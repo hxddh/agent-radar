@@ -39,6 +39,7 @@ agent-radar/
   docs/
     maintenance.md
     cloud-agent.md
+    subscription-mode.md
     release-v0.1.0.md
   automation/
     runbook.md
@@ -76,7 +77,7 @@ Daily notes are append-oriented. Use them to record high-signal items without fo
 
 For fully Cloud Agent-driven operation, use `automation/daily.md`.
 
-For true 24/7 cloud execution, configure `.github/workflows/cloud-agent.yml`; see `docs/cloud-agent.md`.
+For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`; see `docs/cloud-agent.md`.
 
 Daily lightweight questions:
 
@@ -155,6 +156,7 @@ python -m unittest discover -s tests
 - `research-log.md`: accepted sources, rejected sources, and follow-up gaps for each research pass.
 - `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
 - `docs/cloud-agent.md`: GitHub Actions based 24/7 cloud agent setup.
+- `docs/subscription-mode.md`: explains what works without an API key and what does not.
 - `docs/release-v0.1.0.md`: release notes for the first public version.
 - `automation/`: Cloud Agent task cards for daily, weekly, monthly, and source-sweep runs.
 - `CHANGELOG.md`: human-readable version history.

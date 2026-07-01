@@ -23,6 +23,7 @@ on:
 
 permissions:
   contents: write
+  models: read
 
 concurrency:
   group: cloud-agent-${{ github.ref }}
@@ -32,6 +33,9 @@ jobs:
   run:
     runs-on: ubuntu-latest
     env:
+      AGENT_RADAR_MODEL_PROVIDER: ${{ vars.AGENT_RADAR_MODEL_PROVIDER || 'github-models' }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_MODEL: ${{ vars.GITHUB_MODEL || 'openai/gpt-4o' }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.5' }}
 
@@ -46,13 +50,10 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Ensure OpenAI API key is configured
+      - name: Show model provider
         run: |
-          if [ -z "$OPENAI_API_KEY" ]; then
-            echo "OPENAI_API_KEY GitHub Actions secret is not set."
-            echo "Add it under Settings > Secrets and variables > Actions > Repository secrets."
-            exit 1
-          fi
+          echo "Provider: $AGENT_RADAR_MODEL_PROVIDER"
+          echo "GitHub model: $GITHUB_MODEL"
 
       - name: Run cloud agent
         run: |

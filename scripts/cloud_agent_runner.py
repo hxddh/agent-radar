@@ -2,8 +2,8 @@
 """GitHub Actions cloud runner for Agent Radar.
 
 This script intentionally uses only the Python standard library.
-It calls the OpenAI Responses API with web search enabled and asks the model
-to return full-file updates for a small, task-scoped set of Markdown files.
+It can call GitHub Models with the GitHub Actions GITHUB_TOKEN, or the OpenAI
+Responses API when OPENAI_API_KEY is configured.
 """
 
 from __future__ import annotations
@@ -20,8 +20,10 @@ from pathlib import Path
 from typing import Any
 
 
-API_URL = "https://api.openai.com/v1/responses"
-DEFAULT_MODEL = "gpt-5.5"
+OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
+GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions"
+DEFAULT_OPENAI_MODEL = "gpt-5.5"
+DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
 MAX_FILE_CHARS = 80_000
 
 
@@ -162,6 +164,11 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
 
 
 def response_output_text(data: dict[str, Any]) -> str:
+    if "choices" in data:
+        choices = data.get("choices") or []
+        if choices:
+            return choices[0].get("message", {}).get("content", "")
+
     if isinstance(data.get("output_text"), str):
         return data["output_text"]
 
@@ -180,7 +187,7 @@ def call_openai(prompt: str) -> dict[str, Any]:
     if not api_key:
         raise SystemExit("OPENAI_API_KEY is not set. Add it as a GitHub Actions secret.")
 
-    model = os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
+    model = os.environ.get("OPENAI_MODEL", DEFAULT_OPENAI_MODEL)
     payload = {
         "model": model,
         "input": prompt,
@@ -189,7 +196,7 @@ def call_openai(prompt: str) -> dict[str, Any]:
         "text": {"format": {"type": "json_object"}},
     }
     request = urllib.request.Request(
-        API_URL,
+        OPENAI_RESPONSES_URL,
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Authorization": f"Bearer {api_key}",
@@ -205,6 +212,52 @@ def call_openai(prompt: str) -> dict[str, Any]:
         raise SystemExit(f"OpenAI API error {exc.code}: {body}") from exc
 
 
+def call_github_models(prompt: str) -> dict[str, Any]:
+    token = os.environ.get("GITHUB_TOKEN")
+    if not token:
+        raise SystemExit("GITHUB_TOKEN is not set. GitHub Actions should provide it automatically.")
+
+    model = os.environ.get("GITHUB_MODEL", DEFAULT_GITHUB_MODEL)
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a careful autonomous maintainer. Return only valid JSON.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0.2,
+        "response_format": {"type": "json_object"},
+    }
+    request = urllib.request.Request(
+        GITHUB_MODELS_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=900) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise SystemExit(f"GitHub Models API error {exc.code}: {body}") from exc
+
+
+def call_model(prompt: str) -> dict[str, Any]:
+    provider = os.environ.get("AGENT_RADAR_MODEL_PROVIDER", "github-models").lower()
+    if provider == "openai":
+        return call_openai(prompt)
+    if provider in {"github", "github-models"}:
+        return call_github_models(prompt)
+    raise SystemExit(f"Unsupported AGENT_RADAR_MODEL_PROVIDER: {provider}")
+
+
 def build_prompt(task: str, day: dt.date, allowed: list[str], context: str) -> str:
     allowed_text = "\n".join(f"- {path}" for path in allowed)
     return f"""You are the autonomous cloud agent for Agent Radar.
@@ -214,7 +267,7 @@ Date: {day.isoformat()}
 Month: {month_label(day)}
 ISO week: {week_label(day)}
 
-Use OpenAI web search and all supplied repository context. Update only files in this allowed list:
+Use supplied repository context and any source links already present in the files. Update only files in this allowed list:
 {allowed_text}
 
 Return only valid JSON with this shape:
@@ -228,6 +281,7 @@ Return only valid JSON with this shape:
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
+- If the provider cannot browse the live web, record the limitation in research-log.md and use existing source lists, official URLs already in the repo, and conservative follow-up gaps.
 - Label weak evidence, missing corroboration, private/logged-in source status, and inference.
 - Do not publish private URLs, private messages, screenshots, customer names, personal identifiers, or confidential details.
 - Do not invent factual claims. Use source links, source classes, or source status labels.
@@ -270,7 +324,7 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
         run_cli(root, config["ensure"], day)
     allowed, context = build_context(root, task, day)
     prompt = build_prompt(task, day, allowed, context)
-    data = call_openai(prompt)
+    data = call_model(prompt)
     output_text = response_output_text(data)
     try:
         result = json.loads(output_text)

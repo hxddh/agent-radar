@@ -6,24 +6,31 @@ The `automation/` task cards are instructions. True 24/7 operation is provided b
 
 1. GitHub Actions wakes up on a schedule.
 2. The hosted runner checks out the repository.
-3. `scripts/cloud_agent_runner.py` calls the OpenAI Responses API with web search enabled.
+3. `scripts/cloud_agent_runner.py` calls GitHub Models with the GitHub Actions `GITHUB_TOKEN` by default. It can optionally call the OpenAI Responses API when an API key is configured.
 4. The cloud agent returns source-backed full-file updates for allowed Markdown files.
 5. The workflow runs validation, tests, Python compilation, and obvious secret scanning.
 6. If files changed and checks pass, the workflow commits and pushes to `main`.
 
 This does not depend on a local desktop, local Codex app automation, or a local machine staying online.
 
-## Required Secret
+## Default: No OpenAI API Key Required
 
-Add this repository secret:
+The default provider is GitHub Models:
 
 ```text
-OPENAI_API_KEY
+AGENT_RADAR_MODEL_PROVIDER=github-models
+GITHUB_MODEL=openai/gpt-4o
 ```
 
-Optional repository variable:
+GitHub-hosted runners provide `GITHUB_TOKEN` automatically, and GitHub Models supports `models: read` workflow permission. No OpenAI API key is required for this default mode.
+
+## Optional: OpenAI API Provider
+
+If you later add an OpenAI API key, set:
 
 ```text
+AGENT_RADAR_MODEL_PROVIDER=openai
+OPENAI_API_KEY as a repository secret
 OPENAI_MODEL=gpt-5.5
 ```
 
@@ -61,3 +68,17 @@ python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py
 
 and an obvious secret scan before committing.
 
+## Subscription-Only Mode
+
+If you only have a ChatGPT/Codex subscription and no OpenAI API key, use the default GitHub Models provider. This gives the repository a true cloud-hosted scheduled model runner without needing `OPENAI_API_KEY`.
+
+In subscription-only mode, the repo still works as:
+
+- A Markdown-first radar workspace.
+- A Codex Cloud/manual task target.
+- A validated structure for daily, weekly, monthly, and source-sweep runs.
+- A GitHub Actions CI project.
+
+This mode may not have OpenAI Responses API web search. When live browsing is unavailable, the runner records that limitation in `research-log.md` and uses existing source lists and conservative follow-up gaps.
+
+Avoid browser-login automation as a workaround. It is brittle, difficult to secure, and not appropriate for a public repository workflow.
