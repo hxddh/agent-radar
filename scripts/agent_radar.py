@@ -10,11 +10,14 @@ import sys
 from pathlib import Path
 
 
+__version__ = "0.1.0"
+
 CORE_FILES = [
     "README.md",
     "AGENTS.md",
     "CONTRIBUTING.md",
     "SECURITY.md",
+    "CHANGELOG.md",
     "radar.md",
     "agent-watchlist.md",
     "user-field-notes.md",
@@ -76,6 +79,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "AGENTS.md": AGENTS_TEMPLATE,
         "CONTRIBUTING.md": CONTRIBUTING_TEMPLATE,
         "SECURITY.md": SECURITY_TEMPLATE,
+        "CHANGELOG.md": CHANGELOG_TEMPLATE.format(date=date_text),
         "radar.md": RADAR_TEMPLATE.format(date=date_text),
         "agent-watchlist.md": WATCHLIST_TEMPLATE,
         "user-field-notes.md": FIELD_NOTES_TEMPLATE.format(month=month_text),
@@ -112,6 +116,14 @@ def command_init(args: argparse.Namespace) -> int:
             continue
         result = write_file(root / rel_path, content, force=args.force)
         results.append((rel_path, result))
+
+    script_path = root / "scripts" / "agent_radar.py"
+    if script_path.resolve() == Path(__file__).resolve():
+        results.append(("scripts/agent_radar.py", "skipped"))
+    else:
+        script_content = Path(__file__).read_text(encoding="utf-8")
+        result = write_file(script_path, script_content, force=args.force)
+        results.append(("scripts/agent_radar.py", result))
 
     print(f"Project root: {root}")
     for rel_path, result in results:
@@ -492,6 +504,7 @@ def command_brief(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Manage a Markdown-first AI Agent radar.")
+    parser.add_argument("--version", action="version", version=f"agent-radar {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     init_parser = subparsers.add_parser("init", help="Create missing project files.")
@@ -556,6 +569,13 @@ Run validation before opening a pull request.
 SECURITY_TEMPLATE = """# Security Policy
 
 This repository is public. Do not publish secrets, private URLs, private messages, personal identifiers, or confidential details.
+"""
+
+CHANGELOG_TEMPLATE = """# Changelog
+
+## Unreleased
+
+- Initial structure generated on {date}.
 """
 
 RADAR_TEMPLATE = """# AI Agent Radar

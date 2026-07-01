@@ -1,0 +1,67 @@
+from __future__ import annotations
+
+import contextlib
+import importlib.util
+import os
+import tempfile
+import unittest
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = REPO_ROOT / "scripts" / "agent_radar.py"
+
+
+spec = importlib.util.spec_from_file_location("agent_radar", MODULE_PATH)
+assert spec is not None
+agent_radar = importlib.util.module_from_spec(spec)
+assert spec.loader is not None
+spec.loader.exec_module(agent_radar)
+
+
+@contextlib.contextmanager
+def chdir(path: Path):
+    previous = Path.cwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(previous)
+
+
+class AgentRadarCliTest(unittest.TestCase):
+    def test_daily_weekly_monthly_validate_and_root_detection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "agent-radar"
+            root.mkdir()
+
+            with chdir(root):
+                self.assertEqual(agent_radar.main(["init", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["daily", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["daily", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["weekly", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["monthly", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["validate", "--date", "2026-07-02"]), 0)
+
+            daily = root / "daily" / "2026-07.md"
+            weekly = root / "weekly" / "2026-W27.md"
+            monthly = root / "monthly" / "2026-07.md"
+
+            self.assertTrue(daily.exists())
+            self.assertTrue(weekly.exists())
+            self.assertTrue(monthly.exists())
+            self.assertEqual(daily.read_text(encoding="utf-8").count("## 2026-07-02"), 1)
+
+            nested = root / "daily" / "nested"
+            nested.mkdir()
+            with chdir(nested):
+                detected = agent_radar.find_root()
+            self.assertEqual(detected.resolve(), root.resolve())
+
+    def test_invalid_date_exits(self) -> None:
+        with self.assertRaises(SystemExit):
+            agent_radar.parse_date("2026-99-99")
+
+
+if __name__ == "__main__":
+    unittest.main()

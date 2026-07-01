@@ -28,6 +28,7 @@ agent-radar/
   AGENTS.md
   CONTRIBUTING.md
   SECURITY.md
+  CHANGELOG.md
   radar.md
   agent-watchlist.md
   user-field-notes.md
@@ -37,6 +38,7 @@ agent-radar/
   research-log.md
   docs/
     maintenance.md
+    release-v0.1.0.md
   daily/
     .gitkeep
   weekly/
@@ -106,6 +108,7 @@ python scripts/agent_radar.py monthly --date 2026-07-02
 python scripts/agent_radar.py status
 python scripts/agent_radar.py validate
 python scripts/agent_radar.py brief
+python scripts/agent_radar.py --version
 ```
 
 The CLI supports running from any subdirectory. Existing files are not overwritten unless `--force` is passed to `init`.
@@ -119,6 +122,7 @@ python scripts/agent_radar.py weekly
 python scripts/agent_radar.py status
 python scripts/agent_radar.py validate
 python scripts/agent_radar.py brief
+python -m unittest discover -s tests
 ```
 
 ## What Goes Where
@@ -131,6 +135,8 @@ python scripts/agent_radar.py brief
 - `sources.md`: source classes, source discipline, and high-signal filters.
 - `research-log.md`: accepted sources, rejected sources, and follow-up gaps for each research pass.
 - `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
+- `docs/release-v0.1.0.md`: release notes for the first public version.
+- `CHANGELOG.md`: human-readable version history.
 - `daily/YYYY-MM.md`: daily signal capture.
 - `weekly/YYYY-Www.md`: weekly synthesis.
 - `monthly/YYYY-MM.md`: monthly thesis, evidence, and watchlist review.
@@ -180,4 +186,5 @@ python scripts/agent_radar.py status --date 2026-07-02
 python scripts/agent_radar.py validate --date 2026-07-02
 python scripts/agent_radar.py brief --date 2026-07-02
 python -m py_compile scripts/agent_radar.py
+python -m unittest discover -s tests
 ```
