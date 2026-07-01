@@ -1,0 +1,92 @@
+name: Cloud Agent
+
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Task to run"
+        required: true
+        default: "auto"
+        type: choice
+        options:
+          - auto
+          - daily
+          - weekly
+          - monthly
+          - source-sweep
+      date:
+        description: "Optional date, YYYY-MM-DD"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cloud-agent-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.5' }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Ensure OpenAI API key is configured
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY GitHub Actions secret is not set."
+            echo "Add it under Settings > Secrets and variables > Actions > Repository secrets."
+            exit 1
+          fi
+
+      - name: Run cloud agent
+        run: |
+          TASK="${{ github.event.inputs.task || 'auto' }}"
+          DATE_INPUT="${{ github.event.inputs.date }}"
+          if [ -n "$DATE_INPUT" ]; then
+            python scripts/cloud_agent_runner.py --task "$TASK" --date "$DATE_INPUT"
+          else
+            python scripts/cloud_agent_runner.py --task "$TASK"
+          fi
+
+      - name: Validate
+        run: |
+          TODAY="$(date -u +%F)"
+          python scripts/agent_radar.py brief --date "$TODAY"
+          python scripts/agent_radar.py validate --date "$TODAY"
+          python -m unittest discover -s tests
+          python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py
+
+      - name: Scan for obvious secrets
+        run: |
+          if grep -RInE --exclude=validate.yml --exclude=cloud-agent.yml --exclude-dir=.git --exclude-dir=__pycache__ '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
+            echo "Possible secret detected."
+            exit 1
+          fi
+
+      - name: Commit and push changes
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "agent-radar-cloud"
+          git config user.email "agent-radar-cloud@users.noreply.github.com"
+          git add .
+          git commit -m "Cloud agent radar update $(date -u +%F)"
+          git push

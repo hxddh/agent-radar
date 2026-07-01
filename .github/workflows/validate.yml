@@ -18,14 +18,14 @@ jobs:
           python-version: "3.10"
 
       - name: Compile CLI
-        run: python -m py_compile scripts/agent_radar.py
+        run: python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py
 
       - name: Run tests
         run: python -m unittest discover -s tests
 
       - name: Scan for obvious secrets
         run: |
-          if grep -RInE --exclude=validate.yml --exclude-dir=.git --exclude-dir=__pycache__ '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
+          if grep -RInE --exclude=validate.yml --exclude=cloud-agent.yml --exclude-dir=.git --exclude-dir=__pycache__ '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
             echo "Possible secret detected."
             exit 1
           fi

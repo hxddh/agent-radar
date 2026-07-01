@@ -26,6 +26,7 @@ CORE_FILES = [
     "sources.md",
     "research-log.md",
     "docs/maintenance.md",
+    "docs/cloud-agent.md",
     "automation/runbook.md",
     "automation/daily.md",
     "automation/weekly.md",
@@ -36,6 +37,7 @@ CORE_FILES = [
     "prompts/agent-watchlist-update.md",
     "prompts/monthly-review.md",
     "scripts/agent_radar.py",
+    "scripts/cloud_agent_runner.py",
 ]
 
 
@@ -93,6 +95,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "sources.md": SOURCES_TEMPLATE,
         "research-log.md": RESEARCH_LOG_TEMPLATE,
         "docs/maintenance.md": MAINTENANCE_TEMPLATE,
+        "docs/cloud-agent.md": CLOUD_AGENT_TEMPLATE,
         "automation/runbook.md": AUTOMATION_RUNBOOK_TEMPLATE,
         "automation/daily.md": AUTOMATION_DAILY_TEMPLATE,
         "automation/weekly.md": AUTOMATION_WEEKLY_TEMPLATE,
@@ -134,6 +137,13 @@ def command_init(args: argparse.Namespace) -> int:
         script_content = Path(__file__).read_text(encoding="utf-8")
         result = write_file(script_path, script_content, force=args.force)
         results.append(("scripts/agent_radar.py", result))
+
+    cloud_runner_path = root / "scripts" / "cloud_agent_runner.py"
+    source_cloud_runner = Path(__file__).with_name("cloud_agent_runner.py")
+    if source_cloud_runner.exists() and cloud_runner_path.resolve() != source_cloud_runner.resolve():
+        runner_content = source_cloud_runner.read_text(encoding="utf-8")
+        result = write_file(cloud_runner_path, runner_content, force=args.force)
+        results.append(("scripts/cloud_agent_runner.py", result))
 
     print(f"Project root: {root}")
     for rel_path, result in results:
@@ -672,6 +682,11 @@ Record research passes, accepted sources, rejected sources, and follow-up gaps.
 MAINTENANCE_TEMPLATE = """# Maintenance Guide
 
 Keep updates source-backed, public-safe, and lightweight.
+"""
+
+CLOUD_AGENT_TEMPLATE = """# True Cloud Agent Operation
+
+Use GitHub Actions plus scripts/cloud_agent_runner.py for 24/7 cloud execution.
 """
 
 AUTOMATION_RUNBOOK_TEMPLATE = """# Cloud Agent Runbook

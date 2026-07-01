@@ -31,6 +31,7 @@ python scripts/agent_radar.py weekly
 python scripts/agent_radar.py monthly
 python scripts/agent_radar.py brief
 python scripts/agent_radar.py validate
+python -m py_compile scripts/cloud_agent_runner.py
 ```
 
 ## Completion Checklist

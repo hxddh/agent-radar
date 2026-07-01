@@ -38,6 +38,7 @@ agent-radar/
   research-log.md
   docs/
     maintenance.md
+    cloud-agent.md
     release-v0.1.0.md
   automation/
     runbook.md
@@ -58,12 +59,14 @@ agent-radar/
     monthly-review.md
   scripts/
     agent_radar.py
+    cloud_agent_runner.py
   .github/
     PULL_REQUEST_TEMPLATE.md
     ISSUE_TEMPLATE/
       daily-signal.yml
       source-gap.yml
     workflows/
+      cloud-agent.yml
       validate.yml
 ```
 
@@ -72,6 +75,8 @@ agent-radar/
 Daily notes are append-oriented. Use them to record high-signal items without forcing a full thesis update.
 
 For fully Cloud Agent-driven operation, use `automation/daily.md`.
+
+For true 24/7 cloud execution, configure `.github/workflows/cloud-agent.yml`; see `docs/cloud-agent.md`.
 
 Daily lightweight questions:
 
@@ -149,6 +154,7 @@ python -m unittest discover -s tests
 - `sources.md`: source classes, source discipline, and high-signal filters.
 - `research-log.md`: accepted sources, rejected sources, and follow-up gaps for each research pass.
 - `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
+- `docs/cloud-agent.md`: GitHub Actions based 24/7 cloud agent setup.
 - `docs/release-v0.1.0.md`: release notes for the first public version.
 - `automation/`: Cloud Agent task cards for daily, weekly, monthly, and source-sweep runs.
 - `CHANGELOG.md`: human-readable version history.
@@ -159,6 +165,7 @@ python -m unittest discover -s tests
 - `CONTRIBUTING.md`: lightweight contribution rules.
 - `SECURITY.md`: public-safe handling policy.
 - `.github/workflows/validate.yml`: CI check for CLI syntax and structural validation.
+- `.github/workflows/cloud-agent.yml`: scheduled cloud agent runner.
 - `.github/PULL_REQUEST_TEMPLATE.md`: contribution checklist.
 - `.github/ISSUE_TEMPLATE/`: structured signal and source-gap intake.
 
