@@ -173,3 +173,29 @@ Follow-up gaps:
 - Watch for storage and persistence patterns in agent memory (World Model MCP) and ops agents (ai-ops-agent).
 - Investigate whether enterprise architecture tools (enterprise-architect-mcp) signal a new category of agent-accessible enterprise models.
 - Look for pricing, governance, and compliance signals across all emerging agent tools.
+
+### Pass 5: Promote Candidates (2026-07-02)
+
+Purpose:
+- Promote high-relevance candidates from the public source snapshot into formal radar files.
+
+Promoted candidates:
+- Omnigent (omnigent-ai/omnigent): https://github.com/omnigent-ai/omnigent
+  - Promotion reason: Direct agent infrastructure implication as a meta-harness orchestrating multiple coding agents with policy enforcement and sandboxing. 5,943 stars and active development signal strong community interest. Added to agent-watchlist.md and radar.md thesis.
+  - Promotion status: promoted
+- Vestige (samvallad33/vestige): https://github.com/samvallad33/vestige
+  - Promotion reason: Direct agent memory and debugging primitive. Local-first Rust MCP server for time-travel failure tracing. 574 stars and recent activity. Added to agent-watchlist.md, storage-angle.md, and radar.md thesis.
+  - Promotion status: promoted
+- Obsidian Turbocharged (The-40-Thieves/obsidian-tc): https://github.com/The-40-Thieves/obsidian-tc
+  - Promotion reason: Direct agent knowledge-base access via MCP. Comprehensive, model-agnostic, agent-ready Obsidian MCP server. Very early (0 stars) but technically detailed and directly relevant. Added to agent-watchlist.md, storage-angle.md, and radar.md thesis.
+  - Promotion status: promoted
+
+Deferred candidates (no promotion this run):
+- All other candidates from Pass 3 and Pass 4 remain deferred with follow-up gaps as previously recorded.
+- No new candidates from the current snapshot met the promotion threshold beyond the three promoted.
+
+Follow-up gaps:
+- Monitor Omnigent for integration docs, user case studies, or enterprise adoption signals.
+- Monitor Vestige for benchmarks, integration guides, or user testimonials.
+- Monitor Obsidian Turbocharged for community engagement, stars, or user reports.
+- Continue tracking deferred candidates for stronger evidence in future runs.

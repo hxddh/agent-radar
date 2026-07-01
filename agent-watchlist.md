@@ -186,6 +186,51 @@ Status:
 
 # Emerging Agents
 
+## Omnigent
+
+- Category: Agent meta-harness / orchestration
+- Why it matters: Directly addresses agent runtime fragmentation by orchestrating Claude Code, Codex, Cursor, Pi, and custom agents under a single harness with policy enforcement, sandboxing, and real-time collaboration.
+- Recent signal: Public GitHub repo with 5,943 stars and active updates (2026-07-01).
+- Source class: Official public source.
+- Source visibility: Public.
+- Evidence strength: Medium (strong community interest, but no production user evidence yet).
+- User evidence: Source required.
+- Infra angle: Agent orchestration, harness swapping, policy enforcement, sandboxing, real-time collaboration.
+- Risk: Early-stage; may be absorbed by mainstream agent platforms or remain a power-user tool.
+- Public corroboration: GitHub stars and recent activity suggest growing interest, but no independent user reports yet.
+- Watch next: Whether Omnigent publishes integration docs, user case studies, or enterprise adoption signals.
+- Source: https://github.com/omnigent-ai/omnigent
+
+## Vestige
+
+- Category: Agent memory / debugging
+- Why it matters: Gives AI agents sharp, time-travel memory to trace failures back to root causes, not just lookalikes. Directly relevant to agent reliability and debugging.
+- Recent signal: Public GitHub repo with 574 stars, updated 2026-07-01. Local-first Rust MCP server.
+- Source class: Official public source.
+- Source visibility: Public.
+- Evidence strength: Medium (strong technical concept, moderate community interest, no production user evidence yet).
+- User evidence: Source required.
+- Infra angle: Agent memory, failure tracing, MCP server, local-first storage.
+- Risk: Early-stage; may be niche if mainstream agents build similar capabilities internally.
+- Public corroboration: GitHub stars and recent activity, but no independent user reports or case studies yet.
+- Watch next: Whether Vestige publishes benchmarks, integration guides, or user testimonials.
+- Source: https://github.com/samvallad33/vestige
+
+## Obsidian Turbocharged (obsidian-tc)
+
+- Category: Agent-ready MCP server / knowledge management
+- Why it matters: Comprehensive, model-agnostic, agent-ready Obsidian MCP server with multi-vault support, pluggable embeddings, and polyglot architecture. Directly enables agents to interact with personal/team knowledge bases.
+- Recent signal: Public GitHub repo (0 stars, but updated 2026-07-01). Apache 2.0 license.
+- Source class: Official public source.
+- Source visibility: Public.
+- Evidence strength: Weak (very early, no stars, but technically detailed and directly relevant to agent knowledge access).
+- User evidence: Source required.
+- Infra angle: MCP server, knowledge base access, embeddings, multi-vault, polyglot architecture.
+- Risk: Very early; may not gain traction or may be superseded by simpler MCP servers.
+- Public corroboration: None yet; needs community engagement or user reports.
+- Watch next: Whether obsidian-tc gains stars, forks, or user testimonials.
+- Source: https://github.com/The-40-Thieves/obsidian-tc
+
 ## Candidate Template
 
 Name:

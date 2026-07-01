@@ -9,12 +9,16 @@ Last updated: 2026-07-02
 3. Cloud sandbox, persistent workspace, tool calling, memory, and evaluation are becoming core infrastructure.
 4. Real user experience is still uneven: success depends heavily on repo size, task framing, testability, and tool access.
 5. Object storage may become an important layer for agent workspace, snapshots, artifacts, logs, knowledge bases, and replayable execution history.
+6. Agent meta-harnesses and cross-runtime orchestration are emerging as a response to fragmentation across Claude Code, Codex, Cursor, and other coding agents.
+7. Agent memory is evolving from simple context windows to time-travel debugging and root-cause tracing.
+8. Knowledge bases (e.g., Obsidian vaults) are becoming agent-accessible through MCP servers, enabling agents to read, write, and search personal/team knowledge.
 
 ## Changed Thesis
 
 ### 2026-07-02
 
 - Initial setup.
+- Added thesis points 6-8 based on Omnigent, Vestige, and Obsidian Turbocharged signals.
 
 ## Open Questions
 
@@ -22,3 +26,6 @@ Last updated: 2026-07-02
 - Will MCP become the default tool integration layer?
 - Will long-running agents be priced by seat, token, task, or compute time?
 - Which agent categories will expand beyond coding first?
+- Will meta-harnesses like Omnigent become standard or remain power-user tools?
+- Will agent memory primitives like Vestige be absorbed into mainstream platforms?
+- Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge?

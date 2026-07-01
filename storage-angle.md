@@ -45,6 +45,11 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong.
   - Source: https://manual.raycast.com/new-in-v2
 
+- 2026-07-02: Vestige gives AI agents sharp memory: a local-first Rust MCP server that reaches backward through time to find the quiet change, decision, or service that caused today's failure, not the lookalike. Direct signal for agent memory as a debugging and reliability primitive.
+  - Source class: Official public source.
+  - Evidence strength: Medium (strong technical concept, moderate community interest, no production user evidence yet).
+  - Source: https://github.com/samvallad33/vestige
+
 ### Artifact and Report Storage
 
 - 2026-07-02: Cloudflare temporary accounts create a 60-minute live deployment and claim flow for agent-created Workers. This is a useful pattern for temporary artifacts that can later become persistent resources.
@@ -75,6 +80,11 @@ AI Agent workloads create demand for:
   - Source class: Official public source.
   - Evidence strength: Strong for product thesis.
   - Source: https://factory.ai/news/software-factory
+
+- 2026-07-02: Obsidian Turbocharged (obsidian-tc) is a comprehensive, model-agnostic, agent-ready Obsidian MCP server with multi-vault support and pluggable embeddings. Direct signal for knowledge bases as agent-accessible storage.
+  - Source class: Official public source.
+  - Evidence strength: Weak (very early, no stars, but technically detailed).
+  - Source: https://github.com/The-40-Thieves/obsidian-tc
 
 ## Open Questions
 
