@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import re
 import sys
 from pathlib import Path
 
@@ -321,18 +322,12 @@ def warn_empty_fields(path: Path) -> list[str]:
         return []
     content = path.read_text(encoding="utf-8")
     warnings: list[str] = []
-    empty_markers = [
-        "- Source:",
-        "- Evidence:",
-        "- Change:",
-        "- Signal:",
-        "Source:\n",
-        "Public corroboration:\n",
-    ]
-    for marker in empty_markers:
-        if marker in content:
-            warnings.append(f"{path}: contains empty template field {marker.strip()!r}")
-            break
+    empty_field = re.compile(
+        r"(?m)^(?:-\s*)?(Source|Evidence|Change|Signal|Public corroboration):\s*$"
+    )
+    match = empty_field.search(content)
+    if match:
+        warnings.append(f"{path}: contains empty template field {match.group(1)!r}")
     return warnings
 
 
