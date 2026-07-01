@@ -51,6 +51,22 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {"PUBLIC_SOURCE_COLLECTION": "false"}, clear=True):
             self.assertIn("disabled", cloud_agent_runner.collect_public_sources("daily"))
 
+    def test_extracts_github_repos_for_release_tracking(self) -> None:
+        repos = cloud_agent_runner.extract_github_repos(
+            "See https://github.com/modelcontextprotocol/servers and https://github.com/openai/codex/releases",
+            10,
+        )
+        self.assertIn("modelcontextprotocol/servers", repos)
+        self.assertIn("openai/codex", repos)
+
+    def test_release_and_changelog_defaults_are_present(self) -> None:
+        self.assertIn("openai/codex", cloud_agent_runner.DEFAULT_RELEASE_REPOS)
+        feed_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_FEEDS]
+        self.assertIn("github-changelog", feed_names)
+        with mock.patch.dict(os.environ, {"MAX_RELEASE_REPOS": "3"}, clear=True):
+            repos = cloud_agent_runner.release_repos_from_context(REPO_ROOT, 3)
+        self.assertLessEqual(len(repos), 3)
+
     def test_openrouter_prompt_bans_paid_search_tools(self) -> None:
         prompt = cloud_agent_runner.build_prompt(
             "daily",

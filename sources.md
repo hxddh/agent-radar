@@ -20,6 +20,9 @@ Use broad source coverage by default. The radar should not be limited to public 
 - GitHub discussions
 - Pull requests
 - Release tags
+- GitHub releases
+- GitHub tags
+- Changelog entries
 - Example repos
 - Benchmark repos
 - SDK changes
@@ -99,6 +102,7 @@ Prefer items with:
 - Tool calling issue
 - Sandbox / environment detail
 - MCP / integration detail
+- Release / tag / changelog signal
 - Memory / context issue
 - Storage / artifact / snapshot mention
 

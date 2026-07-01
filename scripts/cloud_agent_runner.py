@@ -13,6 +13,7 @@ import datetime as dt
 import html
 import json
 import os
+import re
 import subprocess
 import sys
 import urllib.error
@@ -34,6 +35,18 @@ MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
 MAX_PUBLIC_SOURCE_ITEMS = 40
 DEFAULT_MAX_PROMPT_CHARS = 120_000
+DEFAULT_RELEASE_REPOS = [
+    "openai/codex",
+    "modelcontextprotocol/servers",
+    "modelcontextprotocol/python-sdk",
+    "modelcontextprotocol/typescript-sdk",
+    "elizaOS/eliza",
+]
+DEFAULT_CHANGELOG_FEEDS = [
+    ("openai-blog", "https://openai.com/news/rss.xml"),
+    ("github-changelog", "https://github.blog/changelog/feed/"),
+    ("cursor-changelog", "https://cursor.com/changelog/rss"),
+]
 
 
 TASK_CONFIG = {
@@ -291,6 +304,73 @@ def collect_github_items(query: str, limit: int, items: list[dict[str, str]], se
         add_source_item(items, seen, "github", repo.get("full_name", "GitHub repo"), repo.get("html_url", ""), note)
 
 
+def github_headers() -> dict[str, str]:
+    token = os.environ.get("GITHUB_TOKEN", "")
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "agent-radar-cloud",
+    }
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
+def extract_github_repos(text: str, limit: int) -> list[str]:
+    repos: list[str] = []
+    seen: set[str] = set()
+    for owner, repo in re.findall(r"https://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)", text):
+        repo = repo.removesuffix(".git")
+        if repo in {"issues", "pulls", "releases", "tags"}:
+            continue
+        full_name = f"{owner}/{repo}"
+        if full_name not in seen:
+            seen.add(full_name)
+            repos.append(full_name)
+        if len(repos) >= limit:
+            break
+    return repos
+
+
+def release_repos_from_context(root: Path, limit: int) -> list[str]:
+    configured = split_env_list("RELEASE_REPOS", DEFAULT_RELEASE_REPOS)
+    repos: list[str] = []
+    seen: set[str] = set()
+    for repo in configured:
+        if "/" in repo and repo not in seen:
+            seen.add(repo)
+            repos.append(repo)
+    context = "\n".join(
+        read_text(root / rel_path)
+        for rel_path in ["sources.md", "agent-watchlist.md", "research-log.md"]
+    )
+    for repo in extract_github_repos(context, limit * 2):
+        if repo not in seen:
+            seen.add(repo)
+            repos.append(repo)
+        if len(repos) >= limit:
+            break
+    return repos[:limit]
+
+
+def collect_github_releases(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    url = f"https://api.github.com/repos/{repo}/releases?per_page={limit}"
+    data = request_json(url, headers=github_headers())
+    for release in data[:limit]:
+        title = release.get("name") or release.get("tag_name") or f"{repo} release"
+        note = f"published={release.get('published_at', '')}; prerelease={release.get('prerelease', False)}"
+        add_source_item(items, seen, f"github-release:{repo}", title, release.get("html_url", ""), note)
+
+
+def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    url = f"https://api.github.com/repos/{repo}/tags?per_page={limit}"
+    data = request_json(url, headers=github_headers())
+    for tag in data[:limit]:
+        name = tag.get("name", "")
+        tag_url = f"https://github.com/{repo}/releases/tag/{urllib.parse.quote(name)}" if name else ""
+        note = f"commit={tag.get('commit', {}).get('sha', '')[:12]}"
+        add_source_item(items, seen, f"github-tag:{repo}", name or f"{repo} tag", tag_url, note)
+
+
 def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     request = urllib.request.Request(feed_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
     with urllib.request.urlopen(request, timeout=45) as response:
@@ -320,7 +400,19 @@ def public_source_budget(task: str) -> int:
     return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
 
 
-def collect_public_sources(task: str) -> str:
+def changelog_feeds() -> list[tuple[str, str]]:
+    configured = split_env_list("CHANGELOG_FEEDS", [])
+    feeds = list(DEFAULT_CHANGELOG_FEEDS)
+    for item in configured:
+        if "=" in item:
+            name, url = item.split("=", 1)
+            feeds.append((name.strip(), url.strip()))
+        else:
+            feeds.append(("changelog", item))
+    return feeds
+
+
+def collect_public_sources(task: str, root: Path | None = None) -> str:
     if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
         return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
 
@@ -329,6 +421,8 @@ def collect_public_sources(task: str) -> str:
     items: list[dict[str, str]] = []
     seen: set[str] = set()
     errors: list[str] = []
+    repo_limit = env_int("MAX_RELEASE_REPOS", 12)
+    release_limit = env_int("MAX_RELEASES_PER_REPO", 2)
 
     collectors = [
         ("hn:ai-agent", lambda: collect_hn_items("AI agent", per_query, items, seen)),
@@ -337,11 +431,16 @@ def collect_public_sources(task: str) -> str:
         ("github:agent-framework", lambda: collect_github_items("AI agent framework", per_query, items, seen)),
         ("github:mcp", lambda: collect_github_items("MCP server agent", per_query, items, seen)),
         ("github:agent-memory", lambda: collect_github_items("agent memory MCP", per_query, items, seen)),
-        ("openai-blog", lambda: collect_feed_items("https://openai.com/news/rss.xml", "openai-blog", per_query, items, seen)),
         ("anthropic-news", lambda: collect_feed_items("https://www.anthropic.com/news/rss.xml", "anthropic-news", per_query, items, seen)),
-        ("github-blog", lambda: collect_feed_items("https://github.blog/changelog/feed/", "github-changelog", per_query, items, seen)),
         ("arxiv-agents", lambda: collect_feed_items("https://export.arxiv.org/rss/cs.AI", "arxiv-cs-ai", per_query, items, seen)),
     ]
+    for source_name, feed_url in changelog_feeds():
+        collectors.append((f"feed:{source_name}", lambda source_name=source_name, feed_url=feed_url: collect_feed_items(feed_url, source_name, per_query, items, seen)))
+
+    release_repos = release_repos_from_context(root, repo_limit) if root else DEFAULT_RELEASE_REPOS[:repo_limit]
+    for repo in release_repos:
+        collectors.append((f"release:{repo}", lambda repo=repo: collect_github_releases(repo, release_limit, items, seen)))
+        collectors.append((f"tag:{repo}", lambda repo=repo: collect_github_tags(repo, release_limit, items, seen)))
 
     for name, collector in collectors:
         if len(items) >= budget:
@@ -355,7 +454,7 @@ def collect_public_sources(task: str) -> str:
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
-        "- Source policy: GitHub API, Hacker News Algolia, and public RSS only.",
+        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, and public RSS/changelog feeds only.",
         f"- Item budget: {budget}",
     ]
     for item in limited:
@@ -708,7 +807,7 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
     allowed, context = build_context(root, task, day)
-    public_sources = collect_public_sources(task) if model_provider() == "openrouter" else ""
+    public_sources = collect_public_sources(task, root) if model_provider() == "openrouter" else ""
     prompt = build_prompt(task, day, allowed, context, public_sources)
     data = call_model(prompt, task, public_sources)
     output_text = response_output_text(data)

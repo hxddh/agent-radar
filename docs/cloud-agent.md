@@ -45,12 +45,17 @@ MAX_OPENROUTER_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
 OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
+MAX_RELEASE_REPOS=12
+MAX_RELEASES_PER_REPO=2
+RELEASE_REPOS=openai/codex,modelcontextprotocol/servers,modelcontextprotocol/python-sdk,modelcontextprotocol/typescript-sdk,elizaOS/eliza
+CHANGELOG_FEEDS=
 ```
 
 This mode does not call OpenRouter web search, Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
 
 - Hacker News Algolia API
 - GitHub REST API with `GITHUB_TOKEN`
+- GitHub releases and tags for configured and discovered repos
 - Public RSS feeds for official blogs, changelogs, and arXiv categories
 
 Model routing stays intentionally small:

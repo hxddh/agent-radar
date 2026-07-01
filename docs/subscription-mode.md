@@ -84,13 +84,15 @@ PUBLIC_SOURCE_COLLECTION=true
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
 OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
+MAX_RELEASE_REPOS=12
+MAX_RELEASES_PER_REPO=2
 ```
 
 Behavior:
 
 - No OpenRouter web search calls.
 - No Grok search, Perplexity, Search1API, SocialCrawl, or Tavily.
-- Public source collection uses Hacker News Algolia, GitHub REST API, and public RSS feeds.
+- Public source collection uses Hacker News Algolia, GitHub REST API, GitHub releases/tags, and public RSS/changelog feeds.
 - Source-sweep runs keep broad candidate coverage in `research-log.md` and `sources.md`.
 - Promote-candidates runs automatically promote at most 3 high-quality candidates.
 - Daily runs use DeepSeek V4 Flash for screening and DeepSeek V4 Pro for final updates.
