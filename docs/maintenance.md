@@ -2,6 +2,8 @@
 
 Agent Radar is automation-first, source-comprehensive, Markdown-first, public-safe, and completion-biased.
 
+For fully Cloud Agent-driven operation, use the task cards in `automation/`. They are the executable runbooks for daily, weekly, monthly, and source-sweep maintenance.
+
 ## Cadence
 
 Daily:
@@ -141,4 +143,3 @@ Use this format:
 - Evidence:
 - Confidence:
 ```
-

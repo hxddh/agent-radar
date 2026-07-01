@@ -26,6 +26,11 @@ CORE_FILES = [
     "sources.md",
     "research-log.md",
     "docs/maintenance.md",
+    "automation/runbook.md",
+    "automation/daily.md",
+    "automation/weekly.md",
+    "automation/monthly.md",
+    "automation/source-sweep.md",
     "prompts/daily-update.md",
     "prompts/weekly-review.md",
     "prompts/agent-watchlist-update.md",
@@ -88,6 +93,11 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "sources.md": SOURCES_TEMPLATE,
         "research-log.md": RESEARCH_LOG_TEMPLATE,
         "docs/maintenance.md": MAINTENANCE_TEMPLATE,
+        "automation/runbook.md": AUTOMATION_RUNBOOK_TEMPLATE,
+        "automation/daily.md": AUTOMATION_DAILY_TEMPLATE,
+        "automation/weekly.md": AUTOMATION_WEEKLY_TEMPLATE,
+        "automation/monthly.md": AUTOMATION_MONTHLY_TEMPLATE,
+        "automation/source-sweep.md": AUTOMATION_SOURCE_SWEEP_TEMPLATE,
         "prompts/daily-update.md": DAILY_PROMPT_TEMPLATE,
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
         "prompts/agent-watchlist-update.md": WATCHLIST_PROMPT_TEMPLATE,
@@ -100,7 +110,7 @@ def command_init(args: argparse.Namespace) -> int:
     root.mkdir(parents=True, exist_ok=True)
     results: list[tuple[str, str]] = []
 
-    for folder in ["daily", "weekly", "monthly", "docs", "prompts", "scripts"]:
+    for folder in ["daily", "weekly", "monthly", "docs", "automation", "prompts", "scripts"]:
         (root / folder).mkdir(parents=True, exist_ok=True)
 
     for keep in ["daily/.gitkeep", "weekly/.gitkeep", "monthly/.gitkeep"]:
@@ -355,6 +365,7 @@ def missing_required(root: Path) -> list[str]:
         "weekly",
         "monthly",
         "docs",
+        "automation",
         "prompts",
     ]
     return [item for item in required if not (root / item).exists()]
@@ -661,6 +672,31 @@ Record research passes, accepted sources, rejected sources, and follow-up gaps.
 MAINTENANCE_TEMPLATE = """# Maintenance Guide
 
 Keep updates source-backed, public-safe, and lightweight.
+"""
+
+AUTOMATION_RUNBOOK_TEMPLATE = """# Cloud Agent Runbook
+
+Use the automation task cards to run daily, weekly, monthly, and source-sweep maintenance end to end.
+"""
+
+AUTOMATION_DAILY_TEMPLATE = """# Daily Cloud Agent Task
+
+Use prompts/daily-update.md, update daily notes, validate, commit, and push.
+"""
+
+AUTOMATION_WEEKLY_TEMPLATE = """# Weekly Cloud Agent Task
+
+Use prompts/weekly-review.md, synthesize the week, validate, commit, and push.
+"""
+
+AUTOMATION_MONTHLY_TEMPLATE = """# Monthly Cloud Agent Task
+
+Use prompts/monthly-review.md, review the month, validate, commit, and push.
+"""
+
+AUTOMATION_SOURCE_SWEEP_TEMPLATE = """# Source Sweep Cloud Agent Task
+
+Refresh source coverage, update sources.md and research-log.md, validate, commit, and push.
 """
 
 DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update

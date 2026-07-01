@@ -1,0 +1,20 @@
+name: Source gap
+description: Suggest a missing or under-covered source area.
+title: "Source gap: "
+labels: ["source-gap"]
+body:
+  - type: textarea
+    id: gap
+    attributes:
+      label: Gap
+      description: What source, product, category, or user segment is under-covered?
+    validations:
+      required: true
+  - type: textarea
+    id: suggested_sources
+    attributes:
+      label: Suggested sources
+      description: Links or source classes to investigate.
+    validations:
+      required: false
+

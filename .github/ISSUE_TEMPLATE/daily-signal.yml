@@ -1,0 +1,37 @@
+name: Daily signal
+description: Suggest a high-signal AI Agent update for the radar.
+title: "Daily signal: "
+labels: ["daily-signal"]
+body:
+  - type: textarea
+    id: signal
+    attributes:
+      label: Signal
+      description: What happened?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Public URL or source class.
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Evidence strength
+      options:
+        - Strong
+        - Medium
+        - Weak
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: Product, user, infra, storage, commercialization, enterprise, security, governance, standard, or anti-signal angle.
+    validations:
+      required: true
+

@@ -39,6 +39,12 @@ agent-radar/
   docs/
     maintenance.md
     release-v0.1.0.md
+  automation/
+    runbook.md
+    daily.md
+    weekly.md
+    monthly.md
+    source-sweep.md
   daily/
     .gitkeep
   weekly/
@@ -53,6 +59,10 @@ agent-radar/
   scripts/
     agent_radar.py
   .github/
+    PULL_REQUEST_TEMPLATE.md
+    ISSUE_TEMPLATE/
+      daily-signal.yml
+      source-gap.yml
     workflows/
       validate.yml
 ```
@@ -60,6 +70,8 @@ agent-radar/
 ## Daily Workflow
 
 Daily notes are append-oriented. Use them to record high-signal items without forcing a full thesis update.
+
+For fully Cloud Agent-driven operation, use `automation/daily.md`.
 
 Daily lightweight questions:
 
@@ -73,6 +85,8 @@ Daily lightweight questions:
 ## Weekly Workflow
 
 Weekly notes are synthesis-oriented. They should explain what actually changed, what remains uncertain, and which signals deserve attention next week.
+
+For fully Cloud Agent-driven operation, use `automation/weekly.md`. For monthly review, use `automation/monthly.md`. For source coverage refreshes, use `automation/source-sweep.md`.
 
 Weekly synthesis dimensions:
 
@@ -136,6 +150,7 @@ python -m unittest discover -s tests
 - `research-log.md`: accepted sources, rejected sources, and follow-up gaps for each research pass.
 - `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
 - `docs/release-v0.1.0.md`: release notes for the first public version.
+- `automation/`: Cloud Agent task cards for daily, weekly, monthly, and source-sweep runs.
 - `CHANGELOG.md`: human-readable version history.
 - `daily/YYYY-MM.md`: daily signal capture.
 - `weekly/YYYY-Www.md`: weekly synthesis.
@@ -144,6 +159,8 @@ python -m unittest discover -s tests
 - `CONTRIBUTING.md`: lightweight contribution rules.
 - `SECURITY.md`: public-safe handling policy.
 - `.github/workflows/validate.yml`: CI check for CLI syntax and structural validation.
+- `.github/PULL_REQUEST_TEMPLATE.md`: contribution checklist.
+- `.github/ISSUE_TEMPLATE/`: structured signal and source-gap intake.
 
 ## What Should Not Go Here
 
