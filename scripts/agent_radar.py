@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -14,6 +15,7 @@ __version__ = "0.1.0"
 
 CORE_FILES = [
     "README.md",
+    ".gitignore",
     "AGENTS.md",
     "CONTRIBUTING.md",
     "SECURITY.md",
@@ -34,6 +36,8 @@ CORE_FILES = [
     "automation/monthly.md",
     "automation/source-sweep.md",
     "automation/promote-candidates.md",
+    "automation/source-health.md",
+    "docs/release-checklist.md",
     "prompts/daily-update.md",
     "prompts/weekly-review.md",
     "prompts/agent-watchlist-update.md",
@@ -87,6 +91,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
     month_text = day.strftime("%Y-%m")
     return {
         "README.md": README_TEMPLATE,
+        ".gitignore": GITIGNORE_TEMPLATE,
         "AGENTS.md": AGENTS_TEMPLATE,
         "CONTRIBUTING.md": CONTRIBUTING_TEMPLATE,
         "SECURITY.md": SECURITY_TEMPLATE,
@@ -108,6 +113,8 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "automation/monthly.md": AUTOMATION_MONTHLY_TEMPLATE,
         "automation/source-sweep.md": AUTOMATION_SOURCE_SWEEP_TEMPLATE,
         "automation/promote-candidates.md": AUTOMATION_PROMOTE_CANDIDATES_TEMPLATE,
+        "automation/source-health.md": SOURCE_HEALTH_TEMPLATE,
+        "docs/release-checklist.md": RELEASE_CHECKLIST_TEMPLATE,
         "prompts/daily-update.md": DAILY_PROMPT_TEMPLATE,
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
         "prompts/agent-watchlist-update.md": WATCHLIST_PROMPT_TEMPLATE,
@@ -123,8 +130,9 @@ def command_init(args: argparse.Namespace) -> int:
 
     for folder in ["daily", "weekly", "monthly", "docs", "automation", "prompts", "scripts"]:
         (root / folder).mkdir(parents=True, exist_ok=True)
+    (root / "automation" / "runs").mkdir(parents=True, exist_ok=True)
 
-    for keep in ["daily/.gitkeep", "weekly/.gitkeep", "monthly/.gitkeep"]:
+    for keep in ["daily/.gitkeep", "weekly/.gitkeep", "monthly/.gitkeep", "automation/runs/.gitkeep"]:
         path = root / keep
         if not path.exists():
             path.write_text("", encoding="utf-8")
@@ -531,6 +539,80 @@ def command_brief(args: argparse.Namespace) -> int:
     return 0
 
 
+def latest_tag() -> str:
+    try:
+        result = subprocess.run(
+            ["git", "describe", "--tags", "--abbrev=0"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return result.stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return ""
+
+
+def git_log_since(tag: str) -> list[str]:
+    command = ["git", "log", "--oneline", "--decorate=no"]
+    if tag:
+        command.insert(2, f"{tag}..HEAD")
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return []
+    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+
+def unreleased_changelog(root: Path) -> str:
+    changelog = root / "CHANGELOG.md"
+    text = changelog.read_text(encoding="utf-8") if changelog.exists() else ""
+    marker = "## Unreleased"
+    if marker not in text:
+        return ""
+    section = text.split(marker, 1)[1]
+    next_heading = re.search(r"\n## v", section)
+    if next_heading:
+        section = section[: next_heading.start()]
+    return section.strip()
+
+
+def command_release_draft(args: argparse.Namespace) -> int:
+    root = find_root()
+    tag = latest_tag()
+    commits = git_log_since(tag)
+    target = root / "docs" / "release-draft.md"
+    lines = [
+        "# Release Draft",
+        "",
+        f"Generated: {parse_date(args.date).isoformat() if args.date else today().isoformat()}",
+        f"Since tag: {tag or 'none'}",
+        "",
+        "## Unreleased Changelog",
+        "",
+        unreleased_changelog(root) or "- No unreleased changelog entries found.",
+        "",
+        "## Commits",
+        "",
+    ]
+    lines.extend(f"- {commit}" for commit in commits)
+    if not commits:
+        lines.append("- No commits found.")
+    lines.extend(
+        [
+            "",
+            "## Checklist",
+            "",
+            "- [ ] Confirm CHANGELOG.md has the target version section.",
+            "- [ ] Confirm docs/release-vX.Y.Z.md exists.",
+            "- [ ] Run validation and tests.",
+            "- [ ] Tag vX.Y.Z and push the tag.",
+        ]
+    )
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"created {target}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Manage a Markdown-first AI Agent radar.")
     parser.add_argument("--version", action="version", version=f"agent-radar {__version__}")
@@ -565,6 +647,10 @@ def build_parser() -> argparse.ArgumentParser:
     brief_parser.add_argument("--date", help="Date for current daily/weekly/monthly paths, YYYY-MM-DD.")
     brief_parser.set_defaults(func=command_brief)
 
+    release_draft_parser = subparsers.add_parser("release-draft", help="Generate docs/release-draft.md from changelog and git log.")
+    release_draft_parser.add_argument("--date", help="Date for the draft, YYYY-MM-DD.")
+    release_draft_parser.set_defaults(func=command_release_draft)
+
     return parser
 
 
@@ -573,6 +659,11 @@ README_TEMPLATE = """# Agent Radar
 Agent Radar = trend judgment + Agent Watchlist + real user field notes + reusable playbook + storage infrastructure perspective.
 
 This repository is a lightweight, Markdown-first AI Agent trend radar. It is not a news dump, a crawler framework, or a complex knowledge base.
+"""
+
+GITIGNORE_TEMPLATE = """__pycache__/
+*.py[cod]
+docs/release-draft.md
 """
 
 AGENTS_TEMPLATE = """# AGENTS.md
@@ -735,6 +826,24 @@ Refresh source coverage, update sources.md and research-log.md, validate, commit
 AUTOMATION_PROMOTE_CANDIDATES_TEMPLATE = """# Promote Candidates Cloud Agent Task
 
 Automatically promote high-quality candidate signals from research-log.md into formal radar files when evidence thresholds are met.
+"""
+
+SOURCE_HEALTH_TEMPLATE = """# Source Health
+
+Last checked: never
+
+| Source | Status | Detail |
+| --- | --- | --- |
+"""
+
+RELEASE_CHECKLIST_TEMPLATE = """# Release Checklist
+
+1. Update CHANGELOG.md.
+2. Create docs/release-vX.Y.Z.md.
+3. Run validation and tests.
+4. Run `python scripts/agent_radar.py release-draft`.
+5. Create and push tag `vX.Y.Z`.
+6. Confirm GitHub Release workflow succeeds.
 """
 
 DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update

@@ -42,14 +42,19 @@ class AgentRadarCliTest(unittest.TestCase):
                 self.assertEqual(agent_radar.main(["weekly", "--date", "2026-07-02"]), 0)
                 self.assertEqual(agent_radar.main(["monthly", "--date", "2026-07-02"]), 0)
                 self.assertEqual(agent_radar.main(["validate", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["release-draft", "--date", "2026-07-02"]), 0)
 
             daily = root / "daily" / "2026-07.md"
             weekly = root / "weekly" / "2026-W27.md"
             monthly = root / "monthly" / "2026-07.md"
+            release_draft = root / "docs" / "release-draft.md"
 
             self.assertTrue(daily.exists())
             self.assertTrue(weekly.exists())
             self.assertTrue(monthly.exists())
+            self.assertTrue(release_draft.exists())
+            self.assertTrue((root / "automation" / "source-health.md").exists())
+            self.assertTrue((root / "docs" / "release-checklist.md").exists())
             self.assertEqual(daily.read_text(encoding="utf-8").count("## 2026-07-02"), 1)
 
             nested = root / "daily" / "nested"

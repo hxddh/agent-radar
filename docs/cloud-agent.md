@@ -8,8 +8,9 @@ The `automation/` task cards are instructions. True 24/7 operation is provided b
 2. The hosted runner checks out the repository.
 3. `scripts/cloud_agent_runner.py` calls GitHub Models with the GitHub Actions `GITHUB_TOKEN` by default. It can optionally call OpenRouter or the OpenAI Responses API when an API key is configured.
 4. The cloud agent returns source-backed full-file updates for allowed Markdown files.
-5. The workflow runs validation, tests, Python compilation, and obvious secret scanning.
-6. If files changed and checks pass, the workflow commits and pushes to `main`.
+5. The runner writes audit metadata to `automation/runs/YYYY-MM.md` and source health to `automation/source-health.md`.
+6. The workflow runs validation, tests, Python compilation, and obvious secret scanning.
+7. If files changed and checks pass, the workflow commits and pushes to `main`.
 
 This does not depend on a local desktop, local Codex app automation, or a local machine staying online.
 
@@ -67,6 +68,17 @@ Model routing stays intentionally small:
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
+Every run records:
+
+- task name
+- provider and models used
+- OpenRouter call count
+- public source item count
+- changed file count
+- budget status
+- fallback usage
+- source errors
+
 ## Optional: OpenAI API Provider
 
 If you later add an OpenAI API key, set:
@@ -100,6 +112,8 @@ You can also run it manually from GitHub Actions with:
 ## Safety
 
 The runner is constrained by allowed file paths per task. It cannot update arbitrary files from model output.
+
+The source health snapshot and run logs are written by the runner itself, not by model output.
 
 It also runs:
 

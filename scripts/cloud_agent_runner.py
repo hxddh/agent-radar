@@ -47,6 +47,16 @@ DEFAULT_CHANGELOG_FEEDS = [
     ("github-changelog", "https://github.blog/changelog/feed/"),
     ("cursor-changelog", "https://cursor.com/changelog/rss"),
 ]
+RUN_AUDIT: dict[str, Any] = {
+    "provider": "",
+    "models": [],
+    "openrouter_calls": 0,
+    "fallbacks": [],
+    "public_source_items": 0,
+    "source_errors": [],
+    "source_status": [],
+    "budget_status": "normal",
+}
 
 
 TASK_CONFIG = {
@@ -276,6 +286,19 @@ def add_source_item(items: list[dict[str, str]], seen: set[str], source: str, ti
     )
 
 
+def audit_model(model: str) -> None:
+    RUN_AUDIT["provider"] = model_provider()
+    RUN_AUDIT["models"].append(model)
+    if model_provider() == "openrouter":
+        RUN_AUDIT["openrouter_calls"] += 1
+
+
+def audit_source_status(name: str, status: str, detail: str = "") -> None:
+    RUN_AUDIT["source_status"].append({"name": name, "status": status, "detail": detail[:220]})
+    if status != "ok":
+        RUN_AUDIT["source_errors"].append(f"{name}: {detail}")
+
+
 def collect_hn_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     encoded = urllib.parse.quote(query)
     url = f"https://hn.algolia.com/api/v1/search_by_date?query={encoded}&tags=story&hitsPerPage={limit}"
@@ -447,10 +470,13 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
             break
         try:
             collector()
+            audit_source_status(name, "ok", "")
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError) as exc:
             errors.append(f"{name}: {exc}")
+            audit_source_status(name, "error", str(exc))
 
     limited = items[:budget]
+    RUN_AUDIT["public_source_items"] = len(limited)
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
@@ -492,6 +518,7 @@ def call_openai(prompt: str) -> dict[str, Any]:
         raise SystemExit("OPENAI_API_KEY is not set. Add it as a GitHub Actions secret.")
 
     model = os.environ.get("OPENAI_MODEL", DEFAULT_OPENAI_MODEL)
+    audit_model(model)
     payload = {
         "model": model,
         "input": prompt,
@@ -522,6 +549,7 @@ def call_github_models(prompt: str) -> dict[str, Any]:
         raise SystemExit("GITHUB_TOKEN is not set. GitHub Actions should provide it automatically.")
 
     model = os.environ.get("GITHUB_MODEL", DEFAULT_GITHUB_MODEL)
+    audit_model(model)
     payload = {
         "model": model,
         "messages": [
@@ -590,6 +618,9 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
     last_error = ""
     for candidate_model in openrouter_fallback_models(model):
         payload["model"] = candidate_model
+        audit_model(candidate_model)
+        if candidate_model != model:
+            RUN_AUDIT["fallbacks"].append(f"{model}->{candidate_model}")
         request = urllib.request.Request(
             OPENROUTER_URL,
             data=json.dumps(payload).encode("utf-8"),
@@ -662,6 +693,7 @@ def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, An
     max_calls = env_int("MAX_OPENROUTER_CALLS_PER_TASK", {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2))
     if max_calls <= 0:
         if os.environ.get("DRY_RUN_ON_BUDGET_EXCEEDED", "true").lower() in {"1", "true", "yes"}:
+            RUN_AUDIT["budget_status"] = "dry-run-budget-zero"
             return {
                 "choices": [
                     {
@@ -718,6 +750,8 @@ Source-sweep quality gate:
 - Put new candidates in research-log.md under a "Candidate inbox" or "Deferred candidates" section.
 - Keep the candidate inbox broad but ranked. Prefer 5-12 candidates per sweep unless there are genuinely more high-signal items.
 - For each candidate, include why it matters, evidence strength, relevance score, defer/reject reason, and follow-up needed.
+- For each candidate, include candidate_seen_at, last_checked_at, promotion_status, defer_count, and stale_after_days.
+- Deduplicate against existing candidates and promoted watchlist entries.
 - Avoid full template entries for weak candidates; one compact bullet is enough.
 - Do not promote a candidate during source-sweep. Later daily/weekly/monthly runs may promote it automatically if the evidence threshold is met.
 """
@@ -733,6 +767,8 @@ Candidate promotion gate:
 - Do not promote low-evidence items just to fill a template.
 - For each promoted candidate, update research-log.md with promotion_status=promoted and the reason.
 - For deferred candidates, leave a compact follow-up note; do not delete them.
+- Increment defer_count for candidates checked but not promoted.
+- Move candidates with defer_count >= 3 or stale_after_days exceeded into an archived/deprioritized subsection unless a new source refreshes them.
 """
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
     context = truncate_text(context, max_prompt)
@@ -802,7 +838,60 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
     return count
 
 
+def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: str, sources: list[Any]) -> None:
+    path = root / "automation" / "runs" / f"{month_label(day)}.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    models = ", ".join(dict.fromkeys(str(model) for model in RUN_AUDIT["models"])) or "none"
+    fallbacks = ", ".join(RUN_AUDIT["fallbacks"]) or "none"
+    source_errors = RUN_AUDIT["source_errors"]
+    entry = [
+        f"## {day.isoformat()} - {task}",
+        "",
+        f"- Provider: {RUN_AUDIT.get('provider') or model_provider()}",
+        f"- Models used: {models}",
+        f"- OpenRouter calls attempted: {RUN_AUDIT['openrouter_calls']}",
+        f"- Public source items: {RUN_AUDIT['public_source_items']}",
+        f"- Files changed: {changed}",
+        f"- Budget status: {RUN_AUDIT['budget_status']}",
+        f"- Fallbacks: {fallbacks}",
+        f"- Summary: {summary or 'none'}",
+        f"- Source count reported by model: {len(sources)}",
+    ]
+    if source_errors:
+        entry.append("- Source errors:")
+        entry.extend(f"  - {error}" for error in source_errors[:10])
+    entry.append("")
+    previous = path.read_text(encoding="utf-8") if path.exists() else f"# Cloud Agent Runs - {month_label(day)}\n\n"
+    path.write_text(previous + "\n".join(entry) + "\n", encoding="utf-8")
+
+
+def update_source_health(root: Path, day: dt.date) -> None:
+    if not RUN_AUDIT["source_status"]:
+        return
+    path = root / "automation" / "source-health.md"
+    lines = [
+        "# Source Health",
+        "",
+        f"Last checked: {day.isoformat()}",
+        "",
+        "| Source | Status | Detail |",
+        "| --- | --- | --- |",
+    ]
+    for item in RUN_AUDIT["source_status"][-80:]:
+        detail = str(item.get("detail", "")).replace("|", "/")
+        lines.append(f"| {item.get('name', '')} | {item.get('status', '')} | {detail} |")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def run_task(root: Path, task: str, day: dt.date) -> None:
+    RUN_AUDIT["provider"] = model_provider()
+    RUN_AUDIT["models"] = []
+    RUN_AUDIT["openrouter_calls"] = 0
+    RUN_AUDIT["fallbacks"] = []
+    RUN_AUDIT["public_source_items"] = 0
+    RUN_AUDIT["source_errors"] = []
+    RUN_AUDIT["source_status"] = []
+    RUN_AUDIT["budget_status"] = "normal"
     config = TASK_CONFIG[task]
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
@@ -817,9 +906,13 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
         raise SystemExit(f"Model did not return valid JSON: {output_text[:1000]}") from exc
 
     changed = apply_updates(root, allowed, result)
+    sources = result.get("sources", [])
+    if not isinstance(sources, list):
+        sources = []
+    append_run_log(root, task, day, changed, str(result.get("summary", "")), sources)
+    update_source_health(root, day)
     print(f"Task {task}: {changed} file(s) changed.")
     print(f"Summary: {result.get('summary', '')}")
-    sources = result.get("sources", [])
     if sources:
         print("Sources:")
         for source in sources[:20]:

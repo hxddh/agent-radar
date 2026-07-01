@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-- No unreleased changes yet.
+Added:
+- Cloud-agent run audit logs in `automation/runs/YYYY-MM.md`.
+- Source health snapshot in `automation/source-health.md`.
+- Candidate aging and defer-count instructions for source-sweep and promotion tasks.
+- `release-draft` CLI command for release note drafting.
+- Release checklist documentation.
 
 ## v0.2.0 - 2026-07-02
 

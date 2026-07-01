@@ -40,6 +40,7 @@ agent-radar/
     maintenance.md
     cloud-agent.md
     subscription-mode.md
+    release-checklist.md
     release-v0.1.0.md
     release-v0.2.0.md
   automation/
@@ -49,6 +50,9 @@ agent-radar/
     monthly.md
     source-sweep.md
     promote-candidates.md
+    source-health.md
+    runs/
+      .gitkeep
   daily/
     .gitkeep
   weekly/
@@ -131,6 +135,7 @@ python scripts/agent_radar.py monthly --date 2026-07-02
 python scripts/agent_radar.py status
 python scripts/agent_radar.py validate
 python scripts/agent_radar.py brief
+python scripts/agent_radar.py release-draft
 python scripts/agent_radar.py --version
 ```
 
@@ -160,9 +165,12 @@ python -m unittest discover -s tests
 - `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
 - `docs/cloud-agent.md`: GitHub Actions based 24/7 cloud agent setup.
 - `docs/subscription-mode.md`: explains what works without an API key and what does not.
+- `docs/release-checklist.md`: release discipline for changelog, tags, and GitHub Releases.
 - `docs/release-v0.1.0.md`: release notes for the first public version.
 - `docs/release-v0.2.0.md`: release notes for the cloud-agent automation version.
 - `automation/`: Cloud Agent task cards for daily, weekly, monthly, and source-sweep runs.
+- `automation/runs/`: monthly cloud-agent run summaries and budget/source audit trail.
+- `automation/source-health.md`: latest free-source health snapshot.
 - `CHANGELOG.md`: human-readable version history.
 - `daily/YYYY-MM.md`: daily signal capture.
 - `weekly/YYYY-Www.md`: weekly synthesis.

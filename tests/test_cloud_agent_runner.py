@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -113,6 +114,23 @@ class CloudAgentRunnerTest(unittest.TestCase):
             data = cloud_agent_runner.call_openrouter("daily", "prompt", "sources")
         text = cloud_agent_runner.response_output_text(data)
         self.assertIn("OpenRouter call budget is zero", text)
+
+    def test_run_log_and_source_health_are_written_by_runner(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cloud_agent_runner.RUN_AUDIT["provider"] = "openrouter"
+            cloud_agent_runner.RUN_AUDIT["models"] = ["deepseek/deepseek-v4-pro"]
+            cloud_agent_runner.RUN_AUDIT["openrouter_calls"] = 1
+            cloud_agent_runner.RUN_AUDIT["public_source_items"] = 3
+            cloud_agent_runner.RUN_AUDIT["source_errors"] = ["feed:test: 404"]
+            cloud_agent_runner.RUN_AUDIT["source_status"] = [{"name": "feed:test", "status": "error", "detail": "404"}]
+            cloud_agent_runner.RUN_AUDIT["budget_status"] = "normal"
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            cloud_agent_runner.append_run_log(root, "source-sweep", day, 2, "summary", ["source"])
+            cloud_agent_runner.update_source_health(root, day)
+
+            self.assertIn("OpenRouter calls attempted: 1", (root / "automation" / "runs" / "2026-07.md").read_text())
+            self.assertIn("feed:test", (root / "automation" / "source-health.md").read_text())
 
 
 if __name__ == "__main__":
