@@ -31,16 +31,23 @@ Always update:
 - `sources.md`
 - `research-log.md`
 
-Update when justified:
+Do not update during source sweep:
 
 - `agent-watchlist.md`
 - `storage-angle.md`
 - `radar.md`
+- daily, weekly, or monthly notes
+
+Those files are promotion targets for daily, weekly, and monthly runs after the evidence threshold is met.
 
 ## Output Rules
 
 - Add useful source classes and source examples.
 - Record rejected/deprioritized source categories.
+- Do not discard weak or early signals. Put them in `research-log.md` as a compact candidate inbox, not as promoted watchlist entries.
+- Keep the candidate inbox broad but ranked. Prefer 5-12 candidates per sweep unless there are genuinely more high-signal items.
+- Include evidence strength, relevance score, why it matters, defer/reject reason, and follow-up needed for each candidate.
+- Avoid full template entries for weak candidates; one compact bullet is enough.
 - Do not dump low-quality links into `sources.md`.
 - Do not remove source categories just because this pass did not use them.
 
@@ -51,4 +58,3 @@ Commit as:
 ```text
 Refresh agent radar sources
 ```
-

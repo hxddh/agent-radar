@@ -86,9 +86,6 @@ TASK_CONFIG = {
         "allowed": [
             "sources.md",
             "research-log.md",
-            "agent-watchlist.md",
-            "storage-angle.md",
-            "radar.md",
         ],
     },
 }
@@ -532,6 +529,19 @@ def call_model(prompt: str, task: str, public_sources: str) -> dict[str, Any]:
 
 def build_prompt(task: str, day: dt.date, allowed: list[str], context: str, public_sources: str) -> str:
     allowed_text = "\n".join(f"- {path}" for path in allowed)
+    task_rules = ""
+    if task == "source-sweep":
+        task_rules = """
+Source-sweep quality gate:
+- Treat this task as discovery, not promotion.
+- Do not update agent-watchlist.md, radar.md, storage-angle.md, daily notes, weekly notes, or monthly notes.
+- Do not discard weak or early signals. Capture them compactly in research-log.md.
+- Put new candidates in research-log.md under a "Candidate inbox" or "Deferred candidates" section.
+- Keep the candidate inbox broad but ranked. Prefer 5-12 candidates per sweep unless there are genuinely more high-signal items.
+- For each candidate, include why it matters, evidence strength, relevance score, defer/reject reason, and follow-up needed.
+- Avoid full template entries for weak candidates; one compact bullet is enough.
+- Do not promote a candidate during source-sweep. Later daily/weekly/monthly runs may promote it automatically if the evidence threshold is met.
+"""
     return f"""You are the autonomous cloud agent for Agent Radar.
 
 Task: {task}
@@ -560,6 +570,7 @@ Rules:
 - Do not invent factual claims. Use source links, source classes, or source status labels.
 - Preserve existing useful content. Append or synthesize rather than deleting history.
 - If no useful update is found, update research-log.md with the search pass and return that file only.
+{task_rules}
 
 Public source snapshot:
 {public_sources}

@@ -53,6 +53,21 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("do not use paid search tools", prompt)
         self.assertIn("Public source snapshot:", prompt)
 
+    def test_source_sweep_is_discovery_only(self) -> None:
+        allowed = cloud_agent_runner.TASK_CONFIG["source-sweep"]["allowed"]
+        self.assertEqual(allowed, ["sources.md", "research-log.md"])
+
+        prompt = cloud_agent_runner.build_prompt(
+            "source-sweep",
+            cloud_agent_runner.parse_date("2026-07-02"),
+            ["sources.md", "research-log.md"],
+            "repo context",
+            "public source snapshot",
+        )
+        self.assertIn("Treat this task as discovery, not promotion.", prompt)
+        self.assertIn("Do not update agent-watchlist.md", prompt)
+        self.assertIn("daily/weekly/monthly runs may promote it automatically", prompt)
+
 
 if __name__ == "__main__":
     unittest.main()

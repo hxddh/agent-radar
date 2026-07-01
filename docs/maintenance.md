@@ -73,7 +73,7 @@ Update `weekly/YYYY-Www.md` when:
 Update `agent-watchlist.md` when:
 - A tracked agent ships a meaningful capability.
 - A tracked agent shows a real weakness or anti-signal.
-- A new candidate appears in credible evidence.
+- A new candidate passes the promotion threshold below.
 
 Update `user-field-notes.md` when:
 - The source describes a real workflow, complaint, adoption pattern, setup trick, or failure mode.
@@ -93,6 +93,28 @@ Update `radar.md` when:
 Update `research-log.md` when:
 - A research pass uses multiple sources.
 - A source is accepted, rejected, or deferred for a reason future maintainers should know.
+
+## Automatic Promotion Threshold
+
+Source-sweep runs discover candidates broadly; they do not promote candidates into `agent-watchlist.md`, `radar.md`, or `storage-angle.md`.
+
+Do not block weak or early signals. Capture them compactly in `research-log.md` so the radar keeps breadth without polluting high-judgment files.
+
+Daily, weekly, and monthly runs may promote a candidate automatically only when at least one of these is true:
+
+- The candidate has strong first-party evidence and a direct agent-runtime, MCP/tool-use, memory, sandbox, eval, deployment, security, governance, or storage implication.
+- The candidate has multiple independent public sources with concrete workflow evidence.
+- The candidate changes an existing thesis or creates a durable open question that is broader than a single project.
+- The candidate is early but unusually relevant: a direct MCP/tool-use, memory, sandbox, eval, security, deployment, or storage primitive with a clear agent workflow, even if adoption evidence is still weak.
+
+Do not promote candidates when:
+
+- The only evidence is a zero-star or low-engagement launch.
+- The relation to agents is inferred from a generic infrastructure project.
+- The item is merely a benchmark, adoption post, or incident report with no agent workflow implication.
+- The output would mostly repeat a template with `Source required` fields.
+
+When the threshold is not met, keep the item in `research-log.md` under candidate inbox or deferred candidates with follow-up gaps. Use compact bullets instead of full watchlist templates.
 
 ## Public-Safe Handling
 

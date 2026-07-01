@@ -22,9 +22,3 @@ Last updated: 2026-07-02
 - Will MCP become the default tool integration layer?
 - Will long-running agents be priced by seat, token, task, or compute time?
 - Which agent categories will expand beyond coding first?
-- Will agent operating systems (elizaOS) and agent harnesses (go-micro) converge or diverge?
-- Will cross-runtime memory (World Model MCP) become a standard layer or remain experimental?
-- Will MCP server proliferation lead to standardization or fragmentation?
-- Will enterprise architecture tools (enterprise-architect-mcp) create a new category of agent-accessible enterprise models?
-- Will agent skills security (awesome-agent-skills-security) become a critical governance requirement?
-- Will ops agents (ai-ops-agent) shift from markdown vaults to structured object storage?

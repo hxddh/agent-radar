@@ -61,27 +61,58 @@ Follow-up gaps:
 Purpose:
 - Broaden source coverage using public source snapshot and screening pass to identify new agent signals, tools, and infrastructure.
 
-Accepted sources:
-- elizaOS/eliza: https://github.com/elizaOS/eliza (agent operating system, 18,665 stars)
-- micro/go-micro: https://github.com/micro/go-micro (agent harness and service framework, 22,907 stars)
-- World Model MCP: https://github.com/SaravananJaichandar/world-model-mcp (cross-runtime memory across 7 coding agents)
-- idesense: https://github.com/vcth4nh/idesense (MCP server for JetBrains IDEs)
-- ai-ops-agent: https://github.com/mirasolutions06/ai-ops-agent (plug-and-play ops agent with 24 FastMCP tools)
-- agentx-kit: https://github.com/muhammadyahiya/agentx-kit (provider-agnostic agentic framework)
-- AnalystAIPack: https://meltedinhex.com/posts/analyst-ai-pack/ and https://github.com/meltedinhex/analyst-ai-pack (118 runnable agent skills for malware analysis)
-- awesome-agent-skills-security: https://github.com/LLMSecurity/awesome-agent-skills-security (curated list on agent skills security)
-- enterprise-architect-mcp: https://github.com/DITEC-Mracka/enterprise-architect-mcp (MCP server for Sparx Enterprise Architect)
-- cloudscape-docs-mcp: https://github.com/prem676/cloudscape-docs-mcp (MCP server for AWS Cloudscape docs)
-- Ox: https://news.ycombinator.com/item?id=48746066 (AI agent that catches tech debt before commit)
-- CoderScreen: https://github.com/CoderScreen/coderscreen (open-source interview platform)
-- Strata: https://strata.space/show (real-time Markdown editor mountable as filesystem)
-- OpenAI adoption expansion: https://openai.com/index/how-chatgpt-adoption-has-expanded
-- GeneBench Pro: https://openai.com/index/genebench-pro/case-studies and https://openai.com/index/introducing-genebench-pro
-- OpenAI Core Dump: https://openai.com/index/core-dump-epidemiology-data-infrastructure-bug
-- Show HN: Open-source sandbox for product team: https://news.ycombinator.com/item?id=48750459 (10 points, 8 comments)
-- 3 dangers of being locked into a harness: https://news.ycombinator.com/item?id=48745664 (1 point, 0 comments)
+Candidate inbox, not promoted:
+- World Model MCP: https://github.com/SaravananJaichandar/world-model-mcp
+  - Why it matters: Direct cross-runtime agent memory signal.
+  - Evidence strength: Weak; very early repo.
+  - Relevance: High.
+  - Promotion status: Deferred until there is adoption, integration, or real workflow evidence.
+- idesense: https://github.com/vcth4nh/idesense
+  - Why it matters: MCP access to JetBrains IDE indexes and refactoring tools.
+  - Evidence strength: Weak; early repo.
+  - Relevance: High.
+  - Promotion status: Deferred until there is usage evidence or a richer technical release.
+- ai-ops-agent: https://github.com/mirasolutions06/ai-ops-agent
+  - Why it matters: Ops agent using markdown vault, semantic search, scheduled workflows, and FastMCP tools.
+  - Evidence strength: Weak; early repo.
+  - Relevance: Medium-high.
+  - Promotion status: Deferred until workflow evidence appears.
+- AnalystAIPack: https://meltedinhex.com/posts/analyst-ai-pack/ and https://github.com/meltedinhex/analyst-ai-pack
+  - Why it matters: Domain-specific agent skills for malware analysis and reverse engineering.
+  - Evidence strength: Medium for existence; weak for adoption.
+  - Relevance: Medium-high for agent skills/security.
+  - Promotion status: Deferred; may become security/playbook signal if field use appears.
+- awesome-agent-skills-security: https://github.com/LLMSecurity/awesome-agent-skills-security
+  - Why it matters: Curated agent skills security resources.
+  - Evidence strength: Weak.
+  - Relevance: Medium-high for governance.
+  - Promotion status: Deferred; track for standard references or incident evidence.
+- enterprise-architect-mcp: https://github.com/DITEC-Mracka/enterprise-architect-mcp
+  - Why it matters: MCP bridge into enterprise architecture model files.
+  - Evidence strength: Weak.
+  - Relevance: Medium for enterprise tool access.
+  - Promotion status: Deferred until enterprise workflow evidence appears.
+- cloudscape-docs-mcp: https://github.com/prem676/cloudscape-docs-mcp
+  - Why it matters: Design-system documentation exposed through MCP.
+  - Evidence strength: Weak.
+  - Relevance: Medium; useful as a pattern, not a watchlist item yet.
+  - Promotion status: Deferred.
+- elizaOS/eliza: https://github.com/elizaOS/eliza
+  - Why it matters: Agent operating-system framing and large open-source community.
+  - Evidence strength: Medium for community attention; production reliability still unproven.
+  - Relevance: Medium.
+  - Promotion status: Deferred until current adoption or infra signals are more specific.
+- Strata: https://strata.space/show
+  - Why it matters: Filesystem-mounted collaborative Markdown may be relevant to agent-accessible documents.
+  - Evidence strength: Weak HN signal.
+  - Relevance: Medium-low.
+  - Promotion status: Deferred; track only if agent workflow evidence appears.
 
 Rejected or deprioritized:
+- micro/go-micro: mature microservices framework, but agent-specific relation was too inferential for watchlist promotion.
+- agentx-kit: agent scaffolding claim was too early and low-evidence for promotion.
+- Ox, CoderScreen, and low-engagement Show HN items: potentially interesting but too little evidence for high-judgment files.
+- OpenAI adoption expansion, GeneBench Pro, and OpenAI Core Dump: valid sources, but not direct enough for this source-sweep's agent radar promotion path.
 - Show HN items with very low engagement (1-2 points, 0 comments) that lacked concrete workflow or infrastructure detail.
 - Items that were pure launch announcements without technical depth or user evidence.
 - Anthropic news feed (HTTP 404) - could not access; recorded as collection error.
@@ -89,9 +120,9 @@ Rejected or deprioritized:
 Follow-up gaps:
 - No direct signals on agent storage or dedicated deployment platforms from this sweep.
 - No recent signals from Anthropic news feed (HTTP 404 error prevented access).
-- Need more real-world user evidence for all emerging candidates (elizaOS, go-micro, World Model MCP, idesense, ai-ops-agent, agentx-kit, AnalystAIPack, etc.).
+- Need more real-world user evidence for emerging candidates before promotion.
 - Track whether MCP server proliferation leads to standardization or fragmentation.
-- Monitor whether agent operating systems (elizaOS) and agent harnesses (go-micro) converge or diverge.
+- Monitor whether agent operating-system framing becomes concrete product infrastructure or remains community branding.
 - Watch for storage and persistence patterns in agent memory (World Model MCP) and ops agents (ai-ops-agent).
 - Investigate whether enterprise architecture tools (enterprise-architect-mcp) signal a new category of agent-accessible enterprise models.
 - Look for pricing, governance, and compliance signals across all emerging agent tools.
