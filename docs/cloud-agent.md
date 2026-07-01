@@ -41,20 +41,26 @@ MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
 FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
 MAX_PUBLIC_SOURCE_ITEMS=24
 PUBLIC_SOURCE_COLLECTION=true
+MAX_OPENROUTER_CALLS_PER_TASK=
+MAX_PROMPT_CHARS=120000
+DRY_RUN_ON_BUDGET_EXCEEDED=true
+OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
 ```
 
 This mode does not call OpenRouter web search, Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
 
 - Hacker News Algolia API
 - GitHub REST API with `GITHUB_TOKEN`
-- Public RSS feeds for official blogs and release notes
+- Public RSS feeds for official blogs, changelogs, and arXiv categories
 
 Model routing stays intentionally small:
 
-- `daily` and `source-sweep`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes the final file updates.
+- `daily`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes the final file updates.
+- `source-sweep`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes only `research-log.md` and `sources.md`.
+- `promote-candidates`: DeepSeek V4 Pro automatically promotes at most 3 high-quality candidates from `research-log.md`.
 - `weekly` and `monthly`: GLM 5.2 performs final synthesis.
 
-This keeps paid search calls at zero. Model usage is bounded by the fixed task route and by `MAX_PUBLIC_SOURCE_ITEMS`.
+This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
 ## Optional: OpenAI API Provider
 
@@ -73,7 +79,7 @@ The workflow runs daily at `00:30 UTC`.
 In automatic mode:
 
 - Daily runs every day.
-- Weekly synthesis runs on Sundays.
+- Weekly synthesis and candidate promotion run on Sundays.
 - Monthly review runs on the last day of the month.
 - Source sweep runs every other Monday.
 
@@ -84,6 +90,7 @@ You can also run it manually from GitHub Actions with:
 - `task=weekly`
 - `task=monthly`
 - `task=source-sweep`
+- `task=promote-candidates`
 
 ## Safety
 

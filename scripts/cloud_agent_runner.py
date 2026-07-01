@@ -33,6 +33,7 @@ DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
 MAX_PUBLIC_SOURCE_ITEMS = 40
+DEFAULT_MAX_PROMPT_CHARS = 120_000
 
 
 TASK_CONFIG = {
@@ -88,6 +89,17 @@ TASK_CONFIG = {
             "research-log.md",
         ],
     },
+    "promote-candidates": {
+        "automation": "automation/promote-candidates.md",
+        "prompt": "prompts/agent-watchlist-update.md",
+        "ensure": None,
+        "allowed": [
+            "agent-watchlist.md",
+            "storage-angle.md",
+            "radar.md",
+            "research-log.md",
+        ],
+    },
 }
 
 
@@ -121,7 +133,7 @@ def run_cli(root: Path, command: str, day: dt.date) -> None:
 def auto_tasks(day: dt.date) -> list[str]:
     tasks = ["daily"]
     if day.weekday() == 6:
-        tasks.append("weekly")
+        tasks.extend(["weekly", "promote-candidates"])
     if (day + dt.timedelta(days=1)).month != day.month:
         tasks.append("monthly")
     if day.weekday() == 0 and day.toordinal() % 14 == 0:
@@ -150,6 +162,14 @@ def env_int(name: str, default: int) -> int:
         return default
 
 
+def split_env_list(name: str, default: list[str]) -> list[str]:
+    value = os.environ.get(name, "")
+    if not value:
+        return default
+    items = [item.strip() for item in value.split(",") if item.strip()]
+    return items or default
+
+
 def read_text(path: Path) -> str:
     if not path.exists():
         return ""
@@ -158,6 +178,12 @@ def read_text(path: Path) -> str:
     if len(content) > limit:
         return content[-limit:]
     return content
+
+
+def truncate_text(value: str, limit: int) -> str:
+    if len(value) <= limit:
+        return value
+    return value[-limit:]
 
 
 def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
@@ -307,10 +333,14 @@ def collect_public_sources(task: str) -> str:
     collectors = [
         ("hn:ai-agent", lambda: collect_hn_items("AI agent", per_query, items, seen)),
         ("hn:mcp", lambda: collect_hn_items("MCP agent", per_query, items, seen)),
+        ("hn:agent-memory", lambda: collect_hn_items("agent memory", per_query, items, seen)),
         ("github:agent-framework", lambda: collect_github_items("AI agent framework", per_query, items, seen)),
         ("github:mcp", lambda: collect_github_items("MCP server agent", per_query, items, seen)),
+        ("github:agent-memory", lambda: collect_github_items("agent memory MCP", per_query, items, seen)),
         ("openai-blog", lambda: collect_feed_items("https://openai.com/news/rss.xml", "openai-blog", per_query, items, seen)),
         ("anthropic-news", lambda: collect_feed_items("https://www.anthropic.com/news/rss.xml", "anthropic-news", per_query, items, seen)),
+        ("github-blog", lambda: collect_feed_items("https://github.blog/changelog/feed/", "github-changelog", per_query, items, seen)),
+        ("arxiv-agents", lambda: collect_feed_items("https://export.arxiv.org/rss/cs.AI", "arxiv-cs-ai", per_query, items, seen)),
     ]
 
     for name, collector in collectors:
@@ -436,6 +466,15 @@ def openrouter_headers() -> dict[str, str]:
     }
 
 
+def openrouter_fallback_models(model: str) -> list[str]:
+    fallback = split_env_list("OPENROUTER_FALLBACK_MODELS", [DEFAULT_MAIN_RESEARCH_MODEL, DEFAULT_FINAL_SYNTHESIS_MODEL])
+    models = [model]
+    for item in fallback:
+        if item not in models:
+            models.append(item)
+    return models
+
+
 def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
     payload = {
         "model": model,
@@ -449,18 +488,26 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
         "temperature": 0.2,
         "response_format": {"type": "json_object"},
     }
-    request = urllib.request.Request(
-        OPENROUTER_URL,
-        data=json.dumps(payload).encode("utf-8"),
-        headers=openrouter_headers(),
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=900) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
-        raise SystemExit(f"OpenRouter API error {exc.code}: {body}") from exc
+    last_error = ""
+    for candidate_model in openrouter_fallback_models(model):
+        payload["model"] = candidate_model
+        request = urllib.request.Request(
+            OPENROUTER_URL,
+            data=json.dumps(payload).encode("utf-8"),
+            headers=openrouter_headers(),
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=900) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", errors="replace")
+            last_error = f"OpenRouter API error for {candidate_model} ({exc.code}): {body}"
+            if exc.code not in {400, 404, 408, 409, 429, 500, 502, 503, 504}:
+                break
+        except urllib.error.URLError as exc:
+            last_error = f"OpenRouter transport error for {candidate_model}: {exc}"
+    raise SystemExit(last_error or "OpenRouter API error.")
 
 
 def openrouter_models_for_task(task: str) -> list[str]:
@@ -469,6 +516,8 @@ def openrouter_models_for_task(task: str) -> list[str]:
     final = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
     if task in {"weekly", "monthly"}:
         return [final]
+    if task == "promote-candidates":
+        return [main]
     if task == "source-sweep":
         return [cheap, main]
     return [cheap, main]
@@ -485,7 +534,17 @@ Return only valid JSON with this shape:
 {{
   "summary": "short screening summary",
   "candidates": [
-    {{"title": "signal", "why_it_matters": "reason", "evidence": ["url or source label"], "confidence": "high|medium|low"}}
+    {{
+      "title": "signal",
+      "why_it_matters": "reason",
+      "evidence": ["url or source label"],
+      "confidence": "high|medium|low",
+      "relevance_score": 1,
+      "source_diversity": 1,
+      "infra_angle": "runtime|mcp|memory|sandbox|eval|security|storage|deployment|none",
+      "promotion_status": "candidate|defer|reject",
+      "next_check": "what to check next"
+    }}
   ],
   "gaps": ["missing source or follow-up"]
 }}
@@ -501,6 +560,27 @@ Rules:
 
 def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, Any]:
     models = openrouter_models_for_task(task)
+    max_calls = env_int("MAX_OPENROUTER_CALLS_PER_TASK", {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2))
+    if max_calls <= 0:
+        if os.environ.get("DRY_RUN_ON_BUDGET_EXCEEDED", "true").lower() in {"1", "true", "yes"}:
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {
+                                    "summary": "OpenRouter call budget is zero; recorded no paid model update.",
+                                    "sources": ["budget-limit"],
+                                    "files": [],
+                                }
+                            )
+                        }
+                    }
+                ]
+            }
+        raise SystemExit("MAX_OPENROUTER_CALLS_PER_TASK is zero.")
+    if len(models) > max_calls:
+        models = models[-max_calls:]
     if len(models) == 1:
         return call_openrouter_model(prompt, models[0])
 
@@ -542,6 +622,22 @@ Source-sweep quality gate:
 - Avoid full template entries for weak candidates; one compact bullet is enough.
 - Do not promote a candidate during source-sweep. Later daily/weekly/monthly runs may promote it automatically if the evidence threshold is met.
 """
+    if task == "promote-candidates":
+        task_rules = """
+Candidate promotion gate:
+- Promote automatically; do not ask for human confirmation.
+- Read candidate inbox/deferred candidates from research-log.md.
+- Promote at most 3 candidates per run.
+- Promote only candidates with relevance_score >= 4 or a clear direct agent infrastructure implication.
+- A promotion must add non-template substance to agent-watchlist.md, storage-angle.md, or radar.md.
+- Do not promote generic infrastructure projects whose agent relation is mostly inferred.
+- Do not promote low-evidence items just to fill a template.
+- For each promoted candidate, update research-log.md with promotion_status=promoted and the reason.
+- For deferred candidates, leave a compact follow-up note; do not delete them.
+"""
+    max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
+    context = truncate_text(context, max_prompt)
+    public_sources = truncate_text(public_sources, max_prompt // 3)
     return f"""You are the autonomous cloud agent for Agent Radar.
 
 Task: {task}

@@ -16,6 +16,7 @@ on:
           - weekly
           - monthly
           - source-sweep
+          - promote-candidates
       date:
         description: "Optional date, YYYY-MM-DD"
         required: false
@@ -44,6 +45,10 @@ jobs:
       FINAL_SYNTHESIS_MODEL: ${{ vars.FINAL_SYNTHESIS_MODEL || 'z-ai/glm-5.2' }}
       MAX_PUBLIC_SOURCE_ITEMS: ${{ vars.MAX_PUBLIC_SOURCE_ITEMS || '' }}
       PUBLIC_SOURCE_COLLECTION: ${{ vars.PUBLIC_SOURCE_COLLECTION || 'true' }}
+      MAX_OPENROUTER_CALLS_PER_TASK: ${{ vars.MAX_OPENROUTER_CALLS_PER_TASK || '' }}
+      MAX_PROMPT_CHARS: ${{ vars.MAX_PROMPT_CHARS || '' }}
+      DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
+      OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
 
     steps:
       - name: Check out repository
@@ -63,6 +68,8 @@ jobs:
           echo "Cheap screen model: $CHEAP_SCREEN_MODEL"
           echo "Main research model: $MAIN_RESEARCH_MODEL"
           echo "Final synthesis model: $FINAL_SYNTHESIS_MODEL"
+          echo "Max public source items: $MAX_PUBLIC_SOURCE_ITEMS"
+          echo "Max OpenRouter calls per task: $MAX_OPENROUTER_CALLS_PER_TASK"
 
       - name: Run cloud agent
         run: |

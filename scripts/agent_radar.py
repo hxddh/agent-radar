@@ -33,6 +33,7 @@ CORE_FILES = [
     "automation/weekly.md",
     "automation/monthly.md",
     "automation/source-sweep.md",
+    "automation/promote-candidates.md",
     "prompts/daily-update.md",
     "prompts/weekly-review.md",
     "prompts/agent-watchlist-update.md",
@@ -103,6 +104,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "automation/weekly.md": AUTOMATION_WEEKLY_TEMPLATE,
         "automation/monthly.md": AUTOMATION_MONTHLY_TEMPLATE,
         "automation/source-sweep.md": AUTOMATION_SOURCE_SWEEP_TEMPLATE,
+        "automation/promote-candidates.md": AUTOMATION_PROMOTE_CANDIDATES_TEMPLATE,
         "prompts/daily-update.md": DAILY_PROMPT_TEMPLATE,
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
         "prompts/agent-watchlist-update.md": WATCHLIST_PROMPT_TEMPLATE,
@@ -719,6 +721,11 @@ Use prompts/monthly-review.md, review the month, validate, commit, and push.
 AUTOMATION_SOURCE_SWEEP_TEMPLATE = """# Source Sweep Cloud Agent Task
 
 Refresh source coverage, update sources.md and research-log.md, validate, commit, and push.
+"""
+
+AUTOMATION_PROMOTE_CANDIDATES_TEMPLATE = """# Promote Candidates Cloud Agent Task
+
+Automatically promote high-quality candidate signals from research-log.md into formal radar files when evidence thresholds are met.
 """
 
 DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update

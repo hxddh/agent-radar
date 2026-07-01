@@ -37,6 +37,15 @@ class CloudAgentRunnerTest(unittest.TestCase):
                 cloud_agent_runner.openrouter_models_for_task("monthly"),
                 ["z-ai/glm-5.2"],
             )
+            self.assertEqual(
+                cloud_agent_runner.openrouter_models_for_task("promote-candidates"),
+                ["deepseek/deepseek-v4-pro"],
+            )
+
+    def test_auto_tasks_include_candidate_promotion_on_sunday(self) -> None:
+        tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-05"))
+        self.assertIn("weekly", tasks)
+        self.assertIn("promote-candidates", tasks)
 
     def test_public_source_collection_can_be_disabled(self) -> None:
         with mock.patch.dict(os.environ, {"PUBLIC_SOURCE_COLLECTION": "false"}, clear=True):
@@ -67,6 +76,27 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("Treat this task as discovery, not promotion.", prompt)
         self.assertIn("Do not update agent-watchlist.md", prompt)
         self.assertIn("daily/weekly/monthly runs may promote it automatically", prompt)
+
+    def test_promote_candidates_gate_is_automatic_and_bounded(self) -> None:
+        allowed = cloud_agent_runner.TASK_CONFIG["promote-candidates"]["allowed"]
+        self.assertIn("agent-watchlist.md", allowed)
+        self.assertIn("research-log.md", allowed)
+
+        prompt = cloud_agent_runner.build_prompt(
+            "promote-candidates",
+            cloud_agent_runner.parse_date("2026-07-05"),
+            allowed,
+            "repo context",
+            "",
+        )
+        self.assertIn("Promote automatically; do not ask for human confirmation.", prompt)
+        self.assertIn("Promote at most 3 candidates per run.", prompt)
+
+    def test_zero_openrouter_budget_dry_runs(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_OPENROUTER_CALLS_PER_TASK": "0"}, clear=True):
+            data = cloud_agent_runner.call_openrouter("daily", "prompt", "sources")
+        text = cloud_agent_runner.response_output_text(data)
+        self.assertIn("OpenRouter call budget is zero", text)
 
 
 if __name__ == "__main__":

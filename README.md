@@ -47,6 +47,7 @@ agent-radar/
     weekly.md
     monthly.md
     source-sweep.md
+    promote-candidates.md
   daily/
     .gitkeep
   weekly/
@@ -92,7 +93,7 @@ Daily lightweight questions:
 
 Weekly notes are synthesis-oriented. They should explain what actually changed, what remains uncertain, and which signals deserve attention next week.
 
-For fully Cloud Agent-driven operation, use `automation/weekly.md`. For monthly review, use `automation/monthly.md`. For source coverage refreshes, use `automation/source-sweep.md`.
+For fully Cloud Agent-driven operation, use `automation/weekly.md`. For monthly review, use `automation/monthly.md`. For source coverage refreshes, use `automation/source-sweep.md`. Candidate promotion is handled automatically by `automation/promote-candidates.md`.
 
 Weekly synthesis dimensions:
 
