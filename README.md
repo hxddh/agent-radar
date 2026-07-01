@@ -26,6 +26,8 @@ Agent Radar keeps those signals in a simple editable structure:
 agent-radar/
   README.md
   AGENTS.md
+  CONTRIBUTING.md
+  SECURITY.md
   radar.md
   agent-watchlist.md
   user-field-notes.md
@@ -39,10 +41,13 @@ agent-radar/
     .gitkeep
   weekly/
     .gitkeep
+  monthly/
+    .gitkeep
   prompts/
     daily-update.md
     weekly-review.md
     agent-watchlist-update.md
+    monthly-review.md
   scripts/
     agent_radar.py
   .github/
@@ -96,8 +101,11 @@ python scripts/agent_radar.py daily
 python scripts/agent_radar.py daily --date 2026-07-02
 python scripts/agent_radar.py weekly
 python scripts/agent_radar.py weekly --date 2026-07-02
+python scripts/agent_radar.py monthly
+python scripts/agent_radar.py monthly --date 2026-07-02
 python scripts/agent_radar.py status
 python scripts/agent_radar.py validate
+python scripts/agent_radar.py brief
 ```
 
 The CLI supports running from any subdirectory. Existing files are not overwritten unless `--force` is passed to `init`.
@@ -110,6 +118,7 @@ python scripts/agent_radar.py daily
 python scripts/agent_radar.py weekly
 python scripts/agent_radar.py status
 python scripts/agent_radar.py validate
+python scripts/agent_radar.py brief
 ```
 
 ## What Goes Where
@@ -124,7 +133,10 @@ python scripts/agent_radar.py validate
 - `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
 - `daily/YYYY-MM.md`: daily signal capture.
 - `weekly/YYYY-Www.md`: weekly synthesis.
+- `monthly/YYYY-MM.md`: monthly thesis, evidence, and watchlist review.
 - `prompts/`: prompts for Cloud research and maintenance runs.
+- `CONTRIBUTING.md`: lightweight contribution rules.
+- `SECURITY.md`: public-safe handling policy.
 - `.github/workflows/validate.yml`: CI check for CLI syntax and structural validation.
 
 ## What Should Not Go Here
@@ -163,7 +175,9 @@ Stop only for authentication failure, inaccessible repository state, suspected s
 python scripts/agent_radar.py init
 python scripts/agent_radar.py daily --date 2026-07-02
 python scripts/agent_radar.py weekly --date 2026-07-02
+python scripts/agent_radar.py monthly --date 2026-07-02
 python scripts/agent_radar.py status --date 2026-07-02
 python scripts/agent_radar.py validate --date 2026-07-02
+python scripts/agent_radar.py brief --date 2026-07-02
 python -m py_compile scripts/agent_radar.py
 ```

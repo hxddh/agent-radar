@@ -28,6 +28,8 @@ Do not:
 python scripts/agent_radar.py status
 python scripts/agent_radar.py daily
 python scripts/agent_radar.py weekly
+python scripts/agent_radar.py monthly
+python scripts/agent_radar.py brief
 python scripts/agent_radar.py validate
 ```
 
@@ -40,4 +42,3 @@ Before finishing:
 - Show modified files
 - Summarize assumptions
 - Do not silently rewrite existing content
-

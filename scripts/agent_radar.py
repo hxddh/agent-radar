@@ -13,15 +13,20 @@ from pathlib import Path
 CORE_FILES = [
     "README.md",
     "AGENTS.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
     "radar.md",
     "agent-watchlist.md",
     "user-field-notes.md",
     "playbook.md",
     "storage-angle.md",
     "sources.md",
+    "research-log.md",
+    "docs/maintenance.md",
     "prompts/daily-update.md",
     "prompts/weekly-review.md",
     "prompts/agent-watchlist-update.md",
+    "prompts/monthly-review.md",
     "scripts/agent_radar.py",
 ]
 
@@ -69,15 +74,20 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
     return {
         "README.md": README_TEMPLATE,
         "AGENTS.md": AGENTS_TEMPLATE,
+        "CONTRIBUTING.md": CONTRIBUTING_TEMPLATE,
+        "SECURITY.md": SECURITY_TEMPLATE,
         "radar.md": RADAR_TEMPLATE.format(date=date_text),
         "agent-watchlist.md": WATCHLIST_TEMPLATE,
         "user-field-notes.md": FIELD_NOTES_TEMPLATE.format(month=month_text),
         "playbook.md": PLAYBOOK_TEMPLATE,
         "storage-angle.md": STORAGE_TEMPLATE.format(date=date_text),
         "sources.md": SOURCES_TEMPLATE,
+        "research-log.md": RESEARCH_LOG_TEMPLATE,
+        "docs/maintenance.md": MAINTENANCE_TEMPLATE,
         "prompts/daily-update.md": DAILY_PROMPT_TEMPLATE,
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
         "prompts/agent-watchlist-update.md": WATCHLIST_PROMPT_TEMPLATE,
+        "prompts/monthly-review.md": MONTHLY_PROMPT_TEMPLATE,
     }
 
 
@@ -86,10 +96,10 @@ def command_init(args: argparse.Namespace) -> int:
     root.mkdir(parents=True, exist_ok=True)
     results: list[tuple[str, str]] = []
 
-    for folder in ["daily", "weekly", "prompts", "scripts"]:
+    for folder in ["daily", "weekly", "monthly", "docs", "prompts", "scripts"]:
         (root / folder).mkdir(parents=True, exist_ok=True)
 
-    for keep in ["daily/.gitkeep", "weekly/.gitkeep"]:
+    for keep in ["daily/.gitkeep", "weekly/.gitkeep", "monthly/.gitkeep"]:
         path = root / keep
         if not path.exists():
             path.write_text("", encoding="utf-8")
@@ -116,6 +126,10 @@ def daily_path(root: Path, day: dt.date) -> Path:
 def weekly_path(root: Path, day: dt.date) -> Path:
     year, week, _ = day.isocalendar()
     return root / "weekly" / f"{year}-W{week:02d}.md"
+
+
+def monthly_path(root: Path, day: dt.date) -> Path:
+    return root / "monthly" / f"{day:%Y-%m}.md"
 
 
 def daily_entry(day: dt.date) -> str:
@@ -275,11 +289,60 @@ def command_weekly(args: argparse.Namespace) -> int:
     return 0
 
 
+def monthly_template(day: dt.date) -> str:
+    label = f"{day:%Y-%m}"
+    return f"""# Agent Radar Monthly - {label}
+
+## 1. Executive Summary
+
+- Biggest thesis change:
+- Strongest product signal:
+- Strongest user-experience signal:
+- Strongest infrastructure signal:
+- Strongest storage implication:
+- Biggest anti-signal:
+
+## 2. Watchlist Changes
+
+## 3. Evidence Quality Review
+
+## 4. Playbook Promotions
+
+## 5. Storage and Infrastructure Thesis
+
+## 6. Commercialization and Enterprise Adoption
+
+## 7. Security and Governance
+
+## 8. Open Questions Resolved
+
+## 9. Open Questions Added
+
+## 10. Next Month Watchlist
+"""
+
+
+def command_monthly(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    path = monthly_path(root, day)
+    if path.exists():
+        print(f"exists  {path}")
+        return 0
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(monthly_template(day), encoding="utf-8")
+    print(f"created {path}")
+    return 0
+
+
 def missing_required(root: Path) -> list[str]:
     required = [
         *CORE_FILES,
         "daily",
         "weekly",
+        "monthly",
+        "docs",
         "prompts",
     ]
     return [item for item in required if not (root / item).exists()]
@@ -290,6 +353,7 @@ def command_status(args: argparse.Namespace) -> int:
     day = parse_date(args.date)
     current_daily = daily_path(root, day)
     current_weekly = weekly_path(root, day)
+    current_monthly = monthly_path(root, day)
     missing = missing_required(root)
     executable_name = Path(sys.executable).name
     python_cmd = "python3" if executable_name.startswith("python3") else executable_name or "python"
@@ -302,6 +366,7 @@ def command_status(args: argparse.Namespace) -> int:
 
     print(f"\nCurrent daily:  {current_daily}")
     print(f"Current weekly: {current_weekly}")
+    print(f"Current monthly: {current_monthly}")
 
     if missing:
         print("\nMissing:")
@@ -312,8 +377,10 @@ def command_status(args: argparse.Namespace) -> int:
         print(f"\nSuggested next command: {python_cmd} scripts/agent_radar.py daily")
     elif not current_weekly.exists():
         print(f"\nSuggested next command: {python_cmd} scripts/agent_radar.py weekly")
+    elif not current_monthly.exists():
+        print(f"\nSuggested next command: {python_cmd} scripts/agent_radar.py monthly")
     else:
-        print(f"\nSuggested next command: {python_cmd} scripts/agent_radar.py validate")
+        print(f"\nSuggested next command: {python_cmd} scripts/agent_radar.py brief")
     return 0
 
 
@@ -348,15 +415,19 @@ def command_validate(args: argparse.Namespace) -> int:
     errors = missing_required(root)
     current_daily = daily_path(root, day)
     current_weekly = weekly_path(root, day)
+    current_monthly = monthly_path(root, day)
 
     if not current_daily.exists():
         errors.append(str(current_daily.relative_to(root)))
     if not current_weekly.exists():
         errors.append(str(current_weekly.relative_to(root)))
+    if not current_monthly.exists():
+        errors.append(str(current_monthly.relative_to(root)))
 
     warnings: list[str] = []
     warnings.extend(warn_empty_fields(current_daily))
     warnings.extend(warn_empty_fields(current_weekly))
+    warnings.extend(warn_empty_fields(current_monthly))
     warnings.extend(warn_weekly_sparse(current_weekly))
 
     if errors:
@@ -372,6 +443,51 @@ def command_validate(args: argparse.Namespace) -> int:
             print(f"- {warning}")
 
     return 1 if errors else 0
+
+
+def count_occurrences(root: Path, rel_path: str, pattern: str) -> int:
+    path = root / rel_path
+    if not path.exists():
+        return 0
+    return path.read_text(encoding="utf-8").count(pattern)
+
+
+def command_brief(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    current_daily = daily_path(root, day)
+    current_weekly = weekly_path(root, day)
+    current_monthly = monthly_path(root, day)
+    missing = missing_required(root)
+    source_required = count_occurrences(root, "agent-watchlist.md", "Source required")
+
+    print(f"Project root: {root}")
+    print(f"Date: {day.isoformat()}")
+    print("\nCurrent files:")
+    for path in [current_daily, current_weekly, current_monthly]:
+        marker = "ok" if path.exists() else "missing"
+        print(f"- {marker:7} {path.relative_to(root)}")
+
+    print("\nMaintenance signals:")
+    print(f"- Missing structural items: {len(missing)}")
+    print(f"- Watchlist fields still marked 'Source required': {source_required}")
+
+    print("\nSuggested next research focus:")
+    if missing:
+        print("- Run `python scripts/agent_radar.py init` to restore missing structure.")
+    elif not current_daily.exists():
+        print("- Create the current daily note.")
+    elif source_required > 20:
+        print("- Backfill watchlist entries with official sources and concrete user evidence.")
+    else:
+        print("- Look for fresh daily signals and update weekly synthesis if a pattern changed.")
+
+    print("\nReview checklist:")
+    print("- Add accepted and rejected sources to `research-log.md`.")
+    print("- Label weak evidence instead of blocking on it.")
+    print("- Update `storage-angle.md` for workspace, sandbox, memory, logs, replay, or artifact signals.")
+    print("- Run `python scripts/agent_radar.py validate` before finishing.")
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -391,6 +507,10 @@ def build_parser() -> argparse.ArgumentParser:
     weekly_parser.add_argument("--date", help="Week date, YYYY-MM-DD.")
     weekly_parser.set_defaults(func=command_weekly)
 
+    monthly_parser = subparsers.add_parser("monthly", help="Create this month's monthly report.")
+    monthly_parser.add_argument("--date", help="Month date, YYYY-MM-DD.")
+    monthly_parser.set_defaults(func=command_monthly)
+
     status_parser = subparsers.add_parser("status", help="Show project status.")
     status_parser.add_argument("--date", help="Date for current daily/weekly paths, YYYY-MM-DD.")
     status_parser.set_defaults(func=command_status)
@@ -398,6 +518,10 @@ def build_parser() -> argparse.ArgumentParser:
     validate_parser = subparsers.add_parser("validate", help="Validate project structure.")
     validate_parser.add_argument("--date", help="Date for current daily/weekly checks, YYYY-MM-DD.")
     validate_parser.set_defaults(func=command_validate)
+
+    brief_parser = subparsers.add_parser("brief", help="Show maintenance gaps and next research focus.")
+    brief_parser.add_argument("--date", help="Date for current daily/weekly/monthly paths, YYYY-MM-DD.")
+    brief_parser.set_defaults(func=command_brief)
 
     return parser
 
@@ -420,6 +544,18 @@ Do:
 - Use Python standard library only.
 - Use broad authorized source coverage.
 - Run validation before finishing.
+"""
+
+CONTRIBUTING_TEMPLATE = """# Contributing
+
+Agent Radar welcomes small, source-backed updates.
+
+Run validation before opening a pull request.
+"""
+
+SECURITY_TEMPLATE = """# Security Policy
+
+This repository is public. Do not publish secrets, private URLs, private messages, personal identifiers, or confidential details.
 """
 
 RADAR_TEMPLATE = """# AI Agent Radar
@@ -497,6 +633,16 @@ SOURCES_TEMPLATE = """# Sources
 Use broad source coverage by default. Label source class, source visibility, evidence strength, and public corroboration status.
 """
 
+RESEARCH_LOG_TEMPLATE = """# Research Log
+
+Record research passes, accepted sources, rejected sources, and follow-up gaps.
+"""
+
+MAINTENANCE_TEMPLATE = """# Maintenance Guide
+
+Keep updates source-backed, public-safe, and lightweight.
+"""
+
 DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update
 
 Use all available authorized sources. Publish only public-safe summaries. Label weak, private, incomplete, or inferred evidence instead of blocking.
@@ -510,6 +656,11 @@ Synthesize the week across product changes, user experience, infrastructure, sto
 WATCHLIST_PROMPT_TEMPLATE = """# Agent Watchlist Update
 
 Update mainstream and emerging agent entries using broad authorized source coverage and public-safe summaries.
+"""
+
+MONTHLY_PROMPT_TEMPLATE = """# Monthly Agent Radar Review
+
+Synthesize the month, review evidence quality, update watchlist confidence, and change the thesis only when evidence justifies it.
 """
 
 
