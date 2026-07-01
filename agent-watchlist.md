@@ -8,15 +8,16 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 
 Status:
 - Category: Coding agent / task agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Strong adoption signal inside OpenAI and among sampled users, but external market-wide adoption still needs corroboration.
+- Core use case: Delegated coding and task execution, increasingly including longer and parallel agent work.
+- Recent changes: Codex CLI 0.142.5 fixed trace logging so full Responses WebSocket payloads are not written to trace logs.
+- Strengths: Parallelizable task execution and growing usage for work estimated beyond short chat answers.
+- Weaknesses: External user reliability and cost experience need more public field evidence.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Trace logs, payload privacy, long-running agent turns, parallel task orchestration.
+- Storage implications: Logs, traces, task state, artifacts, and replay history become sensitive storage surfaces.
+- Watch next: Whether OpenAI exposes more controls for logs, replay, workspace persistence, and enterprise governance.
+- Sources: https://developers.openai.com/codex/changelog and https://openai.com/index/how-agents-are-transforming-work/
 
 ## Claude Code
 
@@ -24,27 +25,29 @@ Status:
 - Category: Coding agent
 - Maturity: Source required.
 - Core use case: Source required.
-- Recent changes: Source required.
+- Recent changes: Public security reporting around a 0DIN proof of concept focused on Claude Code and clean-looking repositories.
 - Strengths: Source required.
-- Weaknesses: Source required.
+- Weaknesses: Shell-capable agents can be vulnerable to indirect setup-command attack paths when working with unfamiliar repositories.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Trust boundary around repo setup, shell execution, package scripts, network egress, and agent error recovery.
+- Storage implications: Secrets, browser sessions, local files, and workspace state can become exposed if agent execution crosses unsafe trust boundaries.
+- Watch next: Whether Claude Code and other coding agents add stronger setup-script analysis, egress controls, or untrusted-repo sandbox defaults.
+- Sources: https://www.tomshardware.com/tech-industry/cyber-security/ai-coding-agents-can-be-tricked-into-installing-malware-via-clean-github-repositories-mozillas-0din-team-shows-how-claude-code-can-be-exploited-by-its-own-helpfulness and https://hivesecurity.gitlab.io/blog/claude-code-clean-repo-trap/
 
 ## Cursor
 
 Status:
 - Category: AI IDE / coding agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
-- User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Maturity: Mature AI IDE with expanding automation and SDK surface; exact adoption metrics still source required.
+- Core use case: Interactive coding, local/cloud agent tasks, and repeated workflow automations.
+- Recent changes: Cursor Automations added `/automate`, GitHub/Slack triggers, and computer-use support; Cursor SDK exposes the Cursor agent runtime with run streaming and lifecycle controls.
+- Strengths: Connects IDE workflows, cloud VMs, triggers, and programmatic agent APIs.
+- Weaknesses: Needs more public evidence on reliability, cost experience, and enterprise governance at scale.
+- User feedback: Public anecdotes mention Cursor as a project-aware coding agent, but evidence is weak and fragmented.
+- Infra signals: Durable agents, per-prompt runs, SSE streaming, cancellation, archive/unarchive/delete, cloud VM execution.
+- Storage implications: Agent lifecycle state and archived runs imply persistent run metadata and workspace storage.
+- Watch next: Whether automations become reliable enough for unattended repo maintenance.
+- Sources: https://cursor.com/changelog and https://cursor.com/changelog/sdk-release
 
 ## Devin / Cognition
 
@@ -64,15 +67,16 @@ Status:
 
 Status:
 - Category: Coding assistant / coding agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
-- User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Maturity: Broad enterprise/devtool footprint; agentic features are expanding across VS Code and JetBrains surfaces.
+- Core use case: IDE assistance, code review, coding agent workflows, browser-backed app inspection.
+- Recent changes: Browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant; Claude Sonnet 5 is available for GitHub Copilot.
+- Strengths: Strong IDE distribution and enterprise controls around browser access.
+- Weaknesses: Source required for real-world reliability of browser-driven workflows.
+- User feedback: One weak public Reddit signal says Copilot remains the work default for at least some users, even when personal usage spans multiple tools.
+- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts.
+- Storage implications: Browser screenshots, console output, live app state, and per-agent tabs become runtime artifacts that may need retention and governance.
+- Watch next: Whether browser tools move from debugging aid to default agent workflow for web-app changes.
+- Sources: https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/ and https://github.blog/changelog/month/06-2026/
 
 ## Replit Agent
 
@@ -148,29 +152,31 @@ Status:
 
 Status:
 - Category: AI app infrastructure / sandbox workflow
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Sandbox docs are public and productized; adoption evidence still source required.
+- Core use case: Safe execution of untrusted or generated code for AI agents, code generation, and developer experimentation.
+- Recent changes: Vercel Sandbox docs describe SDKs, CLI, authentication, runtime specs, persistence, snapshots, firewall, tags, and drives.
+- Strengths: Explicit sandbox primitive for dynamic agent workloads, file edits, logs, and live previews.
+- Weaknesses: Pricing, limits, and operational field evidence need follow-up.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Sandboxes, logs, file edits, live previews, snapshots, drives, authentication modes.
+- Storage implications: Strong direct signal for workspace persistence, snapshot, artifact, and log storage.
+- Watch next: Whether Vercel Sandbox becomes a default execution substrate for generated apps and coding agents.
+- Source: https://vercel.com/docs/sandbox
 
 ## Cloudflare Agents / Workers AI Agent Workflow
 
 Status:
 - Category: Edge agent infrastructure / runtime
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Source required for broad adoption; temporary deployment workflow is documented.
+- Core use case: Deploying and running agent-created Workers and related Cloudflare resources.
+- Recent changes: Temporary accounts let agents deploy Workers without an API token or signup, using `wrangler deploy --temporary`.
+- Strengths: Low-friction deploy-and-verify loop for agents, with temporary live URLs and claim flow.
+- Weaknesses: Temporary accounts support only a limited product set and expire after a short window.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Temporary accounts, preview deploys, claim URLs, supported products including Workers, KV, D1, Durable Objects, Hyperdrive, and Queues.
+- Storage implications: Temporary previews and claimable resources create a bridge between ephemeral agent artifacts and persistent cloud accounts.
+- Watch next: Whether temporary account flows spread to other agent deployment platforms.
+- Source: https://developers.cloudflare.com/changelog/post/2026-06-19-temporary-accounts-for-agents/
 
 # Emerging Agents
 
@@ -188,4 +194,3 @@ Name:
 - Risk:
 - Public corroboration:
 - Watch next:
-
