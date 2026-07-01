@@ -48,6 +48,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("weekly", tasks)
         self.assertIn("promote-candidates", tasks)
 
+    def test_daily_can_update_source_registry(self) -> None:
+        self.assertIn("sources.md", cloud_agent_runner.TASK_CONFIG["daily"]["allowed"])
+
     def test_public_source_collection_can_be_disabled(self) -> None:
         with mock.patch.dict(os.environ, {"PUBLIC_SOURCE_COLLECTION": "false"}, clear=True):
             self.assertIn("disabled", cloud_agent_runner.collect_public_sources("daily"))

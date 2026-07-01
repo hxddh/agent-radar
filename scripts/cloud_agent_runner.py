@@ -73,6 +73,7 @@ TASK_CONFIG = {
             "storage-angle.md",
             "weekly/{week}.md",
             "radar.md",
+            "sources.md",
         ],
     },
     "weekly": {
