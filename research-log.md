@@ -126,3 +126,50 @@ Follow-up gaps:
 - Watch for storage and persistence patterns in agent memory (World Model MCP) and ops agents (ai-ops-agent).
 - Investigate whether enterprise architecture tools (enterprise-architect-mcp) signal a new category of agent-accessible enterprise models.
 - Look for pricing, governance, and compliance signals across all emerging agent tools.
+
+### Pass 4: Source Sweep (2026-07-02)
+
+Purpose:
+- Refresh source coverage using the public source snapshot and screening pass, and update sources.md and research-log.md with new candidates and source examples.
+
+Accepted sources:
+- elizaOS/eliza: https://github.com/elizaOS/eliza (open-source agentic operating system, 18.6k stars)
+- World Model MCP: https://github.com/SaravananJaichandar/world-model-mcp (cross-runtime memory across 7 coding agents)
+- mcp-observatory: https://github.com/KryptosAI/mcp-observatory (test, secure, and monitor MCP servers)
+- claude-team-mcp: https://github.com/guru111244/claude-team-mcp (multi-agent orchestration via MCP)
+- nereid: https://github.com/bnomei/nereid (Mermaid diagrams with AI agents via TUI + MCP Server)
+- raymon: https://github.com/bnomei/raymon (Ray logging TUI and MCP Server)
+- AnalystAIPack: https://meltedinhex.com/posts/analyst-ai-pack/ and https://github.com/meltedinhex/analyst-ai-pack (118 runnable agent skills for malware analysis and RE)
+- Ox: https://news.ycombinator.com/item?id=48746066 (AI agent that catches tech debt before it's committed)
+- agent-playground: https://github.com/kacchanff/agent-playground (local sandbox for AI agents)
+- agente-admin-observabilidad: https://github.com/Adriano886/agente-admin-observabilidad (agent observability with Grafana)
+- agentx-kit: https://github.com/muhammadyahiya/agentx-kit (provider-agnostic agentic framework + scaffolder)
+- OpenAI Genebench Pro: https://openai.com/index/introducing-genebench-pro and https://openai.com/index/genebench-pro/case-studies (evaluation benchmark)
+- Show HN sandbox: https://news.ycombinator.com/item?id=48750459 (open-source sandbox for product teams)
+- idesense: https://github.com/vcth4nh/idesense (MCP access to JetBrains IDE indexes)
+- ai-ops-agent: https://github.com/mirasolutions06/ai-ops-agent (ops agent with markdown vault and FastMCP)
+- awesome-agent-skills-security: https://github.com/LLMSecurity/awesome-agent-skills-security (curated agent skills security resources)
+- enterprise-architect-mcp: https://github.com/DITEC-Mracka/enterprise-architect-mcp (MCP bridge into enterprise architecture models)
+- cloudscape-docs-mcp: https://github.com/prem676/cloudscape-docs-mcp (design-system docs via MCP)
+- Strata: https://strata.space/show (real-time Markdown editor mounted as a filesystem)
+- OpenAI adoption expansion: https://openai.com/index/how-chatgpt-adoption-has-expanded
+- OpenAI Core Dump: https://openai.com/index/core-dump-epidemiology-data-infrastructure-bug
+
+Rejected or deprioritized:
+- micro/go-micro: mature microservices framework, but agent-specific relation was too inferential for watchlist promotion.
+- agentx-kit: agent scaffolding claim was too early and low-evidence for promotion.
+- Ox, CoderScreen, and low-engagement Show HN items: potentially interesting but too little evidence for high-judgment files.
+- OpenAI adoption expansion, GeneBench Pro, and OpenAI Core Dump: valid sources, but not direct enough for this source-sweep's agent radar promotion path.
+- Show HN items with very low engagement (1-2 points, 0 comments) that lacked concrete workflow or infrastructure detail.
+- Items that were pure launch announcements without technical depth or user evidence.
+- Anthropic news feed (HTTP 404) - could not access; recorded as collection error.
+
+Follow-up gaps:
+- No direct signals on agent storage or dedicated deployment platforms from this sweep.
+- No recent signals from Anthropic news feed (HTTP 404 error prevented access).
+- Need more real-world user evidence for emerging candidates before promotion.
+- Track whether MCP server proliferation leads to standardization or fragmentation.
+- Monitor whether agent operating-system framing becomes concrete product infrastructure or remains community branding.
+- Watch for storage and persistence patterns in agent memory (World Model MCP) and ops agents (ai-ops-agent).
+- Investigate whether enterprise architecture tools (enterprise-architect-mcp) signal a new category of agent-accessible enterprise models.
+- Look for pricing, governance, and compliance signals across all emerging agent tools.

@@ -127,3 +127,27 @@ Ignore or deprioritize:
 - `unverified`
 - `inference`
 - `needs-corroboration`
+
+## Source Examples (2026-07-02)
+
+- elizaOS/eliza: https://github.com/elizaOS/eliza (open-source agentic operating system, 18.6k stars)
+- World Model MCP: https://github.com/SaravananJaichandar/world-model-mcp (cross-runtime memory across 7 coding agents)
+- mcp-observatory: https://github.com/KryptosAI/mcp-observatory (test, secure, and monitor MCP servers)
+- claude-team-mcp: https://github.com/guru111244/claude-team-mcp (multi-agent orchestration via MCP)
+- nereid: https://github.com/bnomei/nereid (Mermaid diagrams with AI agents via TUI + MCP Server)
+- raymon: https://github.com/bnomei/raymon (Ray logging TUI and MCP Server)
+- AnalystAIPack: https://meltedinhex.com/posts/analyst-ai-pack/ and https://github.com/meltedinhex/analyst-ai-pack (118 runnable agent skills for malware analysis and RE)
+- Ox: https://news.ycombinator.com/item?id=48746066 (AI agent that catches tech debt before it's committed)
+- agent-playground: https://github.com/kacchanff/agent-playground (local sandbox for AI agents)
+- agente-admin-observabilidad: https://github.com/Adriano886/agente-admin-observabilidad (agent observability with Grafana)
+- agentx-kit: https://github.com/muhammadyahiya/agentx-kit (provider-agnostic agentic framework + scaffolder)
+- OpenAI Genebench Pro: https://openai.com/index/introducing-genebench-pro and https://openai.com/index/genebench-pro/case-studies (evaluation benchmark)
+- Show HN sandbox: https://news.ycombinator.com/item?id=48750459 (open-source sandbox for product teams)
+- idesense: https://github.com/vcth4nh/idesense (MCP access to JetBrains IDE indexes)
+- ai-ops-agent: https://github.com/mirasolutions06/ai-ops-agent (ops agent with markdown vault and FastMCP)
+- awesome-agent-skills-security: https://github.com/LLMSecurity/awesome-agent-skills-security (curated agent skills security resources)
+- enterprise-architect-mcp: https://github.com/DITEC-Mracka/enterprise-architect-mcp (MCP bridge into enterprise architecture models)
+- cloudscape-docs-mcp: https://github.com/prem676/cloudscape-docs-mcp (design-system docs via MCP)
+- Strata: https://strata.space/show (real-time Markdown editor mounted as a filesystem)
+- OpenAI adoption expansion: https://openai.com/index/how-chatgpt-adoption-has-expanded
+- OpenAI Core Dump: https://openai.com/index/core-dump-epidemiology-data-infrastructure-bug
