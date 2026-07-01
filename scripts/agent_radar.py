@@ -38,6 +38,8 @@ CORE_FILES = [
     "prompts/weekly-review.md",
     "prompts/agent-watchlist-update.md",
     "prompts/monthly-review.md",
+    "docs/release-v0.2.0.md",
+    ".github/workflows/release.yml",
     "scripts/agent_radar.py",
     "scripts/cloud_agent_runner.py",
 ]
@@ -99,6 +101,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "docs/maintenance.md": MAINTENANCE_TEMPLATE,
         "docs/cloud-agent.md": CLOUD_AGENT_TEMPLATE,
         "docs/subscription-mode.md": SUBSCRIPTION_MODE_TEMPLATE,
+        "docs/release-v0.2.0.md": RELEASE_V020_TEMPLATE,
         "automation/runbook.md": AUTOMATION_RUNBOOK_TEMPLATE,
         "automation/daily.md": AUTOMATION_DAILY_TEMPLATE,
         "automation/weekly.md": AUTOMATION_WEEKLY_TEMPLATE,
@@ -109,6 +112,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
         "prompts/agent-watchlist-update.md": WATCHLIST_PROMPT_TEMPLATE,
         "prompts/monthly-review.md": MONTHLY_PROMPT_TEMPLATE,
+        ".github/workflows/release.yml": RELEASE_WORKFLOW_TEMPLATE,
     }
 
 
@@ -603,6 +607,11 @@ CHANGELOG_TEMPLATE = """# Changelog
 - Initial structure generated on {date}.
 """
 
+RELEASE_V020_TEMPLATE = """# Agent Radar v0.2.0
+
+Cloud-agent automation release notes.
+"""
+
 RADAR_TEMPLATE = """# AI Agent Radar
 
 Last updated: {date}
@@ -746,6 +755,28 @@ Update mainstream and emerging agent entries using broad authorized source cover
 MONTHLY_PROMPT_TEMPLATE = """# Monthly Agent Radar Review
 
 Synthesize the month, review evidence quality, update watchlist confidence, and change the thesis only when evidence justifies it.
+"""
+
+RELEASE_WORKFLOW_TEMPLATE = """name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --title "Agent Radar $GITHUB_REF_NAME"
 """
 
 

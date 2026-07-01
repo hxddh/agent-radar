@@ -41,6 +41,7 @@ agent-radar/
     cloud-agent.md
     subscription-mode.md
     release-v0.1.0.md
+    release-v0.2.0.md
   automation/
     runbook.md
     daily.md
@@ -69,6 +70,7 @@ agent-radar/
       source-gap.yml
     workflows/
       cloud-agent.yml
+      release.yml
       validate.yml
 ```
 
@@ -159,6 +161,7 @@ python -m unittest discover -s tests
 - `docs/cloud-agent.md`: GitHub Actions based 24/7 cloud agent setup.
 - `docs/subscription-mode.md`: explains what works without an API key and what does not.
 - `docs/release-v0.1.0.md`: release notes for the first public version.
+- `docs/release-v0.2.0.md`: release notes for the cloud-agent automation version.
 - `automation/`: Cloud Agent task cards for daily, weekly, monthly, and source-sweep runs.
 - `CHANGELOG.md`: human-readable version history.
 - `daily/YYYY-MM.md`: daily signal capture.
@@ -169,6 +172,7 @@ python -m unittest discover -s tests
 - `SECURITY.md`: public-safe handling policy.
 - `.github/workflows/validate.yml`: CI check for CLI syntax and structural validation.
 - `.github/workflows/cloud-agent.yml`: scheduled cloud agent runner.
+- `.github/workflows/release.yml`: publishes GitHub Releases from version tags.
 - `.github/PULL_REQUEST_TEMPLATE.md`: contribution checklist.
 - `.github/ISSUE_TEMPLATE/`: structured signal and source-gap intake.
 
