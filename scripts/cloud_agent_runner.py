@@ -333,6 +333,8 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
             raise SystemExit(f"Refusing to update non-allowed path: {rel_path}")
         if not isinstance(content, str):
             raise SystemExit(f"Missing string content for path: {rel_path}")
+        if content and not content.endswith("\n"):
+            content += "\n"
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text(path)
