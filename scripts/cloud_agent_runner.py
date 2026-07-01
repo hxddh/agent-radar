@@ -25,6 +25,7 @@ GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions"
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
 MAX_FILE_CHARS = 80_000
+GITHUB_MAX_FILE_CHARS = 6_000
 
 
 TASK_CONFIG = {
@@ -124,12 +125,24 @@ def auto_tasks(day: dt.date) -> list[str]:
     return tasks
 
 
+def model_provider() -> str:
+    return os.environ.get("AGENT_RADAR_MODEL_PROVIDER", "github-models").lower()
+
+
+def max_file_chars() -> int:
+    provider = model_provider()
+    if provider in {"github", "github-models"}:
+        return GITHUB_MAX_FILE_CHARS
+    return MAX_FILE_CHARS
+
+
 def read_text(path: Path) -> str:
     if not path.exists():
         return ""
     content = path.read_text(encoding="utf-8")
-    if len(content) > MAX_FILE_CHARS:
-        return content[-MAX_FILE_CHARS:]
+    limit = max_file_chars()
+    if len(content) > limit:
+        return content[-limit:]
     return content
 
 
@@ -151,6 +164,17 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
     if config["prompt"]:
         context_files.append(config["prompt"])
     context_files.extend(allowed)
+
+    if model_provider() in {"github", "github-models"}:
+        priority = {
+            "automation/runbook.md",
+            config["automation"],
+            "docs/maintenance.md",
+            "sources.md",
+            "research-log.md",
+            *allowed,
+        }
+        context_files = [item for item in context_files if item in priority]
 
     seen: set[str] = set()
     chunks: list[str] = []
@@ -250,7 +274,7 @@ def call_github_models(prompt: str) -> dict[str, Any]:
 
 
 def call_model(prompt: str) -> dict[str, Any]:
-    provider = os.environ.get("AGENT_RADAR_MODEL_PROVIDER", "github-models").lower()
+    provider = model_provider()
     if provider == "openai":
         return call_openai(prompt)
     if provider in {"github", "github-models"}:
