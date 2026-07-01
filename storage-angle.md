@@ -26,6 +26,11 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong.
   - Source: https://cursor.com/changelog/sdk-release
 
+- 2026-07-02: Amp's Chronicle points toward remote agent runs, plugin-created agent threads, and multi-surface control from web, CLI, and mobile.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://ampcode.com/chronicle
+
 ### Sandbox Snapshot
 
 - 2026-07-02: Vercel Sandbox documents persistence, snapshots, drives, logs, file edits, and live previews as part of a sandbox primitive for AI agents and generated code.
@@ -34,6 +39,11 @@ AI Agent workloads create demand for:
   - Source: https://vercel.com/docs/sandbox
 
 ### Agent Memory
+
+- 2026-07-02: Raycast v2 introduces Profile and Memory as editable personalization surfaces for Raycast AI.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://manual.raycast.com/new-in-v2
 
 ### Artifact and Report Storage
 
@@ -49,12 +59,22 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong.
   - Source: https://developers.openai.com/codex/changelog
 
+- 2026-07-02: Devin release notes mention MCP error logs, Axiom MCP integration, Slack context, automation updates, structured playbook outputs, and enterprise knowledge limits.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://docs.devin.ai/release-notes/overview
+
 - 2026-07-02: GitHub Copilot browser tools can capture screenshots and console output from agent-driven browser sessions. These are useful debugging artifacts but also governance and retention surfaces.
   - Source class: Official public source.
   - Evidence strength: Strong.
   - Source: https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
 
 ### Knowledge Base as Object Storage Workload
+
+- 2026-07-02: Factory 2.0 describes a continuous software-factory loop from external signals to triage, planning, build, test, review, security, shipping, monitoring, and feedback.
+  - Source class: Official public source.
+  - Evidence strength: Strong for product thesis.
+  - Source: https://factory.ai/news/software-factory
 
 ## Open Questions
 

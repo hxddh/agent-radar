@@ -53,15 +53,16 @@ Status:
 
 Status:
 - Category: Coding agent / software engineering agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Enterprise-oriented product with active release notes; adoption strength still needs external user evidence.
+- Core use case: Software engineering sessions, code review, automations, Slack/Linear workflows, and enterprise review loops.
+- Recent changes: Release notes mention Slack thread context, `!agent` routing, Slack updates for automation runs, Linear project filters, MCP error logs, Axiom MCP integration, structured playbook outputs, enterprise knowledge limit increase, and Devin Review support for GHES.
+- Strengths: Deep workflow integration across Slack, Linear, MCP, playbooks, enterprise knowledge, and code review.
+- Weaknesses: Needs more public evidence on reliability, cost, and how often sessions close without human rescue.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: MCP observability, structured outputs, enterprise knowledge stores, Slack synchronization, Linear-triggered automations, GHES review.
+- Storage implications: Session history, enterprise knowledge, playbook output, MCP logs, Slack context, and review artifacts become governed storage surfaces.
+- Watch next: Whether Devin's enterprise integrations produce stronger field evidence than generic autonomous-coding claims.
+- Source: https://docs.devin.ai/release-notes/overview
 
 ## GitHub Copilot / Coding Agent
 
@@ -82,71 +83,76 @@ Status:
 
 Status:
 - Category: App-building agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Productized app-building agent with active official changelog.
+- Core use case: Creating, updating, deploying, and asking questions about Replit apps.
+- Recent changes: Replit became available as a Claude connector; Claude Design can send designs into Replit as runnable apps; Agent added Voice Mode; new MCP servers were added to the one-click MCP catalog.
+- Strengths: Strong app-building loop and cross-agent handoff from Claude into Replit.
+- Weaknesses: Source required for real-world reliability on larger apps and production handoff.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Claude connector, MCP catalog, voice-to-agent input, design-to-runnable-app handoff, enterprise guest access.
+- Storage implications: Runnable app state, design imports, guest-scoped app access, and MCP-connected project context require workspace and permission boundaries.
+- Watch next: Whether Replit-from-Claude becomes a common front door for non-developer app generation.
+- Source: https://docs.replit.com/updates/2026/06/19/changelog
 
 ## Warp
 
 Status:
 - Category: Terminal / developer workflow agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Productized terminal with active agent-focused changelog.
+- Core use case: Terminal-centered agent workflows, code review comment routing, CLI agent coordination, and MCP-backed context.
+- Recent changes: Review comments can be sent to CLI agent terminals such as Claude Code, routed to idle terminals in the same repo, skills are searchable in Agent Mode, and file-based MCP servers can be configured globally or per project.
+- Strengths: Strong fit as an agent client and coordination surface for terminal-native workflows.
+- Weaknesses: Source required for broad user adoption and reliability under complex multi-agent sessions.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Agent terminal routing, idle terminal selection, project-local MCP configuration, skills context menu.
+- Storage implications: Terminal sessions, project-local `.agents` config, review comments, and failed conversation resume state are workflow artifacts.
+- Watch next: Whether Warp becomes a common front end for multiple CLI coding agents.
+- Source: https://docs.warp.dev/changelog/2026/
 
 ## Amp
 
 Status:
 - Category: Coding agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Active coding-agent product with frequent public Chronicle updates.
+- Core use case: Coding agent threads across web, CLI, mobile, plugin workflows, and diff review.
+- Recent changes: Agents in Orbs for remote runs, custom agents from plugins, direct diff review/staging, faster Librarian, and web/CLI/mobile agent control.
+- Strengths: Multi-surface agent control and plugin-created agent threads.
+- Weaknesses: Source required for reliability, governance, and enterprise adoption.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Remote agents, persistent threads, plugin-created agents, queued/cancelable work, diff staging.
+- Storage implications: Agent threads, remote-run state, queued messages, diffs, and plugin-created session history need retention and replay policy.
+- Watch next: Whether plugin-created agents become a durable extension ecosystem or remain a power-user feature.
+- Source: https://ampcode.com/chronicle
 
 ## Factory
 
 Status:
 - Category: Software development agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Enterprise-positioned agent-native development platform; adoption evidence still source required.
+- Core use case: Agent-native software delivery across planning, coding, testing, reviewing, securing, shipping, and monitoring.
+- Recent changes: Factory 2.0 frames the product around "software factories" and an end-to-end feedback loop from external signals through production monitoring.
+- Strengths: Strong enterprise narrative around full SDLC automation rather than isolated coding sessions.
+- Weaknesses: Needs public user evidence and concrete implementation detail for the full feedback loop.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: Model routing, signal intake, triage, planning, build/test/review/security/deploy/monitor loops.
+- Storage implications: End-to-end software factory needs durable signal stores, work item state, test artifacts, deployment state, monitoring feedback, and audit trails.
+- Watch next: Whether Factory publishes customer field evidence or product docs showing the feedback loop in operation.
+- Source: https://factory.ai/news/software-factory
 
 ## Raycast AI
 
 Status:
 - Category: Desktop productivity agent
-- Maturity: Source required.
-- Core use case: Source required.
-- Recent changes: Source required.
-- Strengths: Source required.
-- Weaknesses: Source required.
+- Maturity: Mature desktop productivity app with expanding AI surfaces in v2.
+- Core use case: Desktop AI Chat, Quick AI, commands, extensions, skills, MCP servers, and personalization.
+- Recent changes: macOS v2 brings AI Extensions, AI Skills, and MCP servers into Quick AI and AI Chat; Raycast v2 manual describes editable Profile and Memory.
+- Strengths: Strong desktop distribution and tool-context routing through extensions, skills, and MCP.
+- Weaknesses: Source required for how well memory and automatic tool loading perform in real daily workflows.
 - User feedback: Source required.
-- Infra signals: Source required.
-- Storage implications: Source required.
-- Watch next: Source required.
+- Infra signals: MCP server installation, auto-loaded extensions/skills, profile, memory, file/image attachments.
+- Storage implications: Desktop agent memory, profile data, tool permissions, attachments, and chat history are personal knowledge/workspace storage surfaces.
+- Watch next: Whether Raycast AI memory becomes trusted enough for work context or remains a convenience layer.
+- Sources: https://www.raycast.com/changelog/macos-beta/2 and https://manual.raycast.com/new-in-v2
 
 ## Vercel AI / Sandbox-Related Agent Workflow
 

@@ -15,6 +15,8 @@ Agent Radar keeps those signals in a simple editable structure:
 - `user-field-notes.md` for real user experience and field evidence.
 - `playbook.md` for reusable workflows, prompts, setup tricks, and recovery patterns.
 - `storage-angle.md` for workspace, sandbox, snapshot, checkpoint, artifact, log, replay, and knowledge-base implications.
+- `research-log.md` for research passes, accepted sources, rejected sources, and follow-up gaps.
+- `docs/maintenance.md` for cadence, evidence labels, public-safe handling, and thesis update rules.
 - `daily/` for append-oriented daily notes.
 - `weekly/` for synthesis-oriented weekly notes.
 
@@ -30,6 +32,9 @@ agent-radar/
   playbook.md
   storage-angle.md
   sources.md
+  research-log.md
+  docs/
+    maintenance.md
   daily/
     .gitkeep
   weekly/
@@ -40,6 +45,9 @@ agent-radar/
     agent-watchlist-update.md
   scripts/
     agent_radar.py
+  .github/
+    workflows/
+      validate.yml
 ```
 
 ## Daily Workflow
@@ -112,9 +120,12 @@ python scripts/agent_radar.py validate
 - `playbook.md`: reusable patterns that generalize beyond one incident.
 - `storage-angle.md`: storage and infrastructure implications.
 - `sources.md`: source classes, source discipline, and high-signal filters.
+- `research-log.md`: accepted sources, rejected sources, and follow-up gaps for each research pass.
+- `docs/maintenance.md`: maintenance cadence, evidence labels, source visibility, public-safe handling, and thesis update rules.
 - `daily/YYYY-MM.md`: daily signal capture.
 - `weekly/YYYY-Www.md`: weekly synthesis.
 - `prompts/`: prompts for Cloud research and maintenance runs.
+- `.github/workflows/validate.yml`: CI check for CLI syntax and structural validation.
 
 ## What Should Not Go Here
 
