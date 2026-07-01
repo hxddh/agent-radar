@@ -308,3 +308,23 @@ Follow-up gaps (new):
 - Macro, mnemos, and BrainRouter target shared agent memory but with different architectures. Track convergence or divergence.
 - Security angle (deptrust) is nascent but will become critical as agents gain more autonomous access.
 - No new sandbox, deployment, or storage-for-agents signals in this sweep. ng gaps for infra beyond memory.
+
+### Pass 7: Daily Update (2026-07-02) – Consolidated Screening Integration
+
+Purpose:
+- Merge screening pass candidates and public snapshot into daily notes, sources.md, and research-log while preserving existing content.
+
+Accepted sources from screening pass and snapshot:
+- Omnigent, Vestige, Obsidian Turbocharged (promoted earlier in Pass 5)
+- mnemos, neuromcp, dukememory, mcp-ai-memory, trusty-tools, cold-frame, atlas-mcp, argus, deptrust, jvmlens, cortex, Toolnexus, BrainRouter, GOAT 2.0, Google OKF, OpenWiki, authsec-ai, folio, agent-orchestrator-framework, awesome-agent-skills-security, and others captured in previous passes.
+
+Rejected or deprioritized this pass:
+- folio (agent-first arch framework, 0 stars): too inferential and lacks traction.
+- agent-orchestrator-framework (turn agent into dev team, 1 star): early concept without evidence.
+- Low-engagement Show HN items (Strata, Ox, CoderScreen, etc.) not meeting promotion thresholds.
+
+Follow-up gaps:
+- Strong memory/MCP overlap observed; need to track which projects gain community traction.
+- No enterprise agent deployment or storage infrastructure signals in this sweep beyond existing coverage.
+- Need to monitor Omnigent's sandbox API and policy enforcement details.
+- Anthropic news feed remains inaccessible; lack of Claude-specific updates may bias coverage toward open-source tools.

@@ -12,6 +12,7 @@ Last updated: 2026-07-02
 6. Agent meta-harnesses and cross-runtime orchestration are emerging as a response to fragmentation across Claude Code, Codex, Cursor, and other coding agents.
 7. Agent memory is evolving from simple context windows to time-travel debugging and root-cause tracing.
 8. Knowledge bases (e.g., Obsidian vaults) are becoming agent-accessible through MCP servers, enabling agents to read, write, and search personal/team knowledge.
+9. The MCP server ecosystem is rapidly expanding into memory, web access, observability, governance, and security, raising both standardization opportunities and fragmentation risks.
 
 ## Changed Thesis
 
@@ -19,6 +20,7 @@ Last updated: 2026-07-02
 
 - Initial setup.
 - Added thesis points 6-8 based on Omnigent, Vestige, and Obsidian Turbocharged signals.
+- Added thesis point 9 based on proliferation of memory, web access, observability, and security MCP servers in the 2026-07-02 snapshot.
 
 ## Open Questions
 
@@ -29,3 +31,5 @@ Last updated: 2026-07-02
 - Will meta-harnesses like Omnigent become standard or remain power-user tools?
 - Will agent memory primitives like Vestige be absorbed into mainstream platforms?
 - Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge?
+- Will MCP server proliferation lead to standardization (convergence) or fragmentation (divergence)?
+- Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate?

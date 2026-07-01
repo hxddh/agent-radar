@@ -190,7 +190,7 @@ Status:
 
 - Category: Agent meta-harness / orchestration
 - Why it matters: Directly addresses agent runtime fragmentation by orchestrating Claude Code, Codex, Cursor, Pi, and custom agents under a single harness with policy enforcement, sandboxing, and real-time collaboration.
-- Recent signal: Public GitHub repo with 5,943 stars and active updates (2026-07-01).
+- Recent signal: Public GitHub repo with 5,945 stars and active updates (2026-07-01).
 - Source class: Official public source.
 - Source visibility: Public.
 - Evidence strength: Medium (strong community interest, but no production user evidence yet).

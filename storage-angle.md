@@ -50,6 +50,18 @@ AI Agent workloads create demand for:
   - Evidence strength: Medium (strong technical concept, moderate community interest, no production user evidence yet).
   - Source: https://github.com/samvallad33/vestige
 
+- 2026-07-02: New memory-focused projects detected in public snapshot: mnemos (production-grade memory OS), neuromcp (semantic memory MCP), dukememory (local-first memory with Codex skill), mcp-ai-memory, cold-frame (local-first SQLite), BrainRouter (cognitive memory + orchestration), and trusty-tools (multi-agent platform with MCP). These signal active open-source development in agent memory.
+  - Source class: Official public sources.
+  - Evidence strength: Weak to Medium (most repos have low stars but high technical relevance).
+  - Sources:
+    - ncz-os/mnemos: https://github.com/ncz-os/mnemos
+    - neuromcp: https://github.com/AdelElo13/neuromcp
+    - dukememory: https://github.com/danilkryachko/dukememory
+    - mcp-ai-memory: https://github.com/ronie-aduana/mcp-ai-memory
+    - cold-frame: https://github.com/coldzero94/cold-frame
+    - BrainRouter: https://github.com/kinqsradiollc/BrainRouter
+    - trusty-tools: https://github.com/bobmatnyc/trusty-tools
+
 ### Artifact and Report Storage
 
 - 2026-07-02: Cloudflare temporary accounts create a 60-minute live deployment and claim flow for agent-created Workers. This is a useful pattern for temporary artifacts that can later become persistent resources.
