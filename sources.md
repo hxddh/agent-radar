@@ -74,6 +74,11 @@ Use broad source coverage by default. The radar should not be limited to public 
 - Cloudflare blog / docs
 - Tigris blog / docs
 - E2B / Modal / Daytona / Supabase / Neon / Railway / Fly.io updates
+- elizaOS / eliza (agent operating system)
+- micro/go-micro (agent harness and service framework)
+- Factory (agent-native development platform)
+- Amp (coding agent)
+- Raycast (desktop productivity agent)
 
 ## Community Sources
 
@@ -86,6 +91,8 @@ Use broad source coverage by default. The radar should not be limited to public 
 - YouTube demos
 - Personal engineering blogs
 - Product Hunt / launch pages
+- meltedinhex.com (security-focused agent skills blog)
+- hivesecurity.gitlab.io (security analysis blog)
 
 ## High-Signal Filters
 

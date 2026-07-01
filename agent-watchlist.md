@@ -200,3 +200,243 @@ Name:
 - Risk:
 - Public corroboration:
 - Watch next:
+
+## elizaOS / eliza
+
+Status:
+- Category: Agent operating system / agentic framework
+- Maturity: High-starred open-source (18,665 stars) with active development; adoption evidence still source required.
+- Core use case: Building and running autonomous agents with a modular agentic operating system.
+- Recent changes: Active repository with frequent updates; latest update 2026-07-01.
+- Strengths: Strong community interest and modular architecture for agent development.
+- Weaknesses: Source required for production reliability, enterprise adoption, and real-world agent performance.
+- User feedback: Source required.
+- Infra signals: Agent OS, modular plugins, multi-agent coordination, runtime management.
+- Storage implications: Agent state, memory, knowledge bases, and plugin data require persistent storage; OS-level agent management implies workspace and snapshot needs.
+- Watch next: Whether elizaOS becomes a standard foundation for agent deployment or remains a community framework.
+- Source: https://github.com/elizaOS/eliza
+
+## micro/go-micro
+
+Status:
+- Category: Agent harness / service framework
+- Maturity: Mature open-source Go framework (22,907 stars) with broad microservices adoption; agent-specific usage still source required.
+- Core use case: Building agent services and harnesses as distributed microservices in Go.
+- Recent changes: Active repository; latest update 2026-07-01.
+- Strengths: Battle-tested microservices framework that can serve as an agent service backbone.
+- Weaknesses: Source required for direct agent-harness use cases and how it compares to newer agent-native frameworks.
+- User feedback: Source required.
+- Infra signals: Service framework, RPC, agent harness, pub/sub, service discovery.
+- Storage implications: Service state, message queues, and agent coordination data require persistent storage; framework-level storage abstractions may influence agent architecture.
+- Watch next: Whether go-micro is explicitly positioned for agent workloads or remains a general microservices tool.
+- Source: https://github.com/micro/go-micro
+
+## World Model MCP
+
+Status:
+- Category: Agent memory / cross-runtime context
+- Maturity: Early-stage open-source (2 stars) with v0.10.0 release; cross-runtime memory across 7 coding agents.
+- Core use case: Shared memory and context layer for multiple coding agents running in different runtimes.
+- Recent changes: v0.10.0 release with cross-runtime memory support across 7 coding agents.
+- Strengths: Directly addresses agent memory fragmentation and MCP interoperability.
+- Weaknesses: Very early stage; needs real-world validation across diverse agent workloads and runtimes.
+- User feedback: Source required.
+- Infra signals: Cross-runtime memory, MCP integration, agent context sharing, memory persistence.
+- Storage implications: Strong signal for agent memory as a shared, persistent layer across runtimes; memory storage, versioning, and synchronization are key.
+- Watch next: Whether World Model MCP gains adoption as a standard cross-agent memory layer.
+- Source: https://github.com/SaravananJaichandar/world-model-mcp
+
+## idesense
+
+Status:
+- Category: MCP server / IDE integration
+- Maturity: Early-stage open-source (0 stars) with active development; MCP server for JetBrains IDEs.
+- Core use case: Giving coding agents access to JetBrains IDE indexing, navigation, and refactoring capabilities.
+- Recent changes: Initial release supporting IntelliJ IDEA, PyCharm, WebStorm, GoLand, PhpStorm, RustRover, and more.
+- Strengths: Extends MCP ecosystem to professional IDE tooling, enabling deeper agent-IDE integration.
+- Weaknesses: Very early stage; needs real-world validation across different JetBrains IDEs and agent workflows.
+- User feedback: Source required.
+- Infra signals: IDE indexing, code navigation, refactoring, MCP server, agent-IDE bridge.
+- Storage implications: IDE project indexes, navigation caches, and refactoring state become agent-accessible storage surfaces.
+- Watch next: Whether idesense becomes a standard MCP server for JetBrains-based coding agents.
+- Source: https://github.com/vcth4nh/idesense
+
+## ai-ops-agent
+
+Status:
+- Category: Operations agent / AI chief-of-staff
+- Maturity: Early-stage open-source (0 stars) with 24 FastMCP tools; plug-and-play ops agent.
+- Core use case: AI-driven operations over markdown vault, tasks, calendar, semantic search, multimodal tools, and scheduled workflows.
+- Recent changes: Initial release with mission-control dashboard and provider-swappable architecture (OpenAI default, MIT license).
+- Strengths: Comprehensive tool set for operational workflows; provider-agnostic design.
+- Weaknesses: Very early stage; needs real-world validation in production ops environments.
+- User feedback: Source required.
+- Infra signals: FastMCP tools, markdown vault, semantic search, scheduled workflows, mission-control dashboard.
+- Storage implications: Markdown vault, task state, calendar data, and workflow artifacts require persistent storage; ops agent implies long-running state management.
+- Watch next: Whether ai-ops-agent gains adoption as a practical ops automation tool.
+- Source: https://github.com/mirasolutions06/ai-ops-agent
+
+## agentx-kit
+
+Status:
+- Category: Agentic framework / project scaffolder
+- Maturity: Early-stage open-source (0 stars) with provider-agnostic design; supports LangChain & CrewAI.
+- Core use case: Interactive project scaffolding for agentic applications across 10+ model providers.
+- Recent changes: Initial release supporting OpenAI, Azure, OpenRouter, Anthropic, Gemini, Vertex AI, Bedrock, Groq, Ollama.
+- Strengths: Provider-agnostic approach reduces vendor lock-in; interactive scaffolder simplifies agent project setup.
+- Weaknesses: Very early stage; needs real-world validation and community adoption.
+- User feedback: Source required.
+- Infra signals: Multi-provider support, LangChain/CrewAI integration, project scaffolding, agent configuration.
+- Storage implications: Project templates, agent configurations, and model provider settings require persistent storage and versioning.
+- Watch next: Whether agentx-kit becomes a go-to scaffolder for multi-provider agent projects.
+- Source: https://github.com/muhammadyahiya/agentx-kit
+
+## AnalystAIPack
+
+Status:
+- Category: Agent skills / security analysis
+- Maturity: Early-stage open-source with 118 runnable agent skills for malware analysis and reverse engineering.
+- Core use case: Pre-built agent skills for security analysis workflows, expanding agent tool-use in specialized domains.
+- Recent changes: Initial release with 118 skills; companion blog post at meltedinhex.com.
+- Strengths: Large skill set for security-focused agents; demonstrates agent specialization in niche domains.
+- Weaknesses: Very early stage; needs real-world validation in production security workflows.
+- User feedback: Source required.
+- Infra signals: Agent skills, malware analysis, reverse engineering, security tooling, domain-specific agents.
+- Storage implications: Analysis artifacts, malware samples, reverse engineering outputs, and skill execution logs require secure, governed storage.
+- Watch next: Whether AnalystAIPack gains adoption in security operations and incident response.
+- Sources: https://meltedinhex.com/posts/analyst-ai-pack/ and https://github.com/meltedinhex/analyst-ai-pack
+
+## awesome-agent-skills-security
+
+Status:
+- Category: Security resource / agent skills security
+- Maturity: Early-stage curated list (28 stars) with active development; resources on agent skills security.
+- Core use case: Curated knowledge base for attacks, defenses, frameworks, and benchmarks for securing AI agent tool use and skill ecosystems.
+- Recent changes: Initial release with curated resources; latest update 2026-07-01.
+- Strengths: Addresses a critical gap in agent security; community-driven resource aggregation.
+- Weaknesses: Early stage; needs broader community contribution and real-world case studies.
+- User feedback: Source required.
+- Infra signals: Agent skills security, attack vectors, defense mechanisms, benchmarks, frameworks.
+- Storage implications: Security policies, audit logs, skill permissions, and vulnerability databases require secure, versioned storage.
+- Watch next: Whether this list becomes a standard reference for agent security practitioners.
+- Source: https://github.com/LLMSecurity/awesome-agent-skills-security
+
+## enterprise-architect-mcp
+
+Status:
+- Category: MCP server / enterprise architecture
+- Maturity: Early-stage open-source (0 stars) with read-only MCP server for Sparx Enterprise Architect.
+- Core use case: Giving AI agents access to EA analysis models without a running EA instance.
+- Recent changes: Initial release supporting `.qea` exports, search elements, navigate packages, read use case scenarios, and traverse connectors.
+- Strengths: Bridges enterprise architecture tools with AI agents via MCP; enables agent-driven architecture analysis.
+- Weaknesses: Very early stage; read-only limitation may restrict practical use cases.
+- User feedback: Source required.
+- Infra signals: Enterprise architecture, MCP server, read-only model access, EA analysis, agent-architecture bridge.
+- Storage implications: EA model files (`.qea`), architecture diagrams, and analysis outputs become agent-accessible storage surfaces.
+- Watch next: Whether enterprise-architect-mcp gains adoption in enterprise architecture governance workflows.
+- Source: https://github.com/DITEC-Mracka/enterprise-architect-mcp
+
+## cloudscape-docs-mcp
+
+Status:
+- Category: MCP server / design systems
+- Maturity: Early-stage open-source (1 star) with semantic search over AWS Cloudscape documentation.
+- Core use case: Enabling AI agents and coding assistants to search and reference AWS Cloudscape design system docs.
+- Recent changes: Initial release with efficient MCP server for semantic search.
+- Strengths: Useful for design-system-aware coding agents; demonstrates MCP integration for documentation access.
+- Weaknesses: Very early stage; niche use case limited to AWS Cloudscape users.
+- User feedback: Source required.
+- Infra signals: Semantic search, design system docs, MCP server, agent documentation access.
+- Storage implications: Design system documentation, search indexes, and agent queries require caching and storage for performance.
+- Watch next: Whether cloudscape-docs-mcp inspires similar MCP servers for other design systems.
+- Source: https://github.com/prem676/cloudscape-docs-mcp
+
+## Ox
+
+Status:
+- Category: Coding agent / tech debt detection
+- Maturity: Early-stage Show HN (2 points, 6 comments) with pre-commit tech debt detection.
+- Core use case: Catching tech debt before it's committed, acting as a code quality gate in the development workflow.
+- Recent changes: Initial Show HN launch.
+- Strengths: Addresses a specific pain point (tech debt) with agent-driven prevention.
+- Weaknesses: Very early stage; low community engagement (2 points) suggests limited initial traction.
+- User feedback: Source required.
+- Infra signals: Pre-commit analysis, code quality, tech debt detection, CI/CD integration.
+- Storage implications: Code analysis results, tech debt reports, and quality metrics require storage and versioning.
+- Watch next: Whether Ox gains more community engagement and real-world adoption evidence.
+- Source: https://news.ycombinator.com/item?id=48746066
+
+## CoderScreen
+
+Status:
+- Category: Interview platform / coding assessment
+- Maturity: Early-stage Show HN (3 points, 0 comments) with open-source interview platform.
+- Core use case: Open-source platform for technical interviews and coding assessments.
+- Recent changes: Initial Show HN launch.
+- Strengths: Open-source alternative to proprietary interview platforms.
+- Weaknesses: Very early stage; no comments and low points suggest limited initial interest.
+- User feedback: Source required.
+- Infra signals: Interview platform, coding assessment, open-source, developer tools.
+- Storage implications: Interview recordings, code submissions, assessment results, and candidate data require secure, governed storage.
+- Watch next: Whether CoderScreen gains community traction or remains a niche tool.
+- Source: https://github.com/CoderScreen/coderscreen
+
+## Strata
+
+Status:
+- Category: Markdown editor / filesystem mount
+- Maturity: Early-stage Show HN (5 points, 4 comments) with real-time Markdown editor mountable as a filesystem.
+- Core use case: Real-time collaborative Markdown editing with filesystem integration.
+- Recent changes: Initial Show HN launch.
+- Strengths: Novel filesystem-mount approach for Markdown editing; potential agent integration point.
+- Weaknesses: Early stage; needs real-world validation and broader use case exploration.
+- User feedback: Source required.
+- Infra signals: Filesystem mount, real-time editing, Markdown, collaborative tools.
+- Storage implications: Filesystem-mounted Markdown files, real-time collaboration state, and version history require persistent storage.
+- Watch next: Whether Strata's filesystem approach inspires agent-accessible document editing patterns.
+- Source: https://strata.space/show
+
+## OpenAI Adoption Expansion
+
+Status:
+- Category: Enterprise AI adoption
+- Maturity: Official OpenAI blog post on ChatGPT adoption expansion.
+- Core use case: Enterprise and organizational adoption of ChatGPT.
+- Recent changes: Blog post published on how ChatGPT adoption has expanded.
+- Strengths: Official first-party data on enterprise AI adoption trends.
+- Weaknesses: High-level adoption narrative; needs specific agent workflow details.
+- User feedback: Source required.
+- Infra signals: Enterprise adoption, organizational usage, AI integration patterns.
+- Storage implications: Enterprise usage data, adoption metrics, and organizational knowledge bases require governed storage.
+- Watch next: Whether OpenAI publishes more detailed agent-specific adoption data.
+- Source: https://openai.com/index/how-chatgpt-adoption-has-expanded
+
+## GeneBench Pro
+
+Status:
+- Category: AI benchmark / genomics
+- Maturity: Official OpenAI benchmark and case studies for genomics AI.
+- Core use case: Benchmarking AI models on genomics tasks; includes case studies.
+- Recent changes: Introduction of GeneBench Pro and accompanying case studies.
+- Strengths: Official benchmark with real-world case studies; domain-specific AI evaluation.
+- Weaknesses: Genomics-specific; limited direct relevance to general coding agents.
+- User feedback: Source required.
+- Infra signals: AI benchmarking, genomics, domain-specific evaluation, case studies.
+- Storage implications: Benchmark datasets, genomic data, evaluation results, and case study artifacts require specialized storage.
+- Watch next: Whether domain-specific benchmarks like GeneBench Pro influence agent evaluation frameworks.
+- Sources: https://openai.com/index/genebench-pro/case-studies and https://openai.com/index/introducing-genebench-pro
+
+## OpenAI Core Dump
+
+Status:
+- Category: Infrastructure / bug report
+- Maturity: Official OpenAI blog post on epidemiology data infrastructure bug.
+- Core use case: Transparent post-mortem on a data infrastructure bug.
+- Recent changes: Blog post published on core dump epidemiology data infrastructure bug.
+- Strengths: Demonstrates OpenAI's transparency in infrastructure incidents.
+- Weaknesses: Single incident; limited direct relevance to agent infrastructure.
+- User feedback: Source required.
+- Infra signals: Data infrastructure, bug post-mortem, epidemiology, incident transparency.
+- Storage implications: Data infrastructure bugs, incident logs, and post-mortem artifacts require secure, auditable storage.
+- Watch next: Whether OpenAI publishes more agent-specific infrastructure incident reports.
+- Source: https://openai.com/index/core-dump-epidemiology-data-infrastructure-bug
