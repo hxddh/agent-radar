@@ -199,3 +199,112 @@ Follow-up gaps:
 - Monitor Vestige for benchmarks, integration guides, or user testimonials.
 - Monitor Obsidian Turbocharged for community engagement, stars, or user reports.
 - Continue tracking deferred candidates for stronger evidence in future runs.
+
+### Pass 6: Source Sweep (2026-07-02)
+
+Purpose:
+- Perform a new source-sweep pass using the latest public source snapshot and a provided screening pass to discover additional candidates and capture them in the research log without promoting into agent-watchlist.md, storage-angle.md, or radar.md.
+
+Accepted sources (new since Pass 4):
+- ncz-os/mnemos: https://github.com/ncz-os/mnemos (production-grade memory operating system for agentic AI)
+- BrainRouter: https://github.com/kinqsradiollc/BrainRouter (cognitive memory and multi-agent orchestration)
+- macro-inc/macro: https://github.com/macro-inc/macro (unified interface with shared AI memory)
+- GOAT 2.0: https://github.com/takashikiari/GOAT2-General-Orchestrated-Agent-Topology (orchestrator with proactive episodic memory)
+- Google OKF memory verification: https://kage-core.com/ (framework to maintain and verify agent memory)
+- Toolnexus: https://pypi.org/project/toolnexus/ (MCP, agent skills, A2A for Python)
+- deptrust: https://github.com/clidey/deptrust (CLI to help AI agents avoid vulnerable dependencies)
+- aobench: https://github.com/MSKazemi/aobench (agent benchmark for HPC)
+- jvmlens: https://github.com/alexmond/jvmlens (LLM-ready JVM profiler with MCP server)
+- cold-frame: https://github.com/coldzero94/cold-frame (local-first memory for AI agents)
+- cortex: https://github.com/envibagus/cortex (macOS control center for local AI stack)
+- argus: https://github.com/chriswu727/argus (exploratory QA agent with MCP server)
+- ALEKSANDRA_BRAIN_v4: https://github.com/navyforses/ALEKSANDRA_BRAIN_v4 (research brain with 52 MCP servers, 5 CrewAI agents)
+- ai-agent-llms: https://github.com/wpawgasa/ai-agent-llms (research framework for LLMs for AI agents)
+- arXiv CS AI papers on interactive improvement and contrastive reflection for prompt optimization.
+
+Candidate inbox (compact, ranked):
+
+1. ncz-os/mnemos – production-grade memory OS for agents.
+   - Why it matters: Direct memory infrastructure with MCP interoperability. High relevance (score 9).
+   - Evidence strength: Medium (28 stars, production use since Dec 2025, Apache 2.0).
+   - Defer reason: Very early community adoption; needs independent user evidence.
+   - Follow-up needed: Watch for documentation, integrations, and developer community growth.
+
+2. BrainRouter – cognitive memory & multi-agent orchestration.
+   - Why it matters: Combines MCP-based memory, layered recall, context compaction, graph memory, and dashboard. Relevance score 8.
+   - Evidence strength: Weak (3 stars), but technically deep.
+   - Defer reason: No community or real-world usage evidence.
+   - Follow-up needed: Monitor GitHub stars, issues, and any case studies.
+
+3. macro-inc/macro – unified agent interface with shared AI memory.
+   - Why it matters: Links email, tasks, agents, PRs, docs, CRM with shared AI memory. Relevance score 7.
+   - Evidence strength: Weak-Medium (305 stars, but pre-alpha).
+   - Defer reason: No production user reports or enterprise adoption.
+   - Follow-up needed: Track release milestones and user stories.
+
+4. Toolnexus – MCP/agent skills/A2A for Python LLMs.
+   - Why it matters: Fills a gap in standardizing tool interfaces for Python agents. Relevance score 8.
+   - Evidence strength: Weak (PyPI package with 2 HN points).
+   - Defer reason: Zero adoption evidence beyond launch.
+   - Follow-up needed: Check PyPI downloads and GitHub repo for integrations.
+
+5. Google OKF memory verification (kage-core.com) – framework to maintain and verify agent memory.
+   - Why it matters: Potential standard for agent memory testing. Relevance score 7.
+   - Evidence strength: Weak (3 points, 3 comments on HN).
+   - Defer reason: Domain is a thin wrapper; unclear Google backing depth.
+   - Follow-up needed: Investigate actual Google connection and any open-source release.
+
+6. GOAT 2.0 – orchestrator with proactive episodic memory.
+   - Why it matters: Direct memory+orchestration signal. Relevance score 6.
+   - Evidence strength: Very weak (1 HN point, no documentation).
+   - Defer reason: Almost no signal. Follow-up only if repo matures.
+   - Follow-up needed: None unless stars/docs appear.
+
+7. deptrust – CLI for AI agents to avoid vulnerable dependencies.
+   - Why it matters: Agent-focused security tool; directly addresses supply-chain risk. Relevance score 6.
+   - Evidence strength: Weak (3 points, 0 comments on HN, no visible users).
+   - Defer reason: Early concept; needs integration examples.
+   - Follow-up needed: Watch for adoption by agent frameworks.
+
+8. argus – exploration QA agent with MCP server.
+   - Why it matters: Testing/QA as an agent primitive; shallow but directly relevant. Relevance score 6.
+   - Evidence strength: Weak (1 star).
+   - Defer reason: No evidence of effectiveness.
+   - Follow-up needed: Look for demo videos or issue reports.
+
+9. jvmlens – LLM-ready JVM profiler with MCP server.
+   - Why it matters: Bridges observability into agent tool-use via MCP. Relevance score 5.
+   - Evidence strength: Weak (1 star).
+   - Defer reason: Niche domain; unclear if agents will use it.
+   - Follow-up needed: Check for MCP server compatibility and CLI usage examples.
+
+10. cold-frame – local-first memory for AI agents.
+    - Why it matters: Offline, private SQLite memory for agents; directly competitive with Vestige. Relevance score 6.
+    - Evidence strength: Very weak (0 stars).
+    - Defer reason: Duplicates existing memory candidates; no differentiation.
+    - Follow-up needed: Compare with Vestige and mnemos if it gains stars.
+
+11. cortex – macOS control center for local AI stack.
+    - Why it matters: Agent lifecycle management on desktop. Relevance score 5.
+    - Evidence strength: Weak (1 star).
+    - Defer reason: Too early; targets a narrow power-user niche.
+    - Follow-up needed: Monitor for feature announcements.
+
+12. ALEKSANDRA_BRAIN_v4 – domain-specific research brain for pediatric HIE.
+    - Why it matters: Real-world agent application with extreme MCP density (52 servers). Relevance score 4.
+    - Evidence strength: Weak (0 stars, repository is a single-user research project).
+    - Defer reason: Domain-specific; not a general agent pattern yet.
+    - Follow-up needed: None unless it is generalized.
+
+Rejected or deprioritized this pass:
+- Generic or low-engagement Show HN items without concrete agent infrastructure or memory/storage angle.
+- ai-agent-llms research framework (0 stars, early).
+- aobench (1 star, HPC-specific benchmark without agent-evaluation traction).
+- arXiv papers: good signal for prompt optimization research but not novel product/infra signals.
+- Anthropic news feed (HTTP 404) remains broken; could not access.
+
+Follow-up gaps (new):
+- Majority of new candidates are memory-centric. Need field evidence to separate durable primitives from overhyped launches.
+- Macro, mnemos, and BrainRouter target shared agent memory but with different architectures. Track convergence or divergence.
+- Security angle (deptrust) is nascent but will become critical as agents gain more autonomous access.
+- No new sandbox, deployment, or storage-for-agents signals in this sweep. ng gaps for infra beyond memory.
