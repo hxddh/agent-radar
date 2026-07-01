@@ -55,4 +55,3 @@ Follow-up gaps:
 - Find stronger public user reports for Devin Review, Replit-from-Claude, Warp terminal routing, Amp remote agents, Factory Droids, and Raycast v2 AI memory.
 - Track whether "agent client" patterns converge around ACP, MCP, AGENTS.md, or vendor-specific integrations.
 - Look for storage-retention details for session histories, agent memories, remote-control threads, and enterprise knowledge stores.
-
