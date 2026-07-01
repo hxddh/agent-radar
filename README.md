@@ -77,7 +77,7 @@ Daily notes are append-oriented. Use them to record high-signal items without fo
 
 For fully Cloud Agent-driven operation, use `automation/daily.md`.
 
-For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`; see `docs/cloud-agent.md`.
+For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`. The recommended low-cost paid mode uses OpenRouter with DeepSeek V4 Flash, DeepSeek V4 Pro, GLM 5.2, and free public sources only; see `docs/cloud-agent.md`.
 
 Daily lightweight questions:
 

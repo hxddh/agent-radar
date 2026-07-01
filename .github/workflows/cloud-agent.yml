@@ -38,6 +38,12 @@ jobs:
       GITHUB_MODEL: ${{ vars.GITHUB_MODEL || 'openai/gpt-4o' }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.5' }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      CHEAP_SCREEN_MODEL: ${{ vars.CHEAP_SCREEN_MODEL || 'deepseek/deepseek-v4-flash' }}
+      MAIN_RESEARCH_MODEL: ${{ vars.MAIN_RESEARCH_MODEL || 'deepseek/deepseek-v4-pro' }}
+      FINAL_SYNTHESIS_MODEL: ${{ vars.FINAL_SYNTHESIS_MODEL || 'z-ai/glm-5.2' }}
+      MAX_PUBLIC_SOURCE_ITEMS: ${{ vars.MAX_PUBLIC_SOURCE_ITEMS || '' }}
+      PUBLIC_SOURCE_COLLECTION: ${{ vars.PUBLIC_SOURCE_COLLECTION || 'true' }}
 
     steps:
       - name: Check out repository
@@ -54,6 +60,9 @@ jobs:
         run: |
           echo "Provider: $AGENT_RADAR_MODEL_PROVIDER"
           echo "GitHub model: $GITHUB_MODEL"
+          echo "Cheap screen model: $CHEAP_SCREEN_MODEL"
+          echo "Main research model: $MAIN_RESEARCH_MODEL"
+          echo "Final synthesis model: $FINAL_SYNTHESIS_MODEL"
 
       - name: Run cloud agent
         run: |

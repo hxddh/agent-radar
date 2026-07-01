@@ -1,6 +1,6 @@
 # Subscription-Only Mode
 
-This repository supports three operating modes.
+This repository supports four operating modes.
 
 ## GitHub Models 24/7 Mode
 
@@ -26,7 +26,7 @@ GITHUB_MODEL=openai/gpt-4o
 
 ## API-Backed 24/7 Mode
 
-This is the only fully unattended mode currently implemented in the repository.
+This is the OpenAI API-backed unattended mode.
 
 Requirements:
 
@@ -62,3 +62,31 @@ Use subscription-only mode for interactive cloud work.
 Use GitHub Models mode for true unattended 24/7 operation without an OpenAI API key.
 
 Use API-backed mode only if you later want OpenAI Responses API-specific features such as built-in web search.
+
+## Low-Cost OpenRouter 24/7 Mode
+
+This is the recommended paid API mode when cost control matters more than perfect paid search coverage.
+
+Requirements:
+
+- GitHub Actions enabled
+- Repository secret named `OPENROUTER_API_KEY`
+- Repository variable `AGENT_RADAR_MODEL_PROVIDER=openrouter`
+
+Recommended variables:
+
+```text
+CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
+MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
+FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
+MAX_PUBLIC_SOURCE_ITEMS=24
+PUBLIC_SOURCE_COLLECTION=true
+```
+
+Behavior:
+
+- No OpenRouter web search calls.
+- No Grok search, Perplexity, Search1API, SocialCrawl, or Tavily.
+- Public source collection uses Hacker News Algolia, GitHub REST API, and public RSS feeds.
+- Daily/source-sweep runs use DeepSeek V4 Flash for screening and DeepSeek V4 Pro for final updates.
+- Weekly/monthly runs use GLM 5.2 for final synthesis.

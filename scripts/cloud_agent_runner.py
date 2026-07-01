@@ -2,19 +2,21 @@
 """GitHub Actions cloud runner for Agent Radar.
 
 This script intentionally uses only the Python standard library.
-It can call GitHub Models with the GitHub Actions GITHUB_TOKEN, or the OpenAI
-Responses API when OPENAI_API_KEY is configured.
+It can call GitHub Models with the GitHub Actions GITHUB_TOKEN, OpenRouter
+with public-source collection, or the OpenAI Responses API when configured.
 """
 
 from __future__ import annotations
 
 import argparse
 import datetime as dt
+import html
 import json
 import os
 import subprocess
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -22,10 +24,15 @@ from typing import Any
 
 OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
+DEFAULT_CHEAP_SCREEN_MODEL = "deepseek/deepseek-v4-flash"
+DEFAULT_MAIN_RESEARCH_MODEL = "deepseek/deepseek-v4-pro"
+DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
+MAX_PUBLIC_SOURCE_ITEMS = 40
 
 
 TASK_CONFIG = {
@@ -136,6 +143,16 @@ def max_file_chars() -> int:
     return MAX_FILE_CHARS
 
 
+def env_int(name: str, default: int) -> int:
+    value = os.environ.get(name)
+    if not value:
+        return default
+    try:
+        return max(0, int(value))
+    except ValueError:
+        return default
+
+
 def read_text(path: Path) -> str:
     if not path.exists():
         return ""
@@ -185,6 +202,143 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
         content = read_text(root / rel_path)
         chunks.append(f"\n--- FILE: {rel_path} ---\n{content}")
     return allowed, "\n".join(chunks)
+
+
+def request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 45) -> Any:
+    request = urllib.request.Request(url, headers=headers or {}, method="GET")
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def strip_html(value: str) -> str:
+    text = html.unescape(value)
+    pieces: list[str] = []
+    in_tag = False
+    for char in text:
+        if char == "<":
+            in_tag = True
+            continue
+        if char == ">":
+            in_tag = False
+            continue
+        if not in_tag:
+            pieces.append(char)
+    return " ".join("".join(pieces).split())
+
+
+def add_source_item(items: list[dict[str, str]], seen: set[str], source: str, title: str, url: str, note: str = "") -> None:
+    if not url or url in seen:
+        return
+    seen.add(url)
+    items.append(
+        {
+            "source": source,
+            "title": strip_html(title)[:220],
+            "url": url,
+            "note": strip_html(note)[:420],
+        }
+    )
+
+
+def collect_hn_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    url = f"https://hn.algolia.com/api/v1/search_by_date?query={encoded}&tags=story&hitsPerPage={limit}"
+    data = request_json(url)
+    for hit in data.get("hits", [])[:limit]:
+        story_id = hit.get("objectID", "")
+        story_url = hit.get("url") or f"https://news.ycombinator.com/item?id={story_id}"
+        title = hit.get("title") or hit.get("story_title") or "HN item"
+        note = f"points={hit.get('points', '?')}; comments={hit.get('num_comments', '?')}"
+        add_source_item(items, seen, "hacker-news", title, story_url, note)
+
+
+def collect_github_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    token = os.environ.get("GITHUB_TOKEN", "")
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "agent-radar-cloud",
+    }
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    encoded = urllib.parse.quote(f"{query} pushed:>{(dt.datetime.now(dt.timezone.utc).date() - dt.timedelta(days=45)).isoformat()}")
+    url = f"https://api.github.com/search/repositories?q={encoded}&sort=updated&order=desc&per_page={limit}"
+    data = request_json(url, headers=headers)
+    for repo in data.get("items", [])[:limit]:
+        note = f"stars={repo.get('stargazers_count', 0)}; updated={repo.get('updated_at', '')}; {repo.get('description') or ''}"
+        add_source_item(items, seen, "github", repo.get("full_name", "GitHub repo"), repo.get("html_url", ""), note)
+
+
+def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    request = urllib.request.Request(feed_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    with urllib.request.urlopen(request, timeout=45) as response:
+        text = response.read().decode("utf-8", errors="replace")
+    chunks = text.split("<item>")[1:]
+    if not chunks:
+        chunks = text.split("<entry>")[1:]
+    for chunk in chunks[:limit]:
+        title = ""
+        link = ""
+        if "<title>" in chunk:
+            title = chunk.split("<title>", 1)[1].split("</title>", 1)[0]
+        if "<link>" in chunk:
+            link = chunk.split("<link>", 1)[1].split("</link>", 1)[0]
+        if not link and 'href="' in chunk:
+            link = chunk.split('href="', 1)[1].split('"', 1)[0]
+        add_source_item(items, seen, source, title or source, link, "rss/feed item")
+
+
+def public_source_budget(task: str) -> int:
+    defaults = {
+        "daily": 16,
+        "source-sweep": 24,
+        "weekly": 28,
+        "monthly": 36,
+    }
+    return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
+
+
+def collect_public_sources(task: str) -> str:
+    if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
+        return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
+
+    budget = public_source_budget(task)
+    per_query = max(2, min(6, budget // 6))
+    items: list[dict[str, str]] = []
+    seen: set[str] = set()
+    errors: list[str] = []
+
+    collectors = [
+        ("hn:ai-agent", lambda: collect_hn_items("AI agent", per_query, items, seen)),
+        ("hn:mcp", lambda: collect_hn_items("MCP agent", per_query, items, seen)),
+        ("github:agent-framework", lambda: collect_github_items("AI agent framework", per_query, items, seen)),
+        ("github:mcp", lambda: collect_github_items("MCP server agent", per_query, items, seen)),
+        ("openai-blog", lambda: collect_feed_items("https://openai.com/news/rss.xml", "openai-blog", per_query, items, seen)),
+        ("anthropic-news", lambda: collect_feed_items("https://www.anthropic.com/news/rss.xml", "anthropic-news", per_query, items, seen)),
+    ]
+
+    for name, collector in collectors:
+        if len(items) >= budget:
+            break
+        try:
+            collector()
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError) as exc:
+            errors.append(f"{name}: {exc}")
+
+    limited = items[:budget]
+    lines = [
+        "Public source snapshot:",
+        "- Paid search calls: 0",
+        "- Source policy: GitHub API, Hacker News Algolia, and public RSS only.",
+        f"- Item budget: {budget}",
+    ]
+    for item in limited:
+        note = f" -- {item['note']}" if item.get("note") else ""
+        lines.append(f"- [{item['source']}] {item['title']} | {item['url']}{note}")
+    if errors:
+        lines.append("Collection errors:")
+        for error in errors[:10]:
+            lines.append(f"- {error}")
+    return "\n".join(lines)
 
 
 def response_output_text(data: dict[str, Any]) -> str:
@@ -273,16 +427,110 @@ def call_github_models(prompt: str) -> dict[str, Any]:
         raise SystemExit(f"GitHub Models API error {exc.code}: {body}") from exc
 
 
-def call_model(prompt: str) -> dict[str, Any]:
+def openrouter_headers() -> dict[str, str]:
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise SystemExit("OPENROUTER_API_KEY is not set. Add it as a GitHub Actions secret.")
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": os.environ.get("OPENROUTER_SITE_URL", "https://github.com/hxddh/agent-radar"),
+        "X-Title": os.environ.get("OPENROUTER_APP_TITLE", "Agent Radar Cloud"),
+    }
+
+
+def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a careful autonomous maintainer. Return only valid JSON.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0.2,
+        "response_format": {"type": "json_object"},
+    }
+    request = urllib.request.Request(
+        OPENROUTER_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers=openrouter_headers(),
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=900) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise SystemExit(f"OpenRouter API error {exc.code}: {body}") from exc
+
+
+def openrouter_models_for_task(task: str) -> list[str]:
+    cheap = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
+    main = os.environ.get("MAIN_RESEARCH_MODEL", DEFAULT_MAIN_RESEARCH_MODEL)
+    final = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
+    if task in {"weekly", "monthly"}:
+        return [final]
+    if task == "source-sweep":
+        return [cheap, main]
+    return [cheap, main]
+
+
+def build_screen_prompt(task: str, public_sources: str) -> str:
+    return f"""You are the low-cost screening model for Agent Radar.
+
+Task: {task}
+
+Use the public source snapshot below. Deduplicate, rank, and compress the signals.
+
+Return only valid JSON with this shape:
+{{
+  "summary": "short screening summary",
+  "candidates": [
+    {{"title": "signal", "why_it_matters": "reason", "evidence": ["url or source label"], "confidence": "high|medium|low"}}
+  ],
+  "gaps": ["missing source or follow-up"]
+}}
+
+Rules:
+- Do not invent facts.
+- Keep weak social/community evidence labeled as weak.
+- Prefer agent infrastructure, agent runtimes, MCP/tool-use, memory, evals, storage, and deployment signals.
+
+{public_sources}
+"""
+
+
+def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, Any]:
+    models = openrouter_models_for_task(task)
+    if len(models) == 1:
+        return call_openrouter_model(prompt, models[0])
+
+    screen_data = call_openrouter_model(build_screen_prompt(task, public_sources), models[0])
+    screen_text = response_output_text(screen_data)
+    combined_prompt = f"""{prompt}
+
+Screening pass from {models[0]}:
+{screen_text}
+
+Use the screening pass as compact evidence, but make the final judgment yourself.
+"""
+    return call_openrouter_model(combined_prompt, models[-1])
+
+
+def call_model(prompt: str, task: str, public_sources: str) -> dict[str, Any]:
     provider = model_provider()
     if provider == "openai":
         return call_openai(prompt)
+    if provider == "openrouter":
+        return call_openrouter(task, prompt, public_sources)
     if provider in {"github", "github-models"}:
         return call_github_models(prompt)
     raise SystemExit(f"Unsupported AGENT_RADAR_MODEL_PROVIDER: {provider}")
 
 
-def build_prompt(task: str, day: dt.date, allowed: list[str], context: str) -> str:
+def build_prompt(task: str, day: dt.date, allowed: list[str], context: str, public_sources: str) -> str:
     allowed_text = "\n".join(f"- {path}" for path in allowed)
     return f"""You are the autonomous cloud agent for Agent Radar.
 
@@ -305,12 +553,16 @@ Return only valid JSON with this shape:
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
-- If the provider cannot browse the live web, record the limitation in research-log.md and use existing source lists, official URLs already in the repo, and conservative follow-up gaps.
+- For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
+- If the provider cannot browse the live web, record the limitation in research-log.md.
 - Label weak evidence, missing corroboration, private/logged-in source status, and inference.
 - Do not publish private URLs, private messages, screenshots, customer names, personal identifiers, or confidential details.
 - Do not invent factual claims. Use source links, source classes, or source status labels.
 - Preserve existing useful content. Append or synthesize rather than deleting history.
 - If no useful update is found, update research-log.md with the search pass and return that file only.
+
+Public source snapshot:
+{public_sources}
 
 Repository context:
 {context}
@@ -349,8 +601,9 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
     allowed, context = build_context(root, task, day)
-    prompt = build_prompt(task, day, allowed, context)
-    data = call_model(prompt)
+    public_sources = collect_public_sources(task) if model_provider() == "openrouter" else ""
+    prompt = build_prompt(task, day, allowed, context, public_sources)
+    data = call_model(prompt, task, public_sources)
     output_text = response_output_text(data)
     try:
         result = json.loads(output_text)
