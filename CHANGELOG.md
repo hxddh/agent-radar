@@ -13,7 +13,8 @@ Added:
 - Official page collection for changelog/news sources that do not expose stable RSS feeds.
 
 Changed:
-- Default public-source budgets are higher: daily 48, source-sweep 80, weekly 64, monthly 96.
+- Default public-source budgets are now aggressive: daily 80, source-sweep 120, weekly 120, monthly 160.
+- Automatic cloud mode now runs discovery-only source sweep every day and candidate promotion every Wednesday and Sunday.
 - Source collectors now run concurrently and trim after collection, so early source lanes cannot consume the whole source budget.
 
 ## v0.2.0 - 2026-07-02

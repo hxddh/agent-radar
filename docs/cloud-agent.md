@@ -40,15 +40,15 @@ AGENT_RADAR_MODEL_PROVIDER=openrouter
 CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
 MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
 FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
-MAX_PUBLIC_SOURCE_ITEMS=48
+MAX_PUBLIC_SOURCE_ITEMS=80
 PUBLIC_SOURCE_COLLECTION=true
 MAX_OPENROUTER_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
 OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
-MAX_RELEASE_REPOS=12
-MAX_RELEASES_PER_REPO=2
-MAX_SOURCE_WORKERS=8
+MAX_RELEASE_REPOS=20
+MAX_RELEASES_PER_REPO=3
+MAX_SOURCE_WORKERS=12
 RELEASE_REPOS=openai/codex,modelcontextprotocol/servers,modelcontextprotocol/python-sdk,modelcontextprotocol/typescript-sdk,elizaOS/eliza
 CHANGELOG_FEEDS=
 CHANGELOG_PAGES=
@@ -63,7 +63,7 @@ This mode does not call OpenRouter web search, Grok search, Perplexity, Search1A
 - Public RSS feeds for official blogs, changelogs, and arXiv categories
 - Official public changelog/news pages when RSS is unavailable
 
-Model routing stays intentionally small:
+Model routing stays bounded but discovery-oriented:
 
 - `daily`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes the final file updates.
 - `source-sweep`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes only `research-log.md` and `sources.md`.
@@ -74,10 +74,10 @@ This keeps paid search calls at zero. Model usage is bounded by the fixed task r
 
 Recommended source budgets:
 
-- `daily`: 48 public source items
-- `source-sweep`: 80 public source items
-- `weekly`: 64 public source items
-- `monthly`: 96 public source items
+- `daily`: 80 public source items
+- `source-sweep`: 120 public source items
+- `weekly`: 120 public source items
+- `monthly`: 160 public source items
 
 The runner samples across source lanes before trimming to the budget, so one noisy lane cannot consume the entire daily source window.
 
@@ -109,9 +109,10 @@ The workflow runs daily at `00:30 UTC`.
 In automatic mode:
 
 - Daily runs every day.
-- Weekly synthesis and candidate promotion run on Sundays.
+- Source sweep runs every day as discovery-only candidate capture.
+- Candidate promotion runs every Wednesday and Sunday.
+- Weekly synthesis runs on Sundays.
 - Monthly review runs on the last day of the month.
-- Source sweep runs every other Monday by default. For more aggressive discovery, run `task=source-sweep` manually or add a second scheduled workflow dispatch.
 
 You can also run it manually from GitHub Actions with:
 

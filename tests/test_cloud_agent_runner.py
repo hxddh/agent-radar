@@ -45,8 +45,17 @@ class CloudAgentRunnerTest(unittest.TestCase):
 
     def test_auto_tasks_include_candidate_promotion_on_sunday(self) -> None:
         tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-05"))
+        self.assertIn("daily", tasks)
+        self.assertIn("source-sweep", tasks)
         self.assertIn("weekly", tasks)
         self.assertIn("promote-candidates", tasks)
+
+    def test_auto_tasks_promote_twice_a_week(self) -> None:
+        tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-01"))
+        self.assertIn("daily", tasks)
+        self.assertIn("source-sweep", tasks)
+        self.assertIn("promote-candidates", tasks)
+        self.assertNotIn("weekly", tasks)
 
     def test_daily_can_update_source_registry(self) -> None:
         self.assertIn("sources.md", cloud_agent_runner.TASK_CONFIG["daily"]["allowed"])
@@ -57,9 +66,11 @@ class CloudAgentRunnerTest(unittest.TestCase):
 
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 48)
-            self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 80)
-            self.assertGreaterEqual(cloud_agent_runner.MAX_PUBLIC_SOURCE_ITEMS, 120)
+            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 80)
+            self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 120)
+            self.assertEqual(cloud_agent_runner.public_source_budget("weekly"), 120)
+            self.assertEqual(cloud_agent_runner.public_source_budget("monthly"), 160)
+            self.assertGreaterEqual(cloud_agent_runner.MAX_PUBLIC_SOURCE_ITEMS, 200)
 
     def test_source_queries_cover_social_and_infra_lanes(self) -> None:
         queries = cloud_agent_runner.source_queries_for_task("source-sweep")

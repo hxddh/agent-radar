@@ -34,7 +34,7 @@ DEFAULT_MAIN_RESEARCH_MODEL = "deepseek/deepseek-v4-pro"
 DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
-MAX_PUBLIC_SOURCE_ITEMS = 120
+MAX_PUBLIC_SOURCE_ITEMS = 200
 DEFAULT_MAX_PROMPT_CHARS = 120_000
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
@@ -161,13 +161,13 @@ def run_cli(root: Path, command: str, day: dt.date) -> None:
 
 
 def auto_tasks(day: dt.date) -> list[str]:
-    tasks = ["daily"]
+    tasks = ["daily", "source-sweep"]
     if day.weekday() == 6:
-        tasks.extend(["weekly", "promote-candidates"])
+        tasks.append("weekly")
+    if day.weekday() in {2, 6}:
+        tasks.append("promote-candidates")
     if (day + dt.timedelta(days=1)).month != day.month:
         tasks.append("monthly")
-    if day.weekday() == 0 and day.toordinal() % 14 == 0:
-        tasks.append("source-sweep")
     return tasks
 
 
@@ -451,10 +451,10 @@ def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[
 
 def public_source_budget(task: str) -> int:
     defaults = {
-        "daily": 48,
-        "source-sweep": 80,
-        "weekly": 64,
-        "monthly": 96,
+        "daily": 80,
+        "source-sweep": 120,
+        "weekly": 120,
+        "monthly": 160,
     }
     return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
 
