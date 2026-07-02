@@ -558,3 +558,16 @@ Accepted result:
 Follow-up gaps:
 - Full cloud-agent daily/weekly/monthly run still needed to fill remaining `中文：` sections and synthesize new signals.
 - r/ClaudeAI RSS may need rotation/backoff when rate-limited.
+
+### Pass 12: Collector and bilingual hygiene (2026-07-02)
+
+Purpose:
+- Reduce reddit-rss 429 bursts, remove duplicate Lobsters collection, and document official-page collector migration.
+
+Accepted result:
+- `cursor-changelog` and `anthropic-news` now use `page:` collectors in `DEFAULT_CHANGELOG_PAGES`; legacy `feed:` 404 errors in old run logs are historical only.
+- reddit-rss subreddits are fetched sequentially with `REDDIT_RSS_BATCH_SIZE=1` by default.
+- Empty `中文：` + `English: Label: URL` pairs in reports can be collapsed to single source lines during `bilingualize`.
+
+Follow-up gaps:
+- Manually trigger `weekly` / `monthly` cloud-agent tasks to verify `FINAL_SYNTHESIS_MODEL` (`glm-5.2`) in production telemetry.

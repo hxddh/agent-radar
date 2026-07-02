@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.3.1 - 2026-07-02
+
+### Added
+- Sequential reddit-rss collection with a 1s gap to reduce HTTP 429 bursts.
+- `collapse_empty_chinese_label_url_pairs()` to fold empty `中文：` + `English: Label: URL` into single source lines.
+- Validate warnings for empty `中文：` placeholder lines in reports.
+- `redact_http_error_body()` to truncate provider API error bodies in logs.
+
+### Changed
+- Default `REDDIT_RSS_BATCH_SIZE` lowered from 3 to 1 in workflow vars and CLI defaults.
+- Lobsters RSS is collected once via the dedicated `lobsters` lane (removed duplicate `SOCIAL_FEEDS` default).
+- `.gitignore` now excludes `.env` and `.env.*`.
+
+### Fixed
+- Reddit subreddit RSS parallel bursts that triggered rate limits on shared runner IPs.
+
 ## v0.3.0 - 2026-07-02
 
 ### Added

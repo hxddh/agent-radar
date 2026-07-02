@@ -110,6 +110,25 @@ class RadarBilingualTest(unittest.TestCase):
         self.assertNotIn("中文：https://example.com/changelog", repaired)
         self.assertNotIn("English: https://example.com/changelog", repaired)
 
+    def test_collapse_empty_chinese_label_url_pair(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "  - Sources:\n"
+            "    - 中文：\n"
+            "    - English: BrainRouter: https://github.com/kinqsradiollc/BrainRouter\n"
+        )
+        repaired = radar_bilingual.repair_identical_bilingual_pairs(content)
+        self.assertIn("- BrainRouter: https://github.com/kinqsradiollc/BrainRouter\n", repaired)
+        self.assertEqual(radar_bilingual.empty_chinese_label_lines(repaired), 0)
+
+    def test_empty_chinese_label_lines_counted(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "    - 中文：\n"
+            "    - English: filler english line number one.\n"
+        )
+        self.assertEqual(radar_bilingual.empty_chinese_label_lines(content), 1)
+
     def test_ensure_bilingual_skips_non_report_paths(self) -> None:
         content = "# Research Log\n\n- item\n"
         self.assertEqual(

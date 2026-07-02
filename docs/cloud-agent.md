@@ -142,7 +142,7 @@ PyPI and Reddit rotation:
 ```text
 COLLECT_PYPI=true
 PYPI_PACKAGES=mcp,langchain,crewai,openai,anthropic
-REDDIT_RSS_BATCH_SIZE=3
+REDDIT_RSS_BATCH_SIZE=1
 ```
 
 Collectors that fail repeatedly with zero successes are auto-disabled in `automation/collector-state.json`. Re-enable by editing that file or setting `DISABLED_COLLECTORS` (comma-separated collector names; takes effect immediately and merges with the JSON disabled list).
@@ -176,13 +176,23 @@ OPENAI_MODEL=gpt-5.5
 
 The workflow runs daily at `00:30 UTC`.
 
-In automatic mode:
+In automatic mode (`task=auto`):
 
-- Daily runs every day.
-- Source sweep runs every day as discovery-only candidate capture.
-- Candidate promotion runs every Wednesday and Sunday.
-- Weekly synthesis runs on Sundays.
-- Monthly review runs on the last day of the month.
+| Day | Tasks added |
+| --- | --- |
+| Every day | `daily`, `source-sweep` |
+| Sunday (`weekday==6`) | `weekly`, `promote-candidates` |
+| Wednesday (`weekday==2`) | `promote-candidates` |
+| Last day of month | `monthly` |
+
+`weekly` and `monthly` use `FINAL_SYNTHESIS_MODEL` (default `z-ai/glm-5.2`). To verify in production before the calendar fires:
+
+```bash
+python scripts/agent_radar.py trigger cloud-agent --task weekly --date 2026-07-06
+python scripts/agent_radar.py trigger cloud-agent --task monthly --date 2026-07-31
+```
+
+Reddit subreddit RSS uses `REDDIT_RSS_BATCH_SIZE=1` by default and fetches subreddits sequentially (1 second apart) to reduce HTTP 429 rate limits.
 
 You can also run it manually from GitHub Actions with:
 

@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 CORE_FILES = [
     "README.md",
@@ -586,6 +586,18 @@ def warn_bilingual_missing(path: Path, strict: bool = False) -> list[str]:
     return [f"{path}: report has substantive bullets but missing bilingual Chinese labels (中文：)"]
 
 
+def warn_empty_chinese_labels(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    content = path.read_text(encoding="utf-8")
+    if not radar_bilingual.is_report_content(content):
+        return []
+    count = radar_bilingual.empty_chinese_label_lines(content)
+    if not count:
+        return []
+    return [f"{path}: report has {count} empty 中文： placeholder line(s); run bilingualize to collapse source URL pairs"]
+
+
 def warn_identical_bilingual_pairs(path: Path, strict: bool = False) -> list[str]:
     if not path.exists():
         return []
@@ -698,6 +710,9 @@ def command_validate(args: argparse.Namespace) -> int:
         warnings.extend(warn_bilingual_missing(current_weekly))
         warnings.extend(warn_bilingual_missing(current_monthly))
         warnings.extend(warn_identical_bilingual_pairs(current_daily))
+    warnings.extend(warn_empty_chinese_labels(current_daily))
+    warnings.extend(warn_empty_chinese_labels(current_weekly))
+    warnings.extend(warn_empty_chinese_labels(current_monthly))
     if require_chinese:
         errors.extend(warn_missing_chinese_substance(current_daily, strict=True))
         errors.extend(warn_missing_chinese_substance(current_weekly, strict=True))
