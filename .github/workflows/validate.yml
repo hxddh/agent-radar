@@ -31,4 +31,8 @@ jobs:
           fi
 
       - name: Validate structure
-        run: python scripts/agent_radar.py validate --date 2026-07-02
+        run: |
+          python scripts/agent_radar.py validate --date 2026-07-02
+          TODAY="$(date -u +%F)"
+          python scripts/agent_radar.py ensure --date "$TODAY"
+          python scripts/agent_radar.py validate --date "$TODAY"

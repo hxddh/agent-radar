@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 
-__version__ = "0.1.0"
+__version__ = "0.2.1"
 
 CORE_FILES = [
     "README.md",
@@ -497,6 +497,43 @@ def warn_weekly_sparse(path: Path) -> list[str]:
     return []
 
 
+def warn_bilingual_missing(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    content = path.read_text(encoding="utf-8")
+    bullet_count = sum(1 for line in content.splitlines() if line.strip().startswith("- "))
+    if bullet_count < 3:
+        return []
+    if "中文：" in content:
+        return []
+    if not any(marker in content for marker in ("Daily Agent Radar", "Agent Radar Weekly", "Agent Radar Monthly")):
+        return []
+    return [f"{path}: report has substantive bullets but missing bilingual Chinese labels (中文：)"]
+
+
+def warn_daily_entry_missing(path: Path, day: dt.date) -> list[str]:
+    if not path.exists():
+        return []
+    if f"## {day.isoformat()}" in path.read_text(encoding="utf-8"):
+        return []
+    return [f"{path}: missing entry heading for {day.isoformat()}"]
+
+
+def ensure_reports(root: Path, day: dt.date) -> None:
+    """Create missing daily, weekly, and monthly report shells."""
+    command_daily(argparse.Namespace(date=day.isoformat()))
+    command_weekly(argparse.Namespace(date=day.isoformat()))
+    command_monthly(argparse.Namespace(date=day.isoformat()))
+
+
+def command_ensure(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    ensure_reports(root, day)
+    print(f"ensured daily, weekly, and monthly report shells for {day.isoformat()}")
+    return 0
+
+
 def command_validate(args: argparse.Namespace) -> int:
     root = find_root()
     day = parse_date(args.date)
@@ -507,16 +544,20 @@ def command_validate(args: argparse.Namespace) -> int:
 
     if not current_daily.exists():
         errors.append(str(current_daily.relative_to(root)))
-    if not current_weekly.exists():
-        errors.append(str(current_weekly.relative_to(root)))
-    if not current_monthly.exists():
-        errors.append(str(current_monthly.relative_to(root)))
 
     warnings: list[str] = []
+    if not current_weekly.exists():
+        warnings.append(f"Missing weekly report: {current_weekly.relative_to(root)}")
+    if not current_monthly.exists():
+        warnings.append(f"Missing monthly report: {current_monthly.relative_to(root)}")
+    warnings.extend(warn_daily_entry_missing(current_daily, day))
     warnings.extend(warn_empty_fields(current_daily))
     warnings.extend(warn_empty_fields(current_weekly))
     warnings.extend(warn_empty_fields(current_monthly))
     warnings.extend(warn_weekly_sparse(current_weekly))
+    warnings.extend(warn_bilingual_missing(current_daily))
+    warnings.extend(warn_bilingual_missing(current_weekly))
+    warnings.extend(warn_bilingual_missing(current_monthly))
 
     if errors:
         print("Validation failed. Missing required files or directories:")
@@ -677,6 +718,10 @@ def build_parser() -> argparse.ArgumentParser:
     status_parser = subparsers.add_parser("status", help="Show project status.")
     status_parser.add_argument("--date", help="Date for current daily/weekly paths, YYYY-MM-DD.")
     status_parser.set_defaults(func=command_status)
+
+    ensure_parser = subparsers.add_parser("ensure", help="Create missing daily, weekly, and monthly report shells.")
+    ensure_parser.add_argument("--date", help="Date for report paths, YYYY-MM-DD.")
+    ensure_parser.set_defaults(func=command_ensure)
 
     validate_parser = subparsers.add_parser("validate", help="Validate project structure.")
     validate_parser.add_argument("--date", help="Date for current daily/weekly checks, YYYY-MM-DD.")

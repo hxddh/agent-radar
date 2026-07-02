@@ -43,6 +43,7 @@ MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
 FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
 MAX_PUBLIC_SOURCE_ITEMS=80
 PUBLIC_SOURCE_COLLECTION=true
+COLLECT_REDDIT=false
 MAX_OPENROUTER_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
@@ -143,6 +144,7 @@ The source health snapshot and run logs are written by the runner itself, not by
 It also runs:
 
 ```bash
+python scripts/agent_radar.py ensure --date YYYY-MM-DD
 python scripts/agent_radar.py brief --date YYYY-MM-DD
 python scripts/agent_radar.py validate --date YYYY-MM-DD
 python -m unittest discover -s tests

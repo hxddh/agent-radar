@@ -18,7 +18,7 @@ Agent Radar runs as a GitHub Actions cloud agent. The architecture is intentiona
 - `github`: repository search for agent runtimes, MCP, memory, sandbox, eval, security, browser, and deployment terms.
 - `github-release`: releases and tags for configured and discovered repositories.
 - `hacker-news`: public HN Algolia search.
-- `reddit`: public Reddit search attempts. This lane may fail with 403 and is tracked as source health instead of blocking.
+- `reddit`: public Reddit search attempts. Disabled by default because the public JSON API often returns HTTP 403 from CI runners. Set `COLLECT_REDDIT=true` to enable.
 - `package-marketplace`: npm, PyPI, crates.io, Open VSX, and Docker Hub.
 - `papers`: arXiv RSS.
 - `feeds-pages`: additional RSS feeds and official pages configured through repository variables.
