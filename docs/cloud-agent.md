@@ -95,6 +95,7 @@ Context efficiency (v0.5.2+):
 - `CONTEXT_SLICING=true` (default): daily context injects only today's day block; `research-log.md` keeps candidate inbox + recent tail.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
+- `prompts/runner-rules.md` holds shared JSON/bilingual/safety rules (injected once per task; task prompts stay focused).
 
 The runner samples across source lanes before trimming to the budget, so one noisy lane cannot consume the entire daily source window.
 

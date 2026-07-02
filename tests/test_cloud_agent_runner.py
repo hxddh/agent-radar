@@ -141,8 +141,15 @@ class CloudAgentRunnerTest(unittest.TestCase):
             "repo context",
             public_sources="public source snapshot",
         )
-        self.assertIn('"mode": "append"', prompt)
-        self.assertIn("Prefer `append` for research-log.md", prompt)
+        self.assertIn("prompts/runner-rules.md", prompt)
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn('"mode": "append"', rules)
+        self.assertIn("Daily append example", rules)
+
+    def test_runner_rules_bans_paid_search_and_documents_append(self) -> None:
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn("do not use paid search tools", rules)
+        self.assertIn("do not rewrite the entire monthly daily file", rules.lower())
 
     def test_source_queries_cover_social_and_infra_lanes(self) -> None:
         queries = cloud_agent_runner.source_queries_for_task("source-sweep")
@@ -189,6 +196,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertLessEqual(len(repos), 3)
 
     def test_openrouter_prompt_bans_paid_search_tools(self) -> None:
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn("do not use paid search tools", rules)
+
         prompt = cloud_agent_runner.build_prompt(
             "daily",
             cloud_agent_runner.parse_date("2026-07-02"),
@@ -196,7 +206,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             "repo context",
             "public source snapshot",
         )
-        self.assertIn("do not use paid search tools", prompt)
+        self.assertIn("prompts/runner-rules.md", prompt)
         self.assertIn("Public source snapshot:", prompt)
 
     def test_source_sweep_is_discovery_only(self) -> None:
@@ -374,6 +384,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             (root / "automation").mkdir(parents=True)
             (root / "docs").mkdir(parents=True)
             (root / "prompts").mkdir(parents=True)
+            (root / "prompts" / "runner-rules.md").write_text("# runner rules\n", encoding="utf-8")
             (root / "automation" / "runbook.md").write_text("# runbook\n", encoding="utf-8")
             (root / "docs" / "maintenance.md").write_text("# maintenance\n", encoding="utf-8")
             (root / "prompts" / "daily-update.md").write_text("# prompt\n", encoding="utf-8")

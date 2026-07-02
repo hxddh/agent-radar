@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.3 - 2026-07-02
+
+### Added
+- `prompts/runner-rules.md`: shared JSON schema, bilingual gates, safety rules, and daily `append` / watchlist `replace_section` examples.
+- Injected `runner-rules.md` into all task contexts via `TASK_CONTEXT_BASE`.
+
+### Changed
+- `build_prompt()` defers static rules to `runner-rules.md` (smaller dynamic prompt shell).
+- Trimmed duplicate bilingual/update rules from `prompts/daily-update.md`, `weekly-review.md`, and `monthly-review.md`.
+- CLI version bumped to `0.5.3`.
+
 ## v0.5.2 - 2026-07-02
 
 ### Added

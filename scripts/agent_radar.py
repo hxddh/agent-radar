@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 
 CORE_FILES = [
     "README.md",
@@ -67,6 +67,7 @@ CORE_FILES = [
     "automation/source-lanes.md",
     "docs/release-checklist.md",
     "prompts/daily-update.md",
+    "prompts/runner-rules.md",
     "prompts/weekly-review.md",
     "prompts/agent-watchlist-update.md",
     "prompts/monthly-review.md",
@@ -120,6 +121,13 @@ def write_file(path: Path, content: str, force: bool = False) -> str:
     return "overwritten" if existed and force else "created"
 
 
+def runner_rules_template() -> str:
+    path = Path(__file__).resolve().parent.parent / "prompts" / "runner-rules.md"
+    if path.is_file():
+        return path.read_text(encoding="utf-8")
+    return "# Cloud Agent Runner Rules\n"
+
+
 def template_files(base_date: dt.date | None = None) -> dict[str, str]:
     day = base_date or today()
     date_text = day.isoformat()
@@ -153,6 +161,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "automation/source-lanes.md": SOURCE_LANES_TEMPLATE,
         "docs/release-checklist.md": RELEASE_CHECKLIST_TEMPLATE,
         "prompts/daily-update.md": DAILY_PROMPT_TEMPLATE,
+        "prompts/runner-rules.md": runner_rules_template(),
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
         "prompts/agent-watchlist-update.md": WATCHLIST_PROMPT_TEMPLATE,
         "prompts/monthly-review.md": MONTHLY_PROMPT_TEMPLATE,

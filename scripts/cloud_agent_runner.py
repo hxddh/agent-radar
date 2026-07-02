@@ -306,6 +306,7 @@ def context_file_chars() -> int:
 
 
 TASK_CONTEXT_BASE = [
+    "prompts/runner-rules.md",
     "automation/runbook.md",
     "docs/maintenance.md",
 ]
@@ -1808,38 +1809,7 @@ ISO week: {week_label(day)}
 Use supplied repository context and any source links already present in the files. Update only files in this allowed list:
 {allowed_text}
 
-Return only valid JSON with this shape:
-{{
-  "summary": "short summary",
-  "sources": ["source URL or source class"],
-  "updates": [
-    {{"path": "relative/path.md", "mode": "append", "content": "new markdown to append"}},
-    {{"path": "relative/path.md", "mode": "replace_section", "anchor": "## Section heading", "content": "replacement body without the heading line"}},
-    {{"path": "relative/path.md", "mode": "full", "content": "complete UTF-8 file content"}}
-  ]
-}}
-
-Update mode rules:
-- Prefer `append` for research-log.md and for adding a new `## YYYY-MM-DD` day block in daily files.
-- Prefer `replace_section` when changing one watchlist agent, one radar thesis block, or one report subsection.
-- Use `full` only for weekly/monthly report files or when a file is new/empty.
-- Never use `full` for research-log.md, sources.md, radar.md, agent-watchlist.md, playbook.md, storage-angle.md, or user-field-notes.md when existing content is present.
-
-Rules:
-- Use broad source coverage and keep going when evidence is weak.
-- For daily, weekly, and monthly report files, bilingual output is mandatory in block form. Weekly and monthly reports use `## English` then `## 中文` (separated by `---`). Daily reports use `### English` then `### 中文` under each `## YYYY-MM-DD` day heading.
-- Mirror section headings in both languages. English bullets contain English prose only; Chinese bullets contain real Simplified Chinese prose only. At least 60% of substantive English lines must have a real Chinese counterpart, or the update is rejected.
-- Keep short metadata fields on a single line without per-language duplication: URLs, repo names, product names, versions, and star counts are written once in the English section (or as language-neutral lines). Enumerated fields pair values inline (for example `- Evidence strength: 强（Strong）` in the Chinese section).
-- Never write the same URL twice for one item.
-- In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
-- Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
-- For OpenRouter mode, do not use paid search tools. Use the screening pass or public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
-- If the provider cannot browse the live web, record the limitation in research-log.md.
-- Label weak evidence, missing corroboration, private/logged-in source status, and inference.
-- Do not publish private URLs, private messages, screenshots, customer names, personal identifiers, or confidential details.
-- Do not invent factual claims. Use source links, source classes, or source status labels.
-- Preserve existing useful content. Append or synthesize rather than deleting history.
-- If no useful update is found, update research-log.md with the search pass and return that file only.
+Follow `prompts/runner-rules.md` in repository context for JSON output shape, update modes (prefer `append` for daily day blocks), bilingual gates, and safety rules.
 {task_rules}
 
 {source_block}
