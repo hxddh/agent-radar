@@ -8,6 +8,12 @@ Added:
 - Candidate aging and defer-count instructions for source-sweep and promotion tasks.
 - `release-draft` CLI command for release note drafting.
 - Release checklist documentation.
+- More aggressive multi-lane public-source collection, including Reddit public search attempts and broader HN/GitHub query coverage.
+- Coverage dimensions for product capability, runtime surface, architecture, tooling, infrastructure, quality, adoption, and risk.
+
+Changed:
+- Default public-source budgets are higher: daily 48, source-sweep 80, weekly 64, monthly 96.
+- Source collectors now run concurrently and trim after collection, so early source lanes cannot consume the whole source budget.
 
 ## v0.2.0 - 2026-07-02
 

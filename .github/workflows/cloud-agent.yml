@@ -51,6 +51,7 @@ jobs:
       OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
       MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '12' }}
       MAX_RELEASES_PER_REPO: ${{ vars.MAX_RELEASES_PER_REPO || '2' }}
+      MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '8' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
       CHANGELOG_FEEDS: ${{ vars.CHANGELOG_FEEDS || '' }}
 
@@ -76,6 +77,7 @@ jobs:
           echo "Max OpenRouter calls per task: $MAX_OPENROUTER_CALLS_PER_TASK"
           echo "Max release repos: $MAX_RELEASE_REPOS"
           echo "Max releases per repo: $MAX_RELEASES_PER_REPO"
+          echo "Max source workers: $MAX_SOURCE_WORKERS"
 
       - name: Run cloud agent
         run: |

@@ -9,6 +9,7 @@ with public-source collection, or the OpenAI Responses API when configured.
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import datetime as dt
 import html
 import json
@@ -33,7 +34,7 @@ DEFAULT_MAIN_RESEARCH_MODEL = "deepseek/deepseek-v4-pro"
 DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
-MAX_PUBLIC_SOURCE_ITEMS = 40
+MAX_PUBLIC_SOURCE_ITEMS = 120
 DEFAULT_MAX_PROMPT_CHARS = 120_000
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
@@ -46,6 +47,7 @@ DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
     ("cursor-changelog", "https://cursor.com/changelog/rss"),
+    ("anthropic-news", "https://www.anthropic.com/rss.xml"),
 ]
 RUN_AUDIT: dict[str, Any] = {
     "provider": "",
@@ -251,7 +253,7 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
     return allowed, "\n".join(chunks)
 
 
-def request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 45) -> Any:
+def request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 10) -> Any:
     request = urllib.request.Request(url, headers=headers or {}, method="GET")
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
@@ -310,6 +312,18 @@ def collect_hn_items(query: str, limit: int, items: list[dict[str, str]], seen: 
         title = hit.get("title") or hit.get("story_title") or "HN item"
         note = f"points={hit.get('points', '?')}; comments={hit.get('num_comments', '?')}"
         add_source_item(items, seen, "hacker-news", title, story_url, note)
+
+
+def collect_reddit_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    url = f"https://www.reddit.com/search.json?q={encoded}&sort=new&t=month&limit={limit}"
+    data = request_json(url, headers={"User-Agent": "agent-radar-cloud/1.0"})
+    for child in data.get("data", {}).get("children", [])[:limit]:
+        post = child.get("data", {})
+        permalink = post.get("permalink", "")
+        post_url = f"https://www.reddit.com{permalink}" if permalink else post.get("url", "")
+        note = f"subreddit={post.get('subreddit', '')}; score={post.get('score', '?')}; comments={post.get('num_comments', '?')}"
+        add_source_item(items, seen, "reddit", post.get("title", "Reddit item"), post_url, note)
 
 
 def collect_github_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
@@ -397,7 +411,7 @@ def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen
 
 def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     request = urllib.request.Request(feed_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
-    with urllib.request.urlopen(request, timeout=45) as response:
+    with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
     chunks = text.split("<item>")[1:]
     if not chunks:
@@ -416,12 +430,46 @@ def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[
 
 def public_source_budget(task: str) -> int:
     defaults = {
-        "daily": 16,
-        "source-sweep": 24,
-        "weekly": 28,
-        "monthly": 36,
+        "daily": 48,
+        "source-sweep": 80,
+        "weekly": 64,
+        "monthly": 96,
     }
     return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
+
+
+def source_queries_for_task(task: str) -> dict[str, list[str]]:
+    common = {
+        "hn": [
+            "AI agent",
+            "MCP agent",
+            "agent memory",
+            "coding agent",
+            "agent sandbox",
+        ],
+        "reddit": [
+            "AI coding agent",
+            "Claude Code Codex Cursor",
+            "MCP server AI agent",
+            "AI agent memory",
+            "agent automation",
+        ],
+        "github": [
+            "AI agent framework",
+            "MCP server agent",
+            "agent memory MCP",
+            "coding agent CLI",
+            "AI agent sandbox",
+            "agent eval framework",
+            "agent security MCP",
+            "computer use agent",
+        ],
+    }
+    if task in {"source-sweep", "monthly"}:
+        common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
+        common["reddit"].extend(["AI agent workflow", "AI coding assistant experience", "agent security"])
+        common["github"].extend(["browser agent automation", "multi agent orchestration", "agent observability", "agent deployment workflow"])
+    return common
 
 
 def changelog_feeds() -> list[tuple[str, str]]:
@@ -441,48 +489,78 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
         return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
 
     budget = public_source_budget(task)
-    per_query = max(2, min(6, budget // 6))
+    per_query = max(2, min(5, budget // 14))
+    per_feed = max(2, min(6, budget // 12))
     items: list[dict[str, str]] = []
     seen: set[str] = set()
     errors: list[str] = []
     repo_limit = env_int("MAX_RELEASE_REPOS", 12)
     release_limit = env_int("MAX_RELEASES_PER_REPO", 2)
 
-    collectors = [
-        ("hn:ai-agent", lambda: collect_hn_items("AI agent", per_query, items, seen)),
-        ("hn:mcp", lambda: collect_hn_items("MCP agent", per_query, items, seen)),
-        ("hn:agent-memory", lambda: collect_hn_items("agent memory", per_query, items, seen)),
-        ("github:agent-framework", lambda: collect_github_items("AI agent framework", per_query, items, seen)),
-        ("github:mcp", lambda: collect_github_items("MCP server agent", per_query, items, seen)),
-        ("github:agent-memory", lambda: collect_github_items("agent memory MCP", per_query, items, seen)),
-        ("anthropic-news", lambda: collect_feed_items("https://www.anthropic.com/news/rss.xml", "anthropic-news", per_query, items, seen)),
-        ("arxiv-agents", lambda: collect_feed_items("https://export.arxiv.org/rss/cs.AI", "arxiv-cs-ai", per_query, items, seen)),
-    ]
+    queries = source_queries_for_task(task)
+    collectors: list[tuple[str, str, str, int]] = []
+    for query in queries["hn"]:
+        collectors.append((f"hn:{query}", "hn", query, per_query))
+    for query in queries["reddit"]:
+        collectors.append((f"reddit:{query}", "reddit", query, per_query))
+    for query in queries["github"]:
+        collectors.append((f"github:{query}", "github", query, per_query))
+    collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://export.arxiv.org/rss/cs.AI", per_feed))
     for source_name, feed_url in changelog_feeds():
-        collectors.append((f"feed:{source_name}", lambda source_name=source_name, feed_url=feed_url: collect_feed_items(feed_url, source_name, per_query, items, seen)))
+        collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
 
     release_repos = release_repos_from_context(root, repo_limit) if root else DEFAULT_RELEASE_REPOS[:repo_limit]
     for repo in release_repos:
-        collectors.append((f"release:{repo}", lambda repo=repo: collect_github_releases(repo, release_limit, items, seen)))
-        collectors.append((f"tag:{repo}", lambda repo=repo: collect_github_tags(repo, release_limit, items, seen)))
+        collectors.append((f"release:{repo}", "release", repo, release_limit))
+        collectors.append((f"tag:{repo}", "tag", repo, release_limit))
 
-    for name, collector in collectors:
-        if len(items) >= budget:
-            break
+    def run_collector(entry: tuple[str, str, str, int]) -> tuple[int, str, list[dict[str, str]], str | None]:
+        index = collectors.index(entry)
+        name, kind, value, limit = entry
+        local_items: list[dict[str, str]] = []
+        local_seen: set[str] = set()
         try:
-            collector()
-            audit_source_status(name, "ok", "")
+            if kind == "hn":
+                collect_hn_items(value, limit, local_items, local_seen)
+            elif kind == "reddit":
+                collect_reddit_items(value, limit, local_items, local_seen)
+            elif kind == "github":
+                collect_github_items(value, limit, local_items, local_seen)
+            elif kind == "feed":
+                source_name, feed_url = value.split("=", 1)
+                collect_feed_items(feed_url, source_name, limit, local_items, local_seen)
+            elif kind == "release":
+                collect_github_releases(value, limit, local_items, local_seen)
+            elif kind == "tag":
+                collect_github_tags(value, limit, local_items, local_seen)
+            return index, name, local_items, None
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError) as exc:
-            errors.append(f"{name}: {exc}")
-            audit_source_status(name, "error", str(exc))
+            return index, name, [], str(exc)
+
+    worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 8))
+    results: list[tuple[int, str, list[dict[str, str]], str | None]] = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
+        futures = [executor.submit(run_collector, collector) for collector in collectors]
+        for future in concurrent.futures.as_completed(futures):
+            results.append(future.result())
+
+    for _, name, local_items, error in sorted(results, key=lambda result: result[0]):
+        if error:
+            errors.append(f"{name}: {error}")
+            audit_source_status(name, "error", error)
+            continue
+        audit_source_status(name, "ok", "")
+        for item in local_items:
+            add_source_item(items, seen, item["source"], item["title"], item["url"], item.get("note", ""))
 
     limited = items[:budget]
     RUN_AUDIT["public_source_items"] = len(limited)
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
-        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, and public RSS/changelog feeds only.",
+        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit public JSON, arXiv RSS, and public RSS/changelog feeds only.",
         f"- Item budget: {budget}",
+        f"- Collected before budget trim: {len(items)}",
     ]
     for item in limited:
         note = f" -- {item['note']}" if item.get("note") else ""

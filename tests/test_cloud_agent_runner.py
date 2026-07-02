@@ -55,6 +55,18 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {"PUBLIC_SOURCE_COLLECTION": "false"}, clear=True):
             self.assertIn("disabled", cloud_agent_runner.collect_public_sources("daily"))
 
+    def test_public_source_budget_is_more_aggressive(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 48)
+            self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 80)
+            self.assertGreaterEqual(cloud_agent_runner.MAX_PUBLIC_SOURCE_ITEMS, 120)
+
+    def test_source_queries_cover_social_and_infra_lanes(self) -> None:
+        queries = cloud_agent_runner.source_queries_for_task("source-sweep")
+        self.assertIn("AI coding agent", queries["reddit"])
+        self.assertIn("agent eval framework", queries["github"])
+        self.assertIn("browser agent", queries["hn"])
+
     def test_extracts_github_repos_for_release_tracking(self) -> None:
         repos = cloud_agent_runner.extract_github_repos(
             "See https://github.com/modelcontextprotocol/servers and https://github.com/openai/codex/releases",

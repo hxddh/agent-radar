@@ -38,6 +38,17 @@ Use broad source coverage by default. The radar should not be limited to public 
 - Forum posts
 - Public Discord / Slack summaries
 
+### Tier 3.5: Public Distribution and Adoption Signals
+
+- Browser extension stores
+- VS Code / JetBrains extension marketplaces
+- npm / PyPI / crates.io package releases
+- Docker images and templates
+- Product Hunt / launch directories
+- Cloud marketplace listings
+- Job posts mentioning agent workflows
+- Conference talks, workshop pages, and meetup notes
+
 ### Tier 4: Authorized Logged-In Sources
 
 - Logged-in community posts
@@ -89,6 +100,26 @@ Use broad source coverage by default. The radar should not be limited to public 
 - YouTube demos
 - Personal engineering blogs
 - Product Hunt / launch pages
+
+## Coverage Dimensions
+
+Track each signal across these dimensions when evidence is available:
+
+- Product capability: coding, browser use, computer use, research, app generation, devops, data analysis, support, security.
+- Runtime surface: IDE, terminal, browser, desktop app, chat surface, Slack/Linear/GitHub/Jira, API/SDK, mobile.
+- Agent architecture: single agent, multi-agent, orchestrator, workflow engine, background automation, remote agent, human-in-the-loop handoff.
+- Tooling layer: MCP, function calling, browser automation, shell, sandbox, connectors, plugins, skills, memory APIs.
+- Infrastructure layer: workspace persistence, snapshots, logs/traces, artifacts, file systems, secrets, identity, deployment, queues.
+- Quality layer: evals, benchmarks, replay, observability, error recovery, cost/latency, reliability, security, governance.
+- Adoption layer: stars, forks, releases, tags, package downloads, extension installs, public user reports, enterprise features, pricing/packaging.
+- Risk layer: prompt injection, malicious repos, data leakage, unsafe tool execution, private-source exposure, compliance boundaries.
+
+Known weak spots to keep probing:
+
+- X / Twitter is not covered by the default free runner unless public links or user-provided lists are added.
+- Logged-in communities, paid newsletters, Discord, Slack, and private repos require authorized inputs or dedicated credentials.
+- Package registries and extension marketplaces are listed as source classes but are not yet first-class automated collectors.
+- Job posts and enterprise procurement signals are useful for adoption but need careful filtering to avoid noise.
 
 ## High-Signal Filters
 

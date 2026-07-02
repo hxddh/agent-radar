@@ -40,7 +40,7 @@ AGENT_RADAR_MODEL_PROVIDER=openrouter
 CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
 MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
 FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
-MAX_PUBLIC_SOURCE_ITEMS=24
+MAX_PUBLIC_SOURCE_ITEMS=48
 PUBLIC_SOURCE_COLLECTION=true
 MAX_OPENROUTER_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
@@ -55,6 +55,7 @@ CHANGELOG_FEEDS=
 This mode does not call OpenRouter web search, Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
 
 - Hacker News Algolia API
+- Reddit public JSON search
 - GitHub REST API with `GITHUB_TOKEN`
 - GitHub releases and tags for configured and discovered repos
 - Public RSS feeds for official blogs, changelogs, and arXiv categories
@@ -67,6 +68,15 @@ Model routing stays intentionally small:
 - `weekly` and `monthly`: GLM 5.2 performs final synthesis.
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
+
+Recommended source budgets:
+
+- `daily`: 48 public source items
+- `source-sweep`: 80 public source items
+- `weekly`: 64 public source items
+- `monthly`: 96 public source items
+
+The runner samples across source lanes before trimming to the budget, so one noisy lane cannot consume the entire daily source window.
 
 Every run records:
 
@@ -98,7 +108,7 @@ In automatic mode:
 - Daily runs every day.
 - Weekly synthesis and candidate promotion run on Sundays.
 - Monthly review runs on the last day of the month.
-- Source sweep runs every other Monday.
+- Source sweep runs every other Monday by default. For more aggressive discovery, run `task=source-sweep` manually or add a second scheduled workflow dispatch.
 
 You can also run it manually from GitHub Actions with:
 
