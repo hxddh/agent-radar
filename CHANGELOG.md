@@ -10,6 +10,7 @@ Added:
 - Release checklist documentation.
 - More aggressive multi-lane public-source collection, including Reddit public search attempts and broader HN/GitHub query coverage.
 - Coverage dimensions for product capability, runtime surface, architecture, tooling, infrastructure, quality, adoption, and risk.
+- Official page collection for changelog/news sources that do not expose stable RSS feeds.
 
 Changed:
 - Default public-source budgets are higher: daily 48, source-sweep 80, weekly 64, monthly 96.

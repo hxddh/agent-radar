@@ -54,6 +54,7 @@ jobs:
       MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '8' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
       CHANGELOG_FEEDS: ${{ vars.CHANGELOG_FEEDS || '' }}
+      CHANGELOG_PAGES: ${{ vars.CHANGELOG_PAGES || '' }}
 
     steps:
       - name: Check out repository

@@ -79,6 +79,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("openai/codex", cloud_agent_runner.DEFAULT_RELEASE_REPOS)
         feed_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_FEEDS]
         self.assertIn("github-changelog", feed_names)
+        page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        self.assertIn("cursor-changelog", page_names)
+        self.assertIn("anthropic-news", page_names)
         with mock.patch.dict(os.environ, {"MAX_RELEASE_REPOS": "3"}, clear=True):
             repos = cloud_agent_runner.release_repos_from_context(REPO_ROOT, 3)
         self.assertLessEqual(len(repos), 3)

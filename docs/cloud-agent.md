@@ -48,8 +48,10 @@ DRY_RUN_ON_BUDGET_EXCEEDED=true
 OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
 MAX_RELEASE_REPOS=12
 MAX_RELEASES_PER_REPO=2
+MAX_SOURCE_WORKERS=8
 RELEASE_REPOS=openai/codex,modelcontextprotocol/servers,modelcontextprotocol/python-sdk,modelcontextprotocol/typescript-sdk,elizaOS/eliza
 CHANGELOG_FEEDS=
+CHANGELOG_PAGES=
 ```
 
 This mode does not call OpenRouter web search, Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
@@ -59,6 +61,7 @@ This mode does not call OpenRouter web search, Grok search, Perplexity, Search1A
 - GitHub REST API with `GITHUB_TOKEN`
 - GitHub releases and tags for configured and discovered repos
 - Public RSS feeds for official blogs, changelogs, and arXiv categories
+- Official public changelog/news pages when RSS is unavailable
 
 Model routing stays intentionally small:
 

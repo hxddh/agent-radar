@@ -46,8 +46,12 @@ DEFAULT_RELEASE_REPOS = [
 DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
-    ("cursor-changelog", "https://cursor.com/changelog/rss"),
-    ("anthropic-news", "https://www.anthropic.com/rss.xml"),
+]
+DEFAULT_CHANGELOG_PAGES = [
+    ("cursor-changelog", "https://cursor.com/changelog"),
+    ("cursor-blog", "https://cursor.com/blog"),
+    ("anthropic-news", "https://www.anthropic.com/news"),
+    ("anthropic-engineering", "https://www.anthropic.com/engineering"),
 ]
 RUN_AUDIT: dict[str, Any] = {
     "provider": "",
@@ -428,6 +432,23 @@ def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[
         add_source_item(items, seen, source, title or source, link, "rss/feed item")
 
 
+def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    request = urllib.request.Request(page_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    with urllib.request.urlopen(request, timeout=10) as response:
+        text = response.read().decode("utf-8", errors="replace")
+    anchors = re.findall(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)
+    for href, label in anchors:
+        title = strip_html(label)
+        if not title or len(title) < 8:
+            continue
+        absolute_url = urllib.parse.urljoin(page_url, html.unescape(href))
+        if urllib.parse.urlparse(absolute_url).netloc != urllib.parse.urlparse(page_url).netloc:
+            continue
+        add_source_item(items, seen, source, title, absolute_url, "official page link")
+        if len(items) >= limit:
+            break
+
+
 def public_source_budget(task: str) -> int:
     defaults = {
         "daily": 48,
@@ -484,6 +505,18 @@ def changelog_feeds() -> list[tuple[str, str]]:
     return feeds
 
 
+def changelog_pages() -> list[tuple[str, str]]:
+    configured = split_env_list("CHANGELOG_PAGES", [])
+    pages = list(DEFAULT_CHANGELOG_PAGES)
+    for item in configured:
+        if "=" in item:
+            name, url = item.split("=", 1)
+            pages.append((name.strip(), url.strip()))
+        else:
+            pages.append(("page", item))
+    return pages
+
+
 def collect_public_sources(task: str, root: Path | None = None) -> str:
     if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
         return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
@@ -508,6 +541,8 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
     collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://export.arxiv.org/rss/cs.AI", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
+    for source_name, page_url in changelog_pages():
+        collectors.append((f"page:{source_name}", "page", f"{source_name}={page_url}", per_feed))
 
     release_repos = release_repos_from_context(root, repo_limit) if root else DEFAULT_RELEASE_REPOS[:repo_limit]
     for repo in release_repos:
@@ -529,6 +564,9 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
             elif kind == "feed":
                 source_name, feed_url = value.split("=", 1)
                 collect_feed_items(feed_url, source_name, limit, local_items, local_seen)
+            elif kind == "page":
+                source_name, page_url = value.split("=", 1)
+                collect_page_links(page_url, source_name, limit, local_items, local_seen)
             elif kind == "release":
                 collect_github_releases(value, limit, local_items, local_seen)
             elif kind == "tag":
@@ -558,7 +596,7 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
-        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit public JSON, arXiv RSS, and public RSS/changelog feeds only.",
+        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit public JSON, arXiv RSS, public RSS/changelog feeds, and official public changelog/news pages only.",
         f"- Item budget: {budget}",
         f"- Collected before budget trim: {len(items)}",
     ]
