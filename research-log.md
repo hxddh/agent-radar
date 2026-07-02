@@ -498,3 +498,37 @@ Follow-up gaps (new):
 - Reddit sources remain blocked (403); missing community signals on agent coding, MCP, memory, automation, security, workflow.
 - cursor-changelog and anthropic-news feeds returned 404; missing official changelog signals.
 - No direct signals from arXiv RSS or other RSS feeds in this snapshot.
+
+### Pass 9: Source Sweep (2026-07-02) – Screening Pass Integration 2
+
+Purpose:
+- Integrate the deepseek/deepseek-v4-flash screening pass into research log, updating candidate confidence and adding new candidates where appropriate.
+
+Accepted sources from screening pass:
+- Previously uncaptured high-relevance items: MCP TypeScript SDK v2 beta (https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/v2.0.0-beta.1), forcefield (https://open-vsx.org/extension/DataScienceTech/forcefield), assay-cli (https://crates.io/crates/assay-cli), gatekeeper (https://github.com/skyblueso/gatekeeper), dense-mem (already in sources), Perseus Vault, stats-pai, agentic-eval, iris-eval-mcp-server, atomr-agents-eval/security, atlas-detect, zradar, cerebro, RaeburnAI-AgentOS, Opera CLI (already in sources), lightscore, and others. Many were already present in sources.md or previous research logs; those were deduplicated.
+
+Candidate inbox updates:
+- Existing candidates were reviewed against the screening pass; several gained updated confidence annotations (e.g., deptrust, argus, Toolnexus, GOAT 2.0 now marked as medium confidence). No changes to promotion status.
+- New candidates added to inbox (compact bullets):
+  1. Perseus Vault – persistent memory MCP server with encryption, 48 tools. Relevance 9. Evidence: weak (stars=9). Defer: needs integration evidence.
+  2. stats-pai – agent-native causal inference via MCP. Relevance 7. Evidence: weak (stars=259 but academic). Defer: needs domain adoption.
+  3. agentic-eval – multi-axis agent fitness evaluation (Rust). Relevance 8. Evidence: weak (downloads=18). Defer: needs benchmarks.
+  4. iris-eval-mcp-server – agent eval standard for MCP. Relevance 8. Evidence: weak (npm downloads unclear). Defer: needs comparison.
+  5. zradar – observability with OpenTelemetry + Parquet. Relevance 7. Evidence: weak (stars=1). Defer: needs performance data.
+  6. cerebro – compliance superpowers for coding agents. Relevance 6. Evidence: weak (stars=12). Defer: needs enterprise case studies.
+  7. lightscore – Lighthouse-to-Markdown for coding agents. Relevance 5. Evidence: weak (stars=0). Defer: template concept only.
+  8. assay-cli – policy-as-code MCP gate with Linux enforcement. Relevance 9. Evidence: medium (downloads=546). Defer: needs agent framework integration.
+  9. forcefield – in-IDE security guardrails (VS Code). Relevance 8. Evidence: weak (downloads=370). Defer: compare with other IDE security tools.
+  10. gatekeeper – multi-vector security scanner. Relevance 7. Evidence: weak (stars=0). Defer: concept promising, no users.
+- All new candidates are early, with weak-to-medium evidence. No promotions; deferred until stronger signals appear.
+
+Rejected or deprioritized:
+- Low-confidence candidates from screening pass that duplicate existing entries or lack agent-specific infrastructure (e.g., kodegen_tools_browser deferred as browser automation tool, but noted as potential MCP performance reference).
+- Items with only Twitter links or very low engagement (e.g., Show HN items from screening pass) kept out of candidate inbox.
+
+Follow-up gaps (new):
+- MCP protocol v2 beta may cause compatibility shifts; monitor migration guides.
+- Security tools (forcefield, assay-cli, gatekeeper) need integration examples with major agent frameworks.
+- Eval standards (iris-eval, ECP) are nascent; track convergence.
+- Observability platforms (zradar, agent-inspector) need performance benchmarks.
+- Compliance (cerebro) may become mandatory for enterprise deployments.

@@ -4,39 +4,46 @@ Last checked: 2026-07-02
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| hn:AI agent | ok |  |
-| hn:MCP agent | ok |  |
-| hn:agent memory | ok |  |
-| hn:coding agent | ok |  |
-| hn:agent sandbox | ok |  |
-| hn:AI agent evaluation | ok |  |
-| hn:browser agent | ok |  |
-| hn:agent deployment | ok |  |
-| reddit:AI coding agent | error | HTTP Error 403: Blocked |
-| reddit:Claude Code Codex Cursor | error | HTTP Error 403: Blocked |
-| reddit:MCP server AI agent | error | HTTP Error 403: Blocked |
-| reddit:AI agent memory | error | HTTP Error 403: Blocked |
-| reddit:agent automation | error | HTTP Error 403: Blocked |
-| reddit:AI agent workflow | error | HTTP Error 403: Blocked |
-| reddit:AI coding assistant experience | error | HTTP Error 403: Blocked |
-| reddit:agent security | error | HTTP Error 403: Blocked |
-| github:AI agent framework | ok |  |
-| github:MCP server agent | ok |  |
-| github:agent memory MCP | ok |  |
-| github:coding agent CLI | ok |  |
-| github:AI agent sandbox | ok |  |
-| github:agent eval framework | ok |  |
-| github:agent security MCP | ok |  |
-| github:computer use agent | ok |  |
-| github:browser agent automation | ok |  |
-| github:multi agent orchestration | ok |  |
-| github:agent observability | ok |  |
-| github:agent deployment workflow | ok |  |
+| crates:ai agent | ok |  |
+| open-vsx:ai agent | ok |  |
+| npm:coding agent | ok |  |
+| pypi:coding agent | ok |  |
+| crates:coding agent | ok |  |
+| open-vsx:coding agent | ok |  |
+| npm:agent memory | ok |  |
+| pypi:agent memory | ok |  |
+| crates:agent memory | ok |  |
+| open-vsx:agent memory | ok |  |
+| npm:agent sandbox | ok |  |
+| pypi:agent sandbox | ok |  |
+| crates:agent sandbox | ok |  |
+| open-vsx:agent sandbox | ok |  |
+| npm:browser agent | ok |  |
+| pypi:browser agent | ok |  |
+| crates:browser agent | ok |  |
+| open-vsx:browser agent | ok |  |
+| npm:agent eval | ok |  |
+| pypi:agent eval | ok |  |
+| crates:agent eval | ok |  |
+| open-vsx:agent eval | ok |  |
+| npm:agent observability | ok |  |
+| pypi:agent observability | ok |  |
+| crates:agent observability | ok |  |
+| open-vsx:agent observability | ok |  |
+| npm:agent security | ok |  |
+| pypi:agent security | ok |  |
+| crates:agent security | ok |  |
+| open-vsx:agent security | ok |  |
+| docker:mcp server | ok |  |
+| docker:ai agent | ok |  |
+| docker:coding agent | ok |  |
 | arxiv:cs-ai | ok |  |
 | feed:openai-blog | ok |  |
 | feed:github-changelog | ok |  |
-| feed:cursor-changelog | error | HTTP Error 404: Not Found |
-| feed:anthropic-news | error | HTTP Error 404: Not Found |
+| page:cursor-changelog | ok |  |
+| page:cursor-blog | ok |  |
+| page:anthropic-news | ok |  |
+| page:anthropic-engineering | ok |  |
 | release:openai/codex | ok |  |
 | tag:openai/codex | ok |  |
 | release:modelcontextprotocol/servers | ok |  |
@@ -61,3 +68,19 @@ Last checked: 2026-07-02
 | tag:bobmatnyc/trusty-tools | ok |  |
 | release:kinqsradiollc/BrainRouter | ok |  |
 | tag:kinqsradiollc/BrainRouter | ok |  |
+| release:macro-inc/macro | ok |  |
+| tag:macro-inc/macro | ok |  |
+| release:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
+| tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
+| release:clidey/deptrust | ok |  |
+| tag:clidey/deptrust | ok |  |
+| release:KrisPowers/atlas-mcp | error | HTTP Error 404: Not Found |
+| tag:KrisPowers/atlas-mcp | error | HTTP Error 404: Not Found |
+| release:chriswu727/argus | ok |  |
+| tag:chriswu727/argus | ok |  |
+| release:alexmond/jvmlens | ok |  |
+| tag:alexmond/jvmlens | ok |  |
+| release:coldzero94/cold-frame | ok |  |
+| tag:coldzero94/cold-frame | ok |  |
+| release:envibagus/cortex | ok |  |
+| tag:envibagus/cortex | ok |  |
