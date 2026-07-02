@@ -106,6 +106,8 @@ Do not `full`-rewrite an existing weekly file.
 - At least 60% of substantive English lines must have a real Chinese counterpart, or the update is rejected.
 - Keep URLs, repo names, product names, versions, and star counts once in English (or as language-neutral lines). Enumerated fields may pair inline, for example `- Evidence strength: 强（Strong）` in the Chinese section.
 - Never write the same URL twice for one item.
+- In daily day blocks, list at most **3 public URLs per signal bullet**; put additional URLs in `research-log.md`.
+- Use exactly `## YYYY-MM-DD` for daily day headings (no suffix text). If a day block already exists, update it with `replace_section` instead of appending another block for the same date.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 
@@ -160,11 +162,3 @@ Promotion (daily/weekly/monthly/promote-candidates may promote; source-sweep doe
 - For deferred candidates, leave a compact follow-up note; do not delete them.
 - Increment defer_count for candidates checked but not promoted.
 - Move candidates with defer_count >= 3 or stale_after_days exceeded into an archived/deprioritized subsection unless a new source refreshes them.
-
-## Screening JSON shape (Flash model)
-
-Used by the low-cost screening pass before daily/weekly/monthly/source-sweep synthesis. Return only valid JSON:
-
-```json
-{"summary":"short screening summary","candidates":[{"title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}],"gaps":["missing source"]}
-```

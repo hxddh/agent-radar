@@ -57,6 +57,8 @@ DEFAULT_MAX_PROMPT_CHARS = 120_000
 DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
 DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
 DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
+DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
+DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 80
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
     "modelcontextprotocol/servers",
@@ -116,6 +118,16 @@ MONTHLY_REPLACE_SECTION_MESSAGE = (
 LEGACY_FILES_REJECT_MESSAGE = (
     "Refusing legacy files[] update for {path}; use updates[] with {hint} instead."
 )
+INVALID_DAILY_HEADING_MESSAGE = (
+    "Refusing daily update for {path}: day headings must be exactly ## YYYY-MM-DD "
+    "(no suffix text in the heading line)."
+)
+DUPLICATE_DAILY_DATE_MESSAGE = (
+    "Refusing daily append for {path}: ## {date} already exists; use replace_section "
+    "on that day block instead of appending another block."
+)
+STRICT_DAILY_DATE_HEADING = re.compile(r"^## (\d{4}-\d{2}-\d{2})$", re.MULTILINE)
+INVALID_DAILY_DATE_HEADING = re.compile(r"^## \d{4}-\d{2}-\d{2}.+$", re.MULTILINE)
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
     "coding agent",
@@ -405,6 +417,15 @@ WATCHLIST_CONTEXT_SLICE_NOTE = (
     "Use `replace_section` with the listed anchor to update one agent.\n\n"
 )
 
+SOURCES_CONTEXT_SLICE_NOTE = (
+    "\n\n> Context note: source-class intro plus recent high-signal example URLs only; "
+    "full registry remains on disk.\n\n"
+)
+
+SOURCES_CONTEXT_SLICE_MARKER = (
+    "\n\n[... middle sources.md omitted for prompt budget; recent examples preserved ...]\n\n"
+)
+
 WATCHLIST_INDEX_SKIP_SECTIONS = {
     "mainstream agents",
     "emerging agents",
@@ -535,15 +556,16 @@ def is_monthly_path(rel_path: str) -> bool:
 
 
 def slice_daily_month_file(content: str, day: dt.date, limit: int) -> str:
-    """Inject only the monthly header and today's day block for daily task context."""
+    """Inject only the monthly header and the latest exact ## YYYY-MM-DD block for the day."""
     date_heading = f"## {day.isoformat()}"
-    parts = re.split(r"\n(?=## \d{4}-\d{2}-\d{2})", content)
+    parts = re.split(r"\n(?=## )", content)
     header = parts[0] if parts else content
-    today_block = ""
+    today_blocks: list[str] = []
     for part in parts:
-        if part.startswith(date_heading):
-            today_block = part
-            break
+        first_line = part.split("\n", 1)[0].strip()
+        if first_line == date_heading:
+            today_blocks.append(part)
+    today_block = today_blocks[-1] if today_blocks else ""
     if not today_block:
         return truncate_keep_ends(content, limit)
     sliced = header.rstrip() + DAILY_CONTEXT_SLICE_NOTE + today_block
@@ -663,6 +685,73 @@ def compact_watchlist_for_context(content: str, limit: int) -> str:
     return truncate_keep_ends(compact, limit)
 
 
+def slice_sources_for_context(content: str, limit: int) -> str:
+    """Keep the source-class intro and the most recent example URL tail."""
+    if len(content) <= limit:
+        return content
+    head_budget = min(env_int("SOURCES_HEAD_CHARS", 1800), limit // 4)
+    tail_budget = min(
+        env_int("SOURCES_TAIL_CHARS", 4200),
+        max(0, limit - head_budget - len(SOURCES_CONTEXT_SLICE_MARKER)),
+    )
+    head = content[:head_budget].rstrip()
+    tail = content[-tail_budget:].lstrip()
+    combined = head + SOURCES_CONTEXT_SLICE_NOTE + SOURCES_CONTEXT_SLICE_MARKER + tail
+    return truncate_keep_ends(combined, limit)
+
+
+def format_scored_items_for_screening(items: list[dict[str, str]], limit: int) -> str:
+    lines = [
+        "Scored source items (compact):",
+        f"- Items shown: {min(limit, len(items))}/{len(items)}",
+    ]
+    for item in items[:limit]:
+        note = f" -- {item['note']}" if item.get("note") else ""
+        lines.append(
+            f"- [{item['source']} score={item.get('score', '0')}] {item['title']} | {item['url']}{note}"
+        )
+    return "\n".join(lines)
+
+
+def screening_schema_text(root: Path | None = None) -> str:
+    path = (root or find_root()) / "prompts" / "screening-schema.md"
+    if path.exists():
+        return read_text_full(path).strip()
+    return (
+        'Return JSON: {"summary":"...","candidates":[{"title":"...","why_it_matters":"...",'
+        '"evidence":["url"],"confidence":"high|medium|low","relevance_score":1,'
+        '"source_diversity":1,"infra_angle":"mcp","promotion_status":"candidate",'
+        '"next_check":"..."}],"gaps":["..."]}'
+    )
+
+
+def preflight_shared_screening(
+    shared_collection: tuple[Any, ...],
+    root: Path,
+    day: dt.date,
+) -> tuple[str, int]:
+    items, _lane_stats, _errors, _raw_count = unpack_shared_collection(shared_collection)
+    cap = env_int("MAX_SCREEN_SOURCE_ITEMS", DEFAULT_MAX_SCREEN_SOURCE_ITEMS)
+    compact = format_scored_items_for_screening(items, cap)
+    screen_model = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
+    data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
+    return response_output_text(data), 1
+
+
+def validate_daily_update_content(rel_path: str, old: str, mode: str, content: str) -> None:
+    if not is_daily_month_path(rel_path):
+        return
+    if mode not in {"append", "full", "replace"}:
+        return
+    if INVALID_DAILY_DATE_HEADING.search(content):
+        raise SystemExit(INVALID_DAILY_HEADING_MESSAGE.format(path=rel_path))
+    if mode != "append":
+        return
+    for date_label in STRICT_DAILY_DATE_HEADING.findall(content):
+        if re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
+            raise SystemExit(DUPLICATE_DAILY_DATE_MESSAGE.format(path=rel_path, date=date_label))
+
+
 def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit: int) -> str:
     path = root / rel_path
     if not path.exists():
@@ -681,6 +770,9 @@ def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit:
         elif rel_path == "agent-watchlist.md" and task in {"daily", "weekly", "monthly"}:
             slice_limit = min(limit, env_int("WATCHLIST_CONTEXT_CHARS", DEFAULT_WATCHLIST_CONTEXT_CHARS))
             content = compact_watchlist_for_context(content, slice_limit)
+        elif rel_path == "sources.md" and task in {"daily", "source-sweep"}:
+            slice_limit = min(limit, env_int("SOURCES_CONTEXT_CHARS", DEFAULT_SOURCES_CONTEXT_CHARS))
+            content = slice_sources_for_context(content, slice_limit)
         else:
             content = truncate_keep_ends(content, limit)
     else:
@@ -1889,21 +1981,16 @@ def openrouter_models_for_task(task: str) -> list[str]:
     return [cheap, main]
 
 
-def build_screen_prompt(task: str, public_sources: str) -> str:
+def build_screen_prompt(task: str, public_sources: str, root: Path | None = None) -> str:
     cap = env_int("MAX_SCREEN_PROMPT_CHARS", DEFAULT_MAX_SCREEN_PROMPT_CHARS)
+    schema = screening_schema_text(root)
     header = f"""You are the low-cost screening model for Agent Radar.
 
 Task: {task}
 
-Use the public source snapshot below. Deduplicate, rank, and compress the signals.
+Use the scored source items below. Deduplicate, rank, and compress the signals.
 
-Return only valid JSON:
-{{"summary":"short screening summary","candidates":[{{"title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}}],"gaps":["missing source"]}}
-
-Rules:
-- Do not invent facts.
-- Keep weak social/community evidence labeled as weak.
-- Prefer agent infrastructure, agent runtimes, MCP/tool-use, memory, evals, storage, and deployment signals.
+{schema}
 
 """
     source_budget = max(2000, cap - len(header))
@@ -2192,6 +2279,7 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
+        validate_daily_update_content(rel_path, old, mode, content)
         if mode == "full" and legacy and old.strip():
             if is_daily_month_path(rel_path):
                 raise SystemExit(
@@ -2361,12 +2449,14 @@ def run_task(
     root: Path,
     task: str,
     day: dt.date,
-    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]] | None = None,
-    screen_cache: dict[str, str] | None = None,
+    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int] | None = None,
+    *,
+    shared_screened: str | None = None,
+    preflight_screen_calls: int = 0,
 ) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
-    RUN_AUDIT["openrouter_calls"] = 0
+    RUN_AUDIT["openrouter_calls"] = preflight_screen_calls
     RUN_AUDIT["fallbacks"] = []
     RUN_AUDIT["public_source_items"] = 0
     RUN_AUDIT["source_errors"] = []
@@ -2395,26 +2485,11 @@ def run_task(
             )
         else:
             public_sources = collect_public_sources(task, root, day)
-    shared_screened: str | None = None
-    if task_uses_screening(task):
-        if screen_cache and screen_cache.get("text"):
-            shared_screened = screen_cache["text"]
-            RUN_AUDIT["shared_screening"] = True
-        elif (
-            screen_cache is not None
-            and shared_collection is not None
-            and shared_screening_enabled()
-        ):
-            items, lane_stats, errors, _raw_count = unpack_shared_collection(shared_collection)
-            sweep_sources = collect_public_sources_from_cache(
-                items, lane_stats, errors, "source-sweep", root, day
-            )
-            screen_model = openrouter_models_for_task("source-sweep")[0]
-            shared_screened = response_output_text(
-                call_openrouter_model(build_screen_prompt("source-sweep", sweep_sources), screen_model)
-            )
-            screen_cache["text"] = shared_screened
-    data = invoke_model(task, day, allowed, context, public_sources, shared_screened=shared_screened)
+    screen_text: str | None = None
+    if task_uses_screening(task) and shared_screened:
+        screen_text = shared_screened
+        RUN_AUDIT["shared_screening"] = True
+    data = invoke_model(task, day, allowed, context, public_sources, shared_screened=screen_text)
     output_text = response_output_text(data)
     RUN_AUDIT["output_chars"] = len(output_text)
     try:
@@ -2492,17 +2567,24 @@ def main(argv: list[str] | None = None) -> int:
         if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
             shared_collection = prepare_shared_source_collection(root, day, tasks)
 
-    screen_cache: dict[str, str] | None = None
+    shared_screened: str | None = None
+    preflight_screen_calls = 0
     if (
-        len(tasks) > 1
-        and model_provider() == "openrouter"
-        and shared_collection is not None
+        shared_collection is not None
         and shared_screening_enabled()
+        and any(task_uses_screening(task) for task in tasks)
     ):
-        screen_cache = {}
+        shared_screened, preflight_screen_calls = preflight_shared_screening(shared_collection, root, day)
 
-    for task in tasks:
-        run_task(root, task, day, shared_collection=shared_collection, screen_cache=screen_cache)
+    for index, task in enumerate(tasks):
+        run_task(
+            root,
+            task,
+            day,
+            shared_collection=shared_collection,
+            shared_screened=shared_screened if task_uses_screening(task) else None,
+            preflight_screen_calls=preflight_screen_calls if index == 0 and shared_screened else 0,
+        )
     return 0
 
 
