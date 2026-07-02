@@ -24,6 +24,7 @@ Return only valid JSON with this shape:
 - Prefer `replace_section` when changing one watchlist agent, one radar thesis block, or one report subsection.
 - Use `full` only for weekly/monthly report files or when a file is new/empty.
 - Never use `full` for `research-log.md`, `sources.md`, `radar.md`, `agent-watchlist.md`, `playbook.md`, `storage-angle.md`, or `user-field-notes.md` when existing content is present.
+- Never use `full` for `daily/YYYY-MM.md` when the monthly file already exists; **append** a new `## YYYY-MM-DD` day block instead. The runner rejects `full` rewrites of existing daily month files.
 
 ### Daily append example (preferred)
 

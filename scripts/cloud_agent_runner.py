@@ -101,6 +101,9 @@ STRUCTURE_PRESERVED_FILES = {
     "storage-angle.md",
     "user-field-notes.md",
 }
+DAILY_APPEND_ONLY_MESSAGE = (
+    "Refusing full-file update for {path}; append a new ## YYYY-MM-DD day block instead."
+)
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
     "coding agent",
@@ -1966,6 +1969,8 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
+        if mode == "full" and is_daily_month_path(rel_path) and old.strip():
+            raise SystemExit(DAILY_APPEND_ONLY_MESSAGE.format(path=rel_path))
         merged = merge_update_content(old, mode, content, str(anchor) if anchor else None)
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
