@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## v0.2.4 - 2026-07-02
+
+### Added
+- `validate --require-chinese` to require substantive CJK `中文` text in reports with enough English content.
+- `workflow_dispatch` on `validate.yml` with optional date and strictness inputs.
+- `docs/release-v0.2.4.md`.
+- Tests for CJK substance checks and apply_updates Chinese guard.
+
+### Changed
+- CLI version bumped to `0.2.4`.
+- `missing_chinese_substance` now checks for CJK characters, not merely non-empty `中文：` lines.
+- Cloud agent validate uses `--strict-bilingual --require-chinese`.
+- Push/PR validation enables `--require-chinese` by default.
+- Seed daily/weekly/monthly executive summaries include real Simplified Chinese.
+
+### Fixed
+- Bilingual compliance that passed strict checks with empty Chinese placeholders.
+- No manual path to trigger validation from GitHub Actions UI.
+
 ## v0.2.3 - 2026-07-02
 
 ### Added

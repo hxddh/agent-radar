@@ -16,6 +16,7 @@ FIELD_LABEL_RE = re.compile(
     r"Positive|Pain point|Public-safe summary|This week|Most important|Biggest|Strongest).+): (.+)$"
 )
 MIN_IDENTICAL_PAIR_CHARS = 12
+MIN_CJK_LINES_FOR_SUBSTANCE = 3
 
 
 def is_report_content(content: str) -> bool:
@@ -35,6 +36,47 @@ def needs_bilingual(content: str) -> bool:
 
 def normalize_bilingual_text(value: str) -> str:
     return " ".join(value.strip().split())
+
+
+def has_cjk(text: str) -> bool:
+    return any("\u4e00" <= char <= "\u9fff" for char in text)
+
+
+def substantive_english_lines(content: str) -> int:
+    count = 0
+    for line in content.splitlines():
+        match = ENGLISH_LABEL_RE.match(line)
+        if not match:
+            continue
+        text = normalize_bilingual_text(match.group(2))
+        if len(text) >= MIN_IDENTICAL_PAIR_CHARS:
+            count += 1
+    return count
+
+
+def substantive_chinese_cjk_lines(content: str) -> int:
+    count = 0
+    for line in content.splitlines():
+        match = CHINESE_LABEL_RE.match(line)
+        if not match:
+            continue
+        text = normalize_bilingual_text(match.group(2))
+        if len(text) >= MIN_IDENTICAL_PAIR_CHARS and has_cjk(text):
+            count += 1
+    return count
+
+
+def missing_chinese_substance(content: str) -> bool:
+    if not is_report_content(content):
+        return False
+    english_count = substantive_english_lines(content)
+    if english_count < 10:
+        return False
+    return substantive_chinese_cjk_lines(content) < MIN_CJK_LINES_FOR_SUBSTANCE
+
+
+def report_has_required_chinese(content: str) -> bool:
+    return not missing_chinese_substance(content)
 
 
 def identical_bilingual_pairs(content: str, min_chars: int = MIN_IDENTICAL_PAIR_CHARS) -> list[str]:
@@ -62,18 +104,6 @@ def identical_bilingual_pairs(content: str, min_chars: int = MIN_IDENTICAL_PAIR_
             issues.append(preview)
         index += 2
     return issues
-
-
-def missing_chinese_substance(content: str) -> bool:
-    if not is_report_content(content):
-        return False
-    chinese_lines = [
-        normalize_bilingual_text(match.group(2))
-        for match in (CHINESE_LABEL_RE.match(line) for line in content.splitlines())
-        if match
-    ]
-    substantive = [line for line in chinese_lines if len(line) >= MIN_IDENTICAL_PAIR_CHARS]
-    return bool(chinese_lines) and not substantive
 
 
 def bilingualize_report(content: str) -> str:

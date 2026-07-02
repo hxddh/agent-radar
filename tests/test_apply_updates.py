@@ -81,6 +81,23 @@ class ApplyUpdatesTest(unittest.TestCase):
                     {"files": [{"path": "daily/2026-07.md", "content": "# Daily\n\n## 2026-07-02\n\n- new\n"}]},
                 )
 
+    def test_rejects_report_without_cjk_chinese(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            content = (
+                "# Daily Agent Radar - 2026-07\n\n## 2026-07-02\n\n"
+                + "".join(
+                    f"- 中文：\n- English: filler english line number {index}.\n"
+                    for index in range(12)
+                )
+            )
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {"files": [{"path": "daily/2026-07.md", "content": content}]},
+                )
+
     def test_bilingualizes_daily_report_updates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

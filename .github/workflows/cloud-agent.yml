@@ -110,7 +110,7 @@ jobs:
           python scripts/agent_radar.py ensure --date "$TODAY"
           python scripts/agent_radar.py bilingualize --date "$TODAY"
           python scripts/agent_radar.py brief --date "$TODAY"
-          python scripts/agent_radar.py validate --date "$TODAY" --strict-bilingual
+          python scripts/agent_radar.py validate --date "$TODAY" --strict-bilingual --require-chinese
           python -m unittest discover -s tests
           python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
 

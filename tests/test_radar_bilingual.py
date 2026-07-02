@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -45,6 +46,29 @@ class RadarBilingualTest(unittest.TestCase):
         repaired = radar_bilingual.repair_identical_bilingual_pairs(content)
         self.assertIn("- 中文：\n", repaired)
         self.assertEqual(len(radar_bilingual.identical_bilingual_pairs(repaired)), 0)
+
+    def test_missing_chinese_requires_cjk_not_english_copy(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            + "".join(
+                f"- 中文：English only line number {index}.\n- English: English only line number {index}.\n"
+                for index in range(12)
+            )
+        )
+        self.assertTrue(radar_bilingual.missing_chinese_substance(content))
+
+    def test_cjk_chinese_satisfies_substance_check(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            "- 中文：浏览器工具进入主流产品。\n- English: Browser tools are mainstream.\n"
+            "- 中文：沙箱执行成为基础设施信号。\n- English: Sandbox execution is an infra signal.\n"
+            "- 中文：存储面包括日志与 trace。\n- English: Storage surfaces include logs and traces.\n"
+            + "".join(
+                f"- 中文：\n- English: filler english line number {index}.\n"
+                for index in range(8)
+            )
+        )
+        self.assertFalse(radar_bilingual.missing_chinese_substance(content))
 
     def test_ensure_bilingual_skips_non_report_paths(self) -> None:
         content = "# Research Log\n\n- item\n"
