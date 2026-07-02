@@ -34,11 +34,12 @@ Update when justified:
 
 ## Synthesis Requirements
 
-Write `weekly/YYYY-Www.md` as a bilingual paired report:
+Write `weekly/YYYY-Www.md` as a block bilingual report:
 
-- Use nested bilingual pairs: each substantive item is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets.
-- Chinese must be real Simplified Chinese; never copy the English sentence into the `中文：` line. At least 60% of substantive English lines need a real Chinese counterpart.
-- Keep short metadata fields on one line as `中文值（English value）`; write URLs, product names, model names, and repo names once, never duplicated per language.
+- Use a full `## English` section first, then a full `## 中文` section separated by `---`.
+- Mirror section headings in both languages. English bullets contain English prose only; Chinese bullets contain Simplified Chinese prose only.
+- Chinese must be real Simplified Chinese; never copy the English sentence verbatim. At least 60% of substantive English lines need a real Chinese counterpart.
+- Keep short metadata fields on one line as `中文值（English value）` or language-neutral English lines; write URLs, product names, model names, and repo names once in English unless language-neutral.
 - Keep URLs, product names, model names, repo names, and source labels unchanged.
 
 Cover:

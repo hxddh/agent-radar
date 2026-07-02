@@ -1542,10 +1542,10 @@ Return only valid JSON with this shape:
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
-- For daily, weekly, and monthly report files, bilingual output is mandatory in nested paired form: each substantive field is a label bullet (for example `- Signal` or `- Why it matters`) followed by exactly two sub-bullets, `中文：` first and `English:` second.
-- Chinese text must be real Simplified Chinese. Never copy the English sentence verbatim into the `中文：` line. At least 60% of substantive English lines must have a real Chinese counterpart, or the update is rejected.
-- Keep short metadata fields on a single line without per-language duplication: URLs, repo names, product names, versions, and star counts are written once (for example `- Source: https://...`). Enumerated fields pair values inline (for example `- Evidence strength: 强（Strong）`).
-- Never write the same URL twice for one item and never emit `中文：`/`English:` lines with identical content.
+- For daily, weekly, and monthly report files, bilingual output is mandatory in block form. Weekly and monthly reports use `## English` then `## 中文` (separated by `---`). Daily reports use `### English` then `### 中文` under each `## YYYY-MM-DD` day heading.
+- Mirror section headings in both languages. English bullets contain English prose only; Chinese bullets contain real Simplified Chinese prose only. At least 60% of substantive English lines must have a real Chinese counterpart, or the update is rejected.
+- Keep short metadata fields on a single line without per-language duplication: URLs, repo names, product names, versions, and star counts are written once in the English section (or as language-neutral lines). Enumerated fields pair values inline (for example `- Evidence strength: 强（Strong）` in the Chinese section).
+- Never write the same URL twice for one item.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 - For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.

@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.4.0 - 2026-07-02
+
+### Added
+- Block bilingual report format: weekly and monthly files use full `## English` then `## 中文` sections; daily files use `### English` then `### 中文` per day.
+- `convert_paired_to_block()` and block-format detection helpers in `scripts/radar_bilingual.py`.
+- Tests for block-format detection, substance counting, and paired-to-block conversion.
+- `docs/release-v0.4.0.md`.
+
+### Changed
+- CLI version bumped to `0.4.0`.
+- Templates, prompts, runner rules, automation cards, and architecture docs now describe block bilingual format instead of nested `中文：` / `English:` pairs.
+- `weekly/2026-W27.md`, `weekly/2026-W28.md`, and `monthly/2026-07.md` converted to block format via `bilingualize`.
+- Cloud agent commit step rebases onto `origin/main` before push to avoid schedule-run push rejections when `main` advances during long runs.
+
+### Fixed
+- Reading experience: users can read the full English report before scrolling to the full Chinese section.
+
 ## v0.3.1 - 2026-07-02
 
 ### Added

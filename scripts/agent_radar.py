@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
 CORE_FILES = [
     "README.md",
@@ -232,19 +232,15 @@ def daily_entry(day: dt.date) -> str:
     date_text = day.isoformat()
     return f"""## {date_text}
 
-> Format: each substantive field is a label bullet followed by nested `中文：` (first) and `English:` (second) lines. Short metadata fields stay on one line as `中文值（English value）`. URLs, repo names, product names, versions, and star counts are written once and never duplicated per language.
+> Format: read `### English` first, then `### 中文` for this day. URLs, repo names, and product names appear once in the English section unless language-neutral.
 
-### 1. New Signals
+### English
 
-- Signal
-  - 中文：
-  - English:
-  - What happened
-    - 中文：
-    - English:
-  - Why it matters
-    - 中文：
-    - English:
+#### 1. New Signals
+
+- Signal:
+  - What happened:
+  - Why it matters:
   - Related agent:
   - Category:
   - Source class:
@@ -252,94 +248,130 @@ def daily_entry(day: dt.date) -> str:
   - Evidence strength:
   - Source:
 
-### 2. Mainstream Agent Progress
+#### 2. Mainstream Agent Progress
 
 - Agent:
-  - Change
-    - 中文：
-    - English:
-  - User impact
-    - 中文：
-    - English:
-  - Infra implication
-    - 中文：
-    - English:
+  - Change:
+  - User impact:
+  - Infra implication:
   - Source class:
   - Evidence strength:
   - Source:
 
-### 3. Emerging Agents to Watch
+#### 3. Emerging Agents to Watch
 
 - Agent / project:
   - Category:
-  - Why it matters
-    - 中文：
-    - English:
-  - Evidence
-    - 中文：
-    - English:
-  - Risk
-    - 中文：
-    - English:
+  - Why it matters:
+  - Evidence:
+  - Risk:
   - Source class:
   - Public corroboration:
   - Source:
 
-### 4. User Field Notes
+#### 4. User Field Notes
 
 - Tool:
-  - Scenario
-    - 中文：
-    - English:
-  - Positive
-    - 中文：
-    - English:
-  - Pain point
-    - 中文：
-    - English:
-  - Useful trick
-    - 中文：
-    - English:
+  - Scenario:
+  - Positive:
+  - Pain point:
+  - Useful trick:
   - Source class:
   - Source visibility:
   - Evidence strength:
-  - Public-safe summary
-    - 中文：
-    - English:
+  - Public-safe summary:
   - Source:
 
-### 5. Playbook Candidates
+#### 5. Playbook Candidates
 
-- Trick
-  - 中文：
-  - English:
-  - When useful
-    - 中文：
-    - English:
-  - Evidence
-    - 中文：
-    - English:
+- Trick:
+  - When useful:
+  - Evidence:
   - Should promote to playbook? yes / no
 
-### 6. Storage / Infra Angle
+#### 6. Storage / Infra Angle
 
-- Signal
-  - 中文：
-  - English:
+- Signal:
   - Related to:
-  - Storage implication
-    - 中文：
-    - English:
+  - Storage implication:
   - Source class:
   - Evidence strength:
   - Source:
 
-### 7. Possible Thesis Changes
+#### 7. Possible Thesis Changes
 
 - Current thesis affected:
-- New evidence
-  - 中文：
-  - English:
+- New evidence:
+- Change now? yes / no
+
+### 中文
+
+#### 1. New Signals
+
+- Signal:
+  - What happened:
+  - Why it matters:
+  - Related agent:
+  - Category:
+  - Source class:
+  - Source visibility:
+  - Evidence strength:
+  - Source:
+
+#### 2. Mainstream Agent Progress
+
+- Agent:
+  - Change:
+  - User impact:
+  - Infra implication:
+  - Source class:
+  - Evidence strength:
+  - Source:
+
+#### 3. Emerging Agents to Watch
+
+- Agent / project:
+  - Category:
+  - Why it matters:
+  - Evidence:
+  - Risk:
+  - Source class:
+  - Public corroboration:
+  - Source:
+
+#### 4. User Field Notes
+
+- Tool:
+  - Scenario:
+  - Positive:
+  - Pain point:
+  - Useful trick:
+  - Source class:
+  - Source visibility:
+  - Evidence strength:
+  - Public-safe summary:
+  - Source:
+
+#### 5. Playbook Candidates
+
+- Trick:
+  - When useful:
+  - Evidence:
+  - Should promote to playbook? yes / no
+
+#### 6. Storage / Infra Angle
+
+- Signal:
+  - Related to:
+  - Storage implication:
+  - Source class:
+  - Evidence strength:
+  - Source:
+
+#### 7. Possible Thesis Changes
+
+- Current thesis affected:
+- New evidence:
 - Change now? yes / no
 """
 
@@ -374,55 +406,89 @@ def weekly_template(day: dt.date) -> str:
     label = f"{year}-W{week:02d}"
     return f"""# Agent Radar Weekly - {label}
 
-> Format: each substantive item is a label bullet followed by nested `中文：` (first) and `English:` (second) lines, as in section 1 below. Short metadata fields stay on one line as `中文值（English value）`. URLs, repo names, and product names are written once and never duplicated per language.
+> Format: read the full `## English` section first, then the full `## 中文` section. URLs, repo names, and product names appear once in the English section unless language-neutral.
 
-## 1. Executive Summary
+## English
 
-- 本周最大变化 / This week's biggest change:
-  - 中文：
-  - English:
-- 最重要的用户体验信号 / Most important user experience signal:
-  - 中文：
-  - English:
-- 最重要的基础设施信号 / Most important infra signal:
-  - 中文：
-  - English:
-- 最重要的存储启示 / Most important storage implication:
-  - 中文：
-  - English:
-- 最大不确定性 / Biggest uncertainty:
-  - 中文：
-  - English:
+### 1. Executive Summary
 
-## 2. Product Changes
+- This week's biggest change:
+- Most important user experience signal:
+- Most important infra signal:
+- Most important storage implication:
+- Biggest uncertainty:
 
-## 3. Mainstream Agent Progress
+### 2. Product Changes
 
-## 4. Emerging Agent Progress
+### 3. Mainstream Agent Progress
 
-## 5. User Experience
+### 4. Emerging Agent Progress
 
-## 6. Useful Tricks
+### 5. User Experience
 
-## 7. Infrastructure Changes
+### 6. Useful Tricks
 
-## 8. Storage Implications
+### 7. Infrastructure Changes
 
-## 9. Commercialization
+### 8. Storage Implications
 
-## 10. Enterprise Adoption
+### 9. Commercialization
 
-## 11. Reliability and Evaluation
+### 10. Enterprise Adoption
 
-## 12. Security and Governance
+### 11. Reliability and Evaluation
 
-## 13. Ecosystem Standards
+### 12. Security and Governance
 
-## 14. Anti-Signals
+### 13. Ecosystem Standards
 
-## 15. Changed Thesis
+### 14. Anti-Signals
 
-## 16. Watch Next Week
+### 15. Changed Thesis
+
+### 16. Watch Next Week
+
+---
+
+## 中文
+
+### 1. Executive Summary
+
+- 本周最大变化：
+- 最重要的用户体验信号：
+- 最重要的基础设施信号：
+- 最重要的存储启示：
+- 最大不确定性：
+
+### 2. Product Changes
+
+### 3. Mainstream Agent Progress
+
+### 4. Emerging Agent Progress
+
+### 5. User Experience
+
+### 6. Useful Tricks
+
+### 7. Infrastructure Changes
+
+### 8. Storage Implications
+
+### 9. Commercialization
+
+### 10. Enterprise Adoption
+
+### 11. Reliability and Evaluation
+
+### 12. Security and Governance
+
+### 13. Ecosystem Standards
+
+### 14. Anti-Signals
+
+### 15. Changed Thesis
+
+### 16. Watch Next Week
 """
 
 
@@ -444,46 +510,67 @@ def monthly_template(day: dt.date) -> str:
     label = f"{day:%Y-%m}"
     return f"""# Agent Radar Monthly - {label}
 
-> Format: each substantive item is a label bullet followed by nested `中文：` (first) and `English:` (second) lines, as in section 1 below. Short metadata fields stay on one line as `中文值（English value）`. URLs, repo names, and product names are written once and never duplicated per language.
+> Format: read the full `## English` section first, then the full `## 中文` section. URLs, repo names, and product names appear once in the English section unless language-neutral.
 
-## 1. Executive Summary
+## English
 
-- 最大 thesis 变化 / Biggest thesis change:
-  - 中文：
-  - English:
-- 最强产品信号 / Strongest product signal:
-  - 中文：
-  - English:
-- 最强用户体验信号 / Strongest user-experience signal:
-  - 中文：
-  - English:
-- 最强基础设施信号 / Strongest infrastructure signal:
-  - 中文：
-  - English:
-- 最强存储启示 / Strongest storage implication:
-  - 中文：
-  - English:
-- 最大反信号 / Biggest anti-signal:
-  - 中文：
-  - English:
+### 1. Executive Summary
 
-## 2. Watchlist Changes
+- Biggest thesis change:
+- Strongest product signal:
+- Strongest user-experience signal:
+- Strongest infrastructure signal:
+- Strongest storage implication:
+- Biggest anti-signal:
 
-## 3. Evidence Quality Review
+### 2. Watchlist Changes
 
-## 4. Playbook Promotions
+### 3. Evidence Quality Review
 
-## 5. Storage and Infrastructure Thesis
+### 4. Playbook Promotions
 
-## 6. Commercialization and Enterprise Adoption
+### 5. Storage and Infrastructure Thesis
 
-## 7. Security and Governance
+### 6. Commercialization and Enterprise Adoption
 
-## 8. Open Questions Resolved
+### 7. Security and Governance
 
-## 9. Open Questions Added
+### 8. Open Questions Resolved
 
-## 10. Next Month Watchlist
+### 9. Open Questions Added
+
+### 10. Next Month Watchlist
+
+---
+
+## 中文
+
+### 1. Executive Summary
+
+- 最大 thesis 变化：
+- 最强产品信号：
+- 最强用户体验信号：
+- 最强基础设施信号：
+- 最强存储启示：
+- 最大反信号：
+
+### 2. Watchlist Changes
+
+### 3. Evidence Quality Review
+
+### 4. Playbook Promotions
+
+### 5. Storage and Infrastructure Thesis
+
+### 6. Commercialization and Enterprise Adoption
+
+### 7. Security and Governance
+
+### 8. Open Questions Resolved
+
+### 9. Open Questions Added
+
+### 10. Next Month Watchlist
 """
 
 
@@ -582,8 +669,11 @@ def warn_bilingual_missing(path: Path, strict: bool = False) -> list[str]:
     if not radar_bilingual.needs_bilingual(content):
         return []
     if strict:
-        return [f"{path}: requires bilingual Chinese labels (中文：) and English labels (English:)"]
-    return [f"{path}: report has substantive bullets but missing bilingual Chinese labels (中文：)"]
+        return [
+            f"{path}: requires block bilingual sections "
+            "(`## English` / `## 中文` for weekly/monthly, or `### English` / `### 中文` per day)"
+        ]
+    return [f"{path}: report has substantive bullets but missing bilingual block sections"]
 
 
 def warn_empty_chinese_labels(path: Path) -> list[str]:

@@ -107,7 +107,7 @@ Every run records:
 - source lane stats
 - duration
 
-Daily, weekly, and monthly reports use nested bilingual pairs: each substantive item is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets; short metadata fields stay on one line as `中文值（English value）`; URLs are written once. The runner rejects report updates where fewer than 60% of substantive English lines have a real Chinese counterpart.
+Daily, weekly, and monthly reports use block bilingual sections: weekly and monthly files have a full `## English` section followed by a full `## 中文` section; daily files use `### English` then `### 中文` under each day. Short metadata fields stay on one line as `中文值（English value）` or language-neutral English lines; URLs are written once. The runner rejects report updates where fewer than 60% of substantive English lines have a real Chinese counterpart.
 
 See `docs/architecture.md` for the full architecture.
 

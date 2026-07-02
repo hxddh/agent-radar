@@ -25,9 +25,63 @@ class RadarBilingualTest(unittest.TestCase):
     def test_bilingualize_adds_empty_chinese_placeholder(self) -> None:
         content = "# Agent Radar Weekly - 2026-W27\n\n- one signal\n- two signal\n- three signal\n"
         updated = radar_bilingual.bilingualize_report(content)
+        self.assertTrue(radar_bilingual.is_block_bilingual_format(updated))
+        self.assertIn("## English", updated)
+        self.assertIn("## 中文", updated)
+        self.assertIn("one signal", updated)
+
+    def test_block_format_substance_counts(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W28\n\n"
+            "> Format note\n\n"
+            "## English\n\n"
+            "### 1. Executive Summary\n\n"
+            "- English summary line one with enough substance.\n"
+            "- English summary line two with enough substance.\n"
+            "- English summary line three with enough substance.\n\n"
+            "---\n\n"
+            "## 中文\n\n"
+            "### 1. Executive Summary\n\n"
+            "- 第一条中文摘要内容足够长。\n"
+            "- 第二条中文摘要内容足够长。\n"
+            "- 第三条中文摘要内容足够长。\n"
+        )
+        self.assertTrue(radar_bilingual.is_block_bilingual_format(content))
+        self.assertEqual(radar_bilingual.substantive_english_lines(content), 3)
+        self.assertEqual(radar_bilingual.substantive_chinese_cjk_lines(content), 3)
+        self.assertFalse(radar_bilingual.missing_chinese_substance(content))
+
+    def test_convert_paired_to_block(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            "## 1. Executive Summary\n\n"
+            "- Signal\n"
+            "  - 中文：苹果发布 MCP 服务器。\n"
+            "  - English: Apple shipped an MCP server.\n"
+        )
+        converted = radar_bilingual.convert_paired_to_block(content)
+        self.assertTrue(radar_bilingual.is_block_bilingual_format(converted))
+        self.assertIn("Apple shipped an MCP server.", converted)
+        self.assertIn("苹果发布 MCP 服务器。", converted)
+        self.assertNotIn("中文：", converted)
+
+    def test_ensure_bilingual_converts_weekly_paired_to_block(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            "- 中文：信号\n- English: signal\n"
+        )
+        updated = radar_bilingual.ensure_bilingual_file_content("weekly/2026-W27.md", content)
+        self.assertTrue(radar_bilingual.is_block_bilingual_format(updated))
+
+    def test_ensure_bilingual_leaves_daily_paired_unchanged(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "## 2026-07-02\n\n"
+            "- 中文：信号\n- English: signal\n"
+        )
+        updated = radar_bilingual.ensure_bilingual_file_content("daily/2026-07.md", content)
         self.assertIn("中文：", updated)
-        self.assertIn("English: one signal", updated)
-        self.assertNotIn("中文：one signal", updated)
+        self.assertNotIn("## English", updated)
 
     def test_identical_pairs_detected(self) -> None:
         content = (
