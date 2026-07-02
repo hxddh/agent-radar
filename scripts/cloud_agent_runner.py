@@ -104,6 +104,14 @@ STRUCTURE_PRESERVED_FILES = {
 DAILY_APPEND_ONLY_MESSAGE = (
     "Refusing full-file update for {path}; append a new ## YYYY-MM-DD day block instead."
 )
+WEEKLY_REPLACE_SECTION_MESSAGE = (
+    "Refusing full-file update for {path}; use replace_section on changed ### subsections "
+    "or on ## English / ## 中文 blocks instead."
+)
+MONTHLY_REPLACE_SECTION_MESSAGE = (
+    "Refusing full-file update for {path}; use replace_section on changed ### subsections "
+    "or on ## English / ## 中文 blocks instead."
+)
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
     "coding agent",
@@ -486,6 +494,14 @@ def context_skip_paths(task: str, day: dt.date) -> set[str]:
 
 def is_daily_month_path(rel_path: str) -> bool:
     return bool(re.match(r"daily/\d{4}-\d{2}\.md$", rel_path))
+
+
+def is_weekly_path(rel_path: str) -> bool:
+    return bool(re.match(r"weekly/\d{4}-W\d{2}\.md$", rel_path))
+
+
+def is_monthly_path(rel_path: str) -> bool:
+    return bool(re.match(r"monthly/\d{4}-\d{2}\.md$", rel_path))
 
 
 def slice_daily_month_file(content: str, day: dt.date, limit: int) -> str:
@@ -2028,6 +2044,10 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         old = read_text_full(path)
         if mode == "full" and is_daily_month_path(rel_path) and old.strip():
             raise SystemExit(DAILY_APPEND_ONLY_MESSAGE.format(path=rel_path))
+        if mode == "full" and is_weekly_path(rel_path) and old.strip():
+            raise SystemExit(WEEKLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
+        if mode == "full" and is_monthly_path(rel_path) and old.strip():
+            raise SystemExit(MONTHLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
         merged = merge_update_content(old, mode, content, str(anchor) if anchor else None)
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):

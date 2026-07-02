@@ -119,7 +119,7 @@ Every run records:
 - source lane stats
 - duration
 
-Daily, weekly, and monthly reports use block bilingual sections: weekly and monthly files have a full `## English` section followed by a full `## 中文` section; daily files use `### English` then `### 中文` under each day. Existing `daily/YYYY-MM.md` files are append-only (new day blocks via `append`; `full` is rejected when content exists). Short metadata fields stay on one line as `中文值（English value）` or language-neutral English lines; URLs are written once. The runner rejects report updates where fewer than 60% of substantive English lines have a real Chinese counterpart.
+Daily, weekly, and monthly reports use block bilingual sections: weekly and monthly files have a full `## English` section followed by a full `## 中文` section; daily files use `### English` then `### 中文` under each day. Existing `daily/YYYY-MM.md` files are append-only; existing `weekly/YYYY-Www.md` and `monthly/YYYY-MM.md` files require `replace_section` (not `full`). Short metadata fields stay on one line as `中文值（English value）` or language-neutral English lines; URLs are written once. The runner rejects report updates where fewer than 60% of substantive English lines have a real Chinese counterpart.
 
 See `docs/architecture.md` for the full architecture.
 
