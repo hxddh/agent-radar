@@ -719,3 +719,63 @@ Accepted sources (added to sources.md):
 Candidate inbox: Already populated in Pass 14 with the screening pass candidates. No new candidates added beyond those.
 
 Follow-up gaps: Same as Pass 14.
+
+
+### Pass 16: Daily update (2026-07-02) – Screening pass integration
+
+Accepted sources:
+- wmux: https://github.com/openwong2kim/wmux
+- infinity-context: https://github.com/777genius/infinity-context
+- remnic: https://github.com/joshuaswarren/remnic
+- mitos: https://github.com/mitos-run/mitos
+- iris-eval MCP server: https://github.com/iris-eval/mcp-server
+- Cursor prompt injection flaws: https://bsky.app/profile/aiweekly.bsky.social/post/3mpozirxaia2m
+- warden: https://github.com/askalf/warden
+- ctx: https://github.com/ctxrs/ctx and https://news.ycombinator.com/item?id=48763462
+- agentrc: https://github.com/adeelahmad/agentrc
+- forcefield: https://open-vsx.org/extension/DataScienceTech/forcefield
+- Knotic: https://medium.com/@riccardo.tartaglia/how-i-have-build-memory-that-actually-works-for-ai-coding-938ee4df4060
+- Copilot agent session streaming: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview
+- MCP TypeScript SDK v2.0.0 beta: https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/server%402.0.0-beta.2 and https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/node%402.0.0-beta.2
+- macro v2026.7.2: https://github.com/macro-inc/macro/releases/tag/v2026.7.2.1 and https://github.com/macro-inc/macro/releases/tag/v2026.7.2.0
+- Codex v0.143.0-alpha.34: https://github.com/openai/codex/releases/tag/rust-v0.143.0-alpha.34
+
+Candidate inbox (compact, ranked):
+1. wmux – Windows tmux alternative for AI agent terminal splitting. Relevance 5. Evidence: high (repo). Defer: needs adoption.
+2. infinity-context – Reliable memory and context infrastructure for AI coding agents. Relevance 5. Evidence: high (repo). Defer: evaluate Qdrant/Graphiti integration.
+3. remnic – Open-source memory and context for user-aware agents. Relevance 5. Evidence: high (repo). Defer: monitor star growth.
+4. mitos – Millisecond microVM sandbox forking for AI agents on Kubernetes. Relevance 5. Evidence: high (repo). Defer: assess K8s CRD maturity.
+5. iris-eval MCP server – Agent eval standard for MCP. Relevance 5. Evidence: high (repo). Defer: monitor integration with agent frameworks.
+6. Cursor prompt injection flaws (CVSS 9.8) – Zero-click prompt injection in Cursor AI IDE. Relevance 5. Evidence: medium (Bluesky post). Defer: confirm remediation in Cursor 3.0.
+7. warden – Deterministic firewall for AI-agent tool calls. Relevance 5. Evidence: high (repo). Defer: test tamper-evident audit.
+8. ctx – Search the coding agent history already on your machine. Relevance 4. Evidence: high (repo + HN). Defer: monitor for broader agent source integration.
+9. agentrc – Agent Run Config: open specification for portable, governed AI agents. Relevance 4. Evidence: medium (repo). Defer: check specification progress.
+10. forcefield – Security guardrails for vibe coding. Relevance 4. Evidence: medium (Open VSX). Defer: evaluate policy constitution file.
+11. Knotic – Layered memory (project/session/docs) for AI coding agents. Relevance 3. Evidence: low (Medium post). Defer: look for open-source release.
+12. Copilot agent session streaming – Official GitHub Copilot feature. Relevance 4. Evidence: high (changelog). Defer: monitor adoption.
+13. MCP TypeScript SDK v2.0.0 beta – Major version bump for MCP TypeScript SDK. Relevance 5. Evidence: high (releases). Defer: track full release.
+14. macro v2026.7.2 – Two releases in one day from macro. Relevance 3. Evidence: high (releases). Defer: review changelogs.
+15. Codex v0.143.0-alpha.34 – OpenAI's coding agent continues to evolve. Relevance 4. Evidence: high (release). Defer: monitor for stable release.
+
+Gaps:
+- Missing detailed eval frameworks for agent memory quality.
+- No major deployments of agent storage backends beyond SQLite/vector DB.
+- Lack of standardized agent observability outside of LangSmith mentions (weak).
+- No signals on agent-specific database or caching infrastructure.
+
+Follow-up gaps:
+- Monitor high-confidence candidates for adoption, integration, or user reports.
+- Track MCP ecosystem growth and fragmentation risks.
+- Watch for platform-vendor MCP adoption to accelerate standardization.
+- Need real user evidence for eval tooling.
+
+
+### Pass 17: Source-sweep (2026-07-02) – Final integration
+
+Purpose: Complete source-sweep using the provided screening pass. Confirm candidate inbox in research-log.md.
+
+Accepted sources: All screening pass sources are already present in research-log.md from Pass 16 and in sources.md from previous updates. No new sources added.
+
+Candidate inbox: Already populated in Pass 16 with the screening pass candidates. No new candidates added beyond those.
+
+Follow-up gaps: Same as Pass 16.

@@ -247,3 +247,22 @@ Ignore or deprioritize:
 - rexleimo/harness-cli: https://github.com/rexleimo/harness-cli (browser MCP + ContextDB)
 - Contexa: https://github.com/contexa-security/contexa (runtime security control plane)
 - PGramps Web MCP: https://github.com/Scormave/gramps-web-mcp (domain-specific MCP)
+
+
+## Additional sources from 2026-07-02 daily update
+
+- wmux: https://github.com/openwong2kim/wmux (Windows tmux alternative for AI agent terminal splitting)
+- infinity-context: https://github.com/777genius/infinity-context (reliable memory and context infrastructure for AI coding agents)
+- remnic: https://github.com/joshuaswarren/remnic (open-source memory and context for user-aware agents)
+- mitos: https://github.com/mitos-run/mitos (millisecond microVM sandbox forking for AI agents on Kubernetes)
+- iris-eval MCP server: https://github.com/iris-eval/mcp-server (agent eval standard for MCP)
+- Cursor prompt injection flaws: https://bsky.app/profile/aiweekly.bsky.social/post/3mpozirxaia2m (two critical Cursor prompt injection flaws, CVSS 9.8)
+- warden: https://github.com/askalf/warden (deterministic firewall for AI-agent tool calls)
+- ctx: https://github.com/ctxrs/ctx and https://news.ycombinator.com/item?id=48763462 (search the coding agent history already on your machine)
+- agentrc: https://github.com/adeelahmad/agentrc (agent Run Config: open specification for portable, governed AI agents)
+- forcefield: https://open-vsx.org/extension/DataScienceTech/forcefield (security guardrails for vibe coding)
+- Knotic: https://medium.com/@riccardo.tartaglia/how-i-have-build-memory-that-actually-works-for-ai-coding-938ee4df4060 (layered memory for AI coding agents)
+- Copilot agent session streaming: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview (official GitHub Copilot feature)
+- MCP TypeScript SDK v2.0.0 beta: https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/server%402.0.0-beta.2 and https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/node%402.0.0-beta.2 (major version bump for MCP TypeScript SDK)
+- macro v2026.7.2: https://github.com/macro-inc/macro/releases/tag/v2026.7.2.1 and https://github.com/macro-inc/macro/releases/tag/v2026.7.2.0 (two releases in one day from macro)
+- Codex v0.143.0-alpha.34: https://github.com/openai/codex/releases/tag/rust-v0.143.0-alpha.34 (OpenAI's coding agent continues to evolve)

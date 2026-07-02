@@ -7,7 +7,7 @@ Last checked: 2026-07-02
 | arxiv | 1 | 0 | 6 |
 | bluesky | 8 | 0 | 32 |
 | crates | 9 | 0 | 45 |
-| devto | 6 | 0 | 24 |
+| devto | 5 | 1 | 20 |
 | docker | 3 | 0 | 15 |
 | feed | 2 | 0 | 12 |
 | github | 12 | 0 | 60 |
