@@ -1,6 +1,13 @@
 # Changelog
 
-## Unreleased
+## v0.2.6 - 2026-07-02
+
+### Added
+- `trigger` CLI command to start GitHub Actions via `repository_dispatch` (works when `workflow_dispatch` returns 403 for bot tokens).
+- `repository_dispatch` listeners on `validate.yml` and `cloud-agent.yml`.
+
+### Changed
+- CLI version bumped to `0.2.6`.
 
 ## v0.2.5 - 2026-07-02
 

@@ -19,6 +19,8 @@ on:
         required: false
         default: false
         type: boolean
+  repository_dispatch:
+    types: [validate]
 
 jobs:
   validate:
@@ -48,16 +50,20 @@ jobs:
 
       - name: Validate structure
         env:
-          VALIDATE_DATE: ${{ github.event.inputs.date || '2026-07-02' }}
-          STRICT_BILINGUAL: ${{ github.event.inputs.strict_bilingual != false }}
-          REQUIRE_CHINESE: ${{ github.event.inputs.require_chinese == true }}
+          VALIDATE_DATE: ${{ github.event.client_payload.date || github.event.inputs.date || '2026-07-02' }}
+          STRICT_BILINGUAL: ${{ github.event.client_payload.strict_bilingual != false && github.event.inputs.strict_bilingual != false }}
+          REQUIRE_CHINESE: ${{ github.event.client_payload.require_chinese == true || github.event.inputs.require_chinese == true }}
         run: |
           STRICT_ARGS=""
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "$STRICT_BILINGUAL" = "true" ]; then
+          MANUAL_TRIGGER=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            MANUAL_TRIGGER=true
+          fi
+          if [ "$MANUAL_TRIGGER" != "true" ] || [ "$STRICT_BILINGUAL" = "true" ]; then
             STRICT_ARGS="--strict-bilingual"
           fi
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "$REQUIRE_CHINESE" = "true" ]; then
-            if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+          if [ "$MANUAL_TRIGGER" != "true" ] || [ "$REQUIRE_CHINESE" = "true" ]; then
+            if [ "$MANUAL_TRIGGER" != "true" ]; then
               STRICT_ARGS="$STRICT_ARGS --require-chinese"
             elif [ "$REQUIRE_CHINESE" = "true" ]; then
               STRICT_ARGS="$STRICT_ARGS --require-chinese"
