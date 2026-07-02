@@ -328,3 +328,173 @@ Follow-up gaps:
 - No enterprise agent deployment or storage infrastructure signals in this sweep beyond existing coverage.
 - Need to monitor Omnigent's sandbox API and policy enforcement details.
 - Anthropic news feed remains inaccessible; lack of Claude-specific updates may bias coverage toward open-source tools.
+
+### Pass 8: Source Sweep (2026-07-02) – Screening Pass Integration
+
+Purpose:
+- Integrate the latest screening pass (deepseek/deepseek-v4-flash) into the research log, updating the candidate inbox with new high-signal items and deduplicating against existing entries. No promotions; all candidates remain deferred pending stronger evidence.
+
+Accepted sources from screening pass:
+- Prismor: https://github.com/PrismorSec/prismor (runtime security for agents, 215 stars)
+- Shinken: https://github.com/Meirtz/Shinken (train computer-use agents end-to-end at scale, 18 stars)
+- SIN-Code: https://github.com/OpenSIN-Code/SIN-Code (verification-first coding agent with MCP server, 1 star)
+- MemEcsy: https://github.com/vajraimb/MemEcsy (structured long-term memory for AI agents, 0 stars)
+- computer-use-mcp: https://github.com/minghinmatthewlam/computer-use-mcp (macOS computer use for any MCP client, 13 stars)
+- Evaluation Context Protocol (ECP): https://www.evaluationcontextprotocol.io/ (standardized evaluation protocol for agents)
+- Reap: https://arxiv.org/abs/2604.01527 (automatic curation of coding agent benchmarks)
+- Emergence World: https://www.emergence.ai/blog/emergence-world-a-laboratory-for-evaluating-long-horizon-agent-autonomy (laboratory for evaluating long-horizon agent autonomy)
+- sandbox-runtime: https://github.com/candisulphurous105/sandbox-runtime (lightweight OS-level sandboxing for AI agents, 1 star)
+- env-vault-agent: https://github.com/saiahi/env-vault-agent (AI dev sandbox with real env injection and traffic replay, 1 star)
+- prx: https://github.com/bounded-systems/prx (agent-run work-unit CLI with capability-scoped agents, 1 star)
+- loki-mode: https://github.com/asklokesh/loki-mode (multi-agent autonomous SDLC framework, 998 stars)
+- limen: https://github.com/organvm/limen (MCP-accessible multi-agent task orchestration, 0 stars)
+- pi-agent-browser-native: https://github.com/fitchmultz/pi-agent-browser-native (browser automation native tool for agents, 139 stars)
+- Opera CLI: https://github.com/operasoftware/opera-browser-cli/blob/main/docs/opera-compact-whitepaper.md (36% smaller accessibility snapshots for browser agents)
+- awesome-x-ops: https://github.com/xlabs-club/awesome-x-ops (curated map of modern X-Ops including AI Agent Observability, 12 stars)
+- deptrust (already in inbox, updated with screening pass confidence: medium)
+- argus (already in inbox, updated with screening pass confidence: medium)
+- Toolnexus (already in inbox, updated with screening pass confidence: medium)
+- GOAT 2.0 (already in inbox, updated with screening pass confidence: medium)
+- MemEcsy (new, added to inbox)
+- computer-use-mcp (new, added to inbox)
+- ECP (new, added to inbox)
+- sandbox-runtime (new, added to inbox)
+- prx (new, added to inbox)
+- limen (new, added to inbox)
+- Opera CLI (new, added to inbox)
+- awesome-x-ops (new, added to inbox)
+- Shinken (new, added to inbox)
+- SIN-Code (new, added to inbox)
+- Prismor (new, added to inbox)
+- loki-mode (new, added to inbox)
+- pi-agent-browser-native (new, added to inbox)
+- Reap (new, added to inbox)
+- Emergence World (new, added to inbox)
+- env-vault-agent (new, added to inbox)
+
+Rejected or deprioritized this pass:
+- Low-engagement Show HN items without concrete agent infrastructure angle (e.g., job application agent, terminal workspace, interview platform).
+- micro/go-micro (general microservices framework, not agent-specific).
+- BuilderIO/agent-native (low detail, deferred for now).
+- opencode-llama-local-agent (low stars, niche).
+- rusty-beaker (multi-purpose CLI, not agent infrastructure).
+- super-agent-news-computer-use-cache (generated news site, not infrastructure).
+- Ask HN: Line by Line Agentic Coding (discussion, weak signal).
+- 3 dangers of being locked into a harness (opinion piece, weak signal).
+- Show HN: Simulate what AI agents do to an engineering org (simulation tool, weak relevance).
+- Show HN: Identity Layer for Agents and Autonomous AI (low stars, deferred).
+- Show HN: Open-source sandbox for your product team (low engagement, deferred).
+- Show HN: Petabyte-scale storage for AI agent sandboxes (Twitter link, low confidence).
+- Show HN: Build autonomous agents on Theseus with Sonnet 5 from the browser (Twitter link, low confidence).
+- Show HN: Open-Source Interview Platform (not agent infrastructure).
+- Show HN: Strata (not agent infrastructure).
+- Show HN: Even, the terminal-first desktop workspace (not agent infrastructure).
+
+Updated candidate inbox (merged and ranked, 2026-07-02):
+
+1. Prismor – runtime security for agents (215 stars).
+   - Why it matters: Blocks dangerous commands, secret leaks, prompt injection; critical for safe agent deployment. Relevance score 10.
+   - Evidence strength: Medium (215 stars, active repo, clear security value).
+   - Defer reason: Needs integration examples with major agent frameworks and real-world adoption evidence.
+   - Follow-up needed: Monitor for MCP integration, enterprise adoption, and case studies.
+
+2. Shinken – train computer-use agents end-to-end at scale (18 stars).
+   - Why it matters: High-performance runtime for 8K+ live environments on one laptop thread; enables scalable agent training. Relevance score 10.
+   - Evidence strength: Medium (18 stars, technically impressive claims).
+   - Defer reason: Very early; needs independent verification of scalability and adoption by agent training pipelines.
+   - Follow-up needed: Verify scalability claims, look for benchmarks or integrations with agent frameworks.
+
+3. SIN-Code – verification-first coding agent with MCP server (1 star).
+   - Why it matters: Multi-agent orchestrator with critic/adversary/governor, persistent memory, LSP; comprehensive agent infrastructure. Relevance score 8.
+   - Evidence strength: Weak (1 star, but detailed feature set).
+   - Defer reason: No community traction; needs demonstration of effectiveness.
+   - Follow-up needed: Assess tool count and integration quality; watch for demo or user reports.
+
+4. MemEcsy – structured long-term memory for AI agents (0 stars).
+   - Why it matters: Implements ECS-based memory with decay and MCP server, directly addressing persistent memory challenges. Relevance score 9.
+   - Evidence strength: Weak (0 stars, but technically deep).
+   - Defer reason: No adoption; needs documentation and usage examples.
+   - Follow-up needed: Check for usage examples and integration docs.
+
+5. computer-use-mcp – macOS computer use for any MCP client (13 stars).
+   - Why it matters: Agent-agnostic MCP server for computer use; enables browser/desktop automation across tools. Relevance score 8.
+   - Evidence strength: Weak (13 stars, but directly useful).
+   - Defer reason: Needs testing with major coding agents and evidence of reliability.
+   - Follow-up needed: Test with Claude Code and Cursor; look for user reports.
+
+6. Evaluation Context Protocol (ECP) – standardized evaluation protocol for agents.
+   - Why it matters: Could become industry benchmark for agent evaluation. Relevance score 8.
+   - Evidence strength: Weak (new website, no adoption evidence).
+   - Defer reason: No community support or integrations yet.
+   - Follow-up needed: Check spec adoption and community support.
+
+7. sandbox-runtime – lightweight OS-level sandboxing for AI agents (1 star).
+   - Why it matters: Enforces filesystem/network restrictions; critical for safe agent execution. Relevance score 8.
+   - Evidence strength: Weak (1 star, early).
+   - Defer reason: Needs performance and security validation.
+   - Follow-up needed: Verify sandboxing effectiveness and performance.
+
+8. prx – agent-run work-unit CLI with capability-scoped agents (1 star).
+   - Why it matters: Capability-scoped agents with signed verification; strong deployment and security signal. Relevance score 8.
+   - Evidence strength: Weak (1 star, but interesting design).
+   - Defer reason: No real-world usage; needs integration examples.
+   - Follow-up needed: Review signed pipeline implementation.
+
+9. limen – MCP-accessible multi-agent task orchestration (0 stars).
+   - Why it matters: Cross-repo task dispatch and self-healing coordination over MCP; strong orchestration signal. Relevance score 8.
+   - Evidence strength: Weak (0 stars, early).
+   - Defer reason: No evidence of self-healing capabilities in practice.
+   - Follow-up needed: Test self-healing capabilities.
+
+10. Opera CLI – 36% smaller accessibility snapshots for browser agents.
+    - Why it matters: Optimized accessibility snapshots improve browser agent efficiency. Relevance score 6.
+    - Evidence strength: Medium (Opera-backed, whitepaper).
+    - Defer reason: Niche optimization; needs adoption by browser agent frameworks.
+    - Follow-up needed: Benchmark snapshot size reduction; check integration with Playwright/Puppeteer.
+
+11. awesome-x-ops – curated map of modern X-Ops including AI Agent Observability (12 stars).
+    - Why it matters: Discovery resource for agent observability tools. Relevance score 6.
+    - Evidence strength: Weak (12 stars, curated list).
+    - Defer reason: Not a product; useful as reference.
+    - Follow-up needed: Review listed agent observability tools.
+
+12. loki-mode – multi-agent autonomous SDLC framework (998 stars).
+    - Why it matters: End-to-end SDLC automation with quality gates; relevant to agent deployment pipelines. Relevance score 7.
+    - Evidence strength: Medium (998 stars, active).
+    - Defer reason: Needs evidence of reliability and enterprise adoption.
+    - Follow-up needed: Evaluate quality gate effectiveness; look for user case studies.
+
+13. pi-agent-browser-native – browser automation native tool for agents (139 stars).
+    - Why it matters: Native browser tool for agents; relevant to agent browser automation infrastructure. Relevance score 7.
+    - Evidence strength: Weak-Medium (139 stars, but niche).
+    - Defer reason: Limited to pi extension ecosystem.
+    - Follow-up needed: Test with pi extension; check for cross-platform support.
+
+14. Reap – automatic curation of coding agent benchmarks (arXiv paper).
+    - Why it matters: Automated benchmark curation reduces evaluation bias; important for agent eval infrastructure. Relevance score 7.
+    - Evidence strength: Weak (arXiv paper, no implementation adoption).
+    - Defer reason: Academic; needs tooling or community uptake.
+    - Follow-up needed: Read paper for methodology; check for code release.
+
+15. Emergence World – laboratory for evaluating long-horizon agent autonomy.
+    - Why it matters: Dedicated evaluation environment for long-horizon tasks; fills a gap in agent testing. Relevance score 7.
+    - Evidence strength: Weak (blog post, no public access details).
+    - Defer reason: Unclear if publicly available.
+    - Follow-up needed: Explore Emergence World platform.
+
+16. env-vault-agent – AI dev sandbox with real env injection and traffic replay (1 star).
+    - Why it matters: Provides realistic testing environments for agents; useful for sandbox and eval. Relevance score 7.
+    - Evidence strength: Weak (1 star, early).
+    - Defer reason: Needs demonstration of traffic replay fidelity.
+    - Follow-up needed: Check traffic replay fidelity.
+
+Existing candidates from Pass 6 remain in inbox with updated notes where screening pass provided new confidence levels (e.g., deptrust, argus, Toolnexus, GOAT 2.0 now marked as medium confidence from screening pass). No promotions; all remain deferred.
+
+Follow-up gaps (new):
+- Security and sandboxing candidates (Prismor, sandbox-runtime, prx) are high-relevance but need integration evidence with agent frameworks.
+- Evaluation infrastructure (ECP, Reap, Emergence World) is nascent; track standardization efforts.
+- Computer-use training (Shinken) and browser optimization (Opera CLI) could become critical for agent scalability.
+- Memory candidates continue to proliferate; need to identify which architectures gain traction.
+- Reddit sources remain blocked (403); missing community signals on agent coding, MCP, memory, automation, security, workflow.
+- cursor-changelog and anthropic-news feeds returned 404; missing official changelog signals.
+- No direct signals from arXiv RSS or other RSS feeds in this snapshot.
