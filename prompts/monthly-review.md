@@ -26,11 +26,7 @@ Focus on:
 7. Which commercialization, enterprise, security, governance, and standards signals matter next
 
 Report language:
-- Write the monthly report in block bilingual form: a full `## English` section first, then a full `## 中文` section separated by `---`.
-- Mirror section headings (`### 1. Executive Summary`, etc.) in both languages. English bullets contain English prose only; Chinese bullets contain Simplified Chinese prose only.
-- Chinese must be real Simplified Chinese; never copy the English sentence verbatim. At least 60% of substantive English lines need a real Chinese counterpart.
-- Keep short metadata fields on one line as `中文值（English value）` in the Chinese section or language-neutral single lines in English; write URLs, product names, model names, and repo names once in English unless language-neutral.
-- Keep URLs, product names, model names, repo names, and source labels unchanged.
+- See `prompts/runner-rules.md` for block bilingual format and coverage gates.
 
 Rules:
 - Do not rewrite history.
