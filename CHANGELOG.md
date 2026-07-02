@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v0.2.5 - 2026-07-02
+
+### Added
+- `source-refresh` CLI command and `--collect-only` runner mode to refresh collectors without a model call.
+- Fresh production telemetry for v0.2.2+ source lanes (Bluesky, Dev.to, PyPI RSS, reddit-rss).
+
+### Changed
+- CLI version bumped to `0.2.5`.
+- `automation/source-lanes.md`, `source-health.md`, `collector-state.json`, and telemetry updated from a live collector refresh.
+
+### Fixed
+- Stale telemetry that still reflected pre-v0.2.2 Reddit JSON and zero-item PyPI lanes.
+
 ## v0.2.4 - 2026-07-02
 
 ### Added

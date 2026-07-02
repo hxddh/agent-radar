@@ -5,23 +5,25 @@ Last checked: 2026-07-02
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
 | arxiv | 1 | 0 | 6 |
+| bluesky | 8 | 0 | 32 |
 | crates | 9 | 0 | 45 |
+| devto | 6 | 0 | 24 |
 | docker | 3 | 0 | 15 |
 | feed | 2 | 0 | 12 |
 | github | 12 | 0 | 60 |
 | hn | 8 | 0 | 40 |
+| lobsters | 1 | 0 | 6 |
 | npm | 9 | 0 | 45 |
 | open-vsx | 9 | 0 | 45 |
 | page | 4 | 0 | 24 |
-| pypi | 9 | 0 | 0 |
-| reddit | 0 | 8 | 0 |
-| reddit-rss | 3 | 0 | 12 |
-| social | 4 | 0 | 16 |
-| release | 19 | 1 | 39 |
-| tag | 19 | 1 | 45 |
+| pypi-package | 8 | 0 | 8 |
+| pypi-updates | 9 | 0 | 45 |
+| reddit-rss | 2 | 1 | 8 |
+| release | 12 | 0 | 19 |
+| social-feed | 1 | 0 | 6 |
+| tag | 12 | 0 | 22 |
 
 Failure handling:
 - Collector failures are recorded here and in `automation/source-health.md`.
 - Failed collectors do not block the run when other lanes return usable signals.
-- Collectors with repeated errors and zero successes are auto-disabled in `automation/collector-state.json`.
 - Repeated failures should be replaced with a stable RSS, API, official page, or user-provided source lane.

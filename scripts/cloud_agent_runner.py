@@ -1661,6 +1661,7 @@ def update_source_health(root: Path, day: dt.date) -> None:
     for item in RUN_AUDIT["source_status"][-80:]:
         detail = str(item.get("detail", "")).replace("|", "/")
         lines.append(f"| {item.get('name', '')} | {item.get('status', '')} | {detail} |")
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -1686,8 +1687,10 @@ def update_source_lanes(root: Path, day: dt.date) -> None:
             "- Collector failures are recorded here and in `automation/source-health.md`.",
             "- Failed collectors do not block the run when other lanes return usable signals.",
             "- Repeated failures should be replaced with a stable RSS, API, official page, or user-provided source lane.",
+            "- Collectors with repeated errors and zero successes are auto-disabled in `automation/collector-state.json`.",
         ]
     )
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -1732,6 +1735,28 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
             print(f"- {source}")
 
 
+def run_collect_only(root: Path, task: str, day: dt.date) -> None:
+    RUN_AUDIT["provider"] = model_provider()
+    RUN_AUDIT["models"] = []
+    RUN_AUDIT["openrouter_calls"] = 0
+    RUN_AUDIT["fallbacks"] = []
+    RUN_AUDIT["public_source_items"] = 0
+    RUN_AUDIT["source_errors"] = []
+    RUN_AUDIT["source_status"] = []
+    RUN_AUDIT["source_lanes"] = {}
+    RUN_AUDIT["collected_source_items"] = 0
+    RUN_AUDIT["budget_status"] = "collect-only"
+    RUN_AUDIT["started_at"] = time.time()
+    snapshot = collect_public_sources(task, root, day)
+    update_source_health(root, day)
+    update_source_lanes(root, day)
+    append_telemetry(root, "source-refresh", day, 0, f"Collector refresh for {task}", [])
+    append_run_log(root, "source-refresh", day, 0, f"Collector refresh for {task}", [])
+    print(snapshot[:2000])
+    if len(snapshot) > 2000:
+        print("... snapshot truncated ...")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run Agent Radar cloud automation.")
     parser.add_argument(
@@ -1741,10 +1766,20 @@ def main(argv: list[str] | None = None) -> int:
         help="Automation task to run.",
     )
     parser.add_argument("--date", help="Date to use, YYYY-MM-DD. Defaults to UTC today.")
+    parser.add_argument(
+        "--collect-only",
+        action="store_true",
+        help="Refresh public source collectors and health files without calling a model.",
+    )
     args = parser.parse_args(argv)
 
     root = find_root()
     day = parse_date(args.date)
+    if args.collect_only:
+        task = "source-sweep" if args.task == "auto" else args.task
+        run_collect_only(root, task, day)
+        return 0
+
     ensure_report_shells(root, day)
     tasks = auto_tasks(day) if args.task == "auto" else [args.task]
 

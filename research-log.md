@@ -543,3 +543,18 @@ Rejected sources:
 
 Follow-up gaps:
 - Re-check discovered repos from research-log links before adding them to release/tag collectors.
+
+### Pass 11: Source refresh (2026-07-02)
+
+Purpose:
+- Refresh public source collectors and automation health files without a paid model call.
+
+Accepted result:
+- `source-refresh` collected 396 items before budget trim across Bluesky, Dev.to, Lobsters, PyPI RSS/package JSON, reddit-rss, HN, GitHub, npm, crates, feeds, and pages.
+- PyPI lanes now return items (pypi-updates=45, pypi-package=8).
+- Reddit subreddit RSS works for LocalLLaMA and ChatGPT; r/ClaudeAI returned HTTP 429 once.
+- Telemetry appended to `automation/telemetry/2026-07.jsonl` with task `source-refresh`.
+
+Follow-up gaps:
+- Full cloud-agent daily/weekly/monthly run still needed to fill remaining `中文：` sections and synthesize new signals.
+- r/ClaudeAI RSS may need rotation/backoff when rate-limited.
