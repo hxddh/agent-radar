@@ -571,3 +571,62 @@ Accepted result:
 
 Follow-up gaps:
 - Manually trigger `weekly` / `monthly` cloud-agent tasks to verify `FINAL_SYNTHESIS_MODEL` (`glm-5.2`) in production telemetry.
+
+## 2026-07-06
+
+### Pass 13: Weekly Synthesis (2026-W28)
+
+Purpose:
+- Synthesize the week's daily notes and public source snapshot into a bilingual weekly report for 2026-W28. Update radar.md, agent-watchlist.md, storage-angle.md, playbook.md, and user-field-notes.md where justified.
+
+Accepted sources:
+- rivet-dev/agentos: https://github.com/rivet-dev/agentos (3475 stars, sandbox + orchestration for coding agents)
+- 0xSteph/patient-zero: https://github.com/0xSteph/patient-zero (supply-chain scanner for agents, npm + Python + MCP)
+- lavkushry/AegisAgent: https://github.com/lavkushry/AegisAgent (zero-trust API firewall for agents)
+- dylanp12/proctor: https://github.com/dylanp12/proctor (benchmark sandbox with signed integrity bundles)
+- Apple Safari MCP server: https://bsky.app/profile/saganote.bsky.social/post/3mpn6wyjvck2n (Safari Technology Preview 247)
+- AWS Agent Toolkit: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mpn5g6l7g72t (300+ services, 64 skills)
+- MongoDB MCP Server: https://hub.docker.com/r/library/mongodb/mongodb-mcp-server (578K Docker pulls)
+- HashiCorp Vault MCP Server: https://hub.docker.com/r/library/hashicorp/vault-mcp-server
+- Okta MCP Server: https://pypi.org/project/okta-mcp-server/1.1.2/ (GA)
+- Camunda MCP Server: https://pypi.org/project/camunda-mcp/1.0.1/
+- MCP TypeScript SDK v2 beta: https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/v2.0.0-beta.1
+- OpenAI Genebench Pro: https://openai.com/index/introducing-genebench-pro
+- agent-failure-doctor: https://pypi.org/project/agent-failure-doctor/4.1.0/
+- junwenleong/stateful-agent-security-eval: https://github.com/junwenleong/stateful-agent-security-eval
+- Setix clearinghouse: https://bsky.app/profile/setix.com/post/3mpnaox3a3l2n
+- saravananvpk/Cisco-FMC-MCP-Server: https://github.com/saravananvpk/Cisco-FMC-MCP-Server
+
+Promoted candidates:
+- agentos (rivet-dev/agentos): Promoted to agent-watchlist.md as emerging agent. 3475 stars, direct sandbox+orchestration infrastructure for coding agents, active development. Meets threshold: strong community interest + direct agent runtime/sandbox implication.
+- patient-zero (0xSteph/patient-zero): Promoted to agent-watchlist.md as emerging agent (security category). 8 stars, but direct agent supply-chain security primitive with clear workflow (npx patient-zero, CI GitHub Action). Meets threshold: early but unusually relevant security primitive with clear agent workflow.
+
+Thesis changes:
+- Added thesis point 10 to radar.md: Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
+- Evidence: Apple Safari MCP server, AWS Agent Toolkit, MongoDB official MCP Docker image (578K pulls), Vault official MCP server.
+- Confidence: Medium.
+
+Rejected or deprioritized:
+- the-open-agent/openagent (5321 stars): Personal AI assistant with computer-use, browser-use, coding agent. High stars but broad consumer framing; not a direct agent infrastructure or coding-agent-specific signal. Deferred.
+- GCWing/BitFun (1295 stars): Desktop agent runtime with memory, personality, evolution. Interesting but consumer-oriented; deferred until enterprise or developer workflow evidence appears.
+- phuetz/code-buddy (22 stars): Multi-provider AI coding agent. Too early and low adoption for watchlist.
+- Multiple zero-star memory projects (MemoryCrystal, mindroom, reflect, neo4j-labs/meta-knowledge-graph): Overlapping memory claims with no differentiation or adoption. Deferred.
+- Setix clearinghouse: Agent economy concept with 232 buyers, 0 sellers. Interesting anti-signal but not a watchlist candidate.
+- Multiple zero-star security projects (sigil-guardian, pwnkit, Kali_Hack_Agent): Concepts without adoption evidence. Deferred.
+
+Follow-up gaps:
+- Monitor whether Apple Safari MCP server gets official documentation beyond Bluesky post.
+- Monitor whether AWS Agent Toolkit expands beyond Cursor to other IDEs.
+- Track agentos for integration docs, enterprise use cases, or mainstream coding-agent adoption.
+- Watch MCP TypeScript SDK v2 beta migration impact on existing MCP servers.
+- Monitor patient-zero and AegisAgent for integration with major agent frameworks.
+- Need real user evidence for AWS Agent Toolkit and Safari MCP workflows.
+- Anthropic news feed still inaccessible; Claude-specific signals may be underrepresented.
+- Reddit search JSON disabled; community signals limited to subreddit RSS.
+- X search API disabled; Twitter/X signals not covered.
+
+Limitations:
+- Provider cannot browse the live web; synthesis based on public source snapshot from 2026-07-02 and existing repository context.
+- No paid search tools used.
+- Bluesky posts are the primary social signal source; X/Twitter not covered.
+- Some official pages (cursor-changelog, anthropic-news) returned navigation links only without specific new content.

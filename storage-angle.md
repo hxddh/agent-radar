@@ -1,6 +1,6 @@
 # Storage Angle for AI Agents
 
-Last updated: 2026-07-02
+Last updated: 2026-07-06
 
 ## Current Thesis
 
@@ -16,6 +16,7 @@ AI Agent workloads create demand for:
 - Dataset and cache layer
 - Agent memory
 - Long-running task state
+- Enterprise data layers accessible to agents via MCP (databases, secrets, identity, workflow)
 
 ## Signals
 
@@ -37,6 +38,11 @@ AI Agent workloads create demand for:
   - Source class: Official public source.
   - Evidence strength: Strong.
   - Source: https://vercel.com/docs/sandbox
+
+- 2026-07-06: agentos (rivet-dev/agentos, 3475 stars) runs coding agents inside isolated Linux VMs with built-in orchestration. VM-level isolation means workspace persistence and snapshots require additional storage strategy beyond container-level sandboxing.
+  - Source class: Official public source.
+  - Evidence strength: Medium (strong community interest, but no production user evidence yet).
+  - Source: https://github.com/rivet-dev/agentos
 
 ### Agent Memory
 
@@ -61,6 +67,11 @@ AI Agent workloads create demand for:
     - cold-frame: https://github.com/coldzero94/cold-frame
     - BrainRouter: https://github.com/kinqsradiollc/BrainRouter
     - trusty-tools: https://github.com/bobmatnyc/trusty-tools
+
+- 2026-07-06: Additional memory projects detected in W28 snapshot: MemoryCrystal (persistent memory for agents), mindroom (universal interface with persistent memory), neo4j-labs/meta-knowledge-graph (self-improving memory layer backed by Neo4j), and reflect (MCP self-correction engine). Features overlap significantly with existing memory candidates; no differentiation evidence yet.
+  - Source class: Official public sources.
+  - Evidence strength: Weak (all repos have 0-1 stars, but high technical relevance).
+  - Source status: inference, needs-corroboration
 
 ### Artifact and Report Storage
 
@@ -98,9 +109,33 @@ AI Agent workloads create demand for:
   - Evidence strength: Weak (very early, no stars, but technically detailed).
   - Source: https://github.com/The-40-Thieves/obsidian-tc
 
+### Enterprise Data Layers as Agent-Accessible Storage
+
+- 2026-07-06: Official MongoDB MCP Server Docker image has 578K pulls, indicating enterprise databases are becoming agent-readable/writable storage layers. This is a strong signal that agent storage extends beyond workspace and memory into production data systems.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://hub.docker.com/r/library/mongodb/mongodb-mcp-server
+
+- 2026-07-06: HashiCorp Vault official MCP server makes secrets management accessible to agents. This raises new challenges for agent permission boundaries, audit trails, and secret access governance.
+  - Source class: Official public source.
+  - Evidence strength: Medium.
+  - Source: https://hub.docker.com/r/library/hashicorp/vault-mcp-server
+
+- 2026-07-06: Okta MCP Server is generally available, allowing agents to perform identity management operations via natural language. Identity and access management data becomes an agent-accessible storage and governance surface.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://pypi.org/project/okta-mcp-server/1.1.2/
+
+- 2026-07-06: Camunda MCP Server exposes workflow orchestration engine state to agents, making process state and task history agent-accessible storage surfaces.
+  - Source class: Official public source.
+  - Evidence strength: Medium.
+  - Source: https://pypi.org/project/camunda-mcp/1.0.1/
+
 ## Open Questions
 
 - Will object storage become the default persistence layer for agent workspaces?
 - Will agent sandbox providers expose snapshot/fork as first-class APIs?
 - Will enterprise agent platforms require bucket-level isolation per agent/task/user?
 - Will agent memory be stored as documents, vectors, logs, or versioned objects?
+- Will enterprise data layers (databases, secrets, identity, workflow) become standard agent-accessible storage surfaces via MCP?
+- How should agent access to production databases and secrets be governed, audited, and retained?

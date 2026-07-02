@@ -1,6 +1,6 @@
 # Source Lanes
 
-Last checked: 2026-07-02
+Last checked: 2026-07-06
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
@@ -18,9 +18,8 @@ Last checked: 2026-07-02
 | page | 4 | 0 | 24 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 5 | 0 | 25 |
-| reddit-rss | 1 | 2 | 4 |
+| reddit-rss | 1 | 0 | 4 |
 | release | 20 | 0 | 39 |
-| social-feed | 1 | 0 | 6 |
 | tag | 20 | 0 | 46 |
 
 Failure handling:

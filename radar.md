@@ -1,6 +1,6 @@
 # AI Agent Radar
 
-Last updated: 2026-07-02
+Last updated: 2026-07-06
 
 ## Current Thesis
 
@@ -13,8 +13,15 @@ Last updated: 2026-07-02
 7. Agent memory is evolving from simple context windows to time-travel debugging and root-cause tracing.
 8. Knowledge bases (e.g., Obsidian vaults) are becoming agent-accessible through MCP servers, enabling agents to read, write, and search personal/team knowledge.
 9. The MCP server ecosystem is rapidly expanding into memory, web access, observability, governance, and security, raising both standardization opportunities and fragmentation risks.
+10. Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
 
 ## Changed Thesis
+
+### 2026-07-06
+
+- Added: Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
+- Evidence: Apple Safari MCP server (Technology Preview 247), AWS Agent Toolkit (300+ services, 64 curated skills, IAM-scoped, CloudTrail logging), MongoDB official MCP Docker image (578K pulls), HashiCorp Vault official MCP server.
+- Confidence: Medium.
 
 ### 2026-07-02
 
@@ -33,3 +40,4 @@ Last updated: 2026-07-02
 - Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge?
 - Will MCP server proliferation lead to standardization (convergence) or fragmentation (divergence)?
 - Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate?
+- Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos?

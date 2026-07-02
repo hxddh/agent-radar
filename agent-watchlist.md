@@ -231,6 +231,36 @@ Status:
 - Watch next: Whether obsidian-tc gains stars, forks, or user testimonials.
 - Source: https://github.com/The-40-Thieves/obsidian-tc
 
+## agentos
+
+- Category: Agent sandbox / orchestration
+- Why it matters: Combines isolated Linux VMs with built-in agent orchestration, positioning as a faster, lighter, cheaper alternative to traditional sandboxes for coding agents. Directly addresses the sandbox+orchestration infrastructure gap.
+- Recent signal: Public GitHub repo with 3475 stars, updated 2026-07-02. Active development.
+- Source class: Official public source.
+- Source visibility: Public.
+- Evidence strength: Medium (strong community interest at 3475 stars, but no production user evidence yet).
+- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal.
+- Infra angle: Isolated Linux VMs, agent orchestration, sandbox runtime, coding agent execution environment.
+- Risk: May be absorbed by mainstream agent platforms that build sandboxing natively; VM-based approach may have overhead concerns.
+- Public corroboration: GitHub stars suggest strong interest, but no independent user reports or case studies yet.
+- Watch next: Whether agentos publishes integration docs with Claude Code, Codex, Cursor, or other coding agents, and whether enterprise adoption signals appear.
+- Source: https://github.com/rivet-dev/agentos
+
+## patient-zero
+
+- Category: Agent security / supply-chain scanning
+- Why it matters: Supply-chain attack scanner designed for the agent era, covering npm, Python, and MCP agent configs. Can triage in 30 seconds with `npx patient-zero`, block malicious installs before postinstall runs, and drop into CI as a GitHub Action. Directly addresses the gap between agent autonomy and package security.
+- Recent signal: Public GitHub repo with 8 stars, updated 2026-07-02. MIT license, no signup, no telemetry.
+- Source class: Official public source.
+- Source visibility: Public.
+- Evidence strength: Weak (8 stars, but unusually relevant security primitive with clear agent workflow).
+- User evidence: No independent user reports yet; very early adoption.
+- Infra angle: Supply-chain scanning, postinstall blocking, CI integration, MCP config scanning, npm + Python coverage.
+- Risk: May be superseded by broader security platforms or absorbed into agent framework defaults.
+- Public corroboration: None yet; needs integration evidence with major agent frameworks.
+- Watch next: Whether patient-zero is integrated by Claude Code, Cursor, Codex, or other coding agents, and whether supply-chain incidents drive adoption.
+- Source: https://github.com/0xSteph/patient-zero
+
 ## Candidate Template
 
 Name:
