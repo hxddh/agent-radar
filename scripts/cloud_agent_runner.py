@@ -898,6 +898,57 @@ def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) ->
     return max(1, score)
 
 
+def items_are_scored(items: list[dict[str, str]]) -> bool:
+    return bool(items) and all("score" in item for item in items)
+
+
+def score_source_items(items: list[dict[str, str]], root: Path | None) -> list[dict[str, str]]:
+    cache = load_source_cache(root)
+    scored = [dict(item) for item in items]
+    for item in scored:
+        item["score"] = str(score_source_item(item, cache))
+    scored.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
+    return scored
+
+
+def max_public_source_budget_for_tasks(tasks: list[str]) -> int:
+    if not tasks:
+        return public_source_budget("daily")
+    return max(public_source_budget(task) for task in tasks)
+
+
+def unpack_shared_collection(
+    shared: tuple[Any, ...],
+) -> tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int | None]:
+    if len(shared) >= 4:
+        items, lane_stats, errors, raw_count = shared[0], shared[1], shared[2], shared[3]
+        return items, lane_stats, errors, int(raw_count) if raw_count is not None else None
+    items, lane_stats, errors = shared[0], shared[1], shared[2]
+    return items, lane_stats, errors, None
+
+
+def prepare_shared_source_collection(
+    root: Path,
+    day: dt.date,
+    tasks: list[str],
+) -> tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int]:
+    raw_items, lane_stats, errors = collect_source_items_raw("source-sweep", root, day)
+    scored = score_source_items(raw_items, root)
+    pool = scored[: max_public_source_budget_for_tasks(tasks)]
+    update_source_cache(root, pool, day)
+    return pool, lane_stats, errors, len(raw_items)
+
+
+def warn_public_source_budget_override() -> None:
+    value = os.environ.get("MAX_PUBLIC_SOURCE_ITEMS", "").strip()
+    if not value:
+        return
+    print(
+        "Warning: MAX_PUBLIC_SOURCE_ITEMS is set; it overrides per-task code defaults "
+        "(daily=50, source-sweep/weekly=120, monthly=160). Leave unset unless intentional."
+    )
+
+
 def update_source_cache(root: Path | None, items: list[dict[str, str]], day: dt.date) -> None:
     if root is None:
         return
@@ -1599,17 +1650,22 @@ def format_public_source_snapshot(
     day: dt.date | None,
     lane_stats: dict[str, dict[str, Any]],
     errors: list[str],
+    *,
+    raw_collected_count: int | None = None,
+    update_cache: bool = True,
 ) -> str:
     budget = public_source_budget(task)
-    cache = load_source_cache(root)
-    scored = [dict(item) for item in items]
-    for item in scored:
-        item["score"] = str(score_source_item(item, cache))
-    scored.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
+    if items_are_scored(items):
+        scored = items
+    else:
+        scored = score_source_items(items, root)
     limited = scored[:budget]
-    update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
+    if update_cache:
+        update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
     RUN_AUDIT["source_lanes"] = lane_stats
-    RUN_AUDIT["collected_source_items"] = len(scored)
+    RUN_AUDIT["collected_source_items"] = (
+        raw_collected_count if raw_collected_count is not None else len(scored)
+    )
     RUN_AUDIT["public_source_items"] = len(limited)
     RUN_AUDIT["source_errors"] = errors
     lines = [
@@ -1658,8 +1714,19 @@ def collect_public_sources_from_cache(
     task: str,
     root: Path | None,
     day: dt.date | None,
+    *,
+    raw_collected_count: int | None = None,
 ) -> str:
-    return format_public_source_snapshot(items, task, root, day, lane_stats, errors)
+    return format_public_source_snapshot(
+        items,
+        task,
+        root,
+        day,
+        lane_stats,
+        errors,
+        raw_collected_count=raw_collected_count,
+        update_cache=False,
+    )
 
 
 def response_output_text(data: dict[str, Any]) -> str:
@@ -2322,8 +2389,10 @@ def run_task(
     public_sources = ""
     if model_provider() == "openrouter":
         if shared_collection is not None:
-            items, lane_stats, errors = shared_collection
-            public_sources = collect_public_sources_from_cache(items, lane_stats, errors, task, root, day)
+            items, lane_stats, errors, raw_count = unpack_shared_collection(shared_collection)
+            public_sources = collect_public_sources_from_cache(
+                items, lane_stats, errors, task, root, day, raw_collected_count=raw_count
+            )
         else:
             public_sources = collect_public_sources(task, root, day)
     shared_screened: str | None = None
@@ -2336,7 +2405,7 @@ def run_task(
             and shared_collection is not None
             and shared_screening_enabled()
         ):
-            items, lane_stats, errors = shared_collection
+            items, lane_stats, errors, _raw_count = unpack_shared_collection(shared_collection)
             sweep_sources = collect_public_sources_from_cache(
                 items, lane_stats, errors, "source-sweep", root, day
             )
@@ -2416,11 +2485,12 @@ def main(argv: list[str] | None = None) -> int:
 
     ensure_report_shells(root, day)
     tasks = auto_tasks(day) if args.task == "auto" else [args.task]
+    warn_public_source_budget_override()
 
-    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]] | None = None
+    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int] | None = None
     if len(tasks) > 1 and model_provider() == "openrouter":
         if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
-            shared_collection = collect_source_items_raw("source-sweep", root, day)
+            shared_collection = prepare_shared_source_collection(root, day, tasks)
 
     screen_cache: dict[str, str] | None = None
     if (

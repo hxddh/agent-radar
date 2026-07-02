@@ -99,6 +99,7 @@ Context efficiency (v0.5.2+):
 - Weekly/monthly slim profile (v0.5.8+): context skips `playbook.md`, `storage-angle.md`, and `user-field-notes.md` (weekly) or `playbook.md` and `storage-angle.md` (monthly); files remain writable.
 - `build_prompt()` applies a global `MAX_PROMPT_CHARS` budget: source/screening block first, then repository context.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
+- `auto` mode with OpenRouter also reuses one scored source pool across tasks (`prepare_shared_source_collection`).
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
 - `prompts/runner-rules.md` holds shared JSON/bilingual/safety/evidence rules (injected once per task; task prompts stay focused).
 - `docs/maintenance.md` and `automation/runbook.md` are human-facing; excluded from model context unless `INCLUDE_MAINTENANCE_CONTEXT=true` or `INCLUDE_RUNBOOK_CONTEXT=true`.

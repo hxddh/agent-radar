@@ -674,6 +674,45 @@ class CloudAgentRunnerTest(unittest.TestCase):
             self.assertNotIn("storage-full-content", context)
             self.assertNotIn("field-notes-full-content", context)
 
+    def test_score_source_items_adds_scores_and_sorts(self) -> None:
+        items = [
+            {"source": "hn", "title": "low signal", "url": "https://example.com/a", "note": ""},
+            {"source": "github-release", "title": "agent MCP release", "url": "https://example.com/b", "note": "stars=1200"},
+        ]
+        scored = cloud_agent_runner.score_source_items(items, None)
+        self.assertTrue(cloud_agent_runner.items_are_scored(scored))
+        self.assertGreater(int(scored[0]["score"]), int(scored[1]["score"]))
+
+    def test_prepare_shared_source_collection_trims_to_max_task_budget(self) -> None:
+        raw = [
+            {
+                "source": "github",
+                "title": f"agent item {index}",
+                "url": f"https://example.com/item-{index}",
+                "note": "",
+            }
+            for index in range(150)
+        ]
+        with mock.patch.object(cloud_agent_runner, "collect_source_items_raw", return_value=(raw, {}, [])):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                with mock.patch.dict(os.environ, {}, clear=True):
+                    pool, _lanes, _errors, raw_count = cloud_agent_runner.prepare_shared_source_collection(
+                        root,
+                        cloud_agent_runner.parse_date("2026-07-02"),
+                        ["daily", "source-sweep"],
+                    )
+                    expected = cloud_agent_runner.public_source_budget("source-sweep")
+        self.assertEqual(raw_count, 150)
+        self.assertEqual(len(pool), expected)
+
+    def test_warn_public_source_budget_override_prints_when_set(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_PUBLIC_SOURCE_ITEMS": "80"}, clear=False):
+            with mock.patch("builtins.print") as print_mock:
+                cloud_agent_runner.warn_public_source_budget_override()
+        printed = " ".join(str(call.args[0]) for call in print_mock.call_args_list)
+        self.assertIn("MAX_PUBLIC_SOURCE_ITEMS", printed)
+
 
 if __name__ == "__main__":
     unittest.main()

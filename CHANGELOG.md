@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.10 - 2026-07-02
+
+### Added
+- Shared source collection scores once and pre-trims to the max per-task budget for the run.
+- Startup warning when `MAX_PUBLIC_SOURCE_ITEMS` overrides per-task code defaults.
+- `brief` notes missing prompt telemetry and unset-vars recommendation.
+
+### Changed
+- `collect_public_sources_from_cache()` skips re-scoring and duplicate cache writes on shared pools.
+- CLI version bumped to `0.5.10`.
+
 ## v0.5.9 - 2026-07-02
 
 ### Added
