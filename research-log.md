@@ -630,3 +630,92 @@ Limitations:
 - No paid search tools used.
 - Bluesky posts are the primary social signal source; X/Twitter not covered.
 - Some official pages (cursor-changelog, anthropic-news) returned navigation links only without specific new content.
+
+
+### Pass 14: Daily update (2026-07-02) – Screening pass integration
+
+Accepted sources:
+- TGYD-helige/pi: https://github.com/TGYD-helige/pi
+- fu351/Doberman-Core: https://github.com/fu351/Doberman-Core
+- nirholas/three.ws: https://github.com/nirholas/three.ws
+- metorial/metorial: https://github.com/metorial/metorial
+- Apple Safari MCP server: https://bsky.app/profile/danny.webmobix.com/post/3mpnnnez35p2p
+- n8n MCP Server: https://bsky.app/profile/pondero-ai.bsky.social/post/3mpnmk2mtri2d
+- omnigent-ai/omnigent: https://github.com/omnigent-ai/omnigent
+- elizaOS/eliza: https://github.com/elizaOS/eliza
+- rocketride-org/rocketride-server: https://github.com/rocketride-org/rocketride-server
+- quetzal-eval 0.2.2: https://pypi.org/project/quetzal-eval/0.2.2/
+- nightgaze 0.1.0: https://pypi.org/project/nightgaze/0.1.0/
+- @iris-eval/mcp-server: https://www.npmjs.com/package/@iris-eval/mcp-server
+- Wide-Moat/ocu-sandbox: https://github.com/Wide-Moat/ocu-sandbox
+- GCWing/BitFun: https://github.com/GCWing/BitFun
+- stacklok/toolhive-studio: https://github.com/stacklok/toolhive-studio
+- sifxprime/kodelyth-ecc: https://github.com/sifxprime/kodelyth-ecc
+- shreyasks094/Zeus: https://github.com/shreyasks094/Zeus
+- rexleimo/harness-cli: https://github.com/rexleimo/harness-cli
+- Contexa: https://github.com/contexa-security/contexa
+- PGramps Web MCP: https://github.com/Scormave/gramps-web-mcp
+
+Candidate inbox (compact, ranked):
+1. TGYD-helige/pi – Pluggable MCP runtime. Relevance 63. Evidence: high (repo). Defer: needs adoption.
+2. fu351/Doberman-Core – Agent security framework. Relevance 59. Evidence: high (repo). Defer: needs integration evidence.
+3. nirholas/three.ws – 3D agent runtime with MCP, memory, payments. Relevance 57. Evidence: high (repo). Defer: needs user reports.
+4. metorial/metorial – 1200+ integrations (MCP/CLI/API). Relevance 55. Evidence: high (3311 stars). Defer: needs agent-specific workflow evidence.
+5. Apple Safari MCP server – Major browser vendor ships native MCP. Relevance 41. Evidence: high (Bluesky post). Defer: needs official docs.
+6. n8n MCP Server – Workflow automation leader adds native MCP. Relevance 42. Evidence: medium (Bluesky post). Defer: needs official release notes.
+7. omnigent-ai/omnigent – Meta-harness for coding agents. Relevance 43. Evidence: high (5985 stars). Defer: already promoted; track for updates.
+8. elizaOS/eliza – Agentic operating system. Relevance 39. Evidence: high (18.6k stars). Defer: already tracked; monitor for infra signals.
+9. rocketride-org/rocketride-server – AI pipeline engine with agent orchestration. Relevance 49. Evidence: high (4686 stars). Defer: needs agent-specific workflow evidence.
+10. quetzal-eval 0.2.2 – Coding-agent harness accuracy and token cost. Relevance 47. Evidence: medium (PyPI). Defer: needs benchmarks.
+11. nightgaze 0.1.0 – Observability for AI agents. Relevance 46. Evidence: medium (PyPI). Defer: needs integration examples.
+12. @iris-eval/mcp-server – Agent eval standard for MCP. Relevance 36. Evidence: medium (npm). Defer: needs adoption.
+13. Wide-Moat/ocu-sandbox – Isolated agent sandboxes. Relevance 43. Evidence: medium (repo). Defer: needs security validation.
+14. GCWing/BitFun – Desktop agent runtime with memory, personality. Relevance 42. Evidence: medium (1295 stars). Defer: consumer-oriented; needs developer workflow evidence.
+15. stacklok/toolhive-studio – MCP server management platform. Relevance 51. Evidence: medium (repo). Defer: needs user reports.
+16. sifxprime/kodelyth-ecc – 70 agents, 194 skills, MCP server. Relevance 55. Evidence: low (repo). Defer: needs adoption.
+17. shreyasks094/Zeus – Local-first AI agent orchestrator. Relevance 52. Evidence: low (repo). Defer: needs integration examples.
+18. rexleimo/harness-cli – Browser MCP + ContextDB. Relevance 55. Evidence: low (repo). Defer: needs workflow evidence.
+19. Contexa – Runtime security control plane for Spring Boot. Relevance 43. Evidence: low (repo). Defer: needs agent-specific integration.
+20. PGramps Web MCP – Domain-specific MCP for family tree data. Relevance 43. Evidence: low (repo). Defer: niche; track for pattern.
+
+Gaps:
+- Missing: strong agent memory/storage infrastructure signals.
+- Missing: dedicated agent deployment platforms.
+- Missing: formal agent sandbox infrastructure beyond ocu-sandbox.
+- Missing: agent-specific runtime monitoring/observability at scale.
+
+Follow-up gaps:
+- Monitor high-confidence candidates for adoption, integration, or user reports.
+- Track MCP ecosystem growth and fragmentation risks.
+- Watch for platform-vendor MCP adoption (Apple, n8n) to accelerate standardization.
+- Need real user evidence for eval tooling (quetzal-eval, nightgaze, iris-eval).
+
+
+### Pass 15: Source-sweep (2026-07-02) – Final integration
+
+Purpose:
+- Complete source-sweep using the provided screening pass. Update sources.md with new sources and confirm candidate inbox in research-log.md.
+
+Accepted sources (added to sources.md):
+- TGYD-helige/pi: https://github.com/TGYD-helige/pi
+- fu351/Doberman-Core: https://github.com/fu351/Doberman-Core
+- nirholas/three.ws: https://github.com/nirholas/three.ws
+- metorial/metorial: https://github.com/metorial/metorial
+- Apple Safari MCP server: https://bsky.app/profile/danny.webmobix.com/post/3mpnnnez35p2p
+- n8n MCP Server: https://bsky.app/profile/pondero-ai.bsky.social/post/3mpnmk2mtri2d
+- rocketride-org/rocketride-server: https://github.com/rocketride-org/rocketride-server
+- quetzal-eval 0.2.2: https://pypi.org/project/quetzal-eval/0.2.2/
+- nightgaze 0.1.0: https://pypi.org/project/nightgaze/0.1.0/
+- @iris-eval/mcp-server: https://www.npmjs.com/package/@iris-eval/mcp-server
+- Wide-Moat/ocu-sandbox: https://github.com/Wide-Moat/ocu-sandbox
+- GCWing/BitFun: https://github.com/GCWing/BitFun
+- stacklok/toolhive-studio: https://github.com/stacklok/toolhive-studio
+- sifxprime/kodelyth-ecc: https://github.com/sifxprime/kodelyth-ecc
+- shreyasks094/Zeus: https://github.com/shreyasks094/Zeus
+- rexleimo/harness-cli: https://github.com/rexleimo/harness-cli
+- Contexa: https://github.com/contexa-security/contexa
+- PGramps Web MCP: https://github.com/Scormave/gramps-web-mcp
+
+Candidate inbox: Already populated in Pass 14 with the screening pass candidates. No new candidates added beyond those.
+
+Follow-up gaps: Same as Pass 14.

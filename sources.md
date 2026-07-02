@@ -225,3 +225,25 @@ Ignore or deprioritize:
 - gatekeeper: https://github.com/skyblueso/gatekeeper (security scanner for GitHub repos, MCP servers, AI agent packages)
 - zradar: https://github.com/zvectorlabs/zradar (agent tracing & LLM observability platform with OpenTelemetry and Parquet storage)
 - kodegen_tools_browser: https://crates.io/crates/kodegen_tools_browser (memory-efficient MCP tools for code generation agents)
+
+
+## Additional sources from 2026-07-02 sweep
+
+- TGYD-helige/pi: https://github.com/TGYD-helige/pi (pluggable MCP runtime)
+- fu351/Doberman-Core: https://github.com/fu351/Doberman-Core (agent security framework)
+- nirholas/three.ws: https://github.com/nirholas/three.ws (3D agent runtime)
+- metorial/metorial: https://github.com/metorial/metorial (1200+ integrations)
+- Apple Safari MCP server: https://bsky.app/profile/danny.webmobix.com/post/3mpnnnez35p2p (Safari MCP server)
+- n8n MCP Server: https://bsky.app/profile/pondero-ai.bsky.social/post/3mpnmk2mtri2d (n8n native MCP)
+- rocketride-org/rocketride-server: https://github.com/rocketride-org/rocketride-server (AI pipeline engine)
+- quetzal-eval 0.2.2: https://pypi.org/project/quetzal-eval/0.2.2/ (coding-agent eval)
+- nightgaze 0.1.0: https://pypi.org/project/nightgaze/0.1.0/ (agent observability)
+- @iris-eval/mcp-server: https://www.npmjs.com/package/@iris-eval/mcp-server (MCP eval standard)
+- Wide-Moat/ocu-sandbox: https://github.com/Wide-Moat/ocu-sandbox (agent sandbox)
+- GCWing/BitFun: https://github.com/GCWing/BitFun (desktop agent runtime)
+- stacklok/toolhive-studio: https://github.com/stacklok/toolhive-studio (MCP server management)
+- sifxprime/kodelyth-ecc: https://github.com/sifxprime/kodelyth-ecc (70 agents, 194 skills)
+- shreyasks094/Zeus: https://github.com/shreyasks094/Zeus (local-first orchestrator)
+- rexleimo/harness-cli: https://github.com/rexleimo/harness-cli (browser MCP + ContextDB)
+- Contexa: https://github.com/contexa-security/contexa (runtime security control plane)
+- PGramps Web MCP: https://github.com/Scormave/gramps-web-mcp (domain-specific MCP)
