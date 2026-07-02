@@ -111,10 +111,10 @@ AI Agent workloads create demand for:
 
 ### Enterprise Data Layers as Agent-Accessible Storage
 
-- 2026-07-06: Official MongoDB MCP Server Docker image has 578K pulls, indicating enterprise databases are becoming agent-readable/writable storage layers. This is a strong signal that agent storage extends beyond workspace and memory into production data systems.
+- 2026-07-06: Official MongoDB MCP Server Docker image has 500K+ pulls, indicating enterprise databases are becoming agent-readable/writable storage layers. This is a strong signal that agent storage extends beyond workspace and memory into production data systems.
   - Source class: Official public source.
   - Evidence strength: Strong.
-  - Source: https://hub.docker.com/r/library/mongodb/mongodb-mcp-server
+  - Source: https://hub.docker.com/r/mongodb/mongodb-mcp-server
 
 - 2026-07-06: HashiCorp Vault official MCP server makes secrets management accessible to agents. This raises new challenges for agent permission boundaries, audit trails, and secret access governance.
   - Source class: Official public source.

@@ -73,7 +73,26 @@ class RadarBilingualTest(unittest.TestCase):
         updated = radar_bilingual.ensure_bilingual_file_content("weekly/2026-W27.md", content)
         self.assertTrue(radar_bilingual.is_block_bilingual_format(updated))
 
-    def test_ensure_bilingual_converts_daily_paired_to_block(self) -> None:
+    def test_convert_daily_paired_preserves_field_structure(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "## 2026-07-02\n\n"
+            "### 1. New Signals\n\n"
+            "- Signal\n"
+            "  - 中文：测试信号。\n"
+            "  - English: Test signal.\n"
+            "  - What happened\n"
+            "    - 中文：发生了某事。\n"
+            "    - English: Something happened.\n"
+            "  - Why it matters\n"
+            "    - 中文：这很重要。\n"
+            "    - English: This matters.\n"
+            "  - Source: https://example.com/changelog\n"
+        )
+        converted = radar_bilingual.convert_daily_paired_to_block(content)
+        self.assertIn("  - What happened: Something happened.", converted)
+        self.assertIn("  - Why it matters: This matters.", converted)
+        self.assertIn(radar_bilingual.CHINESE_SOURCE_INDEX.split("：")[0], converted)
         content = (
             "# Daily Agent Radar - 2026-07\n\n"
             "## 2026-07-02\n\n"
