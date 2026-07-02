@@ -231,6 +231,50 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertIn("- 中文新", text)
             self.assertNotIn("- 中文旧", text)
 
+    def test_rejects_invalid_daily_heading_suffix(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Daily\n\n## 2026-07-01\n\n- old\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "daily/2026-07.md",
+                                "mode": "append",
+                                "content": "\n## 2026-07-02 (Screening Pass)\n\n- new\n",
+                            }
+                        ]
+                    },
+                )
+            self.assertIn("exactly ## YYYY-MM-DD", str(ctx.exception))
+
+    def test_rejects_duplicate_daily_date_append(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Daily\n\n## 2026-07-02\n\n- existing\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "daily/2026-07.md",
+                                "mode": "append",
+                                "content": "\n## 2026-07-02\n\n- duplicate day\n",
+                            }
+                        ]
+                    },
+                )
+            self.assertIn("already exists", str(ctx.exception))
+
     def test_legacy_files_array_still_supported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.11 - 2026-07-02
+
+### Added
+- Preflight shared screening in `main()` before the task loop (compact scored items, no audit overwrite).
+- `prompts/screening-schema.md` for Flash screening JSON (removed from `runner-rules.md`).
+- `sources.md` context slicing for daily/source-sweep (`SOURCES_CONTEXT_CHARS`, default 6k).
+- Daily append guards: exact `## YYYY-MM-DD` headings only; reject duplicate day blocks.
+- Daily context injects the **latest** exact `## YYYY-MM-DD` block when duplicates exist.
+
+### Changed
+- Daily reports: at most 3 public URLs per signal bullet (extras go to `research-log.md`).
+- CLI version bumped to `0.5.11`.
+
 ## v0.5.10 - 2026-07-02
 
 ### Added

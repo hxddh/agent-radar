@@ -365,6 +365,30 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertNotIn("later day", sliced)
         self.assertIn("Context note", sliced)
 
+    def test_slice_daily_month_file_prefers_latest_exact_day_block(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "## 2026-07-02\n\n"
+            "- Signal: old block\n\n"
+            "## 2026-07-02 (Screening Pass Integration)\n\n"
+            "- Signal: should not pick this\n\n"
+            "## 2026-07-02\n\n"
+            "- Signal: newest block\n"
+        )
+        day = cloud_agent_runner.parse_date("2026-07-02")
+        sliced = cloud_agent_runner.slice_daily_month_file(content, day, 50_000)
+        self.assertIn("newest block", sliced)
+        self.assertNotIn("old block", sliced)
+        self.assertNotIn("Screening Pass Integration", sliced)
+
+    def test_slice_sources_for_context_keeps_head_and_tail(self) -> None:
+        content = "# Sources\n\n## Source Classes\n\n- tiers\n\n" + ("x" * 20_000) + "\n- recent: https://example.com/new\n"
+        sliced = cloud_agent_runner.slice_sources_for_context(content, 6_000)
+        self.assertIn("Source Classes", sliced)
+        self.assertIn("https://example.com/new", sliced)
+        self.assertIn("middle sources.md omitted", sliced)
+        self.assertLessEqual(len(sliced), 6_100)
+
     def test_slice_research_log_preserves_candidate_inbox(self) -> None:
         filler = "x" * 30_000
         content = (
@@ -442,8 +466,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("Screening pass", main_prompt)
         self.assertNotIn("Public source snapshot:", main_prompt)
 
-    def test_shared_screening_reuses_cached_screen_text(self) -> None:
-        screen_cache: dict[str, str] = {"text": '{"summary":"cached-screen"}'}
+    def test_shared_screening_reuses_preflight_screen_text(self) -> None:
         payload = {"choices": [{"message": {"content": '{"summary":"ok","updates":[]}'}}]}
         with mock.patch.object(cloud_agent_runner, "task_uses_screening", return_value=True):
             with mock.patch.object(cloud_agent_runner, "invoke_model", return_value=payload) as invoke_mock:
@@ -456,8 +479,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
                                     root,
                                     "source-sweep",
                                     cloud_agent_runner.parse_date("2026-07-02"),
-                                    shared_collection=([], {}, []),
-                                    screen_cache=screen_cache,
+                                    shared_screened='{"summary":"cached-screen"}',
                                 )
         invoke_mock.assert_called_once()
         self.assertEqual(invoke_mock.call_args.kwargs.get("shared_screened"), '{"summary":"cached-screen"}')
@@ -516,7 +538,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         cap = cloud_agent_runner.env_int("MAX_SCREEN_PROMPT_CHARS", cloud_agent_runner.DEFAULT_MAX_SCREEN_PROMPT_CHARS)
         self.assertLessEqual(len(prompt), cap + 10)
         self.assertIn("screening model", prompt)
-        self.assertIn('"summary":"short screening summary"', prompt)
+        self.assertIn("Return only valid JSON", prompt)
         self.assertLess(len(prompt), 2500 + len(huge[:cap]))
 
     def test_append_telemetry_records_prompt_budget_ratio(self) -> None:
@@ -712,6 +734,33 @@ class CloudAgentRunnerTest(unittest.TestCase):
                 cloud_agent_runner.warn_public_source_budget_override()
         printed = " ".join(str(call.args[0]) for call in print_mock.call_args_list)
         self.assertIn("MAX_PUBLIC_SOURCE_ITEMS", printed)
+
+    def test_shared_daily_collect_keeps_task_budget_after_preflight_pool(self) -> None:
+        raw = [
+            {
+                "source": "github",
+                "title": f"agent item {index}",
+                "url": f"https://example.com/item-{index}",
+                "note": "",
+                "score": str(100 - index),
+            }
+            for index in range(120)
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with mock.patch.dict(os.environ, {}, clear=True):
+                snapshot = cloud_agent_runner.collect_public_sources_from_cache(
+                    raw,
+                    {},
+                    [],
+                    "daily",
+                    root,
+                    cloud_agent_runner.parse_date("2026-07-02"),
+                    raw_collected_count=394,
+                )
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 50)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["collected_source_items"], 394)
+        self.assertIn("Budget 50/120", snapshot)
 
 
 if __name__ == "__main__":
