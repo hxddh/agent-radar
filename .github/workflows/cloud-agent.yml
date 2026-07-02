@@ -54,6 +54,7 @@ jobs:
       CONTEXT_SLICING: ${{ vars.CONTEXT_SLICING || 'true' }}
       SHARED_SCREENING: ${{ vars.SHARED_SCREENING || 'true' }}
       INCLUDE_MAINTENANCE_CONTEXT: ${{ vars.INCLUDE_MAINTENANCE_CONTEXT || 'false' }}
+      INCLUDE_RUNBOOK_CONTEXT: ${{ vars.INCLUDE_RUNBOOK_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
       MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '20' }}
@@ -101,6 +102,7 @@ jobs:
           echo "Context slicing: $CONTEXT_SLICING"
           echo "Shared screening: $SHARED_SCREENING"
           echo "Include maintenance context: $INCLUDE_MAINTENANCE_CONTEXT"
+          echo "Include runbook context: $INCLUDE_RUNBOOK_CONTEXT"
           echo "Max release repos: $MAX_RELEASE_REPOS"
           echo "Max releases per repo: $MAX_RELEASES_PER_REPO"
           echo "Max source workers: $MAX_SOURCE_WORKERS"

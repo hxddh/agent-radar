@@ -41,7 +41,7 @@ AGENT_RADAR_MODEL_PROVIDER=openrouter
 CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
 MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
 FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
-MAX_PUBLIC_SOURCE_ITEMS=80
+MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 COLLECT_REDDIT=false
 COLLECT_REDDIT_RSS=true
@@ -83,20 +83,23 @@ Model routing stays bounded but discovery-oriented:
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
-Recommended source budgets:
+Recommended source budgets (code defaults when `MAX_PUBLIC_SOURCE_ITEMS` is unset):
 
 - `daily`: 50 public source items (screening pass compresses the shortlist)
 - `source-sweep`: 120 public source items
 - `weekly`: 120 public source items
 - `monthly`: 160 public source items
 
+Leave GitHub `vars.MAX_PUBLIC_SOURCE_ITEMS` unset unless you intentionally want one global cap for all tasks. Setting it to `80` overrides every task (including source-sweep) and increases daily prompt size without adding breadth.
+
 Context efficiency (v0.5.2+):
 
-- `CONTEXT_SLICING=true` (default): daily context injects only today's day block; `research-log.md` keeps candidate inbox + recent tail.
+- `CONTEXT_SLICING=true` (default): daily context injects only today's day block; weekly injects this ISO week's daily blocks; `research-log.md` keeps candidate inbox + recent tail.
+- Daily slim profile (v0.5.6+): daily context reads `sources.md`, `radar.md`, `agent-watchlist.md`, and `research-log.md` only; `playbook.md`, `storage-angle.md`, and `user-field-notes.md` remain writable but are not injected unless you expand the profile.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
 - `prompts/runner-rules.md` holds shared JSON/bilingual/safety/evidence rules (injected once per task; task prompts stay focused).
-- `docs/maintenance.md` is human-facing; excluded from model context unless `INCLUDE_MAINTENANCE_CONTEXT=true`.
+- `docs/maintenance.md` and `automation/runbook.md` are human-facing; excluded from model context unless `INCLUDE_MAINTENANCE_CONTEXT=true` or `INCLUDE_RUNBOOK_CONTEXT=true`.
 - `python scripts/agent_radar.py brief` shows recent `prompt_chars` / `context_chars` / `output_chars` from telemetry.
 
 The runner samples across source lanes before trimming to the budget, so one noisy lane cannot consume the entire daily source window.
