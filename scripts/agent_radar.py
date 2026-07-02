@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.5.7"
+__version__ = "0.5.10"
 
 CORE_FILES = [
     "README.md",
@@ -898,10 +898,16 @@ def command_brief(args: argparse.Namespace) -> int:
                 shared.append("shared-screening")
             shared_text = f"; {', '.join(shared)}" if shared else ""
             warn_text = " WARNING" if warning else ""
+            legacy = " (pre-v0.5.4 telemetry)" if not prompt_chars and not context_chars else ""
             print(
                 f"- {item.get('date', '?')} {task}: prompt={prompt_chars}, "
                 f"context={context_chars}, output={output_chars}, "
-                f"budget_ratio={ratio}{warn_text}{shared_text}"
+                f"budget_ratio={ratio}{warn_text}{shared_text}{legacy}"
+            )
+        if all(not item.get("prompt_chars") for item in telemetry):
+            print(
+                "- Note: prompt/context chars missing; run cloud-agent on v0.5.4+ "
+                "and leave MAX_PUBLIC_SOURCE_ITEMS unset for per-task defaults."
             )
 
     print("\nSuggested next research focus:")

@@ -18,6 +18,8 @@ Return only valid JSON with this shape:
 }
 ```
 
+Prefer `updates[]`. Legacy `files[]` is accepted only for new/empty files; the runner rejects `files[]` rewrites of existing daily, weekly, or monthly reports.
+
 ## Update modes
 
 - Prefer `append` for `research-log.md` and for adding a new `## YYYY-MM-DD` day block in monthly daily files.
@@ -69,6 +71,8 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
 
 Update only the subsections that changed. When both languages need updates, use separate anchors under `## English` and `## 中文`, or replace uniquely titled sections such as `### 15. Changed Thesis`.
 
+When the same `### N.` title appears under both `## English` and `## 中文`, add `"within": "## 中文"` (or `"within": "## English"`) so the runner replaces the correct language block.
+
 ```json
 {
   "summary": "Weekly update for 2026-W28",
@@ -78,13 +82,15 @@ Update only the subsections that changed. When both languages need updates, use 
       "path": "weekly/2026-W28.md",
       "mode": "replace_section",
       "anchor": "### 15. Changed Thesis",
+      "within": "## English",
       "content": "- Platform vendors are now shipping first-party MCP servers.\n- Source: https://example.com/changelog\n"
     },
     {
       "path": "weekly/2026-W28.md",
       "mode": "replace_section",
-      "anchor": "### 16. Watch Next Week",
-      "content": "- Track enterprise MCP adoption evidence.\n"
+      "anchor": "### 15. Changed Thesis",
+      "within": "## 中文",
+      "content": "- 平台厂商正在发布第一方 MCP 服务器。\n"
     }
   ]
 }
@@ -127,3 +133,38 @@ Promotion (daily/weekly/monthly/promote-candidates may promote; source-sweep doe
 - Promote only with strong first-party evidence, multiple independent workflow sources, thesis-level impact, or unusually relevant early MCP/memory/sandbox/eval primitives.
 - Do not promote zero-star launches, generic infra with inferred agent relation, or template-only watchlist filler.
 - When threshold is not met, keep compact bullets in `research-log.md` candidate inbox or deferred candidates.
+
+## Source-sweep task gate
+
+- Treat this task as discovery, not promotion.
+- Do not update agent-watchlist.md, radar.md, storage-angle.md, daily notes, weekly notes, or monthly notes.
+- Do not discard weak or early signals. Capture them compactly in research-log.md.
+- Put new candidates in research-log.md under a "Candidate inbox" or "Deferred candidates" section.
+- Keep the candidate inbox broad but ranked. Prefer 5-12 candidates per sweep unless there are genuinely more high-signal items.
+- For each candidate, include why it matters, evidence strength, relevance score, defer/reject reason, and follow-up needed.
+- For each candidate, include candidate_seen_at, last_checked_at, promotion_status, defer_count, and stale_after_days.
+- Deduplicate against existing candidates and promoted watchlist entries.
+- Avoid full template entries for weak candidates; one compact bullet is enough.
+- Do not promote a candidate during source-sweep. Later daily/weekly/monthly runs may promote it automatically if the evidence threshold is met.
+
+## Promote-candidates task gate
+
+- Promote automatically; do not ask for human confirmation.
+- Read candidate inbox/deferred candidates from research-log.md.
+- Promote at most 3 candidates per run.
+- Promote only candidates with relevance_score >= 4 or a clear direct agent infrastructure implication.
+- A promotion must add non-template substance to agent-watchlist.md, storage-angle.md, or radar.md.
+- Do not promote generic infrastructure projects whose agent relation is mostly inferred.
+- Do not promote low-evidence items just to fill a template.
+- For each promoted candidate, update research-log.md with promotion_status=promoted and the reason.
+- For deferred candidates, leave a compact follow-up note; do not delete them.
+- Increment defer_count for candidates checked but not promoted.
+- Move candidates with defer_count >= 3 or stale_after_days exceeded into an archived/deprioritized subsection unless a new source refreshes them.
+
+## Screening JSON shape (Flash model)
+
+Used by the low-cost screening pass before daily/weekly/monthly/source-sweep synthesis. Return only valid JSON:
+
+```json
+{"summary":"short screening summary","candidates":[{"title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}],"gaps":["missing source"]}
+```

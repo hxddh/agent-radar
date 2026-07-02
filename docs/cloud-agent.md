@@ -79,7 +79,7 @@ Model routing stays bounded but discovery-oriented:
 - `daily`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes the final file updates.
 - `source-sweep`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes only `research-log.md` and `sources.md`.
 - `promote-candidates`: DeepSeek V4 Pro automatically promotes at most 3 high-quality candidates from `research-log.md`.
-- `weekly` and `monthly`: GLM 5.2 performs final synthesis.
+- `weekly` and `monthly`: DeepSeek V4 Flash screens public signals, then GLM 5.2 performs final synthesis (default `MAX_OPENROUTER_CALLS_PER_TASK=2`).
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
@@ -94,9 +94,12 @@ Leave GitHub `vars.MAX_PUBLIC_SOURCE_ITEMS` unset unless you intentionally want 
 
 Context efficiency (v0.5.2+):
 
-- `CONTEXT_SLICING=true` (default): daily context injects only today's day block; weekly injects this ISO week's daily blocks; `research-log.md` keeps candidate inbox + recent tail.
+- `CONTEXT_SLICING=true` (default): daily context injects only today's day block; weekly injects this ISO week's daily blocks; `research-log.md` keeps candidate inbox + recent tail; `agent-watchlist.md` uses a compact index for daily/weekly/monthly.
 - Daily slim profile (v0.5.6+): daily context reads `sources.md`, `radar.md`, `agent-watchlist.md`, and `research-log.md` only; `playbook.md`, `storage-angle.md`, and `user-field-notes.md` remain writable but are not injected unless you expand the profile.
+- Weekly/monthly slim profile (v0.5.8+): context skips `playbook.md`, `storage-angle.md`, and `user-field-notes.md` (weekly) or `playbook.md` and `storage-angle.md` (monthly); files remain writable.
+- `build_prompt()` applies a global `MAX_PROMPT_CHARS` budget: source/screening block first, then repository context.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
+- `auto` mode with OpenRouter also reuses one scored source pool across tasks (`prepare_shared_source_collection`).
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
 - `prompts/runner-rules.md` holds shared JSON/bilingual/safety/evidence rules (injected once per task; task prompts stay focused).
 - `docs/maintenance.md` and `automation/runbook.md` are human-facing; excluded from model context unless `INCLUDE_MAINTENANCE_CONTEXT=true` or `INCLUDE_RUNBOOK_CONTEXT=true`.

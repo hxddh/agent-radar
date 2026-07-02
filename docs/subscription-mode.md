@@ -96,4 +96,4 @@ Behavior:
 - Source-sweep runs keep broad candidate coverage in `research-log.md` and `sources.md`.
 - Promote-candidates runs automatically promote at most 3 high-quality candidates.
 - Daily runs use DeepSeek V4 Flash for screening and DeepSeek V4 Pro for final updates.
-- Weekly/monthly runs use GLM 5.2 for final synthesis.
+- Weekly/monthly runs use DeepSeek V4 Flash for screening, then GLM 5.2 for final synthesis (default `MAX_OPENROUTER_CALLS_PER_TASK=2`).

@@ -1,5 +1,43 @@
 # Changelog
 
+## v0.5.10 - 2026-07-02
+
+### Added
+- Shared source collection scores once and pre-trims to the max per-task budget for the run.
+- Startup warning when `MAX_PUBLIC_SOURCE_ITEMS` overrides per-task code defaults.
+- `brief` notes missing prompt telemetry and unset-vars recommendation.
+
+### Changed
+- `collect_public_sources_from_cache()` skips re-scoring and duplicate cache writes on shared pools.
+- CLI version bumped to `0.5.10`.
+
+## v0.5.9 - 2026-07-02
+
+### Added
+- Explicit rejection of legacy `files[]` rewrites on existing daily/weekly/monthly reports.
+- Screening JSON shape documented in `prompts/runner-rules.md`.
+- Workflow exposes `RESEARCH_LOG_CONTEXT_CHARS` and `WATCHLIST_CONTEXT_CHARS`.
+
+### Changed
+- `prompts/weekly-review.md` and `prompts/monthly-review.md` aligned with slim context profiles.
+- `docs/subscription-mode.md` documents weekly/monthly Flash screening route.
+- Compact one-line screening JSON template in `build_screen_prompt()`.
+- CLI version bumped to `0.5.9`.
+
+## v0.5.8 - 2026-07-02
+
+### Added
+- Global prompt budget: reserve source/screening block space before truncating repository context.
+- Weekly/monthly two-stage OpenRouter route (Flash screening + synthesis model) by default.
+- Compact watchlist context index for daily/weekly/monthly (`WATCHLIST_CONTEXT_CHARS`, default 6k).
+- Weekly/monthly slim context: skip playbook, storage-angle, and user-field-notes from reads (still writable).
+- `replace_section` optional `within` anchor for bilingual weekly/monthly subsections.
+- Source-sweep and promote-candidates task gates moved to `prompts/runner-rules.md`.
+
+### Changed
+- Compact public source snapshot header (lane summary on one line).
+- CLI version bumped to `0.5.8`.
+
 ## v0.5.7 - 2026-07-02
 
 ### Added

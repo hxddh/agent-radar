@@ -56,6 +56,7 @@ MAX_PUBLIC_SOURCE_ITEMS = 200
 DEFAULT_MAX_PROMPT_CHARS = 120_000
 DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
 DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
+DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
     "modelcontextprotocol/servers",
@@ -111,6 +112,9 @@ WEEKLY_REPLACE_SECTION_MESSAGE = (
 MONTHLY_REPLACE_SECTION_MESSAGE = (
     "Refusing full-file update for {path}; use replace_section on changed ### subsections "
     "or on ## English / ## 中文 blocks instead."
+)
+LEGACY_FILES_REJECT_MESSAGE = (
+    "Refusing legacy files[] update for {path}; use updates[] with {hint} instead."
 )
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
@@ -333,17 +337,12 @@ TASK_CONTEXT_FILES: dict[str, list[str]] = {
         "sources.md",
         "radar.md",
         "agent-watchlist.md",
-        "user-field-notes.md",
-        "playbook.md",
-        "storage-angle.md",
         "research-log.md",
     ],
     "monthly": [
         "sources.md",
         "radar.md",
         "agent-watchlist.md",
-        "playbook.md",
-        "storage-angle.md",
         "research-log.md",
     ],
     "source-sweep": ["sources.md", "research-log.md"],
@@ -368,6 +367,15 @@ CONTEXT_SKIP_TEMPLATES: dict[str, list[str]] = {
         "storage-angle.md",
         "user-field-notes.md",
     ],
+    "weekly": [
+        "playbook.md",
+        "storage-angle.md",
+        "user-field-notes.md",
+    ],
+    "monthly": [
+        "playbook.md",
+        "storage-angle.md",
+    ],
 }
 
 RESEARCH_LOG_PRIORITY_KEYWORDS = (
@@ -391,6 +399,18 @@ RESEARCH_LOG_SLICE_MARKER = (
     "\n\n[... middle research-log omitted for prompt budget; "
     "candidate inbox + recent tail preserved ...]\n\n"
 )
+
+WATCHLIST_CONTEXT_SLICE_NOTE = (
+    "\n\n> Context note: compact watchlist index only; full agent entries remain on disk. "
+    "Use `replace_section` with the listed anchor to update one agent.\n\n"
+)
+
+WATCHLIST_INDEX_SKIP_SECTIONS = {
+    "mainstream agents",
+    "emerging agents",
+    "emerging candidates",
+    "agent watchlist",
+}
 
 
 def env_int(name: str, default: int) -> int:
@@ -471,6 +491,16 @@ def prompt_budget_ratio(prompt_chars: int) -> float:
     if max_prompt <= 0:
         return 0.0
     return round(prompt_chars / max_prompt, 3)
+
+
+def max_openrouter_calls_for_task(task: str) -> int:
+    defaults = {"weekly": 2, "monthly": 2, "promote-candidates": 1}
+    return env_int("MAX_OPENROUTER_CALLS_PER_TASK", defaults.get(task, 2))
+
+
+def source_block_char_budget(max_prompt: int | None = None) -> int:
+    cap = max_prompt if max_prompt is not None else env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
+    return max(2000, cap // 3)
 
 
 def record_prompt_budget(prompt_chars: int) -> None:
@@ -580,6 +610,59 @@ def slice_research_log(content: str, task: str, limit: int) -> str:
     return truncate_keep_ends(combined, limit)
 
 
+def compact_watchlist_for_context(content: str, limit: int) -> str:
+    """Inject a compact per-agent index with replace_section anchors."""
+    lines = content.splitlines()
+    header_lines: list[str] = []
+    body_start = len(lines)
+    for index, line in enumerate(lines):
+        if line.startswith("## ") and index > 0:
+            body_start = index
+            break
+        header_lines.append(line)
+    if body_start >= len(lines):
+        return truncate_keep_ends(content, limit)
+
+    header = "\n".join(header_lines).rstrip()
+    sections: list[tuple[str, list[str]]] = []
+    current_title: str | None = None
+    current_lines: list[str] = []
+    for line in lines[body_start:]:
+        if line.startswith("## "):
+            if current_title is not None:
+                sections.append((current_title, current_lines))
+            current_title = line[3:].strip()
+            current_lines = [line]
+        elif current_title is not None:
+            current_lines.append(line)
+    if current_title is not None:
+        sections.append((current_title, current_lines))
+
+    compact_agents: list[str] = []
+    for title, body_lines in sections:
+        if title.lower() in WATCHLIST_INDEX_SKIP_SECTIONS:
+            continue
+        highlights: list[str] = []
+        for body_line in body_lines:
+            stripped = body_line.strip()
+            if stripped.startswith(
+                ("- Category:", "- Maturity:", "- Recent changes:", "- Watch next:")
+            ):
+                highlights.append(stripped)
+            if len(highlights) >= 3:
+                break
+        agent_block = f"## {title}\n"
+        if highlights:
+            agent_block += "\n".join(highlights) + "\n"
+        else:
+            agent_block += "- (compact index; full entry on disk)\n"
+        agent_block += f"- replace_section anchor: `## {title}`"
+        compact_agents.append(agent_block)
+
+    compact = header + WATCHLIST_CONTEXT_SLICE_NOTE + "\n\n".join(compact_agents)
+    return truncate_keep_ends(compact, limit)
+
+
 def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit: int) -> str:
     path = root / rel_path
     if not path.exists():
@@ -595,6 +678,9 @@ def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit:
         elif rel_path == "research-log.md":
             slice_limit = min(limit, env_int("RESEARCH_LOG_CONTEXT_CHARS", 25_000))
             content = slice_research_log(content, task, slice_limit)
+        elif rel_path == "agent-watchlist.md" and task in {"daily", "weekly", "monthly"}:
+            slice_limit = min(limit, env_int("WATCHLIST_CONTEXT_CHARS", DEFAULT_WATCHLIST_CONTEXT_CHARS))
+            content = compact_watchlist_for_context(content, slice_limit)
         else:
             content = truncate_keep_ends(content, limit)
     else:
@@ -603,10 +689,7 @@ def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit:
 
 
 def task_uses_screening(task: str) -> bool:
-    max_calls = env_int(
-        "MAX_OPENROUTER_CALLS_PER_TASK",
-        {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2),
-    )
+    max_calls = max_openrouter_calls_for_task(task)
     if max_calls <= 0:
         return False
     models = openrouter_models_for_task(task)
@@ -618,7 +701,7 @@ def apply_screened_summary_to_prompt(prompt: str, screen_text: str) -> str:
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
     screened_block = (
         "Screening pass (primary evidence for this run):\n"
-        f"{truncate_text(screen_text, max_prompt // 3)}"
+        f"{truncate_text(screen_text, source_block_char_budget(max_prompt))}"
     )
     if "Public source snapshot:" in prompt:
         return re.sub(
@@ -813,6 +896,57 @@ def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) ->
     else:
         score -= min(12, int(cache[item["url"]].get("seen_count", 1)) * 2)
     return max(1, score)
+
+
+def items_are_scored(items: list[dict[str, str]]) -> bool:
+    return bool(items) and all("score" in item for item in items)
+
+
+def score_source_items(items: list[dict[str, str]], root: Path | None) -> list[dict[str, str]]:
+    cache = load_source_cache(root)
+    scored = [dict(item) for item in items]
+    for item in scored:
+        item["score"] = str(score_source_item(item, cache))
+    scored.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
+    return scored
+
+
+def max_public_source_budget_for_tasks(tasks: list[str]) -> int:
+    if not tasks:
+        return public_source_budget("daily")
+    return max(public_source_budget(task) for task in tasks)
+
+
+def unpack_shared_collection(
+    shared: tuple[Any, ...],
+) -> tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int | None]:
+    if len(shared) >= 4:
+        items, lane_stats, errors, raw_count = shared[0], shared[1], shared[2], shared[3]
+        return items, lane_stats, errors, int(raw_count) if raw_count is not None else None
+    items, lane_stats, errors = shared[0], shared[1], shared[2]
+    return items, lane_stats, errors, None
+
+
+def prepare_shared_source_collection(
+    root: Path,
+    day: dt.date,
+    tasks: list[str],
+) -> tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int]:
+    raw_items, lane_stats, errors = collect_source_items_raw("source-sweep", root, day)
+    scored = score_source_items(raw_items, root)
+    pool = scored[: max_public_source_budget_for_tasks(tasks)]
+    update_source_cache(root, pool, day)
+    return pool, lane_stats, errors, len(raw_items)
+
+
+def warn_public_source_budget_override() -> None:
+    value = os.environ.get("MAX_PUBLIC_SOURCE_ITEMS", "").strip()
+    if not value:
+        return
+    print(
+        "Warning: MAX_PUBLIC_SOURCE_ITEMS is set; it overrides per-task code defaults "
+        "(daily=50, source-sweep/weekly=120, monthly=160). Leave unset unless intentional."
+    )
 
 
 def update_source_cache(root: Path | None, items: list[dict[str, str]], day: dt.date) -> None:
@@ -1516,35 +1650,46 @@ def format_public_source_snapshot(
     day: dt.date | None,
     lane_stats: dict[str, dict[str, Any]],
     errors: list[str],
+    *,
+    raw_collected_count: int | None = None,
+    update_cache: bool = True,
 ) -> str:
     budget = public_source_budget(task)
-    cache = load_source_cache(root)
-    scored = [dict(item) for item in items]
-    for item in scored:
-        item["score"] = str(score_source_item(item, cache))
-    scored.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
+    if items_are_scored(items):
+        scored = items
+    else:
+        scored = score_source_items(items, root)
     limited = scored[:budget]
-    update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
+    if update_cache:
+        update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
     RUN_AUDIT["source_lanes"] = lane_stats
-    RUN_AUDIT["collected_source_items"] = len(scored)
+    RUN_AUDIT["collected_source_items"] = (
+        raw_collected_count if raw_collected_count is not None else len(scored)
+    )
     RUN_AUDIT["public_source_items"] = len(limited)
     RUN_AUDIT["source_errors"] = errors
     lines = [
         "Public source snapshot:",
-        "- Paid search calls: 0",
-        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit subreddit RSS, Bluesky search, Dev.to, Lobsters, optional X API, public RSS/changelog feeds, and official public pages.",
-        f"- Reddit search JSON: {'enabled' if collector_enabled('reddit') else 'disabled (set COLLECT_REDDIT=true to enable)'}",
-        f"- Reddit subreddit RSS: {'enabled' if collector_enabled('reddit-rss') else 'disabled'}",
-        f"- Bluesky search: {'enabled' if collector_enabled('bluesky') else 'disabled'}",
-        f"- Dev.to tags: {'enabled' if collector_enabled('devto') else 'disabled'}",
-        f"- PyPI updates RSS and package metadata: {'enabled' if collector_enabled('pypi') else 'disabled'}",
-        f"- X search API: {'enabled' if collector_enabled('x') else 'disabled (set X_BEARER_TOKEN secret to enable)'}",
-        f"- Item budget: {budget}",
-        f"- Collected before budget trim: {len(scored)}",
-        "- Scoring: relevance, source lane, novelty, adoption, infrastructure keywords, and prior-seen penalty.",
+        (
+            f"- Budget {budget}/{len(scored)} scored; paid search: 0; "
+            "policy: public collectors only."
+        ),
+        (
+            f"- Collectors: reddit-json={'on' if collector_enabled('reddit') else 'off'}; "
+            f"reddit-rss={'on' if collector_enabled('reddit-rss') else 'off'}; "
+            f"bluesky={'on' if collector_enabled('bluesky') else 'off'}; "
+            f"devto={'on' if collector_enabled('devto') else 'off'}; "
+            f"pypi={'on' if collector_enabled('pypi') else 'off'}; "
+            f"x={'on' if collector_enabled('x') else 'off'}"
+        ),
+        "- Scoring: relevance, lane, novelty, adoption, infra keywords, prior-seen penalty.",
     ]
-    for lane, stats in sorted(lane_stats.items()):
-        lines.append(f"- Lane {lane}: ok={stats['ok']}; error={stats['error']}; items={stats['items']}")
+    if lane_stats:
+        lane_summary = "; ".join(
+            f"{lane} ok={stats['ok']} err={stats['error']} n={stats['items']}"
+            for lane, stats in sorted(lane_stats.items())
+        )
+        lines.append(f"- Lanes: {lane_summary}")
     for item in limited:
         note = f" -- {item['note']}" if item.get("note") else ""
         lines.append(f"- [{item['source']} score={item.get('score', '0')}] {item['title']} | {item['url']}{note}")
@@ -1569,8 +1714,19 @@ def collect_public_sources_from_cache(
     task: str,
     root: Path | None,
     day: dt.date | None,
+    *,
+    raw_collected_count: int | None = None,
 ) -> str:
-    return format_public_source_snapshot(items, task, root, day, lane_stats, errors)
+    return format_public_source_snapshot(
+        items,
+        task,
+        root,
+        day,
+        lane_stats,
+        errors,
+        raw_collected_count=raw_collected_count,
+        update_cache=False,
+    )
 
 
 def response_output_text(data: dict[str, Any]) -> str:
@@ -1725,7 +1881,7 @@ def openrouter_models_for_task(task: str) -> list[str]:
     main = os.environ.get("MAIN_RESEARCH_MODEL", DEFAULT_MAIN_RESEARCH_MODEL)
     final = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
     if task in {"weekly", "monthly"}:
-        return [final]
+        return [cheap, final]
     if task == "promote-candidates":
         return [main]
     if task == "source-sweep":
@@ -1741,24 +1897,8 @@ Task: {task}
 
 Use the public source snapshot below. Deduplicate, rank, and compress the signals.
 
-Return only valid JSON with this shape:
-{{
-  "summary": "short screening summary",
-  "candidates": [
-    {{
-      "title": "signal",
-      "why_it_matters": "reason",
-      "evidence": ["url or source label"],
-      "confidence": "high|medium|low",
-      "relevance_score": 1,
-      "source_diversity": 1,
-      "infra_angle": "runtime|mcp|memory|sandbox|eval|security|storage|deployment|none",
-      "promotion_status": "candidate|defer|reject",
-      "next_check": "what to check next"
-    }}
-  ],
-  "gaps": ["missing source or follow-up"]
-}}
+Return only valid JSON:
+{{"summary":"short screening summary","candidates":[{{"title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}}],"gaps":["missing source"]}}
 
 Rules:
 - Do not invent facts.
@@ -1773,7 +1913,7 @@ Rules:
 
 def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, Any]:
     models = openrouter_models_for_task(task)
-    max_calls = env_int("MAX_OPENROUTER_CALLS_PER_TASK", {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2))
+    max_calls = max_openrouter_calls_for_task(task)
     if max_calls <= 0:
         if os.environ.get("DRY_RUN_ON_BUDGET_EXCEEDED", "true").lower() in {"1", "true", "yes"}:
             RUN_AUDIT["budget_status"] = "dry-run-budget-zero"
@@ -1817,10 +1957,7 @@ def invoke_model(
     provider = model_provider()
     if provider == "openrouter":
         models = openrouter_models_for_task(task)
-        max_calls = env_int(
-            "MAX_OPENROUTER_CALLS_PER_TASK",
-            {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2),
-        )
+        max_calls = max_openrouter_calls_for_task(task)
         if max_calls <= 0:
             return call_openrouter(task, "", public_sources)
         active_models = models[-max_calls:] if len(models) > max_calls else models
@@ -1867,45 +2004,23 @@ def build_prompt(
     allowed_text = "\n".join(f"- {path}" for path in allowed)
     task_rules = ""
     if task == "source-sweep":
-        task_rules = """
-Source-sweep quality gate:
-- Treat this task as discovery, not promotion.
-- Do not update agent-watchlist.md, radar.md, storage-angle.md, daily notes, weekly notes, or monthly notes.
-- Do not discard weak or early signals. Capture them compactly in research-log.md.
-- Put new candidates in research-log.md under a "Candidate inbox" or "Deferred candidates" section.
-- Keep the candidate inbox broad but ranked. Prefer 5-12 candidates per sweep unless there are genuinely more high-signal items.
-- For each candidate, include why it matters, evidence strength, relevance score, defer/reject reason, and follow-up needed.
-- For each candidate, include candidate_seen_at, last_checked_at, promotion_status, defer_count, and stale_after_days.
-- Deduplicate against existing candidates and promoted watchlist entries.
-- Avoid full template entries for weak candidates; one compact bullet is enough.
-- Do not promote a candidate during source-sweep. Later daily/weekly/monthly runs may promote it automatically if the evidence threshold is met.
-"""
-    if task == "promote-candidates":
-        task_rules = """
-Candidate promotion gate:
-- Promote automatically; do not ask for human confirmation.
-- Read candidate inbox/deferred candidates from research-log.md.
-- Promote at most 3 candidates per run.
-- Promote only candidates with relevance_score >= 4 or a clear direct agent infrastructure implication.
-- A promotion must add non-template substance to agent-watchlist.md, storage-angle.md, or radar.md.
-- Do not promote generic infrastructure projects whose agent relation is mostly inferred.
-- Do not promote low-evidence items just to fill a template.
-- For each promoted candidate, update research-log.md with promotion_status=promoted and the reason.
-- For deferred candidates, leave a compact follow-up note; do not delete them.
-- Increment defer_count for candidates checked but not promoted.
-- Move candidates with defer_count >= 3 or stale_after_days exceeded into an archived/deprioritized subsection unless a new source refreshes them.
-"""
+        task_rules = "\nApply the **Source-sweep task gate** in `prompts/runner-rules.md`.\n"
+    elif task == "promote-candidates":
+        task_rules = "\nApply the **Promote-candidates task gate** in `prompts/runner-rules.md`.\n"
+
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
-    context = truncate_text(context, max_prompt)
+    source_budget = source_block_char_budget(max_prompt)
     if screened_summary:
-        source_block = f"""Screening pass (primary evidence for this run):
-{truncate_text(screened_summary, max_prompt // 3)}"""
+        source_block = (
+            "Screening pass (primary evidence for this run):\n"
+            f"{truncate_text(screened_summary, source_budget)}"
+        )
     elif public_sources:
-        source_block = f"""Public source snapshot:
-{truncate_text(public_sources, max_prompt // 3)}"""
+        source_block = f"Public source snapshot:\n{truncate_text(public_sources, source_budget)}"
     else:
         source_block = "Public sources: use repository context and any links already present in the files."
-    return f"""You are the autonomous cloud agent for Agent Radar.
+
+    prefix = f"""You are the autonomous cloud agent for Agent Radar.
 
 Task: {task}
 Date: {day.isoformat()}
@@ -1921,8 +2036,10 @@ Follow `prompts/runner-rules.md` in repository context for JSON output shape, up
 {source_block}
 
 Repository context:
-{context}
 """
+    context_budget = max(0, max_prompt - len(prefix))
+    trimmed_context = truncate_text(context, context_budget)
+    return prefix + trimmed_context
 
 
 def heading_level(line: str) -> int:
@@ -1937,12 +2054,26 @@ def normalize_section_anchor(anchor: str) -> str:
     return anchor
 
 
-def replace_section_content(old: str, anchor: str, new_body: str) -> str:
+def replace_section_content(
+    old: str, anchor: str, new_body: str, within: str | None = None
+) -> str:
     anchor_line = normalize_section_anchor(anchor)
     anchor_level = heading_level(anchor_line)
     lines = old.splitlines()
+    start_search = 0
+    if within:
+        within_line = normalize_section_anchor(within)
+        found_within = False
+        for index, line in enumerate(lines):
+            if line.strip() == within_line.strip():
+                start_search = index + 1
+                found_within = True
+                break
+        if not found_within:
+            raise SystemExit(f"Refusing to replace section: within anchor not found: {within_line!r}")
     start = None
-    for index, line in enumerate(lines):
+    for index in range(start_search, len(lines)):
+        line = lines[index]
         if line.strip() == anchor_line.strip():
             start = index
             break
@@ -1962,7 +2093,13 @@ def replace_section_content(old: str, anchor: str, new_body: str) -> str:
     return result
 
 
-def merge_update_content(old: str, mode: str, content: str, anchor: str | None = None) -> str:
+def merge_update_content(
+    old: str,
+    mode: str,
+    content: str,
+    anchor: str | None = None,
+    within: str | None = None,
+) -> str:
     mode = (mode or "full").strip().lower()
     if mode == "append":
         if not old:
@@ -1973,7 +2110,7 @@ def merge_update_content(old: str, mode: str, content: str, anchor: str | None =
     if mode == "replace_section":
         if not anchor:
             raise SystemExit("replace_section update requires anchor")
-        return replace_section_content(old, anchor, content)
+        return replace_section_content(old, anchor, content, within=within)
     if mode in {"full", "replace"}:
         return content if content.endswith("\n") else content + "\n"
     raise SystemExit(f"Unknown update mode: {mode!r}")
@@ -1996,6 +2133,8 @@ def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
                     "mode": str(item.get("mode", "full")),
                     "content": content,
                     "anchor": item.get("anchor"),
+                    "within": item.get("within"),
+                    "legacy": False,
                 }
             )
     raw_files = result.get("files")
@@ -2007,7 +2146,16 @@ def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
             content = item.get("content")
             if not isinstance(path, str) or not isinstance(content, str):
                 continue
-            updates.append({"path": path, "mode": "full", "content": content, "anchor": None})
+            updates.append(
+                {
+                    "path": path,
+                    "mode": "full",
+                    "content": content,
+                    "anchor": None,
+                    "within": None,
+                    "legacy": True,
+                }
+            )
     return updates
 
 
@@ -2033,6 +2181,8 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         mode = update["mode"]
         content = update["content"]
         anchor = update.get("anchor")
+        within = update.get("within")
+        legacy = bool(update.get("legacy"))
         if rel_path not in allowed_set:
             raise SystemExit(f"Refusing to update non-allowed path: {rel_path}")
         if mode == "full" and rel_path in STRUCTURE_PRESERVED_FILES:
@@ -2042,13 +2192,30 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
+        if mode == "full" and legacy and old.strip():
+            if is_daily_month_path(rel_path):
+                raise SystemExit(
+                    LEGACY_FILES_REJECT_MESSAGE.format(
+                        path=rel_path, hint="append for a new ## YYYY-MM-DD day block"
+                    )
+                )
+            if is_weekly_path(rel_path) or is_monthly_path(rel_path):
+                raise SystemExit(
+                    LEGACY_FILES_REJECT_MESSAGE.format(path=rel_path, hint="replace_section")
+                )
         if mode == "full" and is_daily_month_path(rel_path) and old.strip():
             raise SystemExit(DAILY_APPEND_ONLY_MESSAGE.format(path=rel_path))
         if mode == "full" and is_weekly_path(rel_path) and old.strip():
             raise SystemExit(WEEKLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
         if mode == "full" and is_monthly_path(rel_path) and old.strip():
             raise SystemExit(MONTHLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
-        merged = merge_update_content(old, mode, content, str(anchor) if anchor else None)
+        merged = merge_update_content(
+            old,
+            mode,
+            content,
+            str(anchor) if anchor else None,
+            str(within) if within else None,
+        )
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
             if radar_bilingual.missing_chinese_substance(merged):
@@ -2222,8 +2389,10 @@ def run_task(
     public_sources = ""
     if model_provider() == "openrouter":
         if shared_collection is not None:
-            items, lane_stats, errors = shared_collection
-            public_sources = collect_public_sources_from_cache(items, lane_stats, errors, task, root, day)
+            items, lane_stats, errors, raw_count = unpack_shared_collection(shared_collection)
+            public_sources = collect_public_sources_from_cache(
+                items, lane_stats, errors, task, root, day, raw_collected_count=raw_count
+            )
         else:
             public_sources = collect_public_sources(task, root, day)
     shared_screened: str | None = None
@@ -2236,7 +2405,7 @@ def run_task(
             and shared_collection is not None
             and shared_screening_enabled()
         ):
-            items, lane_stats, errors = shared_collection
+            items, lane_stats, errors, _raw_count = unpack_shared_collection(shared_collection)
             sweep_sources = collect_public_sources_from_cache(
                 items, lane_stats, errors, "source-sweep", root, day
             )
@@ -2316,11 +2485,12 @@ def main(argv: list[str] | None = None) -> int:
 
     ensure_report_shells(root, day)
     tasks = auto_tasks(day) if args.task == "auto" else [args.task]
+    warn_public_source_budget_override()
 
-    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]] | None = None
+    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int] | None = None
     if len(tasks) > 1 and model_provider() == "openrouter":
         if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
-            shared_collection = collect_source_items_raw("source-sweep", root, day)
+            shared_collection = prepare_shared_source_collection(root, day, tasks)
 
     screen_cache: dict[str, str] | None = None
     if (

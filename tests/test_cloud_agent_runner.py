@@ -42,11 +42,11 @@ class CloudAgentRunnerTest(unittest.TestCase):
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("weekly"),
-                ["z-ai/glm-5.2"],
+                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("monthly"),
-                ["z-ai/glm-5.2"],
+                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("promote-candidates"),
@@ -222,9 +222,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
             "repo context",
             "public source snapshot",
         )
-        self.assertIn("Treat this task as discovery, not promotion.", prompt)
-        self.assertIn("Do not update agent-watchlist.md", prompt)
-        self.assertIn("daily/weekly/monthly runs may promote it automatically", prompt)
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn("Source-sweep task gate", rules)
+        self.assertIn("Apply the **Source-sweep task gate**", prompt)
+        self.assertIn("discovery, not promotion", rules)
 
     def test_promote_candidates_gate_is_automatic_and_bounded(self) -> None:
         allowed = cloud_agent_runner.TASK_CONFIG["promote-candidates"]["allowed"]
@@ -238,8 +239,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
             "repo context",
             "",
         )
-        self.assertIn("Promote automatically; do not ask for human confirmation.", prompt)
-        self.assertIn("Promote at most 3 candidates per run.", prompt)
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn("Promote-candidates task gate", rules)
+        self.assertIn("Apply the **Promote-candidates task gate**", prompt)
+        self.assertIn("Promote at most 3 candidates per run.", rules)
 
     def test_zero_openrouter_budget_dry_runs(self) -> None:
         with mock.patch.dict(os.environ, {"MAX_OPENROUTER_CALLS_PER_TASK": "0"}, clear=True):
@@ -513,6 +516,8 @@ class CloudAgentRunnerTest(unittest.TestCase):
         cap = cloud_agent_runner.env_int("MAX_SCREEN_PROMPT_CHARS", cloud_agent_runner.DEFAULT_MAX_SCREEN_PROMPT_CHARS)
         self.assertLessEqual(len(prompt), cap + 10)
         self.assertIn("screening model", prompt)
+        self.assertIn('"summary":"short screening summary"', prompt)
+        self.assertLess(len(prompt), 2500 + len(huge[:cap]))
 
     def test_append_telemetry_records_prompt_budget_ratio(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -624,6 +629,89 @@ class CloudAgentRunnerTest(unittest.TestCase):
         ]:
             (root / name).write_text(f"# {name}\n", encoding="utf-8")
         (root / "weekly" / f"{cloud_agent_runner.week_label(day)}.md").write_text("# weekly\n", encoding="utf-8")
+
+    def test_build_prompt_respects_global_prompt_budget(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-02")
+        prompt = cloud_agent_runner.build_prompt(
+            "weekly",
+            day,
+            ["research-log.md"],
+            "x" * 200_000,
+            public_sources="y" * 100_000,
+        )
+        max_prompt = cloud_agent_runner.env_int(
+            "MAX_PROMPT_CHARS", cloud_agent_runner.DEFAULT_MAX_PROMPT_CHARS
+        )
+        self.assertLessEqual(len(prompt), max_prompt)
+
+    def test_compact_watchlist_for_context_keeps_anchors(self) -> None:
+        content = (
+            "# Agent Watchlist\n\n"
+            "## Mainstream Agents\n\n"
+            "## Claude Code\n\n"
+            "Status:\n"
+            "- Category: Coding agent\n"
+            "- Maturity: Active\n"
+            "- Recent changes: Security reporting.\n"
+            "- Sources: https://example.com\n"
+        )
+        compact = cloud_agent_runner.compact_watchlist_for_context(content, 10_000)
+        self.assertIn("Claude Code", compact)
+        self.assertIn("replace_section anchor", compact)
+        self.assertNotIn("https://example.com", compact)
+
+    def test_weekly_slim_context_excludes_optional_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            day = dt.date(2026, 7, 2)
+            self._seed_minimal_weekly_context(root, day)
+            (root / "playbook.md").write_text("playbook-full-content\n", encoding="utf-8")
+            (root / "storage-angle.md").write_text("storage-full-content\n", encoding="utf-8")
+            (root / "user-field-notes.md").write_text("field-notes-full-content\n", encoding="utf-8")
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "weekly", day)
+            self.assertNotIn("playbook-full-content", context)
+            self.assertNotIn("storage-full-content", context)
+            self.assertNotIn("field-notes-full-content", context)
+
+    def test_score_source_items_adds_scores_and_sorts(self) -> None:
+        items = [
+            {"source": "hn", "title": "low signal", "url": "https://example.com/a", "note": ""},
+            {"source": "github-release", "title": "agent MCP release", "url": "https://example.com/b", "note": "stars=1200"},
+        ]
+        scored = cloud_agent_runner.score_source_items(items, None)
+        self.assertTrue(cloud_agent_runner.items_are_scored(scored))
+        self.assertGreater(int(scored[0]["score"]), int(scored[1]["score"]))
+
+    def test_prepare_shared_source_collection_trims_to_max_task_budget(self) -> None:
+        raw = [
+            {
+                "source": "github",
+                "title": f"agent item {index}",
+                "url": f"https://example.com/item-{index}",
+                "note": "",
+            }
+            for index in range(150)
+        ]
+        with mock.patch.object(cloud_agent_runner, "collect_source_items_raw", return_value=(raw, {}, [])):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                with mock.patch.dict(os.environ, {}, clear=True):
+                    pool, _lanes, _errors, raw_count = cloud_agent_runner.prepare_shared_source_collection(
+                        root,
+                        cloud_agent_runner.parse_date("2026-07-02"),
+                        ["daily", "source-sweep"],
+                    )
+                    expected = cloud_agent_runner.public_source_budget("source-sweep")
+        self.assertEqual(raw_count, 150)
+        self.assertEqual(len(pool), expected)
+
+    def test_warn_public_source_budget_override_prints_when_set(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_PUBLIC_SOURCE_ITEMS": "80"}, clear=False):
+            with mock.patch("builtins.print") as print_mock:
+                cloud_agent_runner.warn_public_source_budget_override()
+        printed = " ".join(str(call.args[0]) for call in print_mock.call_args_list)
+        self.assertIn("MAX_PUBLIC_SOURCE_ITEMS", printed)
 
 
 if __name__ == "__main__":
