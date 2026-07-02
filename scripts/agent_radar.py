@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.5.8"
+__version__ = "0.5.9"
 
 CORE_FILES = [
     "README.md",

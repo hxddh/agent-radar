@@ -516,6 +516,8 @@ class CloudAgentRunnerTest(unittest.TestCase):
         cap = cloud_agent_runner.env_int("MAX_SCREEN_PROMPT_CHARS", cloud_agent_runner.DEFAULT_MAX_SCREEN_PROMPT_CHARS)
         self.assertLessEqual(len(prompt), cap + 10)
         self.assertIn("screening model", prompt)
+        self.assertIn('"summary":"short screening summary"', prompt)
+        self.assertLess(len(prompt), 2500 + len(huge[:cap]))
 
     def test_append_telemetry_records_prompt_budget_ratio(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

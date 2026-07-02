@@ -113,6 +113,9 @@ MONTHLY_REPLACE_SECTION_MESSAGE = (
     "Refusing full-file update for {path}; use replace_section on changed ### subsections "
     "or on ## English / ## 中文 blocks instead."
 )
+LEGACY_FILES_REJECT_MESSAGE = (
+    "Refusing legacy files[] update for {path}; use updates[] with {hint} instead."
+)
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
     "coding agent",
@@ -1827,24 +1830,8 @@ Task: {task}
 
 Use the public source snapshot below. Deduplicate, rank, and compress the signals.
 
-Return only valid JSON with this shape:
-{{
-  "summary": "short screening summary",
-  "candidates": [
-    {{
-      "title": "signal",
-      "why_it_matters": "reason",
-      "evidence": ["url or source label"],
-      "confidence": "high|medium|low",
-      "relevance_score": 1,
-      "source_diversity": 1,
-      "infra_angle": "runtime|mcp|memory|sandbox|eval|security|storage|deployment|none",
-      "promotion_status": "candidate|defer|reject",
-      "next_check": "what to check next"
-    }}
-  ],
-  "gaps": ["missing source or follow-up"]
-}}
+Return only valid JSON:
+{{"summary":"short screening summary","candidates":[{{"title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}}],"gaps":["missing source"]}}
 
 Rules:
 - Do not invent facts.
@@ -2080,6 +2067,7 @@ def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
                     "content": content,
                     "anchor": item.get("anchor"),
                     "within": item.get("within"),
+                    "legacy": False,
                 }
             )
     raw_files = result.get("files")
@@ -2098,6 +2086,7 @@ def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
                     "content": content,
                     "anchor": None,
                     "within": None,
+                    "legacy": True,
                 }
             )
     return updates
@@ -2126,6 +2115,7 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         content = update["content"]
         anchor = update.get("anchor")
         within = update.get("within")
+        legacy = bool(update.get("legacy"))
         if rel_path not in allowed_set:
             raise SystemExit(f"Refusing to update non-allowed path: {rel_path}")
         if mode == "full" and rel_path in STRUCTURE_PRESERVED_FILES:
@@ -2135,6 +2125,17 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
+        if mode == "full" and legacy and old.strip():
+            if is_daily_month_path(rel_path):
+                raise SystemExit(
+                    LEGACY_FILES_REJECT_MESSAGE.format(
+                        path=rel_path, hint="append for a new ## YYYY-MM-DD day block"
+                    )
+                )
+            if is_weekly_path(rel_path) or is_monthly_path(rel_path):
+                raise SystemExit(
+                    LEGACY_FILES_REJECT_MESSAGE.format(path=rel_path, hint="replace_section")
+                )
         if mode == "full" and is_daily_month_path(rel_path) and old.strip():
             raise SystemExit(DAILY_APPEND_ONLY_MESSAGE.format(path=rel_path))
         if mode == "full" and is_weekly_path(rel_path) and old.strip():

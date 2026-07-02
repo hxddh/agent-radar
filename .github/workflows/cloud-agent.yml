@@ -51,6 +51,8 @@ jobs:
       MAX_PROMPT_CHARS: ${{ vars.MAX_PROMPT_CHARS || '' }}
       MAX_CONTEXT_FILE_CHARS: ${{ vars.MAX_CONTEXT_FILE_CHARS || '' }}
       MAX_SCREEN_PROMPT_CHARS: ${{ vars.MAX_SCREEN_PROMPT_CHARS || '' }}
+      RESEARCH_LOG_CONTEXT_CHARS: ${{ vars.RESEARCH_LOG_CONTEXT_CHARS || '' }}
+      WATCHLIST_CONTEXT_CHARS: ${{ vars.WATCHLIST_CONTEXT_CHARS || '' }}
       CONTEXT_SLICING: ${{ vars.CONTEXT_SLICING || 'true' }}
       SHARED_SCREENING: ${{ vars.SHARED_SCREENING || 'true' }}
       INCLUDE_MAINTENANCE_CONTEXT: ${{ vars.INCLUDE_MAINTENANCE_CONTEXT || 'false' }}
@@ -99,6 +101,8 @@ jobs:
           echo "Max OpenRouter calls per task: $MAX_OPENROUTER_CALLS_PER_TASK"
           echo "Max context file chars: $MAX_CONTEXT_FILE_CHARS"
           echo "Max screen prompt chars: $MAX_SCREEN_PROMPT_CHARS"
+          echo "Research log context chars: $RESEARCH_LOG_CONTEXT_CHARS"
+          echo "Watchlist context chars: $WATCHLIST_CONTEXT_CHARS"
           echo "Context slicing: $CONTEXT_SLICING"
           echo "Shared screening: $SHARED_SCREENING"
           echo "Include maintenance context: $INCLUDE_MAINTENANCE_CONTEXT"

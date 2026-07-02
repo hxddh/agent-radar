@@ -2,14 +2,16 @@
 
 You are maintaining a lightweight AI Agent trend radar.
 
-Read:
+Read (injected in repository context when relevant):
 - radar.md
-- agent-watchlist.md
+- agent-watchlist.md (compact index; full entries on disk)
+- sources.md
+- this ISO week's daily blocks under daily/
+
+Optional write targets (not injected by default; update only when there is new evidence):
 - user-field-notes.md
 - playbook.md
 - storage-angle.md
-- sources.md
-- all daily entries for this week
 
 Task:
 Create this week's Agent Radar Weekly report.

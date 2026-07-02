@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.9 - 2026-07-02
+
+### Added
+- Explicit rejection of legacy `files[]` rewrites on existing daily/weekly/monthly reports.
+- Screening JSON shape documented in `prompts/runner-rules.md`.
+- Workflow exposes `RESEARCH_LOG_CONTEXT_CHARS` and `WATCHLIST_CONTEXT_CHARS`.
+
+### Changed
+- `prompts/weekly-review.md` and `prompts/monthly-review.md` aligned with slim context profiles.
+- `docs/subscription-mode.md` documents weekly/monthly Flash screening route.
+- Compact one-line screening JSON template in `build_screen_prompt()`.
+- CLI version bumped to `0.5.9`.
+
 ## v0.5.8 - 2026-07-02
 
 ### Added

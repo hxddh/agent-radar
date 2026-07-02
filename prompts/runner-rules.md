@@ -18,6 +18,8 @@ Return only valid JSON with this shape:
 }
 ```
 
+Prefer `updates[]`. Legacy `files[]` is accepted only for new/empty files; the runner rejects `files[]` rewrites of existing daily, weekly, or monthly reports.
+
 ## Update modes
 
 - Prefer `append` for `research-log.md` and for adding a new `## YYYY-MM-DD` day block in monthly daily files.
@@ -158,3 +160,11 @@ Promotion (daily/weekly/monthly/promote-candidates may promote; source-sweep doe
 - For deferred candidates, leave a compact follow-up note; do not delete them.
 - Increment defer_count for candidates checked but not promoted.
 - Move candidates with defer_count >= 3 or stale_after_days exceeded into an archived/deprioritized subsection unless a new source refreshes them.
+
+## Screening JSON shape (Flash model)
+
+Used by the low-cost screening pass before daily/weekly/monthly/source-sweep synthesis. Return only valid JSON:
+
+```json
+{"summary":"short screening summary","candidates":[{"title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}],"gaps":["missing source"]}
+```

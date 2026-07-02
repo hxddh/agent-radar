@@ -184,7 +184,21 @@ class ApplyUpdatesTest(unittest.TestCase):
                     ["weekly/2026-W28.md"],
                     {"files": [{"path": "weekly/2026-W28.md", "content": "# Weekly\n\n## English\n\n- new\n"}]},
                 )
-            self.assertIn("replace_section", str(ctx.exception))
+            self.assertIn("legacy files[]", str(ctx.exception))
+
+    def test_rejects_legacy_files_for_existing_daily_month_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Daily\n\n## 2026-07-01\n\n- old\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {"files": [{"path": "daily/2026-07.md", "content": "# Daily\n\n## 2026-07-02\n\n- new\n"}]},
+                )
+            self.assertIn("legacy files[]", str(ctx.exception))
 
     def test_replace_section_within_scopes_bilingual_anchor(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
