@@ -1,4 +1,10 @@
 {
   "collectors": {},
-  "disabled": []
+  "disabled": [
+    "release:KrisPowers/atlas-mcp",
+    "tag:KrisPowers/atlas-mcp"
+  ],
+  "rejected_repos": [
+    "KrisPowers/atlas-mcp"
+  ]
 }

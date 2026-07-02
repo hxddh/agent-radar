@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +39,20 @@ class RadarCollectorStateTest(unittest.TestCase):
             self.assertIn("hn:agent", active)
             self.assertNotIn("reddit-rss:test", active)
             self.assertIn("pypi-updates:mcp", active)
+
+    def test_rejected_repo_is_recorded(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            radar_collector_state.record_repo_rejection(root, "dead/project", "HTTP Error 404: Not Found")
+            self.assertIn("dead/project", radar_collector_state.rejected_repos(root))
+            self.assertTrue(radar_collector_state.is_disabled(root, "release:dead/project"))
+
+    def test_env_disabled_collectors_merge_with_state(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with mock.patch.dict(os.environ, {"DISABLED_COLLECTORS": "hn:agent"}, clear=True):
+                active = radar_collector_state.active_collectors(root, ["hn:agent", "pypi-updates:mcp"])
+            self.assertEqual(active, ["pypi-updates:mcp"])
 
     def test_successful_collector_stays_active(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

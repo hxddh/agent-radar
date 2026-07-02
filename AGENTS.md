@@ -27,12 +27,14 @@ Do not:
 ```bash
 python scripts/agent_radar.py status
 python scripts/agent_radar.py ensure
+python scripts/agent_radar.py bilingualize
 python scripts/agent_radar.py daily
 python scripts/agent_radar.py weekly
 python scripts/agent_radar.py monthly
 python scripts/agent_radar.py brief
 python scripts/agent_radar.py validate
-python -m py_compile scripts/cloud_agent_runner.py
+python scripts/agent_radar.py validate --strict-bilingual
+python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
 ```
 
 ## Completion Checklist

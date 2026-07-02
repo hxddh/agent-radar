@@ -99,7 +99,8 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertEqual(changed, 1)
             text = (root / "daily" / "2026-07.md").read_text(encoding="utf-8")
             self.assertIn("中文：", text)
-            self.assertIn("English:", text)
+            self.assertIn("English: one", text)
+            self.assertNotIn("中文：one", text)
 
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 CORE_FILES = [
     "README.md",
@@ -546,6 +546,33 @@ def warn_bilingual_missing(path: Path, strict: bool = False) -> list[str]:
     return [f"{path}: report has substantive bullets but missing bilingual Chinese labels (中文：)"]
 
 
+def warn_identical_bilingual_pairs(path: Path, strict: bool = False) -> list[str]:
+    if not path.exists():
+        return []
+    content = path.read_text(encoding="utf-8")
+    if not radar_bilingual.is_report_content(content):
+        return []
+    pairs = radar_bilingual.identical_bilingual_pairs(content)
+    if not pairs:
+        return []
+    sample = pairs[0]
+    message = (
+        f"{path}: bilingual Chinese and English lines are identical (example: {sample!r})"
+    )
+    if strict:
+        return [message]
+    return [f"{message}; run bilingualize to repair placeholders"]
+
+
+def warn_missing_chinese_substance(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    content = path.read_text(encoding="utf-8")
+    if radar_bilingual.missing_chinese_substance(content):
+        return [f"{path}: Chinese sections are mostly empty; model should add real 中文 content"]
+    return []
+
+
 def command_bilingualize(args: argparse.Namespace) -> int:
     root = find_root()
     day = parse_date(args.date)
@@ -619,10 +646,17 @@ def command_validate(args: argparse.Namespace) -> int:
         errors.extend(warn_bilingual_missing(current_daily, strict=True))
         errors.extend(warn_bilingual_missing(current_weekly, strict=True))
         errors.extend(warn_bilingual_missing(current_monthly, strict=True))
+        errors.extend(warn_identical_bilingual_pairs(current_daily, strict=True))
+        errors.extend(warn_identical_bilingual_pairs(current_weekly, strict=True))
+        errors.extend(warn_identical_bilingual_pairs(current_monthly, strict=True))
     else:
         warnings.extend(warn_bilingual_missing(current_daily))
         warnings.extend(warn_bilingual_missing(current_weekly))
         warnings.extend(warn_bilingual_missing(current_monthly))
+        warnings.extend(warn_identical_bilingual_pairs(current_daily))
+    warnings.extend(warn_missing_chinese_substance(current_daily))
+    warnings.extend(warn_missing_chinese_substance(current_weekly))
+    warnings.extend(warn_missing_chinese_substance(current_monthly))
 
     if errors:
         print("Validation failed. Missing required files or directories:")
@@ -1030,14 +1064,14 @@ DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update
 
 Use all available authorized sources. Publish only public-safe summaries. Label weak, private, incomplete, or inferred evidence instead of blocking.
 
-Write daily reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+Write daily reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs. Chinese text must be real Simplified Chinese; do not copy the English sentence into `中文：`.
 """
 
 WEEKLY_PROMPT_TEMPLATE = """# Weekly Agent Radar Review
 
 Synthesize the week across product changes, user experience, infrastructure, storage implications, commercialization, reliability, security, standards, and anti-signals.
 
-Write weekly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+Write weekly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs. Chinese text must be real Simplified Chinese; do not copy the English sentence into `中文：`.
 """
 
 WATCHLIST_PROMPT_TEMPLATE = """# Agent Watchlist Update
@@ -1049,7 +1083,7 @@ MONTHLY_PROMPT_TEMPLATE = """# Monthly Agent Radar Review
 
 Synthesize the month, review evidence quality, update watchlist confidence, and change the thesis only when evidence justifies it.
 
-Write monthly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+Write monthly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs. Chinese text must be real Simplified Chinese; do not copy the English sentence into `中文：`.
 """
 
 RELEASE_WORKFLOW_TEMPLATE = """name: Release

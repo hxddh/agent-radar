@@ -807,24 +807,28 @@ def extract_github_repos(text: str, limit: int) -> list[str]:
     return repos
 
 
-def github_repo_exists(repo: str) -> bool:
+def github_repo_exists(root: Path, repo: str) -> bool:
+    if repo in radar_collector_state.rejected_repos(root):
+        return False
     try:
         request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
         return True
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
+            radar_collector_state.record_repo_rejection(root, repo, f"HTTP Error {exc.code}: Not Found")
             return False
-        raise
+        return False
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
-        return True
+        return False
 
 
 def release_repos_from_context(root: Path, limit: int) -> list[str]:
     configured = split_env_list("RELEASE_REPOS", DEFAULT_RELEASE_REPOS)
     repos: list[str] = []
     seen: set[str] = set()
+    rejected = radar_collector_state.rejected_repos(root)
     for repo in configured:
-        if "/" in repo and repo not in seen and github_repo_exists(repo):
+        if "/" in repo and repo not in seen and repo not in rejected and github_repo_exists(root, repo):
             seen.add(repo)
             repos.append(repo)
     context = "\n".join(
@@ -832,7 +836,7 @@ def release_repos_from_context(root: Path, limit: int) -> list[str]:
         for rel_path in ["sources.md", "agent-watchlist.md", "research-log.md"]
     )
     for repo in extract_github_repos(context, limit * 2):
-        if repo not in seen and github_repo_exists(repo):
+        if repo not in seen and repo not in rejected and github_repo_exists(root, repo):
             seen.add(repo)
             repos.append(repo)
         if len(repos) >= limit:
@@ -1512,6 +1516,7 @@ Return only valid JSON with this shape:
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
 - For daily, weekly, and monthly report files, bilingual output is mandatory. Every substantive bullet or paragraph must include paired `中文：` and `English:` lines, with Chinese first.
+- Chinese text must be real Simplified Chinese. Never copy the English sentence verbatim into the `中文：` line.
 - For daily, weekly, and monthly report files, write bilingual paired content: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 - For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
