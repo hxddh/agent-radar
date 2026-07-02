@@ -74,10 +74,8 @@ Last checked: 2026-07-02
 | tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
 | release:clidey/deptrust | ok |  |
 | tag:clidey/deptrust | ok |  |
-| release:KrisPowers/atlas-mcp | error | HTTP Error 404: Not Found |
-| tag:KrisPowers/atlas-mcp | error | HTTP Error 404: Not Found |
-| release:chriswu727/argus | ok |  |
-| tag:chriswu727/argus | ok |  |
+| release:envibagus/cortex | ok |  |
+| tag:envibagus/cortex | ok |  |
 | release:alexmond/jvmlens | ok |  |
 | tag:alexmond/jvmlens | ok |  |
 | release:coldzero94/cold-frame | ok |  |

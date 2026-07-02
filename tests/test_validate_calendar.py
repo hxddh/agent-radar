@@ -75,7 +75,7 @@ class ValidateCalendarTest(unittest.TestCase):
             warnings = agent_radar.warn_bilingual_missing(weekly)
             self.assertTrue(any("bilingual" in item for item in warnings))
 
-    def test_strict_bilingual_fails_without_markers(self) -> None:
+    def test_strict_bilingual_fails_on_identical_pairs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "agent-radar"
             root.mkdir()
@@ -84,7 +84,9 @@ class ValidateCalendarTest(unittest.TestCase):
                 agent_radar.main(["ensure", "--date", "2026-07-02"])
             weekly = root / "weekly" / "2026-W27.md"
             weekly.write_text(
-                "# Agent Radar Weekly - 2026-W27\n\n- one\n- two\n- three\n",
+                "# Agent Radar Weekly - 2026-W27\n\n"
+                "- 中文：This is a duplicated bilingual sentence for testing.\n"
+                "- English: This is a duplicated bilingual sentence for testing.\n",
                 encoding="utf-8",
             )
             with chdir(root):

@@ -11,6 +11,7 @@ from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = REPO_ROOT / "scripts" / "cloud_agent_runner.py"
+STATE_PATH = REPO_ROOT / "scripts" / "radar_collector_state.py"
 
 
 spec = importlib.util.spec_from_file_location("cloud_agent_runner", MODULE_PATH)
@@ -18,6 +19,12 @@ assert spec is not None
 cloud_agent_runner = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(cloud_agent_runner)
+
+state_spec = importlib.util.spec_from_file_location("radar_collector_state", STATE_PATH)
+assert state_spec is not None
+radar_collector_state = importlib.util.module_from_spec(state_spec)
+assert state_spec.loader is not None
+state_spec.loader.exec_module(radar_collector_state)
 
 
 class CloudAgentRunnerTest(unittest.TestCase):
@@ -237,6 +244,18 @@ class CloudAgentRunnerTest(unittest.TestCase):
     def test_pypi_enabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertTrue(cloud_agent_runner.collector_enabled("pypi"))
+
+    def test_rejected_repo_is_skipped_from_release_tracking(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            radar_collector_state.record_repo_rejection(root, "dead/project", "HTTP Error 404: Not Found")
+            (root / "sources.md").write_text(
+                "https://github.com/dead/project\n",
+                encoding="utf-8",
+            )
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                repos = cloud_agent_runner.release_repos_from_context(root, 5)
+            self.assertNotIn("dead/project", repos)
 
     def test_run_log_and_source_health_are_written_by_runner(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

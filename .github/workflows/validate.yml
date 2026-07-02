@@ -36,4 +36,5 @@ jobs:
           python scripts/agent_radar.py validate --date 2026-07-02 --strict-bilingual
           TODAY="$(date -u +%F)"
           python scripts/agent_radar.py ensure --date "$TODAY"
-          python scripts/agent_radar.py validate --date "$TODAY"
+          python scripts/agent_radar.py bilingualize --date "$TODAY"
+          python scripts/agent_radar.py validate --date "$TODAY" --strict-bilingual

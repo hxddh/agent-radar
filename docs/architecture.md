@@ -54,7 +54,7 @@ The model still makes the final judgment; scoring only controls which source ite
 
 `automation/source-lanes.md` records the most recent lane-level collector health.
 
-`automation/collector-state.json` records per-collector success/error counts and auto-disables collectors after repeated failures with zero successes.
+`automation/collector-state.json` records per-collector success/error counts, auto-disables collectors after repeated failures with zero successes, and stores `rejected_repos` for GitHub repositories that return HTTP 404.
 
 `automation/source-health.md` records source-level health.
 

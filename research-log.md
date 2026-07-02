@@ -532,3 +532,14 @@ Follow-up gaps (new):
 - Eval standards (iris-eval, ECP) are nascent; track convergence.
 - Observability platforms (zradar, agent-inspector) need performance benchmarks.
 - Compliance (cerebro) may become mandatory for enterprise deployments.
+
+### Pass 10: Repository hygiene (2026-07-02)
+
+Purpose:
+- Remove dead GitHub repos from active release tracking after repeated HTTP 404 responses.
+
+Rejected sources:
+- KrisPowers/atlas-mcp – GitHub API returned HTTP 404; removed from `sources.md` and added to `automation/collector-state.json` `rejected_repos`.
+
+Follow-up gaps:
+- Re-check discovered repos from research-log links before adding them to release/tag collectors.

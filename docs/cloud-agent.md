@@ -66,7 +66,8 @@ CHANGELOG_PAGES=
 This mode does not call OpenRouter web search, Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
 
 - Hacker News Algolia API
-- Reddit public JSON search
+- Reddit subreddit RSS (`COLLECT_REDDIT_RSS=true` by default; legacy search JSON behind `COLLECT_REDDIT=true`)
+- Bluesky, Dev.to, Lobsters, optional X API, and configurable `SOCIAL_FEEDS` RSS bridges
 - GitHub REST API with `GITHUB_TOKEN`
 - GitHub releases and tags for configured and discovered repos
 - Public RSS feeds for official blogs, changelogs, and arXiv categories
@@ -144,7 +145,7 @@ PYPI_PACKAGES=mcp,langchain,crewai,openai,anthropic
 REDDIT_RSS_BATCH_SIZE=3
 ```
 
-Collectors that fail repeatedly with zero successes are auto-disabled in `automation/collector-state.json`. Re-enable by editing that file or setting `DISABLED_COLLECTORS`.
+Collectors that fail repeatedly with zero successes are auto-disabled in `automation/collector-state.json`. Re-enable by editing that file or setting `DISABLED_COLLECTORS` (comma-separated collector names; takes effect immediately and merges with the JSON disabled list).
 
 ## Optional: OpenAI API Provider
 

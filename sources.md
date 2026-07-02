@@ -178,7 +178,6 @@ Ignore or deprioritize:
 - Google OKF memory verification: https://kage-core.com/ (framework to maintain and verify agent memory)
 - Toolnexus: https://pypi.org/project/toolnexus/ (MCP, agent skills, A2A for Python LLMs)
 - deptrust: https://github.com/clidey/deptrust (CLI to help AI agents avoid vulnerable dependencies)
-- atlas-mcp: https://github.com/KrisPowers/atlas-mcp (real-time web context MCP server for AI agents)
 - argus: https://github.com/chriswu727/argus (exploratory QA agent with MCP server, 1 star)
 - jvmlens: https://github.com/alexmond/jvmlens (LLM-ready JVM profiler with MCP server, 0 stars)
 - cold-frame: https://github.com/coldzero94/cold-frame (local-first memory for AI agents, 0 stars)

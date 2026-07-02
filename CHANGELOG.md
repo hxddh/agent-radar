@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## v0.2.3 - 2026-07-02
+
+### Added
+- Bilingual duplicate detection and `repair_identical_bilingual_pairs()` to clear copied English from `中文：` lines.
+- `validate --strict-bilingual` now errors when Chinese and English lines are identical.
+- Warnings when Chinese sections are empty placeholders awaiting real translation.
+- `rejected_repos` persistence in `automation/collector-state.json` for dead GitHub repos.
+- `DISABLED_COLLECTORS` merges with JSON disabled collector list.
+- `docs/release-v0.2.3.md`.
+
+### Changed
+- CLI version bumped to `0.2.3`.
+- `bilingualize` repairs duplicate pairs instead of copying English into Chinese.
+- `github_repo_exists()` returns false on 404 and records repo rejection; no longer treats network errors as exists.
+- Release/tag collectors skip rejected repos.
+- PR `validate.yml` runs `bilingualize` + strict validation for both seed date and current UTC date.
+- `docs/cloud-agent.md` documents Reddit RSS default and collector disable precedence.
+
+### Fixed
+- Mechanical bilingual content that failed the spirit of bilingual reporting.
+- Dead repo `KrisPowers/atlas-mcp` removed from active tracking and `sources.md`.
+- English-label regex failed to capture text after `English: ` with a space.
+
 ## v0.2.2 - 2026-07-02
 
 ### Added
