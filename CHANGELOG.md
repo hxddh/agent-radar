@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.5.8 - 2026-07-02
+
+### Added
+- Global prompt budget: reserve source/screening block space before truncating repository context.
+- Weekly/monthly two-stage OpenRouter route (Flash screening + synthesis model) by default.
+- Compact watchlist context index for daily/weekly/monthly (`WATCHLIST_CONTEXT_CHARS`, default 6k).
+- Weekly/monthly slim context: skip playbook, storage-angle, and user-field-notes from reads (still writable).
+- `replace_section` optional `within` anchor for bilingual weekly/monthly subsections.
+- Source-sweep and promote-candidates task gates moved to `prompts/runner-rules.md`.
+
+### Changed
+- Compact public source snapshot header (lane summary on one line).
+- CLI version bumped to `0.5.8`.
+
 ## v0.5.7 - 2026-07-02
 
 ### Added

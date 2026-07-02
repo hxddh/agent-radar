@@ -2,14 +2,17 @@
 
 You are maintaining a lightweight AI Agent trend radar.
 
-Read these files first:
+Read these files first (injected in repository context when relevant):
 - radar.md
-- agent-watchlist.md
+- agent-watchlist.md (compact index; full entries on disk)
+- sources.md
+- research-log.md
+- current monthly daily file under daily/
+
+Optional write targets (not injected by default; update only when there is new evidence):
 - user-field-notes.md
 - playbook.md
 - storage-angle.md
-- sources.md
-- current monthly daily file under daily/
 
 Task:
 Collect and summarize high-signal AI Agent updates from the last 24-48 hours.

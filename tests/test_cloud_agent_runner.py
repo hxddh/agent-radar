@@ -42,11 +42,11 @@ class CloudAgentRunnerTest(unittest.TestCase):
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("weekly"),
-                ["z-ai/glm-5.2"],
+                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("monthly"),
-                ["z-ai/glm-5.2"],
+                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("promote-candidates"),
@@ -222,9 +222,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
             "repo context",
             "public source snapshot",
         )
-        self.assertIn("Treat this task as discovery, not promotion.", prompt)
-        self.assertIn("Do not update agent-watchlist.md", prompt)
-        self.assertIn("daily/weekly/monthly runs may promote it automatically", prompt)
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn("Source-sweep task gate", rules)
+        self.assertIn("Apply the **Source-sweep task gate**", prompt)
+        self.assertIn("discovery, not promotion", rules)
 
     def test_promote_candidates_gate_is_automatic_and_bounded(self) -> None:
         allowed = cloud_agent_runner.TASK_CONFIG["promote-candidates"]["allowed"]
@@ -238,8 +239,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
             "repo context",
             "",
         )
-        self.assertIn("Promote automatically; do not ask for human confirmation.", prompt)
-        self.assertIn("Promote at most 3 candidates per run.", prompt)
+        rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
+        self.assertIn("Promote-candidates task gate", rules)
+        self.assertIn("Apply the **Promote-candidates task gate**", prompt)
+        self.assertIn("Promote at most 3 candidates per run.", rules)
 
     def test_zero_openrouter_budget_dry_runs(self) -> None:
         with mock.patch.dict(os.environ, {"MAX_OPENROUTER_CALLS_PER_TASK": "0"}, clear=True):
@@ -624,6 +627,50 @@ class CloudAgentRunnerTest(unittest.TestCase):
         ]:
             (root / name).write_text(f"# {name}\n", encoding="utf-8")
         (root / "weekly" / f"{cloud_agent_runner.week_label(day)}.md").write_text("# weekly\n", encoding="utf-8")
+
+    def test_build_prompt_respects_global_prompt_budget(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-02")
+        prompt = cloud_agent_runner.build_prompt(
+            "weekly",
+            day,
+            ["research-log.md"],
+            "x" * 200_000,
+            public_sources="y" * 100_000,
+        )
+        max_prompt = cloud_agent_runner.env_int(
+            "MAX_PROMPT_CHARS", cloud_agent_runner.DEFAULT_MAX_PROMPT_CHARS
+        )
+        self.assertLessEqual(len(prompt), max_prompt)
+
+    def test_compact_watchlist_for_context_keeps_anchors(self) -> None:
+        content = (
+            "# Agent Watchlist\n\n"
+            "## Mainstream Agents\n\n"
+            "## Claude Code\n\n"
+            "Status:\n"
+            "- Category: Coding agent\n"
+            "- Maturity: Active\n"
+            "- Recent changes: Security reporting.\n"
+            "- Sources: https://example.com\n"
+        )
+        compact = cloud_agent_runner.compact_watchlist_for_context(content, 10_000)
+        self.assertIn("Claude Code", compact)
+        self.assertIn("replace_section anchor", compact)
+        self.assertNotIn("https://example.com", compact)
+
+    def test_weekly_slim_context_excludes_optional_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            day = dt.date(2026, 7, 2)
+            self._seed_minimal_weekly_context(root, day)
+            (root / "playbook.md").write_text("playbook-full-content\n", encoding="utf-8")
+            (root / "storage-angle.md").write_text("storage-full-content\n", encoding="utf-8")
+            (root / "user-field-notes.md").write_text("field-notes-full-content\n", encoding="utf-8")
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "weekly", day)
+            self.assertNotIn("playbook-full-content", context)
+            self.assertNotIn("storage-full-content", context)
+            self.assertNotIn("field-notes-full-content", context)
 
 
 if __name__ == "__main__":

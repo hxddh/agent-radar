@@ -172,6 +172,51 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertNotIn("- old point", text)
             self.assertIn("## Open questions", text)
 
+    def test_rejects_legacy_files_for_existing_weekly_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "weekly" / "2026-W28.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Weekly\n\n## English\n\n- existing\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["weekly/2026-W28.md"],
+                    {"files": [{"path": "weekly/2026-W28.md", "content": "# Weekly\n\n## English\n\n- new\n"}]},
+                )
+            self.assertIn("replace_section", str(ctx.exception))
+
+    def test_replace_section_within_scopes_bilingual_anchor(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "weekly" / "2026-W28.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Weekly\n\n## English\n\n### 15. Changed Thesis\n\n- english old\n\n---\n\n"
+                "## 中文\n\n### 15. Changed Thesis\n\n- 中文旧\n",
+                encoding="utf-8",
+            )
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["weekly/2026-W28.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "weekly/2026-W28.md",
+                            "mode": "replace_section",
+                            "within": "## 中文",
+                            "anchor": "### 15. Changed Thesis",
+                            "content": "- 中文新\n",
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertIn("- english old", text)
+            self.assertIn("- 中文新", text)
+            self.assertNotIn("- 中文旧", text)
+
     def test_legacy_files_array_still_supported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
