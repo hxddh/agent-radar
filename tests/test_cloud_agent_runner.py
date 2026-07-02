@@ -4,6 +4,7 @@ import importlib.util
 import os
 import tempfile
 import unittest
+import urllib.request
 from pathlib import Path
 from unittest import mock
 
@@ -204,6 +205,38 @@ class CloudAgentRunnerTest(unittest.TestCase):
             data = cloud_agent_runner.call_openrouter("daily", "prompt", "sources")
         text = cloud_agent_runner.response_output_text(data)
         self.assertIn("OpenRouter call budget is zero", text)
+
+    def test_pypi_updates_collector_parses_rss(self) -> None:
+        rss = """<?xml version="1.0"?>
+<rss><channel>
+<item><title>mcp 1.2.3</title><link>https://pypi.org/project/mcp/</link><description>Model Context Protocol</description></item>
+<item><title>other 0.1.0</title><link>https://pypi.org/project/other/</link><description>unrelated</description></item>
+</channel></rss>"""
+        items: list[dict[str, str]] = []
+        seen: set[str] = set()
+        with mock.patch.object(urllib.request, "urlopen") as urlopen_mock:
+            response = mock.MagicMock()
+            response.read.return_value = rss.encode("utf-8")
+            response.__enter__.return_value = response
+            response.__exit__.return_value = None
+            urlopen_mock.return_value = response
+            cloud_agent_runner.collect_pypi_updates("mcp", 5, items, seen)
+        self.assertEqual(len(items), 1)
+        self.assertIn("pypi.org/project/mcp", items[0]["url"])
+
+    def test_reddit_subreddit_rotation_batches_by_day(self) -> None:
+        subs = ["a", "b", "c", "d", "e"]
+        with mock.patch.object(cloud_agent_runner, "reddit_subreddits", return_value=subs):
+            with mock.patch.dict(os.environ, {"REDDIT_RSS_BATCH_SIZE": "2"}, clear=True):
+                day_one = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-01"))
+                day_two = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-02"))
+        self.assertEqual(len(day_one), 2)
+        self.assertEqual(len(day_two), 2)
+        self.assertNotEqual(day_one, day_two)
+
+    def test_pypi_enabled_by_default(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertTrue(cloud_agent_runner.collector_enabled("pypi"))
 
     def test_run_log_and_source_health_are_written_by_runner(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

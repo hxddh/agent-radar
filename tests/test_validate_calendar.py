@@ -75,6 +75,32 @@ class ValidateCalendarTest(unittest.TestCase):
             warnings = agent_radar.warn_bilingual_missing(weekly)
             self.assertTrue(any("bilingual" in item for item in warnings))
 
+    def test_strict_bilingual_fails_without_markers(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "agent-radar"
+            root.mkdir()
+            with chdir(root):
+                agent_radar.main(["init", "--date", "2026-07-02"])
+                agent_radar.main(["ensure", "--date", "2026-07-02"])
+            weekly = root / "weekly" / "2026-W27.md"
+            weekly.write_text(
+                "# Agent Radar Weekly - 2026-W27\n\n- one\n- two\n- three\n",
+                encoding="utf-8",
+            )
+            with chdir(root):
+                self.assertEqual(agent_radar.main(["validate", "--date", "2026-07-02", "--strict-bilingual"]), 1)
+
+    def test_init_force_skips_protected_files_with_content(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "agent-radar"
+            root.mkdir()
+            with chdir(root):
+                agent_radar.main(["init", "--date", "2026-07-02"])
+                watchlist = root / "agent-watchlist.md"
+                watchlist.write_text("x" * 500, encoding="utf-8")
+                agent_radar.main(["init", "--force", "--date", "2026-07-02"])
+            self.assertEqual(len(watchlist.read_text(encoding="utf-8")), 500)
+
     def test_year_simulation_most_days_pass_after_ensure(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "agent-radar"

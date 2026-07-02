@@ -10,8 +10,30 @@ import subprocess
 import sys
 from pathlib import Path
 
+import importlib.util
 
-__version__ = "0.2.1"
+_BILINGUAL_SPEC = importlib.util.spec_from_file_location(
+    "radar_bilingual", Path(__file__).with_name("radar_bilingual.py")
+)
+assert _BILINGUAL_SPEC is not None
+radar_bilingual = importlib.util.module_from_spec(_BILINGUAL_SPEC)
+assert _BILINGUAL_SPEC.loader is not None
+_BILINGUAL_SPEC.loader.exec_module(radar_bilingual)
+
+
+INIT_PROTECTED_FILES = {
+    "radar.md",
+    "agent-watchlist.md",
+    "user-field-notes.md",
+    "playbook.md",
+    "storage-angle.md",
+    "sources.md",
+    "research-log.md",
+    "README.md",
+}
+
+
+__version__ = "0.2.2"
 
 CORE_FILES = [
     "README.md",
@@ -48,6 +70,8 @@ CORE_FILES = [
     ".github/workflows/release.yml",
     "scripts/agent_radar.py",
     "scripts/cloud_agent_runner.py",
+    "scripts/radar_bilingual.py",
+    "scripts/radar_collector_state.py",
 ]
 
 
@@ -82,6 +106,10 @@ def find_root(start: Path | None = None) -> Path:
 def write_file(path: Path, content: str, force: bool = False) -> str:
     if path.exists() and not force:
         return "skipped"
+    if force and path.exists() and path.name in INIT_PROTECTED_FILES:
+        existing = path.read_text(encoding="utf-8")
+        if len(existing.strip()) > 400:
+            return "skipped-protected"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     return "overwritten" if path.exists() and force else "created"
@@ -165,6 +193,16 @@ def command_init(args: argparse.Namespace) -> int:
         runner_content = source_cloud_runner.read_text(encoding="utf-8")
         result = write_file(cloud_runner_path, runner_content, force=args.force)
         results.append(("scripts/cloud_agent_runner.py", result))
+
+    for helper_name in ("radar_bilingual.py", "radar_collector_state.py"):
+        helper_path = root / "scripts" / helper_name
+        source_helper = Path(__file__).with_name(helper_name)
+        if source_helper.exists() and helper_path.resolve() != source_helper.resolve():
+            helper_content = source_helper.read_text(encoding="utf-8")
+            result = write_file(helper_path, helper_content, force=args.force)
+            results.append((f"scripts/{helper_name}", result))
+        elif helper_path.resolve() == source_helper.resolve():
+            results.append((f"scripts/{helper_name}", "skipped"))
 
     print(f"Project root: {root}")
     for rel_path, result in results:
@@ -497,18 +535,39 @@ def warn_weekly_sparse(path: Path) -> list[str]:
     return []
 
 
-def warn_bilingual_missing(path: Path) -> list[str]:
+def warn_bilingual_missing(path: Path, strict: bool = False) -> list[str]:
     if not path.exists():
         return []
     content = path.read_text(encoding="utf-8")
-    bullet_count = sum(1 for line in content.splitlines() if line.strip().startswith("- "))
-    if bullet_count < 3:
+    if not radar_bilingual.needs_bilingual(content):
         return []
-    if "中文：" in content:
-        return []
-    if not any(marker in content for marker in ("Daily Agent Radar", "Agent Radar Weekly", "Agent Radar Monthly")):
-        return []
+    if strict:
+        return [f"{path}: requires bilingual Chinese labels (中文：) and English labels (English:)"]
     return [f"{path}: report has substantive bullets but missing bilingual Chinese labels (中文：)"]
+
+
+def command_bilingualize(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    targets = [
+        daily_path(root, day),
+        weekly_path(root, day),
+        monthly_path(root, day),
+    ]
+    changed = 0
+    for path in targets:
+        if not path.exists():
+            continue
+        original = path.read_text(encoding="utf-8")
+        updated = radar_bilingual.ensure_bilingual_file_content(str(path.relative_to(root)), original)
+        if updated != original:
+            path.write_text(updated, encoding="utf-8")
+            changed += 1
+            print(f"updated {path}")
+        else:
+            print(f"skipped {path}")
+    print(f"bilingualized {changed} file(s)")
+    return 0
 
 
 def warn_daily_entry_missing(path: Path, day: dt.date) -> list[str]:
@@ -555,9 +614,15 @@ def command_validate(args: argparse.Namespace) -> int:
     warnings.extend(warn_empty_fields(current_weekly))
     warnings.extend(warn_empty_fields(current_monthly))
     warnings.extend(warn_weekly_sparse(current_weekly))
-    warnings.extend(warn_bilingual_missing(current_daily))
-    warnings.extend(warn_bilingual_missing(current_weekly))
-    warnings.extend(warn_bilingual_missing(current_monthly))
+    strict_bilingual = getattr(args, "strict_bilingual", False)
+    if strict_bilingual:
+        errors.extend(warn_bilingual_missing(current_daily, strict=True))
+        errors.extend(warn_bilingual_missing(current_weekly, strict=True))
+        errors.extend(warn_bilingual_missing(current_monthly, strict=True))
+    else:
+        warnings.extend(warn_bilingual_missing(current_daily))
+        warnings.extend(warn_bilingual_missing(current_weekly))
+        warnings.extend(warn_bilingual_missing(current_monthly))
 
     if errors:
         print("Validation failed. Missing required files or directories:")
@@ -723,8 +788,17 @@ def build_parser() -> argparse.ArgumentParser:
     ensure_parser.add_argument("--date", help="Date for report paths, YYYY-MM-DD.")
     ensure_parser.set_defaults(func=command_ensure)
 
+    bilingual_parser = subparsers.add_parser("bilingualize", help="Add bilingual labels to current report files.")
+    bilingual_parser.add_argument("--date", help="Date for report paths, YYYY-MM-DD.")
+    bilingual_parser.set_defaults(func=command_bilingualize)
+
     validate_parser = subparsers.add_parser("validate", help="Validate project structure.")
     validate_parser.add_argument("--date", help="Date for current daily/weekly checks, YYYY-MM-DD.")
+    validate_parser.add_argument(
+        "--strict-bilingual",
+        action="store_true",
+        help="Treat missing bilingual labels in report files as validation errors.",
+    )
     validate_parser.set_defaults(func=command_validate)
 
     brief_parser = subparsers.add_parser("brief", help="Show maintenance gaps and next research focus.")
@@ -921,6 +995,7 @@ Core generated state:
 - `automation/source-cache.jsonl`
 - `automation/source-health.md`
 - `automation/source-lanes.md`
+- `automation/collector-state.json`
 - `automation/telemetry/YYYY-MM.jsonl`
 - `automation/runs/YYYY-MM.md`
 """
