@@ -5,6 +5,7 @@ import os
 import tempfile
 import time
 import unittest
+import datetime as dt
 import urllib.request
 from pathlib import Path
 from unittest import mock
@@ -530,6 +531,99 @@ class CloudAgentRunnerTest(unittest.TestCase):
             line = (root / "automation" / "telemetry" / "2026-07.jsonl").read_text(encoding="utf-8")
             self.assertIn('"prompt_budget_ratio": 0.833', line)
             self.assertIn('"prompt_budget_warning": true', line)
+
+    def test_daily_slim_context_excludes_optional_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._seed_minimal_daily_context(root)
+            (root / "playbook.md").write_text("playbook-full-content\n", encoding="utf-8")
+            (root / "storage-angle.md").write_text("storage-full-content\n", encoding="utf-8")
+            (root / "user-field-notes.md").write_text("field-notes-full-content\n", encoding="utf-8")
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "daily", day)
+            self.assertNotIn("playbook-full-content", context)
+            self.assertNotIn("storage-full-content", context)
+            self.assertNotIn("field-notes-full-content", context)
+
+    def test_runbook_excluded_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._seed_minimal_daily_context(root)
+            (root / "automation" / "runbook.md").write_text("runbook-full-content\n", encoding="utf-8")
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "daily", day)
+            self.assertNotIn("runbook-full-content", context)
+
+    def test_weekly_context_injects_current_week_daily_blocks(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "## 2026-06-30\n\n"
+            "- old week\n\n"
+            "## 2026-07-02\n\n"
+            "- this week one\n\n"
+            "## 2026-07-06\n\n"
+            "- this week two\n\n"
+            "## 2026-07-10\n\n"
+            "- next week\n"
+        )
+        sliced = cloud_agent_runner.slice_daily_month_for_week(
+            content,
+            cloud_agent_runner.parse_date("2026-07-02"),
+            50_000,
+        )
+        self.assertIn("this week one", sliced)
+        self.assertIn("old week", sliced)
+        self.assertNotIn("this week two", sliced)
+        self.assertNotIn("next week", sliced)
+        self.assertIn("ISO week's", sliced)
+
+    def test_weekly_build_context_includes_week_daily_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            day = dt.date(2026, 7, 2)
+            self._seed_minimal_weekly_context(root, day)
+            (root / "daily" / "2026-07.md").write_text(
+                "# Daily\n\n## 2026-07-02\n\nweek-block\n\n## 2026-07-10\n\nlater-week\n",
+                encoding="utf-8",
+            )
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "weekly", day)
+            self.assertIn("week-block", context)
+            self.assertNotIn("later-week", context)
+
+    def _seed_minimal_daily_context(self, root: Path) -> None:
+        (root / "automation").mkdir(parents=True)
+        (root / "docs").mkdir(parents=True)
+        (root / "prompts").mkdir(parents=True)
+        (root / "daily").mkdir(parents=True)
+        (root / "prompts" / "runner-rules.md").write_text("# rules\n", encoding="utf-8")
+        (root / "automation" / "runbook.md").write_text("# runbook\n", encoding="utf-8")
+        (root / "prompts" / "daily-update.md").write_text("# prompt\n", encoding="utf-8")
+        for name in ["sources.md", "radar.md", "agent-watchlist.md", "research-log.md"]:
+            (root / name).write_text(f"# {name}\n", encoding="utf-8")
+        (root / "daily" / "2026-07.md").write_text("## 2026-07-02\n\ntoday-content\n", encoding="utf-8")
+
+    def _seed_minimal_weekly_context(self, root: Path, day: dt.date) -> None:
+        (root / "automation").mkdir(parents=True)
+        (root / "docs").mkdir(parents=True)
+        (root / "prompts").mkdir(parents=True)
+        (root / "daily").mkdir(parents=True)
+        (root / "weekly").mkdir(parents=True)
+        (root / "prompts" / "runner-rules.md").write_text("# rules\n", encoding="utf-8")
+        (root / "prompts" / "weekly-review.md").write_text("# prompt\n", encoding="utf-8")
+        for name in [
+            "sources.md",
+            "radar.md",
+            "agent-watchlist.md",
+            "user-field-notes.md",
+            "playbook.md",
+            "storage-angle.md",
+            "research-log.md",
+        ]:
+            (root / name).write_text(f"# {name}\n", encoding="utf-8")
+        (root / "weekly" / f"{cloud_agent_runner.week_label(day)}.md").write_text("# weekly\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

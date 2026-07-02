@@ -313,16 +313,12 @@ def context_file_chars() -> int:
 
 TASK_CONTEXT_BASE = [
     "prompts/runner-rules.md",
-    "automation/runbook.md",
 ]
 TASK_CONTEXT_FILES: dict[str, list[str]] = {
     "daily": [
         "sources.md",
         "radar.md",
         "agent-watchlist.md",
-        "user-field-notes.md",
-        "playbook.md",
-        "storage-angle.md",
         "research-log.md",
     ],
     "weekly": [
@@ -351,9 +347,19 @@ TASK_CONTEXT_FILES: dict[str, list[str]] = {
     ],
 }
 
+# Read-only context extras (expanded per run date; not necessarily in allowed writes).
+TASK_CONTEXT_EXTRA_TEMPLATES: dict[str, list[str]] = {
+    "weekly": ["daily/{month}.md"],
+}
+
 # Output targets skipped from read-only context (still writable via allowed list).
 CONTEXT_SKIP_TEMPLATES: dict[str, list[str]] = {
-    "daily": ["weekly/{week}.md"],
+    "daily": [
+        "weekly/{week}.md",
+        "playbook.md",
+        "storage-angle.md",
+        "user-field-notes.md",
+    ],
 }
 
 RESEARCH_LOG_PRIORITY_KEYWORDS = (
@@ -366,6 +372,11 @@ RESEARCH_LOG_PRIORITY_KEYWORDS = (
 DAILY_CONTEXT_SLICE_NOTE = (
     "\n\n> Context note: only the file header and today's `## YYYY-MM-DD` block are injected; "
     "prior days remain in the file on disk.\n\n"
+)
+
+WEEKLY_DAILY_SLICE_NOTE = (
+    "\n\n> Context note: only this ISO week's `## YYYY-MM-DD` daily blocks are injected; "
+    "other days remain in the file on disk.\n\n"
 )
 
 RESEARCH_LOG_SLICE_MARKER = (
@@ -426,8 +437,22 @@ def include_maintenance_context() -> bool:
     return os.environ.get("INCLUDE_MAINTENANCE_CONTEXT", "false").lower() in {"1", "true", "yes"}
 
 
+def include_runbook_context() -> bool:
+    return os.environ.get("INCLUDE_RUNBOOK_CONTEXT", "false").lower() in {"1", "true", "yes"}
+
+
+def task_context_files(task: str) -> list[str]:
+    return list(TASK_CONTEXT_FILES.get(task, TASK_CONTEXT_FILES["daily"]))
+
+
+def task_context_extra_paths(task: str, day: dt.date) -> list[str]:
+    return [expand_path(item, day) for item in TASK_CONTEXT_EXTRA_TEMPLATES.get(task, [])]
+
+
 def task_context_base_files() -> list[str]:
     files = list(TASK_CONTEXT_BASE)
+    if include_runbook_context():
+        files.append("automation/runbook.md")
     if include_maintenance_context():
         files.append("docs/maintenance.md")
     return files
@@ -479,6 +504,32 @@ def slice_daily_month_file(content: str, day: dt.date, limit: int) -> str:
     return truncate_keep_ends(sliced, limit)
 
 
+def week_date_range(day: dt.date) -> tuple[dt.date, dt.date]:
+    _, _, weekday = day.isocalendar()
+    monday = day - dt.timedelta(days=weekday - 1)
+    sunday = monday + dt.timedelta(days=6)
+    return monday, sunday
+
+
+def slice_daily_month_for_week(content: str, day: dt.date, limit: int) -> str:
+    """Inject the monthly header and daily blocks from the current ISO week."""
+    week_start, week_end = week_date_range(day)
+    parts = re.split(r"\n(?=## \d{4}-\d{2}-\d{2})", content)
+    header = parts[0] if parts else content
+    week_blocks: list[str] = []
+    for part in parts:
+        match = re.match(r"^## (\d{4}-\d{2}-\d{2})", part)
+        if not match:
+            continue
+        block_day = dt.date.fromisoformat(match.group(1))
+        if week_start <= block_day <= week_end:
+            week_blocks.append(part)
+    if not week_blocks:
+        return truncate_keep_ends(content, limit)
+    sliced = header.rstrip() + WEEKLY_DAILY_SLICE_NOTE + "\n\n".join(week_blocks)
+    return truncate_keep_ends(sliced, limit)
+
+
 def slice_research_log(content: str, task: str, limit: int) -> str:
     """Keep intro, candidate-inbox sections, and recent tail within the context cap."""
     if len(content) <= limit:
@@ -523,6 +574,8 @@ def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit:
     if context_slicing_enabled():
         if task == "daily" and is_daily_month_path(rel_path):
             content = slice_daily_month_file(content, day, limit)
+        elif task == "weekly" and is_daily_month_path(rel_path):
+            content = slice_daily_month_for_week(content, day, limit)
         elif rel_path == "research-log.md":
             slice_limit = min(limit, env_int("RESEARCH_LOG_CONTEXT_CHARS", 25_000))
             content = slice_research_log(content, task, slice_limit)
@@ -574,7 +627,11 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
     config = TASK_CONFIG[task]
     allowed = [expand_path(item, day) for item in config["allowed"]]
     allowed_set = set(allowed)
-    context_files = [*task_context_base_files(), *TASK_CONTEXT_FILES.get(task, TASK_CONTEXT_FILES["daily"])]
+    context_files = [
+        *task_context_base_files(),
+        *task_context_files(task),
+        *task_context_extra_paths(task, day),
+    ]
     if config["prompt"]:
         context_files.append(config["prompt"])
     context_files.extend(allowed)

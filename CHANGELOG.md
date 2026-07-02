@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.6 - 2026-07-02
+
+### Added
+- Daily slim context profile: reads `sources`, `radar`, `agent-watchlist`, `research-log` only (playbook/storage/user-field-notes remain writable).
+- Weekly context injects this ISO week's `daily/YYYY-MM.md` day blocks.
+- `INCLUDE_RUNBOOK_CONTEXT` toggle (default false).
+
+### Changed
+- `automation/runbook.md` excluded from default model context.
+- Docs recommend leaving `MAX_PUBLIC_SOURCE_ITEMS` unset for per-task defaults (daily 50, sweep 120).
+- CLI version bumped to `0.5.6`.
+
 ## v0.5.5 - 2026-07-02
 
 ### Added
