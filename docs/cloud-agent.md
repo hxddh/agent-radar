@@ -44,6 +44,12 @@ FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
 MAX_PUBLIC_SOURCE_ITEMS=80
 PUBLIC_SOURCE_COLLECTION=true
 COLLECT_REDDIT=false
+COLLECT_REDDIT_RSS=true
+COLLECT_BLUESKY=true
+COLLECT_DEVTO=true
+COLLECT_LOBSTERS=true
+SOCIAL_FEEDS=
+REDDIT_SUBREDDITS=LocalLLaMA,MachineLearning,ClaudeAI,GithubCopilot,Cursor,ChatGPTCoding,mcp,agentdevelopment
 MAX_OPENROUTER_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
@@ -103,6 +109,32 @@ Every run records:
 Daily, weekly, and monthly reports are bilingual paired reports: Chinese first, English immediately after it, with `中文：` and `English:` labels for substantive bullets or paragraphs.
 
 See `docs/architecture.md` for the full architecture.
+
+## Automated Social Sources (No Manual Link Entry)
+
+OpenRouter mode now collects social/community signals automatically:
+
+- **Reddit subreddit RSS** (`COLLECT_REDDIT_RSS=true` by default): watches configured subreddits such as `LocalLLaMA`, `GithubCopilot`, `ClaudeAI`.
+- **Bluesky search** (`COLLECT_BLUESKY=true` by default): uses `api.bsky.app` public search.
+- **Dev.to tags** (`COLLECT_DEVTO=true` by default): pulls tagged articles via the public API.
+- **Lobsters RSS** (`COLLECT_LOBSTERS=true` by default): newest stories feed.
+- **Optional X search** (`X_BEARER_TOKEN` secret): enables X/Twitter recent search without per-run manual work.
+- **Optional RSS bridges** (`SOCIAL_FEEDS` variable): add stable RSS URLs for accounts or lists, for example a self-hosted RSSHub route.
+
+Legacy Reddit search JSON remains behind `COLLECT_REDDIT=true` because GitHub Actions often receives HTTP 403. Prefer subreddit RSS instead.
+
+One-time repository setup for full X coverage:
+
+```text
+X_BEARER_TOKEN=<repository secret>
+X_SEARCH_QUERIES=AI agent,coding agent,MCP server
+```
+
+Optional RSS bridge example:
+
+```text
+SOCIAL_FEEDS=cursor-x=https://your-rsshub.example/twitter/user/cursor_ai
+```
 
 ## Optional: OpenAI API Provider
 

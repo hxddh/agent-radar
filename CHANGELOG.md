@@ -3,6 +3,17 @@
 ## Unreleased
 
 ### Added
+- Automated social/community collectors: Reddit subreddit RSS, Bluesky search, Dev.to tags, Lobsters RSS.
+- Optional X/Twitter recent-search lane via `X_BEARER_TOKEN`.
+- Configurable `SOCIAL_FEEDS` and `REDDIT_SUBREDDITS` repository variables for unattended social coverage.
+
+### Changed
+- Reddit coverage now defaults to subreddit RSS instead of blocked search JSON.
+- Social lane scoring groups Bluesky, Dev.to, Lobsters, X, and custom social feeds.
+
+## v0.2.1 - 2026-07-02
+
+### Added
 - `ensure` CLI command to create missing daily, weekly, and monthly report shells.
 - Bilingual missing warnings in `validate`.
 - Daily entry missing warnings in `validate`.

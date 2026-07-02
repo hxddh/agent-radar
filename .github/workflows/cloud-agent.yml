@@ -55,8 +55,16 @@ jobs:
       MAX_COLLECT_SECONDS: ${{ vars.MAX_COLLECT_SECONDS || '60' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
       CHANGELOG_FEEDS: ${{ vars.CHANGELOG_FEEDS || '' }}
-      COLLECT_REDDIT: ${{ vars.COLLECT_REDDIT || 'false' }}
       CHANGELOG_PAGES: ${{ vars.CHANGELOG_PAGES || '' }}
+      COLLECT_REDDIT: ${{ vars.COLLECT_REDDIT || 'false' }}
+      COLLECT_REDDIT_RSS: ${{ vars.COLLECT_REDDIT_RSS || 'true' }}
+      COLLECT_BLUESKY: ${{ vars.COLLECT_BLUESKY || 'true' }}
+      COLLECT_DEVTO: ${{ vars.COLLECT_DEVTO || 'true' }}
+      COLLECT_LOBSTERS: ${{ vars.COLLECT_LOBSTERS || 'true' }}
+      SOCIAL_FEEDS: ${{ vars.SOCIAL_FEEDS || '' }}
+      REDDIT_SUBREDDITS: ${{ vars.REDDIT_SUBREDDITS || '' }}
+      X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+      X_SEARCH_QUERIES: ${{ vars.X_SEARCH_QUERIES || '' }}
 
     steps:
       - name: Check out repository

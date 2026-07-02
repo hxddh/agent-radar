@@ -55,6 +55,32 @@ DEFAULT_CHANGELOG_PAGES = [
     ("anthropic-news", "https://www.anthropic.com/news"),
     ("anthropic-engineering", "https://www.anthropic.com/engineering"),
 ]
+DEFAULT_REDDIT_SUBREDDITS = [
+    "LocalLLaMA",
+    "MachineLearning",
+    "ClaudeAI",
+    "GithubCopilot",
+    "Cursor",
+    "ChatGPTCoding",
+    "mcp",
+    "agentdevelopment",
+]
+DEFAULT_BLUESKY_QUERIES = [
+    "AI agent",
+    "coding agent",
+    "MCP server",
+    "Claude Code",
+    "agent memory",
+]
+DEFAULT_DEVTO_TAGS = [
+    "ai",
+    "machinelearning",
+    "opensource",
+    "devops",
+]
+DEFAULT_SOCIAL_FEED_SPECS: list[tuple[str, str]] = [
+    ("lobsters", "https://lobste.rs/newest.rss"),
+]
 RUN_AUDIT: dict[str, Any] = {
     "provider": "",
     "models": [],
@@ -157,14 +183,25 @@ def env_bool(name: str, default: bool) -> bool:
 
 
 def disabled_collectors() -> set[str]:
-    defaults = ["reddit"] if not env_bool("COLLECT_REDDIT", False) else []
-    return set(split_env_list("DISABLED_COLLECTORS", defaults))
+    return set(split_env_list("DISABLED_COLLECTORS", []))
 
 
 def collector_enabled(kind: str) -> bool:
-    if kind == "reddit" and not env_bool("COLLECT_REDDIT", False):
+    if kind in disabled_collectors():
         return False
-    return kind not in disabled_collectors()
+    if kind == "reddit":
+        return env_bool("COLLECT_REDDIT", False)
+    if kind == "reddit-rss":
+        return env_bool("COLLECT_REDDIT_RSS", True)
+    if kind == "bluesky":
+        return env_bool("COLLECT_BLUESKY", True)
+    if kind == "devto":
+        return env_bool("COLLECT_DEVTO", True)
+    if kind == "lobsters":
+        return env_bool("COLLECT_LOBSTERS", True)
+    if kind == "x":
+        return bool(os.environ.get("X_BEARER_TOKEN", "").strip())
+    return True
 
 
 def ensure_report_shells(root: Path, day: dt.date) -> None:
@@ -343,8 +380,10 @@ def source_lane(source: str) -> str:
         return "github-release"
     if source.startswith("github"):
         return "github"
-    if source in {"hacker-news", "reddit"}:
-        return source
+    if source.startswith("reddit-rss:") or source == "reddit":
+        return "reddit"
+    if source in {"hacker-news", "bluesky", "devto", "lobsters", "x"} or source.startswith("social-feed:"):
+        return "social"
     if source in {"npm", "pypi", "crates", "open-vsx", "docker-hub"}:
         return "package-marketplace"
     if source.startswith("arxiv"):
@@ -390,8 +429,9 @@ def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) ->
         "github": 14,
         "package-marketplace": 12,
         "hacker-news": 10,
-        "papers": 8,
+        "social": 9,
         "reddit": 7,
+        "papers": 8,
     }.get(lane, 5)
     keyword_weights = {
         "agent": 5,
@@ -490,6 +530,81 @@ def collect_reddit_items(query: str, limit: int, items: list[dict[str, str]], se
         post_url = f"https://www.reddit.com{permalink}" if permalink else post.get("url", "")
         note = f"subreddit={post.get('subreddit', '')}; score={post.get('score', '?')}; comments={post.get('num_comments', '?')}"
         add_source_item(items, seen, "reddit", post.get("title", "Reddit item"), post_url, note)
+
+
+def collect_reddit_rss_items(subreddit: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    name = subreddit.removeprefix("r/").removeprefix("R/")
+    feed_url = f"https://www.reddit.com/r/{urllib.parse.quote(name)}/new.rss"
+    collect_feed_items(feed_url, f"reddit-rss:{name}", limit, items, seen)
+
+
+def collect_bluesky_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    url = f"https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q={encoded}&limit={min(limit, 25)}"
+    data = request_json(url, headers={"User-Agent": "agent-radar-cloud", "Accept": "application/json"})
+    for post in data.get("posts", [])[:limit]:
+        record = post.get("record", {})
+        text = record.get("text", "").strip().replace("\n", " ")
+        title = text[:220] if text else "Bluesky post"
+        author = post.get("author", {})
+        handle = author.get("handle", "")
+        uri = post.get("uri", "")
+        rkey = uri.rsplit("/", 1)[-1] if uri else ""
+        post_url = f"https://bsky.app/profile/{handle}/post/{rkey}" if handle and rkey else ""
+        indexed_at = post.get("indexedAt", "")
+        note = f"author=@{handle}; indexed={indexed_at}"
+        add_source_item(items, seen, "bluesky", title, post_url, note)
+
+
+def collect_devto_items(tag: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(tag)
+    url = f"https://dev.to/api/articles?tag={encoded}&per_page={min(limit, 30)}"
+    data = request_json(url, headers={"User-Agent": "agent-radar-cloud", "Accept": "application/json"})
+    for article in data[:limit]:
+        title = article.get("title", "Dev.to article")
+        article_url = article.get("url", "")
+        note = (
+            f"tag={tag}; reactions={article.get('public_reactions_count', '?')}; "
+            f"comments={article.get('comments_count', '?')}; {article.get('description', '')}"
+        )
+        add_source_item(items, seen, "devto", title, article_url, note[:420])
+
+
+def collect_lobsters_items(limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    collect_feed_items("https://lobste.rs/newest.rss", "lobsters", limit, items, seen)
+
+
+def collect_x_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    token = os.environ.get("X_BEARER_TOKEN", "").strip()
+    if not token:
+        return
+    encoded = urllib.parse.quote(f"{query} -is:retweet lang:en")
+    max_results = max(10, min(limit, 100))
+    url = (
+        "https://api.twitter.com/2/tweets/search/recent?"
+        f"query={encoded}&max_results={max_results}"
+        "&tweet.fields=created_at,public_metrics,author_id&expansions=author_id&user.fields=username"
+    )
+    data = request_json(
+        url,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "agent-radar-cloud",
+            "Accept": "application/json",
+        },
+    )
+    users = {user["id"]: user.get("username", "") for user in data.get("includes", {}).get("users", [])}
+    for tweet in data.get("data", [])[:limit]:
+        tweet_id = tweet.get("id", "")
+        username = users.get(tweet.get("author_id", ""), "")
+        tweet_url = f"https://x.com/{username}/status/{tweet_id}" if username and tweet_id else ""
+        text = tweet.get("text", "").strip().replace("\n", " ")
+        metrics = tweet.get("public_metrics", {})
+        note = (
+            f"author=@{username}; likes={metrics.get('like_count', '?')}; "
+            f"retweets={metrics.get('retweet_count', '?')}; query={query}"
+        )
+        add_source_item(items, seen, "x", text[:220] or "X post", tweet_url, note)
 
 
 def collect_github_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
@@ -764,6 +879,42 @@ def changelog_pages() -> list[tuple[str, str]]:
     return pages
 
 
+def social_feeds() -> list[tuple[str, str]]:
+    configured = split_env_list("SOCIAL_FEEDS", [])
+    feeds = list(DEFAULT_SOCIAL_FEED_SPECS)
+    for item in configured:
+        if "=" in item:
+            name, url = item.split("=", 1)
+            feeds.append((name.strip(), url.strip()))
+        else:
+            feeds.append(("social-feed", item))
+    return feeds
+
+
+def reddit_subreddits() -> list[str]:
+    return split_env_list("REDDIT_SUBREDDITS", DEFAULT_REDDIT_SUBREDDITS)
+
+
+def bluesky_queries_for_task(task: str) -> list[str]:
+    queries = list(DEFAULT_BLUESKY_QUERIES)
+    if task in {"source-sweep", "monthly"}:
+        queries.extend(["agent sandbox", "browser agent", "agent eval"])
+    return queries
+
+
+def devto_tags_for_task(task: str) -> list[str]:
+    tags = list(DEFAULT_DEVTO_TAGS)
+    if task in {"source-sweep", "monthly"}:
+        tags.extend(["programming", "productivity"])
+    return tags
+
+
+def x_queries_for_task(task: str) -> list[str]:
+    queries = bluesky_queries_for_task(task)
+    extra = split_env_list("X_SEARCH_QUERIES", [])
+    return extra or queries
+
+
 def collect_public_sources(task: str, root: Path | None = None, day: dt.date | None = None) -> str:
     if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
         return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
@@ -771,6 +922,8 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     budget = public_source_budget(task)
     per_query = max(2, min(5, budget // 14))
     per_feed = max(2, min(6, budget // 12))
+    per_subreddit = max(2, min(4, budget // 20))
+    per_social = max(2, min(4, budget // 16))
     items: list[dict[str, str]] = []
     seen: set[str] = set()
     errors: list[str] = []
@@ -784,6 +937,22 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     if collector_enabled("reddit"):
         for query in queries["reddit"]:
             collectors.append((f"reddit:{query}", "reddit", query, per_query))
+    if collector_enabled("reddit-rss"):
+        for subreddit in reddit_subreddits():
+            collectors.append((f"reddit-rss:{subreddit}", "reddit-rss", subreddit, per_subreddit))
+    if collector_enabled("bluesky"):
+        for query in bluesky_queries_for_task(task):
+            collectors.append((f"bluesky:{query}", "bluesky", query, per_social))
+    if collector_enabled("devto"):
+        for tag in devto_tags_for_task(task):
+            collectors.append((f"devto:{tag}", "devto", tag, per_social))
+    if collector_enabled("lobsters"):
+        collectors.append(("lobsters:newest", "lobsters", "newest", per_feed))
+    if collector_enabled("x"):
+        for query in x_queries_for_task(task):
+            collectors.append((f"x:{query}", "x", query, per_social))
+    for source_name, feed_url in social_feeds():
+        collectors.append((f"social-feed:{source_name}", "social-feed", f"{source_name}={feed_url}", per_feed))
     for query in queries["github"]:
         collectors.append((f"github:{query}", "github", query, per_query))
     for query in queries["packages"]:
@@ -819,6 +988,19 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
                 collect_hn_items(value, limit, local_items, local_seen)
             elif kind == "reddit":
                 collect_reddit_items(value, limit, local_items, local_seen)
+            elif kind == "reddit-rss":
+                collect_reddit_rss_items(value, limit, local_items, local_seen)
+            elif kind == "bluesky":
+                collect_bluesky_items(value, limit, local_items, local_seen)
+            elif kind == "devto":
+                collect_devto_items(value, limit, local_items, local_seen)
+            elif kind == "lobsters":
+                collect_lobsters_items(limit, local_items, local_seen)
+            elif kind == "x":
+                collect_x_items(value, limit, local_items, local_seen)
+            elif kind == "social-feed":
+                source_name, feed_url = value.split("=", 1)
+                collect_feed_items(feed_url, f"social-feed:{source_name}", limit, local_items, local_seen)
             elif kind == "github":
                 collect_github_items(value, limit, local_items, local_seen)
             elif kind == "npm":
@@ -886,8 +1068,13 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
-        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, public RSS/changelog feeds, and official public changelog/news pages only.",
-        f"- Reddit collection: {'enabled' if collector_enabled('reddit') else 'disabled (set COLLECT_REDDIT=true to enable)'}",
+        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit subreddit RSS, Bluesky search, Dev.to, Lobsters, optional X API, public RSS/changelog feeds, and official public pages.",
+        f"- Reddit search JSON: {'enabled' if collector_enabled('reddit') else 'disabled (set COLLECT_REDDIT=true to enable)'}",
+        f"- Reddit subreddit RSS: {'enabled' if collector_enabled('reddit-rss') else 'disabled'}",
+        f"- Bluesky search: {'enabled' if collector_enabled('bluesky') else 'disabled'}",
+        f"- Dev.to tags: {'enabled' if collector_enabled('devto') else 'disabled'}",
+        f"- Lobsters RSS: {'enabled' if collector_enabled('lobsters') else 'disabled'}",
+        f"- X search API: {'enabled' if collector_enabled('x') else 'disabled (set X_BEARER_TOKEN secret to enable)'}",
         f"- Item budget: {budget}",
         f"- Collected before budget trim: {len(items)}",
         "- Scoring: relevance, source lane, novelty, adoption, infrastructure keywords, and prior-seen penalty.",

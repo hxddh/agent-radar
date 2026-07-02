@@ -18,7 +18,8 @@ Agent Radar runs as a GitHub Actions cloud agent. The architecture is intentiona
 - `github`: repository search for agent runtimes, MCP, memory, sandbox, eval, security, browser, and deployment terms.
 - `github-release`: releases and tags for configured and discovered repositories.
 - `hacker-news`: public HN Algolia search.
-- `reddit`: public Reddit search attempts. Disabled by default because the public JSON API often returns HTTP 403 from CI runners. Set `COLLECT_REDDIT=true` to enable.
+- `reddit`: subreddit RSS feeds (`COLLECT_REDDIT_RSS=true` by default). Legacy search JSON remains behind `COLLECT_REDDIT=true`.
+- `social`: Bluesky search (`api.bsky.app`), Dev.to tags, Lobsters RSS, optional X API (`X_BEARER_TOKEN`), and configurable `SOCIAL_FEEDS` RSS bridges.
 - `package-marketplace`: npm, PyPI, crates.io, Open VSX, and Docker Hub.
 - `papers`: arXiv RSS.
 - `feeds-pages`: additional RSS feeds and official pages configured through repository variables.
