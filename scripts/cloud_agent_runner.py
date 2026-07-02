@@ -111,9 +111,7 @@ DEFAULT_DEVTO_TAGS = [
     "opensource",
     "devops",
 ]
-DEFAULT_SOCIAL_FEED_SPECS: list[tuple[str, str]] = [
-    ("lobsters", "https://lobste.rs/newest.rss"),
-]
+DEFAULT_SOCIAL_FEED_SPECS: list[tuple[str, str]] = []
 RUN_AUDIT: dict[str, Any] = {
     "provider": "",
     "models": [],
@@ -379,6 +377,13 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
         content = read_text(root / rel_path)
         chunks.append(f"\n--- FILE: {rel_path} ---\n{content}")
     return allowed, "\n".join(chunks)
+
+
+def redact_http_error_body(body: str, limit: int = 240) -> str:
+    compact = " ".join(body.split())
+    if len(compact) <= limit:
+        return compact
+    return compact[:limit] + "..."
 
 
 def request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 10) -> Any:
@@ -1002,7 +1007,7 @@ def reddit_subreddits_for_day(day: dt.date) -> list[str]:
     subreddits = reddit_subreddits()
     if not subreddits:
         return []
-    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", min(3, len(subreddits))))
+    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 1))
     start = day.toordinal() % len(subreddits)
     selected: list[str] = []
     for offset in range(batch_size):
@@ -1157,10 +1162,24 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 8))
     collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 60))
     results: list[tuple[int, str, list[dict[str, str]], str | None]] = []
+
+    reddit_entries: list[tuple[int, tuple[str, str, str, int]]] = []
+    parallel_entries: list[tuple[int, tuple[str, str, str, int]]] = []
+    for index, collector in enumerate(collectors):
+        if collector[1] == "reddit-rss":
+            reddit_entries.append((index, collector))
+        else:
+            parallel_entries.append((index, collector))
+
+    for offset, (index, collector) in enumerate(reddit_entries):
+        results.append(run_collector(index, collector))
+        if offset + 1 < len(reddit_entries):
+            time.sleep(1)
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
         future_map = {
             executor.submit(run_collector, index, collector): (index, collector)
-            for index, collector in enumerate(collectors)
+            for index, collector in parallel_entries
         }
         done, pending = concurrent.futures.wait(future_map, timeout=collect_seconds)
         for future in done:
@@ -1268,7 +1287,7 @@ def call_openai(prompt: str) -> dict[str, Any]:
         with urllib.request.urlopen(request, timeout=900) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
+        body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
         raise SystemExit(f"OpenAI API error {exc.code}: {body}") from exc
 
 
@@ -1306,7 +1325,7 @@ def call_github_models(prompt: str) -> dict[str, Any]:
         with urllib.request.urlopen(request, timeout=900) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
+        body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
         raise SystemExit(f"GitHub Models API error {exc.code}: {body}") from exc
 
 
@@ -1360,7 +1379,7 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
             with urllib.request.urlopen(request, timeout=900) as response:
                 return json.loads(response.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
-            body = exc.read().decode("utf-8", errors="replace")
+            body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
             last_error = f"OpenRouter API error for {candidate_model} ({exc.code}): {body}"
             if exc.code not in {400, 404, 408, 409, 429, 500, 502, 503, 504}:
                 break

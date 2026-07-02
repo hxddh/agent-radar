@@ -171,7 +171,54 @@ def bilingualize_report(content: str) -> str:
     return result
 
 
+def parse_label_url_line(text: str) -> tuple[str, str] | None:
+    match = re.match(r"^(.+?):\s*(https?://\S+)\s*$", text.strip())
+    if match:
+        return match.group(1).strip(), match.group(2)
+    return None
+
+
+def empty_chinese_label_lines(content: str) -> int:
+    count = 0
+    for line in content.splitlines():
+        match = CHINESE_LABEL_RE.match(line)
+        if match and not normalize_bilingual_text(match.group(2)):
+            count += 1
+    return count
+
+
+def collapse_empty_chinese_label_url_pairs(content: str) -> str:
+    lines = content.splitlines()
+    output: list[str] = []
+    index = 0
+    while index < len(lines):
+        if index < len(lines) - 1:
+            chinese_match = CHINESE_LABEL_RE.match(lines[index])
+            english_match = ENGLISH_LABEL_RE.match(lines[index + 1])
+            if chinese_match and english_match:
+                chinese_text = normalize_bilingual_text(chinese_match.group(2))
+                english_text = normalize_bilingual_text(english_match.group(2))
+                if not chinese_text and english_text:
+                    label_url = parse_label_url_line(english_text)
+                    if label_url:
+                        label, url = label_url
+                        output.append(f"{chinese_match.group(1)}- {label}: {url}")
+                        index += 2
+                        continue
+                    if is_language_neutral(english_text):
+                        output.append(f"{chinese_match.group(1)}- {english_text}")
+                        index += 2
+                        continue
+        output.append(lines[index])
+        index += 1
+    result = "\n".join(output)
+    if result and not result.endswith("\n"):
+        result += "\n"
+    return result
+
+
 def repair_identical_bilingual_pairs(content: str) -> str:
+    content = collapse_empty_chinese_label_url_pairs(content)
     lines = content.splitlines()
     output: list[str] = []
     index = 0

@@ -241,6 +241,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(len(day_two), 2)
         self.assertNotEqual(day_one, day_two)
 
+    def test_reddit_rss_default_batch_size_is_one(self) -> None:
+        subs = ["a", "b", "c"]
+        with mock.patch.object(cloud_agent_runner, "reddit_subreddits", return_value=subs):
+            with mock.patch.dict(os.environ, {}, clear=True):
+                selected = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-02"))
+        self.assertEqual(len(selected), 1)
+
     def test_pypi_enabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertTrue(cloud_agent_runner.collector_enabled("pypi"))

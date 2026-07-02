@@ -65,7 +65,7 @@ jobs:
       COLLECT_LOBSTERS: ${{ vars.COLLECT_LOBSTERS || 'true' }}
       COLLECT_PYPI: ${{ vars.COLLECT_PYPI || 'true' }}
       PYPI_PACKAGES: ${{ vars.PYPI_PACKAGES || '' }}
-      REDDIT_RSS_BATCH_SIZE: ${{ vars.REDDIT_RSS_BATCH_SIZE || '3' }}
+      REDDIT_RSS_BATCH_SIZE: ${{ vars.REDDIT_RSS_BATCH_SIZE || '1' }}
       SOCIAL_FEEDS: ${{ vars.SOCIAL_FEEDS || '' }}
       REDDIT_SUBREDDITS: ${{ vars.REDDIT_SUBREDDITS || '' }}
       X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
