@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.5 - 2026-07-02
+
+### Added
+- Runner rejects `full` updates to existing `daily/YYYY-MM.md` files; models must `append` new `## YYYY-MM-DD` day blocks.
+- Test coverage for daily append-only enforcement.
+
+### Changed
+- `prompts/runner-rules.md` documents enforced daily append-only policy.
+- CLI version bumped to `0.5.5`.
+
 ## v0.5.4 - 2026-07-02
 
 ### Added

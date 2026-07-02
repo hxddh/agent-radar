@@ -115,6 +115,27 @@ class ApplyUpdatesTest(unittest.TestCase):
             )
             self.assertEqual(changed, 1)
 
+    def test_rejects_full_update_for_existing_daily_month_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Daily Agent Radar - 2026-07\n\n## 2026-07-01\n\n### English\n\n- Signal: old day\n",
+                encoding="utf-8",
+            )
+            content = (
+                "# Daily Agent Radar - 2026-07\n\n## 2026-07-01\n\n### English\n\n- Signal: old day\n\n"
+                "## 2026-07-02\n\n### English\n\n- Signal: new day\n"
+            )
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {"updates": [{"path": "daily/2026-07.md", "mode": "full", "content": content}]},
+                )
+            self.assertIn("append a new ## YYYY-MM-DD", str(ctx.exception))
+
     def test_rejects_missing_daily_dates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
