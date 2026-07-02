@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.5.0 - 2026-07-02
+
+### Added
+- Patch-based model output: `updates` array with `append`, `replace_section`, and `full` modes (legacy `files` still supported).
+- Shared source collection across `auto` workflow tasks to avoid repeated collector fan-out.
+- Prompt/output telemetry: `prompt_chars`, `output_chars`, `context_chars`, `shared_source_collection`.
+- `convert_daily_paired_to_block()` for daily `### English` / `### 中文` migration.
+- `docs/release-v0.5.0.md`.
+
+### Changed
+- CLI version bumped to `0.5.0`.
+- OpenRouter two-stage runs omit raw `public_sources` from the main prompt after screening.
+- Daily public-source budget lowered from 80 to 50 (screening pass covers filtering).
+- `build_context` drops duplicate `automation/{task}.md` injection; task prompts remain the single instruction source.
+- OpenRouter context files capped at 20k chars (`MAX_CONTEXT_FILE_CHARS`) except allowed output targets.
+- `bilingualize` now converts daily paired reports to per-day block format.
+
+### Fixed
+- Token waste from full-file JSON rewrites on structure-preserved files (`research-log.md`, `radar.md`, etc.).
+
 ## v0.4.0 - 2026-07-02
 
 ### Added

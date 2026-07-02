@@ -8,7 +8,7 @@ Agent Radar runs as a GitHub Actions cloud agent. The architecture is intentiona
 2. `scripts/cloud_agent_runner.py` creates any required daily, weekly, or monthly report files.
 3. Source lanes collect public signals without paid search calls.
 4. The runner scores and trims source items before sending them to the model.
-5. The model returns complete Markdown file updates for allowed files only.
+5. The model returns JSON `updates` (append, replace_section, or full file) for allowed files only.
 6. The runner writes source cache, telemetry, source health, lane health, and run logs.
 7. Validation, tests, Python compilation, and secret scanning run before commit.
 
