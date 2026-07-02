@@ -95,7 +95,9 @@ Context efficiency (v0.5.2+):
 - `CONTEXT_SLICING=true` (default): daily context injects only today's day block; `research-log.md` keeps candidate inbox + recent tail.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
-- `prompts/runner-rules.md` holds shared JSON/bilingual/safety rules (injected once per task; task prompts stay focused).
+- `prompts/runner-rules.md` holds shared JSON/bilingual/safety/evidence rules (injected once per task; task prompts stay focused).
+- `docs/maintenance.md` is human-facing; excluded from model context unless `INCLUDE_MAINTENANCE_CONTEXT=true`.
+- `python scripts/agent_radar.py brief` shows recent `prompt_chars` / `context_chars` / `output_chars` from telemetry.
 
 The runner samples across source lanes before trimming to the budget, so one noisy lane cannot consume the entire daily source window.
 

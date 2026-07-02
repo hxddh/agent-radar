@@ -49,6 +49,11 @@ jobs:
       PUBLIC_SOURCE_COLLECTION: ${{ vars.PUBLIC_SOURCE_COLLECTION || 'true' }}
       MAX_OPENROUTER_CALLS_PER_TASK: ${{ vars.MAX_OPENROUTER_CALLS_PER_TASK || '' }}
       MAX_PROMPT_CHARS: ${{ vars.MAX_PROMPT_CHARS || '' }}
+      MAX_CONTEXT_FILE_CHARS: ${{ vars.MAX_CONTEXT_FILE_CHARS || '' }}
+      MAX_SCREEN_PROMPT_CHARS: ${{ vars.MAX_SCREEN_PROMPT_CHARS || '' }}
+      CONTEXT_SLICING: ${{ vars.CONTEXT_SLICING || 'true' }}
+      SHARED_SCREENING: ${{ vars.SHARED_SCREENING || 'true' }}
+      INCLUDE_MAINTENANCE_CONTEXT: ${{ vars.INCLUDE_MAINTENANCE_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
       MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '20' }}
@@ -91,6 +96,11 @@ jobs:
           echo "Final synthesis model: $FINAL_SYNTHESIS_MODEL"
           echo "Max public source items: $MAX_PUBLIC_SOURCE_ITEMS"
           echo "Max OpenRouter calls per task: $MAX_OPENROUTER_CALLS_PER_TASK"
+          echo "Max context file chars: $MAX_CONTEXT_FILE_CHARS"
+          echo "Max screen prompt chars: $MAX_SCREEN_PROMPT_CHARS"
+          echo "Context slicing: $CONTEXT_SLICING"
+          echo "Shared screening: $SHARED_SCREENING"
+          echo "Include maintenance context: $INCLUDE_MAINTENANCE_CONTEXT"
           echo "Max release repos: $MAX_RELEASE_REPOS"
           echo "Max releases per repo: $MAX_RELEASES_PER_REPO"
           echo "Max source workers: $MAX_SOURCE_WORKERS"

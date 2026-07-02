@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.4 - 2026-07-02
+
+### Added
+- `prompt_budget_ratio` and `prompt_budget_warning` in telemetry and run logs.
+- `brief` command shows recent cloud-agent telemetry (prompt/context/output chars).
+- Compact evidence/promotion rules in `prompts/runner-rules.md`.
+- `MAX_SCREEN_PROMPT_CHARS` cap (default 40k) for screening prompts.
+
+### Changed
+- `docs/maintenance.md` excluded from model context by default (`INCLUDE_MAINTENANCE_CONTEXT=false`).
+- Workflow exposes `MAX_CONTEXT_FILE_CHARS`, `CONTEXT_SLICING`, `SHARED_SCREENING`, `INCLUDE_MAINTENANCE_CONTEXT`, `MAX_SCREEN_PROMPT_CHARS`.
+- CLI version bumped to `0.5.4`.
+
 ## v0.5.3 - 2026-07-02
 
 ### Added

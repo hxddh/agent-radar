@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.5.3"
+__version__ = "0.5.4"
 
 CORE_FILES = [
     "README.md",
@@ -843,6 +843,24 @@ def count_occurrences(root: Path, rel_path: str, pattern: str) -> int:
     return path.read_text(encoding="utf-8").count(pattern)
 
 
+def latest_telemetry_records(root: Path, day: dt.date, limit: int = 5) -> list[dict[str, object]]:
+    path = root / "automation" / "telemetry" / f"{day:%Y-%m}.jsonl"
+    if not path.exists():
+        return []
+    records: list[dict[str, object]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(item, dict):
+            records.append(item)
+    return records[-limit:]
+
+
 def command_brief(args: argparse.Namespace) -> int:
     root = find_root()
     day = parse_date(args.date)
@@ -862,6 +880,29 @@ def command_brief(args: argparse.Namespace) -> int:
     print("\nMaintenance signals:")
     print(f"- Missing structural items: {len(missing)}")
     print(f"- Watchlist fields still marked 'Source required': {source_required}")
+
+    telemetry = latest_telemetry_records(root, day)
+    if telemetry:
+        print("\nRecent cloud-agent telemetry:")
+        for item in telemetry:
+            task = item.get("task", "?")
+            prompt_chars = item.get("prompt_chars", 0)
+            context_chars = item.get("context_chars", 0)
+            output_chars = item.get("output_chars", 0)
+            ratio = item.get("prompt_budget_ratio", 0.0)
+            warning = item.get("prompt_budget_warning", False)
+            shared = []
+            if item.get("shared_source_collection"):
+                shared.append("shared-collection")
+            if item.get("shared_screening"):
+                shared.append("shared-screening")
+            shared_text = f"; {', '.join(shared)}" if shared else ""
+            warn_text = " WARNING" if warning else ""
+            print(
+                f"- {item.get('date', '?')} {task}: prompt={prompt_chars}, "
+                f"context={context_chars}, output={output_chars}, "
+                f"budget_ratio={ratio}{warn_text}{shared_text}"
+            )
 
     print("\nSuggested next research focus:")
     if missing:

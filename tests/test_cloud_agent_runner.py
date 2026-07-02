@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import os
 import tempfile
+import time
 import unittest
 import urllib.request
 from pathlib import Path
@@ -457,6 +458,78 @@ class CloudAgentRunnerTest(unittest.TestCase):
         invoke_mock.assert_called_once()
         self.assertEqual(invoke_mock.call_args.kwargs.get("shared_screened"), '{"summary":"cached-screen"}')
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["shared_screening"])
+
+    def test_maintenance_context_excluded_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            (root / "docs").mkdir(parents=True)
+            (root / "prompts").mkdir(parents=True)
+            (root / "prompts" / "runner-rules.md").write_text("# rules\n", encoding="utf-8")
+            (root / "automation" / "runbook.md").write_text("# runbook\n", encoding="utf-8")
+            (root / "docs" / "maintenance.md").write_text("maintenance-full-content\n", encoding="utf-8")
+            (root / "prompts" / "daily-update.md").write_text("# prompt\n", encoding="utf-8")
+            for name in [
+                "sources.md",
+                "radar.md",
+                "agent-watchlist.md",
+                "user-field-notes.md",
+                "playbook.md",
+                "storage-angle.md",
+                "research-log.md",
+            ]:
+                (root / name).write_text(f"# {name}\n", encoding="utf-8")
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text("## 2026-07-02\n\ntoday\n", encoding="utf-8")
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "daily", day)
+            self.assertNotIn("maintenance-full-content", context)
+
+    def test_include_maintenance_context_adds_maintenance_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            (root / "docs").mkdir(parents=True)
+            (root / "prompts").mkdir(parents=True)
+            (root / "prompts" / "runner-rules.md").write_text("# rules\n", encoding="utf-8")
+            (root / "automation" / "runbook.md").write_text("# runbook\n", encoding="utf-8")
+            (root / "docs" / "maintenance.md").write_text("maintenance-full-content\n", encoding="utf-8")
+            (root / "prompts" / "daily-update.md").write_text("# prompt\n", encoding="utf-8")
+            for name in ["sources.md", "radar.md", "research-log.md"]:
+                (root / name).write_text(f"# {name}\n", encoding="utf-8")
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text("## 2026-07-02\n\ntoday\n", encoding="utf-8")
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            env = {"AGENT_RADAR_MODEL_PROVIDER": "openrouter", "INCLUDE_MAINTENANCE_CONTEXT": "true"}
+            with mock.patch.dict(os.environ, env, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "daily", day)
+            self.assertIn("maintenance-full-content", context)
+
+    def test_build_screen_prompt_caps_public_sources(self) -> None:
+        huge = "Public source snapshot:\n" + ("- item\n" * 20_000)
+        prompt = cloud_agent_runner.build_screen_prompt("daily", huge)
+        cap = cloud_agent_runner.env_int("MAX_SCREEN_PROMPT_CHARS", cloud_agent_runner.DEFAULT_MAX_SCREEN_PROMPT_CHARS)
+        self.assertLessEqual(len(prompt), cap + 10)
+        self.assertIn("screening model", prompt)
+
+    def test_append_telemetry_records_prompt_budget_ratio(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cloud_agent_runner.RUN_AUDIT["provider"] = "openrouter"
+            cloud_agent_runner.RUN_AUDIT["models"] = ["deepseek/deepseek-v4-pro"]
+            cloud_agent_runner.RUN_AUDIT["openrouter_calls"] = 2
+            cloud_agent_runner.record_prompt_budget(100_000)
+            cloud_agent_runner.RUN_AUDIT["context_chars"] = 90_000
+            cloud_agent_runner.RUN_AUDIT["output_chars"] = 5_000
+            cloud_agent_runner.RUN_AUDIT["public_source_items"] = 50
+            cloud_agent_runner.RUN_AUDIT["collected_source_items"] = 300
+            cloud_agent_runner.RUN_AUDIT["started_at"] = time.time()
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            cloud_agent_runner.append_telemetry(root, "daily", day, 1, "summary", ["source"])
+            line = (root / "automation" / "telemetry" / "2026-07.jsonl").read_text(encoding="utf-8")
+            self.assertIn('"prompt_budget_ratio": 0.833', line)
+            self.assertIn('"prompt_budget_warning": true', line)
 
 
 if __name__ == "__main__":

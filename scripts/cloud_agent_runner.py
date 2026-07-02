@@ -54,6 +54,7 @@ GITHUB_MAX_FILE_CHARS = 6_000
 DEFAULT_CONTEXT_FILE_CHARS = 20_000
 MAX_PUBLIC_SOURCE_ITEMS = 200
 DEFAULT_MAX_PROMPT_CHARS = 120_000
+DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
 DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
@@ -131,6 +132,8 @@ RUN_AUDIT: dict[str, Any] = {
     "context_chars": 0,
     "shared_source_collection": False,
     "shared_screening": False,
+    "prompt_budget_ratio": 0.0,
+    "prompt_budget_warning": False,
 }
 
 
@@ -308,7 +311,6 @@ def context_file_chars() -> int:
 TASK_CONTEXT_BASE = [
     "prompts/runner-rules.md",
     "automation/runbook.md",
-    "docs/maintenance.md",
 ]
 TASK_CONTEXT_FILES: dict[str, list[str]] = {
     "daily": [
@@ -415,6 +417,31 @@ def read_text(path: Path, *, limit: int | None = None) -> str:
 
 def truncate_text(value: str, limit: int) -> str:
     return truncate_keep_ends(value, limit)
+
+
+def include_maintenance_context() -> bool:
+    return os.environ.get("INCLUDE_MAINTENANCE_CONTEXT", "false").lower() in {"1", "true", "yes"}
+
+
+def task_context_base_files() -> list[str]:
+    files = list(TASK_CONTEXT_BASE)
+    if include_maintenance_context():
+        files.append("docs/maintenance.md")
+    return files
+
+
+def prompt_budget_ratio(prompt_chars: int) -> float:
+    max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
+    if max_prompt <= 0:
+        return 0.0
+    return round(prompt_chars / max_prompt, 3)
+
+
+def record_prompt_budget(prompt_chars: int) -> None:
+    RUN_AUDIT["prompt_chars"] = prompt_chars
+    ratio = prompt_budget_ratio(prompt_chars)
+    RUN_AUDIT["prompt_budget_ratio"] = ratio
+    RUN_AUDIT["prompt_budget_warning"] = ratio >= 0.8
 
 
 def context_slicing_enabled() -> bool:
@@ -544,14 +571,14 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
     config = TASK_CONFIG[task]
     allowed = [expand_path(item, day) for item in config["allowed"]]
     allowed_set = set(allowed)
-    context_files = [*TASK_CONTEXT_BASE, *TASK_CONTEXT_FILES.get(task, TASK_CONTEXT_FILES["daily"])]
+    context_files = [*task_context_base_files(), *TASK_CONTEXT_FILES.get(task, TASK_CONTEXT_FILES["daily"])]
     if config["prompt"]:
         context_files.append(config["prompt"])
     context_files.extend(allowed)
 
     if model_provider() in {"github", "github-models"}:
         priority = {
-            *TASK_CONTEXT_BASE,
+            *task_context_base_files(),
             "sources.md",
             "research-log.md",
             *allowed,
@@ -1631,7 +1658,8 @@ def openrouter_models_for_task(task: str) -> list[str]:
 
 
 def build_screen_prompt(task: str, public_sources: str) -> str:
-    return f"""You are the low-cost screening model for Agent Radar.
+    cap = env_int("MAX_SCREEN_PROMPT_CHARS", DEFAULT_MAX_SCREEN_PROMPT_CHARS)
+    header = f"""You are the low-cost screening model for Agent Radar.
 
 Task: {task}
 
@@ -1661,8 +1689,10 @@ Rules:
 - Keep weak social/community evidence labeled as weak.
 - Prefer agent infrastructure, agent runtimes, MCP/tool-use, memory, evals, storage, and deployment signals.
 
-{public_sources}
 """
+    source_budget = max(2000, cap - len(header))
+    trimmed_sources = truncate_text(public_sources, source_budget)
+    return header + trimmed_sources
 
 
 def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, Any]:
@@ -1728,14 +1758,14 @@ def invoke_model(
             prompt = build_prompt(task, day, allowed, context, screened_summary=screen_text)
         else:
             prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
-        RUN_AUDIT["prompt_chars"] = len(prompt)
+        record_prompt_budget(len(prompt))
         return call_openrouter_model(prompt, active_models[-1])
     if provider == "openai":
         prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
-        RUN_AUDIT["prompt_chars"] = len(prompt)
+        record_prompt_budget(len(prompt))
         return call_openai(prompt)
     prompt = build_prompt(task, day, allowed, context, public_sources="")
-    RUN_AUDIT["prompt_chars"] = len(prompt)
+    record_prompt_budget(len(prompt))
     return call_github_models(prompt)
 
 
@@ -1984,6 +2014,13 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Fallbacks: {fallbacks}",
         f"- Summary: {summary or 'none'}",
         f"- Source count reported by model: {len(sources)}",
+        f"- Prompt chars: {RUN_AUDIT.get('prompt_chars', 0)}",
+        f"- Context chars: {RUN_AUDIT.get('context_chars', 0)}",
+        f"- Output chars: {RUN_AUDIT.get('output_chars', 0)}",
+        f"- Prompt budget ratio: {RUN_AUDIT.get('prompt_budget_ratio', 0.0)}",
+        f"- Prompt budget warning: {RUN_AUDIT.get('prompt_budget_warning', False)}",
+        f"- Shared source collection: {RUN_AUDIT.get('shared_source_collection', False)}",
+        f"- Shared screening: {RUN_AUDIT.get('shared_screening', False)}",
     ]
     if source_errors:
         entry.append("- Source errors:")
@@ -2016,6 +2053,8 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "context_chars": RUN_AUDIT.get("context_chars", 0),
         "shared_source_collection": RUN_AUDIT.get("shared_source_collection", False),
         "shared_screening": RUN_AUDIT.get("shared_screening", False),
+        "prompt_budget_ratio": RUN_AUDIT.get("prompt_budget_ratio", 0.0),
+        "prompt_budget_warning": RUN_AUDIT.get("prompt_budget_warning", False),
     }
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
@@ -2090,6 +2129,8 @@ def run_task(
     RUN_AUDIT["prompt_chars"] = 0
     RUN_AUDIT["output_chars"] = 0
     RUN_AUDIT["context_chars"] = 0
+    RUN_AUDIT["prompt_budget_ratio"] = 0.0
+    RUN_AUDIT["prompt_budget_warning"] = False
     RUN_AUDIT["shared_source_collection"] = shared_collection is not None
     RUN_AUDIT["shared_screening"] = False
     config = TASK_CONFIG[task]

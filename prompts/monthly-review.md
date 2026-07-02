@@ -10,7 +10,6 @@ Read:
 - storage-angle.md
 - sources.md
 - research-log.md
-- docs/maintenance.md
 - all daily and weekly entries for this month
 
 Task:
