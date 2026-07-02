@@ -2,28 +2,29 @@
 
 ## Unreleased
 
-Added:
-- Cloud-agent run audit logs in `automation/runs/YYYY-MM.md`.
-- Source health snapshot in `automation/source-health.md`.
-- Candidate aging and defer-count instructions for source-sweep and promotion tasks.
-- `release-draft` CLI command for release note drafting.
-- Release checklist documentation.
-- More aggressive multi-lane public-source collection, including Reddit public search attempts and broader HN/GitHub query coverage.
-- Coverage dimensions for product capability, runtime surface, architecture, tooling, infrastructure, quality, adoption, and risk.
-- Official page collection for changelog/news sources that do not expose stable RSS feeds.
-- Source memory in `automation/source-cache.jsonl`.
-- Structured run telemetry in `automation/telemetry/YYYY-MM.jsonl`.
-- Source lane health tracking in `automation/source-lanes.md`.
-- Package and marketplace collectors for npm, PyPI, crates.io, Open VSX, and Docker Hub.
-- Source scoring before prompt construction.
-- Architecture documentation in `docs/architecture.md`.
-- Configurable total source collection timeout with `MAX_COLLECT_SECONDS`.
+### Added
+- `ensure` CLI command to create missing daily, weekly, and monthly report shells.
+- Bilingual missing warnings in `validate`.
+- Daily entry missing warnings in `validate`.
+- `apply_updates` shrink guard to refuse suspiciously short full-file replacements.
+- PyPI collector now parses the public PyPI search page instead of deprecated XML-RPC search.
+- GitHub release repo discovery skips repositories that return HTTP 404.
+- Calendar validation tests and `apply_updates` safety tests.
+- CI now runs `ensure` + `validate` with the current UTC date.
 
-Changed:
-- Default public-source budgets are now aggressive: daily 80, source-sweep 120, weekly 120, monthly 160.
-- Automatic cloud mode now runs discovery-only source sweep every day and candidate promotion every Wednesday and Sunday.
-- Source collectors now run concurrently and trim after collection, so early source lanes cannot consume the whole source budget.
-- Daily, weekly, and monthly report instructions now require bilingual paired Chinese/English output.
+### Changed
+- `validate` no longer hard-fails on missing weekly or monthly files; those are warnings.
+- Cloud runner ensures daily, weekly, and monthly shells before every task batch.
+- Reddit collection is disabled by default (`COLLECT_REDDIT=false`).
+- CLI version bumped to `0.2.1`.
+- `docs/subscription-mode.md` now recommends `MAX_PUBLIC_SOURCE_ITEMS=80`.
+
+### Fixed
+- Cloud-agent validate self-lock that blocked commits on most calendar days.
+- PR CI blind spot where only a fixed seed date was validated.
+- PyPI collector returning zero items while reporting success.
+- `apply_updates` comparing against truncated file tails from `read_text`.
+- Invalid GitHub repos discovered from research logs causing release/tag collector noise.
 
 ## v0.2.0 - 2026-07-02
 

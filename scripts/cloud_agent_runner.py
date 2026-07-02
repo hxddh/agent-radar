@@ -138,6 +138,40 @@ TASK_CONFIG = {
 }
 
 
+def find_root(start: Path | None = None) -> Path:
+    current = (start or Path.cwd()).resolve()
+    for path in [current, *current.parents]:
+        if (path / "radar.md").exists() and (path / "agent-watchlist.md").exists():
+            return path
+    for path in [current, *current.parents]:
+        if path.name == "agent-radar":
+            return path
+    return current
+
+
+def env_bool(name: str, default: bool) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.lower() in {"1", "true", "yes", "on"}
+
+
+def disabled_collectors() -> set[str]:
+    defaults = ["reddit"] if not env_bool("COLLECT_REDDIT", False) else []
+    return set(split_env_list("DISABLED_COLLECTORS", defaults))
+
+
+def collector_enabled(kind: str) -> bool:
+    if kind == "reddit" and not env_bool("COLLECT_REDDIT", False):
+        return False
+    return kind not in disabled_collectors()
+
+
+def ensure_report_shells(root: Path, day: dt.date) -> None:
+    for command in ("daily", "weekly", "monthly"):
+        run_cli(root, command, day)
+
+
 def parse_date(value: str | None) -> dt.date:
     if value:
         return dt.date.fromisoformat(value)
@@ -205,10 +239,16 @@ def split_env_list(name: str, default: list[str]) -> list[str]:
     return items or default
 
 
+def read_text_full(path: Path) -> str:
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8")
+
+
 def read_text(path: Path) -> str:
     if not path.exists():
         return ""
-    content = path.read_text(encoding="utf-8")
+    content = read_text_full(path)
     limit = max_file_chars()
     if len(content) > limit:
         return content[-limit:]
@@ -480,12 +520,27 @@ def collect_npm_items(query: str, limit: int, items: list[dict[str, str]], seen:
 
 def collect_pypi_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     encoded = urllib.parse.quote(query)
-    request = urllib.request.Request(f"https://pypi.org/search/?q={encoded}", headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    request = urllib.request.Request(
+        f"https://pypi.org/search/?q={encoded}&o=-created",
+        headers={"User-Agent": "agent-radar-cloud"},
+        method="GET",
+    )
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
-    for href, label in re.findall(r'<a[^>]+href=["\'](/project/[^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)[:limit]:
-        title = strip_html(label).splitlines()[0] if strip_html(label) else href.strip("/").split("/")[-1]
-        add_source_item(items, seen, "pypi", title, urllib.parse.urljoin("https://pypi.org", href), "PyPI search result")
+    names: list[str] = []
+    for match in re.finditer(r'class="package-snippet__name"[^>]*href="/project/([^"/]+)/?"', text):
+        names.append(match.group(1))
+    if not names:
+        for href in re.findall(r'href="/project/([^"/]+)/?"', text):
+            names.append(href)
+    added = 0
+    for name in names:
+        if added >= limit:
+            break
+        before = len(items)
+        add_source_item(items, seen, "pypi", name, f"https://pypi.org/project/{urllib.parse.quote(name)}/", "PyPI search result")
+        if len(items) > before:
+            added += 1
 
 
 def collect_crates_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
@@ -545,12 +600,24 @@ def extract_github_repos(text: str, limit: int) -> list[str]:
     return repos
 
 
+def github_repo_exists(repo: str) -> bool:
+    try:
+        request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
+        return True
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return False
+        raise
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return True
+
+
 def release_repos_from_context(root: Path, limit: int) -> list[str]:
     configured = split_env_list("RELEASE_REPOS", DEFAULT_RELEASE_REPOS)
     repos: list[str] = []
     seen: set[str] = set()
     for repo in configured:
-        if "/" in repo and repo not in seen:
+        if "/" in repo and repo not in seen and github_repo_exists(repo):
             seen.add(repo)
             repos.append(repo)
     context = "\n".join(
@@ -558,7 +625,7 @@ def release_repos_from_context(root: Path, limit: int) -> list[str]:
         for rel_path in ["sources.md", "agent-watchlist.md", "research-log.md"]
     )
     for repo in extract_github_repos(context, limit * 2):
-        if repo not in seen:
+        if repo not in seen and github_repo_exists(repo):
             seen.add(repo)
             repos.append(repo)
         if len(repos) >= limit:
@@ -714,17 +781,23 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     collectors: list[tuple[str, str, str, int]] = []
     for query in queries["hn"]:
         collectors.append((f"hn:{query}", "hn", query, per_query))
-    for query in queries["reddit"]:
-        collectors.append((f"reddit:{query}", "reddit", query, per_query))
+    if collector_enabled("reddit"):
+        for query in queries["reddit"]:
+            collectors.append((f"reddit:{query}", "reddit", query, per_query))
     for query in queries["github"]:
         collectors.append((f"github:{query}", "github", query, per_query))
     for query in queries["packages"]:
-        collectors.append((f"npm:{query}", "npm", query, per_query))
-        collectors.append((f"pypi:{query}", "pypi", query, per_query))
-        collectors.append((f"crates:{query}", "crates", query, per_query))
-        collectors.append((f"open-vsx:{query}", "open-vsx", query, per_query))
+        if collector_enabled("npm"):
+            collectors.append((f"npm:{query}", "npm", query, per_query))
+        if collector_enabled("pypi"):
+            collectors.append((f"pypi:{query}", "pypi", query, per_query))
+        if collector_enabled("crates"):
+            collectors.append((f"crates:{query}", "crates", query, per_query))
+        if collector_enabled("open-vsx"):
+            collectors.append((f"open-vsx:{query}", "open-vsx", query, per_query))
     for query in queries["packages"][:3]:
-        collectors.append((f"docker:{query}", "docker", query, per_query))
+        if collector_enabled("docker"):
+            collectors.append((f"docker:{query}", "docker", query, per_query))
     collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://export.arxiv.org/rss/cs.AI", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
@@ -813,7 +886,8 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
-        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit public JSON, arXiv RSS, public RSS/changelog feeds, and official public changelog/news pages only.",
+        "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, public RSS/changelog feeds, and official public changelog/news pages only.",
+        f"- Reddit collection: {'enabled' if collector_enabled('reddit') else 'disabled (set COLLECT_REDDIT=true to enable)'}",
         f"- Item budget: {budget}",
         f"- Collected before budget trim: {len(items)}",
         "- Scoring: relevance, source lane, novelty, adoption, infrastructure keywords, and prior-seen penalty.",
@@ -1131,6 +1205,7 @@ Return only valid JSON with this shape:
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
+- For daily, weekly, and monthly report files, bilingual output is mandatory. Every substantive bullet or paragraph must include paired `中文：` and `English:` lines, with Chinese first.
 - For daily, weekly, and monthly report files, write bilingual paired content: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 - For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
@@ -1170,7 +1245,11 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
             content += "\n"
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
-        old = read_text(path)
+        old = read_text_full(path)
+        if old and len(old) > 500 and len(content) < len(old) // 2:
+            raise SystemExit(
+                f"Refusing to replace {rel_path}: new content is much shorter than the existing file."
+            )
         if old != content:
             path.write_text(content, encoding="utf-8")
             count += 1
@@ -1325,8 +1404,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--date", help="Date to use, YYYY-MM-DD. Defaults to UTC today.")
     args = parser.parse_args(argv)
 
-    root = Path.cwd()
+    root = find_root()
     day = parse_date(args.date)
+    ensure_report_shells(root, day)
     tasks = auto_tasks(day) if args.task == "auto" else [args.task]
 
     for task in tasks:

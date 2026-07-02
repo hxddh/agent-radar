@@ -55,6 +55,7 @@ jobs:
       MAX_COLLECT_SECONDS: ${{ vars.MAX_COLLECT_SECONDS || '60' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
       CHANGELOG_FEEDS: ${{ vars.CHANGELOG_FEEDS || '' }}
+      COLLECT_REDDIT: ${{ vars.COLLECT_REDDIT || 'false' }}
       CHANGELOG_PAGES: ${{ vars.CHANGELOG_PAGES || '' }}
 
     steps:
@@ -95,6 +96,7 @@ jobs:
       - name: Validate
         run: |
           TODAY="$(date -u +%F)"
+          python scripts/agent_radar.py ensure --date "$TODAY"
           python scripts/agent_radar.py brief --date "$TODAY"
           python scripts/agent_radar.py validate --date "$TODAY"
           python -m unittest discover -s tests

@@ -64,6 +64,22 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {"PUBLIC_SOURCE_COLLECTION": "false"}, clear=True):
             self.assertIn("disabled", cloud_agent_runner.collect_public_sources("daily"))
 
+    def test_reddit_collection_disabled_by_default(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertFalse(cloud_agent_runner.collector_enabled("reddit"))
+            prompt = cloud_agent_runner.build_prompt(
+                "daily",
+                cloud_agent_runner.parse_date("2026-07-02"),
+                ["research-log.md"],
+                "repo context",
+                "Public source snapshot:\n- Reddit collection: disabled (set COLLECT_REDDIT=true to enable)",
+            )
+        self.assertIn("Reddit collection: disabled", prompt)
+
+    def test_reddit_collection_can_be_enabled(self) -> None:
+        with mock.patch.dict(os.environ, {"COLLECT_REDDIT": "true"}, clear=True):
+            self.assertTrue(cloud_agent_runner.collector_enabled("reddit"))
+
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 80)

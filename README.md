@@ -134,6 +134,7 @@ If your environment does not provide `python`, use `python3` for the same comman
 
 ```bash
 python scripts/agent_radar.py init
+python scripts/agent_radar.py ensure
 python scripts/agent_radar.py daily
 python scripts/agent_radar.py daily --date 2026-07-02
 python scripts/agent_radar.py weekly

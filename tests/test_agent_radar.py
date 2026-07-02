@@ -37,6 +37,7 @@ class AgentRadarCliTest(unittest.TestCase):
 
             with chdir(root):
                 self.assertEqual(agent_radar.main(["init", "--date", "2026-07-02"]), 0)
+                self.assertEqual(agent_radar.main(["ensure", "--date", "2026-07-02"]), 0)
                 self.assertEqual(agent_radar.main(["daily", "--date", "2026-07-02"]), 0)
                 self.assertEqual(agent_radar.main(["daily", "--date", "2026-07-02"]), 0)
                 self.assertEqual(agent_radar.main(["weekly", "--date", "2026-07-02"]), 0)

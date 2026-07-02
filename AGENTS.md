@@ -26,6 +26,7 @@ Do not:
 
 ```bash
 python scripts/agent_radar.py status
+python scripts/agent_radar.py ensure
 python scripts/agent_radar.py daily
 python scripts/agent_radar.py weekly
 python scripts/agent_radar.py monthly
