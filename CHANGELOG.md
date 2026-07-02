@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.7 - 2026-07-02
+
+### Added
+- Runner rejects `full` updates to existing `weekly/YYYY-Www.md` and `monthly/YYYY-MM.md` files; models must use `replace_section`.
+- Weekly `replace_section` example in `prompts/runner-rules.md`.
+
+### Changed
+- CLI version bumped to `0.5.7`.
+
 ## v0.5.6 - 2026-07-02
 
 ### Added

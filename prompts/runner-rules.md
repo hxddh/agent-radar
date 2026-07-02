@@ -21,10 +21,11 @@ Return only valid JSON with this shape:
 ## Update modes
 
 - Prefer `append` for `research-log.md` and for adding a new `## YYYY-MM-DD` day block in monthly daily files.
-- Prefer `replace_section` when changing one watchlist agent, one radar thesis block, or one report subsection.
-- Use `full` only for weekly/monthly report files or when a file is new/empty.
+- Prefer `replace_section` when changing one watchlist agent, one radar thesis block, or one weekly/monthly report subsection.
+- Use `full` only when a weekly/monthly report file is new/empty.
 - Never use `full` for `research-log.md`, `sources.md`, `radar.md`, `agent-watchlist.md`, `playbook.md`, `storage-angle.md`, or `user-field-notes.md` when existing content is present.
 - Never use `full` for `daily/YYYY-MM.md` when the monthly file already exists; **append** a new `## YYYY-MM-DD` day block instead. The runner rejects `full` rewrites of existing daily month files.
+- Never use `full` for existing `weekly/YYYY-Www.md` or `monthly/YYYY-MM.md` files; use `replace_section` instead. The runner rejects `full` rewrites when content is already present.
 
 ### Daily append example (preferred)
 
@@ -63,6 +64,33 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
   ]
 }
 ```
+
+### Weekly replace_section example (preferred for existing reports)
+
+Update only the subsections that changed. When both languages need updates, use separate anchors under `## English` and `## 中文`, or replace uniquely titled sections such as `### 15. Changed Thesis`.
+
+```json
+{
+  "summary": "Weekly update for 2026-W28",
+  "sources": ["https://example.com/changelog"],
+  "updates": [
+    {
+      "path": "weekly/2026-W28.md",
+      "mode": "replace_section",
+      "anchor": "### 15. Changed Thesis",
+      "content": "- Platform vendors are now shipping first-party MCP servers.\n- Source: https://example.com/changelog\n"
+    },
+    {
+      "path": "weekly/2026-W28.md",
+      "mode": "replace_section",
+      "anchor": "### 16. Watch Next Week",
+      "content": "- Track enterprise MCP adoption evidence.\n"
+    }
+  ]
+}
+```
+
+Do not `full`-rewrite an existing weekly file.
 
 ## Bilingual reports (daily / weekly / monthly)
 

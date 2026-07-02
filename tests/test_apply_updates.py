@@ -46,12 +46,81 @@ class ApplyUpdatesTest(unittest.TestCase):
             target = root / "weekly" / "2026-W27.md"
             target.parent.mkdir(parents=True)
             target.write_text("x\n" * 600, encoding="utf-8")
-            with self.assertRaises(SystemExit):
+            with self.assertRaises(SystemExit) as ctx:
                 cloud_agent_runner.apply_updates(
                     root,
                     ["weekly/2026-W27.md"],
                     {"updates": [{"path": "weekly/2026-W27.md", "mode": "full", "content": "tiny\n"}]},
                 )
+            self.assertIn("replace_section", str(ctx.exception))
+
+    def test_rejects_full_update_for_existing_weekly_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "weekly" / "2026-W28.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Weekly\n\n## English\n\n### 1. Executive Summary\n\n- old summary\n\n---\n\n## 中文\n\n### 1. Executive Summary\n\n- 旧摘要\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["weekly/2026-W28.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "weekly/2026-W28.md",
+                                "mode": "full",
+                                "content": "# Weekly\n\n## English\n\n### 1. Executive Summary\n\n- new summary\n",
+                            }
+                        ]
+                    },
+                )
+            self.assertIn("replace_section", str(ctx.exception))
+
+    def test_rejects_full_update_for_existing_monthly_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "monthly" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Monthly\n\n## English\n\n- old thesis\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["monthly/2026-07.md"],
+                    {"updates": [{"path": "monthly/2026-07.md", "mode": "full", "content": "# Monthly\n\n## English\n\n- new thesis\n"}]},
+                )
+            self.assertIn("replace_section", str(ctx.exception))
+
+    def test_weekly_replace_section_updates_subsection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "weekly" / "2026-W28.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Weekly\n\n## English\n\n### 15. Changed Thesis\n\n- old thesis\n\n### 16. Watch Next Week\n\n- old watch\n",
+                encoding="utf-8",
+            )
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["weekly/2026-W28.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "weekly/2026-W28.md",
+                            "mode": "replace_section",
+                            "anchor": "### 15. Changed Thesis",
+                            "content": "- new thesis point\n",
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertIn("- new thesis point", text)
+            self.assertNotIn("- old thesis", text)
+            self.assertIn("### 16. Watch Next Week", text)
 
     def test_allows_append_style_update(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
