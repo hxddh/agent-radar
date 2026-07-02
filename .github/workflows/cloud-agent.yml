@@ -61,6 +61,9 @@ jobs:
       COLLECT_BLUESKY: ${{ vars.COLLECT_BLUESKY || 'true' }}
       COLLECT_DEVTO: ${{ vars.COLLECT_DEVTO || 'true' }}
       COLLECT_LOBSTERS: ${{ vars.COLLECT_LOBSTERS || 'true' }}
+      COLLECT_PYPI: ${{ vars.COLLECT_PYPI || 'true' }}
+      PYPI_PACKAGES: ${{ vars.PYPI_PACKAGES || '' }}
+      REDDIT_RSS_BATCH_SIZE: ${{ vars.REDDIT_RSS_BATCH_SIZE || '3' }}
       SOCIAL_FEEDS: ${{ vars.SOCIAL_FEEDS || '' }}
       REDDIT_SUBREDDITS: ${{ vars.REDDIT_SUBREDDITS || '' }}
       X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
@@ -105,10 +108,11 @@ jobs:
         run: |
           TODAY="$(date -u +%F)"
           python scripts/agent_radar.py ensure --date "$TODAY"
+          python scripts/agent_radar.py bilingualize --date "$TODAY"
           python scripts/agent_radar.py brief --date "$TODAY"
-          python scripts/agent_radar.py validate --date "$TODAY"
+          python scripts/agent_radar.py validate --date "$TODAY" --strict-bilingual
           python -m unittest discover -s tests
-          python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py
+          python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
 
       - name: Scan for obvious secrets
         run: |

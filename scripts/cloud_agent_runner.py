@@ -13,6 +13,7 @@ import concurrent.futures
 import datetime as dt
 import hashlib
 import html
+import importlib.util
 import json
 import os
 import re
@@ -24,6 +25,20 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any
+
+
+def _load_local_module(module_name: str):
+    path = Path(__file__).with_name(f"{module_name}.py")
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    assert spec is not None
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+radar_bilingual = _load_local_module("radar_bilingual")
+radar_collector_state = _load_local_module("radar_collector_state")
 
 
 OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
@@ -57,14 +72,32 @@ DEFAULT_CHANGELOG_PAGES = [
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
-    "MachineLearning",
     "ClaudeAI",
-    "GithubCopilot",
-    "Cursor",
-    "ChatGPTCoding",
     "mcp",
     "agentdevelopment",
+    "ChatGPT",
 ]
+PYPI_UPDATES_RSS = "https://pypi.org/rss/updates.xml"
+DEFAULT_PYPI_PACKAGES = [
+    "mcp",
+    "langchain",
+    "crewai",
+    "openai",
+    "anthropic",
+    "llama-index",
+    "semantic-kernel",
+    "autogen-agentchat",
+    "litellm",
+]
+STRUCTURE_PRESERVED_FILES = {
+    "research-log.md",
+    "agent-watchlist.md",
+    "radar.md",
+    "sources.md",
+    "playbook.md",
+    "storage-angle.md",
+    "user-field-notes.md",
+}
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
     "coding agent",
@@ -199,6 +232,8 @@ def collector_enabled(kind: str) -> bool:
         return env_bool("COLLECT_DEVTO", True)
     if kind == "lobsters":
         return env_bool("COLLECT_LOBSTERS", True)
+    if kind == "pypi":
+        return env_bool("COLLECT_PYPI", True)
     if kind == "x":
         return bool(os.environ.get("X_BEARER_TOKEN", "").strip())
     return True
@@ -633,29 +668,86 @@ def collect_npm_items(query: str, limit: int, items: list[dict[str, str]], seen:
         add_source_item(items, seen, "npm", name, f"https://www.npmjs.com/package/{urllib.parse.quote(name)}", note)
 
 
-def collect_pypi_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
-    encoded = urllib.parse.quote(query)
+def collect_pypi_updates(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     request = urllib.request.Request(
-        f"https://pypi.org/search/?q={encoded}&o=-created",
+        PYPI_UPDATES_RSS,
         headers={"User-Agent": "agent-radar-cloud"},
         method="GET",
     )
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
-    names: list[str] = []
-    for match in re.finditer(r'class="package-snippet__name"[^>]*href="/project/([^"/]+)/?"', text):
-        names.append(match.group(1))
-    if not names:
-        for href in re.findall(r'href="/project/([^"/]+)/?"', text):
-            names.append(href)
+    chunks = text.split("<item>")[1:]
+    query_terms = [term for term in query.lower().split() if term]
     added = 0
-    for name in names:
+    for chunk in chunks:
         if added >= limit:
             break
-        before = len(items)
-        add_source_item(items, seen, "pypi", name, f"https://pypi.org/project/{urllib.parse.quote(name)}/", "PyPI search result")
-        if len(items) > before:
-            added += 1
+        title = ""
+        link = ""
+        description = ""
+        if "<title>" in chunk:
+            title = strip_html(chunk.split("<title>", 1)[1].split("</title>", 1)[0])
+        if "<link>" in chunk:
+            link = chunk.split("<link>", 1)[1].split("</link>", 1)[0]
+        if "<description>" in chunk:
+            description = strip_html(chunk.split("<description>", 1)[1].split("</description>", 1)[0])
+        haystack = f"{title} {description}".lower()
+        if query_terms and not any(term in haystack for term in query_terms):
+            continue
+        note = description[:420] if description else "PyPI recent update"
+        add_source_item(items, seen, "pypi", title or "PyPI package", link, note)
+        added += 1
+
+
+def collect_pypi_package(package: str, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(package)
+    data = request_json(f"https://pypi.org/pypi/{encoded}/json")
+    info = data.get("info", {})
+    summary = info.get("summary") or "PyPI package metadata"
+    note = f"version={info.get('version', '')}; {summary}"
+    add_source_item(
+        items,
+        seen,
+        "pypi",
+        info.get("name", package),
+        f"https://pypi.org/project/{encoded}/",
+        note[:420],
+    )
+
+
+def extract_pypi_packages(text: str, limit: int) -> list[str]:
+    packages: list[str] = []
+    seen: set[str] = set()
+    for match in re.findall(r"https://pypi\.org/project/([^/\s\"'<>]+)", text):
+        name = match.lower()
+        if name not in seen:
+            seen.add(name)
+            packages.append(name)
+    for match in re.findall(r"pip install ([A-Za-z0-9_.-]+)", text):
+        name = match.lower()
+        if name not in seen:
+            seen.add(name)
+            packages.append(name)
+        if len(packages) >= limit:
+            break
+    return packages[:limit]
+
+
+def pypi_packages_from_context(root: Path | None, limit: int) -> list[str]:
+    configured = [item.lower() for item in split_env_list("PYPI_PACKAGES", DEFAULT_PYPI_PACKAGES)]
+    packages: list[str] = []
+    seen = set(configured)
+    packages.extend(configured)
+    if root is None:
+        return packages[:limit]
+    context = "\n".join(read_text(root / rel_path) for rel_path in ["sources.md", "research-log.md", "agent-watchlist.md"])
+    for name in extract_pypi_packages(context, limit * 2):
+        if name not in seen:
+            seen.add(name)
+            packages.append(name)
+        if len(packages) >= limit:
+            break
+    return packages[:limit]
 
 
 def collect_crates_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
@@ -895,6 +987,18 @@ def reddit_subreddits() -> list[str]:
     return split_env_list("REDDIT_SUBREDDITS", DEFAULT_REDDIT_SUBREDDITS)
 
 
+def reddit_subreddits_for_day(day: dt.date) -> list[str]:
+    subreddits = reddit_subreddits()
+    if not subreddits:
+        return []
+    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", min(3, len(subreddits))))
+    start = day.toordinal() % len(subreddits)
+    selected: list[str] = []
+    for offset in range(batch_size):
+        selected.append(subreddits[(start + offset) % len(subreddits)])
+    return selected
+
+
 def bluesky_queries_for_task(task: str) -> list[str]:
     queries = list(DEFAULT_BLUESKY_QUERIES)
     if task in {"source-sweep", "monthly"}:
@@ -938,7 +1042,8 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         for query in queries["reddit"]:
             collectors.append((f"reddit:{query}", "reddit", query, per_query))
     if collector_enabled("reddit-rss"):
-        for subreddit in reddit_subreddits():
+        rotation_day = day or dt.datetime.now(dt.timezone.utc).date()
+        for subreddit in reddit_subreddits_for_day(rotation_day):
             collectors.append((f"reddit-rss:{subreddit}", "reddit-rss", subreddit, per_subreddit))
     if collector_enabled("bluesky"):
         for query in bluesky_queries_for_task(task):
@@ -959,7 +1064,7 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         if collector_enabled("npm"):
             collectors.append((f"npm:{query}", "npm", query, per_query))
         if collector_enabled("pypi"):
-            collectors.append((f"pypi:{query}", "pypi", query, per_query))
+            collectors.append((f"pypi-updates:{query}", "pypi-updates", query, per_query))
         if collector_enabled("crates"):
             collectors.append((f"crates:{query}", "crates", query, per_query))
         if collector_enabled("open-vsx"):
@@ -972,6 +1077,16 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
     for source_name, page_url in changelog_pages():
         collectors.append((f"page:{source_name}", "page", f"{source_name}={page_url}", per_feed))
+
+    if collector_enabled("pypi") and root is not None:
+        for package in pypi_packages_from_context(root, env_int("MAX_PYPI_PACKAGES", 8)):
+            collectors.append((f"pypi-package:{package}", "pypi-package", package, 1))
+
+    if root is not None:
+        active_names = set(
+            radar_collector_state.active_collectors(root, [entry[0] for entry in collectors])
+        )
+        collectors = [entry for entry in collectors if entry[0] in active_names]
 
     release_repos = release_repos_from_context(root, repo_limit) if root else DEFAULT_RELEASE_REPOS[:repo_limit]
     for repo in release_repos:
@@ -1005,8 +1120,10 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
                 collect_github_items(value, limit, local_items, local_seen)
             elif kind == "npm":
                 collect_npm_items(value, limit, local_items, local_seen)
-            elif kind == "pypi":
-                collect_pypi_items(value, limit, local_items, local_seen)
+            elif kind == "pypi-updates":
+                collect_pypi_updates(value, limit, local_items, local_seen)
+            elif kind == "pypi-package":
+                collect_pypi_package(value, local_items, local_seen)
             elif kind == "crates":
                 collect_crates_items(value, limit, local_items, local_seen)
             elif kind == "open-vsx":
@@ -1045,6 +1162,8 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     for _, name, local_items, error in sorted(results, key=lambda result: result[0]):
         lane = name.split(":", 1)[0]
         lane_record = lane_stats.setdefault(lane, {"ok": 0, "error": 0, "items": 0})
+        if root is not None:
+            radar_collector_state.record_result(root, name, not bool(error), str(error or ""))
         if error:
             lane_record["error"] += 1
             errors.append(f"{name}: {error}")
@@ -1073,7 +1192,7 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         f"- Reddit subreddit RSS: {'enabled' if collector_enabled('reddit-rss') else 'disabled'}",
         f"- Bluesky search: {'enabled' if collector_enabled('bluesky') else 'disabled'}",
         f"- Dev.to tags: {'enabled' if collector_enabled('devto') else 'disabled'}",
-        f"- Lobsters RSS: {'enabled' if collector_enabled('lobsters') else 'disabled'}",
+        f"- PyPI updates RSS and package metadata: {'enabled' if collector_enabled('pypi') else 'disabled'}",
         f"- X search API: {'enabled' if collector_enabled('x') else 'disabled (set X_BEARER_TOKEN secret to enable)'}",
         f"- Item budget: {budget}",
         f"- Collected before budget trim: {len(items)}",
@@ -1412,6 +1531,16 @@ Repository context:
 """
 
 
+def missing_headings(old: str, new: str) -> set[str]:
+    pattern = re.compile(r"^#{1,3} .+$", re.MULTILINE)
+    return set(pattern.findall(old)) - set(pattern.findall(new))
+
+
+def missing_daily_dates(old: str, new: str) -> set[str]:
+    pattern = re.compile(r"^## (\d{4}-\d{2}-\d{2})$", re.MULTILINE)
+    return set(pattern.findall(old)) - set(pattern.findall(new))
+
+
 def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int:
     allowed_set = set(allowed)
     updates = result.get("files", [])
@@ -1430,6 +1559,7 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
             raise SystemExit(f"Missing string content for path: {rel_path}")
         if content and not content.endswith("\n"):
             content += "\n"
+        content = radar_bilingual.ensure_bilingual_file_content(rel_path, content)
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
@@ -1437,6 +1567,18 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
             raise SystemExit(
                 f"Refusing to replace {rel_path}: new content is much shorter than the existing file."
             )
+        if rel_path in STRUCTURE_PRESERVED_FILES and old:
+            dropped = missing_headings(old, content)
+            if dropped:
+                raise SystemExit(
+                    f"Refusing to replace {rel_path}: missing sections: {', '.join(sorted(dropped)[:5])}"
+                )
+        if rel_path.startswith("daily/") and old:
+            dropped_dates = missing_daily_dates(old, content)
+            if dropped_dates:
+                raise SystemExit(
+                    f"Refusing to replace {rel_path}: would drop dated entries: {', '.join(sorted(dropped_dates))}"
+                )
         if old != content:
             path.write_text(content, encoding="utf-8")
             count += 1

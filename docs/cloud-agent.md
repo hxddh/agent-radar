@@ -71,7 +71,7 @@ This mode does not call OpenRouter web search, Grok search, Perplexity, Search1A
 - GitHub releases and tags for configured and discovered repos
 - Public RSS feeds for official blogs, changelogs, and arXiv categories
 - Official public changelog/news pages when RSS is unavailable
-- Package and marketplace sources: npm, PyPI, crates.io, Open VSX, and Docker Hub
+- Package and marketplace sources: npm, PyPI RSS updates plus package metadata JSON, crates.io, Open VSX, and Docker Hub
 
 Model routing stays bounded but discovery-oriented:
 
@@ -136,6 +136,16 @@ Optional RSS bridge example:
 SOCIAL_FEEDS=cursor-x=https://your-rsshub.example/twitter/user/cursor_ai
 ```
 
+PyPI and Reddit rotation:
+
+```text
+COLLECT_PYPI=true
+PYPI_PACKAGES=mcp,langchain,crewai,openai,anthropic
+REDDIT_RSS_BATCH_SIZE=3
+```
+
+Collectors that fail repeatedly with zero successes are auto-disabled in `automation/collector-state.json`. Re-enable by editing that file or setting `DISABLED_COLLECTORS`.
+
 ## Optional: OpenAI API Provider
 
 If you later add an OpenAI API key, set:
@@ -177,10 +187,11 @@ It also runs:
 
 ```bash
 python scripts/agent_radar.py ensure --date YYYY-MM-DD
+python scripts/agent_radar.py bilingualize --date YYYY-MM-DD
 python scripts/agent_radar.py brief --date YYYY-MM-DD
-python scripts/agent_radar.py validate --date YYYY-MM-DD
+python scripts/agent_radar.py validate --date YYYY-MM-DD --strict-bilingual
 python -m unittest discover -s tests
-python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py
+python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
 ```
 
 and an obvious secret scan before committing.

@@ -56,5 +56,51 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertIn("2026-07-03", target.read_text(encoding="utf-8"))
 
 
+    def test_rejects_missing_structure_headings(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "research-log.md"
+            target.write_text("# Research Log\n\n## 2026-07-02\n\n- item\n", encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["research-log.md"],
+                    {"files": [{"path": "research-log.md", "content": "# Research Log\n\n- only bullets\n"}]},
+                )
+
+    def test_rejects_missing_daily_dates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Daily\n\n## 2026-07-01\n\n- old\n", encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {"files": [{"path": "daily/2026-07.md", "content": "# Daily\n\n## 2026-07-02\n\n- new\n"}]},
+                )
+
+    def test_bilingualizes_daily_report_updates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["daily/2026-07.md"],
+                {
+                    "files": [
+                        {
+                            "path": "daily/2026-07.md",
+                            "content": "# Daily Agent Radar - 2026-07\n\n## 2026-07-02\n\n- one\n- two\n- three\n",
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = (root / "daily" / "2026-07.md").read_text(encoding="utf-8")
+            self.assertIn("中文：", text)
+            self.assertIn("English:", text)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -13,7 +13,7 @@ Status:
 - Recent changes: Codex CLI 0.142.5 fixed trace logging so full Responses WebSocket payloads are not written to trace logs.
 - Strengths: Parallelizable task execution and growing usage for work estimated beyond short chat answers.
 - Weaknesses: External user reliability and cost experience need more public field evidence.
-- User feedback: Source required.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Trace logs, payload privacy, long-running agent turns, parallel task orchestration.
 - Storage implications: Logs, traces, task state, artifacts, and replay history become sensitive storage surfaces.
 - Watch next: Whether OpenAI exposes more controls for logs, replay, workspace persistence, and enterprise governance.
@@ -23,12 +23,12 @@ Status:
 
 Status:
 - Category: Coding agent
-- Maturity: Source required.
-- Core use case: Source required.
+- Maturity: Active coding-agent product with growing developer adoption; broad market-share evidence still sparse.
+- Core use case: Repository-aware coding assistance, shell command execution, and multi-file edits in local repos.
 - Recent changes: Public security reporting around a 0DIN proof of concept focused on Claude Code and clean-looking repositories.
-- Strengths: Source required.
+- Strengths: Strong repo context and agentic workflow integrated with Anthropic models; official docs and changelog are active.
 - Weaknesses: Shell-capable agents can be vulnerable to indirect setup-command attack paths when working with unfamiliar repositories.
-- User feedback: Source required.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Trust boundary around repo setup, shell execution, package scripts, network egress, and agent error recovery.
 - Storage implications: Secrets, browser sessions, local files, and workspace state can become exposed if agent execution crosses unsafe trust boundaries.
 - Watch next: Whether Claude Code and other coding agents add stronger setup-script analysis, egress controls, or untrusted-repo sandbox defaults.
@@ -58,7 +58,7 @@ Status:
 - Recent changes: Release notes mention Slack thread context, `!agent` routing, Slack updates for automation runs, Linear project filters, MCP error logs, Axiom MCP integration, structured playbook outputs, enterprise knowledge limit increase, and Devin Review support for GHES.
 - Strengths: Deep workflow integration across Slack, Linear, MCP, playbooks, enterprise knowledge, and code review.
 - Weaknesses: Needs more public evidence on reliability, cost, and how often sessions close without human rescue.
-- User feedback: Source required.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: MCP observability, structured outputs, enterprise knowledge stores, Slack synchronization, Linear-triggered automations, GHES review.
 - Storage implications: Session history, enterprise knowledge, playbook output, MCP logs, Slack context, and review artifacts become governed storage surfaces.
 - Watch next: Whether Devin's enterprise integrations produce stronger field evidence than generic autonomous-coding claims.
@@ -72,7 +72,7 @@ Status:
 - Core use case: IDE assistance, code review, coding agent workflows, browser-backed app inspection.
 - Recent changes: Browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant; Claude Sonnet 5 is available for GitHub Copilot.
 - Strengths: Strong IDE distribution and enterprise controls around browser access.
-- Weaknesses: Source required for real-world reliability of browser-driven workflows.
+- Weaknesses: Weak public field evidence on real-world reliability of browser-driven workflows; official controls exist but user reports are sparse.
 - User feedback: One weak public Reddit signal says Copilot remains the work default for at least some users, even when personal usage spans multiple tools.
 - Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts.
 - Storage implications: Browser screenshots, console output, live app state, and per-agent tabs become runtime artifacts that may need retention and governance.
@@ -87,8 +87,8 @@ Status:
 - Core use case: Creating, updating, deploying, and asking questions about Replit apps.
 - Recent changes: Replit became available as a Claude connector; Claude Design can send designs into Replit as runnable apps; Agent added Voice Mode; new MCP servers were added to the one-click MCP catalog.
 - Strengths: Strong app-building loop and cross-agent handoff from Claude into Replit.
-- Weaknesses: Source required for real-world reliability on larger apps and production handoff.
-- User feedback: Source required.
+- Weaknesses: Weak public field evidence on reliability for larger apps and production handoff; official changelog is strong but user reports are sparse.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Claude connector, MCP catalog, voice-to-agent input, design-to-runnable-app handoff, enterprise guest access.
 - Storage implications: Runnable app state, design imports, guest-scoped app access, and MCP-connected project context require workspace and permission boundaries.
 - Watch next: Whether Replit-from-Claude becomes a common front door for non-developer app generation.
@@ -102,8 +102,8 @@ Status:
 - Core use case: Terminal-centered agent workflows, code review comment routing, CLI agent coordination, and MCP-backed context.
 - Recent changes: Review comments can be sent to CLI agent terminals such as Claude Code, routed to idle terminals in the same repo, skills are searchable in Agent Mode, and file-based MCP servers can be configured globally or per project.
 - Strengths: Strong fit as an agent client and coordination surface for terminal-native workflows.
-- Weaknesses: Source required for broad user adoption and reliability under complex multi-agent sessions.
-- User feedback: Source required.
+- Weaknesses: Weak public field evidence on broad adoption and reliability under complex multi-agent sessions.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Agent terminal routing, idle terminal selection, project-local MCP configuration, skills context menu.
 - Storage implications: Terminal sessions, project-local `.agents` config, review comments, and failed conversation resume state are workflow artifacts.
 - Watch next: Whether Warp becomes a common front end for multiple CLI coding agents.
@@ -117,8 +117,8 @@ Status:
 - Core use case: Coding agent threads across web, CLI, mobile, plugin workflows, and diff review.
 - Recent changes: Agents in Orbs for remote runs, custom agents from plugins, direct diff review/staging, faster Librarian, and web/CLI/mobile agent control.
 - Strengths: Multi-surface agent control and plugin-created agent threads.
-- Weaknesses: Source required for reliability, governance, and enterprise adoption.
-- User feedback: Source required.
+- Weaknesses: Weak public field evidence on reliability, governance, and enterprise adoption despite active product updates.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Remote agents, persistent threads, plugin-created agents, queued/cancelable work, diff staging.
 - Storage implications: Agent threads, remote-run state, queued messages, diffs, and plugin-created session history need retention and replay policy.
 - Watch next: Whether plugin-created agents become a durable extension ecosystem or remain a power-user feature.
@@ -133,7 +133,7 @@ Status:
 - Recent changes: Factory 2.0 frames the product around "software factories" and an end-to-end feedback loop from external signals through production monitoring.
 - Strengths: Strong enterprise narrative around full SDLC automation rather than isolated coding sessions.
 - Weaknesses: Needs public user evidence and concrete implementation detail for the full feedback loop.
-- User feedback: Source required.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Model routing, signal intake, triage, planning, build/test/review/security/deploy/monitor loops.
 - Storage implications: End-to-end software factory needs durable signal stores, work item state, test artifacts, deployment state, monitoring feedback, and audit trails.
 - Watch next: Whether Factory publishes customer field evidence or product docs showing the feedback loop in operation.
@@ -147,8 +147,8 @@ Status:
 - Core use case: Desktop AI Chat, Quick AI, commands, extensions, skills, MCP servers, and personalization.
 - Recent changes: macOS v2 brings AI Extensions, AI Skills, and MCP servers into Quick AI and AI Chat; Raycast v2 manual describes editable Profile and Memory.
 - Strengths: Strong desktop distribution and tool-context routing through extensions, skills, and MCP.
-- Weaknesses: Source required for how well memory and automatic tool loading perform in real daily workflows.
-- User feedback: Source required.
+- Weaknesses: Weak public field evidence on how well memory and automatic tool loading perform in real daily workflows.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: MCP server installation, auto-loaded extensions/skills, profile, memory, file/image attachments.
 - Storage implications: Desktop agent memory, profile data, tool permissions, attachments, and chat history are personal knowledge/workspace storage surfaces.
 - Watch next: Whether Raycast AI memory becomes trusted enough for work context or remains a convenience layer.
@@ -158,12 +158,12 @@ Status:
 
 Status:
 - Category: AI app infrastructure / sandbox workflow
-- Maturity: Sandbox docs are public and productized; adoption evidence still source required.
+- Maturity: Sandbox docs are public and productized; broad adoption evidence remains weak.
 - Core use case: Safe execution of untrusted or generated code for AI agents, code generation, and developer experimentation.
 - Recent changes: Vercel Sandbox docs describe SDKs, CLI, authentication, runtime specs, persistence, snapshots, firewall, tags, and drives.
 - Strengths: Explicit sandbox primitive for dynamic agent workloads, file edits, logs, and live previews.
 - Weaknesses: Pricing, limits, and operational field evidence need follow-up.
-- User feedback: Source required.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Sandboxes, logs, file edits, live previews, snapshots, drives, authentication modes.
 - Storage implications: Strong direct signal for workspace persistence, snapshot, artifact, and log storage.
 - Watch next: Whether Vercel Sandbox becomes a default execution substrate for generated apps and coding agents.
@@ -173,12 +173,12 @@ Status:
 
 Status:
 - Category: Edge agent infrastructure / runtime
-- Maturity: Source required for broad adoption; temporary deployment workflow is documented.
+- Maturity: Temporary deployment workflow is documented; broad adoption evidence remains weak.
 - Core use case: Deploying and running agent-created Workers and related Cloudflare resources.
 - Recent changes: Temporary accounts let agents deploy Workers without an API token or signup, using `wrangler deploy --temporary`.
 - Strengths: Low-friction deploy-and-verify loop for agents, with temporary live URLs and claim flow.
 - Weaknesses: Temporary accounts support only a limited product set and expire after a short window.
-- User feedback: Source required.
+- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
 - Infra signals: Temporary accounts, preview deploys, claim URLs, supported products including Workers, KV, D1, Durable Objects, Hyperdrive, and Queues.
 - Storage implications: Temporary previews and claimable resources create a bridge between ephemeral agent artifacts and persistent cloud accounts.
 - Watch next: Whether temporary account flows spread to other agent deployment platforms.
@@ -194,7 +194,7 @@ Status:
 - Source class: Official public source.
 - Source visibility: Public.
 - Evidence strength: Medium (strong community interest, but no production user evidence yet).
-- User evidence: Source required.
+- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal (weak).
 - Infra angle: Agent orchestration, harness swapping, policy enforcement, sandboxing, real-time collaboration.
 - Risk: Early-stage; may be absorbed by mainstream agent platforms or remain a power-user tool.
 - Public corroboration: GitHub stars and recent activity suggest growing interest, but no independent user reports yet.
@@ -209,7 +209,7 @@ Status:
 - Source class: Official public source.
 - Source visibility: Public.
 - Evidence strength: Medium (strong technical concept, moderate community interest, no production user evidence yet).
-- User evidence: Source required.
+- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal (weak).
 - Infra angle: Agent memory, failure tracing, MCP server, local-first storage.
 - Risk: Early-stage; may be niche if mainstream agents build similar capabilities internally.
 - Public corroboration: GitHub stars and recent activity, but no independent user reports or case studies yet.
@@ -224,7 +224,7 @@ Status:
 - Source class: Official public source.
 - Source visibility: Public.
 - Evidence strength: Weak (very early, no stars, but technically detailed and directly relevant to agent knowledge access).
-- User evidence: Source required.
+- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal (weak).
 - Infra angle: MCP server, knowledge base access, embeddings, multi-vault, polyglot architecture.
 - Risk: Very early; may not gain traction or may be superseded by simpler MCP servers.
 - Public corroboration: None yet; needs community engagement or user reports.

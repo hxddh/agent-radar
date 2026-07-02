@@ -2,14 +2,30 @@
 
 ## Unreleased
 
+## v0.2.2 - 2026-07-02
+
 ### Added
-- Automated social/community collectors: Reddit subreddit RSS, Bluesky search, Dev.to tags, Lobsters RSS.
-- Optional X/Twitter recent-search lane via `X_BEARER_TOKEN`.
-- Configurable `SOCIAL_FEEDS` and `REDDIT_SUBREDDITS` repository variables for unattended social coverage.
+- `bilingualize` CLI command and `scripts/radar_bilingual.py` post-processing for daily/weekly/monthly reports.
+- `validate --strict-bilingual` to treat missing `中文：` / `English:` markers as errors.
+- `scripts/radar_collector_state.py` with `automation/collector-state.json` auto-disable after repeated collector failures.
+- PyPI collector via RSS updates feed and per-package JSON metadata (`COLLECT_PYPI`, `PYPI_PACKAGES`).
+- Reddit subreddit RSS daily rotation via `REDDIT_RSS_BATCH_SIZE`.
+- Structure-preservation guards in `apply_updates` for headings and dated daily entries.
+- `init --force` protection for substantial watchlist, radar, and research-log content.
+- Tests for bilingual helpers, collector state, PyPI RSS, strict validation, and structure guards.
+- Watchlist backfill replacing `Source required` placeholders with weak-evidence labels.
 
 ### Changed
-- Reddit coverage now defaults to subreddit RSS instead of blocked search JSON.
-- Social lane scoring groups Bluesky, Dev.to, Lobsters, X, and custom social feeds.
+- CLI version bumped to `0.2.2`.
+- Cloud runner bilingualizes allowed report updates before writing files.
+- Default Reddit subreddit list reduced; rotation spreads coverage across days.
+- CI cloud-agent workflow runs `bilingualize` and `validate --strict-bilingual`.
+- `docs/architecture.md` and `docs/cloud-agent.md` document collector auto-prune and PyPI RSS lane.
+
+### Fixed
+- PyPI collector returning zero items from JS-rendered HTML search pages.
+- Duplicate bilingual warnings when `--strict-bilingual` is enabled.
+- Stale watchlist `Source required` fields blocking maintenance signals.
 
 ## v0.2.1 - 2026-07-02
 
