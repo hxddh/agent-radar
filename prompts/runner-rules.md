@@ -84,3 +84,17 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
 - For OpenRouter mode, do not use paid search tools. Use the screening pass or public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
 - If the provider cannot browse the live web, record the limitation in `research-log.md`.
 - If no useful update is found, update `research-log.md` with the search pass and return that file only.
+
+## Evidence labels and promotion (compact)
+
+Evidence strength:
+- **Strong**: official changelog/docs/release, multiple independent user reports, reproducible public issue or code.
+- **Medium**: one detailed public report, trusted secondary analysis with primary links, concrete authorized private signal.
+- **Weak**: single anecdote, vague social post, claim without user evidence.
+
+Source visibility (when helpful): `Public`, `Logged-in authorized`, `Private user-provided`, `Inference`.
+
+Promotion (daily/weekly/monthly/promote-candidates may promote; source-sweep does not):
+- Promote only with strong first-party evidence, multiple independent workflow sources, thesis-level impact, or unusually relevant early MCP/memory/sandbox/eval primitives.
+- Do not promote zero-star launches, generic infra with inferred agent relation, or template-only watchlist filler.
+- When threshold is not met, keep compact bullets in `research-log.md` candidate inbox or deferred candidates.
