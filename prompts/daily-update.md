@@ -26,7 +26,9 @@ Focus on:
 7. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
 
 Rules:
-- Write the daily report as a bilingual paired report. For every substantive bullet or paragraph, put `中文：` first and `English:` immediately after it.
+- Write the daily report with nested bilingual pairs: each substantive field is a label bullet (for example `- Signal`, `- Why it matters`) followed by `中文：` (first) and `English:` (second) sub-bullets.
+- Chinese must be real Simplified Chinese; never copy the English sentence into the `中文：` line. At least 60% of substantive English lines need a real Chinese counterpart.
+- Keep short metadata fields on one line as `中文值（English value）`; write URLs once, never duplicated per language. Separate day sections with a `---` line.
 - Keep URLs, source names, product names, model names, repo names, and code identifiers unchanged in both languages.
 - Prefer official sources and real user reports.
 - Do not collect low-value launch hype.

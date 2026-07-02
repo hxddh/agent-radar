@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 
 
@@ -15,8 +16,15 @@ FIELD_LABEL_RE = re.compile(
     r"^(\s*)- ((?:Signal|What happened|Why it matters|Change|User impact|Infra implication|Evidence|"
     r"Positive|Pain point|Public-safe summary|This week|Most important|Biggest|Strongest).+): (.+)$"
 )
+URL_RE = re.compile(r"https?://\S+")
 MIN_IDENTICAL_PAIR_CHARS = 12
+# Chinese is denser than English, so a shorter minimum still indicates substance.
+MIN_CJK_PAIR_CHARS = 8
 MIN_CJK_LINES_FOR_SUBSTANCE = 3
+# Every substantive English line should have a real Chinese counterpart.
+# The ratio (rather than a small absolute count) is what makes a report
+# genuinely bilingual instead of a mostly-English file with token Chinese.
+MIN_CJK_RATIO = 0.6
 
 
 def is_report_content(content: str) -> bool:
@@ -42,6 +50,13 @@ def has_cjk(text: str) -> bool:
     return any("\u4e00" <= char <= "\u9fff" for char in text)
 
 
+def is_language_neutral(text: str) -> bool:
+    """True for content with nothing to translate: URLs, repo names, versions."""
+    leftover = URL_RE.sub("", text)
+    leftover = re.sub(r"[\s\W\d_]+", "", leftover, flags=re.UNICODE)
+    return len(leftover) < MIN_CJK_PAIR_CHARS and not has_cjk(text)
+
+
 def substantive_english_lines(content: str) -> int:
     count = 0
     for line in content.splitlines():
@@ -49,7 +64,7 @@ def substantive_english_lines(content: str) -> int:
         if not match:
             continue
         text = normalize_bilingual_text(match.group(2))
-        if len(text) >= MIN_IDENTICAL_PAIR_CHARS:
+        if len(text) >= MIN_IDENTICAL_PAIR_CHARS and not is_language_neutral(text):
             count += 1
     return count
 
@@ -61,9 +76,13 @@ def substantive_chinese_cjk_lines(content: str) -> int:
         if not match:
             continue
         text = normalize_bilingual_text(match.group(2))
-        if len(text) >= MIN_IDENTICAL_PAIR_CHARS and has_cjk(text):
+        if len(text) >= MIN_CJK_PAIR_CHARS and has_cjk(text):
             count += 1
     return count
+
+
+def required_chinese_lines(english_count: int) -> int:
+    return max(MIN_CJK_LINES_FOR_SUBSTANCE, math.ceil(english_count * MIN_CJK_RATIO))
 
 
 def missing_chinese_substance(content: str) -> bool:
@@ -72,7 +91,7 @@ def missing_chinese_substance(content: str) -> bool:
     english_count = substantive_english_lines(content)
     if english_count < 10:
         return False
-    return substantive_chinese_cjk_lines(content) < MIN_CJK_LINES_FOR_SUBSTANCE
+    return substantive_chinese_cjk_lines(content) < required_chinese_lines(english_count)
 
 
 def report_has_required_chinese(content: str) -> bool:
@@ -139,7 +158,7 @@ def bilingualize_report(content: str) -> str:
                     output.append(f"{indent}  - 中文：")
                     output.append(f"{indent}  - English: {value}")
                 else:
-                    output.append(f"{indent}- Signal:")
+                    output.append(f"{indent}- Signal")
                     output.append(f"{indent}  - 中文：")
                     output.append(f"{indent}  - English: {body}")
                 continue
@@ -164,8 +183,16 @@ def repair_identical_bilingual_pairs(content: str) -> str:
                 chinese_text = normalize_bilingual_text(chinese_match.group(2))
                 english_text = normalize_bilingual_text(english_match.group(2))
                 if chinese_text and english_text and chinese_text == english_text:
-                    output.append(f"{chinese_match.group(1)}- 中文：")
-                    output.append(lines[index + 1])
+                    if is_language_neutral(chinese_text):
+                        # Nothing to translate (URL, repo name, version):
+                        # collapse the fake pair into a single line.
+                        output.append(f"{chinese_match.group(1)}- {chinese_text}")
+                    else:
+                        # Copied English prose: blank the Chinese line so the
+                        # substance ratio check exposes the gap instead of
+                        # hiding it.
+                        output.append(f"{chinese_match.group(1)}- 中文：")
+                        output.append(lines[index + 1])
                     index += 2
                     continue
         output.append(lines[index])

@@ -60,4 +60,4 @@ The model still makes the final judgment; scoring only controls which source ite
 
 ## Bilingual Reports
 
-Daily, weekly, and monthly reports use bilingual paired content. Each substantive bullet or paragraph should put Chinese first and English immediately after it with `中文：` and `English:` labels. Product names, model names, URLs, repo names, and source labels stay unchanged.
+Daily, weekly, and monthly reports use nested bilingual pairs: each substantive item is a label bullet (for example `- Signal`) followed by `中文：` (first) and `English:` (second) sub-bullets. Short metadata fields stay on one line as `中文值（English value）`. Product names, model names, URLs, repo names, and source labels stay unchanged and are written once, never duplicated per language. The runner rejects report updates where fewer than 60% of substantive English lines have a real Chinese counterpart.

@@ -317,20 +317,27 @@ def read_text_full(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+TRUNCATION_MARKER = "\n\n[... middle truncated for prompt budget ...]\n\n"
+
+
+def truncate_keep_ends(value: str, limit: int) -> str:
+    """Trim the middle, keeping the head (titles, thesis) and the tail (recent entries)."""
+    if len(value) <= limit:
+        return value
+    budget = max(0, limit - len(TRUNCATION_MARKER))
+    head = budget // 3
+    tail = budget - head
+    return value[:head] + TRUNCATION_MARKER + value[-tail:]
+
+
 def read_text(path: Path) -> str:
     if not path.exists():
         return ""
-    content = read_text_full(path)
-    limit = max_file_chars()
-    if len(content) > limit:
-        return content[-limit:]
-    return content
+    return truncate_keep_ends(read_text_full(path), max_file_chars())
 
 
 def truncate_text(value: str, limit: int) -> str:
-    if len(value) <= limit:
-        return value
-    return value[-limit:]
+    return truncate_keep_ends(value, limit)
 
 
 def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
@@ -1097,8 +1104,7 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         collectors.append((f"release:{repo}", "release", repo, release_limit))
         collectors.append((f"tag:{repo}", "tag", repo, release_limit))
 
-    def run_collector(entry: tuple[str, str, str, int]) -> tuple[int, str, list[dict[str, str]], str | None]:
-        index = collectors.index(entry)
+    def run_collector(index: int, entry: tuple[str, str, str, int]) -> tuple[int, str, list[dict[str, str]], str | None]:
         name, kind, value, limit = entry
         local_items: list[dict[str, str]] = []
         local_seen: set[str] = set()
@@ -1152,15 +1158,17 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
     collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 60))
     results: list[tuple[int, str, list[dict[str, str]], str | None]] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
-        future_map = {executor.submit(run_collector, collector): collector for collector in collectors}
+        future_map = {
+            executor.submit(run_collector, index, collector): (index, collector)
+            for index, collector in enumerate(collectors)
+        }
         done, pending = concurrent.futures.wait(future_map, timeout=collect_seconds)
         for future in done:
             results.append(future.result())
         for future in pending:
             future.cancel()
-            index = collectors.index(future_map[future])
-            name = future_map[future][0]
-            results.append((index, name, [], f"collector timed out after {collect_seconds}s"))
+            index, entry = future_map[future]
+            results.append((index, entry[0], [], f"collector timed out after {collect_seconds}s"))
 
     lane_stats: dict[str, dict[str, Any]] = {}
     for _, name, local_items, error in sorted(results, key=lambda result: result[0]):
@@ -1515,9 +1523,11 @@ Return only valid JSON with this shape:
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
-- For daily, weekly, and monthly report files, bilingual output is mandatory. Every substantive bullet or paragraph must include paired `中文：` and `English:` lines, with Chinese first.
-- Chinese text must be real Simplified Chinese. Never copy the English sentence verbatim into the `中文：` line.
-- For daily, weekly, and monthly report files, write bilingual paired content: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- For daily, weekly, and monthly report files, bilingual output is mandatory in nested paired form: each substantive field is a label bullet (for example `- Signal` or `- Why it matters`) followed by exactly two sub-bullets, `中文：` first and `English:` second.
+- Chinese text must be real Simplified Chinese. Never copy the English sentence verbatim into the `中文：` line. At least 60% of substantive English lines must have a real Chinese counterpart, or the update is rejected.
+- Keep short metadata fields on a single line without per-language duplication: URLs, repo names, product names, versions, and star counts are written once (for example `- Source: https://...`). Enumerated fields pair values inline (for example `- Evidence strength: 强（Strong）`).
+- Never write the same URL twice for one item and never emit `中文：`/`English:` lines with identical content.
+- In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 - For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
 - If the provider cannot browse the live web, record the limitation in research-log.md.

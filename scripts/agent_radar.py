@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.2.6"
+__version__ = "0.3.0"
 
 CORE_FILES = [
     "README.md",
@@ -108,15 +108,16 @@ def find_root(start: Path | None = None) -> Path:
 
 
 def write_file(path: Path, content: str, force: bool = False) -> str:
-    if path.exists() and not force:
+    existed = path.exists()
+    if existed and not force:
         return "skipped"
-    if force and path.exists() and path.name in INIT_PROTECTED_FILES:
+    if force and existed and path.name in INIT_PROTECTED_FILES:
         existing = path.read_text(encoding="utf-8")
         if len(existing.strip()) > 400:
             return "skipped-protected"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
-    return "overwritten" if path.exists() and force else "created"
+    return "overwritten" if existed and force else "created"
 
 
 def template_files(base_date: dt.date | None = None) -> dict[str, str]:
@@ -231,17 +232,17 @@ def daily_entry(day: dt.date) -> str:
     date_text = day.isoformat()
     return f"""## {date_text}
 
-> Format: write every substantive section in bilingual paired form. Put Chinese first, then English, using `中文：` and `English:` labels for each bullet or paragraph.
+> Format: each substantive field is a label bullet followed by nested `中文：` (first) and `English:` (second) lines. Short metadata fields stay on one line as `中文值（English value）`. URLs, repo names, product names, versions, and star counts are written once and never duplicated per language.
 
 ### 1. New Signals
 
-- Signal / 信号:
+- Signal
   - 中文：
   - English:
-  - What happened / 发生了什么:
+  - What happened
     - 中文：
     - English:
-  - Why it matters / 为什么重要:
+  - Why it matters
     - 中文：
     - English:
   - Related agent:
@@ -254,9 +255,15 @@ def daily_entry(day: dt.date) -> str:
 ### 2. Mainstream Agent Progress
 
 - Agent:
-  - Change:
-  - User impact:
-  - Infra implication:
+  - Change
+    - 中文：
+    - English:
+  - User impact
+    - 中文：
+    - English:
+  - Infra implication
+    - 中文：
+    - English:
   - Source class:
   - Evidence strength:
   - Source:
@@ -265,9 +272,15 @@ def daily_entry(day: dt.date) -> str:
 
 - Agent / project:
   - Category:
-  - Why it matters:
-  - Evidence:
-  - Risk:
+  - Why it matters
+    - 中文：
+    - English:
+  - Evidence
+    - 中文：
+    - English:
+  - Risk
+    - 中文：
+    - English:
   - Source class:
   - Public corroboration:
   - Source:
@@ -275,28 +288,48 @@ def daily_entry(day: dt.date) -> str:
 ### 4. User Field Notes
 
 - Tool:
-  - Scenario:
-  - Positive:
-  - Pain point:
-  - Useful trick:
+  - Scenario
+    - 中文：
+    - English:
+  - Positive
+    - 中文：
+    - English:
+  - Pain point
+    - 中文：
+    - English:
+  - Useful trick
+    - 中文：
+    - English:
   - Source class:
   - Source visibility:
   - Evidence strength:
-  - Public-safe summary:
+  - Public-safe summary
+    - 中文：
+    - English:
   - Source:
 
 ### 5. Playbook Candidates
 
-- Trick:
-  - When useful:
-  - Evidence:
+- Trick
+  - 中文：
+  - English:
+  - When useful
+    - 中文：
+    - English:
+  - Evidence
+    - 中文：
+    - English:
   - Should promote to playbook? yes / no
 
 ### 6. Storage / Infra Angle
 
-- Signal:
+- Signal
+  - 中文：
+  - English:
   - Related to:
-  - Storage implication:
+  - Storage implication
+    - 中文：
+    - English:
   - Source class:
   - Evidence strength:
   - Source:
@@ -304,7 +337,9 @@ def daily_entry(day: dt.date) -> str:
 ### 7. Possible Thesis Changes
 
 - Current thesis affected:
-- New evidence:
+- New evidence
+  - 中文：
+  - English:
 - Change now? yes / no
 """
 
@@ -327,7 +362,8 @@ def command_daily(args: argparse.Namespace) -> int:
         print(f"exists  {path} ({entry_heading})")
         return 0
 
-    separator = "\n" if content.endswith("\n") else "\n\n"
+    # Separate day sections with a horizontal rule for navigability.
+    separator = "\n---\n\n" if content.endswith("\n") else "\n\n---\n\n"
     path.write_text(content + separator + daily_entry(day), encoding="utf-8")
     print(f"updated {path} ({entry_heading})")
     return 0
@@ -338,7 +374,7 @@ def weekly_template(day: dt.date) -> str:
     label = f"{year}-W{week:02d}"
     return f"""# Agent Radar Weekly - {label}
 
-> Format: bilingual paired report. For every substantive section, write Chinese first and English immediately after it.
+> Format: each substantive item is a label bullet followed by nested `中文：` (first) and `English:` (second) lines, as in section 1 below. Short metadata fields stay on one line as `中文值（English value）`. URLs, repo names, and product names are written once and never duplicated per language.
 
 ## 1. Executive Summary
 
@@ -408,7 +444,7 @@ def monthly_template(day: dt.date) -> str:
     label = f"{day:%Y-%m}"
     return f"""# Agent Radar Monthly - {label}
 
-> Format: bilingual paired report. For every substantive section, write Chinese first and English immediately after it.
+> Format: each substantive item is a label bullet followed by nested `中文：` (first) and `English:` (second) lines, as in section 1 below. Short metadata fields stay on one line as `中文值（English value）`. URLs, repo names, and product names are written once and never duplicated per language.
 
 ## 1. Executive Summary
 
@@ -1229,14 +1265,14 @@ DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update
 
 Use all available authorized sources. Publish only public-safe summaries. Label weak, private, incomplete, or inferred evidence instead of blocking.
 
-Write daily reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs. Chinese text must be real Simplified Chinese; do not copy the English sentence into `中文：`.
+Write daily reports with nested bilingual pairs: each substantive item is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets. Chinese must be real Simplified Chinese; never copy the English sentence into `中文：`. Keep short metadata fields on one line as `中文值（English value）` and write URLs once. At least 60% of substantive English lines need a real Chinese counterpart.
 """
 
 WEEKLY_PROMPT_TEMPLATE = """# Weekly Agent Radar Review
 
 Synthesize the week across product changes, user experience, infrastructure, storage implications, commercialization, reliability, security, standards, and anti-signals.
 
-Write weekly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs. Chinese text must be real Simplified Chinese; do not copy the English sentence into `中文：`.
+Write weekly reports with nested bilingual pairs: each substantive item is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets. Chinese must be real Simplified Chinese; never copy the English sentence into `中文：`. Keep short metadata fields on one line as `中文值（English value）` and write URLs once. At least 60% of substantive English lines need a real Chinese counterpart.
 """
 
 WATCHLIST_PROMPT_TEMPLATE = """# Agent Watchlist Update
@@ -1248,7 +1284,7 @@ MONTHLY_PROMPT_TEMPLATE = """# Monthly Agent Radar Review
 
 Synthesize the month, review evidence quality, update watchlist confidence, and change the thesis only when evidence justifies it.
 
-Write monthly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs. Chinese text must be real Simplified Chinese; do not copy the English sentence into `中文：`.
+Write monthly reports with nested bilingual pairs: each substantive item is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets. Chinese must be real Simplified Chinese; never copy the English sentence into `中文：`. Keep short metadata fields on one line as `中文值（English value）` and write URLs once. At least 60% of substantive English lines need a real Chinese counterpart.
 """
 
 RELEASE_WORKFLOW_TEMPLATE = """name: Release

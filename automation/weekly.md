@@ -36,8 +36,9 @@ Update when justified:
 
 Write `weekly/YYYY-Www.md` as a bilingual paired report:
 
-- Put Chinese first, then English immediately after it.
-- Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- Use nested bilingual pairs: each substantive item is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets.
+- Chinese must be real Simplified Chinese; never copy the English sentence into the `中文：` line. At least 60% of substantive English lines need a real Chinese counterpart.
+- Keep short metadata fields on one line as `中文值（English value）`; write URLs, product names, model names, and repo names once, never duplicated per language.
 - Keep URLs, product names, model names, repo names, and source labels unchanged.
 
 Cover:
