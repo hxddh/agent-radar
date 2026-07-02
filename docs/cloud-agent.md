@@ -153,6 +153,15 @@ Refresh collectors locally without a model call:
 python scripts/agent_radar.py source-refresh --task source-sweep --date 2026-07-02
 ```
 
+Trigger GitHub Actions remotely (works from Cloud Agent environments where `workflow_dispatch` returns 403):
+
+```bash
+python scripts/agent_radar.py trigger cloud-agent --task daily --date 2026-07-02
+python scripts/agent_radar.py trigger validate --date 2026-07-02 --require-chinese
+```
+
+These commands use `repository_dispatch`, which bot/integration tokens can call even when `gh workflow run` is blocked.
+
 ## Optional: OpenAI API Provider
 
 If you later add an OpenAI API key, set:

@@ -21,6 +21,8 @@ on:
         description: "Optional date, YYYY-MM-DD"
         required: false
         type: string
+  repository_dispatch:
+    types: [cloud-agent]
 
 permissions:
   contents: write
@@ -96,8 +98,8 @@ jobs:
 
       - name: Run cloud agent
         run: |
-          TASK="${{ github.event.inputs.task || 'auto' }}"
-          DATE_INPUT="${{ github.event.inputs.date }}"
+          TASK="${{ github.event.client_payload.task || github.event.inputs.task || 'auto' }}"
+          DATE_INPUT="${{ github.event.client_payload.date || github.event.inputs.date }}"
           if [ -n "$DATE_INPUT" ]; then
             python scripts/cloud_agent_runner.py --task "$TASK" --date "$DATE_INPUT"
           else

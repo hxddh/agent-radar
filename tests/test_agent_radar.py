@@ -6,6 +6,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -73,6 +74,36 @@ class AgentRadarCliTest(unittest.TestCase):
     def test_invalid_date_exits(self) -> None:
         with self.assertRaises(SystemExit):
             agent_radar.parse_date("2026-99-99")
+
+    def test_trigger_cloud_agent_uses_repository_dispatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            with chdir(root):
+                with mock.patch.object(agent_radar, "github_token", return_value="test-token"):
+                    with mock.patch.object(agent_radar, "github_repo_slug", return_value="owner/repo"):
+                        with mock.patch.object(agent_radar, "repository_dispatch") as dispatch:
+                            code = agent_radar.main(
+                                ["trigger", "cloud-agent", "--task", "daily", "--date", "2026-07-02"]
+                            )
+            self.assertEqual(code, 0)
+            dispatch.assert_called_once_with(
+                "owner/repo",
+                "test-token",
+                "cloud-agent",
+                {"task": "daily", "date": "2026-07-02"},
+            )
+
+    def test_trigger_requires_token(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            with chdir(root):
+                with mock.patch.object(agent_radar, "github_token", return_value=""):
+                    code = agent_radar.main(["trigger", "validate", "--date", "2026-07-02"])
+            self.assertEqual(code, 1)
 
 
 if __name__ == "__main__":

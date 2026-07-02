@@ -5,9 +5,13 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
+import os
 import re
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import importlib.util
@@ -33,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.2.5"
+__version__ = "0.2.6"
 
 CORE_FILES = [
     "README.md",
@@ -821,6 +825,92 @@ def command_source_refresh(args: argparse.Namespace) -> int:
     return result.returncode
 
 
+def github_token() -> str:
+    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    if token:
+        return token
+    result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=False)
+    if result.returncode == 0:
+        return result.stdout.strip()
+    return ""
+
+
+def github_repo_slug(root: Path) -> str:
+    result = subprocess.run(
+        ["git", "-C", str(root), "remote", "get-url", "origin"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError("Could not read git remote origin.")
+    remote = result.stdout.strip()
+    match = re.search(r"github\.com[:/](?P<owner>[^/]+)/(?P<repo>[^/]+?)(?:\.git)?$", remote)
+    if not match:
+        raise RuntimeError(f"Could not parse GitHub repo from remote: {remote}")
+    return f"{match.group('owner')}/{match.group('repo')}"
+
+
+def repository_dispatch(repo_slug: str, token: str, event_type: str, payload: dict[str, object]) -> None:
+    owner, repo = repo_slug.split("/", 1)
+    url = f"https://api.github.com/repos/{owner}/{repo}/dispatches"
+    body = json.dumps({"event_type": event_type, "client_payload": payload}).encode("utf-8")
+    request = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "User-Agent": "agent-radar-trigger",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            if response.status not in {200, 201, 204}:
+                raise RuntimeError(f"Unexpected GitHub API status: {response.status}")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"GitHub repository_dispatch failed ({exc.code}): {detail}") from exc
+
+
+def command_trigger(args: argparse.Namespace) -> int:
+    root = find_root()
+    token = github_token()
+    if not token:
+        print("No GitHub token found. Set GITHUB_TOKEN or run `gh auth login`.", file=sys.stderr)
+        return 1
+    try:
+        repo_slug = github_repo_slug(root)
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+
+    if args.workflow == "cloud-agent":
+        payload: dict[str, object] = {"task": args.task or "daily"}
+        if args.date:
+            payload["date"] = args.date
+        event_type = "cloud-agent"
+    else:
+        payload = {
+            "date": args.date or "2026-07-02",
+            "strict_bilingual": not args.no_strict_bilingual,
+            "require_chinese": args.require_chinese,
+        }
+        event_type = "validate"
+
+    try:
+        repository_dispatch(repo_slug, token, event_type, payload)
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+
+    print(f"Triggered {event_type} on {repo_slug} with payload: {json.dumps(payload, ensure_ascii=False)}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Manage a Markdown-first AI Agent radar.")
     parser.add_argument("--version", action="version", version=f"agent-radar {__version__}")
@@ -885,6 +975,34 @@ def build_parser() -> argparse.ArgumentParser:
     )
     source_refresh_parser.add_argument("--date", help="Date for collector rotation and logs, YYYY-MM-DD.")
     source_refresh_parser.set_defaults(func=command_source_refresh)
+
+    trigger_parser = subparsers.add_parser(
+        "trigger",
+        help="Trigger GitHub Actions workflows via repository_dispatch (works with bot tokens).",
+    )
+    trigger_parser.add_argument(
+        "workflow",
+        choices=["cloud-agent", "validate"],
+        help="Workflow to trigger.",
+    )
+    trigger_parser.add_argument(
+        "--task",
+        default="daily",
+        choices=["auto", "daily", "weekly", "monthly", "source-sweep", "promote-candidates"],
+        help="Cloud agent task (cloud-agent workflow only).",
+    )
+    trigger_parser.add_argument("--date", help="Optional date, YYYY-MM-DD.")
+    trigger_parser.add_argument(
+        "--require-chinese",
+        action="store_true",
+        help="Require substantive 中文 content (validate workflow only).",
+    )
+    trigger_parser.add_argument(
+        "--no-strict-bilingual",
+        action="store_true",
+        help="Skip strict bilingual validation (validate workflow only).",
+    )
+    trigger_parser.set_defaults(func=command_trigger)
 
     release_draft_parser = subparsers.add_parser("release-draft", help="Generate docs/release-draft.md from changelog and git log.")
     release_draft_parser.add_argument("--date", help="Date for the draft, YYYY-MM-DD.")
