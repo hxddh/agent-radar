@@ -113,7 +113,7 @@ See `docs/architecture.md` for the full architecture.
 
 ## Automated Social Sources (No Manual Link Entry)
 
-OpenRouter mode now collects social/community signals automatically:
+OpenRouter mode now collects social/community signals automatically. Two-stage routing sends the raw public snapshot only to the screening model; the synthesis model receives the screening JSON plus trimmed repository context. In `auto` mode, one collector snapshot is shared across all tasks in the run.
 
 - **Reddit subreddit RSS** (`COLLECT_REDDIT_RSS=true` by default): watches configured subreddits such as `LocalLLaMA`, `GithubCopilot`, `ClaudeAI`.
 - **Bluesky search** (`COLLECT_BLUESKY=true` by default): uses `api.bsky.app` public search.

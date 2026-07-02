@@ -395,6 +395,72 @@ def _extract_paired_items(section_lines: list[str]) -> list[dict[str, object]]:
     return items
 
 
+def convert_daily_paired_to_block(content: str) -> str:
+    if is_daily_block_format(content):
+        return content
+    if "Daily Agent Radar" not in content or not is_paired_bilingual_format(content):
+        return content
+
+    lines = content.splitlines()
+    prefix_lines: list[str] = []
+    sections: list[tuple[str, list[str]]] = []
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        if re.match(r"^## \d{4}-\d{2}-\d{2}\s*$", line):
+            title = line
+            body: list[str] = []
+            index += 1
+            while index < len(lines):
+                if re.match(r"^## \d{4}-\d{2}-\d{2}\s*$", lines[index]) or SECTION_BREAK_RE.match(lines[index]):
+                    break
+                body.append(lines[index])
+                index += 1
+            sections.append((title, body))
+            continue
+        if not sections:
+            prefix_lines.append(line)
+        index += 1
+
+    output: list[str] = [line for line in prefix_lines if line.strip() and not line.startswith("> Format:")]
+    if output and BLOCK_FORMAT_NOTE.replace("`### English`", "`## English`") not in "\n".join(output):
+        output.extend(["", "> Format: read `### English` first, then `### 中文` for each day. URLs appear once in English unless language-neutral.", ""])
+    for title, body in sections:
+        output.append(title)
+        output.append("")
+        english_lines = ["### English", ""]
+        chinese_lines = ["### 中文", ""]
+        items = _extract_paired_items(body)
+        if not items and body:
+            english_lines.extend(body)
+            chinese_lines.extend(body)
+        for item in items:
+            label = str(item.get("label", "")).strip()
+            english = str(item.get("english", "")).strip()
+            chinese = str(item.get("chinese", "")).strip()
+            metadata = item.get("metadata", [])
+            if english:
+                english_lines.append(f"- {label}: {english}" if label and not has_cjk(label) else f"- {english}")
+            for meta in metadata:
+                english_lines.append(str(meta))
+            if chinese:
+                chinese_lines.append(f"- {label}: {chinese}" if label and has_cjk(label) else f"- {chinese}")
+            if english or chinese:
+                english_lines.append("")
+                chinese_lines.append("")
+        output.extend(english_lines)
+        output.append("")
+        output.extend(chinese_lines)
+        output.append("")
+        output.append("---")
+        output.append("")
+    while output and output[-1] == "---":
+        output.pop()
+    while output and not output[-1].strip():
+        output.pop()
+    return "\n".join(output) + "\n"
+
+
 def convert_paired_to_block(content: str) -> str:
     if is_block_bilingual_format(content):
         return content
@@ -523,7 +589,7 @@ def bilingualize_report(content: str) -> str:
     if not result.endswith("\n"):
         result += "\n"
     if "Daily Agent Radar" in result:
-        return result
+        return convert_daily_paired_to_block(result)
     return convert_paired_to_block(result)
 
 
@@ -537,7 +603,7 @@ def ensure_bilingual_file_content(rel_path: str, content: str) -> str:
         return content
     if is_paired_bilingual_format(content):
         if rel_path.replace("\\", "/").startswith("daily/"):
-            return content
+            return convert_daily_paired_to_block(content)
         return convert_paired_to_block(content)
     if needs_bilingual(content):
         content = bilingualize_report(content)

@@ -116,11 +116,33 @@ class CloudAgentRunnerTest(unittest.TestCase):
 
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 80)
+            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 50)
             self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 120)
             self.assertEqual(cloud_agent_runner.public_source_budget("weekly"), 120)
             self.assertEqual(cloud_agent_runner.public_source_budget("monthly"), 160)
             self.assertGreaterEqual(cloud_agent_runner.MAX_PUBLIC_SOURCE_ITEMS, 200)
+
+    def test_build_prompt_uses_screening_pass_instead_of_raw_sources(self) -> None:
+        prompt = cloud_agent_runner.build_prompt(
+            "daily",
+            cloud_agent_runner.parse_date("2026-07-02"),
+            ["research-log.md"],
+            "repo context",
+            screened_summary='{"summary":"screened"}',
+        )
+        self.assertIn("Screening pass", prompt)
+        self.assertNotIn("Public source snapshot:", prompt)
+
+    def test_build_prompt_prefers_patch_updates_schema(self) -> None:
+        prompt = cloud_agent_runner.build_prompt(
+            "daily",
+            cloud_agent_runner.parse_date("2026-07-02"),
+            ["research-log.md"],
+            "repo context",
+            public_sources="public source snapshot",
+        )
+        self.assertIn('"mode": "append"', prompt)
+        self.assertIn("Prefer `append` for research-log.md", prompt)
 
     def test_source_queries_cover_social_and_infra_lanes(self) -> None:
         queries = cloud_agent_runner.source_queries_for_task("source-sweep")

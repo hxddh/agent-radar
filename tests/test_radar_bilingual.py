@@ -73,15 +73,19 @@ class RadarBilingualTest(unittest.TestCase):
         updated = radar_bilingual.ensure_bilingual_file_content("weekly/2026-W27.md", content)
         self.assertTrue(radar_bilingual.is_block_bilingual_format(updated))
 
-    def test_ensure_bilingual_leaves_daily_paired_unchanged(self) -> None:
+    def test_ensure_bilingual_converts_daily_paired_to_block(self) -> None:
         content = (
             "# Daily Agent Radar - 2026-07\n\n"
             "## 2026-07-02\n\n"
-            "- 中文：信号\n- English: signal\n"
+            "- Signal\n"
+            "  - 中文：测试信号。\n"
+            "  - English: Test signal.\n"
         )
         updated = radar_bilingual.ensure_bilingual_file_content("daily/2026-07.md", content)
-        self.assertIn("中文：", updated)
-        self.assertNotIn("## English", updated)
+        self.assertTrue(radar_bilingual.is_daily_block_format(updated))
+        self.assertIn("### English", updated)
+        self.assertIn("### 中文", updated)
+        self.assertNotIn("中文：", updated)
 
     def test_identical_pairs_detected(self) -> None:
         content = (

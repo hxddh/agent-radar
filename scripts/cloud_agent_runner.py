@@ -51,8 +51,10 @@ DEFAULT_MAIN_RESEARCH_MODEL = "deepseek/deepseek-v4-pro"
 DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
+DEFAULT_CONTEXT_FILE_CHARS = 20_000
 MAX_PUBLIC_SOURCE_ITEMS = 200
 DEFAULT_MAX_PROMPT_CHARS = 120_000
+DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
     "modelcontextprotocol/servers",
@@ -124,6 +126,10 @@ RUN_AUDIT: dict[str, Any] = {
     "collected_source_items": 0,
     "budget_status": "normal",
     "started_at": 0.0,
+    "prompt_chars": 0,
+    "output_chars": 0,
+    "context_chars": 0,
+    "shared_source_collection": False,
 }
 
 
@@ -291,6 +297,54 @@ def max_file_chars() -> int:
     return MAX_FILE_CHARS
 
 
+def context_file_chars() -> int:
+    provider = model_provider()
+    if provider in {"github", "github-models"}:
+        return GITHUB_MAX_FILE_CHARS
+    return env_int("MAX_CONTEXT_FILE_CHARS", DEFAULT_CONTEXT_FILE_CHARS)
+
+
+TASK_CONTEXT_BASE = [
+    "automation/runbook.md",
+    "docs/maintenance.md",
+]
+TASK_CONTEXT_FILES: dict[str, list[str]] = {
+    "daily": [
+        "sources.md",
+        "radar.md",
+        "agent-watchlist.md",
+        "user-field-notes.md",
+        "playbook.md",
+        "storage-angle.md",
+        "research-log.md",
+    ],
+    "weekly": [
+        "sources.md",
+        "radar.md",
+        "agent-watchlist.md",
+        "user-field-notes.md",
+        "playbook.md",
+        "storage-angle.md",
+        "research-log.md",
+    ],
+    "monthly": [
+        "sources.md",
+        "radar.md",
+        "agent-watchlist.md",
+        "playbook.md",
+        "storage-angle.md",
+        "research-log.md",
+    ],
+    "source-sweep": ["sources.md", "research-log.md"],
+    "promote-candidates": [
+        "research-log.md",
+        "agent-watchlist.md",
+        "storage-angle.md",
+        "radar.md",
+    ],
+}
+
+
 def env_int(name: str, default: int) -> int:
     value = os.environ.get(name)
     if not value:
@@ -328,10 +382,11 @@ def truncate_keep_ends(value: str, limit: int) -> str:
     return value[:head] + TRUNCATION_MARKER + value[-tail:]
 
 
-def read_text(path: Path) -> str:
+def read_text(path: Path, *, limit: int | None = None) -> str:
     if not path.exists():
         return ""
-    return truncate_keep_ends(read_text_full(path), max_file_chars())
+    cap = limit if limit is not None else max_file_chars()
+    return truncate_keep_ends(read_text_full(path), cap)
 
 
 def truncate_text(value: str, limit: int) -> str:
@@ -341,31 +396,21 @@ def truncate_text(value: str, limit: int) -> str:
 def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
     config = TASK_CONFIG[task]
     allowed = [expand_path(item, day) for item in config["allowed"]]
-    context_files = [
-        "automation/runbook.md",
-        config["automation"],
-        "docs/maintenance.md",
-        "sources.md",
-        "radar.md",
-        "agent-watchlist.md",
-        "user-field-notes.md",
-        "playbook.md",
-        "storage-angle.md",
-        "research-log.md",
-    ]
+    allowed_set = set(allowed)
+    context_files = [*TASK_CONTEXT_BASE, *TASK_CONTEXT_FILES.get(task, TASK_CONTEXT_FILES["daily"])]
     if config["prompt"]:
         context_files.append(config["prompt"])
     context_files.extend(allowed)
 
     if model_provider() in {"github", "github-models"}:
         priority = {
-            "automation/runbook.md",
-            config["automation"],
-            "docs/maintenance.md",
+            *TASK_CONTEXT_BASE,
             "sources.md",
             "research-log.md",
             *allowed,
         }
+        if config["prompt"]:
+            priority.add(config["prompt"])
         context_files = [item for item in context_files if item in priority]
 
     seen: set[str] = set()
@@ -374,9 +419,12 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
         if rel_path in seen:
             continue
         seen.add(rel_path)
-        content = read_text(root / rel_path)
+        limit = max_file_chars() if rel_path in allowed_set else context_file_chars()
+        content = read_text(root / rel_path, limit=limit)
         chunks.append(f"\n--- FILE: {rel_path} ---\n{content}")
-    return allowed, "\n".join(chunks)
+    context = "\n".join(chunks)
+    RUN_AUDIT["context_chars"] = len(context)
+    return allowed, context
 
 
 def redact_http_error_body(body: str, limit: int = 240) -> str:
@@ -913,7 +961,7 @@ def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[
 
 def public_source_budget(task: str) -> int:
     defaults = {
-        "daily": 80,
+        "daily": DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS,
         "source-sweep": 120,
         "weekly": 120,
         "monthly": 160,
@@ -1035,9 +1083,10 @@ def x_queries_for_task(task: str) -> list[str]:
     return extra or queries
 
 
-def collect_public_sources(task: str, root: Path | None = None, day: dt.date | None = None) -> str:
+def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date | None = None) -> tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]]:
+    """Collect and deduplicate source items without scoring or budget trimming."""
     if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
-        return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
+        return [], {}, []
 
     budget = public_source_budget(task)
     per_query = max(2, min(5, budget // 14))
@@ -1206,15 +1255,29 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         for item in local_items:
             add_source_item(items, seen, item["source"], item["title"], item["url"], item.get("note", ""))
 
+    return items, lane_stats, errors
+
+
+def format_public_source_snapshot(
+    items: list[dict[str, str]],
+    task: str,
+    root: Path | None,
+    day: dt.date | None,
+    lane_stats: dict[str, dict[str, Any]],
+    errors: list[str],
+) -> str:
+    budget = public_source_budget(task)
     cache = load_source_cache(root)
-    for item in items:
+    scored = [dict(item) for item in items]
+    for item in scored:
         item["score"] = str(score_source_item(item, cache))
-    items.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
-    limited = items[:budget]
+    scored.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
+    limited = scored[:budget]
     update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
     RUN_AUDIT["source_lanes"] = lane_stats
-    RUN_AUDIT["collected_source_items"] = len(items)
+    RUN_AUDIT["collected_source_items"] = len(scored)
     RUN_AUDIT["public_source_items"] = len(limited)
+    RUN_AUDIT["source_errors"] = errors
     lines = [
         "Public source snapshot:",
         "- Paid search calls: 0",
@@ -1226,7 +1289,7 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         f"- PyPI updates RSS and package metadata: {'enabled' if collector_enabled('pypi') else 'disabled'}",
         f"- X search API: {'enabled' if collector_enabled('x') else 'disabled (set X_BEARER_TOKEN secret to enable)'}",
         f"- Item budget: {budget}",
-        f"- Collected before budget trim: {len(items)}",
+        f"- Collected before budget trim: {len(scored)}",
         "- Scoring: relevance, source lane, novelty, adoption, infrastructure keywords, and prior-seen penalty.",
     ]
     for lane, stats in sorted(lane_stats.items()):
@@ -1239,6 +1302,24 @@ def collect_public_sources(task: str, root: Path | None = None, day: dt.date | N
         for error in errors[:10]:
             lines.append(f"- {error}")
     return "\n".join(lines)
+
+
+def collect_public_sources(task: str, root: Path | None = None, day: dt.date | None = None) -> str:
+    if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
+        return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
+    items, lane_stats, errors = collect_source_items_raw(task, root, day)
+    return format_public_source_snapshot(items, task, root, day, lane_stats, errors)
+
+
+def collect_public_sources_from_cache(
+    items: list[dict[str, str]],
+    lane_stats: dict[str, dict[str, Any]],
+    errors: list[str],
+    task: str,
+    root: Path | None,
+    day: dt.date | None,
+) -> str:
+    return format_public_source_snapshot(items, task, root, day, lane_stats, errors)
 
 
 def response_output_text(data: dict[str, Any]) -> str:
@@ -1450,7 +1531,7 @@ def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, An
                                 {
                                     "summary": "OpenRouter call budget is zero; recorded no paid model update.",
                                     "sources": ["budget-limit"],
-                                    "files": [],
+                                    "updates": [],
                                 }
                             )
                         }
@@ -1465,14 +1546,36 @@ def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, An
 
     screen_data = call_openrouter_model(build_screen_prompt(task, public_sources), models[0])
     screen_text = response_output_text(screen_data)
-    combined_prompt = f"""{prompt}
+    return call_openrouter_model(prompt, models[-1])
 
-Screening pass from {models[0]}:
-{screen_text}
 
-Use the screening pass as compact evidence, but make the final judgment yourself.
-"""
-    return call_openrouter_model(combined_prompt, models[-1])
+def invoke_model(task: str, day: dt.date, allowed: list[str], context: str, public_sources: str) -> dict[str, Any]:
+    provider = model_provider()
+    if provider == "openrouter":
+        models = openrouter_models_for_task(task)
+        max_calls = env_int(
+            "MAX_OPENROUTER_CALLS_PER_TASK",
+            {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2),
+        )
+        if max_calls <= 0:
+            return call_openrouter(task, "", public_sources)
+        active_models = models[-max_calls:] if len(models) > max_calls else models
+        if len(active_models) > 1:
+            screen_text = response_output_text(
+                call_openrouter_model(build_screen_prompt(task, public_sources), active_models[0])
+            )
+            prompt = build_prompt(task, day, allowed, context, screened_summary=screen_text)
+        else:
+            prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
+        RUN_AUDIT["prompt_chars"] = len(prompt)
+        return call_openrouter_model(prompt, active_models[-1])
+    if provider == "openai":
+        prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
+        RUN_AUDIT["prompt_chars"] = len(prompt)
+        return call_openai(prompt)
+    prompt = build_prompt(task, day, allowed, context, public_sources="")
+    RUN_AUDIT["prompt_chars"] = len(prompt)
+    return call_github_models(prompt)
 
 
 def call_model(prompt: str, task: str, public_sources: str) -> dict[str, Any]:
@@ -1486,7 +1589,14 @@ def call_model(prompt: str, task: str, public_sources: str) -> dict[str, Any]:
     raise SystemExit(f"Unsupported AGENT_RADAR_MODEL_PROVIDER: {provider}")
 
 
-def build_prompt(task: str, day: dt.date, allowed: list[str], context: str, public_sources: str) -> str:
+def build_prompt(
+    task: str,
+    day: dt.date,
+    allowed: list[str],
+    context: str,
+    public_sources: str = "",
+    screened_summary: str = "",
+) -> str:
     allowed_text = "\n".join(f"- {path}" for path in allowed)
     task_rules = ""
     if task == "source-sweep":
@@ -1520,7 +1630,14 @@ Candidate promotion gate:
 """
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
     context = truncate_text(context, max_prompt)
-    public_sources = truncate_text(public_sources, max_prompt // 3)
+    if screened_summary:
+        source_block = f"""Screening pass (primary evidence for this run):
+{truncate_text(screened_summary, max_prompt // 3)}"""
+    elif public_sources:
+        source_block = f"""Public source snapshot:
+{truncate_text(public_sources, max_prompt // 3)}"""
+    else:
+        source_block = "Public sources: use repository context and any links already present in the files."
     return f"""You are the autonomous cloud agent for Agent Radar.
 
 Task: {task}
@@ -1535,10 +1652,18 @@ Return only valid JSON with this shape:
 {{
   "summary": "short summary",
   "sources": ["source URL or source class"],
-  "files": [
-    {{"path": "relative/path.md", "content": "complete UTF-8 file content"}}
+  "updates": [
+    {{"path": "relative/path.md", "mode": "append", "content": "new markdown to append"}},
+    {{"path": "relative/path.md", "mode": "replace_section", "anchor": "## Section heading", "content": "replacement body without the heading line"}},
+    {{"path": "relative/path.md", "mode": "full", "content": "complete UTF-8 file content"}}
   ]
 }}
+
+Update mode rules:
+- Prefer `append` for research-log.md and for adding a new `## YYYY-MM-DD` day block in daily files.
+- Prefer `replace_section` when changing one watchlist agent, one radar thesis block, or one report subsection.
+- Use `full` only for weekly/monthly report files or when a file is new/empty.
+- Never use `full` for research-log.md, sources.md, radar.md, agent-watchlist.md, playbook.md, storage-angle.md, or user-field-notes.md when existing content is present.
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
@@ -1548,7 +1673,7 @@ Rules:
 - Never write the same URL twice for one item.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
-- For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
+- For OpenRouter mode, do not use paid search tools. Use the screening pass or public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
 - If the provider cannot browse the live web, record the limitation in research-log.md.
 - Label weak evidence, missing corroboration, private/logged-in source status, and inference.
 - Do not publish private URLs, private messages, screenshots, customer names, personal identifiers, or confidential details.
@@ -1557,12 +1682,97 @@ Rules:
 - If no useful update is found, update research-log.md with the search pass and return that file only.
 {task_rules}
 
-Public source snapshot:
-{public_sources}
+{source_block}
 
 Repository context:
 {context}
 """
+
+
+def heading_level(line: str) -> int:
+    match = re.match(r"^(#{1,6}) ", line)
+    return len(match.group(1)) if match else 0
+
+
+def normalize_section_anchor(anchor: str) -> str:
+    anchor = anchor.strip()
+    if not anchor.startswith("#"):
+        return f"## {anchor}"
+    return anchor
+
+
+def replace_section_content(old: str, anchor: str, new_body: str) -> str:
+    anchor_line = normalize_section_anchor(anchor)
+    anchor_level = heading_level(anchor_line)
+    lines = old.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if line.strip() == anchor_line.strip():
+            start = index
+            break
+    if start is None:
+        raise SystemExit(f"Refusing to replace section: anchor not found: {anchor_line!r}")
+    end = len(lines)
+    for index in range(start + 1, len(lines)):
+        level = heading_level(lines[index])
+        if level and level <= anchor_level:
+            end = index
+            break
+    body_lines = new_body.rstrip("\n").splitlines() if new_body.strip() else []
+    merged = lines[: start + 1] + body_lines + lines[end:]
+    result = "\n".join(merged)
+    if old.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def merge_update_content(old: str, mode: str, content: str, anchor: str | None = None) -> str:
+    mode = (mode or "full").strip().lower()
+    if mode == "append":
+        if not old:
+            return content if content.endswith("\n") else content + "\n"
+        separator = "" if old.endswith("\n") else "\n"
+        merged = old + separator + content
+        return merged if merged.endswith("\n") else merged + "\n"
+    if mode == "replace_section":
+        if not anchor:
+            raise SystemExit("replace_section update requires anchor")
+        return replace_section_content(old, anchor, content)
+    if mode in {"full", "replace"}:
+        return content if content.endswith("\n") else content + "\n"
+    raise SystemExit(f"Unknown update mode: {mode!r}")
+
+
+def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
+    updates: list[dict[str, Any]] = []
+    raw_updates = result.get("updates")
+    if isinstance(raw_updates, list):
+        for item in raw_updates:
+            if not isinstance(item, dict):
+                continue
+            path = item.get("path")
+            content = item.get("content")
+            if not isinstance(path, str) or not isinstance(content, str):
+                continue
+            updates.append(
+                {
+                    "path": path,
+                    "mode": str(item.get("mode", "full")),
+                    "content": content,
+                    "anchor": item.get("anchor"),
+                }
+            )
+    raw_files = result.get("files")
+    if isinstance(raw_files, list):
+        for item in raw_files:
+            if not isinstance(item, dict):
+                continue
+            path = item.get("path")
+            content = item.get("content")
+            if not isinstance(path, str) or not isinstance(content, str):
+                continue
+            updates.append({"path": path, "mode": "full", "content": content, "anchor": None})
+    return updates
 
 
 def missing_headings(old: str, new: str) -> set[str]:
@@ -1577,49 +1787,50 @@ def missing_daily_dates(old: str, new: str) -> set[str]:
 
 def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int:
     allowed_set = set(allowed)
-    updates = result.get("files", [])
-    if not isinstance(updates, list):
-        raise SystemExit("Model output missing files list.")
+    updates = normalize_result_updates(result)
+    if not updates:
+        raise SystemExit("Model output missing updates list.")
 
     count = 0
     for update in updates:
-        if not isinstance(update, dict):
-            continue
-        rel_path = update.get("path")
-        content = update.get("content")
+        rel_path = update["path"]
+        mode = update["mode"]
+        content = update["content"]
+        anchor = update.get("anchor")
         if rel_path not in allowed_set:
             raise SystemExit(f"Refusing to update non-allowed path: {rel_path}")
-        if not isinstance(content, str):
-            raise SystemExit(f"Missing string content for path: {rel_path}")
-        if content and not content.endswith("\n"):
-            content += "\n"
-        content = radar_bilingual.ensure_bilingual_file_content(rel_path, content)
-        if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
-            if radar_bilingual.missing_chinese_substance(content):
-                raise SystemExit(
-                    f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
-                )
+        if mode == "full" and rel_path in STRUCTURE_PRESERVED_FILES:
+            raise SystemExit(
+                f"Refusing full-file update for {rel_path}; use append or replace_section instead."
+            )
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
-        if old and len(old) > 500 and len(content) < len(old) // 2:
+        merged = merge_update_content(old, mode, content, str(anchor) if anchor else None)
+        merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
+        if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
+            if radar_bilingual.missing_chinese_substance(merged):
+                raise SystemExit(
+                    f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
+                )
+        if mode == "full" and old and len(old) > 500 and len(merged) < len(old) // 2:
             raise SystemExit(
                 f"Refusing to replace {rel_path}: new content is much shorter than the existing file."
             )
-        if rel_path in STRUCTURE_PRESERVED_FILES and old:
-            dropped = missing_headings(old, content)
+        if mode == "full" and rel_path in STRUCTURE_PRESERVED_FILES and old:
+            dropped = missing_headings(old, merged)
             if dropped:
                 raise SystemExit(
                     f"Refusing to replace {rel_path}: missing sections: {', '.join(sorted(dropped)[:5])}"
                 )
-        if rel_path.startswith("daily/") and old:
-            dropped_dates = missing_daily_dates(old, content)
+        if mode == "full" and rel_path.startswith("daily/") and old:
+            dropped_dates = missing_daily_dates(old, merged)
             if dropped_dates:
                 raise SystemExit(
                     f"Refusing to replace {rel_path}: would drop dated entries: {', '.join(sorted(dropped_dates))}"
                 )
-        if old != content:
-            path.write_text(content, encoding="utf-8")
+        if old != merged:
+            path.write_text(merged, encoding="utf-8")
             count += 1
     return count
 
@@ -1670,6 +1881,10 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "duration_seconds": round(time.time() - float(RUN_AUDIT.get("started_at", time.time())), 2),
         "summary": summary,
         "model_source_count": len(sources),
+        "prompt_chars": RUN_AUDIT.get("prompt_chars", 0),
+        "output_chars": RUN_AUDIT.get("output_chars", 0),
+        "context_chars": RUN_AUDIT.get("context_chars", 0),
+        "shared_source_collection": RUN_AUDIT.get("shared_source_collection", False),
     }
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
@@ -1723,7 +1938,12 @@ def update_source_lanes(root: Path, day: dt.date) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def run_task(root: Path, task: str, day: dt.date) -> None:
+def run_task(
+    root: Path,
+    task: str,
+    day: dt.date,
+    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]] | None = None,
+) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
     RUN_AUDIT["openrouter_calls"] = 0
@@ -1735,14 +1955,24 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
     RUN_AUDIT["collected_source_items"] = 0
     RUN_AUDIT["budget_status"] = "normal"
     RUN_AUDIT["started_at"] = time.time()
+    RUN_AUDIT["prompt_chars"] = 0
+    RUN_AUDIT["output_chars"] = 0
+    RUN_AUDIT["context_chars"] = 0
+    RUN_AUDIT["shared_source_collection"] = shared_collection is not None
     config = TASK_CONFIG[task]
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
     allowed, context = build_context(root, task, day)
-    public_sources = collect_public_sources(task, root, day) if model_provider() == "openrouter" else ""
-    prompt = build_prompt(task, day, allowed, context, public_sources)
-    data = call_model(prompt, task, public_sources)
+    public_sources = ""
+    if model_provider() == "openrouter":
+        if shared_collection is not None:
+            items, lane_stats, errors = shared_collection
+            public_sources = collect_public_sources_from_cache(items, lane_stats, errors, task, root, day)
+        else:
+            public_sources = collect_public_sources(task, root, day)
+    data = invoke_model(task, day, allowed, context, public_sources)
     output_text = response_output_text(data)
+    RUN_AUDIT["output_chars"] = len(output_text)
     try:
         result = json.loads(output_text)
     except json.JSONDecodeError as exc:
@@ -1812,8 +2042,13 @@ def main(argv: list[str] | None = None) -> int:
     ensure_report_shells(root, day)
     tasks = auto_tasks(day) if args.task == "auto" else [args.task]
 
+    shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]] | None = None
+    if len(tasks) > 1 and model_provider() == "openrouter":
+        if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
+            shared_collection = collect_source_items_raw("source-sweep", root, day)
+
     for task in tasks:
-        run_task(root, task, day)
+        run_task(root, task, day, shared_collection=shared_collection)
     return 0
 
 
