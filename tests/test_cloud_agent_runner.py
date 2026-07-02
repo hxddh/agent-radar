@@ -331,6 +331,122 @@ class CloudAgentRunnerTest(unittest.TestCase):
             self.assertIn("feed:test", (root / "automation" / "source-health.md").read_text())
             self.assertIn("| feed | 0 | 1 | 0 |", (root / "automation" / "source-lanes.md").read_text())
 
+    def test_slice_daily_month_file_keeps_today_block_only(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "> header\n\n"
+            "## 2026-07-02\n\n"
+            "### English\n\n"
+            "- Signal: today\n"
+            "  - Source: https://example.com/today\n\n"
+            "## 2026-07-06\n\n"
+            "### English\n\n"
+            "- Signal: later day\n"
+        )
+        day = cloud_agent_runner.parse_date("2026-07-02")
+        sliced = cloud_agent_runner.slice_daily_month_file(content, day, 50_000)
+        self.assertIn("## 2026-07-02", sliced)
+        self.assertIn("today", sliced)
+        self.assertNotIn("later day", sliced)
+        self.assertIn("Context note", sliced)
+
+    def test_slice_research_log_preserves_candidate_inbox(self) -> None:
+        filler = "x" * 30_000
+        content = (
+            "# Research Log\n\n"
+            "intro\n\n"
+            f"{filler}\n\n"
+            "Candidate inbox, not promoted:\n"
+            "- World Model MCP: https://github.com/example/world-model-mcp\n"
+            "  - Promotion status: Deferred\n\n"
+            f"{filler}\n\n"
+            "## 2026-07-06\n\n"
+            "Recent pass tail content.\n"
+        )
+        sliced = cloud_agent_runner.slice_research_log(content, "promote-candidates", 12_000)
+        self.assertIn("Candidate inbox", sliced)
+        self.assertIn("world-model-mcp", sliced)
+        self.assertIn("Recent pass tail content", sliced)
+
+    def test_build_context_daily_skips_weekly_and_slices_daily(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            (root / "docs").mkdir(parents=True)
+            (root / "prompts").mkdir(parents=True)
+            (root / "automation" / "runbook.md").write_text("# runbook\n", encoding="utf-8")
+            (root / "docs" / "maintenance.md").write_text("# maintenance\n", encoding="utf-8")
+            (root / "prompts" / "daily-update.md").write_text("# prompt\n", encoding="utf-8")
+            for name in [
+                "sources.md",
+                "radar.md",
+                "agent-watchlist.md",
+                "user-field-notes.md",
+                "playbook.md",
+                "storage-angle.md",
+                "research-log.md",
+            ]:
+                (root / name).write_text(f"# {name}\n", encoding="utf-8")
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text(
+                "# Daily\n\n## 2026-07-02\n\ntoday-content\n\n## 2026-07-06\n\nold-day\n",
+                encoding="utf-8",
+            )
+            (root / "weekly").mkdir(parents=True)
+            (root / "weekly" / "2026-W27.md").write_text("weekly-full-content\n", encoding="utf-8")
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+                _, context = cloud_agent_runner.build_context(root, "daily", day)
+            self.assertIn("today-content", context)
+            self.assertNotIn("old-day", context)
+            self.assertNotIn("weekly-full-content", context)
+
+    def test_call_openrouter_applies_screening_to_prompt(self) -> None:
+        prompt = cloud_agent_runner.build_prompt(
+            "daily",
+            cloud_agent_runner.parse_date("2026-07-02"),
+            ["research-log.md"],
+            "repo context",
+            public_sources="Public source snapshot:\n- item one",
+        )
+        screen_payload = {
+            "choices": [{"message": {"content": '{"summary":"screened","candidates":[]}'}}]
+        }
+        main_payload = {
+            "choices": [{"message": {"content": '{"summary":"done","updates":[]}'}}]
+        }
+        with mock.patch.object(
+            cloud_agent_runner,
+            "call_openrouter_model",
+            side_effect=[screen_payload, main_payload],
+        ) as model_mock:
+            data = cloud_agent_runner.call_openrouter("daily", prompt, "Public source snapshot:\n- item")
+        self.assertEqual(cloud_agent_runner.response_output_text(data), '{"summary":"done","updates":[]}')
+        main_prompt = model_mock.call_args_list[1].args[0]
+        self.assertIn("Screening pass", main_prompt)
+        self.assertNotIn("Public source snapshot:", main_prompt)
+
+    def test_shared_screening_reuses_cached_screen_text(self) -> None:
+        screen_cache: dict[str, str] = {"text": '{"summary":"cached-screen"}'}
+        payload = {"choices": [{"message": {"content": '{"summary":"ok","updates":[]}'}}]}
+        with mock.patch.object(cloud_agent_runner, "task_uses_screening", return_value=True):
+            with mock.patch.object(cloud_agent_runner, "invoke_model", return_value=payload) as invoke_mock:
+                with mock.patch.object(cloud_agent_runner, "build_context", return_value=(["research-log.md"], "ctx")):
+                    with mock.patch.object(cloud_agent_runner, "collect_public_sources", return_value="sources"):
+                        with mock.patch.object(cloud_agent_runner, "apply_updates", return_value=0):
+                            with tempfile.TemporaryDirectory() as tmp:
+                                root = Path(tmp)
+                                cloud_agent_runner.run_task(
+                                    root,
+                                    "source-sweep",
+                                    cloud_agent_runner.parse_date("2026-07-02"),
+                                    shared_collection=([], {}, []),
+                                    screen_cache=screen_cache,
+                                )
+        invoke_mock.assert_called_once()
+        self.assertEqual(invoke_mock.call_args.kwargs.get("shared_screened"), '{"summary":"cached-screen"}')
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["shared_screening"])
+
 
 if __name__ == "__main__":
     unittest.main()

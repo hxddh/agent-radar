@@ -130,6 +130,7 @@ RUN_AUDIT: dict[str, Any] = {
     "output_chars": 0,
     "context_chars": 0,
     "shared_source_collection": False,
+    "shared_screening": False,
 }
 
 
@@ -344,6 +345,28 @@ TASK_CONTEXT_FILES: dict[str, list[str]] = {
     ],
 }
 
+# Output targets skipped from read-only context (still writable via allowed list).
+CONTEXT_SKIP_TEMPLATES: dict[str, list[str]] = {
+    "daily": ["weekly/{week}.md"],
+}
+
+RESEARCH_LOG_PRIORITY_KEYWORDS = (
+    "Candidate inbox",
+    "candidate inbox",
+    "Deferred candidates",
+    "Promote Candidates",
+)
+
+DAILY_CONTEXT_SLICE_NOTE = (
+    "\n\n> Context note: only the file header and today's `## YYYY-MM-DD` block are injected; "
+    "prior days remain in the file on disk.\n\n"
+)
+
+RESEARCH_LOG_SLICE_MARKER = (
+    "\n\n[... middle research-log omitted for prompt budget; "
+    "candidate inbox + recent tail preserved ...]\n\n"
+)
+
 
 def env_int(name: str, default: int) -> int:
     value = os.environ.get(name)
@@ -393,6 +416,129 @@ def truncate_text(value: str, limit: int) -> str:
     return truncate_keep_ends(value, limit)
 
 
+def context_slicing_enabled() -> bool:
+    return os.environ.get("CONTEXT_SLICING", "true").lower() not in {"0", "false", "no"}
+
+
+def shared_screening_enabled() -> bool:
+    return os.environ.get("SHARED_SCREENING", "true").lower() not in {"0", "false", "no"}
+
+
+def context_skip_paths(task: str, day: dt.date) -> set[str]:
+    return {expand_path(item, day) for item in CONTEXT_SKIP_TEMPLATES.get(task, [])}
+
+
+def is_daily_month_path(rel_path: str) -> bool:
+    return bool(re.match(r"daily/\d{4}-\d{2}\.md$", rel_path))
+
+
+def slice_daily_month_file(content: str, day: dt.date, limit: int) -> str:
+    """Inject only the monthly header and today's day block for daily task context."""
+    date_heading = f"## {day.isoformat()}"
+    parts = re.split(r"\n(?=## \d{4}-\d{2}-\d{2})", content)
+    header = parts[0] if parts else content
+    today_block = ""
+    for part in parts:
+        if part.startswith(date_heading):
+            today_block = part
+            break
+    if not today_block:
+        return truncate_keep_ends(content, limit)
+    sliced = header.rstrip() + DAILY_CONTEXT_SLICE_NOTE + today_block
+    return truncate_keep_ends(sliced, limit)
+
+
+def slice_research_log(content: str, task: str, limit: int) -> str:
+    """Keep intro, candidate-inbox sections, and recent tail within the context cap."""
+    if len(content) <= limit:
+        return content
+    head_budget = min(env_int("RESEARCH_LOG_HEAD_CHARS", 1500), limit // 6)
+    tail_budget = min(env_int("RESEARCH_LOG_TAIL_CHARS", 8000), limit // 3)
+    marker_budget = len(RESEARCH_LOG_SLICE_MARKER) * 2
+    middle_budget = max(0, limit - head_budget - tail_budget - marker_budget)
+    head = content[:head_budget]
+    tail = content[-tail_budget:]
+    priority_chunks: list[str] = []
+    if task in {"daily", "source-sweep", "promote-candidates", "weekly", "monthly"}:
+        for keyword in RESEARCH_LOG_PRIORITY_KEYWORDS:
+            start = 0
+            while True:
+                pos = content.find(keyword, start)
+                if pos < 0:
+                    break
+                line_start = content.rfind("\n", 0, pos)
+                line_start = 0 if line_start < 0 else line_start + 1
+                section_end = content.find("\n### ", pos + len(keyword))
+                if section_end < 0:
+                    section_end = content.find("\n## ", pos + len(keyword))
+                if section_end < 0:
+                    section_end = min(pos + 4000, len(content))
+                chunk = content[line_start:section_end].strip()
+                if chunk and chunk not in priority_chunks:
+                    priority_chunks.append(chunk)
+                start = pos + len(keyword)
+    priority_text = truncate_text("\n\n".join(priority_chunks), middle_budget)
+    combined = head + RESEARCH_LOG_SLICE_MARKER + priority_text + RESEARCH_LOG_SLICE_MARKER + tail
+    return truncate_keep_ends(combined, limit)
+
+
+def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit: int) -> str:
+    path = root / rel_path
+    if not path.exists():
+        return ""
+    content = read_text_full(path)
+    if not content:
+        return ""
+    if context_slicing_enabled():
+        if task == "daily" and is_daily_month_path(rel_path):
+            content = slice_daily_month_file(content, day, limit)
+        elif rel_path == "research-log.md":
+            slice_limit = min(limit, env_int("RESEARCH_LOG_CONTEXT_CHARS", 25_000))
+            content = slice_research_log(content, task, slice_limit)
+        else:
+            content = truncate_keep_ends(content, limit)
+    else:
+        content = truncate_keep_ends(content, limit)
+    return content
+
+
+def task_uses_screening(task: str) -> bool:
+    max_calls = env_int(
+        "MAX_OPENROUTER_CALLS_PER_TASK",
+        {"weekly": 1, "monthly": 1, "promote-candidates": 1}.get(task, 2),
+    )
+    if max_calls <= 0:
+        return False
+    models = openrouter_models_for_task(task)
+    active = models[-max_calls:] if len(models) > max_calls else models
+    return len(active) > 1
+
+
+def apply_screened_summary_to_prompt(prompt: str, screen_text: str) -> str:
+    max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
+    screened_block = (
+        "Screening pass (primary evidence for this run):\n"
+        f"{truncate_text(screen_text, max_prompt // 3)}"
+    )
+    if "Public source snapshot:" in prompt:
+        return re.sub(
+            r"Public source snapshot:\n.*?(?=\n\nRepository context:)",
+            screened_block,
+            prompt,
+            count=1,
+            flags=re.DOTALL,
+        )
+    if "Screening pass (primary evidence for this run):" in prompt:
+        return re.sub(
+            r"Screening pass \(primary evidence for this run\):\n.*?(?=\n\nRepository context:)",
+            screened_block,
+            prompt,
+            count=1,
+            flags=re.DOTALL,
+        )
+    return prompt
+
+
 def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
     config = TASK_CONFIG[task]
     allowed = [expand_path(item, day) for item in config["allowed"]]
@@ -413,14 +559,15 @@ def build_context(root: Path, task: str, day: dt.date) -> tuple[list[str], str]:
             priority.add(config["prompt"])
         context_files = [item for item in context_files if item in priority]
 
+    skip_paths = context_skip_paths(task, day)
     seen: set[str] = set()
     chunks: list[str] = []
     for rel_path in context_files:
-        if rel_path in seen:
+        if rel_path in seen or rel_path in skip_paths:
             continue
         seen.add(rel_path)
         limit = max_file_chars() if rel_path in allowed_set else context_file_chars()
-        content = read_text(root / rel_path, limit=limit)
+        content = read_context_file(root, rel_path, task, day, limit)
         chunks.append(f"\n--- FILE: {rel_path} ---\n{content}")
     context = "\n".join(chunks)
     RUN_AUDIT["context_chars"] = len(context)
@@ -1544,12 +1691,22 @@ def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, An
     if len(models) == 1:
         return call_openrouter_model(prompt, models[0])
 
-    screen_data = call_openrouter_model(build_screen_prompt(task, public_sources), models[0])
-    screen_text = response_output_text(screen_data)
+    screen_text = response_output_text(
+        call_openrouter_model(build_screen_prompt(task, public_sources), models[0])
+    )
+    prompt = apply_screened_summary_to_prompt(prompt, screen_text)
     return call_openrouter_model(prompt, models[-1])
 
 
-def invoke_model(task: str, day: dt.date, allowed: list[str], context: str, public_sources: str) -> dict[str, Any]:
+def invoke_model(
+    task: str,
+    day: dt.date,
+    allowed: list[str],
+    context: str,
+    public_sources: str,
+    *,
+    shared_screened: str | None = None,
+) -> dict[str, Any]:
     provider = model_provider()
     if provider == "openrouter":
         models = openrouter_models_for_task(task)
@@ -1561,9 +1718,12 @@ def invoke_model(task: str, day: dt.date, allowed: list[str], context: str, publ
             return call_openrouter(task, "", public_sources)
         active_models = models[-max_calls:] if len(models) > max_calls else models
         if len(active_models) > 1:
-            screen_text = response_output_text(
-                call_openrouter_model(build_screen_prompt(task, public_sources), active_models[0])
-            )
+            if shared_screened:
+                screen_text = shared_screened
+            else:
+                screen_text = response_output_text(
+                    call_openrouter_model(build_screen_prompt(task, public_sources), active_models[0])
+                )
             prompt = build_prompt(task, day, allowed, context, screened_summary=screen_text)
         else:
             prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
@@ -1885,6 +2045,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "output_chars": RUN_AUDIT.get("output_chars", 0),
         "context_chars": RUN_AUDIT.get("context_chars", 0),
         "shared_source_collection": RUN_AUDIT.get("shared_source_collection", False),
+        "shared_screening": RUN_AUDIT.get("shared_screening", False),
     }
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
@@ -1943,6 +2104,7 @@ def run_task(
     task: str,
     day: dt.date,
     shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str]] | None = None,
+    screen_cache: dict[str, str] | None = None,
 ) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
@@ -1959,6 +2121,7 @@ def run_task(
     RUN_AUDIT["output_chars"] = 0
     RUN_AUDIT["context_chars"] = 0
     RUN_AUDIT["shared_source_collection"] = shared_collection is not None
+    RUN_AUDIT["shared_screening"] = False
     config = TASK_CONFIG[task]
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
@@ -1970,7 +2133,26 @@ def run_task(
             public_sources = collect_public_sources_from_cache(items, lane_stats, errors, task, root, day)
         else:
             public_sources = collect_public_sources(task, root, day)
-    data = invoke_model(task, day, allowed, context, public_sources)
+    shared_screened: str | None = None
+    if task_uses_screening(task):
+        if screen_cache and screen_cache.get("text"):
+            shared_screened = screen_cache["text"]
+            RUN_AUDIT["shared_screening"] = True
+        elif (
+            screen_cache is not None
+            and shared_collection is not None
+            and shared_screening_enabled()
+        ):
+            items, lane_stats, errors = shared_collection
+            sweep_sources = collect_public_sources_from_cache(
+                items, lane_stats, errors, "source-sweep", root, day
+            )
+            screen_model = openrouter_models_for_task("source-sweep")[0]
+            shared_screened = response_output_text(
+                call_openrouter_model(build_screen_prompt("source-sweep", sweep_sources), screen_model)
+            )
+            screen_cache["text"] = shared_screened
+    data = invoke_model(task, day, allowed, context, public_sources, shared_screened=shared_screened)
     output_text = response_output_text(data)
     RUN_AUDIT["output_chars"] = len(output_text)
     try:
@@ -2047,8 +2229,17 @@ def main(argv: list[str] | None = None) -> int:
         if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
             shared_collection = collect_source_items_raw("source-sweep", root, day)
 
+    screen_cache: dict[str, str] | None = None
+    if (
+        len(tasks) > 1
+        and model_provider() == "openrouter"
+        and shared_collection is not None
+        and shared_screening_enabled()
+    ):
+        screen_cache = {}
+
     for task in tasks:
-        run_task(root, task, day, shared_collection=shared_collection)
+        run_task(root, task, day, shared_collection=shared_collection, screen_cache=screen_cache)
     return 0
 
 

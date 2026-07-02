@@ -85,10 +85,16 @@ This keeps paid search calls at zero. Model usage is bounded by the fixed task r
 
 Recommended source budgets:
 
-- `daily`: 80 public source items
+- `daily`: 50 public source items (screening pass compresses the shortlist)
 - `source-sweep`: 120 public source items
 - `weekly`: 120 public source items
 - `monthly`: 160 public source items
+
+Context efficiency (v0.5.2+):
+
+- `CONTEXT_SLICING=true` (default): daily context injects only today's day block; `research-log.md` keeps candidate inbox + recent tail.
+- `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
+- `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
 
 The runner samples across source lanes before trimming to the budget, so one noisy lane cannot consume the entire daily source window.
 

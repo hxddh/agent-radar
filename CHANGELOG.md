@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.5.2 - 2026-07-02
+
+### Added
+- Smart context slicing: daily task injects only today's `## YYYY-MM-DD` block; `research-log.md` keeps intro, candidate inbox sections, and recent tail.
+- Shared screening cache across `auto` workflow tasks (one Flash screen per run when collection is shared).
+- `CONTEXT_SLICING` and `SHARED_SCREENING` env toggles; telemetry field `shared_screening`.
+
+### Changed
+- Daily context skips `weekly/{week}.md` injection (file remains writable).
+- CLI version bumped to `0.5.2`.
+
+### Fixed
+- `call_openrouter()` now applies screening results to the main prompt instead of discarding them.
+
 ## v0.5.1 - 2026-07-02
 
 ### Fixed
