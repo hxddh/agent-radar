@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.3.0 - 2026-07-02
+
+### Added
+- Proportional Chinese-substance validation: at least 60% of substantive English lines must have a real CJK Chinese counterpart (was a fixed floor of 3 lines, which let mostly-English reports pass `--require-chinese`).
+- `---` separators between day sections in daily files for navigability.
+- Tests for proportional bilingual coverage, URL-line exclusion, and identical-URL-pair collapsing.
+
+### Changed
+- Report format unified to nested bilingual pairs: each substantive field is a label bullet followed by `中文：` (first) and `English:` (second) sub-bullets; short metadata fields are single-line `中文值（English value）`; URLs, repo names, product names, and star counts are written once, never duplicated per language. Templates, runner prompt rules, prompts, automation cards, and docs all describe the same format.
+- `daily/2026-07.md` and `weekly/2026-W27.md` converted to the nested format with all URLs and prose preserved; `monthly/2026-07.md` rewritten fully bilingual (previously 25 of 31 Chinese lines were empty).
+- Pure-URL lines no longer count as substantive English lines in bilingual validation.
+- `repair_identical_bilingual_pairs` collapses language-neutral identical pairs (URLs, repo names) into a single line, and still blanks copied English prose so the substance ratio check exposes it.
+- Prompt-context truncation (`read_text`, `truncate_text`) now keeps both the head (titles, thesis) and the tail (recent entries) instead of dropping the file head.
+- Secret scan excludes `automation/source-cache.jsonl` and `automation/collector-state.json` (machine-written external titles/URLs that can false-positive); reports and code stay fully scanned.
+- Source collectors are indexed with `enumerate` instead of quadratic `list.index` lookups.
+- CLI version bumped to `0.3.0`.
+
+### Fixed
+- `write_file` no longer reports `overwritten` for files it just created with `--force`.
+
 ## v0.2.6 - 2026-07-02
 
 ### Added

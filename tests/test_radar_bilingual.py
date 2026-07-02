@@ -57,7 +57,9 @@ class RadarBilingualTest(unittest.TestCase):
         )
         self.assertTrue(radar_bilingual.missing_chinese_substance(content))
 
-    def test_cjk_chinese_satisfies_substance_check(self) -> None:
+    def test_token_chinese_no_longer_satisfies_substance_check(self) -> None:
+        # 3 real Chinese lines against 11 substantive English lines is token
+        # coverage, not a bilingual report; the proportional rule flags it.
         content = (
             "# Agent Radar Weekly - 2026-W27\n\n"
             "- 中文：浏览器工具进入主流产品。\n- English: Browser tools are mainstream.\n"
@@ -68,7 +70,45 @@ class RadarBilingualTest(unittest.TestCase):
                 for index in range(8)
             )
         )
+        self.assertTrue(radar_bilingual.missing_chinese_substance(content))
+
+    def test_proportional_chinese_coverage_satisfies_substance_check(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            + "".join(
+                f"- 中文：这是第 {index} 条真实的中文双语内容行。\n"
+                f"- English: This is real bilingual content line number {index}.\n"
+                for index in range(9)
+            )
+            + "".join(
+                f"- 中文：\n- English: filler english line number {index}.\n"
+                for index in range(3)
+            )
+        )
+        # 9 real Chinese lines / 12 substantive English lines = 75% >= 60%.
         self.assertFalse(radar_bilingual.missing_chinese_substance(content))
+
+    def test_url_lines_do_not_count_as_substantive_english(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            + "".join(
+                f"- English: https://example.com/very/long/path/item-{index}\n"
+                for index in range(20)
+            )
+        )
+        self.assertEqual(radar_bilingual.substantive_english_lines(content), 0)
+        self.assertFalse(radar_bilingual.missing_chinese_substance(content))
+
+    def test_repair_collapses_identical_url_pair_to_single_line(self) -> None:
+        content = (
+            "# Agent Radar Weekly - 2026-W27\n\n"
+            "- 中文：https://example.com/changelog\n"
+            "- English: https://example.com/changelog\n"
+        )
+        repaired = radar_bilingual.repair_identical_bilingual_pairs(content)
+        self.assertIn("- https://example.com/changelog\n", repaired)
+        self.assertNotIn("中文：https://example.com/changelog", repaired)
+        self.assertNotIn("English: https://example.com/changelog", repaired)
 
     def test_ensure_bilingual_skips_non_report_paths(self) -> None:
         content = "# Research Log\n\n- item\n"
