@@ -245,6 +245,26 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertTrue(cloud_agent_runner.collector_enabled("pypi"))
 
+    def test_collect_only_refreshes_health_files(self) -> None:
+        def fake_collect(_task: str, _root: Path, _day: cloud_agent_runner.dt.date) -> str:
+            cloud_agent_runner.RUN_AUDIT["source_status"] = [
+                {"name": "feed:test", "status": "ok", "detail": ""},
+            ]
+            cloud_agent_runner.RUN_AUDIT["source_lanes"] = {
+                "feed": {"ok": 1, "error": 0, "items": 3},
+            }
+            return "snapshot"
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            with mock.patch.object(cloud_agent_runner, "collect_public_sources", side_effect=fake_collect):
+                cloud_agent_runner.run_collect_only(root, "source-sweep", cloud_agent_runner.parse_date("2026-07-02"))
+            self.assertTrue((root / "automation" / "source-health.md").exists())
+            self.assertTrue((root / "automation" / "source-lanes.md").exists())
+            self.assertIn("source-refresh", (root / "automation" / "telemetry" / "2026-07.jsonl").read_text())
+
     def test_rejected_repo_is_skipped_from_release_tracking(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

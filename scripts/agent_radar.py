@@ -33,7 +33,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 CORE_FILES = [
     "README.md",
@@ -801,6 +801,26 @@ def command_release_draft(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_source_refresh(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    task = args.task or "source-sweep"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/cloud_agent_runner.py",
+            "--collect-only",
+            "--task",
+            task,
+            "--date",
+            day.isoformat(),
+        ],
+        cwd=root,
+        check=False,
+    )
+    return result.returncode
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Manage a Markdown-first AI Agent radar.")
     parser.add_argument("--version", action="version", version=f"agent-radar {__version__}")
@@ -852,6 +872,19 @@ def build_parser() -> argparse.ArgumentParser:
     brief_parser = subparsers.add_parser("brief", help="Show maintenance gaps and next research focus.")
     brief_parser.add_argument("--date", help="Date for current daily/weekly/monthly paths, YYYY-MM-DD.")
     brief_parser.set_defaults(func=command_brief)
+
+    source_refresh_parser = subparsers.add_parser(
+        "source-refresh",
+        help="Refresh public source collectors and automation health files without a model call.",
+    )
+    source_refresh_parser.add_argument(
+        "--task",
+        default="source-sweep",
+        choices=["daily", "source-sweep", "weekly", "monthly"],
+        help="Collector budget profile to use.",
+    )
+    source_refresh_parser.add_argument("--date", help="Date for collector rotation and logs, YYYY-MM-DD.")
+    source_refresh_parser.set_defaults(func=command_source_refresh)
 
     release_draft_parser = subparsers.add_parser("release-draft", help="Generate docs/release-draft.md from changelog and git log.")
     release_draft_parser.add_argument("--date", help="Date for the draft, YYYY-MM-DD.")

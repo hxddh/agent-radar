@@ -4,34 +4,42 @@ Last checked: 2026-07-02
 
 | Source | Status | Detail |
 | --- | --- | --- |
+| github:agent observability | ok |  |
+| github:agent deployment workflow | ok |  |
+| npm:mcp server | ok |  |
+| pypi-updates:mcp server | ok |  |
+| crates:mcp server | ok |  |
+| open-vsx:mcp server | ok |  |
+| npm:ai agent | ok |  |
+| pypi-updates:ai agent | ok |  |
 | crates:ai agent | ok |  |
 | open-vsx:ai agent | ok |  |
 | npm:coding agent | ok |  |
-| pypi:coding agent | ok |  |
+| pypi-updates:coding agent | ok |  |
 | crates:coding agent | ok |  |
 | open-vsx:coding agent | ok |  |
 | npm:agent memory | ok |  |
-| pypi:agent memory | ok |  |
+| pypi-updates:agent memory | ok |  |
 | crates:agent memory | ok |  |
 | open-vsx:agent memory | ok |  |
 | npm:agent sandbox | ok |  |
-| pypi:agent sandbox | ok |  |
+| pypi-updates:agent sandbox | ok |  |
 | crates:agent sandbox | ok |  |
 | open-vsx:agent sandbox | ok |  |
 | npm:browser agent | ok |  |
-| pypi:browser agent | ok |  |
+| pypi-updates:browser agent | ok |  |
 | crates:browser agent | ok |  |
 | open-vsx:browser agent | ok |  |
 | npm:agent eval | ok |  |
-| pypi:agent eval | ok |  |
+| pypi-updates:agent eval | ok |  |
 | crates:agent eval | ok |  |
 | open-vsx:agent eval | ok |  |
 | npm:agent observability | ok |  |
-| pypi:agent observability | ok |  |
+| pypi-updates:agent observability | ok |  |
 | crates:agent observability | ok |  |
 | open-vsx:agent observability | ok |  |
 | npm:agent security | ok |  |
-| pypi:agent security | ok |  |
+| pypi-updates:agent security | ok |  |
 | crates:agent security | ok |  |
 | open-vsx:agent security | ok |  |
 | docker:mcp server | ok |  |
@@ -44,6 +52,14 @@ Last checked: 2026-07-02
 | page:cursor-blog | ok |  |
 | page:anthropic-news | ok |  |
 | page:anthropic-engineering | ok |  |
+| pypi-package:mcp | ok |  |
+| pypi-package:langchain | ok |  |
+| pypi-package:crewai | ok |  |
+| pypi-package:openai | ok |  |
+| pypi-package:anthropic | ok |  |
+| pypi-package:llama-index | ok |  |
+| pypi-package:semantic-kernel | ok |  |
+| pypi-package:autogen-agentchat | ok |  |
 | release:openai/codex | ok |  |
 | tag:openai/codex | ok |  |
 | release:modelcontextprotocol/servers | ok |  |
@@ -68,17 +84,3 @@ Last checked: 2026-07-02
 | tag:bobmatnyc/trusty-tools | ok |  |
 | release:kinqsradiollc/BrainRouter | ok |  |
 | tag:kinqsradiollc/BrainRouter | ok |  |
-| release:macro-inc/macro | ok |  |
-| tag:macro-inc/macro | ok |  |
-| release:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
-| tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
-| release:clidey/deptrust | ok |  |
-| tag:clidey/deptrust | ok |  |
-| release:envibagus/cortex | ok |  |
-| tag:envibagus/cortex | ok |  |
-| release:alexmond/jvmlens | ok |  |
-| tag:alexmond/jvmlens | ok |  |
-| release:coldzero94/cold-frame | ok |  |
-| tag:coldzero94/cold-frame | ok |  |
-| release:envibagus/cortex | ok |  |
-| tag:envibagus/cortex | ok |  |

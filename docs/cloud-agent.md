@@ -147,6 +147,12 @@ REDDIT_RSS_BATCH_SIZE=3
 
 Collectors that fail repeatedly with zero successes are auto-disabled in `automation/collector-state.json`. Re-enable by editing that file or setting `DISABLED_COLLECTORS` (comma-separated collector names; takes effect immediately and merges with the JSON disabled list).
 
+Refresh collectors locally without a model call:
+
+```bash
+python scripts/agent_radar.py source-refresh --task source-sweep --date 2026-07-02
+```
+
 ## Optional: OpenAI API Provider
 
 If you later add an OpenAI API key, set:
