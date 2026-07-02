@@ -31,6 +31,12 @@ Cover these dimensions:
 12. Ecosystem standards
 13. Anti-signals
 
+Report language:
+- Write the weekly report as a bilingual paired report.
+- Put Chinese first, then English immediately after it.
+- Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- Keep URLs, product names, model names, repo names, and source labels unchanged.
+
 Rules:
 - Synthesize, do not dump links.
 - Identify what actually changed.
@@ -48,4 +54,3 @@ Output:
 1. Weekly report file under weekly/
 2. Short summary of thesis changes
 3. List of updated files
-

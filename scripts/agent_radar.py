@@ -29,6 +29,7 @@ CORE_FILES = [
     "research-log.md",
     "docs/maintenance.md",
     "docs/cloud-agent.md",
+    "docs/architecture.md",
     "docs/subscription-mode.md",
     "automation/runbook.md",
     "automation/daily.md",
@@ -37,6 +38,7 @@ CORE_FILES = [
     "automation/source-sweep.md",
     "automation/promote-candidates.md",
     "automation/source-health.md",
+    "automation/source-lanes.md",
     "docs/release-checklist.md",
     "prompts/daily-update.md",
     "prompts/weekly-review.md",
@@ -105,6 +107,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "research-log.md": RESEARCH_LOG_TEMPLATE,
         "docs/maintenance.md": MAINTENANCE_TEMPLATE,
         "docs/cloud-agent.md": CLOUD_AGENT_TEMPLATE,
+        "docs/architecture.md": ARCHITECTURE_TEMPLATE,
         "docs/subscription-mode.md": SUBSCRIPTION_MODE_TEMPLATE,
         "docs/release-v0.2.0.md": RELEASE_V020_TEMPLATE,
         "automation/runbook.md": AUTOMATION_RUNBOOK_TEMPLATE,
@@ -114,6 +117,7 @@ def template_files(base_date: dt.date | None = None) -> dict[str, str]:
         "automation/source-sweep.md": AUTOMATION_SOURCE_SWEEP_TEMPLATE,
         "automation/promote-candidates.md": AUTOMATION_PROMOTE_CANDIDATES_TEMPLATE,
         "automation/source-health.md": SOURCE_HEALTH_TEMPLATE,
+        "automation/source-lanes.md": SOURCE_LANES_TEMPLATE,
         "docs/release-checklist.md": RELEASE_CHECKLIST_TEMPLATE,
         "prompts/daily-update.md": DAILY_PROMPT_TEMPLATE,
         "prompts/weekly-review.md": WEEKLY_PROMPT_TEMPLATE,
@@ -131,8 +135,9 @@ def command_init(args: argparse.Namespace) -> int:
     for folder in ["daily", "weekly", "monthly", "docs", "automation", "prompts", "scripts"]:
         (root / folder).mkdir(parents=True, exist_ok=True)
     (root / "automation" / "runs").mkdir(parents=True, exist_ok=True)
+    (root / "automation" / "telemetry").mkdir(parents=True, exist_ok=True)
 
-    for keep in ["daily/.gitkeep", "weekly/.gitkeep", "monthly/.gitkeep", "automation/runs/.gitkeep"]:
+    for keep in ["daily/.gitkeep", "weekly/.gitkeep", "monthly/.gitkeep", "automation/runs/.gitkeep", "automation/telemetry/.gitkeep"]:
         path = root / keep
         if not path.exists():
             path.write_text("", encoding="utf-8")
@@ -184,11 +189,19 @@ def daily_entry(day: dt.date) -> str:
     date_text = day.isoformat()
     return f"""## {date_text}
 
+> Format: write every substantive section in bilingual paired form. Put Chinese first, then English, using `中文：` and `English:` labels for each bullet or paragraph.
+
 ### 1. New Signals
 
-- Signal:
-  - What happened:
-  - Why it matters:
+- Signal / 信号:
+  - 中文：
+  - English:
+  - What happened / 发生了什么:
+    - 中文：
+    - English:
+  - Why it matters / 为什么重要:
+    - 中文：
+    - English:
   - Related agent:
   - Category:
   - Source class:
@@ -283,13 +296,25 @@ def weekly_template(day: dt.date) -> str:
     label = f"{year}-W{week:02d}"
     return f"""# Agent Radar Weekly - {label}
 
+> Format: bilingual paired report. For every substantive section, write Chinese first and English immediately after it.
+
 ## 1. Executive Summary
 
-- This week's biggest change:
-- Most important user experience signal:
-- Most important infra signal:
-- Most important storage implication:
-- Biggest uncertainty:
+- 本周最大变化 / This week's biggest change:
+  - 中文：
+  - English:
+- 最重要的用户体验信号 / Most important user experience signal:
+  - 中文：
+  - English:
+- 最重要的基础设施信号 / Most important infra signal:
+  - 中文：
+  - English:
+- 最重要的存储启示 / Most important storage implication:
+  - 中文：
+  - English:
+- 最大不确定性 / Biggest uncertainty:
+  - 中文：
+  - English:
 
 ## 2. Product Changes
 
@@ -341,14 +366,28 @@ def monthly_template(day: dt.date) -> str:
     label = f"{day:%Y-%m}"
     return f"""# Agent Radar Monthly - {label}
 
+> Format: bilingual paired report. For every substantive section, write Chinese first and English immediately after it.
+
 ## 1. Executive Summary
 
-- Biggest thesis change:
-- Strongest product signal:
-- Strongest user-experience signal:
-- Strongest infrastructure signal:
-- Strongest storage implication:
-- Biggest anti-signal:
+- 最大 thesis 变化 / Biggest thesis change:
+  - 中文：
+  - English:
+- 最强产品信号 / Strongest product signal:
+  - 中文：
+  - English:
+- 最强用户体验信号 / Strongest user-experience signal:
+  - 中文：
+  - English:
+- 最强基础设施信号 / Strongest infrastructure signal:
+  - 中文：
+  - English:
+- 最强存储启示 / Strongest storage implication:
+  - 中文：
+  - English:
+- 最大反信号 / Biggest anti-signal:
+  - 中文：
+  - English:
 
 ## 2. Watchlist Changes
 
@@ -828,12 +867,33 @@ AUTOMATION_PROMOTE_CANDIDATES_TEMPLATE = """# Promote Candidates Cloud Agent Tas
 Automatically promote high-quality candidate signals from research-log.md into formal radar files when evidence thresholds are met.
 """
 
+ARCHITECTURE_TEMPLATE = """# Agent Radar Architecture
+
+Agent Radar runs as a GitHub Actions cloud agent with source lanes, source memory, scoring, model synthesis, promotion, bilingual reports, and audit telemetry.
+
+Core generated state:
+
+- `automation/source-cache.jsonl`
+- `automation/source-health.md`
+- `automation/source-lanes.md`
+- `automation/telemetry/YYYY-MM.jsonl`
+- `automation/runs/YYYY-MM.md`
+"""
+
 SOURCE_HEALTH_TEMPLATE = """# Source Health
 
 Last checked: never
 
 | Source | Status | Detail |
 | --- | --- | --- |
+"""
+
+SOURCE_LANES_TEMPLATE = """# Source Lanes
+
+Last checked: never
+
+| Lane | OK collectors | Error collectors | Items collected |
+| --- | ---: | ---: | ---: |
 """
 
 RELEASE_CHECKLIST_TEMPLATE = """# Release Checklist
@@ -849,11 +909,15 @@ RELEASE_CHECKLIST_TEMPLATE = """# Release Checklist
 DAILY_PROMPT_TEMPLATE = """# Daily Agent Radar Update
 
 Use all available authorized sources. Publish only public-safe summaries. Label weak, private, incomplete, or inferred evidence instead of blocking.
+
+Write daily reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
 """
 
 WEEKLY_PROMPT_TEMPLATE = """# Weekly Agent Radar Review
 
 Synthesize the week across product changes, user experience, infrastructure, storage implications, commercialization, reliability, security, standards, and anti-signals.
+
+Write weekly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
 """
 
 WATCHLIST_PROMPT_TEMPLATE = """# Agent Watchlist Update
@@ -864,6 +928,8 @@ Update mainstream and emerging agent entries using broad authorized source cover
 MONTHLY_PROMPT_TEMPLATE = """# Monthly Agent Radar Review
 
 Synthesize the month, review evidence quality, update watchlist confidence, and change the thesis only when evidence justifies it.
+
+Write monthly reports as bilingual paired reports: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
 """
 
 RELEASE_WORKFLOW_TEMPLATE = """name: Release

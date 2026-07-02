@@ -26,6 +26,8 @@ Focus on:
 7. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
 
 Rules:
+- Write the daily report as a bilingual paired report. For every substantive bullet or paragraph, put `中文：` first and `English:` immediately after it.
+- Keep URLs, source names, product names, model names, repo names, and code identifiers unchanged in both languages.
 - Prefer official sources and real user reports.
 - Do not collect low-value launch hype.
 - Do not rewrite old files unless a thesis genuinely changed.
@@ -48,4 +50,3 @@ Output:
 1. Show a short summary of what you changed.
 2. List files modified.
 3. List sources used or source classes used.
-

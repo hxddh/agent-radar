@@ -11,12 +11,14 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import datetime as dt
+import hashlib
 import html
 import json
 import os
 import re
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -61,7 +63,10 @@ RUN_AUDIT: dict[str, Any] = {
     "public_source_items": 0,
     "source_errors": [],
     "source_status": [],
+    "source_lanes": {},
+    "collected_source_items": 0,
     "budget_status": "normal",
+    "started_at": 0.0,
 }
 
 
@@ -293,6 +298,123 @@ def add_source_item(items: list[dict[str, str]], seen: set[str], source: str, ti
     )
 
 
+def source_lane(source: str) -> str:
+    if source.startswith("github-release:") or source.startswith("github-tag:"):
+        return "github-release"
+    if source.startswith("github"):
+        return "github"
+    if source in {"hacker-news", "reddit"}:
+        return source
+    if source in {"npm", "pypi", "crates", "open-vsx", "docker-hub"}:
+        return "package-marketplace"
+    if source.startswith("arxiv"):
+        return "papers"
+    if source in {"openai-blog", "github-changelog", "cursor-changelog", "cursor-blog", "anthropic-news", "anthropic-engineering"}:
+        return "official"
+    return "feeds-pages"
+
+
+def source_cache_path(root: Path) -> Path:
+    return root / "automation" / "source-cache.jsonl"
+
+
+def load_source_cache(root: Path | None) -> dict[str, dict[str, Any]]:
+    if root is None:
+        return {}
+    path = source_cache_path(root)
+    if not path.exists():
+        return {}
+    cache: dict[str, dict[str, Any]] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        url = record.get("url")
+        if isinstance(url, str):
+            cache[url] = record
+    return cache
+
+
+def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) -> int:
+    title = item.get("title", "")
+    note = item.get("note", "")
+    text = f"{title} {note}".lower()
+    score = 10
+    lane = source_lane(item.get("source", ""))
+    score += {
+        "official": 18,
+        "github-release": 16,
+        "github": 14,
+        "package-marketplace": 12,
+        "hacker-news": 10,
+        "papers": 8,
+        "reddit": 7,
+    }.get(lane, 5)
+    keyword_weights = {
+        "agent": 5,
+        "mcp": 6,
+        "memory": 5,
+        "sandbox": 6,
+        "browser": 5,
+        "eval": 5,
+        "observability": 5,
+        "security": 6,
+        "deployment": 4,
+        "workflow": 4,
+        "multi-agent": 5,
+        "coding": 4,
+        "cli": 3,
+        "release": 3,
+        "changelog": 3,
+    }
+    for keyword, weight in keyword_weights.items():
+        if keyword in text:
+            score += weight
+    stars_match = re.search(r"stars=(\d+)", note)
+    if stars_match:
+        stars = int(stars_match.group(1))
+        if stars >= 1000:
+            score += 14
+        elif stars >= 100:
+            score += 8
+        elif stars >= 10:
+            score += 4
+    if item.get("url", "") not in cache:
+        score += 8
+    else:
+        score -= min(12, int(cache[item["url"]].get("seen_count", 1)) * 2)
+    return max(1, score)
+
+
+def update_source_cache(root: Path | None, items: list[dict[str, str]], day: dt.date) -> None:
+    if root is None:
+        return
+    path = source_cache_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    cache = load_source_cache(root)
+    for item in items:
+        url = item.get("url", "")
+        if not url:
+            continue
+        previous = cache.get(url, {})
+        cache[url] = {
+            "url": url,
+            "title": item.get("title", ""),
+            "source": item.get("source", ""),
+            "lane": source_lane(item.get("source", "")),
+            "first_seen": previous.get("first_seen", day.isoformat()),
+            "last_seen": day.isoformat(),
+            "seen_count": int(previous.get("seen_count", 0)) + 1,
+            "score": item.get("score", 0),
+            "fingerprint": hashlib.sha256(url.encode("utf-8")).hexdigest()[:16],
+        }
+    records = sorted(cache.values(), key=lambda record: (record.get("last_seen", ""), int(record.get("score", 0))), reverse=True)
+    path.write_text("\n".join(json.dumps(record, ensure_ascii=False, sort_keys=True) for record in records[:5000]) + "\n", encoding="utf-8")
+
+
 def audit_model(model: str) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"].append(model)
@@ -344,6 +466,56 @@ def collect_github_items(query: str, limit: int, items: list[dict[str, str]], se
     for repo in data.get("items", [])[:limit]:
         note = f"stars={repo.get('stargazers_count', 0)}; updated={repo.get('updated_at', '')}; {repo.get('description') or ''}"
         add_source_item(items, seen, "github", repo.get("full_name", "GitHub repo"), repo.get("html_url", ""), note)
+
+
+def collect_npm_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    data = request_json(f"https://registry.npmjs.org/-/v1/search?text={encoded}&size={limit}")
+    for result in data.get("objects", [])[:limit]:
+        package = result.get("package", {})
+        name = package.get("name", "npm package")
+        note = f"version={package.get('version', '')}; date={package.get('date', '')}; {package.get('description', '')}"
+        add_source_item(items, seen, "npm", name, f"https://www.npmjs.com/package/{urllib.parse.quote(name)}", note)
+
+
+def collect_pypi_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    request = urllib.request.Request(f"https://pypi.org/search/?q={encoded}", headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    with urllib.request.urlopen(request, timeout=10) as response:
+        text = response.read().decode("utf-8", errors="replace")
+    for href, label in re.findall(r'<a[^>]+href=["\'](/project/[^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)[:limit]:
+        title = strip_html(label).splitlines()[0] if strip_html(label) else href.strip("/").split("/")[-1]
+        add_source_item(items, seen, "pypi", title, urllib.parse.urljoin("https://pypi.org", href), "PyPI search result")
+
+
+def collect_crates_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    data = request_json(f"https://crates.io/api/v1/crates?q={encoded}&per_page={limit}")
+    for crate in data.get("crates", [])[:limit]:
+        name = crate.get("id", "crate")
+        note = f"downloads={crate.get('downloads', 0)}; recent_downloads={crate.get('recent_downloads', 0)}; {crate.get('description') or ''}"
+        add_source_item(items, seen, "crates", name, f"https://crates.io/crates/{urllib.parse.quote(name)}", note)
+
+
+def collect_open_vsx_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    data = request_json(f"https://open-vsx.org/api/-/search?query={encoded}&size={limit}")
+    for extension in data.get("extensions", [])[:limit]:
+        namespace = extension.get("namespace", "")
+        name = extension.get("name", "")
+        full_name = f"{namespace}.{name}".strip(".")
+        note = f"downloads={extension.get('downloadCount', 0)}; rating={extension.get('averageRating', '')}; {extension.get('description') or ''}"
+        add_source_item(items, seen, "open-vsx", full_name or "Open VSX extension", f"https://open-vsx.org/extension/{namespace}/{name}", note)
+
+
+def collect_docker_hub_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    encoded = urllib.parse.quote(query)
+    data = request_json(f"https://hub.docker.com/v2/search/repositories/?query={encoded}&page_size={limit}")
+    for repo in data.get("results", [])[:limit]:
+        namespace = repo.get("repo_owner") or repo.get("namespace") or "library"
+        name = repo.get("repo_name", "docker image")
+        note = f"pulls={repo.get('pull_count', 0)}; stars={repo.get('star_count', 0)}; {repo.get('short_description') or ''}"
+        add_source_item(items, seen, "docker-hub", f"{namespace}/{name}", f"https://hub.docker.com/r/{namespace}/{name}", note)
 
 
 def github_headers() -> dict[str, str]:
@@ -485,11 +657,19 @@ def source_queries_for_task(task: str) -> dict[str, list[str]]:
             "agent security MCP",
             "computer use agent",
         ],
+        "packages": [
+            "mcp server",
+            "ai agent",
+            "coding agent",
+            "agent memory",
+            "agent sandbox",
+        ],
     }
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
         common["reddit"].extend(["AI agent workflow", "AI coding assistant experience", "agent security"])
         common["github"].extend(["browser agent automation", "multi agent orchestration", "agent observability", "agent deployment workflow"])
+        common["packages"].extend(["browser agent", "agent eval", "agent observability", "agent security"])
     return common
 
 
@@ -517,7 +697,7 @@ def changelog_pages() -> list[tuple[str, str]]:
     return pages
 
 
-def collect_public_sources(task: str, root: Path | None = None) -> str:
+def collect_public_sources(task: str, root: Path | None = None, day: dt.date | None = None) -> str:
     if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() in {"0", "false", "no"}:
         return "Public source collection disabled by PUBLIC_SOURCE_COLLECTION."
 
@@ -538,6 +718,13 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
         collectors.append((f"reddit:{query}", "reddit", query, per_query))
     for query in queries["github"]:
         collectors.append((f"github:{query}", "github", query, per_query))
+    for query in queries["packages"]:
+        collectors.append((f"npm:{query}", "npm", query, per_query))
+        collectors.append((f"pypi:{query}", "pypi", query, per_query))
+        collectors.append((f"crates:{query}", "crates", query, per_query))
+        collectors.append((f"open-vsx:{query}", "open-vsx", query, per_query))
+    for query in queries["packages"][:3]:
+        collectors.append((f"docker:{query}", "docker", query, per_query))
     collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://export.arxiv.org/rss/cs.AI", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
@@ -561,6 +748,16 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
                 collect_reddit_items(value, limit, local_items, local_seen)
             elif kind == "github":
                 collect_github_items(value, limit, local_items, local_seen)
+            elif kind == "npm":
+                collect_npm_items(value, limit, local_items, local_seen)
+            elif kind == "pypi":
+                collect_pypi_items(value, limit, local_items, local_seen)
+            elif kind == "crates":
+                collect_crates_items(value, limit, local_items, local_seen)
+            elif kind == "open-vsx":
+                collect_open_vsx_items(value, limit, local_items, local_seen)
+            elif kind == "docker":
+                collect_docker_hub_items(value, limit, local_items, local_seen)
             elif kind == "feed":
                 source_name, feed_url = value.split("=", 1)
                 collect_feed_items(feed_url, source_name, limit, local_items, local_seen)
@@ -576,22 +773,42 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
             return index, name, [], str(exc)
 
     worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 8))
+    collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 60))
     results: list[tuple[int, str, list[dict[str, str]], str | None]] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
-        futures = [executor.submit(run_collector, collector) for collector in collectors]
-        for future in concurrent.futures.as_completed(futures):
+        future_map = {executor.submit(run_collector, collector): collector for collector in collectors}
+        done, pending = concurrent.futures.wait(future_map, timeout=collect_seconds)
+        for future in done:
             results.append(future.result())
+        for future in pending:
+            future.cancel()
+            index = collectors.index(future_map[future])
+            name = future_map[future][0]
+            results.append((index, name, [], f"collector timed out after {collect_seconds}s"))
 
+    lane_stats: dict[str, dict[str, Any]] = {}
     for _, name, local_items, error in sorted(results, key=lambda result: result[0]):
+        lane = name.split(":", 1)[0]
+        lane_record = lane_stats.setdefault(lane, {"ok": 0, "error": 0, "items": 0})
         if error:
+            lane_record["error"] += 1
             errors.append(f"{name}: {error}")
             audit_source_status(name, "error", error)
             continue
+        lane_record["ok"] += 1
+        lane_record["items"] += len(local_items)
         audit_source_status(name, "ok", "")
         for item in local_items:
             add_source_item(items, seen, item["source"], item["title"], item["url"], item.get("note", ""))
 
+    cache = load_source_cache(root)
+    for item in items:
+        item["score"] = str(score_source_item(item, cache))
+    items.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
     limited = items[:budget]
+    update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
+    RUN_AUDIT["source_lanes"] = lane_stats
+    RUN_AUDIT["collected_source_items"] = len(items)
     RUN_AUDIT["public_source_items"] = len(limited)
     lines = [
         "Public source snapshot:",
@@ -599,10 +816,13 @@ def collect_public_sources(task: str, root: Path | None = None) -> str:
         "- Source policy: GitHub API, GitHub releases/tags, Hacker News Algolia, Reddit public JSON, arXiv RSS, public RSS/changelog feeds, and official public changelog/news pages only.",
         f"- Item budget: {budget}",
         f"- Collected before budget trim: {len(items)}",
+        "- Scoring: relevance, source lane, novelty, adoption, infrastructure keywords, and prior-seen penalty.",
     ]
+    for lane, stats in sorted(lane_stats.items()):
+        lines.append(f"- Lane {lane}: ok={stats['ok']}; error={stats['error']}; items={stats['items']}")
     for item in limited:
         note = f" -- {item['note']}" if item.get("note") else ""
-        lines.append(f"- [{item['source']}] {item['title']} | {item['url']}{note}")
+        lines.append(f"- [{item['source']} score={item.get('score', '0')}] {item['title']} | {item['url']}{note}")
     if errors:
         lines.append("Collection errors:")
         for error in errors[:10]:
@@ -911,6 +1131,8 @@ Return only valid JSON with this shape:
 
 Rules:
 - Use broad source coverage and keep going when evidence is weak.
+- For daily, weekly, and monthly report files, write bilingual paired content: Chinese first, then English immediately after it. Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 - For OpenRouter mode, do not use paid search tools. Use the public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
 - If the provider cannot browse the live web, record the limitation in research-log.md.
 - Label weak evidence, missing corroboration, private/logged-in source status, and inference.
@@ -968,6 +1190,7 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Models used: {models}",
         f"- OpenRouter calls attempted: {RUN_AUDIT['openrouter_calls']}",
         f"- Public source items: {RUN_AUDIT['public_source_items']}",
+        f"- Collected source items before trim: {RUN_AUDIT['collected_source_items']}",
         f"- Files changed: {changed}",
         f"- Budget status: {RUN_AUDIT['budget_status']}",
         f"- Fallbacks: {fallbacks}",
@@ -980,6 +1203,29 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
     entry.append("")
     previous = path.read_text(encoding="utf-8") if path.exists() else f"# Cloud Agent Runs - {month_label(day)}\n\n"
     path.write_text(previous + "\n".join(entry) + "\n", encoding="utf-8")
+
+
+def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary: str, sources: list[Any]) -> None:
+    path = root / "automation" / "telemetry" / f"{month_label(day)}.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "date": day.isoformat(),
+        "task": task,
+        "provider": RUN_AUDIT.get("provider") or model_provider(),
+        "models": list(dict.fromkeys(str(model) for model in RUN_AUDIT["models"])),
+        "openrouter_calls": RUN_AUDIT["openrouter_calls"],
+        "public_source_items": RUN_AUDIT["public_source_items"],
+        "collected_source_items": RUN_AUDIT["collected_source_items"],
+        "changed_files": changed,
+        "source_error_count": len(RUN_AUDIT["source_errors"]),
+        "source_lanes": RUN_AUDIT.get("source_lanes", {}),
+        "budget_status": RUN_AUDIT["budget_status"],
+        "duration_seconds": round(time.time() - float(RUN_AUDIT.get("started_at", time.time())), 2),
+        "summary": summary,
+        "model_source_count": len(sources),
+    }
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
 
 
 def update_source_health(root: Path, day: dt.date) -> None:
@@ -1000,6 +1246,33 @@ def update_source_health(root: Path, day: dt.date) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def update_source_lanes(root: Path, day: dt.date) -> None:
+    lanes = RUN_AUDIT.get("source_lanes") or {}
+    if not lanes:
+        return
+    path = root / "automation" / "source-lanes.md"
+    lines = [
+        "# Source Lanes",
+        "",
+        f"Last checked: {day.isoformat()}",
+        "",
+        "| Lane | OK collectors | Error collectors | Items collected |",
+        "| --- | ---: | ---: | ---: |",
+    ]
+    for lane, stats in sorted(lanes.items()):
+        lines.append(f"| {lane} | {stats.get('ok', 0)} | {stats.get('error', 0)} | {stats.get('items', 0)} |")
+    lines.extend(
+        [
+            "",
+            "Failure handling:",
+            "- Collector failures are recorded here and in `automation/source-health.md`.",
+            "- Failed collectors do not block the run when other lanes return usable signals.",
+            "- Repeated failures should be replaced with a stable RSS, API, official page, or user-provided source lane.",
+        ]
+    )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def run_task(root: Path, task: str, day: dt.date) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
@@ -1008,12 +1281,15 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
     RUN_AUDIT["public_source_items"] = 0
     RUN_AUDIT["source_errors"] = []
     RUN_AUDIT["source_status"] = []
+    RUN_AUDIT["source_lanes"] = {}
+    RUN_AUDIT["collected_source_items"] = 0
     RUN_AUDIT["budget_status"] = "normal"
+    RUN_AUDIT["started_at"] = time.time()
     config = TASK_CONFIG[task]
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
     allowed, context = build_context(root, task, day)
-    public_sources = collect_public_sources(task, root) if model_provider() == "openrouter" else ""
+    public_sources = collect_public_sources(task, root, day) if model_provider() == "openrouter" else ""
     prompt = build_prompt(task, day, allowed, context, public_sources)
     data = call_model(prompt, task, public_sources)
     output_text = response_output_text(data)
@@ -1027,7 +1303,9 @@ def run_task(root: Path, task: str, day: dt.date) -> None:
     if not isinstance(sources, list):
         sources = []
     append_run_log(root, task, day, changed, str(result.get("summary", "")), sources)
+    append_telemetry(root, task, day, changed, str(result.get("summary", "")), sources)
     update_source_health(root, day)
+    update_source_lanes(root, day)
     print(f"Task {task}: {changed} file(s) changed.")
     print(f"Summary: {result.get('summary', '')}")
     if sources:

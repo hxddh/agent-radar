@@ -49,9 +49,10 @@ jobs:
       MAX_PROMPT_CHARS: ${{ vars.MAX_PROMPT_CHARS || '' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
-      MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '12' }}
-      MAX_RELEASES_PER_REPO: ${{ vars.MAX_RELEASES_PER_REPO || '2' }}
-      MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '8' }}
+      MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '20' }}
+      MAX_RELEASES_PER_REPO: ${{ vars.MAX_RELEASES_PER_REPO || '3' }}
+      MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '12' }}
+      MAX_COLLECT_SECONDS: ${{ vars.MAX_COLLECT_SECONDS || '60' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
       CHANGELOG_FEEDS: ${{ vars.CHANGELOG_FEEDS || '' }}
       CHANGELOG_PAGES: ${{ vars.CHANGELOG_PAGES || '' }}
@@ -79,6 +80,7 @@ jobs:
           echo "Max release repos: $MAX_RELEASE_REPOS"
           echo "Max releases per repo: $MAX_RELEASES_PER_REPO"
           echo "Max source workers: $MAX_SOURCE_WORKERS"
+          echo "Max collect seconds: $MAX_COLLECT_SECONDS"
 
       - name: Run cloud agent
         run: |

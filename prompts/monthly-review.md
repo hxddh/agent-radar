@@ -25,6 +25,12 @@ Focus on:
 6. Which infrastructure and storage implications became stronger
 7. Which commercialization, enterprise, security, governance, and standards signals matter next
 
+Report language:
+- Write the monthly report as a bilingual paired report.
+- Put Chinese first, then English immediately after it.
+- Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- Keep URLs, product names, model names, repo names, and source labels unchanged.
+
 Rules:
 - Do not rewrite history.
 - Separate evidence from inference.

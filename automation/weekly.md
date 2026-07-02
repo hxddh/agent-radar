@@ -34,6 +34,12 @@ Update when justified:
 
 ## Synthesis Requirements
 
+Write `weekly/YYYY-Www.md` as a bilingual paired report:
+
+- Put Chinese first, then English immediately after it.
+- Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- Keep URLs, product names, model names, repo names, and source labels unchanged.
+
 Cover:
 
 - Product changes
@@ -73,4 +79,3 @@ Commit as:
 ```text
 Update weekly agent radar YYYY-Www
 ```
-

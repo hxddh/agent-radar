@@ -36,6 +36,12 @@ Update when justified:
 
 ## Monthly Decisions
 
+Write `monthly/YYYY-MM.md` as a bilingual paired report:
+
+- Put Chinese first, then English immediately after it.
+- Use `中文：` and `English:` labels for substantive bullets or paragraphs.
+- Keep URLs, product names, model names, repo names, and source labels unchanged.
+
 Decide whether to:
 
 - Promote emerging candidates.
@@ -61,4 +67,3 @@ Commit as:
 ```text
 Update monthly agent radar YYYY-MM
 ```
-

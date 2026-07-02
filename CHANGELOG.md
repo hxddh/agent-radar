@@ -11,11 +11,19 @@ Added:
 - More aggressive multi-lane public-source collection, including Reddit public search attempts and broader HN/GitHub query coverage.
 - Coverage dimensions for product capability, runtime surface, architecture, tooling, infrastructure, quality, adoption, and risk.
 - Official page collection for changelog/news sources that do not expose stable RSS feeds.
+- Source memory in `automation/source-cache.jsonl`.
+- Structured run telemetry in `automation/telemetry/YYYY-MM.jsonl`.
+- Source lane health tracking in `automation/source-lanes.md`.
+- Package and marketplace collectors for npm, PyPI, crates.io, Open VSX, and Docker Hub.
+- Source scoring before prompt construction.
+- Architecture documentation in `docs/architecture.md`.
+- Configurable total source collection timeout with `MAX_COLLECT_SECONDS`.
 
 Changed:
 - Default public-source budgets are now aggressive: daily 80, source-sweep 120, weekly 120, monthly 160.
 - Automatic cloud mode now runs discovery-only source sweep every day and candidate promotion every Wednesday and Sunday.
 - Source collectors now run concurrently and trim after collection, so early source lanes cannot consume the whole source budget.
+- Daily, weekly, and monthly report instructions now require bilingual paired Chinese/English output.
 
 ## v0.2.0 - 2026-07-02
 

@@ -54,8 +54,14 @@ class AgentRadarCliTest(unittest.TestCase):
             self.assertTrue(monthly.exists())
             self.assertTrue(release_draft.exists())
             self.assertTrue((root / "automation" / "source-health.md").exists())
+            self.assertTrue((root / "automation" / "source-lanes.md").exists())
+            self.assertTrue((root / "automation" / "telemetry" / ".gitkeep").exists())
+            self.assertTrue((root / "docs" / "architecture.md").exists())
             self.assertTrue((root / "docs" / "release-checklist.md").exists())
             self.assertEqual(daily.read_text(encoding="utf-8").count("## 2026-07-02"), 1)
+            self.assertIn("中文：", daily.read_text(encoding="utf-8"))
+            self.assertIn("English:", weekly.read_text(encoding="utf-8"))
+            self.assertIn("English:", monthly.read_text(encoding="utf-8"))
 
             nested = root / "daily" / "nested"
             nested.mkdir()

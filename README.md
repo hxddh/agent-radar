@@ -17,6 +17,7 @@ Agent Radar keeps those signals in a simple editable structure:
 - `storage-angle.md` for workspace, sandbox, snapshot, checkpoint, artifact, log, replay, and knowledge-base implications.
 - `research-log.md` for research passes, accepted sources, rejected sources, and follow-up gaps.
 - `docs/maintenance.md` for cadence, evidence labels, public-safe handling, and thesis update rules.
+- `docs/architecture.md` for cloud-agent source lanes, source memory, scoring, telemetry, and bilingual report flow.
 - `daily/` for append-oriented daily notes.
 - `weekly/` for synthesis-oriented weekly notes.
 
@@ -38,6 +39,7 @@ agent-radar/
   research-log.md
   docs/
     maintenance.md
+    architecture.md
     cloud-agent.md
     subscription-mode.md
     release-checklist.md
@@ -51,6 +53,10 @@ agent-radar/
     source-sweep.md
     promote-candidates.md
     source-health.md
+    source-lanes.md
+    source-cache.jsonl
+    telemetry/
+      .gitkeep
     runs/
       .gitkeep
   daily/
@@ -85,6 +91,8 @@ Daily notes are append-oriented. Use them to record high-signal items without fo
 For fully Cloud Agent-driven operation, use `automation/daily.md`.
 
 For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`. The recommended low-cost paid mode uses OpenRouter with DeepSeek V4 Flash, DeepSeek V4 Pro, GLM 5.2, and free public sources only; see `docs/cloud-agent.md`.
+
+Cloud mode uses source lanes, source-cache novelty tracking, scoring, source health, lane health, and structured telemetry. Daily, weekly, and monthly reports should be bilingual paired reports with Chinese first and English immediately after it.
 
 Daily lightweight questions:
 

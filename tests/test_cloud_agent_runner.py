@@ -77,6 +77,25 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("AI coding agent", queries["reddit"])
         self.assertIn("agent eval framework", queries["github"])
         self.assertIn("browser agent", queries["hn"])
+        self.assertIn("mcp server", queries["packages"])
+
+    def test_source_scoring_and_cache(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            item = {
+                "source": "github",
+                "title": "Agent memory MCP sandbox",
+                "url": "https://github.com/example/agent-memory",
+                "note": "stars=1200; updated=2026-07-02",
+            }
+            score = cloud_agent_runner.score_source_item(item, {})
+            self.assertGreater(score, 40)
+            item["score"] = str(score)
+            cloud_agent_runner.update_source_cache(root, [item], cloud_agent_runner.parse_date("2026-07-02"))
+            cache_text = (root / "automation" / "source-cache.jsonl").read_text(encoding="utf-8")
+            self.assertIn("agent-memory", cache_text)
+            cache = cloud_agent_runner.load_source_cache(root)
+            self.assertIn(item["url"], cache)
 
     def test_extracts_github_repos_for_release_tracking(self) -> None:
         repos = cloud_agent_runner.extract_github_repos(
@@ -151,15 +170,23 @@ class CloudAgentRunnerTest(unittest.TestCase):
             cloud_agent_runner.RUN_AUDIT["models"] = ["deepseek/deepseek-v4-pro"]
             cloud_agent_runner.RUN_AUDIT["openrouter_calls"] = 1
             cloud_agent_runner.RUN_AUDIT["public_source_items"] = 3
+            cloud_agent_runner.RUN_AUDIT["collected_source_items"] = 5
             cloud_agent_runner.RUN_AUDIT["source_errors"] = ["feed:test: 404"]
             cloud_agent_runner.RUN_AUDIT["source_status"] = [{"name": "feed:test", "status": "error", "detail": "404"}]
+            cloud_agent_runner.RUN_AUDIT["source_lanes"] = {"feed": {"ok": 0, "error": 1, "items": 0}}
             cloud_agent_runner.RUN_AUDIT["budget_status"] = "normal"
+            cloud_agent_runner.RUN_AUDIT["started_at"] = 1.0
             day = cloud_agent_runner.parse_date("2026-07-02")
             cloud_agent_runner.append_run_log(root, "source-sweep", day, 2, "summary", ["source"])
+            cloud_agent_runner.append_telemetry(root, "source-sweep", day, 2, "summary", ["source"])
             cloud_agent_runner.update_source_health(root, day)
+            cloud_agent_runner.update_source_lanes(root, day)
 
             self.assertIn("OpenRouter calls attempted: 1", (root / "automation" / "runs" / "2026-07.md").read_text())
+            self.assertIn("Collected source items before trim: 5", (root / "automation" / "runs" / "2026-07.md").read_text())
+            self.assertIn("\"source_error_count\": 1", (root / "automation" / "telemetry" / "2026-07.jsonl").read_text())
             self.assertIn("feed:test", (root / "automation" / "source-health.md").read_text())
+            self.assertIn("| feed | 0 | 1 | 0 |", (root / "automation" / "source-lanes.md").read_text())
 
 
 if __name__ == "__main__":
