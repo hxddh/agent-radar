@@ -64,21 +64,47 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {"PUBLIC_SOURCE_COLLECTION": "false"}, clear=True):
             self.assertIn("disabled", cloud_agent_runner.collect_public_sources("daily"))
 
-    def test_reddit_collection_disabled_by_default(self) -> None:
+    def test_reddit_search_disabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertFalse(cloud_agent_runner.collector_enabled("reddit"))
-            prompt = cloud_agent_runner.build_prompt(
-                "daily",
-                cloud_agent_runner.parse_date("2026-07-02"),
-                ["research-log.md"],
-                "repo context",
-                "Public source snapshot:\n- Reddit collection: disabled (set COLLECT_REDDIT=true to enable)",
-            )
-        self.assertIn("Reddit collection: disabled", prompt)
+            self.assertTrue(cloud_agent_runner.collector_enabled("reddit-rss"))
+            self.assertTrue(cloud_agent_runner.collector_enabled("bluesky"))
 
-    def test_reddit_collection_can_be_enabled(self) -> None:
+    def test_reddit_search_can_be_enabled(self) -> None:
         with mock.patch.dict(os.environ, {"COLLECT_REDDIT": "true"}, clear=True):
             self.assertTrue(cloud_agent_runner.collector_enabled("reddit"))
+
+    def test_x_requires_bearer_token(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertFalse(cloud_agent_runner.collector_enabled("x"))
+        with mock.patch.dict(os.environ, {"X_BEARER_TOKEN": "token"}, clear=True):
+            self.assertTrue(cloud_agent_runner.collector_enabled("x"))
+
+    def test_bluesky_collector_parses_posts(self) -> None:
+        payload = {
+            "posts": [
+                {
+                    "uri": "at://did:plc:abc/app.bsky.feed.post/3jz7",
+                    "indexedAt": "2026-07-02T00:00:00.000Z",
+                    "author": {"handle": "example.bsky.social"},
+                    "record": {"text": "AI agent memory update"},
+                }
+            ]
+        }
+        items: list[dict[str, str]] = []
+        seen: set[str] = set()
+        with mock.patch.object(cloud_agent_runner, "request_json", return_value=payload):
+            cloud_agent_runner.collect_bluesky_items("AI agent", 1, items, seen)
+        self.assertEqual(len(items), 1)
+        self.assertIn("bsky.app/profile/example.bsky.social/post/3jz7", items[0]["url"])
+
+    def test_reddit_rss_uses_feed_collector(self) -> None:
+        items: list[dict[str, str]] = []
+        seen: set[str] = set()
+        with mock.patch.object(cloud_agent_runner, "collect_feed_items") as feed_mock:
+            cloud_agent_runner.collect_reddit_rss_items("LocalLLaMA", 3, items, seen)
+        feed_mock.assert_called_once()
+        self.assertIn("reddit.com/r/LocalLLaMA/new.rss", feed_mock.call_args.args[0])
 
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
