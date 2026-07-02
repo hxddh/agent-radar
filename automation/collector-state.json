@@ -4,25 +4,25 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "bluesky:AI agent": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "bluesky:Claude Code": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "bluesky:MCP server": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "bluesky:agent eval": {
       "error": 0,
@@ -34,7 +34,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "bluesky:agent sandbox": {
       "error": 0,
@@ -52,7 +52,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "crates:agent eval": {
       "error": 0,
@@ -64,7 +64,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "crates:agent observability": {
       "error": 0,
@@ -76,7 +76,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "crates:agent security": {
       "error": 0,
@@ -88,7 +88,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "crates:browser agent": {
       "error": 0,
@@ -100,37 +100,37 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "crates:mcp server": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "devto:ai": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "devto:devops": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "devto:machinelearning": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "devto:opensource": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "devto:productivity": {
       "error": 0,
@@ -148,49 +148,49 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "docker:coding agent": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "docker:mcp server": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "feed:github-changelog": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "feed:openai-blog": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:AI agent framework": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:AI agent sandbox": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:MCP server agent": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:agent deployment workflow": {
       "error": 0,
@@ -202,13 +202,13 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:agent memory MCP": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:agent observability": {
       "error": 0,
@@ -220,7 +220,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:browser agent automation": {
       "error": 0,
@@ -232,13 +232,13 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:computer use agent": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "github:multi agent orchestration": {
       "error": 0,
@@ -250,7 +250,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "hn:AI agent evaluation": {
       "error": 0,
@@ -262,7 +262,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "hn:agent deployment": {
       "error": 0,
@@ -274,13 +274,13 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "hn:agent sandbox": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "hn:browser agent": {
       "error": 0,
@@ -292,13 +292,13 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "lobsters:newest": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "npm:agent eval": {
       "error": 0,
@@ -310,7 +310,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "npm:agent observability": {
       "error": 0,
@@ -322,7 +322,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "npm:agent security": {
       "error": 0,
@@ -334,7 +334,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "npm:browser agent": {
       "error": 0,
@@ -346,13 +346,13 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "npm:mcp server": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "open-vsx:agent eval": {
       "error": 0,
@@ -364,7 +364,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "open-vsx:agent observability": {
       "error": 0,
@@ -376,7 +376,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "open-vsx:agent security": {
       "error": 0,
@@ -388,7 +388,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "open-vsx:browser agent": {
       "error": 0,
@@ -400,85 +400,85 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "open-vsx:mcp server": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "page:anthropic-engineering": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "page:anthropic-news": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "page:cursor-blog": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "page:cursor-changelog": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:anthropic": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:autogen-agentchat": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:crewai": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:langchain": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:llama-index": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:mcp": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:openai": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-package:semantic-kernel": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-updates:agent eval": {
       "error": 0,
@@ -490,7 +490,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-updates:agent observability": {
       "error": 0,
@@ -502,7 +502,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-updates:agent security": {
       "error": 0,
@@ -514,7 +514,7 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-updates:browser agent": {
       "error": 0,
@@ -526,33 +526,39 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "pypi-updates:mcp server": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "reddit-rss:ChatGPT": {
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
+      "error": 1,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
       "ok": 1
     },
     "reddit-rss:ClaudeAI": {
       "error": 1,
       "last_detail": "HTTP Error 429: Too Many Requests",
-      "last_status": "error",
-      "ok": 0
-    },
-    "reddit-rss:LocalLLaMA": {
-      "error": 0,
-      "last_detail": "",
       "last_status": "ok",
       "ok": 1
     },
+    "reddit-rss:LocalLLaMA": {
+      "error": 1,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "ok": 1
+    },
     "release:AdelElo13/neuromcp": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "release:alexmond/jvmlens": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -562,15 +568,39 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
+      "ok": 2
+    },
+    "release:chriswu727/argus": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 1
+    },
+    "release:clidey/deptrust": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 1
+    },
+    "release:coldzero94/cold-frame": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
       "ok": 1
     },
     "release:danilkryachko/dukememory": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "release:elizaOS/eliza": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "release:envibagus/cortex": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -580,21 +610,33 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
+      "ok": 2
+    },
+    "release:macro-inc/macro": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
       "ok": 1
     },
     "release:modelcontextprotocol/python-sdk": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "release:modelcontextprotocol/servers": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "release:modelcontextprotocol/typescript-sdk": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "release:navyforses/ALEKSANDRA_BRAIN_v4": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -604,21 +646,27 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "release:omnigent-ai/omnigent": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "release:openai/codex": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "release:ronie-aduana/mcp-ai-memory": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "release:takashikiari/GOAT2-General-Orchestrated-Agent-Topology": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -628,9 +676,15 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:AdelElo13/neuromcp": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "tag:alexmond/jvmlens": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -640,15 +694,39 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
+      "ok": 2
+    },
+    "tag:chriswu727/argus": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 1
+    },
+    "tag:clidey/deptrust": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 1
+    },
+    "tag:coldzero94/cold-frame": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
       "ok": 1
     },
     "tag:danilkryachko/dukememory": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:elizaOS/eliza": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "tag:envibagus/cortex": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -658,21 +736,33 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
+      "ok": 2
+    },
+    "tag:macro-inc/macro": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
       "ok": 1
     },
     "tag:modelcontextprotocol/python-sdk": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:modelcontextprotocol/servers": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:modelcontextprotocol/typescript-sdk": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "tag:navyforses/ALEKSANDRA_BRAIN_v4": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
@@ -682,21 +772,27 @@
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:omnigent-ai/omnigent": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:openai/codex": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 1
+      "ok": 2
     },
     "tag:ronie-aduana/mcp-ai-memory": {
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "ok": 2
+    },
+    "tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",

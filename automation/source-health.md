@@ -4,8 +4,8 @@ Last checked: 2026-07-02
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| github:agent observability | ok |  |
-| github:agent deployment workflow | ok |  |
+| github:agent security MCP | ok |  |
+| github:computer use agent | ok |  |
 | npm:mcp server | ok |  |
 | pypi-updates:mcp server | ok |  |
 | crates:mcp server | ok |  |
@@ -26,22 +26,6 @@ Last checked: 2026-07-02
 | pypi-updates:agent sandbox | ok |  |
 | crates:agent sandbox | ok |  |
 | open-vsx:agent sandbox | ok |  |
-| npm:browser agent | ok |  |
-| pypi-updates:browser agent | ok |  |
-| crates:browser agent | ok |  |
-| open-vsx:browser agent | ok |  |
-| npm:agent eval | ok |  |
-| pypi-updates:agent eval | ok |  |
-| crates:agent eval | ok |  |
-| open-vsx:agent eval | ok |  |
-| npm:agent observability | ok |  |
-| pypi-updates:agent observability | ok |  |
-| crates:agent observability | ok |  |
-| open-vsx:agent observability | ok |  |
-| npm:agent security | ok |  |
-| pypi-updates:agent security | ok |  |
-| crates:agent security | ok |  |
-| open-vsx:agent security | ok |  |
 | docker:mcp server | ok |  |
 | docker:ai agent | ok |  |
 | docker:coding agent | ok |  |
@@ -84,3 +68,19 @@ Last checked: 2026-07-02
 | tag:bobmatnyc/trusty-tools | ok |  |
 | release:kinqsradiollc/BrainRouter | ok |  |
 | tag:kinqsradiollc/BrainRouter | ok |  |
+| release:macro-inc/macro | ok |  |
+| tag:macro-inc/macro | ok |  |
+| release:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
+| tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
+| release:clidey/deptrust | ok |  |
+| tag:clidey/deptrust | ok |  |
+| release:chriswu727/argus | ok |  |
+| tag:chriswu727/argus | ok |  |
+| release:alexmond/jvmlens | ok |  |
+| tag:alexmond/jvmlens | ok |  |
+| release:coldzero94/cold-frame | ok |  |
+| tag:coldzero94/cold-frame | ok |  |
+| release:envibagus/cortex | ok |  |
+| tag:envibagus/cortex | ok |  |
+| release:navyforses/ALEKSANDRA_BRAIN_v4 | ok |  |
+| tag:navyforses/ALEKSANDRA_BRAIN_v4 | ok |  |
