@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.1 - 2026-07-02
+
+### Fixed
+- Daily block conversion now preserves `What happened` / `Why it matters` field structure and Chinese source index.
+- `weekly/2026-W27.md` malformed sources, truncation, and superseded banner; added per-agent sources.
+- `weekly/2026-W28.md` Docker URLs (500K+ pulls), official Apple/AWS corroboration, Chinese executive summary alignment.
+- `monthly/2026-07.md` seed title clarity and representative source URLs.
+- `radar.md`, `research-log.md`, `storage-angle.md` MongoDB Docker URL corrections.
+
 ## v0.5.0 - 2026-07-02
 
 ### Added

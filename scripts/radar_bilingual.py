@@ -26,9 +26,20 @@ MIN_IDENTICAL_PAIR_CHARS = 12
 MIN_CJK_PAIR_CHARS = 8
 MIN_CJK_LINES_FOR_SUBSTANCE = 3
 MIN_CJK_RATIO = 0.6
+DAILY_BLOCK_FORMAT_NOTE = (
+    "> Format: read `### English` first, then `### 中文` for each day. "
+    "URLs, Evidence strength, and Source class appear in `### English` only; "
+    "the Chinese block mirrors narrative prose."
+)
+CHINESE_SOURCE_INDEX = (
+    "> 来源索引：本日 `### English` 含 Source / Evidence strength / Source class；下文为中文叙述。"
+)
 BLOCK_FORMAT_NOTE = (
     "> Format: read the full `## English` section first, then the full `## 中文` section. "
     "URLs, repo names, and product names appear once in the English section unless language-neutral."
+)
+WEEKLY_CHINESE_SOURCE_INDEX = (
+    "> 来源索引：`## English` 含 Source / Evidence strength；下文为中文叙述。"
 )
 
 
@@ -395,15 +406,118 @@ def _extract_paired_items(section_lines: list[str]) -> list[dict[str, object]]:
     return items
 
 
+def _split_daily_section_items(section_lines: list[str]) -> list[list[str]]:
+    items: list[list[str]] = []
+    current: list[str] = []
+    for line in section_lines:
+        if not line.strip():
+            continue
+        if BULLET_RE.match(line) and not BULLET_RE.match(line).group(1):
+            if current:
+                items.append(current)
+            current = [line]
+        elif current:
+            current.append(line)
+    if current:
+        items.append(current)
+    return items
+
+
+def _split_daily_day_sections(day_body: list[str]) -> list[tuple[str, list[str]]]:
+    sections: list[tuple[str, list[str]]] = []
+    current_title = ""
+    current_body: list[str] = []
+    for line in day_body:
+        if re.match(r"^### \d+\.", line):
+            if current_title or current_body:
+                sections.append((current_title, current_body))
+            current_title = line[4:].strip()
+            current_body = []
+            continue
+        if line.strip():
+            current_body.append(line)
+    if current_title or current_body:
+        sections.append((current_title, current_body))
+    return sections
+
+
+def _render_daily_item(item_lines: list[str]) -> tuple[list[str], list[str]]:
+    if not item_lines:
+        return [], []
+    label_match = BULLET_RE.match(item_lines[0])
+    label = label_match.group(2).strip().rstrip(":") if label_match else "Item"
+    english: list[str] = []
+    chinese: list[str] = []
+    index = 1
+    title_chinese = ""
+    title_english = ""
+    if index < len(item_lines) and CHINESE_LABEL_RE.match(item_lines[index]):
+        title_chinese = CHINESE_LABEL_RE.match(item_lines[index]).group(2).strip()
+        index += 1
+    if index < len(item_lines) and ENGLISH_LABEL_RE.match(item_lines[index]):
+        title_english = ENGLISH_LABEL_RE.match(item_lines[index]).group(2).strip()
+        index += 1
+    if title_english:
+        english.append(f"- {label}: {title_english}")
+    else:
+        english.append(f"- {label}")
+    if title_chinese:
+        chinese.append(f"- {label}: {title_chinese}")
+    else:
+        chinese.append(f"- {label}")
+
+    while index < len(item_lines):
+        line = item_lines[index]
+        if not line.startswith("  "):
+            break
+        field_match = re.match(r"^  - (.+)$", line)
+        if not field_match:
+            index += 1
+            continue
+        field_body = field_match.group(1).strip()
+        if CHINESE_LABEL_RE.match(line) or ENGLISH_LABEL_RE.match(line):
+            index += 1
+            continue
+        if re.match(r"^https?://", field_body):
+            english.append(f"  - Source: {field_body}")
+            index += 1
+            continue
+        if ": " in field_body and not field_body.endswith(":"):
+            english.append(f"  - {field_body}")
+            index += 1
+            continue
+        field_name = field_body.rstrip(":")
+        nested_chinese = ""
+        nested_english = ""
+        if index + 2 < len(item_lines):
+            child_chinese = CHINESE_LABEL_RE.match(item_lines[index + 1])
+            child_english = ENGLISH_LABEL_RE.match(item_lines[index + 2])
+            if child_chinese and child_english and item_lines[index + 1].startswith("    "):
+                nested_chinese = child_chinese.group(2).strip()
+                nested_english = child_english.group(2).strip()
+                english.append(f"  - {field_name}: {nested_english}")
+                chinese.append(f"  - {field_name}: {nested_chinese}")
+                index += 3
+                continue
+        if field_body.endswith(":"):
+            english.append(f"  - {field_name}:")
+            chinese.append(f"  - {field_name}:")
+        else:
+            english.append(f"  - {field_name}")
+            chinese.append(f"  - {field_name}")
+        index += 1
+    return english, chinese
+
+
 def convert_daily_paired_to_block(content: str) -> str:
-    if is_daily_block_format(content):
+    if is_daily_block_format(content) and "  - What happened:" in content:
         return content
     if "Daily Agent Radar" not in content or not is_paired_bilingual_format(content):
         return content
 
     lines = content.splitlines()
     prefix_lines: list[str] = []
-    sections: list[tuple[str, list[str]]] = []
+    day_sections: list[tuple[str, list[str]]] = []
     index = 0
     while index < len(lines):
         line = lines[index]
@@ -416,37 +530,32 @@ def convert_daily_paired_to_block(content: str) -> str:
                     break
                 body.append(lines[index])
                 index += 1
-            sections.append((title, body))
+            day_sections.append((title, body))
             continue
-        if not sections:
+        if not day_sections:
             prefix_lines.append(line)
         index += 1
 
     output: list[str] = [line for line in prefix_lines if line.strip() and not line.startswith("> Format:")]
-    if output and BLOCK_FORMAT_NOTE.replace("`### English`", "`## English`") not in "\n".join(output):
-        output.extend(["", "> Format: read `### English` first, then `### 中文` for each day. URLs appear once in English unless language-neutral.", ""])
-    for title, body in sections:
-        output.append(title)
+    if output:
+        output.append("")
+    output.append(DAILY_BLOCK_FORMAT_NOTE)
+    output.append("")
+
+    for day_title, day_body in day_sections:
+        output.append(day_title)
         output.append("")
         english_lines = ["### English", ""]
-        chinese_lines = ["### 中文", ""]
-        items = _extract_paired_items(body)
-        if not items and body:
-            english_lines.extend(body)
-            chinese_lines.extend(body)
-        for item in items:
-            label = str(item.get("label", "")).strip()
-            english = str(item.get("english", "")).strip()
-            chinese = str(item.get("chinese", "")).strip()
-            metadata = item.get("metadata", [])
-            if english:
-                english_lines.append(f"- {label}: {english}" if label and not has_cjk(label) else f"- {english}")
-            for meta in metadata:
-                english_lines.append(str(meta))
-            if chinese:
-                chinese_lines.append(f"- {label}: {chinese}" if label and has_cjk(label) else f"- {chinese}")
-            if english or chinese:
+        chinese_lines = ["### 中文", "", CHINESE_SOURCE_INDEX, ""]
+        for section_title, section_body in _split_daily_day_sections(day_body):
+            if section_title:
+                english_lines.extend([f"#### {section_title}", ""])
+                chinese_lines.extend([f"#### {section_title}", ""])
+            for item_lines in _split_daily_section_items(section_body):
+                en_item, zh_item = _render_daily_item(item_lines)
+                english_lines.extend(en_item)
                 english_lines.append("")
+                chinese_lines.extend(zh_item)
                 chinese_lines.append("")
         output.extend(english_lines)
         output.append("")
@@ -454,6 +563,7 @@ def convert_daily_paired_to_block(content: str) -> str:
         output.append("")
         output.append("---")
         output.append("")
+
     while output and output[-1] == "---":
         output.pop()
     while output and not output[-1].strip():

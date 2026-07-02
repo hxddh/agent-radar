@@ -20,7 +20,7 @@ Last updated: 2026-07-06
 ### 2026-07-06
 
 - Added: Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
-- Evidence: Apple Safari MCP server (Technology Preview 247), AWS Agent Toolkit (300+ services, 64 curated skills, IAM-scoped, CloudTrail logging), MongoDB official MCP Docker image (578K pulls), HashiCorp Vault official MCP server.
+- Evidence: Apple Safari MCP server (Technology Preview 247; WebKit blog), AWS Agent Toolkit (AWS What's New), MongoDB official MCP Docker image (500K+ pulls), HashiCorp Vault official MCP server.
 - Confidence: Medium.
 
 ### 2026-07-02

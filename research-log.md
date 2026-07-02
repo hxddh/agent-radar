@@ -586,7 +586,7 @@ Accepted sources:
 - dylanp12/proctor: https://github.com/dylanp12/proctor (benchmark sandbox with signed integrity bundles)
 - Apple Safari MCP server: https://bsky.app/profile/saganote.bsky.social/post/3mpn6wyjvck2n (Safari Technology Preview 247)
 - AWS Agent Toolkit: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mpn5g6l7g72t (300+ services, 64 skills)
-- MongoDB MCP Server: https://hub.docker.com/r/library/mongodb/mongodb-mcp-server (578K Docker pulls)
+- MongoDB MCP Server: https://hub.docker.com/r/mongodb/mongodb-mcp-server (500K+ Docker pulls)
 - HashiCorp Vault MCP Server: https://hub.docker.com/r/library/hashicorp/vault-mcp-server
 - Okta MCP Server: https://pypi.org/project/okta-mcp-server/1.1.2/ (GA)
 - Camunda MCP Server: https://pypi.org/project/camunda-mcp/1.0.1/
@@ -603,7 +603,7 @@ Promoted candidates:
 
 Thesis changes:
 - Added thesis point 10 to radar.md: Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
-- Evidence: Apple Safari MCP server, AWS Agent Toolkit, MongoDB official MCP Docker image (578K pulls), Vault official MCP server.
+- Evidence: Apple Safari MCP server (WebKit blog), AWS Agent Toolkit (AWS What's New), MongoDB official MCP Docker image (500K+ pulls), Vault official MCP server.
 - Confidence: Medium.
 
 Rejected or deprioritized:
