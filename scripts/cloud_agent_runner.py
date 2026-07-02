@@ -1565,6 +1565,11 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         if content and not content.endswith("\n"):
             content += "\n"
         content = radar_bilingual.ensure_bilingual_file_content(rel_path, content)
+        if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
+            if radar_bilingual.missing_chinese_substance(content):
+                raise SystemExit(
+                    f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
+                )
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)

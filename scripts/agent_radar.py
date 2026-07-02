@@ -33,7 +33,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 CORE_FILES = [
     "README.md",
@@ -564,13 +564,16 @@ def warn_identical_bilingual_pairs(path: Path, strict: bool = False) -> list[str
     return [f"{message}; run bilingualize to repair placeholders"]
 
 
-def warn_missing_chinese_substance(path: Path) -> list[str]:
+def warn_missing_chinese_substance(path: Path, strict: bool = False) -> list[str]:
     if not path.exists():
         return []
     content = path.read_text(encoding="utf-8")
-    if radar_bilingual.missing_chinese_substance(content):
-        return [f"{path}: Chinese sections are mostly empty; model should add real 中文 content"]
-    return []
+    if not radar_bilingual.missing_chinese_substance(content):
+        return []
+    message = f"{path}: Chinese sections lack substantive 中文 content (need CJK text, not empty placeholders)"
+    if strict:
+        return [message]
+    return [message + "; cloud agent should add real Chinese translations"]
 
 
 def command_bilingualize(args: argparse.Namespace) -> int:
@@ -642,6 +645,7 @@ def command_validate(args: argparse.Namespace) -> int:
     warnings.extend(warn_empty_fields(current_monthly))
     warnings.extend(warn_weekly_sparse(current_weekly))
     strict_bilingual = getattr(args, "strict_bilingual", False)
+    require_chinese = getattr(args, "require_chinese", False)
     if strict_bilingual:
         errors.extend(warn_bilingual_missing(current_daily, strict=True))
         errors.extend(warn_bilingual_missing(current_weekly, strict=True))
@@ -654,9 +658,14 @@ def command_validate(args: argparse.Namespace) -> int:
         warnings.extend(warn_bilingual_missing(current_weekly))
         warnings.extend(warn_bilingual_missing(current_monthly))
         warnings.extend(warn_identical_bilingual_pairs(current_daily))
-    warnings.extend(warn_missing_chinese_substance(current_daily))
-    warnings.extend(warn_missing_chinese_substance(current_weekly))
-    warnings.extend(warn_missing_chinese_substance(current_monthly))
+    if require_chinese:
+        errors.extend(warn_missing_chinese_substance(current_daily, strict=True))
+        errors.extend(warn_missing_chinese_substance(current_weekly, strict=True))
+        errors.extend(warn_missing_chinese_substance(current_monthly, strict=True))
+    else:
+        warnings.extend(warn_missing_chinese_substance(current_daily))
+        warnings.extend(warn_missing_chinese_substance(current_weekly))
+        warnings.extend(warn_missing_chinese_substance(current_monthly))
 
     if errors:
         print("Validation failed. Missing required files or directories:")
@@ -832,6 +841,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--strict-bilingual",
         action="store_true",
         help="Treat missing bilingual labels in report files as validation errors.",
+    )
+    validate_parser.add_argument(
+        "--require-chinese",
+        action="store_true",
+        help="Require substantive 中文 content (CJK text) in report files with enough English content.",
     )
     validate_parser.set_defaults(func=command_validate)
 

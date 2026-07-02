@@ -33,7 +33,7 @@ python scripts/agent_radar.py weekly
 python scripts/agent_radar.py monthly
 python scripts/agent_radar.py brief
 python scripts/agent_radar.py validate
-python scripts/agent_radar.py validate --strict-bilingual
+python scripts/agent_radar.py validate --strict-bilingual --require-chinese
 python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
 ```
 
