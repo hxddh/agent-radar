@@ -937,3 +937,52 @@ Follow-up gaps:
 - Monitor candidates for adoption, integration, and independent user evidence.
 - Track whether evaluation and storage standards begin to converge.
 - Watch for security tools integrating with CI/CD for agent workflows.
+
+
+### Pass: Daily update (2026-07-03)
+
+Purpose:
+- Integrate screening pass signals into daily report, incorporating top candidates and gaps.
+
+Accepted sources:
+- OpenSandbox: https://github.com/opensandbox-group/OpenSandbox
+- FastGPT: https://github.com/labring/FastGPT
+- elizaOS: https://github.com/elizaOS/eliza
+- BitFun: https://github.com/GCWing/BitFun
+- InnerWarden: https://github.com/InnerWarden/innerwarden
+- Litefuse: https://github.com/litefuse/litefuse
+- OrchestKit: https://github.com/yonatangross/orchestkit
+- Local LLM Proxy: https://github.com/wink-run/local-llm-proxy
+- GoClaw: https://github.com/nextlevelbuilder/goclaw
+- Flowork_Agent: https://github.com/flowork-os/Flowork_Agent
+- Prismor: https://github.com/PrismorSec/prismor
+- yoloai: https://github.com/kstenerud/yoloai
+- agentguard: https://github.com/Sungho-pk42ac/agentguard
+- duduclaw: https://pypi.org/project/duduclaw/1.32.0/
+- tokenfuse: https://github.com/TAIPANBOX/tokenfuse
+- perseus-vault: https://github.com/Perseus-Computing-LLC/perseus-vault
+
+Changes:
+- Updated daily/2026-07.md section 3 (Emerging Agents) with all screening pass candidates.
+- Updated gaps to include limited agent-to-agent communication and multi-agent eval signals.
+- No promotions to watchlist; all candidates remain deferred with weak evidence.
+
+Follow-up gaps:
+- Monitor OpenSandbox, InnerWarden, and others for integration with major agent frameworks.
+- Track emerging eval platforms (Litefuse) and agent OS (elizaOS) for user adoption.
+
+
+### Pass 20: Source-sweep completion (2026-07-03)
+
+Purpose:
+- Complete source-sweep task using the provided screening pass. Update sources.md and confirm candidate inbox.
+
+Accepted sources:
+- All sources from screening pass already added to sources.md and candidate inbox in Pass 19.
+
+Changes:
+- sources.md updated with additional sources from screening pass (already present).
+- Candidate inbox confirmed in research-log.md (Pass 19).
+
+Follow-up gaps:
+- Same as Pass 19.

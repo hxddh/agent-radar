@@ -1,166 +1,166 @@
 {
-  "summary": "Screened 80 source items. Top 12 candidates emphasize agent security, sandboxing, persistent memory, MCP tooling, and runtime control. Leading projects: GoClaw, Flowork_Agent, Prismor, yoloai, agentguard, duduclaw, tokenfuse, perseus-vault, forcefield, phinq, ai-agent-nix-sandboxing, rocketride-server.",
+  "summary": "Agent infrastructure signals: sandbox runtimes, persistent memory, security layers, MCP tool ecosystems, and evaluation platforms dominate. Notable: OpenSandbox (sandbox), FastGPT (RAG), elizaOS (agentic OS), BitFun (desktop runtime), innerwarden (security), litefuse (eval), orchestkit (dev toolkit), local-llm-proxy (routing), nano-brain (memory), agent-opfor (adversary emulation), iris-security (governance), sage-harness (governance harness).",
   "candidates": [
     {
-      "title": "GoClaw: Multi-tenant AI agent deployment with isolation",
-      "why_it_matters": "Enables secure team-scale agent deployment with 5-layer security and native concurrency.",
+      "title": "OpenSandbox - Secure sandbox runtime for AI agents",
+      "why_it_matters": "Fast, extensible sandbox for agent code execution",
       "evidence": [
-        "https://github.com/nextlevelbuilder/goclaw"
+        "https://github.com/opensandbox-group/OpenSandbox"
       ],
       "confidence": "high",
       "relevance_score": 9,
       "source_diversity": 1,
       "infra_angle": "sandbox",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "2026-07-04"
     },
     {
-      "title": "Flowork_Agent: Self-hosted agents with per-agent brain",
-      "why_it_matters": "Provides isolated persistent memory, immune system, and MCP orchestration in a single binary.",
+      "title": "FastGPT - Knowledge platform with RAG and workflow",
+      "why_it_matters": "Out-of-box RAG and AI workflow for agent knowledge",
       "evidence": [
-        "https://github.com/flowork-os/Flowork_Agent"
-      ],
-      "confidence": "medium",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "Prismor: Runtime security for AI agents",
-      "why_it_matters": "Blocks dangerous commands, secret leaks, and prompt injection in real time.",
-      "evidence": [
-        "https://github.com/PrismorSec/prismor"
+        "https://github.com/labring/FastGPT"
       ],
       "confidence": "high",
       "relevance_score": 8,
       "source_diversity": 1,
-      "infra_angle": "security",
+      "infra_angle": "storage",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "2026-07-04"
     },
     {
-      "title": "yoloai: AI agent sandboxing done right",
-      "why_it_matters": "Lightweight sandboxing for isolating AI agent execution environments.",
+      "title": "elizaOS - Open source agentic operating system",
+      "why_it_matters": "Full agent OS runtime with memory and tools",
       "evidence": [
-        "https://github.com/kstenerud/yoloai"
+        "https://github.com/elizaOS/eliza"
       ],
       "confidence": "high",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "infra_angle": "sandbox",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "agentguard: AgentOps security scanner",
-      "why_it_matters": "Scans MCP configs, transcripts, and PR diffs for agent security issues.",
-      "evidence": [
-        "https://github.com/Sungho-pk42ac/agentguard"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "duduclaw: Multi-LLM agent platform with 80+ MCP tools",
-      "why_it_matters": "Unifies Claude, Codex, Gemini with agent routing and extensive MCP ecosystem.",
-      "evidence": [
-        "https://pypi.org/project/duduclaw/1.32.0/"
-      ],
-      "confidence": "high",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "infra_angle": "mcp",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "tokenfuse: Runtime cost control for agents",
-      "why_it_matters": "Adds per-run budgets, loop detection, and kill-switch to prevent runaway costs.",
-      "evidence": [
-        "https://github.com/TAIPANBOX/tokenfuse"
-      ],
-      "confidence": "high",
-      "relevance_score": 7,
+      "relevance_score": 9,
       "source_diversity": 1,
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "2026-07-04"
     },
     {
-      "title": "perseus-vault: Persistent memory MCP server",
-      "why_it_matters": "Local-first SQLite + vector memory with encryption and bi-temporal history.",
+      "title": "BitFun - Desktop-grade agent runtime with memory",
+      "why_it_matters": "Agent runtime with built-in code agent and computer use",
       "evidence": [
-        "https://github.com/Perseus-Computing-LLC/perseus-vault"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "forcefield: Security guardrails for AI coding agents",
-      "why_it_matters": "Monitors and blocks dangerous files, commands, and prompt injection in real time.",
-      "evidence": [
-        "https://open-vsx.org/extension/DataScienceTech/forcefield"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "phinq: Runtime checkpoint with human-in-the-loop",
-      "why_it_matters": "Classifies tool calls by risk before execution, enabling safe agent operation.",
-      "evidence": [
-        "https://pypi.org/project/phinq/0.1.0/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "ai-agent-nix-sandboxing: Linux namespace sandbox for agents",
-      "why_it_matters": "Sandboxes coding agents using user namespaces without host privileges.",
-      "evidence": [
-        "https://github.com/Antoinemarteau/ai-agent-nix-sandboxing"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "infra_angle": "sandbox",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "title": "rocketride-server: High-performance AI pipeline with agent orchestration",
-      "why_it_matters": "C++ core pipeline engine supporting 50+ nodes, multi-provider LLMs, and agent workflows.",
-      "evidence": [
-        "https://github.com/rocketride-org/rocketride-server"
+        "https://github.com/GCWing/BitFun"
       ],
       "confidence": "high",
       "relevance_score": 8,
       "source_diversity": 1,
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "InnerWarden - Local safety layer for AI agents",
+      "why_it_matters": "Screens risky commands and MCP calls, eBPF monitoring",
+      "evidence": [
+        "https://github.com/InnerWarden/innerwarden"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "Litefuse - Agent observability and evaluation platform",
+      "why_it_matters": "Open-source eval and observability for agents",
+      "evidence": [
+        "https://github.com/litefuse/litefuse"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "OrchestKit - AI dev toolkit for Claude Code",
+      "why_it_matters": "113 skills, 37 agents, production patterns",
+      "evidence": [
+        "https://github.com/yonatangross/orchestkit"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "Local LLM Proxy - Token bank and smart routing",
+      "why_it_matters": "Gateway for AI agents to manage token spend and routing",
+      "evidence": [
+        "https://github.com/wink-run/local-llm-proxy"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "Nano-Brain - Persistent memory server for coding agents",
+      "why_it_matters": "Hybrid search, knowledge graph, 14 MCP tools",
+      "evidence": [
+        "https://github.com/nano-step/nano-brain"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "Agent OpFor - Adversary emulation for AI agents",
+      "why_it_matters": "Open-source red teaming for agents and MCP servers",
+      "evidence": [
+        "https://github.com/KeyValueSoftwareSystems/agent-opfor"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "IRIS Security - AI agent governance SDK and MCP server",
+      "why_it_matters": "Govern AI agents locally with tool permissions and audit",
+      "evidence": [
+        "https://pypi.org/project/iris-security-mcp/0.2.17/",
+        "https://pypi.org/project/iris-security-sdk/0.2.17/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
+    },
+    {
+      "title": "Sage Harness - Governance harness for coding agents",
+      "why_it_matters": "Spec-SSOT closed loop for Claude Code and Codex",
+      "evidence": [
+        "https://pypi.org/project/sage-harness/0.9.35/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-04"
     }
   ],
   "gaps": [
-    "Dedicated agent evaluation frameworks are sparse; most security tools focus on runtime blocking rather than testing.",
-    "Storage solutions for agent memory are primarily SQLite-based; no dedicated agent storage infrastructure.",
-    "Deployment-specific tooling is limited to rocketride-server's pipeline orchestration."
+    "Limited signals on agent-to-agent communication protocols",
+    "Few evals for multi-agent systems beyond single-agent harnesses"
   ]
 }

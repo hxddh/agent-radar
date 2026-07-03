@@ -269,7 +269,14 @@ Ignore or deprioritize:
 
 
 ## Additional sources from 2026-07-03 screening pass
-
+- OpenSandbox: https://github.com/opensandbox-group/OpenSandbox
+- FastGPT: https://github.com/labring/FastGPT
+- elizaOS: https://github.com/elizaOS/eliza
+- BitFun: https://github.com/GCWing/BitFun
+- InnerWarden: https://github.com/InnerWarden/innerwarden
+- Litefuse: https://github.com/litefuse/litefuse
+- OrchestKit: https://github.com/yonatangross/orchestkit
+- Local LLM Proxy: https://github.com/wink-run/local-llm-proxy
 - GoClaw: https://github.com/nextlevelbuilder/goclaw
 - Flowork_Agent: https://github.com/flowork-os/Flowork_Agent
 - Prismor: https://github.com/PrismorSec/prismor
