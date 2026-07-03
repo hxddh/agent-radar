@@ -10,3 +10,5 @@ Rules:
 - Do not invent facts.
 - Keep weak social/community evidence labeled as weak.
 - Prefer agent infrastructure, agent runtimes, MCP/tool-use, memory, evals, storage, and deployment signals.
+- Return at most **12 candidates** per screening pass.
+- Keep each `why_it_matters` under **120 characters**.

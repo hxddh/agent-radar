@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import tempfile
 import time
@@ -761,6 +762,109 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 50)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["collected_source_items"], 394)
         self.assertIn("Budget 50/120", snapshot)
+
+    def test_compact_screening_for_prompt_is_smaller_than_raw_json(self) -> None:
+        raw = json.dumps(
+            {
+                "summary": "screening summary",
+                "candidates": [
+                    {
+                        "title": f"Candidate {index}",
+                        "why_it_matters": "x" * 300,
+                        "evidence": [f"https://example.com/{index}"],
+                        "promotion_status": "candidate",
+                        "relevance_score": 4,
+                        "infra_angle": "mcp",
+                    }
+                    for index in range(20)
+                ],
+                "gaps": ["gap one", "gap two"],
+            }
+        )
+        compact = cloud_agent_runner.compact_screening_for_prompt(
+            raw,
+            day=cloud_agent_runner.parse_date("2026-07-02"),
+        )
+        self.assertLess(len(compact), len(raw) // 2)
+        self.assertIn("Top candidates (8 shown)", compact)
+        self.assertIn("automation/screening/2026-07-02.json", compact)
+
+    def test_should_skip_source_sweep_when_candidates_already_tracked(self) -> None:
+        screen = json.dumps(
+            {
+                "summary": "done",
+                "candidates": [
+                    {
+                        "title": "Tracked Tool",
+                        "evidence": ["https://example.com/tracked"],
+                        "promotion_status": "candidate",
+                    }
+                ],
+            }
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "research-log.md").write_text(
+                "https://example.com/tracked\nTracked Tool\n",
+                encoding="utf-8",
+            )
+            skip, reason = cloud_agent_runner.should_skip_source_sweep(root, screen)
+        self.assertTrue(skip)
+        self.assertIn("already tracked", reason)
+
+    def test_validate_response_size_rejects_huge_payload(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_RESPONSE_CHARS": "100"}, clear=False):
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.validate_response_size("x" * 200)
+        self.assertIn("MAX_RESPONSE_CHARS", str(ctx.exception))
+
+    def test_run_task_skips_source_sweep_without_new_candidates(self) -> None:
+        screen = json.dumps({"summary": "empty", "candidates": []})
+        with mock.patch.object(cloud_agent_runner, "task_uses_screening", return_value=True):
+            with mock.patch.object(cloud_agent_runner, "invoke_model") as invoke_mock:
+                with mock.patch.object(cloud_agent_runner, "build_context", return_value=(["sources.md"], "ctx")):
+                    with mock.patch.object(cloud_agent_runner, "collect_public_sources", return_value="sources"):
+                        with tempfile.TemporaryDirectory() as tmp:
+                            root = Path(tmp)
+                            cloud_agent_runner.run_task(
+                                root,
+                                "source-sweep",
+                                cloud_agent_runner.parse_date("2026-07-02"),
+                                shared_screened=screen,
+                            )
+        invoke_mock.assert_not_called()
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["budget_status"], "skipped-no-new-candidates")
+
+    def test_preflight_writes_screening_artifact(self) -> None:
+        payload = {
+            "choices": [
+                {
+                    "message": {
+                        "content": '{"summary":"saved","candidates":[{"title":"x","evidence":["https://a"],"promotion_status":"candidate"}]}'
+                    }
+                }
+            ]
+        }
+        raw_items = [
+            {
+                "source": "github",
+                "title": "agent",
+                "url": "https://example.com/a",
+                "note": "",
+                "score": "10",
+            }
+        ]
+        collection = (raw_items, {}, [], 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            day = cloud_agent_runner.parse_date("2026-07-02")
+            with mock.patch.object(cloud_agent_runner, "call_openrouter_model", return_value=payload):
+                screen_text, calls = cloud_agent_runner.preflight_shared_screening(collection, root, day)
+            artifact = root / "automation" / "screening" / "2026-07-02.json"
+        self.assertEqual(calls, 1)
+        self.assertTrue(artifact.exists())
+        self.assertIn("saved", artifact.read_text(encoding="utf-8"))
+        self.assertIn("saved", screen_text)
 
 
 if __name__ == "__main__":
