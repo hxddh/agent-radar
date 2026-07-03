@@ -822,3 +822,118 @@ Follow-up gaps:
 - Monitor whether GitHub's Actions-native Copilot CLI becomes a pattern for scheduled repo maintenance.
 - Track whether workflow-scoped agent credentials appear in non-GitHub ecosystems before promoting the PAT-avoidance pattern to `playbook.md`.
 - Continue monitoring early Java debugging and Claude Code plugin candidates for adoption, issues, or reproducible demos.
+
+
+### Pass 19: Screening pass (2026-07-03)
+Purpose:
+- Integrate top candidates from 2026-07-03 screening snapshot into research-log with standard candidate fields.
+
+Accepted sources:
+- GoClaw: https://github.com/nextlevelbuilder/goclaw
+- Flowork_Agent: https://github.com/flowork-os/Flowork_Agent
+- Prismor: https://github.com/PrismorSec/prismor
+- yoloai: https://github.com/kstenerud/yoloai
+- agentguard: https://github.com/Sungho-pk42ac/agentguard
+- duduclaw: https://pypi.org/project/duduclaw/1.32.0/
+- tokenfuse: https://github.com/TAIPANBOX/tokenfuse
+- perseus-vault: https://github.com/Perseus-Computing-LLC/perseus-vault
+
+Candidate inbox (compact, ranked):
+
+1. GoClaw – Multi-tenant AI agent deployment with 5-layer security and native concurrency.
+   - Why it matters: Enables secure team-scale agent deployment with sandboxing, isolation, and Go concurrency. Relevance score: 9.
+   - Evidence strength: Weak (0 stars, new repo).
+   - Defer reason: No adoption or independent security validation yet.
+   - Follow-up needed: Look for integration with major agent frameworks, user case studies.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+2. Flowork_Agent – Self-hosted agents with per-agent brain, isolated persistent memory, and MCP orchestration.
+   - Why it matters: Provides a full agent runtime stack with memory isolation and immune system. Relevance score: 8.
+   - Evidence strength: Weak (early repo).
+   - Defer reason: Needs independent verification and deployment examples.
+   - Follow-up needed: Test memory isolation claims; look for enterprise adoption.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+3. Prismor – Runtime security for AI agents, blocking dangerous commands, secret leaks, and prompt injection.
+   - Why it matters: Addresses critical agent security gaps with real-time interception. Relevance score: 8.
+   - Evidence strength: Weak (early package).
+   - Defer reason: Needs integration examples with major agent runtimes and security benchmarks.
+   - Follow-up needed: Monitor for CVE or incident response use cases.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+4. duduclaw – Multi-LLM agent platform with 80+ MCP tools, unifying Claude, Codex, Gemini.
+   - Why it matters: Aggregates multiple models and tools via MCP, could indicate MCP ecosystem maturation. Relevance score: 8.
+   - Evidence strength: Weak (PyPI package, unknown quality).
+   - Defer reason: Needs documentation and community validation of tool quality.
+   - Follow-up needed: Check PyPI download stats, GitHub repo if any, and user feedback.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+5. tokenfuse – Runtime cost control for agents with per-run budgets, loop detection, and kill-switch.
+   - Why it matters: Directly mitigates runaway agent costs and infinite loops, important for production deployments. Relevance score: 7.
+   - Evidence strength: Weak (early).
+   - Defer reason: No real-world usage reports or benchmarks.
+   - Follow-up needed: Look for testimonials from users running expensive agent workloads.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+6. perseus-vault – Persistent memory MCP server with SQLite + vector storage, encryption, bi-temporal history.
+   - Why it matters: Local-first encrypted memory with audit trails is a strong candidate for agent memory infrastructure. Relevance score: 7.
+   - Evidence strength: Weak (early).
+   - Defer reason: Needs performance benchmarks and integration examples.
+   - Follow-up needed: Test memory retrieval quality; look for adoption in agent frameworks.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+7. yoloai – Lightweight sandboxing for AI agent execution environments.
+   - Why it matters: Sandboxing remains a top security concern; lightweight solutions lower adoption barrier. Relevance score: 7.
+   - Evidence strength: Weak (early).
+   - Defer reason: Needs security audit and performance overhead measurements.
+   - Follow-up needed: Compare with gVisor, Firecracker, or other sandboxing approaches.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+8. agentguard – AgentOps security scanner for MCP configs, transcripts, and PR diffs.
+   - Why it matters: Security scanning tailored for agent workflows can prevent misconfigurations and leaks. Relevance score: 7.
+   - Evidence strength: Weak (early).
+   - Defer reason: Unclear if it integrates with CI/CD or popular agent platforms.
+   - Follow-up needed: Test with real MCP configurations; monitor for incident detection track record.
+   - candidate_seen_at: 2026-07-03
+   - last_checked_at: 2026-07-03
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+Gaps:
+- Dedicated agent evaluation frameworks are sparse; most security tools focus on runtime blocking rather than testing.
+- Storage solutions for agent memory are primarily SQLite-based; no dedicated agent storage infrastructure.
+- Deployment-specific tooling is limited to rocketride-server's pipeline orchestration.
+
+Follow-up gaps:
+- Monitor candidates for adoption, integration, and independent user evidence.
+- Track whether evaluation and storage standards begin to converge.
+- Watch for security tools integrating with CI/CD for agent workflows.

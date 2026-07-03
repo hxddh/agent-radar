@@ -1,0 +1,166 @@
+{
+  "summary": "Screened 80 source items. Top 12 candidates emphasize agent security, sandboxing, persistent memory, MCP tooling, and runtime control. Leading projects: GoClaw, Flowork_Agent, Prismor, yoloai, agentguard, duduclaw, tokenfuse, perseus-vault, forcefield, phinq, ai-agent-nix-sandboxing, rocketride-server.",
+  "candidates": [
+    {
+      "title": "GoClaw: Multi-tenant AI agent deployment with isolation",
+      "why_it_matters": "Enables secure team-scale agent deployment with 5-layer security and native concurrency.",
+      "evidence": [
+        "https://github.com/nextlevelbuilder/goclaw"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "Flowork_Agent: Self-hosted agents with per-agent brain",
+      "why_it_matters": "Provides isolated persistent memory, immune system, and MCP orchestration in a single binary.",
+      "evidence": [
+        "https://github.com/flowork-os/Flowork_Agent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "Prismor: Runtime security for AI agents",
+      "why_it_matters": "Blocks dangerous commands, secret leaks, and prompt injection in real time.",
+      "evidence": [
+        "https://github.com/PrismorSec/prismor"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "yoloai: AI agent sandboxing done right",
+      "why_it_matters": "Lightweight sandboxing for isolating AI agent execution environments.",
+      "evidence": [
+        "https://github.com/kstenerud/yoloai"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "agentguard: AgentOps security scanner",
+      "why_it_matters": "Scans MCP configs, transcripts, and PR diffs for agent security issues.",
+      "evidence": [
+        "https://github.com/Sungho-pk42ac/agentguard"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "duduclaw: Multi-LLM agent platform with 80+ MCP tools",
+      "why_it_matters": "Unifies Claude, Codex, Gemini with agent routing and extensive MCP ecosystem.",
+      "evidence": [
+        "https://pypi.org/project/duduclaw/1.32.0/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "tokenfuse: Runtime cost control for agents",
+      "why_it_matters": "Adds per-run budgets, loop detection, and kill-switch to prevent runaway costs.",
+      "evidence": [
+        "https://github.com/TAIPANBOX/tokenfuse"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "perseus-vault: Persistent memory MCP server",
+      "why_it_matters": "Local-first SQLite + vector memory with encryption and bi-temporal history.",
+      "evidence": [
+        "https://github.com/Perseus-Computing-LLC/perseus-vault"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "forcefield: Security guardrails for AI coding agents",
+      "why_it_matters": "Monitors and blocks dangerous files, commands, and prompt injection in real time.",
+      "evidence": [
+        "https://open-vsx.org/extension/DataScienceTech/forcefield"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "phinq: Runtime checkpoint with human-in-the-loop",
+      "why_it_matters": "Classifies tool calls by risk before execution, enabling safe agent operation.",
+      "evidence": [
+        "https://pypi.org/project/phinq/0.1.0/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "ai-agent-nix-sandboxing: Linux namespace sandbox for agents",
+      "why_it_matters": "Sandboxes coding agents using user namespaces without host privileges.",
+      "evidence": [
+        "https://github.com/Antoinemarteau/ai-agent-nix-sandboxing"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "title": "rocketride-server: High-performance AI pipeline with agent orchestration",
+      "why_it_matters": "C++ core pipeline engine supporting 50+ nodes, multi-provider LLMs, and agent workflows.",
+      "evidence": [
+        "https://github.com/rocketride-org/rocketride-server"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": [
+    "Dedicated agent evaluation frameworks are sparse; most security tools focus on runtime blocking rather than testing.",
+    "Storage solutions for agent memory are primarily SQLite-based; no dedicated agent storage infrastructure.",
+    "Deployment-specific tooling is limited to rocketride-server's pipeline orchestration."
+  ]
+}

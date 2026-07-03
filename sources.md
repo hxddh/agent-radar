@@ -266,3 +266,15 @@ Ignore or deprioritize:
 - MCP TypeScript SDK v2.0.0 beta: https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/server%402.0.0-beta.2 and https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/node%402.0.0-beta.2 (major version bump for MCP TypeScript SDK)
 - macro v2026.7.2: https://github.com/macro-inc/macro/releases/tag/v2026.7.2.1 and https://github.com/macro-inc/macro/releases/tag/v2026.7.2.0 (two releases in one day from macro)
 - Codex v0.143.0-alpha.34: https://github.com/openai/codex/releases/tag/rust-v0.143.0-alpha.34 (OpenAI's coding agent continues to evolve)
+
+
+## Additional sources from 2026-07-03 screening pass
+
+- GoClaw: https://github.com/nextlevelbuilder/goclaw
+- Flowork_Agent: https://github.com/flowork-os/Flowork_Agent
+- Prismor: https://github.com/PrismorSec/prismor
+- yoloai: https://github.com/kstenerud/yoloai
+- agentguard: https://github.com/Sungho-pk42ac/agentguard
+- duduclaw: https://pypi.org/project/duduclaw/1.32.0/
+- tokenfuse: https://github.com/TAIPANBOX/tokenfuse
+- perseus-vault: https://github.com/Perseus-Computing-LLC/perseus-vault
