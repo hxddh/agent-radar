@@ -478,9 +478,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
                                 root = Path(tmp)
                                 cloud_agent_runner.run_task(
                                     root,
-                                    "source-sweep",
+                                    "daily",
                                     cloud_agent_runner.parse_date("2026-07-02"),
-                                    shared_screened='{"summary":"cached-screen"}',
+                                    shared_screened='{"summary":"cached-screen","candidates":[{"title":"Fresh","evidence":["https://fresh.example"],"promotion_status":"candidate"}]}',
                                 )
         invoke_mock.assert_called_once()
         self.assertEqual(invoke_mock.call_args.kwargs.get("shared_screened"), '{"summary":"cached-screen"}')
@@ -861,10 +861,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
             with mock.patch.object(cloud_agent_runner, "call_openrouter_model", return_value=payload):
                 screen_text, calls = cloud_agent_runner.preflight_shared_screening(collection, root, day)
             artifact = root / "automation" / "screening" / "2026-07-02.json"
-        self.assertEqual(calls, 1)
-        self.assertTrue(artifact.exists())
-        self.assertIn("saved", artifact.read_text(encoding="utf-8"))
-        self.assertIn("saved", screen_text)
+            self.assertEqual(calls, 1)
+            self.assertTrue(artifact.exists())
+            self.assertIn("saved", artifact.read_text(encoding="utf-8"))
+            self.assertIn("saved", screen_text)
 
 
 if __name__ == "__main__":

@@ -793,9 +793,8 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
         gap_text = "; ".join(str(item) for item in gaps[:max_gaps])
         lines.append(f"Gaps: {gap_text}")
 
-    if root is not None and day is not None:
-        rel = f"automation/screening/{day.isoformat()}.json"
-        lines.append(f"Full screening JSON: {rel}")
+    if day is not None:
+        lines.append(f"Full screening JSON: automation/screening/{day.isoformat()}.json")
     return "\n".join(lines)
 
 
@@ -872,7 +871,7 @@ def validate_daily_append_size(rel_path: str, mode: str, content: str) -> None:
     if len(content) > limit:
         raise SystemExit(
             f"Refusing daily append for {rel_path}: content is {len(content)} chars "
-            f"(limit {limit}). Keep the day block compact."
+            f"(MAX_DAILY_APPEND_CHARS limit {limit}). Keep the day block compact."
         )
 
 

@@ -108,6 +108,19 @@ class AgentRadarCliTest(unittest.TestCase):
                     code = agent_radar.main(["trigger", "validate", "--date", "2026-07-02"])
             self.assertEqual(code, 1)
 
+    def test_brief_json_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            with chdir(root):
+                with mock.patch("sys.stdout") as stdout_mock:
+                    code = agent_radar.main(["brief", "--date", "2026-07-03", "--json"])
+            self.assertEqual(code, 0)
+            payload = agent_radar.json.loads(stdout_mock.write.call_args.args[0])
+            self.assertEqual(payload["date"], "2026-07-03")
+            self.assertIn("recent_telemetry", payload)
+
 
 if __name__ == "__main__":
     unittest.main()
