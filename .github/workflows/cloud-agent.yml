@@ -127,12 +127,17 @@ jobs:
       - name: Validate
         run: |
           TODAY="$(date -u +%F)"
+          DOW="$(date -u +%u)"
           python scripts/agent_radar.py ensure --date "$TODAY"
           python scripts/agent_radar.py bilingualize --date "$TODAY"
           python scripts/agent_radar.py brief --date "$TODAY"
-          python scripts/agent_radar.py validate --date "$TODAY" --strict-bilingual --require-chinese
+          if [ "$DOW" = "7" ]; then
+            python scripts/agent_radar.py validate --date "$TODAY" --tier full --strict-bilingual --require-chinese
+          else
+            python scripts/agent_radar.py validate --date "$TODAY" --tier daily --strict-bilingual --require-chinese
+          fi
           python -m unittest discover -s tests
-          python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
+          python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py scripts/radar_corpus_audit.py
 
       - name: Scan for obvious secrets
         run: |

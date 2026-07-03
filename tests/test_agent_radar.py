@@ -124,6 +124,44 @@ class AgentRadarCliTest(unittest.TestCase):
             self.assertEqual(payload["date"], "2026-07-03")
             self.assertIn("recent_telemetry", payload)
 
+    def test_collect_status_json(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            with chdir(root):
+                buffer = io.StringIO()
+                with contextlib.redirect_stdout(buffer):
+                    code = agent_radar.main(["collect-status", "--json"])
+            self.assertEqual(code, 0)
+            payload = json.loads(buffer.getvalue())
+            self.assertEqual(payload["version"], agent_radar.__version__)
+            self.assertIn("collectors", payload)
+
+    def test_corpus_audit_detects_issues(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            (root / "research-log.md").write_text("### Pass: old\n", encoding="utf-8")
+            with chdir(root):
+                buffer = io.StringIO()
+                with contextlib.redirect_stdout(buffer):
+                    code = agent_radar.main(["corpus-audit", "--json"])
+            self.assertEqual(code, 1)
+            payload = json.loads(buffer.getvalue())
+            self.assertGreater(payload["issue_count"], 0)
+
+    def test_validate_tier_daily_skips_weekly_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "agent-radar"
+            root.mkdir()
+            with chdir(root):
+                agent_radar.main(["init", "--date", "2026-07-02"])
+                agent_radar.main(["daily", "--date", "2026-07-02"])
+                code = agent_radar.main(["validate", "--date", "2026-07-02", "--tier", "daily"])
+            self.assertEqual(code, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

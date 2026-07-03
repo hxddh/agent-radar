@@ -24,6 +24,22 @@ radar_bilingual = importlib.util.module_from_spec(_BILINGUAL_SPEC)
 assert _BILINGUAL_SPEC.loader is not None
 _BILINGUAL_SPEC.loader.exec_module(radar_bilingual)
 
+_CORPUS_SPEC = importlib.util.spec_from_file_location(
+    "radar_corpus_audit", Path(__file__).with_name("radar_corpus_audit.py")
+)
+assert _CORPUS_SPEC is not None
+radar_corpus_audit = importlib.util.module_from_spec(_CORPUS_SPEC)
+assert _CORPUS_SPEC.loader is not None
+_CORPUS_SPEC.loader.exec_module(radar_corpus_audit)
+
+_COLLECTOR_SPEC = importlib.util.spec_from_file_location(
+    "radar_collector_state", Path(__file__).with_name("radar_collector_state.py")
+)
+assert _COLLECTOR_SPEC is not None
+radar_collector_state = importlib.util.module_from_spec(_COLLECTOR_SPEC)
+assert _COLLECTOR_SPEC.loader is not None
+_COLLECTOR_SPEC.loader.exec_module(radar_collector_state)
+
 
 INIT_PROTECTED_FILES = {
     "radar.md",
@@ -37,7 +53,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.5.12"
+__version__ = "0.6.0"
 
 CORE_FILES = [
     "README.md",
@@ -77,6 +93,7 @@ CORE_FILES = [
     "scripts/cloud_agent_runner.py",
     "scripts/radar_bilingual.py",
     "scripts/radar_collector_state.py",
+    "scripts/radar_corpus_audit.py",
 ]
 
 
@@ -208,7 +225,7 @@ def command_init(args: argparse.Namespace) -> int:
         result = write_file(cloud_runner_path, runner_content, force=args.force)
         results.append(("scripts/cloud_agent_runner.py", result))
 
-    for helper_name in ("radar_bilingual.py", "radar_collector_state.py"):
+    for helper_name in ("radar_bilingual.py", "radar_collector_state.py", "radar_corpus_audit.py"):
         helper_path = root / "scripts" / helper_name
         source_helper = Path(__file__).with_name(helper_name)
         if source_helper.exists() and helper_path.resolve() != source_helper.resolve():
@@ -777,56 +794,70 @@ def command_ensure(args: argparse.Namespace) -> int:
 def command_validate(args: argparse.Namespace) -> int:
     root = find_root()
     day = parse_date(args.date)
+    tier = getattr(args, "tier", "full")
     errors = missing_required(root)
     current_daily = daily_path(root, day)
     current_weekly = weekly_path(root, day)
     current_monthly = monthly_path(root, day)
 
-    if not current_daily.exists():
-        errors.append(str(current_daily.relative_to(root)))
+    if tier == "daily":
+        if not current_daily.exists():
+            errors.append(str(current_daily.relative_to(root)))
+    else:
+        if not current_daily.exists():
+            errors.append(str(current_daily.relative_to(root)))
 
     warnings: list[str] = []
-    if not current_weekly.exists():
-        warnings.append(f"Missing weekly report: {current_weekly.relative_to(root)}")
-    if not current_monthly.exists():
-        warnings.append(f"Missing monthly report: {current_monthly.relative_to(root)}")
+    if tier == "full":
+        if not current_weekly.exists():
+            warnings.append(f"Missing weekly report: {current_weekly.relative_to(root)}")
+        if not current_monthly.exists():
+            warnings.append(f"Missing monthly report: {current_monthly.relative_to(root)}")
     warnings.extend(warn_daily_entry_missing(current_daily, day))
     warnings.extend(warn_empty_fields(current_daily))
-    warnings.extend(warn_empty_fields(current_weekly))
-    warnings.extend(warn_empty_fields(current_monthly))
-    warnings.extend(warn_weekly_sparse(current_weekly))
+    if tier == "full":
+        warnings.extend(warn_empty_fields(current_weekly))
+        warnings.extend(warn_empty_fields(current_monthly))
+        warnings.extend(warn_weekly_sparse(current_weekly))
     strict_bilingual = getattr(args, "strict_bilingual", False)
     require_chinese = getattr(args, "require_chinese", False)
+    report_paths = [current_daily]
+    if tier == "full":
+        report_paths.extend([current_weekly, current_monthly])
     if strict_bilingual:
-        errors.extend(warn_bilingual_missing(current_daily, strict=True))
-        errors.extend(warn_bilingual_missing(current_weekly, strict=True))
-        errors.extend(warn_bilingual_missing(current_monthly, strict=True))
-        errors.extend(warn_identical_bilingual_pairs(current_daily, strict=True))
-        errors.extend(warn_identical_bilingual_pairs(current_weekly, strict=True))
-        errors.extend(warn_identical_bilingual_pairs(current_monthly, strict=True))
+        for path in report_paths:
+            errors.extend(warn_bilingual_missing(path, strict=True))
+            errors.extend(warn_identical_bilingual_pairs(path, strict=True))
     else:
-        warnings.extend(warn_bilingual_missing(current_daily))
-        warnings.extend(warn_bilingual_missing(current_weekly))
-        warnings.extend(warn_bilingual_missing(current_monthly))
-        warnings.extend(warn_identical_bilingual_pairs(current_daily))
-    warnings.extend(warn_empty_chinese_labels(current_daily))
-    warnings.extend(warn_empty_chinese_labels(current_weekly))
-    warnings.extend(warn_empty_chinese_labels(current_monthly))
+        for path in report_paths:
+            warnings.extend(warn_bilingual_missing(path))
+            if tier == "full":
+                warnings.extend(warn_identical_bilingual_pairs(path))
+    for path in report_paths:
+        warnings.extend(warn_empty_chinese_labels(path))
     if require_chinese:
-        errors.extend(warn_missing_chinese_substance(current_daily, strict=True))
-        errors.extend(warn_missing_chinese_substance(current_weekly, strict=True))
-        errors.extend(warn_missing_chinese_substance(current_monthly, strict=True))
-    else:
-        warnings.extend(warn_missing_chinese_substance(current_daily))
-        warnings.extend(warn_missing_chinese_substance(current_weekly))
-        warnings.extend(warn_missing_chinese_substance(current_monthly))
+        for path in report_paths:
+            errors.extend(warn_missing_chinese_substance(path, strict=True))
+    elif tier == "full":
+        for path in report_paths:
+            warnings.extend(warn_missing_chinese_substance(path))
+
+    if tier == "full":
+        audit = radar_corpus_audit.audit_corpus(root, day)
+        for issue in audit.get("issues", []):
+            code = str(issue.get("code", ""))
+            if code in {"multiple-candidate-inbox", "legacy-pass-sections"}:
+                warnings.append(f"{issue.get('path')}: {issue.get('message')}")
+            elif code == "duplicate-daily-date":
+                errors.append(f"{issue.get('path')}: {issue.get('message')}")
 
     if errors:
         print("Validation failed. Missing required files or directories:")
         for item in errors:
             print(f"- {item}")
     else:
-        print("Validation passed. Project is structurally valid.")
+        label = f" ({tier} tier)" if tier != "full" else ""
+        print(f"Validation passed{label}. Project is structurally valid.")
 
     if warnings:
         print("\nWarnings:")
@@ -834,6 +865,51 @@ def command_validate(args: argparse.Namespace) -> int:
             print(f"- {warning}")
 
     return 1 if errors else 0
+
+
+def command_collect_status(args: argparse.Namespace) -> int:
+    root = find_root()
+    payload = radar_collector_state.collect_status_payload(root)
+    payload["version"] = __version__
+    if getattr(args, "json", False):
+        print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    print(f"Collector status ({payload['disabled_count']} disabled)")
+    for row in payload.get("collectors", []):
+        status = row.get("status", "ok")
+        disabled = " [disabled]" if row.get("disabled") else ""
+        detail = row.get("last_detail", "")
+        detail_text = f" — {detail}" if detail else ""
+        print(f"- {row.get('name')}: {status}{disabled}{detail_text}")
+    if payload.get("rejected_repos"):
+        print("\nRejected repos:")
+        for repo in payload["rejected_repos"]:
+            print(f"- {repo}")
+    return 0
+
+
+def command_corpus_audit(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    dry_run = not getattr(args, "fix", False)
+    if getattr(args, "fix", False):
+        report = radar_corpus_audit.apply_corpus_fixes(root, day, dry_run=dry_run)
+    else:
+        report = radar_corpus_audit.audit_corpus(root, day)
+    if getattr(args, "json", False):
+        print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    else:
+        print(f"Corpus audit: {report.get('issue_count', 0)} issue(s)")
+        for issue in report.get("issues", []):
+            print(f"- [{issue.get('code')}] {issue.get('path')}: {issue.get('message')}")
+        applied = report.get("applied", [])
+        if applied:
+            print("\nApplied fixes:")
+            for item in applied:
+                print(f"- {item}")
+        elif getattr(args, "fix", False) and not dry_run:
+            print("\nNo fixes applied.")
+    return 1 if report.get("issue_count", 0) else 0
 
 
 def count_occurrences(root: Path, rel_path: str, pattern: str) -> int:
@@ -1197,7 +1273,33 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Require substantive 中文 content (CJK text) in report files with enough English content.",
     )
+    validate_parser.add_argument(
+        "--tier",
+        choices=["daily", "full"],
+        default="full",
+        help="Validation depth: daily (current daily file only) or full (daily+weekly+monthly+corpus).",
+    )
     validate_parser.set_defaults(func=command_validate)
+
+    collect_status_parser = subparsers.add_parser(
+        "collect-status",
+        help="Show collector health from automation/collector-state.json.",
+    )
+    collect_status_parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
+    collect_status_parser.set_defaults(func=command_collect_status)
+
+    corpus_audit_parser = subparsers.add_parser(
+        "corpus-audit",
+        help="Audit corpus hygiene (duplicate inboxes, legacy Pass sections, duplicate daily dates).",
+    )
+    corpus_audit_parser.add_argument("--date", help="Date for fix archive labels, YYYY-MM-DD.")
+    corpus_audit_parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
+    corpus_audit_parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Apply safe fixes (archive legacy ### Pass: sections to research-log-archive/).",
+    )
+    corpus_audit_parser.set_defaults(func=command_corpus_audit)
 
     brief_parser = subparsers.add_parser("brief", help="Show maintenance gaps and next research focus.")
     brief_parser.add_argument("--date", help="Date for current daily/weekly/monthly paths, YYYY-MM-DD.")

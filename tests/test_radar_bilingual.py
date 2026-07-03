@@ -217,6 +217,43 @@ class RadarBilingualTest(unittest.TestCase):
         content = "# Agent Radar Weekly - 2026-W27\n\n- 中文：信号\n- English: signal\n"
         self.assertFalse(radar_bilingual.needs_bilingual(content))
 
+    def test_assemble_daily_day_block(self) -> None:
+        block = radar_bilingual.assemble_daily_day_block(
+            "#### 1. Signals\n\n- Signal: test\n",
+            "#### 1. Signals\n\n- 信号：测试\n",
+            "## 2026-07-03",
+        )
+        self.assertIn("### English", block)
+        self.assertIn("### 中文", block)
+        self.assertIn("## 2026-07-03", block)
+
+    def test_daily_block_lighter_chinese_gate(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "## 2026-07-03\n\n"
+            "### English\n\n"
+            "#### 1. Signals\n\n- Signal: one with enough english substance here.\n"
+            "#### 2. Signals\n\n- Signal: two with enough english substance here.\n"
+            "#### 3. Signals\n\n- Signal: three with enough english substance here.\n\n"
+            "### 中文\n\n"
+            "#### 1. Signals\n\n- 信号：第一条中文内容。\n"
+            "#### 2. Signals\n\n- 信号：第二条中文内容。\n"
+            "#### 3. Signals\n\n- 信号：第三条中文内容。\n"
+        )
+        self.assertTrue(radar_bilingual.is_daily_block_format(content))
+        self.assertFalse(radar_bilingual.missing_chinese_substance_daily_block(content))
+
+    def test_bilingual_char_stats_daily(self) -> None:
+        content = (
+            "# Daily Agent Radar - 2026-07\n\n"
+            "## 2026-07-03\n\n"
+            "### English\n\n- English text here.\n\n"
+            "### 中文\n\n- 中文内容在这里。\n"
+        )
+        stats = radar_bilingual.bilingual_char_stats(content)
+        self.assertGreater(stats["english_chars"], 0)
+        self.assertGreater(stats["chinese_cjk_chars"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

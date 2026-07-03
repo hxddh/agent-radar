@@ -64,6 +64,14 @@ DEFAULT_MAX_DAILY_APPEND_CHARS = 10_000
 DEFAULT_SCREEN_PROMPT_CANDIDATES = 8
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 3
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
+PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
+DEFAULT_PRIORITY_LANE_FLOOR_RATIO = 0.4
+DEFAULT_LANE_COVERAGE_DEGRADED_THRESHOLD = 0.5
+CANDIDATE_INBOX_ANCHOR = "## Candidate inbox"
+CANDIDATE_INBOX_HEADING = re.compile(r"^## Candidate inbox\s*$", re.MULTILINE | re.IGNORECASE)
+LEGACY_PASS_HEADING = re.compile(r"^### Pass:", re.MULTILINE)
+MAX_DAILY_SIGNAL_SECTIONS = 8
+MAX_URLS_PER_DAILY_SIGNAL = 3
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
     "modelcontextprotocol/servers",
@@ -166,6 +174,15 @@ RUN_AUDIT: dict[str, Any] = {
     "shared_screening": False,
     "prompt_budget_ratio": 0.0,
     "prompt_budget_warning": False,
+    "lane_coverage": 0.0,
+    "breadth_degraded": False,
+    "priority_lane_share": 0.0,
+    "english_chars": 0,
+    "chinese_cjk_chars": 0,
+    "bilingual_ratio": 0.0,
+    "bilingual_repair_applied": False,
+    "synthesis_recall": 0.0,
+    "screening_candidate_ids": [],
 }
 
 
@@ -445,6 +462,16 @@ def env_int(name: str, default: int) -> int:
         return default
     try:
         return max(0, int(value))
+    except ValueError:
+        return default
+
+
+def env_float(name: str, default: float) -> float:
+    value = os.environ.get(name)
+    if not value:
+        return default
+    try:
+        return float(value)
     except ValueError:
         return default
 
@@ -742,12 +769,35 @@ def parse_screening_json(text: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
+    candidates = data.get("candidates", [])
+    if not isinstance(candidates, list):
+        return data
+    ids: list[str] = []
+    for cand in candidates:
+        if not isinstance(cand, dict):
+            continue
+        if cand.get("id"):
+            ids.append(str(cand["id"]))
+            continue
+        title = str(cand.get("title", ""))[:80]
+        evidence = cand.get("evidence", [])
+        url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
+        slug = hashlib.sha256(f"{title}|{url}".encode("utf-8")).hexdigest()[:8]
+        cand_id = f"scr-{slug}"
+        cand["id"] = cand_id
+        ids.append(cand_id)
+    RUN_AUDIT["screening_candidate_ids"] = ids
+    return data
+
+
 def write_screening_artifact(root: Path, day: dt.date, screen_text: str) -> Path:
     path = root / "automation" / "screening" / f"{day.isoformat()}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     data = parse_screening_json(screen_text)
     if not data:
         data = {"summary": "unparsed screening output", "raw": screen_text.strip()}
+    data = enrich_screening_with_ids(data)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
 
@@ -775,6 +825,7 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
         for cand in candidates[:max_candidates]:
             if not isinstance(cand, dict):
                 continue
+            cand_id = str(cand.get("id", ""))
             title = str(cand.get("title", "?"))
             status = cand.get("promotion_status", "candidate")
             score = cand.get("relevance_score", "")
@@ -784,7 +835,8 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             if isinstance(evidence, list) and evidence:
                 url = str(evidence[0])
             why = truncate_text(str(cand.get("why_it_matters", "")), why_limit)
-            lines.append(f"- [{status} score={score} infra={infra}] {title} | {url}")
+            id_prefix = f"{cand_id} " if cand_id else ""
+            lines.append(f"- {id_prefix}[{status} score={score} infra={infra}] {title} | {url}")
             if why:
                 lines.append(f"  why: {why}")
 
@@ -891,17 +943,99 @@ def preflight_shared_screening(
 
 
 def validate_daily_update_content(rel_path: str, old: str, mode: str, content: str) -> None:
-    if not is_daily_month_path(rel_path):
+    if is_daily_month_path(rel_path):
+        if mode in {"append", "full", "replace"}:
+            if INVALID_DAILY_DATE_HEADING.search(content):
+                raise SystemExit(INVALID_DAILY_HEADING_MESSAGE.format(path=rel_path))
+            if mode == "append":
+                for date_label in STRICT_DAILY_DATE_HEADING.findall(content):
+                    if re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
+                        raise SystemExit(DUPLICATE_DAILY_DATE_MESSAGE.format(path=rel_path, date=date_label))
+                validate_daily_signal_limits(rel_path, content)
+    if rel_path == "research-log.md" and mode == "append":
+        validate_research_log_append(old, content)
+
+
+def count_urls_in_text(text: str) -> int:
+    return len(re.findall(r"https?://\S+", text))
+
+
+def validate_daily_signal_limits(rel_path: str, content: str) -> None:
+    signals = radar_bilingual.count_daily_signal_sections(content)
+    if signals > MAX_DAILY_SIGNAL_SECTIONS:
+        raise SystemExit(
+            f"Refusing daily append for {rel_path}: {signals} signal sections exceeds "
+            f"max {MAX_DAILY_SIGNAL_SECTIONS}."
+        )
+    for section in re.split(r"^#### \d+\.", content, flags=re.MULTILINE)[1:]:
+        if count_urls_in_text(section) > MAX_URLS_PER_DAILY_SIGNAL:
+            raise SystemExit(
+                f"Refusing daily append for {rel_path}: a signal section has more than "
+                f"{MAX_URLS_PER_DAILY_SIGNAL} public URLs."
+            )
+
+
+def validate_research_log_append(old: str, content: str) -> None:
+    if LEGACY_PASS_HEADING.search(content):
+        raise SystemExit(
+            "Refusing research-log append with ### Pass: sections; "
+            "update ## Candidate inbox entries instead."
+        )
+    if CANDIDATE_INBOX_HEADING.search(content) and CANDIDATE_INBOX_HEADING.search(old):
+        raise SystemExit(
+            "Refusing research-log append that adds another ## Candidate inbox section; "
+            "append bullets under the existing inbox."
+        )
+
+
+def compute_synthesis_recall(screen_text: str | None, result: dict[str, Any]) -> float:
+    if not screen_text:
+        return 1.0
+    data = enrich_screening_with_ids(parse_screening_json(screen_text))
+    candidates = screening_actionable_candidates(data)
+    if not candidates:
+        return 1.0
+    hay_parts = [str(result.get("summary", ""))]
+    for update in normalize_result_updates(result):
+        hay_parts.append(str(update.get("content", "")))
+    hay = "\n".join(hay_parts).lower()
+    matched = 0
+    for cand in candidates:
+        cand_id = str(cand.get("id", "")).strip()
+        title = str(cand.get("title", "")).strip().lower()
+        if cand_id and cand_id.lower() in hay:
+            matched += 1
+        elif len(title) >= 4 and title in hay:
+            matched += 1
+    return round(matched / len(candidates), 3)
+
+
+def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: str | None) -> None:
+    if task not in {"daily", "weekly", "monthly"}:
         return
-    if mode not in {"append", "full", "replace"}:
-        return
-    if INVALID_DAILY_DATE_HEADING.search(content):
-        raise SystemExit(INVALID_DAILY_HEADING_MESSAGE.format(path=rel_path))
-    if mode != "append":
-        return
-    for date_label in STRICT_DAILY_DATE_HEADING.findall(content):
-        if re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
-            raise SystemExit(DUPLICATE_DAILY_DATE_MESSAGE.format(path=rel_path, date=date_label))
+    recall = compute_synthesis_recall(screen_text, result)
+    RUN_AUDIT["synthesis_recall"] = recall
+    min_recall = env_float("MIN_SYNTHESIS_RECALL", 0.0)
+    if min_recall > 0 and recall < min_recall:
+        raise SystemExit(
+            f"Synthesis recall {recall:.3f} is below MIN_SYNTHESIS_RECALL ({min_recall}). "
+            "Reference more screened candidates in the daily synthesis."
+        )
+
+
+def record_bilingual_telemetry(root: Path, result: dict[str, Any]) -> None:
+    for update in normalize_result_updates(result):
+        rel_path = str(update.get("path", ""))
+        if not rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
+            continue
+        path = root / rel_path
+        if not path.exists():
+            continue
+        stats = radar_bilingual.bilingual_char_stats(read_text_full(path))
+        RUN_AUDIT["english_chars"] = stats.get("english_chars", 0)
+        RUN_AUDIT["chinese_cjk_chars"] = stats.get("chinese_cjk_chars", 0)
+        RUN_AUDIT["bilingual_ratio"] = stats.get("bilingual_ratio", 0.0)
+        break
 
 
 def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit: int) -> str:
@@ -1778,6 +1912,23 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
             collectors.append((f"pypi-package:{package}", "pypi-package", package, 1))
 
     if root is not None:
+        existing_names = {entry[0] for entry in collectors}
+        for name, _kind, value, limit in list(collectors):
+            if not name.startswith("page:"):
+                continue
+            if not radar_collector_state.is_disabled(root, name):
+                continue
+            fallback = radar_collector_state.fallback_feed_for_collector(name)
+            if not fallback:
+                continue
+            fb_name, fb_url = fallback
+            if fb_name in existing_names:
+                continue
+            source_name = fb_name.split(":", 1)[1]
+            collectors.append((fb_name, "feed", f"{source_name}={fb_url}", limit))
+            existing_names.add(fb_name)
+
+    if root is not None:
         active_names = set(
             radar_collector_state.active_collectors(root, [entry[0] for entry in collectors])
         )
@@ -1888,6 +2039,51 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     return items, lane_stats, errors
 
 
+def select_scored_items_with_lane_balance(scored: list[dict[str, str]], budget: int) -> list[dict[str, str]]:
+    if budget <= 0 or not scored:
+        return []
+    floor_ratio = env_float("PRIORITY_LANE_FLOOR_RATIO", DEFAULT_PRIORITY_LANE_FLOOR_RATIO)
+    floor_count = max(1, int(budget * floor_ratio))
+    selected: list[dict[str, str]] = []
+    seen_urls: set[str] = set()
+
+    for item in scored:
+        if len(selected) >= floor_count:
+            break
+        lane = source_lane(item.get("source", ""))
+        if lane not in PRIORITY_BREADTH_LANES:
+            continue
+        url = item.get("url", "")
+        if url and url not in seen_urls:
+            selected.append(item)
+            seen_urls.add(url)
+
+    for item in scored:
+        if len(selected) >= budget:
+            break
+        url = item.get("url", "")
+        if url and url in seen_urls:
+            continue
+        selected.append(item)
+        if url:
+            seen_urls.add(url)
+
+    return selected[:budget]
+
+
+def update_lane_coverage_audit(lane_stats: dict[str, dict[str, Any]], limited: list[dict[str, str]]) -> None:
+    scores = radar_collector_state.lane_health_scores(lane_stats)
+    if scores:
+        RUN_AUDIT["lane_coverage"] = round(sum(scores.values()) / len(scores), 3)
+        threshold = env_float("LANE_COVERAGE_DEGRADED_THRESHOLD", DEFAULT_LANE_COVERAGE_DEGRADED_THRESHOLD)
+        RUN_AUDIT["breadth_degraded"] = RUN_AUDIT["lane_coverage"] < threshold
+    if limited:
+        priority_count = sum(
+            1 for item in limited if source_lane(item.get("source", "")) in PRIORITY_BREADTH_LANES
+        )
+        RUN_AUDIT["priority_lane_share"] = round(priority_count / len(limited), 3)
+
+
 def format_public_source_snapshot(
     items: list[dict[str, str]],
     task: str,
@@ -1904,10 +2100,11 @@ def format_public_source_snapshot(
         scored = items
     else:
         scored = score_source_items(items, root)
-    limited = scored[:budget]
+    limited = select_scored_items_with_lane_balance(scored, budget)
     if update_cache:
         update_source_cache(root, limited, day or dt.datetime.now(dt.timezone.utc).date())
     RUN_AUDIT["source_lanes"] = lane_stats
+    update_lane_coverage_audit(lane_stats, limited)
     RUN_AUDIT["collected_source_items"] = (
         raw_collected_count if raw_collected_count is not None else len(scored)
     )
@@ -1926,6 +2123,11 @@ def format_public_source_snapshot(
             f"devto={'on' if collector_enabled('devto') else 'off'}; "
             f"pypi={'on' if collector_enabled('pypi') else 'off'}; "
             f"x={'on' if collector_enabled('x') else 'off'}"
+        ),
+        (
+            f"- Lane health: coverage={RUN_AUDIT.get('lane_coverage', 0.0)}; "
+            f"priority_share={RUN_AUDIT.get('priority_lane_share', 0.0)}; "
+            f"breadth_degraded={RUN_AUDIT.get('breadth_degraded', False)}"
         ),
         "- Scoring: relevance, lane, novelty, adoption, infra keywords, prior-seen penalty.",
     ]
@@ -2370,6 +2572,22 @@ def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
             if not isinstance(item, dict):
                 continue
             path = item.get("path")
+            english_block = item.get("english_block")
+            chinese_block = item.get("chinese_block")
+            if isinstance(path, str) and isinstance(english_block, str) and isinstance(chinese_block, str):
+                day_heading = str(item.get("day_heading", "")).strip()
+                content = radar_bilingual.assemble_daily_day_block(english_block, chinese_block, day_heading)
+                updates.append(
+                    {
+                        "path": path,
+                        "mode": str(item.get("mode", "append")),
+                        "content": content,
+                        "anchor": item.get("anchor"),
+                        "within": item.get("within"),
+                        "legacy": False,
+                    }
+                )
+                continue
             content = item.get("content")
             if not isinstance(path, str) or not isinstance(content, str):
                 continue
@@ -2415,7 +2633,7 @@ def missing_daily_dates(old: str, new: str) -> set[str]:
     return set(pattern.findall(old)) - set(pattern.findall(new))
 
 
-def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int:
+def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: str | None = None) -> int:
     allowed_set = set(allowed)
     updates = normalize_result_updates(result)
     if not updates:
@@ -2429,6 +2647,10 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         anchor = update.get("anchor")
         within = update.get("within")
         legacy = bool(update.get("legacy"))
+        if task == "daily" and rel_path == "radar.md":
+            raise SystemExit(
+                "Refusing radar.md update on daily task; reserve thesis changes for weekly/monthly runs."
+            )
         if rel_path not in allowed_set:
             raise SystemExit(f"Refusing to update non-allowed path: {rel_path}")
         if mode == "full" and rel_path in STRUCTURE_PRESERVED_FILES:
@@ -2518,6 +2740,11 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Prompt budget warning: {RUN_AUDIT.get('prompt_budget_warning', False)}",
         f"- Shared source collection: {RUN_AUDIT.get('shared_source_collection', False)}",
         f"- Shared screening: {RUN_AUDIT.get('shared_screening', False)}",
+        f"- Lane coverage: {RUN_AUDIT.get('lane_coverage', 0.0)}",
+        f"- Priority lane share: {RUN_AUDIT.get('priority_lane_share', 0.0)}",
+        f"- Breadth degraded: {RUN_AUDIT.get('breadth_degraded', False)}",
+        f"- Synthesis recall: {RUN_AUDIT.get('synthesis_recall', 0.0)}",
+        f"- Bilingual ratio: {RUN_AUDIT.get('bilingual_ratio', 0.0)}",
     ]
     if source_errors:
         entry.append("- Source errors:")
@@ -2552,6 +2779,14 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "shared_screening": RUN_AUDIT.get("shared_screening", False),
         "prompt_budget_ratio": RUN_AUDIT.get("prompt_budget_ratio", 0.0),
         "prompt_budget_warning": RUN_AUDIT.get("prompt_budget_warning", False),
+        "lane_coverage": RUN_AUDIT.get("lane_coverage", 0.0),
+        "breadth_degraded": RUN_AUDIT.get("breadth_degraded", False),
+        "priority_lane_share": RUN_AUDIT.get("priority_lane_share", 0.0),
+        "english_chars": RUN_AUDIT.get("english_chars", 0),
+        "chinese_cjk_chars": RUN_AUDIT.get("chinese_cjk_chars", 0),
+        "bilingual_ratio": RUN_AUDIT.get("bilingual_ratio", 0.0),
+        "synthesis_recall": RUN_AUDIT.get("synthesis_recall", 0.0),
+        "screening_candidate_ids": RUN_AUDIT.get("screening_candidate_ids", []),
     }
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
@@ -2632,6 +2867,14 @@ def run_task(
     RUN_AUDIT["prompt_budget_warning"] = False
     RUN_AUDIT["shared_source_collection"] = shared_collection is not None
     RUN_AUDIT["shared_screening"] = False
+    RUN_AUDIT["lane_coverage"] = 0.0
+    RUN_AUDIT["breadth_degraded"] = False
+    RUN_AUDIT["priority_lane_share"] = 0.0
+    RUN_AUDIT["english_chars"] = 0
+    RUN_AUDIT["chinese_cjk_chars"] = 0
+    RUN_AUDIT["bilingual_ratio"] = 0.0
+    RUN_AUDIT["synthesis_recall"] = 0.0
+    RUN_AUDIT["screening_candidate_ids"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:
         run_cli(root, config["ensure"], day)
@@ -2688,10 +2931,12 @@ def run_task(
     except json.JSONDecodeError as exc:
         raise SystemExit(f"Model did not return valid JSON: {output_text[:1000]}") from exc
 
-    changed = apply_updates(root, allowed, result)
+    validate_synthesis_result(task, result, screen_text)
+    changed = apply_updates(root, allowed, result, task=task)
     sources = result.get("sources", [])
     if not isinstance(sources, list):
         sources = []
+    record_bilingual_telemetry(root, result)
     append_run_log(root, task, day, changed, str(result.get("summary", "")), sources)
     append_telemetry(root, task, day, changed, str(result.get("summary", "")), sources)
     update_source_health(root, day)

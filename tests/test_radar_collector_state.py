@@ -54,13 +54,49 @@ class RadarCollectorStateTest(unittest.TestCase):
                 active = radar_collector_state.active_collectors(root, ["hn:agent", "pypi-updates:mcp"])
             self.assertEqual(active, ["pypi-updates:mcp"])
 
-    def test_successful_collector_stays_active(self) -> None:
+    def test_transient_error_triggers_degraded_backoff(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             name = "bluesky:AI agent"
             radar_collector_state.record_result(root, name, True)
             radar_collector_state.record_result(root, name, False, "timeout")
-            self.assertFalse(radar_collector_state.is_disabled(root, name))
+            self.assertTrue(radar_collector_state.is_disabled(root, name))
+            record = radar_collector_state.load_state(root)["collectors"][name]
+            self.assertEqual(record["status"], "degraded")
+
+    def test_transient_errors_enter_degraded_state(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            name = "feed:github-changelog"
+            radar_collector_state.record_result(root, name, False, "503 Service Unavailable")
+            state = radar_collector_state.load_state(root)
+            record = state["collectors"][name]
+            self.assertEqual(record["status"], "degraded")
+            self.assertTrue(record.get("next_retry_after"))
+
+    def test_degraded_collector_recovers_after_ok_streak(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            name = "feed:test"
+            radar_collector_state.record_result(root, name, False, "timeout")
+            for _ in range(3):
+                radar_collector_state.record_result(root, name, True)
+            state = radar_collector_state.load_state(root)
+            record = state["collectors"][name]
+            self.assertEqual(record["status"], "ok")
+
+    def test_collect_status_payload(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            radar_collector_state.record_result(root, "hn:agent", True)
+            payload = radar_collector_state.collect_status_payload(root)
+            self.assertIn("collectors", payload)
+            self.assertEqual(payload["disabled_count"], 0)
+
+    def test_fallback_feed_mapping(self) -> None:
+        fb = radar_collector_state.fallback_feed_for_collector("page:cursor-changelog")
+        self.assertIsNotNone(fb)
+        self.assertEqual(fb[0], "feed:cursor-changelog")
 
 
 if __name__ == "__main__":

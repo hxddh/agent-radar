@@ -875,6 +875,84 @@ class CloudAgentRunnerTest(unittest.TestCase):
             self.assertIn("saved", artifact.read_text(encoding="utf-8"))
             self.assertIn("saved", screen_text)
 
+    def test_lane_balance_reserves_priority_lanes(self) -> None:
+        scored = [
+            {"source": "reddit-rss:test", "title": "social", "url": "https://example.com/s", "score": "99"},
+            {"source": "github", "title": "repo", "url": "https://example.com/g", "score": "50"},
+            {"source": "openai-blog", "title": "official", "url": "https://example.com/o", "score": "40"},
+        ]
+        selected = cloud_agent_runner.select_scored_items_with_lane_balance(scored, 2)
+        lanes = {cloud_agent_runner.source_lane(item["source"]) for item in selected}
+        self.assertTrue(lanes & cloud_agent_runner.PRIORITY_BREADTH_LANES)
+
+    def test_enrich_screening_with_ids(self) -> None:
+        data = {"candidates": [{"title": "Signal", "evidence": ["https://example.com/x"]}]}
+        enriched = cloud_agent_runner.enrich_screening_with_ids(data)
+        self.assertTrue(str(enriched["candidates"][0]["id"]).startswith("scr-"))
+
+    def test_rejects_research_log_pass_append(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "research-log.md").write_text("# Log\n\n## Candidate inbox\n\n- item\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["research-log.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "research-log.md",
+                                "mode": "append",
+                                "content": "\n\n### Pass: Daily\n\n- bad\n",
+                            }
+                        ]
+                    },
+                )
+            self.assertIn("Pass:", str(ctx.exception))
+
+    def test_rejects_radar_update_on_daily_task(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# Radar\n\n## Thesis\n\n- old\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["radar.md"],
+                    {"updates": [{"path": "radar.md", "mode": "replace_section", "anchor": "## Thesis", "content": "- new\n"}]},
+                    task="daily",
+                )
+            self.assertIn("radar.md", str(ctx.exception))
+
+    def test_english_block_chinese_block_assembly(self) -> None:
+        updates = cloud_agent_runner.normalize_result_updates(
+            {
+                "updates": [
+                    {
+                        "path": "daily/2026-07.md",
+                        "mode": "append",
+                        "day_heading": "## 2026-07-03",
+                        "english_block": "#### 1. Signals\n\n- Signal: test\n",
+                        "chinese_block": "#### 1. Signals\n\n- 信号：测试\n",
+                    }
+                ]
+            }
+        )
+        self.assertEqual(len(updates), 1)
+        self.assertIn("### English", updates[0]["content"])
+        self.assertIn("### 中文", updates[0]["content"])
+
+    def test_compute_synthesis_recall(self) -> None:
+        screen = (
+            '{"candidates":[{"id":"scr-abc","title":"Fresh MCP","evidence":["https://x"],'
+            '"promotion_status":"candidate"}]}'
+        )
+        result = {
+            "summary": "Discussed scr-abc",
+            "updates": [{"path": "daily/2026-07.md", "mode": "append", "content": "scr-abc noted"}],
+        }
+        recall = cloud_agent_runner.compute_synthesis_recall(screen, result)
+        self.assertEqual(recall, 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

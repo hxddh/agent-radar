@@ -130,12 +130,13 @@ def split_block_sections(content: str) -> tuple[str, str, str]:
 
 def substantive_block_bullets(section: str, *, require_cjk: bool) -> int:
     count = 0
+    min_chars = MIN_CJK_PAIR_CHARS if require_cjk else MIN_IDENTICAL_PAIR_CHARS
     for line in section.splitlines():
         match = BULLET_RE.match(line)
         if not match:
             continue
         text = normalize_bilingual_text(match.group(2))
-        if len(text) < MIN_IDENTICAL_PAIR_CHARS:
+        if len(text) < min_chars:
             continue
         if require_cjk:
             if has_cjk(text):
@@ -191,10 +192,59 @@ def required_chinese_lines(english_count: int) -> int:
 def missing_chinese_substance(content: str) -> bool:
     if not is_report_content(content):
         return False
+    if is_daily_block_format(content):
+        return missing_chinese_substance_daily_block(content)
     english_count = substantive_english_lines(content)
     if english_count < 10:
         return False
     return substantive_chinese_cjk_lines(content) < required_chinese_lines(english_count)
+
+
+def count_daily_signal_sections(content: str) -> int:
+    return len(re.findall(r"^#### \d+\.", content, re.MULTILINE))
+
+
+def missing_chinese_substance_daily_block(content: str) -> bool:
+    english, chinese = split_daily_block_bodies(content)
+    english_signals = count_daily_signal_sections(english) or substantive_english_lines(english)
+    if english_signals < 3:
+        return False
+    chinese_cjk = substantive_block_bullets(chinese, require_cjk=True)
+    required = max(MIN_CJK_LINES_FOR_SUBSTANCE, min(english_signals, 6))
+    return chinese_cjk < required
+
+
+def assemble_daily_day_block(english_block: str, chinese_block: str, day_heading: str = "") -> str:
+    en = english_block.strip()
+    zh = chinese_block.strip()
+    parts: list[str] = []
+    if day_heading:
+        parts.append(day_heading)
+    parts.extend(["### English", en, "", "### 中文", zh])
+    return "\n".join(parts).rstrip() + "\n"
+
+
+def bilingual_char_stats(content: str) -> dict[str, int]:
+    if is_daily_block_format(content):
+        english, chinese = split_daily_block_bodies(content)
+    elif is_block_bilingual_format(content):
+        english_match = BLOCK_ENGLISH_RE.search(content)
+        chinese_match = BLOCK_CHINESE_RE.search(content)
+        if english_match and chinese_match:
+            english = content[english_match.end() : chinese_match.start()]
+            chinese = content[chinese_match.end() :]
+        else:
+            english, chinese = content, ""
+    else:
+        english, chinese = content, ""
+    english_chars = len(english)
+    chinese_cjk_chars = sum(1 for ch in chinese if "\u4e00" <= ch <= "\u9fff")
+    total = max(1, english_chars + chinese_cjk_chars)
+    return {
+        "english_chars": english_chars,
+        "chinese_cjk_chars": chinese_cjk_chars,
+        "bilingual_ratio": round(chinese_cjk_chars / total, 3),
+    }
 
 
 def report_has_required_chinese(content: str) -> bool:
