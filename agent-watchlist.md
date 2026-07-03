@@ -40,13 +40,13 @@ Status:
 - Category: AI IDE / coding agent
 - Maturity: Mature AI IDE with expanding automation and SDK surface; exact adoption metrics still source required.
 - Core use case: Interactive coding, local/cloud agent tasks, and repeated workflow automations.
-- Recent changes: Cursor Automations added `/automate`, GitHub/Slack triggers, and computer-use support; Cursor SDK exposes the Cursor agent runtime with run streaming and lifecycle controls.
-- Strengths: Connects IDE workflows, cloud VMs, triggers, and programmatic agent APIs.
+- Recent changes: Cursor 3.9 added iOS public beta for launching/managing always-on cloud agents, remote control for local agents, mobile review of demos/screenshots/logs/diffs, and Team MCP distribution through team marketplaces.
+- Strengths: Connects IDE workflows, cloud VMs, triggers, mobile supervision, governed MCP distribution, and programmatic agent APIs.
 - Weaknesses: Needs more public evidence on reliability, cost experience, and enterprise governance at scale.
 - User feedback: Public anecdotes mention Cursor as a project-aware coding agent, but evidence is weak and fragmented.
-- Infra signals: Durable agents, per-prompt runs, SSE streaming, cancellation, archive/unarchive/delete, cloud VM execution.
-- Storage implications: Agent lifecycle state and archived runs imply persistent run metadata and workspace storage.
-- Watch next: Whether automations become reliable enough for unattended repo maintenance.
+- Infra signals: Durable agents, per-prompt runs, SSE streaming, cancellation, archive/unarchive/delete, cloud VM execution, Team MCP marketplaces, mobile agent handoff.
+- Storage implications: Agent lifecycle state, archived runs, mobile-visible demos/screenshots/logs/diffs, and governed MCP install state imply persistent run metadata, artifacts, and workspace storage.
+- Watch next: Whether mobile supervision and team MCP marketplaces make always-on agents more usable in governed teams.
 - Sources: https://cursor.com/changelog and https://cursor.com/changelog/sdk-release
 
 ## Devin / Cognition
@@ -70,14 +70,14 @@ Status:
 - Category: Coding assistant / coding agent
 - Maturity: Broad enterprise/devtool footprint; agentic features are expanding across VS Code and JetBrains surfaces.
 - Core use case: IDE assistance, code review, coding agent workflows, browser-backed app inspection.
-- Recent changes: Browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant; Claude Sonnet 5 is available for GitHub Copilot.
-- Strengths: Strong IDE distribution and enterprise controls around browser access.
+- Recent changes: Copilot CLI can now run in GitHub Actions using the built-in `GITHUB_TOKEN` instead of a personal access token; browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant.
+- Strengths: Strong IDE distribution and enterprise controls around browser access, workflow-token auth, organization billing, and session limits.
 - Weaknesses: Weak public field evidence on real-world reliability of browser-driven workflows; official controls exist but user reports are sparse.
 - User feedback: One weak public Reddit signal says Copilot remains the work default for at least some users, even when personal usage spans multiple tools.
-- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts.
-- Storage implications: Browser screenshots, console output, live app state, and per-agent tabs become runtime artifacts that may need retention and governance.
-- Watch next: Whether browser tools move from debugging aid to default agent workflow for web-app changes.
-- Sources: https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/ and https://github.blog/changelog/month/06-2026/
+- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts, `copilot-requests: write`, organization-level cost centers, and session credit limits.
+- Storage implications: Browser screenshots, console output, live app state, per-agent tabs, Actions logs, and org-billed CLI sessions become runtime artifacts that may need retention and governance.
+- Watch next: Whether Actions-native Copilot CLI becomes a standard pattern for scheduled or CI-triggered coding-agent workflows.
+- Sources: https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/ and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
 
 ## Replit Agent
 

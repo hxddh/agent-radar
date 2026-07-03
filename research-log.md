@@ -779,3 +779,46 @@ Accepted sources: All screening pass sources are already present in research-log
 Candidate inbox: Already populated in Pass 16 with the screening pass candidates. No new candidates added beyond those.
 
 Follow-up gaps: Same as Pass 16.
+
+
+### Pass 18: Daily update (2026-07-03) - official source sweep plus collector refresh
+
+Purpose:
+- Run the daily automation for 2026-07-03 using public collectors plus live official/developer source checks. The workspace timezone/date used for this run is 2026-07-03.
+
+Accepted sources:
+- GitHub Copilot CLI in Actions with `GITHUB_TOKEN`: https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/
+- Cursor changelog 3.9: https://cursor.com/changelog
+- Anthropic Claude Sonnet 5: https://www.anthropic.com/news/claude-sonnet-5
+- Anthropic Fable 5 redeployment and cyber safeguards: https://www.anthropic.com/news/redeploying-fable-5
+- MCP TypeScript SDK v1.29.0: https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/v1.29.0
+- `jdbg`: https://github.com/PieceOfFall/jdbg
+- `goodvibes-plugin`: https://github.com/mgd34msu/goodvibes-plugin
+- `testsprite-cli`: https://github.com/zkwr3354/testsprite-cli
+- Vercel MCP Agent Runs observability tools: https://vercel.com/docs/agent-resources/vercel-mcp/tools
+
+Collector snapshot:
+- `python3 scripts/cloud_agent_runner.py --task daily --date 2026-07-03 --collect-only` collected 152 public source items.
+- Collectors covered arxiv, Bluesky, crates, dev.to, Docker, official feeds/pages, GitHub, HN, Lobsters, npm, Open VSX, PyPI, reddit RSS, releases, and tags.
+- Source errors: 12. Notable unavailable/partial lanes included OpenAI blog feed timeout, Anthropic engineering page timeout, some GitHub/crates/npm/Docker/release timeouts, and disabled X/reddit-json collectors.
+
+Candidate inbox (compact, ranked):
+1. `jdbg` - agent-friendly Java debugger with persistent sessions, structured output, native MCP tools, and setup targets for Claude Code, Codex, OpenCode, and Pi. Relevance 5. Evidence: weak-to-medium (public repo, 6 stars, release on 2026-07-03). Defer: needs independent user evidence.
+2. `goodvibes-plugin` - Claude Code plugin with 75 MCP tools, 11 specialized agents, persistent cross-session memory, and caching/token-efficiency claims. Relevance 4. Evidence: weak (public repo, 6 stars, release on 2026-07-03). Defer: claims need testing and may be superseded by native agent features.
+3. `testsprite-cli` - CLI claiming to verify coding agents by testing live applications like a human user. Relevance 3. Evidence: weak (0 stars, no releases). Defer: needs adoption or reproducible examples.
+4. `mayssamj/versatile-ai-stack` - self-contained script for agentic-AI stack experimentation with inference, memory, observability, security, sandboxed agents, and RAG. Relevance 3. Evidence: weak (1 star). Defer: broad experiment stack, not yet a distinct agent infrastructure primitive.
+5. Vercel MCP Agent Runs tools - official docs expose list/get/trace tools for eve Agent Runs. Relevance 4. Evidence: strong for docs, but freshness uncertain because the page says last updated May 1, 2026. Defer: use as storage/observability corroboration, not as a fresh daily launch.
+
+Watchlist changes:
+- Updated Cursor entry for mobile cloud agents, remote control, Team MCP marketplaces, and mobile-visible artifacts.
+- Updated GitHub Copilot entry for Copilot CLI in Actions using `GITHUB_TOKEN`, org billing, cost centers, and session limits.
+
+Rejected or deprioritized:
+- Low-star one-off GitHub projects from the collector (`MemEcsy`, `cursor-mem0`, `vocalingo-mcp`, `kvm-pilot`, `typstpad`, `rilable`) were not promoted because evidence is weak, overlap is high, or agent relevance is not yet distinct.
+- Bluesky posts about Safari MCP and Vercel Agent Runs were treated as discovery/corroboration only; official docs or first-party pages were preferred for public claims.
+
+Follow-up gaps:
+- Need independent user reports for Cursor mobile cloud-agent supervision.
+- Monitor whether GitHub's Actions-native Copilot CLI becomes a pattern for scheduled repo maintenance.
+- Track whether workflow-scoped agent credentials appear in non-GitHub ecosystems before promoting the PAT-avoidance pattern to `playbook.md`.
+- Continue monitoring early Java debugging and Claude Code plugin candidates for adoption, issues, or reproducible demos.
