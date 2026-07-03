@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.6.0 - 2026-07-03
+
+### Added
+- **采集韧性 (v0.5.13)**: collector `degraded` status with exponential backoff; permanent vs transient error classes; RSS fallbacks for disabled page collectors; priority-lane floor (40% official/github/github-release) in source trimming; `lane_coverage` / `breadth_degraded` telemetry; `collect-status --json`.
+- **知识卫生 (v0.5.14)**: single `## Candidate inbox` enforcement; reject `### Pass:` appends; `corpus-audit` and `--fix` (archive Pass sections); post-apply synthesis gates (`synthesis_recall`, daily signal/URL limits, no `radar.md` on daily); screening candidate `id` fields.
+- **双语降本 (v0.5.15–0.6.0)**: asymmetric bilingual rules (English detail, concise Chinese); daily `english_block` / `chinese_block` JSON; lighter daily Chinese substance gate; tiered `validate --tier daily|full` (Sunday full in CI); bilingual char telemetry.
+
+### Changed
+- `prompts/runner-rules.md` and `prompts/screening-schema.md` updated for v0.6.0 gates.
+- Cloud-agent workflow uses tiered validate (weekday daily, Sunday full).
+- CLI version bumped to `0.6.0`.
+
 ## v0.5.12 - 2026-07-03
 
 ### Added

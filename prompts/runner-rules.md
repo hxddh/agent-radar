@@ -12,11 +12,14 @@ Return only valid JSON with this shape:
   "sources": ["source URL or source class"],
   "updates": [
     {"path": "relative/path.md", "mode": "append", "content": "markdown to append"},
+    {"path": "daily/2026-07.md", "mode": "append", "day_heading": "## 2026-07-03", "english_block": "### English\n\n...", "chinese_block": "### 中文\n\n..."},
     {"path": "relative/path.md", "mode": "replace_section", "anchor": "## Section heading", "content": "body without the heading line"},
     {"path": "relative/path.md", "mode": "full", "content": "complete UTF-8 file content"}
   ]
 }
 ```
+
+Prefer `english_block` + `chinese_block` for daily appends when the model splits languages; the runner assembles the day block.
 
 Prefer `updates[]`. Legacy `files[]` is accepted only for new/empty files; the runner rejects `files[]` rewrites of existing daily, weekly, or monthly reports.
 
@@ -46,7 +49,7 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
     {
       "path": "research-log.md",
       "mode": "append",
-      "content": "\n\n### Pass: Daily update (2026-07-03)\n\nAccepted sources:\n- Example: https://example.com/changelog\n"
+      "content": "\n\n- **Candidate title** (scr-abc12345): why it matters; evidence strength: Medium; promotion_status: candidate\n  - Source: https://example.com/changelog\n"
     }
   ]
 }
@@ -100,10 +103,12 @@ Do not `full`-rewrite an existing weekly file.
 
 ## Bilingual reports (daily / weekly / monthly)
 
+- **Asymmetric bilingual**: English carries full detail (URLs, evidence strength, source class, versions). Chinese mirrors narrative prose in Simplified Chinese; keep Chinese concise.
 - Weekly and monthly: full `## English` section first, then `## 中文`, separated by `---`.
-- Daily: under each `## YYYY-MM-DD`, write `### English` then `### 中文`.
+- Daily: under each `## YYYY-MM-DD`, write `### English` then `### 中文` (or use `english_block` / `chinese_block` in JSON).
 - Mirror section headings in both languages. English bullets contain English prose only; Chinese bullets contain real Simplified Chinese prose only.
-- At least 60% of substantive English lines must have a real Chinese counterpart, or the update is rejected.
+- Daily Chinese substance gate is lighter than weekly/monthly: mirror major signal sections; URLs and metadata stay in English only.
+- At least 60% of substantive English lines must have a real Chinese counterpart in weekly/monthly, or the update is rejected.
 - Keep URLs, repo names, product names, versions, and star counts once in English (or as language-neutral lines). Enumerated fields may pair inline, for example `- Evidence strength: 强（Strong）` in the Chinese section.
 - Never write the same URL twice for one item.
 - In daily day blocks, list at most **3 public URLs per signal bullet**; put additional URLs in `research-log.md`.
@@ -122,7 +127,9 @@ Do not `full`-rewrite an existing weekly file.
 - Preserve existing useful content. Append or synthesize rather than deleting history.
 - For OpenRouter mode, do not use paid search tools. Use the screening pass or public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
 - If the provider cannot browse the live web, record the limitation in `research-log.md`.
-- If no useful update is found, update `research-log.md` with the search pass and return that file only.
+- If no useful update is found, update `research-log.md` under the single `## Candidate inbox` section.
+- Do not append `### Pass:` sections; the runner rejects them.
+- Daily runs must not update `radar.md` (thesis changes belong in weekly/monthly).
 
 ## Evidence labels and promotion (compact)
 
@@ -143,7 +150,7 @@ Promotion (daily/weekly/monthly/promote-candidates may promote; source-sweep doe
 - Treat this task as discovery, not promotion.
 - Do not update agent-watchlist.md, radar.md, storage-angle.md, daily notes, weekly notes, or monthly notes.
 - Do not discard weak or early signals. Capture them compactly in research-log.md.
-- Put new candidates in research-log.md under a "Candidate inbox" or "Deferred candidates" section.
+- Put new candidates in research-log.md under the single canonical `## Candidate inbox` section (do not create duplicate inbox headings).
 - Keep the candidate inbox broad but ranked. Prefer 5-12 candidates per sweep unless there are genuinely more high-signal items.
 - For each candidate, include why it matters, evidence strength, relevance score, defer/reject reason, and follow-up needed.
 - For each candidate, include candidate_seen_at, last_checked_at, promotion_status, defer_count, and stale_after_days.

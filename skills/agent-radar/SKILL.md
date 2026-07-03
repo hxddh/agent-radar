@@ -23,8 +23,10 @@ Lightweight Markdown-first AI Agent trend radar. Use for scheduled research upda
 ```bash
 python scripts/agent_radar.py brief --date 2026-07-03
 python scripts/agent_radar.py brief --date 2026-07-03 --json
+python scripts/agent_radar.py collect-status --json
+python scripts/agent_radar.py corpus-audit --json
 python scripts/agent_radar.py trigger cloud-agent --task auto --date 2026-07-03
-python scripts/agent_radar.py validate --date 2026-07-03 --strict-bilingual --require-chinese
+python scripts/agent_radar.py validate --date 2026-07-03 --tier daily --strict-bilingual --require-chinese
 ```
 
 ## Structured Output
