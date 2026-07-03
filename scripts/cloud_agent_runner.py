@@ -59,6 +59,11 @@ DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
 DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
 DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
 DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 80
+DEFAULT_MAX_RESPONSE_CHARS = 16_000
+DEFAULT_MAX_DAILY_APPEND_CHARS = 10_000
+DEFAULT_SCREEN_PROMPT_CANDIDATES = 8
+DEFAULT_SCREEN_GAPS_IN_PROMPT = 3
+DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
     "modelcontextprotocol/servers",
@@ -725,6 +730,151 @@ def screening_schema_text(root: Path | None = None) -> str:
     )
 
 
+def parse_screening_json(text: str) -> dict[str, Any]:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
+    try:
+        data = json.loads(cleaned)
+    except json.JSONDecodeError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def write_screening_artifact(root: Path, day: dt.date, screen_text: str) -> Path:
+    path = root / "automation" / "screening" / f"{day.isoformat()}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = parse_screening_json(screen_text)
+    if not data:
+        data = {"summary": "unparsed screening output", "raw": screen_text.strip()}
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day: dt.date | None = None) -> str:
+    data = parse_screening_json(screen_text)
+    if not data:
+        return truncate_text(
+            screen_text,
+            env_int("MAX_SCREEN_PROMPT_SUMMARY_CHARS", 4000),
+        )
+
+    max_candidates = env_int("SCREEN_PROMPT_CANDIDATES", DEFAULT_SCREEN_PROMPT_CANDIDATES)
+    max_gaps = env_int("SCREEN_GAPS_IN_PROMPT", DEFAULT_SCREEN_GAPS_IN_PROMPT)
+    why_limit = env_int("SCREEN_CANDIDATE_WHY_CHARS", DEFAULT_SCREEN_CANDIDATE_WHY_CHARS)
+
+    lines = ["Screening summary (compact; full artifact on disk):"]
+    summary = str(data.get("summary", "")).strip()
+    if summary:
+        lines.append(f"Summary: {truncate_text(summary, 500)}")
+
+    candidates = data.get("candidates", [])
+    if isinstance(candidates, list) and candidates:
+        lines.append(f"Top candidates ({min(max_candidates, len(candidates))} shown):")
+        for cand in candidates[:max_candidates]:
+            if not isinstance(cand, dict):
+                continue
+            title = str(cand.get("title", "?"))
+            status = cand.get("promotion_status", "candidate")
+            score = cand.get("relevance_score", "")
+            infra = cand.get("infra_angle", "")
+            evidence = cand.get("evidence", [])
+            url = ""
+            if isinstance(evidence, list) and evidence:
+                url = str(evidence[0])
+            why = truncate_text(str(cand.get("why_it_matters", "")), why_limit)
+            lines.append(f"- [{status} score={score} infra={infra}] {title} | {url}")
+            if why:
+                lines.append(f"  why: {why}")
+
+    gaps = data.get("gaps", [])
+    if isinstance(gaps, list) and gaps:
+        gap_text = "; ".join(str(item) for item in gaps[:max_gaps])
+        lines.append(f"Gaps: {gap_text}")
+
+    if day is not None:
+        lines.append(f"Full screening JSON: automation/screening/{day.isoformat()}.json")
+    return "\n".join(lines)
+
+
+def candidate_already_tracked(root: Path, candidate: dict[str, Any]) -> bool:
+    haystacks: list[str] = []
+    for rel in ("research-log.md", "sources.md"):
+        path = root / rel
+        if path.exists():
+            haystacks.append(read_text_full(path))
+    if not haystacks:
+        return False
+    hay = "\n".join(haystacks).lower()
+    title = str(candidate.get("title", "")).strip().lower()
+    if len(title) >= 4 and title in hay:
+        return True
+    evidence = candidate.get("evidence", [])
+    if isinstance(evidence, list):
+        for item in evidence:
+            url = str(item).strip()
+            if url and url.lower() in hay:
+                return True
+    return False
+
+
+def screening_actionable_candidates(data: dict[str, Any]) -> list[dict[str, Any]]:
+    raw = data.get("candidates", [])
+    if not isinstance(raw, list):
+        return []
+    actionable: list[dict[str, Any]] = []
+    for cand in raw:
+        if not isinstance(cand, dict):
+            continue
+        status = str(cand.get("promotion_status", "candidate")).lower()
+        if status == "reject":
+            continue
+        actionable.append(cand)
+    return actionable
+
+
+def should_skip_source_sweep(root: Path, screen_text: str | None) -> tuple[bool, str]:
+    if not screen_text:
+        return False, ""
+    if not env_bool("SKIP_SOURCE_SWEEP_WHEN_STALE", True):
+        return False, ""
+    data = parse_screening_json(screen_text)
+    if not data:
+        return False, ""
+    actionable = screening_actionable_candidates(data)
+    if not actionable:
+        return True, "no actionable candidates in screening pass"
+    new_items = [item for item in actionable if not candidate_already_tracked(root, item)]
+    if not new_items:
+        return True, "all screening candidates already tracked in research-log/sources"
+    return False, ""
+
+
+def max_response_chars() -> int:
+    return env_int("MAX_RESPONSE_CHARS", DEFAULT_MAX_RESPONSE_CHARS)
+
+
+def validate_response_size(output_text: str) -> None:
+    limit = max_response_chars()
+    if len(output_text) > limit:
+        raise SystemExit(
+            f"Model response exceeds MAX_RESPONSE_CHARS ({limit}): got {len(output_text)} chars. "
+            "Return a smaller JSON payload with compact append updates."
+        )
+
+
+def validate_daily_append_size(rel_path: str, mode: str, content: str) -> None:
+    if not is_daily_month_path(rel_path) or mode != "append":
+        return
+    limit = env_int("MAX_DAILY_APPEND_CHARS", DEFAULT_MAX_DAILY_APPEND_CHARS)
+    if len(content) > limit:
+        raise SystemExit(
+            f"Refusing daily append for {rel_path}: content is {len(content)} chars "
+            f"(MAX_DAILY_APPEND_CHARS limit {limit}). Keep the day block compact."
+        )
+
+
 def preflight_shared_screening(
     shared_collection: tuple[Any, ...],
     root: Path,
@@ -735,7 +885,9 @@ def preflight_shared_screening(
     compact = format_scored_items_for_screening(items, cap)
     screen_model = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
     data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
-    return response_output_text(data), 1
+    screen_text = response_output_text(data)
+    write_screening_artifact(root, day, screen_text)
+    return screen_text, 1
 
 
 def validate_daily_update_content(rel_path: str, old: str, mode: str, content: str) -> None:
@@ -789,11 +941,12 @@ def task_uses_screening(task: str) -> bool:
     return len(active) > 1
 
 
-def apply_screened_summary_to_prompt(prompt: str, screen_text: str) -> str:
+def apply_screened_summary_to_prompt(prompt: str, screen_text: str, root: Path | None = None, day: dt.date | None = None) -> str:
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
+    compact = compact_screening_for_prompt(screen_text, root, day)
     screened_block = (
         "Screening pass (primary evidence for this run):\n"
-        f"{truncate_text(screen_text, source_block_char_budget(max_prompt))}"
+        f"{truncate_text(compact, source_block_char_budget(max_prompt))}"
     )
     if "Public source snapshot:" in prompt:
         return re.sub(
@@ -2039,6 +2192,7 @@ def invoke_model(
     context: str,
     public_sources: str,
     *,
+    root: Path | None = None,
     shared_screened: str | None = None,
 ) -> dict[str, Any]:
     provider = model_provider()
@@ -2055,16 +2209,18 @@ def invoke_model(
                 screen_text = response_output_text(
                     call_openrouter_model(build_screen_prompt(task, public_sources), active_models[0])
                 )
-            prompt = build_prompt(task, day, allowed, context, screened_summary=screen_text)
+            prompt = build_prompt(
+                task, day, allowed, context, root=root, screened_summary=screen_text
+            )
         else:
-            prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
+            prompt = build_prompt(task, day, allowed, context, root=root, public_sources=public_sources)
         record_prompt_budget(len(prompt))
         return call_openrouter_model(prompt, active_models[-1])
     if provider == "openai":
-        prompt = build_prompt(task, day, allowed, context, public_sources=public_sources)
+        prompt = build_prompt(task, day, allowed, context, root=root, public_sources=public_sources)
         record_prompt_budget(len(prompt))
         return call_openai(prompt)
-    prompt = build_prompt(task, day, allowed, context, public_sources="")
+    prompt = build_prompt(task, day, allowed, context, root=root, public_sources="")
     record_prompt_budget(len(prompt))
     return call_github_models(prompt)
 
@@ -2087,6 +2243,8 @@ def build_prompt(
     context: str,
     public_sources: str = "",
     screened_summary: str = "",
+    *,
+    root: Path | None = None,
 ) -> str:
     allowed_text = "\n".join(f"- {path}" for path in allowed)
     task_rules = ""
@@ -2098,9 +2256,10 @@ def build_prompt(
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
     source_budget = source_block_char_budget(max_prompt)
     if screened_summary:
+        compact = compact_screening_for_prompt(screened_summary, root, day)
         source_block = (
             "Screening pass (primary evidence for this run):\n"
-            f"{truncate_text(screened_summary, source_budget)}"
+            f"{truncate_text(compact, source_budget)}"
         )
     elif public_sources:
         source_block = f"Public source snapshot:\n{truncate_text(public_sources, source_budget)}"
@@ -2280,6 +2439,7 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any]) -> int
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
         validate_daily_update_content(rel_path, old, mode, content)
+        validate_daily_append_size(rel_path, mode, content)
         if mode == "full" and legacy and old.strip():
             if is_daily_month_path(rel_path):
                 raise SystemExit(
@@ -2489,8 +2649,39 @@ def run_task(
     if task_uses_screening(task) and shared_screened:
         screen_text = shared_screened
         RUN_AUDIT["shared_screening"] = True
-    data = invoke_model(task, day, allowed, context, public_sources, shared_screened=screen_text)
+    if task == "source-sweep" and screen_text:
+        skip, reason = should_skip_source_sweep(root, screen_text)
+        if skip:
+            RUN_AUDIT["budget_status"] = "skipped-no-new-candidates"
+            append_run_log(
+                root,
+                task,
+                day,
+                0,
+                f"Skipped source-sweep: {reason}",
+                [],
+            )
+            append_telemetry(
+                root,
+                task,
+                day,
+                0,
+                f"Skipped source-sweep: {reason}",
+                [],
+            )
+            print(f"Task {task}: skipped ({reason}).")
+            return
+    data = invoke_model(
+        task,
+        day,
+        allowed,
+        context,
+        public_sources,
+        root=root,
+        shared_screened=screen_text,
+    )
     output_text = response_output_text(data)
+    validate_response_size(output_text)
     RUN_AUDIT["output_chars"] = len(output_text)
     try:
         result = json.loads(output_text)

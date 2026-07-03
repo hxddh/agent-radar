@@ -360,6 +360,28 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertIn("### 中文", text)
             self.assertIn("one", text)
 
+    def test_rejects_oversized_daily_append(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("# Daily\n\n## 2026-07-02\n\n- existing\n", encoding="utf-8")
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "daily/2026-07.md",
+                                "mode": "append",
+                                "content": "\n\n## 2026-07-03\n\n" + ("x" * 12_000),
+                            }
+                        ]
+                    },
+                )
+            self.assertIn("MAX_DAILY_APPEND_CHARS", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

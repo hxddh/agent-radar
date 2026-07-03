@@ -100,6 +100,7 @@ Context efficiency (v0.5.2+):
 - `build_prompt()` applies a global `MAX_PROMPT_CHARS` budget: source/screening block first, then repository context.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
 - `auto` mode with OpenRouter also reuses one scored source pool across tasks (`prepare_shared_source_collection`) and one preflight Flash screening pass (`preflight_shared_screening`).
+- v0.5.12+: full screening JSON is written to `automation/screening/YYYY-MM-DD.json`; main prompts inject a compact top-N summary. `MAX_RESPONSE_CHARS` and `MAX_DAILY_APPEND_CHARS` cap model output size. Stale source-sweeps skip when screening has no new candidates (`SKIP_SOURCE_SWEEP_WHEN_STALE=true`).
 - `SOURCES_CONTEXT_CHARS=6000` caps `sources.md` in daily/source-sweep context (intro + recent example tail).
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
 - `prompts/runner-rules.md` holds shared JSON/bilingual/safety/evidence rules (injected once per task; task prompts stay focused).

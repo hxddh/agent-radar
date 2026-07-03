@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import contextlib
 import importlib.util
+import io
+import json
 import os
 import tempfile
 import unittest
@@ -107,6 +109,20 @@ class AgentRadarCliTest(unittest.TestCase):
                 with mock.patch.object(agent_radar, "github_token", return_value=""):
                     code = agent_radar.main(["trigger", "validate", "--date", "2026-07-02"])
             self.assertEqual(code, 1)
+
+    def test_brief_json_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text("# radar\n", encoding="utf-8")
+            (root / "agent-watchlist.md").write_text("# watchlist\n", encoding="utf-8")
+            with chdir(root):
+                buffer = io.StringIO()
+                with contextlib.redirect_stdout(buffer):
+                    code = agent_radar.main(["brief", "--date", "2026-07-03", "--json"])
+            self.assertEqual(code, 0)
+            payload = json.loads(buffer.getvalue())
+            self.assertEqual(payload["date"], "2026-07-03")
+            self.assertIn("recent_telemetry", payload)
 
 
 if __name__ == "__main__":

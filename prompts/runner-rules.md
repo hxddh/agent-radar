@@ -107,6 +107,8 @@ Do not `full`-rewrite an existing weekly file.
 - Keep URLs, repo names, product names, versions, and star counts once in English (or as language-neutral lines). Enumerated fields may pair inline, for example `- Evidence strength: 强（Strong）` in the Chinese section.
 - Never write the same URL twice for one item.
 - In daily day blocks, list at most **3 public URLs per signal bullet**; put additional URLs in `research-log.md`.
+- Keep each daily `append` day block under **10,000 characters**; the runner rejects larger appends.
+- Keep the full model JSON response under **16,000 characters**; prefer compact `append` / `replace_section` updates.
 - Use exactly `## YYYY-MM-DD` for daily day headings (no suffix text). If a day block already exists, update it with `replace_section` instead of appending another block for the same date.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.

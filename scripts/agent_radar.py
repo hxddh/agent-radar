@@ -37,7 +37,7 @@ INIT_PROTECTED_FILES = {
 }
 
 
-__version__ = "0.5.11"
+__version__ = "0.5.12"
 
 CORE_FILES = [
     "README.md",
@@ -861,14 +861,65 @@ def latest_telemetry_records(root: Path, day: dt.date, limit: int = 5) -> list[d
     return records[-limit:]
 
 
-def command_brief(args: argparse.Namespace) -> int:
-    root = find_root()
-    day = parse_date(args.date)
+def suggest_next_focus(
+    missing: list[str],
+    current_daily: Path,
+    source_required: int,
+) -> str:
+    if missing:
+        return "Run `python scripts/agent_radar.py init` to restore missing structure."
+    if not current_daily.exists():
+        return "Create the current daily note."
+    if source_required > 20:
+        return "Backfill watchlist entries with official sources and concrete user evidence."
+    return "Look for fresh daily signals and update weekly synthesis if a pattern changed."
+
+
+def build_brief_payload(root: Path, day: dt.date) -> dict[str, object]:
     current_daily = daily_path(root, day)
     current_weekly = weekly_path(root, day)
     current_monthly = monthly_path(root, day)
     missing = missing_required(root)
     source_required = count_occurrences(root, "agent-watchlist.md", "Source required")
+    telemetry = latest_telemetry_records(root, day)
+    screening_artifact = root / "automation" / "screening" / f"{day.isoformat()}.json"
+    return {
+        "version": __version__,
+        "project_root": str(root),
+        "date": day.isoformat(),
+        "files": {
+            str(current_daily.relative_to(root)): current_daily.exists(),
+            str(current_weekly.relative_to(root)): current_weekly.exists(),
+            str(current_monthly.relative_to(root)): current_monthly.exists(),
+        },
+        "maintenance": {
+            "missing_structural_items": len(missing),
+            "watchlist_source_required_count": source_required,
+        },
+        "telemetry_path": str((root / "automation" / "telemetry" / f"{day:%Y-%m}.jsonl").relative_to(root)),
+        "screening_artifact_path": (
+            str(screening_artifact.relative_to(root)) if screening_artifact.exists() else None
+        ),
+        "recent_telemetry": telemetry,
+        "suggested_next_focus": suggest_next_focus(missing, current_daily, source_required),
+    }
+
+
+def command_brief(args: argparse.Namespace) -> int:
+    root = find_root()
+    day = parse_date(args.date)
+    payload = build_brief_payload(root, day)
+
+    if getattr(args, "json", False):
+        print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+
+    current_daily = daily_path(root, day)
+    current_weekly = weekly_path(root, day)
+    current_monthly = monthly_path(root, day)
+    missing = missing_required(root)
+    source_required = count_occurrences(root, "agent-watchlist.md", "Source required")
+    telemetry = payload["recent_telemetry"]
 
     print(f"Project root: {root}")
     print(f"Date: {day.isoformat()}")
@@ -881,7 +932,6 @@ def command_brief(args: argparse.Namespace) -> int:
     print(f"- Missing structural items: {len(missing)}")
     print(f"- Watchlist fields still marked 'Source required': {source_required}")
 
-    telemetry = latest_telemetry_records(root, day)
     if telemetry:
         print("\nRecent cloud-agent telemetry:")
         for item in telemetry:
@@ -911,14 +961,7 @@ def command_brief(args: argparse.Namespace) -> int:
             )
 
     print("\nSuggested next research focus:")
-    if missing:
-        print("- Run `python scripts/agent_radar.py init` to restore missing structure.")
-    elif not current_daily.exists():
-        print("- Create the current daily note.")
-    elif source_required > 20:
-        print("- Backfill watchlist entries with official sources and concrete user evidence.")
-    else:
-        print("- Look for fresh daily signals and update weekly synthesis if a pattern changed.")
+    print(f"- {payload['suggested_next_focus']}")
 
     print("\nReview checklist:")
     print("- Add accepted and rejected sources to `research-log.md`.")
@@ -1158,6 +1201,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     brief_parser = subparsers.add_parser("brief", help="Show maintenance gaps and next research focus.")
     brief_parser.add_argument("--date", help="Date for current daily/weekly/monthly paths, YYYY-MM-DD.")
+    brief_parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON on stdout.")
     brief_parser.set_defaults(func=command_brief)
 
     source_refresh_parser = subparsers.add_parser(

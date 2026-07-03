@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.5.12 - 2026-07-03
+
+### Added
+- Screening artifacts at `automation/screening/YYYY-MM-DD.json`; main prompts inject a compact top-N summary only.
+- `MAX_RESPONSE_CHARS` (default 16k) rejects oversized model JSON before apply.
+- `MAX_DAILY_APPEND_CHARS` (default 10k) rejects oversized daily day-block appends.
+- `SKIP_SOURCE_SWEEP_WHEN_STALE` (default true) skips source-sweep when screening has no new actionable candidates.
+- `brief --json` for machine-readable status without LLM calls.
+- `skills/agent-radar/SKILL.md` for external agent integration.
+
+### Changed
+- Screening schema caps: 12 candidates max, 120-char `why_it_matters`.
+- `runner-rules.md` documents response and daily append size limits.
+- CLI version bumped to `0.5.12`.
+
 ## v0.5.11 - 2026-07-02
 
 ### Added
