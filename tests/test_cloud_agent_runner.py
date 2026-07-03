@@ -478,12 +478,21 @@ class CloudAgentRunnerTest(unittest.TestCase):
                                 root = Path(tmp)
                                 cloud_agent_runner.run_task(
                                     root,
-                                    "daily",
+                                    "source-sweep",
                                     cloud_agent_runner.parse_date("2026-07-02"),
-                                    shared_screened='{"summary":"cached-screen","candidates":[{"title":"Fresh","evidence":["https://fresh.example"],"promotion_status":"candidate"}]}',
+                                    shared_screened=(
+                                        '{"summary":"cached-screen","candidates":['
+                                        '{"title":"Fresh Signal","evidence":["https://fresh.example/new"],'
+                                        '"promotion_status":"candidate"}]}'
+                                    ),
                                 )
         invoke_mock.assert_called_once()
-        self.assertEqual(invoke_mock.call_args.kwargs.get("shared_screened"), '{"summary":"cached-screen"}')
+        expected_screen = (
+            '{"summary":"cached-screen","candidates":['
+            '{"title":"Fresh Signal","evidence":["https://fresh.example/new"],'
+            '"promotion_status":"candidate"}]}'
+        )
+        self.assertEqual(invoke_mock.call_args.kwargs.get("shared_screened"), expected_screen)
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["shared_screening"])
 
     def test_maintenance_context_excluded_by_default(self) -> None:
