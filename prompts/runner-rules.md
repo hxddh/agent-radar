@@ -114,7 +114,7 @@ Do not `full`-rewrite an existing weekly file.
 - In daily day blocks, list at most **3 public URLs per signal bullet**; put additional URLs in `research-log.md`.
 - Keep each daily `append` day block under **10,000 characters**; the runner rejects larger appends.
 - Keep the full model JSON response under **16,000 characters**; prefer compact `append` / `replace_section` updates.
-- Use exactly `## YYYY-MM-DD` for daily day headings (no suffix text). If a day block already exists, update it with `replace_section` instead of appending another block for the same date.
+- If a day block already exists (for example after `ensure`), use `replace_section` with anchor `## YYYY-MM-DD`. The runner also auto-upgrades duplicate `append` payloads to `replace_section`.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 
