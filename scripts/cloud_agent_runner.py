@@ -942,6 +942,36 @@ def preflight_shared_screening(
     return screen_text, 1
 
 
+def strip_daily_day_block_wrapper(content: str, date_label: str) -> str:
+    """Remove leading --- separator and ## YYYY-MM-DD from an append payload."""
+    text = content.lstrip("\n")
+    if text.startswith("---"):
+        text = re.sub(r"^---\s*\n+", "", text, count=1)
+    heading_pattern = re.compile(rf"^## {re.escape(date_label)}\s*$", re.MULTILINE)
+    match = heading_pattern.search(text)
+    if match:
+        text = text[match.end() :].lstrip("\n")
+    return text
+
+
+def coerce_daily_duplicate_append(update: dict[str, Any], old: str, rel_path: str) -> dict[str, Any]:
+    """When ensure already created ## YYYY-MM-DD, upgrade append to replace_section."""
+    if not is_daily_month_path(rel_path) or update.get("mode") != "append":
+        return update
+    content = str(update.get("content", ""))
+    dates = sorted(set(STRICT_DAILY_DATE_HEADING.findall(content)))
+    if len(dates) != 1:
+        return update
+    date_label = dates[0]
+    if not re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
+        return update
+    coerced = dict(update)
+    coerced["mode"] = "replace_section"
+    coerced["anchor"] = f"## {date_label}"
+    coerced["content"] = strip_daily_day_block_wrapper(content, date_label)
+    return coerced
+
+
 def validate_daily_update_content(rel_path: str, old: str, mode: str, content: str) -> None:
     if is_daily_month_path(rel_path):
         if mode in {"append", "full", "replace"}:
@@ -951,7 +981,6 @@ def validate_daily_update_content(rel_path: str, old: str, mode: str, content: s
                 for date_label in STRICT_DAILY_DATE_HEADING.findall(content):
                     if re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
                         raise SystemExit(DUPLICATE_DAILY_DATE_MESSAGE.format(path=rel_path, date=date_label))
-                validate_daily_signal_limits(rel_path, content)
     if rel_path == "research-log.md" and mode == "append":
         validate_research_log_append(old, content)
 
@@ -2660,8 +2689,15 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
+        update = coerce_daily_duplicate_append(update, old, rel_path)
+        mode = update["mode"]
+        content = update["content"]
+        anchor = update.get("anchor")
+        within = update.get("within")
         validate_daily_update_content(rel_path, old, mode, content)
         validate_daily_append_size(rel_path, mode, content)
+        if is_daily_month_path(rel_path) and mode in {"append", "replace_section"}:
+            validate_daily_signal_limits(rel_path, content)
         if mode == "full" and legacy and old.strip():
             if is_daily_month_path(rel_path):
                 raise SystemExit(

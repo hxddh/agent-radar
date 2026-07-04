@@ -253,7 +253,38 @@ class ApplyUpdatesTest(unittest.TestCase):
                 )
             self.assertIn("exactly ## YYYY-MM-DD", str(ctx.exception))
 
-    def test_rejects_duplicate_daily_date_append(self) -> None:
+    def test_coerces_duplicate_daily_append_to_replace_section(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Daily\n\n## 2026-07-04\n\n### English\n\n- Signal: shell\n\n### 中文\n\n- 信号：占位\n",
+                encoding="utf-8",
+            )
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["daily/2026-07.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "daily/2026-07.md",
+                            "mode": "append",
+                            "content": (
+                                "\n---\n\n## 2026-07-04\n\n### English\n\n- Signal: updated content here.\n\n"
+                                "### 中文\n\n- 信号：更新后的中文内容。\n"
+                            ),
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertEqual(text.count("## 2026-07-04"), 1)
+            self.assertIn("updated content here", text)
+            self.assertNotIn("shell", text)
+
+    def test_rejects_append_spanning_multiple_existing_days(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             target = root / "daily" / "2026-07.md"
@@ -268,7 +299,10 @@ class ApplyUpdatesTest(unittest.TestCase):
                             {
                                 "path": "daily/2026-07.md",
                                 "mode": "append",
-                                "content": "\n## 2026-07-02\n\n- duplicate day\n",
+                                "content": (
+                                    "\n## 2026-07-02\n\n- duplicate day\n\n"
+                                    "## 2026-07-05\n\n- another day\n"
+                                ),
                             }
                         ]
                     },
