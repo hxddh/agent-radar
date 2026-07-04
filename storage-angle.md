@@ -97,6 +97,26 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong.
   - Source: https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
 
+- 2026-07-04: GitHub Copilot agent session streaming exposes enterprise agent session activity, including prompts, responses, and tool calls, through a streaming endpoint or REST API for the last 48 hours.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/
+
+- 2026-07-04: Copilot vision lets users attach images and PDFs to Copilot prompts across VS Code, github.com, and Copilot CLI; GitHub says Business and Enterprise attachments are retained for about 24 hours.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/
+
+- 2026-07-04: WebKit's Safari MCP server can expose page content, screenshots, console logs, and browser interactions to an MCP-compatible agent. WebKit states the data goes to the agent being used, not to Apple, making the selected agent/model the key retention and trust boundary.
+  - Source class: Official public source.
+  - Evidence strength: Strong.
+  - Source: https://webkit.org/blog/18136/introducing-the-safari-mcp-server-for-web-developers/
+
+- 2026-07-04: Agentrove combines self-hosted multi-agent workspaces with per-workspace Docker or host sandboxes, secrets, git tools, worktrees, session queues, and desktop/mobile clients.
+  - Source class: Official public source.
+  - Evidence strength: Medium for technical relevance; weak for adoption.
+  - Source: https://github.com/Mng-dev-ai/agentrove
+
 ### Knowledge Base as Object Storage Workload
 
 - 2026-07-02: Factory 2.0 describes a continuous software-factory loop from external signals to triage, planning, build, test, review, security, shipping, monitoring, and feedback.

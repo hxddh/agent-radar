@@ -70,14 +70,14 @@ Status:
 - Category: Coding assistant / coding agent
 - Maturity: Broad enterprise/devtool footprint; agentic features are expanding across VS Code and JetBrains surfaces.
 - Core use case: IDE assistance, code review, coding agent workflows, browser-backed app inspection.
-- Recent changes: Copilot CLI can now run in GitHub Actions using the built-in `GITHUB_TOKEN` instead of a personal access token; browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant.
-- Strengths: Strong IDE distribution and enterprise controls around browser access, workflow-token auth, organization billing, and session limits.
+- Recent changes: Copilot agent session streaming is in public preview for Enterprise Cloud customers with enterprise managed users; Copilot vision is generally available; Copilot CLI can run in GitHub Actions using the built-in `GITHUB_TOKEN`; browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant.
+- Strengths: Strong IDE distribution and enterprise controls around browser access, workflow-token auth, session streaming, organization billing, and session limits.
 - Weaknesses: Weak public field evidence on real-world reliability of browser-driven workflows; official controls exist but user reports are sparse.
 - User feedback: One weak public Reddit signal says Copilot remains the work default for at least some users, even when personal usage spans multiple tools.
-- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts, `copilot-requests: write`, organization-level cost centers, and session credit limits.
-- Storage implications: Browser screenshots, console output, live app state, per-agent tabs, Actions logs, and org-billed CLI sessions become runtime artifacts that may need retention and governance.
-- Watch next: Whether Actions-native Copilot CLI becomes a standard pattern for scheduled or CI-triggered coding-agent workflows.
-- Sources: https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/ and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
+- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts, `copilot-requests: write`, session usage-record streaming, REST retrieval for the last 48 hours, organization-level cost centers, and session credit limits.
+- Storage implications: Prompts, responses, tool calls, browser screenshots, console output, live app state, image/PDF attachments, per-agent tabs, Actions logs, and org-billed CLI sessions become runtime artifacts that need retention and governance.
+- Watch next: Whether session streaming becomes a standard enterprise audit requirement, and whether Actions-native Copilot CLI becomes a pattern for scheduled repo maintenance.
+- Sources: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/, https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/, https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/, and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
 
 ## Replit Agent
 
@@ -260,6 +260,21 @@ Status:
 - Public corroboration: None yet; needs integration evidence with major agent frameworks.
 - Watch next: Whether patient-zero is integrated by Claude Code, Cursor, Codex, or other coding agents, and whether supply-chain incidents drive adoption.
 - Source: https://github.com/0xSteph/patient-zero
+
+## Agentrove
+
+- Category: Self-hosted multi-agent coding workspace / ACP sandbox.
+- Why it matters: Runs Claude Code, Codex, Copilot, Cursor, and OpenCode through ACP adapters from one interface, with per-workspace Docker or host sandboxes and combined chat, editor, terminal, file tree, diffs, secrets, git tools, worktrees, queued follow-ups, permission prompts, desktop, and iOS clients.
+- Recent signal: Public GitHub repo with 293 stars, 58 forks, Apache 2.0 license, pushed 2026-07-04.
+- Source class: Official public source.
+- Source visibility: Public.
+- Evidence strength: Medium for technical relevance; weak for adoption because no independent user reports or security review were found.
+- User evidence: No independent user reports yet; GitHub stars, forks, and active development are the main public signal.
+- Infra angle: Agent Client Protocol adapters, self-hosted workspaces, per-workspace sandboxes, secrets, worktrees, session queues, cross-device supervision.
+- Risk: Early-stage; may remain a power-user workspace or be overtaken by native multi-agent surfaces from GitHub, Cursor, OpenAI, Anthropic, or IDE vendors.
+- Public corroboration: GitHub metadata and README corroborate scope; no external workflow evidence yet.
+- Watch next: Whether Agentrove publishes security docs, ACP compatibility tests, real user workflows, or enterprise deployment examples.
+- Source: https://github.com/Mng-dev-ai/agentrove
 
 ## Candidate Template
 

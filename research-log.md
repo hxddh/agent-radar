@@ -986,3 +986,66 @@ Changes:
 
 Follow-up gaps:
 - Same as Pass 19.
+
+## 2026-07-04
+
+### Pass 21: Daily update - official browser, session, and workspace signals
+
+Purpose:
+- Run the 2026-07-04 daily automation with public collectors plus live official/developer source checks. Workspace timezone/date used: 2026-07-04.
+
+Accepted sources:
+- GitHub Copilot agent session streaming public preview: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/
+- GitHub Copilot vision GA: https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/
+- WebKit Safari MCP server official post: https://webkit.org/blog/18136/introducing-the-safari-mcp-server-for-web-developers/
+- Agentrove self-hosted multi-agent coding workspace: https://github.com/Mng-dev-ai/agentrove
+- Collector source cache and health files for 2026-07-04.
+
+Collector snapshot:
+- `python3 scripts/cloud_agent_runner.py --task daily --date 2026-07-04 --collect-only` collected 190 public source items and scored 50.
+- Collectors covered arxiv, Bluesky, crates, dev.to, Docker, official feeds/pages, GitHub, HN, Lobsters, npm, Open VSX, PyPI, reddit RSS, releases, and tags.
+- Lane coverage was 1.0; priority lane share was 0.46; breadth_degraded=False.
+- Public collectors only. No authorized logged-in or user-provided private sources were available.
+
+Candidate inbox (compact, ranked):
+1. Agentrove (Mng-dev-ai/agentrove) - self-hosted AI coding workspace for Claude Code, Codex, Copilot, Cursor, and OpenCode using ACP adapters and per-workspace Docker/host sandboxes.
+   - Why it matters: Direct multi-agent workspace, sandbox, secrets, git, worktree, and cross-device runtime signal. Relevance score: 8.
+   - Evidence strength: Medium for technical relevance; weak for real-world adoption (293 stars, 58 forks, pushed 2026-07-04, no independent user reports).
+   - Promotion status: promoted to agent-watchlist.md as an emerging infrastructure candidate because it is a direct agent runtime/sandbox/workspace primitive.
+   - Follow-up needed: Watch for security review, user reports, issue activity, and ACP interoperability evidence.
+   - candidate_seen_at: 2026-07-04
+   - last_checked_at: 2026-07-04
+   - defer_count: 0
+   - stale_after_days: 45
+2. kernloop (kernloop/kernloop) - local CLI + MCP control plane for governed, observable AI coding agents.
+   - Why it matters: Relevant governance/control-plane framing for coding agents. Relevance score: 7.
+   - Evidence strength: Weak (1 star, 1 fork, early repo, 69 open issues).
+   - Promotion status: deferred.
+   - Follow-up needed: Look for adoption, docs maturity, and integration examples.
+   - candidate_seen_at: 2026-07-04
+   - last_checked_at: 2026-07-04
+   - defer_count: 1
+   - stale_after_days: 30
+3. MailKite agent inbox, Termi Protocol, context graph posts, and single Bluesky memory-agent anecdotes.
+   - Why it matters: Useful discovery hints around agent inboxes, visualization, and memory.
+   - Evidence strength: Weak; mostly launch/social posts or single-source anecdotes.
+   - Promotion status: deferred.
+   - Follow-up needed: Seek official docs, repos, or concrete user workflows.
+
+Watchlist changes:
+- Updated GitHub Copilot entry with session streaming, Copilot vision, 48-hour usage-record retrieval, approximate 24-hour attachment retention, and enterprise audit/governance implications.
+- Added Agentrove as an emerging agent infrastructure candidate.
+
+Storage changes:
+- Added Copilot session streaming, Copilot vision attachment retention, Safari MCP browser artifact exposure, and Agentrove workspace/sandbox persistence to storage-angle.md.
+
+Rejected or deprioritized:
+- Postmark Skills appeared in social collection but is four months old; not treated as a fresh daily signal.
+- Secondary Safari MCP coverage from MacStories, Daring Fireball, 9to5Mac, and Reddit was used only as corroboration; official WebKit source preferred.
+- Generic package/marketplace items with agent keywords but no concrete workflow were not promoted.
+
+Follow-up gaps:
+- Need independent user evidence for Agentrove and Safari MCP workflows.
+- Need security/audit evidence for browser MCP data handling in real teams.
+- Monitor whether Copilot session streaming becomes a standard enterprise requirement across agent vendors.
+- X/Twitter and authorized private/logged-in sources were not available in this run.

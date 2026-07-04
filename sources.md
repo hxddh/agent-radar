@@ -285,3 +285,15 @@ Ignore or deprioritize:
 - duduclaw: https://pypi.org/project/duduclaw/1.32.0/
 - tokenfuse: https://github.com/TAIPANBOX/tokenfuse
 - perseus-vault: https://github.com/Perseus-Computing-LLC/perseus-vault
+
+
+## Additional sources from 2026-07-04 daily update
+
+- GitHub Copilot agent session streaming: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/ (enterprise prompts/responses/tool calls stream and REST retrieval)
+- GitHub Copilot vision GA: https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/ (image/PDF prompt artifacts, Business/Enterprise retention note)
+- WebKit Safari MCP server: https://webkit.org/blog/18136/introducing-the-safari-mcp-server-for-web-developers/ (official Safari Technology Preview 247 MCP server)
+- Agentrove: https://github.com/Mng-dev-ai/agentrove (self-hosted multi-agent coding workspace with ACP-powered sandboxes)
+- kernloop: https://github.com/kernloop/kernloop (early AI coding-agent governance/control-plane candidate, deferred)
+- MailKite agent inbox: https://mailkite.dev/blog/give-your-agent-an-inbox/ (agent inbox workflow signal, deferred)
+- Termi Protocol: https://termiprotocol.com/ (3D visualization for AI coding agents, deferred)
+- Context graphs: https://nanonets.com/blog/what-is-a-context-graph/ (agent memory/decision context article, deferred)

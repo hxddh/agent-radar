@@ -1,6 +1,6 @@
 # Source Health
 
-Last checked: 2026-07-03
+Last checked: 2026-07-04
 
 | Source | Status | Detail |
 | --- | --- | --- |
@@ -19,22 +19,22 @@ Last checked: 2026-07-03
 | github:agent memory MCP | ok |  |
 | github:coding agent CLI | ok |  |
 | github:AI agent sandbox | ok |  |
-| github:agent eval framework | error | <urlopen error _ssl.c:1063: The handshake operation timed out> |
+| github:agent eval framework | ok |  |
 | github:agent security MCP | ok |  |
-| github:computer use agent | error | The read operation timed out |
+| github:computer use agent | ok |  |
 | npm:mcp server | ok |  |
 | pypi-updates:mcp server | ok |  |
 | crates:mcp server | ok |  |
 | open-vsx:mcp server | ok |  |
 | npm:ai agent | ok |  |
 | pypi-updates:ai agent | ok |  |
-| crates:ai agent | error | <urlopen error _ssl.c:1063: The handshake operation timed out> |
+| crates:ai agent | ok |  |
 | open-vsx:ai agent | ok |  |
 | npm:coding agent | ok |  |
 | pypi-updates:coding agent | ok |  |
 | crates:coding agent | ok |  |
 | open-vsx:coding agent | ok |  |
-| npm:agent memory | error | <urlopen error timed out> |
+| npm:agent memory | ok |  |
 | pypi-updates:agent memory | ok |  |
 | crates:agent memory | ok |  |
 | open-vsx:agent memory | ok |  |
@@ -42,45 +42,45 @@ Last checked: 2026-07-03
 | pypi-updates:agent sandbox | ok |  |
 | crates:agent sandbox | ok |  |
 | open-vsx:agent sandbox | ok |  |
-| docker:mcp server | error | <urlopen error timed out> |
+| docker:mcp server | ok |  |
 | docker:ai agent | ok |  |
 | docker:coding agent | ok |  |
 | arxiv:cs-ai | ok |  |
-| feed:openai-blog | error | The read operation timed out |
+| feed:openai-blog | ok |  |
 | feed:github-changelog | ok |  |
 | page:cursor-changelog | ok |  |
 | page:cursor-blog | ok |  |
 | page:anthropic-news | ok |  |
-| page:anthropic-engineering | error | collector timed out after 60s |
+| page:anthropic-engineering | ok |  |
 | pypi-package:mcp | ok |  |
 | pypi-package:langchain | ok |  |
 | pypi-package:crewai | ok |  |
 | pypi-package:openai | ok |  |
-| pypi-package:anthropic | error | The read operation timed out |
+| pypi-package:anthropic | ok |  |
 | pypi-package:llama-index | ok |  |
 | pypi-package:semantic-kernel | ok |  |
 | pypi-package:autogen-agentchat | ok |  |
+| release:openai/codex | ok |  |
+| tag:openai/codex | ok |  |
 | release:modelcontextprotocol/servers | ok |  |
 | tag:modelcontextprotocol/servers | ok |  |
-| release:modelcontextprotocol/python-sdk | error | The read operation timed out |
+| release:modelcontextprotocol/python-sdk | ok |  |
 | tag:modelcontextprotocol/python-sdk | ok |  |
-| release:modelcontextprotocol/typescript-sdk | error | The read operation timed out |
+| release:modelcontextprotocol/typescript-sdk | ok |  |
 | tag:modelcontextprotocol/typescript-sdk | ok |  |
-| release:TGYD-helige/pi | ok |  |
-| tag:TGYD-helige/pi | ok |  |
-| release:fu351/Doberman-Core | ok |  |
-| tag:fu351/Doberman-Core | ok |  |
-| release:nirholas/three.ws | ok |  |
-| tag:nirholas/three.ws | ok |  |
-| release:metorial/metorial | ok |  |
-| tag:metorial/metorial | ok |  |
+| release:elizaOS/eliza | ok |  |
+| tag:elizaOS/eliza | ok |  |
 | release:Wide-Moat/ocu-sandbox | ok |  |
 | tag:Wide-Moat/ocu-sandbox | ok |  |
+| release:GCWing/BitFun | ok |  |
+| tag:GCWing/BitFun | ok |  |
 | release:stacklok/toolhive-studio | ok |  |
 | tag:stacklok/toolhive-studio | ok |  |
 | release:sifxprime/kodelyth-ecc | ok |  |
 | tag:sifxprime/kodelyth-ecc | ok |  |
-| release:rexleimo/harness-cli | error | collector timed out after 60s |
+| release:rexleimo/harness-cli | ok |  |
 | tag:rexleimo/harness-cli | ok |  |
 | release:contexa-security/contexa | ok |  |
 | tag:contexa-security/contexa | ok |  |
+| release:Scormave/gramps-web-mcp | ok |  |
+| tag:Scormave/gramps-web-mcp | ok |  |
