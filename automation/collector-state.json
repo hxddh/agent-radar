@@ -6,8 +6,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "bluesky:AI agent": {
@@ -16,8 +16,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "bluesky:Claude Code": {
@@ -26,8 +26,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "bluesky:MCP server": {
@@ -36,8 +36,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "bluesky:agent eval": {
@@ -52,8 +52,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "bluesky:agent sandbox": {
@@ -74,8 +74,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "crates:agent eval": {
@@ -90,8 +90,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "crates:agent observability": {
@@ -106,8 +106,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "crates:agent security": {
@@ -122,8 +122,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "crates:browser agent": {
@@ -138,8 +138,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "crates:mcp server": {
@@ -148,8 +148,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "devto:ai": {
@@ -158,8 +158,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "devto:devops": {
@@ -168,8 +168,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
       "status": "ok"
     },
     "devto:machinelearning": {
@@ -178,8 +178,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "devto:opensource": {
@@ -188,8 +188,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "devto:productivity": {
@@ -210,8 +210,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "docker:coding agent": {
@@ -220,8 +220,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "docker:mcp server": {
@@ -230,8 +230,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "feed:github-changelog": {
@@ -240,8 +240,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "feed:openai-blog": {
@@ -250,8 +250,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:AI agent framework": {
@@ -260,8 +260,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:AI agent sandbox": {
@@ -270,8 +270,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:MCP server agent": {
@@ -280,8 +280,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:agent deployment workflow": {
@@ -296,8 +296,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:agent memory MCP": {
@@ -306,8 +306,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:agent observability": {
@@ -322,8 +322,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:browser agent automation": {
@@ -338,8 +338,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:computer use agent": {
@@ -348,8 +348,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "github:multi agent orchestration": {
@@ -364,8 +364,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "hn:AI agent evaluation": {
@@ -380,8 +380,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "hn:agent deployment": {
@@ -396,8 +396,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "hn:agent sandbox": {
@@ -406,8 +406,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "hn:browser agent": {
@@ -422,8 +422,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "lobsters:newest": {
@@ -432,8 +432,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "npm:agent eval": {
@@ -448,8 +448,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "npm:agent observability": {
@@ -464,8 +464,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "npm:agent security": {
@@ -480,8 +480,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "npm:browser agent": {
@@ -496,8 +496,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "npm:mcp server": {
@@ -506,8 +506,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "open-vsx:agent eval": {
@@ -522,8 +522,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "open-vsx:agent observability": {
@@ -538,8 +538,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "open-vsx:agent security": {
@@ -554,8 +554,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "open-vsx:browser agent": {
@@ -570,8 +570,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "open-vsx:mcp server": {
@@ -580,8 +580,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "page:anthropic-engineering": {
@@ -590,8 +590,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "page:anthropic-news": {
@@ -600,8 +600,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "page:cursor-blog": {
@@ -610,8 +610,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "page:cursor-changelog": {
@@ -620,8 +620,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:anthropic": {
@@ -630,8 +630,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:autogen-agentchat": {
@@ -640,8 +640,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:crewai": {
@@ -650,8 +650,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:langchain": {
@@ -660,8 +660,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:llama-index": {
@@ -670,8 +670,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:mcp": {
@@ -680,8 +680,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:openai": {
@@ -690,8 +690,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-package:semantic-kernel": {
@@ -700,8 +700,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-updates:agent eval": {
@@ -716,8 +716,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-updates:agent observability": {
@@ -732,8 +732,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-updates:agent security": {
@@ -748,8 +748,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-updates:browser agent": {
@@ -764,8 +764,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "pypi-updates:mcp server": {
@@ -774,8 +774,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "reddit-rss:ChatGPT": {
@@ -805,6 +805,16 @@
       "last_detail": "",
       "last_status": "ok",
       "ok": 1
+    },
+    "reddit-rss:mcp": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
     },
     "release:AdelElo13/neuromcp": {
       "error": 0,
@@ -848,11 +858,31 @@
       "ok_streak": 1,
       "status": "ok"
     },
+    "release:adeelahmad/agentrc": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "release:alexmond/jvmlens": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "ok": 6
+    },
+    "release:askalf/warden": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
     },
     "release:bobmatnyc/trusty-tools": {
       "error": 0,
@@ -888,6 +918,16 @@
       "ok_streak": 1,
       "status": "ok"
     },
+    "release:ctxrs/ctx": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "release:danilkryachko/dukememory": {
       "error": 0,
       "last_detail": "",
@@ -900,8 +940,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "release:envibagus/cortex": {
@@ -916,6 +956,26 @@
       "last_status": "ok",
       "ok": 1
     },
+    "release:iris-eval/mcp-server": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
+    "release:joshuaswarren/remnic": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "release:kinqsradiollc/BrainRouter": {
       "error": 0,
       "last_detail": "",
@@ -923,10 +983,14 @@
       "ok": 7
     },
     "release:macro-inc/macro": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "status": "ok"
     },
     "release:metorial/metorial": {
       "error": 0,
@@ -934,14 +998,24 @@
       "last_status": "ok",
       "ok": 1
     },
+    "release:mitos-run/mitos": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "release:modelcontextprotocol/python-sdk": {
       "degraded_runs": 0,
       "error": 1,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "release:modelcontextprotocol/servers": {
@@ -950,8 +1024,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "release:modelcontextprotocol/typescript-sdk": {
@@ -960,8 +1034,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "release:navyforses/ALEKSANDRA_BRAIN_v4": {
@@ -994,8 +1068,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "release:rexleimo/harness-cli": {
@@ -1098,11 +1172,31 @@
       "ok_streak": 1,
       "status": "ok"
     },
+    "tag:adeelahmad/agentrc": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "tag:alexmond/jvmlens": {
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "ok": 6
+    },
+    "tag:askalf/warden": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
     },
     "tag:bobmatnyc/trusty-tools": {
       "error": 0,
@@ -1138,6 +1232,16 @@
       "ok_streak": 1,
       "status": "ok"
     },
+    "tag:ctxrs/ctx": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "tag:danilkryachko/dukememory": {
       "error": 0,
       "last_detail": "",
@@ -1150,8 +1254,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "tag:envibagus/cortex": {
@@ -1166,6 +1270,26 @@
       "last_status": "ok",
       "ok": 1
     },
+    "tag:iris-eval/mcp-server": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
+    "tag:joshuaswarren/remnic": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "tag:kinqsradiollc/BrainRouter": {
       "error": 0,
       "last_detail": "",
@@ -1173,10 +1297,14 @@
       "ok": 7
     },
     "tag:macro-inc/macro": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "status": "ok"
     },
     "tag:metorial/metorial": {
       "error": 0,
@@ -1184,14 +1312,24 @@
       "last_status": "ok",
       "ok": 1
     },
+    "tag:mitos-run/mitos": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "status": "ok"
+    },
     "tag:modelcontextprotocol/python-sdk": {
       "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "tag:modelcontextprotocol/servers": {
@@ -1200,8 +1338,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "tag:modelcontextprotocol/typescript-sdk": {
@@ -1210,8 +1348,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 9,
-      "ok_streak": 1,
+      "ok": 10,
+      "ok_streak": 2,
       "status": "ok"
     },
     "tag:navyforses/ALEKSANDRA_BRAIN_v4": {
@@ -1244,8 +1382,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 8,
-      "ok_streak": 1,
+      "ok": 9,
+      "ok_streak": 2,
       "status": "ok"
     },
     "tag:rexleimo/harness-cli": {

@@ -1049,3 +1049,75 @@ Follow-up gaps:
 - Need security/audit evidence for browser MCP data handling in real teams.
 - Monitor whether Copilot session streaming becomes a standard enterprise requirement across agent vendors.
 - X/Twitter and authorized private/logged-in sources were not available in this run.
+
+## 2026-07-05
+
+### Daily update - coding-agent scale, MCP release, and sandbox/context candidates
+
+Purpose:
+- Fill the 2026-07-05 daily block using the workspace date (Asia/Singapore). Note: pulled `main` already contained 2026-07-06 entries, so this pass is a missing historical daily block rather than the latest chronological section.
+
+Accepted sources:
+- Lovable field report on scaling agentic coding spend and workflows: https://lovable.dev/blog/85000-in-tokens-later-scaling-agentic-coding-at-lovable
+- Model Context Protocol `servers` release 2026.7.4: https://github.com/modelcontextprotocol/servers/releases/tag/2026.7.4
+- `codemaps` local-first repo context engine: https://github.com/promptsterhq/codemaps
+- `alcatraz` Docker sandbox and per-project memory for terminal agents: https://github.com/rythelle/alcatraz
+- `omegacode` code-based orchestration for coding agents: https://github.com/Sawyerhood/omegacode
+- Autoloops/Greplica repo memory/context reference: https://github.com/Autoloops/greplica
+- Collector source cache and health files for 2026-07-05.
+
+Collector snapshot:
+- `python3 scripts/cloud_agent_runner.py --task daily --date 2026-07-05 --collect-only` collected 194 public source items and scored 50.
+- Collectors covered arxiv, Bluesky, crates, dev.to, Docker, official feeds/pages, GitHub, HN, Lobsters, npm, Open VSX, PyPI, reddit RSS, releases, and tags.
+- Lane coverage was 1.0; priority lane share was 0.62; breadth_degraded=False.
+- Public collectors only. No authorized logged-in or user-provided private sources were available.
+- The host has `python3` but no `python` executable on PATH; commands were run with `python3`.
+
+Candidate inbox (compact, ranked):
+1. Lovable agentic coding scale report - one engineer describes 6-7 supervised agents with subagents, 150+ merged PRs per productive week, roughly $85K token spend since January, risk-lane review, stacked PRs, task tracking, and git-stored knowledge.
+   - Why it matters: Concrete public field evidence for agent orchestration, review routing, token spend, PR sizing, and durable task state.
+   - Evidence strength: Medium (detailed first-party operator report; no independent audit).
+   - Promotion status: user-field note added; playbook candidates kept in daily only pending corroboration.
+   - candidate_seen_at: 2026-07-05
+   - last_checked_at: 2026-07-05
+   - defer_count: 0
+   - stale_after_days: 45
+2. `alcatraz` - Docker sandbox for terminal agents with MITM secret/PII scrubbing, network allowlisting, per-project persistent memory, and compaction handoff.
+   - Why it matters: Direct sandbox + memory + network governance primitive for Claude Code, Gemini CLI, Codex, and opencode.
+   - Evidence strength: Weak (0 stars, no releases), but high infrastructure relevance.
+   - Promotion status: deferred.
+   - candidate_seen_at: 2026-07-05
+   - last_checked_at: 2026-07-05
+   - defer_count: 1
+   - stale_after_days: 30
+3. `codemaps` - local-first repo context engine over MCP + `AGENTS.md`, with orient/locate/impact/guardrails/risk/security lenses.
+   - Why it matters: Points to structured repo context as a distinct memory layer for coding agents.
+   - Evidence strength: Weak (0 stars, no releases).
+   - Promotion status: deferred.
+   - candidate_seen_at: 2026-07-05
+   - last_checked_at: 2026-07-05
+   - defer_count: 1
+   - stale_after_days: 30
+4. `omegacode` - code-based orchestration for coding agents, including multi-provider review, bake-off, debate, second-opinion, and deep-research workflows.
+   - Why it matters: Another signal that orchestration is moving from ad hoc prompts into reusable workflow code.
+   - Evidence strength: Weak-to-medium (112 stars; no independent user report found).
+   - Promotion status: deferred.
+   - candidate_seen_at: 2026-07-05
+   - last_checked_at: 2026-07-05
+   - defer_count: 1
+   - stale_after_days: 30
+5. MCP `servers` 2026.7.4 - official release updating memory, filesystem, sequential-thinking, and everything servers.
+   - Why it matters: Strong official release evidence for continuing maintenance of base MCP primitives.
+   - Evidence strength: Strong for release existence; weak for adoption impact.
+   - Promotion status: no watchlist change; supports existing MCP thesis.
+
+Rejected or deprioritized:
+- Zero-star or generic GitHub/package items with agent keywords but no concrete workflow were left in source cache only.
+- Bluesky security and memory anecdotes were treated as discovery hints, not adoption evidence.
+- Snorkel Continual Learning Bench and related memory benchmark posts were useful background but outside the strict 24-48 hour daily window for this pass.
+
+Follow-up gaps:
+- Seek independent reports on Lovable-style risk-lane PR review and stacked PR workflows before promoting to `playbook.md`.
+- Watch `alcatraz`, `codemaps`, and `omegacode` for releases, stars, issue activity, or integrations with mainstream coding agents.
+- Continue probing whether repo context engines converge around files, graphs, vector memory, or explicit markdown ledgers.
+- X/Twitter and authorized private/logged-in sources were not available in this run.

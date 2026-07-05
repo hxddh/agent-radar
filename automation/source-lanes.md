@@ -1,10 +1,10 @@
 # Source Lanes
 
-Last checked: 2026-07-04
+Last checked: 2026-07-05
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
-| arxiv | 1 | 0 | 4 |
+| arxiv | 1 | 0 | 0 |
 | bluesky | 5 | 0 | 15 |
 | crates | 5 | 0 | 15 |
 | devto | 4 | 0 | 12 |
@@ -19,8 +19,8 @@ Last checked: 2026-07-04
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 5 | 0 | 15 |
 | reddit-rss | 1 | 0 | 2 |
-| release | 12 | 0 | 20 |
-| tag | 12 | 0 | 23 |
+| release | 12 | 0 | 24 |
+| tag | 12 | 0 | 24 |
 
 Failure handling:
 - Collector failures are recorded here and in `automation/source-health.md`.

@@ -65,6 +65,24 @@ Source: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mpn5g6l7g72t
 Public corroboration: Needed; no independent user workflow reports yet.
 Do not publish: No private data used.
 
+### 2026-07-05
+
+Date: 2026-07-05
+Tool: Mixed coding-agent stack at Lovable
+User type: High-volume product engineer / agent supervisor
+Scenario: One engineer supervising multiple coding agents and subagents across implementation, review, PR classification, and workflow improvement.
+Positive experience: The report claims a move from 20-30 merged PRs per productive week to 150+ merged PRs per productive week, with local multi-subagent review and reusable skills handling more of the routine work.
+Pain point: Human attention, review routing, PR size, context switching, and task state become the limiting factors once code generation is cheap.
+Reusable trick: Use risk-lane PR classification, small stacked PRs, fresh context per task, durable task tracking, and git-stored knowledge/skills.
+Failure mode: Large PRs can pass AI review while smaller stacked PRs expose real issues; task trackers for humans can be polluted if agents dump ephemeral working text into them.
+Source class: Public first-party field report.
+Source visibility: Public.
+Evidence strength: Medium (one detailed operator report; no independent audit).
+Public-safe summary: A Lovable engineer described spending roughly $85K in tokens since January, supervising 6-7 agents with subagents, and using risk classification, stacked PRs, durable task tracking, and reusable skills to keep high-volume agentic coding manageable.
+Source: https://lovable.dev/blog/85000-in-tokens-later-scaling-agentic-coding-at-lovable
+Public corroboration: Needed; treat as a detailed operator report rather than consensus.
+Do not publish: No private data used.
+
 Date: 2026-07-06
 Tool: Apple Safari MCP Server (Technology Preview 247)
 User type: Developer using browser agents for web debugging and automation
