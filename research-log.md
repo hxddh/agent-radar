@@ -1121,3 +1121,39 @@ Follow-up gaps:
 - Watch `alcatraz`, `codemaps`, and `omegacode` for releases, stars, issue activity, or integrations with mainstream coding agents.
 - Continue probing whether repo context engines converge around files, graphs, vector memory, or explicit markdown ledgers.
 - X/Twitter and authorized private/logged-in sources were not available in this run.
+
+### Pass 22: Weekly synthesis (2026-W27)
+
+Purpose:
+- Run the weekly automation for the current ISO week. The workspace date is 2026-07-05, which resolves to 2026-W27. Existing repo content included a future-dated 2026-07-06 template and a 2026-W28 report that overlapped this week; this pass treats `weekly/2026-W27.md` as authoritative for 2026-07-02 through 2026-07-05.
+
+Accepted sources:
+- GitHub Copilot browser tools GA: https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
+- GitHub Copilot agent session streaming: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/
+- GitHub Copilot vision GA: https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/
+- WebKit Safari MCP server: https://webkit.org/blog/18136/introducing-the-safari-mcp-server-for-web-developers/
+- Cursor changelog: https://cursor.com/changelog
+- OpenAI Codex changelog: https://developers.openai.com/codex/changelog
+- Model Context Protocol `servers` 2026.7.4: https://github.com/modelcontextprotocol/servers/releases/tag/2026.7.4
+- Lovable agentic coding field report: https://lovable.dev/blog/85000-in-tokens-later-scaling-agentic-coding-at-lovable
+- Agentrove: https://github.com/Mng-dev-ai/agentrove
+- `codemaps`: https://github.com/promptsterhq/codemaps
+- `alcatraz`: https://github.com/rythelle/alcatraz
+- `omegacode`: https://github.com/Sawyerhood/omegacode
+- Existing daily, watchlist, storage, playbook, user-field-notes, and sources files in this repository.
+
+Changes:
+- Replaced stale partial `weekly/2026-W27.md` with a full block-bilingual weekly synthesis covering product changes, mainstream and emerging agent progress, user experience, useful tricks, infrastructure, storage, commercialization, enterprise adoption, reliability/evaluation, security/governance, ecosystem standards, anti-signals, changed thesis, and watch-next-week items.
+- Appended this research-log entry.
+- Did not update `radar.md`, `agent-watchlist.md`, `user-field-notes.md`, `playbook.md`, or `storage-angle.md`: existing entries already cover the justified promotions and storage notes, and this weekly synthesis did not add a stronger thesis change or a playbook item with enough independent corroboration.
+
+Thesis decision:
+- No new `radar.md` thesis change in this run. The week's evidence strengthens existing theses around browser use, MCP/tool calling, persistent workspace, logs/traces, artifacts, memory, and governance.
+- Possible future thesis: first-party browser and platform MCP adoption may mark a transition from developer-led MCP experimentation to vendor-led standardization, but the current week has one strong Safari signal and needs more same-week platform-vendor corroboration.
+
+Follow-up gaps:
+- Monitor Safari MCP for public workflows, security guidance, and Chrome/Edge equivalents.
+- Monitor GitHub session streaming as a possible enterprise audit-stream reference pattern.
+- Seek independent corroboration for Lovable-style risk-lane PR review and stacked PR workflows.
+- Watch `codemaps`, `alcatraz`, Agentrove, OpenSandbox, InnerWarden, and related candidates for adoption, releases, security reviews, or integrations.
+- The host has `python3` but no `python` executable on PATH; validation and tests were run with `python3`.
