@@ -297,3 +297,19 @@ Ignore or deprioritize:
 - MailKite agent inbox: https://mailkite.dev/blog/give-your-agent-an-inbox/ (agent inbox workflow signal, deferred)
 - Termi Protocol: https://termiprotocol.com/ (3D visualization for AI coding agents, deferred)
 - Context graphs: https://nanonets.com/blog/what-is-a-context-graph/ (agent memory/decision context article, deferred)
+
+
+## Additional sources from 2026-07-06 source sweep
+
+- MetaHarness: https://github.com/ruvnet/metaharness (repo-aware harness factory with MCP server, scoped memory, governance policy, release verification, and hosts including Claude Code, Codex, Copilot, OpenCode, and GitHub Actions)
+- Memory Lane: https://github.com/ribbons-digital/memory-lane (local-first persistent memory for AI coding agents with semantic retrieval and approval workflows)
+- Heckle: https://github.com/rbsriram/heckle (local QA co-pilot that captures DOM, console errors, network calls, and user bug notes for coding agents)
+- Engram: https://github.com/HBarefoot/engram (SQLite-backed persistent agent memory with local embeddings, MCP integration, and secret detection)
+- two-tier-memory: https://github.com/tadelstein9/two-tier-memory (queryable long-term memory pattern for AI coding agents using an index plus SQLite)
+- Greplica benchmark note: https://autoloops.ai/greplica/blog/benchmarking-greplica/ (persistent repo-memory benchmark framing for coding agents)
+- Make No Mistakes: https://github.com/momomuchu/make-no-mistakes (verification gates for AI coding agents using frozen specs, tamper-detected tests, and an independent verifier)
+- Ghostlog: https://github.com/salarkhannn/ghostlog (terminal UI for monitoring commits made by AI coding agents)
+- Verdi Google plugin: https://github.com/VerdiLabs/verdi-google-plugin (Claude Code and Codex plugin routing Google Workspace access through a hosted MCP server with auth and audit framing)
+- AWS Agent Toolkit: https://aws.amazon.com/products/developer-tools/agent-toolkit-for-aws/ and https://github.com/aws/agent-toolkit-for-aws (official AWS MCP server, skills, and plugins for coding agents)
+- Okta MCP Server: https://pypi.org/project/okta-mcp-server/1.1.2/ (GA identity/admin MCP server for AI agents with scope-based tool loading and confirmations)
+- AegisAgent: https://github.com/lavkushry/AegisAgent (zero-trust API firewall and integrity layer for autonomous agents and MCP tool execution)

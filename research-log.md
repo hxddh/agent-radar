@@ -631,6 +631,126 @@ Limitations:
 - Bluesky posts are the primary social signal source; X/Twitter not covered.
 - Some official pages (cursor-changelog, anthropic-news) returned navigation links only without specific new content.
 
+### Pass 23: Source sweep (2026-07-06)
+
+Purpose:
+- Run the source-sweep automation end to end using public collectors plus live verification of high-signal source areas.
+- Keep this as discovery, not promotion: update `sources.md` and `research-log.md`; do not update `agent-watchlist.md`, `storage-angle.md`, `radar.md`, or report files.
+
+Collector snapshot:
+- `python3 scripts/agent_radar.py source-refresh --task source-sweep --date 2026-07-06` collected 303 public source items, scored 120, and updated collector cache, health, lane, run, and telemetry files.
+- Lane coverage was 0.805; priority lane share was 0.4; breadth_degraded=False.
+- Public collectors only. No authorized logged-in, paid-search, X/Twitter, or user-provided private sources were available.
+- Healthy lanes included package registries, Docker, official feeds/pages, HN, Lobsters, PyPI package/update lanes, and most Open VSX/crates queries.
+- Degraded lanes: GitHub search, release, and tag collectors hit GitHub 403 rate limits; Reddit RSS returned no items; Bluesky had partial errors; npm agent-observability hit HTTP 429.
+
+Accepted sources:
+- MetaHarness: https://github.com/ruvnet/metaharness
+- Memory Lane: https://github.com/ribbons-digital/memory-lane
+- Heckle: https://github.com/rbsriram/heckle
+- Engram: https://github.com/HBarefoot/engram
+- two-tier-memory: https://github.com/tadelstein9/two-tier-memory
+- Greplica repo-memory benchmark note: https://autoloops.ai/greplica/blog/benchmarking-greplica/
+- Make No Mistakes: https://github.com/momomuchu/make-no-mistakes
+- Ghostlog: https://github.com/salarkhannn/ghostlog
+- Verdi Google plugin: https://github.com/VerdiLabs/verdi-google-plugin
+- AWS Agent Toolkit: https://aws.amazon.com/products/developer-tools/agent-toolkit-for-aws/ and https://github.com/aws/agent-toolkit-for-aws
+- Okta MCP Server: https://pypi.org/project/okta-mcp-server/1.1.2/
+- AegisAgent: https://github.com/lavkushry/AegisAgent
+
+Candidate inbox (compact, ranked):
+1. MetaHarness - repo-aware harness factory with MCP, scoped memory, governance policy, release verification, and multi-host output for Claude Code, Codex, Copilot, OpenCode, and GitHub Actions.
+   - Why it matters: Direct signal that agent runtime packaging is moving from one-off prompts to versioned, governed, repo-scoped harnesses.
+   - Evidence strength: Medium for technical relevance and public repo activity; weak for independent production adoption.
+   - Relevance score: 9.
+   - Defer reason: No independent user reports or enterprise deployment evidence found in this sweep.
+   - Follow-up needed: Watch for org-wide package use, security review, and case studies.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 45
+2. Heckle - local QA co-pilot that turns spoken/typed app feedback plus DOM, console, and network context into coding-agent tasks.
+   - Why it matters: Strong browser/user-field loop signal: agents get concrete runtime evidence instead of screenshots and prose bug reports.
+   - Evidence strength: Weak-medium; detailed repo and HN signal, but early adoption.
+   - Relevance score: 8.
+   - Defer reason: Needs independent workflow reports and evidence beyond a launch/demo repo.
+   - Follow-up needed: Track whether browser-context handoff appears in mainstream agent clients.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+3. Memory Lane / Engram / two-tier-memory - local persistent memory projects for coding agents using approval queues, SQLite, local embeddings, MCP, or queryable index/database patterns.
+   - Why it matters: Storage and memory signals are converging on local-first, queryable, reviewable memory rather than raw transcript stuffing.
+   - Evidence strength: Weak-medium as a cluster; individual projects are early, but multiple independent signals point to the same design pressure.
+   - Relevance score: 8.
+   - Defer reason: Too many overlapping early memory projects; unclear winner or adoption.
+   - Follow-up needed: Compare retrieval quality, secret handling, approval workflow, and integration with Claude Code/Codex/Cursor.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+4. AWS Agent Toolkit - official AWS MCP server, skills, and plugins for coding agents, with AWS API coverage, sandboxed Python execution, IAM controls, CloudWatch metrics, and Codex/Claude/Kiro setup paths.
+   - Why it matters: Strong enterprise adoption and governance signal from a major cloud provider; also helps mainstream agents work with current cloud docs and APIs.
+   - Evidence strength: Strong for official existence; weak for user outcomes in this sweep.
+   - Relevance score: 8.
+   - Defer reason: Already fits platform-vendor MCP thesis; no new independent field report found today.
+   - Follow-up needed: Track real deployment stories, failure cases, cost impact, and whether other cloud vendors match the pattern.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 45
+5. Okta MCP Server / Verdi Google plugin - enterprise SaaS and identity connectors exposed to agents through MCP, with auth, audit, scope, and confirmation framing.
+   - Why it matters: Enterprise adoption is moving from generic MCP demos toward high-risk systems of record: identity, mail, calendar, drive, docs, and admin APIs.
+   - Evidence strength: Medium for Okta official PyPI/GA claim; weak for Verdi adoption.
+   - Relevance score: 7.
+   - Defer reason: Need user evidence and security posture beyond public setup docs.
+   - Follow-up needed: Watch for audit-log examples, least-privilege patterns, and incidents involving enterprise MCP connectors.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 45
+6. Make No Mistakes / Ghostlog - verification and observability tools for coding agents, including proof gates and git-commit monitoring.
+   - Why it matters: Quality/replay layer is broadening from eval benchmarks to live agent work monitoring and hard gates before work is accepted.
+   - Evidence strength: Weak; launch/repo-level sources only.
+   - Relevance score: 7.
+   - Defer reason: Need integration with mainstream coding-agent workflows and evidence that teams use these tools continuously.
+   - Follow-up needed: Track CI integrations, agent session replay formats, and whether git-history monitoring becomes a common audit source.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+7. AegisAgent - zero-trust API firewall and integrity layer for autonomous agents and MCP tool execution.
+   - Why it matters: Direct governance/security primitive for tool-use hijacking, prompt injection, data exfiltration, and fail-closed agent actions.
+   - Evidence strength: Weak; public repo is detailed but had only minimal adoption evidence during this sweep.
+   - Relevance score: 7.
+   - Defer reason: Security claims need independent validation, integrations, and threat-model review.
+   - Follow-up needed: Monitor for audits, CVE/incident use, framework integrations, and enterprise pilots.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - promotion_status: deferred
+   - defer_count: 1
+   - stale_after_days: 30
+
+Rejected or deprioritized:
+- Generic package-marketplace items with agent keywords but no docs, adoption, or concrete workflow stayed in the source cache only.
+- Low-quality or zero-star consumer assistant repos were not added unless they exposed a distinct memory, security, browser, sandbox, eval, or governance primitive.
+- Open VSX `sdlc-agents-4-enterprise` was not accepted because the page failed to load during verification and the signal could not be quality-checked.
+- Social posts repeating MCP or agent launch headlines without primary docs were treated as discovery hints, not durable sources.
+- GitHub items already promoted or already tracked, including agentos and patient-zero, were not duplicated as new candidates.
+
+Follow-up gaps:
+- GitHub unauthenticated rate limits degraded source freshness for repo search, releases, and tags; repeat with authenticated GitHub access or lower concurrency.
+- Reddit RSS returned no source items and X/Twitter remains unavailable, leaving public user-field notes undercovered.
+- Authorized logged-in communities, paid newsletters, Discord/Slack, and private user reports were unavailable for this run.
+- Need stronger field evidence for browser-context handoff, local persistent memory, AWS Toolkit production use, and enterprise MCP connector governance.
+- Package registries and extension marketplaces are useful for breadth but still noisy; require manual screening before adding to `sources.md`.
+
 
 ### Pass 14: Daily update (2026-07-02) – Screening pass integration
 
@@ -1157,3 +1277,81 @@ Follow-up gaps:
 - Seek independent corroboration for Lovable-style risk-lane PR review and stacked PR workflows.
 - Watch `codemaps`, `alcatraz`, Agentrove, OpenSandbox, InnerWarden, and related candidates for adoption, releases, security reviews, or integrations.
 - The host has `python3` but no `python` executable on PATH; validation and tests were run with `python3`.
+
+### Daily update - meta-harness, MCP gateway, and browser-context handoff
+
+Purpose:
+- Run the 2026-07-06 daily automation end to end using the workspace date and public source collectors, then replace the blank 2026-07-06 daily template with public-safe findings.
+
+Accepted sources:
+- MetaHarness: https://github.com/ruvnet/metaharness
+- Lunar.dev repo: https://github.com/TheLunarCompany/lunar
+- Lunar.dev MCP Gateway page: https://www.lunar.dev/product/mcp
+- Heckle Show HN: https://news.ycombinator.com/item?id=48795580
+- Heckle repo: https://github.com/rbsriram/heckle
+- memory-lane: https://github.com/ribbons-digital/memory-lane
+- AegisAgent: https://github.com/lavkushry/AegisAgent
+- Nox: https://github.com/Nox-HQ/nox
+- OpenAI Codex changelog: https://developers.openai.com/codex/changelog
+- Cursor changelog: https://cursor.com/changelog
+
+Collector snapshot:
+- `python3 scripts/cloud_agent_runner.py --task daily --date 2026-07-06 --collect-only` collected 188 public source items and scored 50.
+- Collectors covered arxiv, Bluesky, crates, dev.to, Docker, official feeds/pages, GitHub, HN, Lobsters, npm, Open VSX, PyPI, Reddit RSS, releases, and tags.
+- Lane coverage was 0.985; priority lane share was 0.52; breadth_degraded=False.
+- Public collectors only. No authorized logged-in or user-provided private sources were available.
+- Degraded lanes included several GitHub search/release/tag collectors due to rate limits, three Bluesky topic collectors with 403 responses, npm observability with 429, and Reddit RSS agentdevelopment with 429. The accepted claims were therefore grounded in public repo/product pages and labeled where adoption evidence was weak.
+
+Candidate inbox (compact, ranked):
+1. MetaHarness (`ruvnet/metaharness`) - meta-harness for branded agent runtimes with `npx` CLI, MCP server, memory namespace, governance policy, and Ed25519 witness-signed releases.
+   - Why it matters: Reinforces meta-harness and provenance themes; direct relevance to reusable agent runtime packaging. Relevance score: 8.
+   - Evidence strength: Medium for technical relevance; weak for adoption because no independent user workflow report was found.
+   - Promotion status: deferred; overlaps with existing Omnigent/Agentrove watchlist themes and needs adoption or integration evidence before another promotion.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 45
+2. Lunar.dev MCP Gateway (`TheLunarCompany/lunar`) - open-source platform and product page for governing MCP/API traffic between agents and tools.
+   - Why it matters: Strong governance/control-plane pattern for MCP proliferation: auth, policy, interception, and organization-level tool traffic controls. Relevance score: 8.
+   - Evidence strength: Medium for infrastructure relevance; user adoption evidence still needs corroboration.
+   - Promotion status: deferred; monitor for enterprise/user reports or integration evidence.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 45
+3. Heckle (`rbsriram/heckle`) - browser bug context handoff to coding agents.
+   - Why it matters: Concrete workflow around packaging browser state for agent debugging, complementing Safari MCP and Copilot browser tools. Relevance score: 7.
+   - Evidence strength: Weak-to-medium; Show HN plus repo, but early and not independently validated.
+   - Promotion status: daily/playbook candidate only; needs another independent workflow report before promotion.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 30
+4. `ribbons-digital/memory-lane` - local-first persistent memory for AI coding agents with semantic retrieval and approval workflows.
+   - Why it matters: Continues the repo-memory/context layer pattern. Relevance score: 7.
+   - Evidence strength: Weak (0 stars in collector snapshot; no independent user reports).
+   - Promotion status: deferred.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 30
+5. `AegisAgent` and `Nox` - security/runtime candidates surfaced by the collector.
+   - Why it matters: Security and zero-trust framing remain important for tool-using agents.
+   - Evidence strength: Weak; relation to agent workflows or integration evidence needs validation.
+   - Promotion status: deferred.
+
+Changes:
+- Replaced the blank `daily/2026-07.md` 2026-07-06 template with a bilingual daily report covering MetaHarness, Lunar.dev MCP Gateway, Heckle, Codex remote workspace signals, Cursor Team MCP/cloud-agent context, weak memory/security candidates, and collector limitations.
+- Appended this research-log entry.
+- Did not update `agent-watchlist.md`, `playbook.md`, `storage-angle.md`, or `radar.md`: today's evidence reinforces existing theses but does not exceed promotion thresholds beyond the daily/research-log level.
+
+Rejected or deprioritized:
+- Generic package-marketplace items and low-context GitHub repos with agent keywords were left in the source cache only.
+- Social posts without repo/product corroboration were treated as discovery hints.
+- Existing already-promoted or recently covered signals (`agentos`, `patient-zero`, Safari MCP, Copilot browser/session streaming, Lovable field report) were not duplicated.
+
+Follow-up gaps:
+- Seek independent user evidence for MetaHarness and Lunar.dev gateway workflows.
+- Watch whether browser-context handoff tools converge on replayable artifacts, MCP browser sessions, or issue attachments.
+- Continue probing repo memory projects for differentiation versus existing memory candidates.
+- X/Twitter, authorized logged-in sources, and user-provided private sources were not available in this run.

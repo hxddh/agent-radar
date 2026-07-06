@@ -1,26 +1,26 @@
 # Source Lanes
 
-Last checked: 2026-07-05
+Last checked: 2026-07-06
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
 | arxiv | 1 | 0 | 0 |
-| bluesky | 5 | 0 | 15 |
-| crates | 5 | 0 | 15 |
-| devto | 4 | 0 | 12 |
-| docker | 3 | 0 | 9 |
-| feed | 2 | 0 | 8 |
-| github | 8 | 0 | 24 |
-| hn | 5 | 0 | 15 |
-| lobsters | 1 | 0 | 4 |
-| npm | 5 | 0 | 15 |
-| open-vsx | 5 | 0 | 15 |
-| page | 4 | 0 | 16 |
+| bluesky | 5 | 3 | 20 |
+| crates | 9 | 0 | 45 |
+| devto | 6 | 0 | 24 |
+| docker | 3 | 0 | 15 |
+| feed | 2 | 0 | 12 |
+| github | 2 | 10 | 10 |
+| hn | 8 | 0 | 40 |
+| lobsters | 1 | 0 | 6 |
+| npm | 8 | 1 | 40 |
+| open-vsx | 9 | 0 | 45 |
+| page | 4 | 0 | 24 |
 | pypi-package | 8 | 0 | 8 |
-| pypi-updates | 5 | 0 | 15 |
-| reddit-rss | 1 | 0 | 2 |
-| release | 12 | 0 | 24 |
-| tag | 12 | 0 | 24 |
+| pypi-updates | 9 | 0 | 45 |
+| reddit-rss | 0 | 1 | 0 |
+| release | 6 | 6 | 12 |
+| tag | 6 | 6 | 12 |
 
 Failure handling:
 - Collector failures are recorded here and in `automation/source-health.md`.

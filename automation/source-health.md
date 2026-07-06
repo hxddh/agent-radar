@@ -1,27 +1,11 @@
 # Source Health
 
-Last checked: 2026-07-05
+Last checked: 2026-07-06
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| bluesky:AI agent | ok |  |
-| bluesky:coding agent | ok |  |
-| bluesky:MCP server | ok |  |
-| bluesky:Claude Code | ok |  |
-| bluesky:agent memory | ok |  |
-| devto:ai | ok |  |
-| devto:machinelearning | ok |  |
-| devto:opensource | ok |  |
-| devto:devops | ok |  |
-| lobsters:newest | ok |  |
-| github:AI agent framework | ok |  |
-| github:MCP server agent | ok |  |
-| github:agent memory MCP | ok |  |
-| github:coding agent CLI | ok |  |
-| github:AI agent sandbox | ok |  |
-| github:agent eval framework | ok |  |
-| github:agent security MCP | ok |  |
-| github:computer use agent | ok |  |
+| github:agent observability | error | HTTP Error 403: rate limit exceeded |
+| github:agent deployment workflow | error | HTTP Error 403: rate limit exceeded |
 | npm:mcp server | ok |  |
 | pypi-updates:mcp server | ok |  |
 | crates:mcp server | ok |  |
@@ -42,6 +26,22 @@ Last checked: 2026-07-05
 | pypi-updates:agent sandbox | ok |  |
 | crates:agent sandbox | ok |  |
 | open-vsx:agent sandbox | ok |  |
+| npm:browser agent | ok |  |
+| pypi-updates:browser agent | ok |  |
+| crates:browser agent | ok |  |
+| open-vsx:browser agent | ok |  |
+| npm:agent eval | ok |  |
+| pypi-updates:agent eval | ok |  |
+| crates:agent eval | ok |  |
+| open-vsx:agent eval | ok |  |
+| npm:agent observability | error | HTTP Error 429: Too Many Requests |
+| pypi-updates:agent observability | ok |  |
+| crates:agent observability | ok |  |
+| open-vsx:agent observability | ok |  |
+| npm:agent security | ok |  |
+| pypi-updates:agent security | ok |  |
+| crates:agent security | ok |  |
+| open-vsx:agent security | ok |  |
 | docker:mcp server | ok |  |
 | docker:ai agent | ok |  |
 | docker:coding agent | ok |  |
@@ -68,19 +68,19 @@ Last checked: 2026-07-05
 | tag:modelcontextprotocol/python-sdk | ok |  |
 | release:modelcontextprotocol/typescript-sdk | ok |  |
 | tag:modelcontextprotocol/typescript-sdk | ok |  |
-| release:elizaOS/eliza | ok |  |
+| release:elizaOS/eliza | error | HTTP Error 403: rate limit exceeded |
 | tag:elizaOS/eliza | ok |  |
 | release:joshuaswarren/remnic | ok |  |
 | tag:joshuaswarren/remnic | ok |  |
 | release:mitos-run/mitos | ok |  |
-| tag:mitos-run/mitos | ok |  |
-| release:iris-eval/mcp-server | ok |  |
-| tag:iris-eval/mcp-server | ok |  |
-| release:askalf/warden | ok |  |
-| tag:askalf/warden | ok |  |
-| release:ctxrs/ctx | ok |  |
-| tag:ctxrs/ctx | ok |  |
-| release:adeelahmad/agentrc | ok |  |
-| tag:adeelahmad/agentrc | ok |  |
-| release:macro-inc/macro | ok |  |
-| tag:macro-inc/macro | ok |  |
+| tag:mitos-run/mitos | error | HTTP Error 403: rate limit exceeded |
+| release:iris-eval/mcp-server | error | HTTP Error 403: rate limit exceeded |
+| tag:iris-eval/mcp-server | error | HTTP Error 403: rate limit exceeded |
+| release:askalf/warden | error | HTTP Error 403: rate limit exceeded |
+| tag:askalf/warden | error | HTTP Error 403: rate limit exceeded |
+| release:ctxrs/ctx | error | HTTP Error 403: rate limit exceeded |
+| tag:ctxrs/ctx | error | HTTP Error 403: rate limit exceeded |
+| release:adeelahmad/agentrc | error | HTTP Error 403: rate limit exceeded |
+| tag:adeelahmad/agentrc | error | HTTP Error 403: rate limit exceeded |
+| release:macro-inc/macro | error | HTTP Error 403: rate limit exceeded |
+| tag:macro-inc/macro | error | HTTP Error 403: rate limit exceeded |
