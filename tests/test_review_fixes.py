@@ -195,6 +195,23 @@ class CloudRunnerTest(unittest.TestCase):
         # Must not raise re.error.
         cloud_agent_runner.apply_screened_summary_to_prompt(prompt, screen)
 
+    def test_github_throttle_spaces_calls_and_can_be_disabled(self) -> None:
+        import time as _time
+
+        with mock.patch.dict(os.environ, {"GITHUB_API_MIN_INTERVAL": "0"}, clear=False):
+            start = _time.monotonic()
+            for _ in range(5):
+                cloud_agent_runner.github_throttle()
+            self.assertLess(_time.monotonic() - start, 0.2)  # disabled: no sleeping
+
+        with mock.patch.dict(os.environ, {"GITHUB_API_MIN_INTERVAL": "0.05"}, clear=False):
+            cloud_agent_runner._GITHUB_API_LAST_CALL = 0.0
+            start = _time.monotonic()
+            cloud_agent_runner.github_throttle()
+            cloud_agent_runner.github_throttle()
+            # Two spaced calls take at least one interval between them.
+            self.assertGreaterEqual(_time.monotonic() - start, 0.04)
+
 
 class InitForceProtectionTest(unittest.TestCase):
     def test_init_force_protects_changelog_and_short_files(self) -> None:

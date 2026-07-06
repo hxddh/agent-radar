@@ -27,3 +27,4 @@ Failure handling:
 - Failed collectors do not block the run when other lanes return usable signals.
 - Repeated failures should be replaced with a stable RSS, API, official page, or user-provided source lane.
 - Collectors with repeated errors and zero successes are auto-disabled in `automation/collector-state.json`.
+- `api.github.com` calls are throttled (`GITHUB_API_MIN_INTERVAL`, default 0.5s) so the github/release/tag lanes do not trip GitHub's secondary rate limit; a valid `GITHUB_TOKEN` is still required for meaningful GitHub quota.

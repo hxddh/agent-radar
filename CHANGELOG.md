@@ -11,7 +11,8 @@
 - **Reports**: `daily/2026-07.md` day blocks are chronological and the duplicate `2026-07-02` heading is relabeled; empty `Sources:` fields are filled from real URLs or removed; `weekly/2026-W28.md` is disambiguated against W27 and its unverifiable item is downgraded; monthly field stutters and a `Curser`→`Cursor` typo are fixed.
 
 ### Added
-- `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection).
+- GitHub API throttle (`GITHUB_API_MIN_INTERVAL`, default 0.5s) that spaces `api.github.com` calls across the concurrent collector pool so the search/release/tag lanes stop hitting GitHub's secondary (burst) rate limit, which returned 403 even with a valid token.
+- `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle).
 
 ## v0.6.0 - 2026-07-03
 

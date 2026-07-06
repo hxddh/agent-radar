@@ -19,6 +19,7 @@ import os
 import re
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -1204,6 +1205,31 @@ def request_json(url: str, headers: dict[str, str] | None = None, timeout: int =
         return json.loads(response.read().decode("utf-8"))
 
 
+_GITHUB_API_LOCK = threading.Lock()
+_GITHUB_API_LAST_CALL = 0.0
+
+
+def github_throttle() -> None:
+    """Space out api.github.com calls so concurrent workers don't trip GitHub's
+    secondary (burst) rate limit, which returns 403 "rate limit exceeded" even
+    with a valid token. Set GITHUB_API_MIN_INTERVAL=0 to disable (e.g. in tests).
+    """
+    interval = env_float("GITHUB_API_MIN_INTERVAL", 0.5)
+    if interval <= 0:
+        return
+    global _GITHUB_API_LAST_CALL
+    with _GITHUB_API_LOCK:
+        wait = _GITHUB_API_LAST_CALL + interval - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        _GITHUB_API_LAST_CALL = time.monotonic()
+
+
+def github_request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 10) -> Any:
+    github_throttle()
+    return request_json(url, headers=headers, timeout=timeout)
+
+
 def strip_html(value: str) -> str:
     text = html.unescape(value)
     pieces: list[str] = []
@@ -1539,7 +1565,7 @@ def collect_github_items(query: str, limit: int, items: list[dict[str, str]], se
         headers["Authorization"] = f"Bearer {token}"
     encoded = urllib.parse.quote(f"{query} pushed:>{(dt.datetime.now(dt.timezone.utc).date() - dt.timedelta(days=45)).isoformat()}")
     url = f"https://api.github.com/search/repositories?q={encoded}&sort=updated&order=desc&per_page={limit}"
-    data = request_json(url, headers=headers)
+    data = github_request_json(url, headers=headers)
     for repo in data.get("items", [])[:limit]:
         note = f"stars={repo.get('stargazers_count', 0)}; updated={repo.get('updated_at', '')}; {repo.get('description') or ''}"
         add_source_item(items, seen, "github", repo.get("full_name", "GitHub repo"), repo.get("html_url", ""), note)
@@ -1698,7 +1724,7 @@ def github_repo_exists(root: Path, repo: str) -> bool:
     if repo in radar_collector_state.rejected_repos(root):
         return False
     try:
-        request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
+        github_request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
         return True
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
@@ -1733,7 +1759,7 @@ def release_repos_from_context(root: Path, limit: int) -> list[str]:
 
 def collect_github_releases(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     url = f"https://api.github.com/repos/{repo}/releases?per_page={limit}"
-    data = request_json(url, headers=github_headers())
+    data = github_request_json(url, headers=github_headers())
     for release in data[:limit]:
         title = release.get("name") or release.get("tag_name") or f"{repo} release"
         note = f"published={release.get('published_at', '')}; prerelease={release.get('prerelease', False)}"
@@ -1742,7 +1768,7 @@ def collect_github_releases(repo: str, limit: int, items: list[dict[str, str]], 
 
 def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     url = f"https://api.github.com/repos/{repo}/tags?per_page={limit}"
-    data = request_json(url, headers=github_headers())
+    data = github_request_json(url, headers=github_headers())
     for tag in data[:limit]:
         name = tag.get("name", "")
         tag_url = f"https://github.com/{repo}/releases/tag/{urllib.parse.quote(name)}" if name else ""
