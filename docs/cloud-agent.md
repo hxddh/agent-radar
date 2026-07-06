@@ -85,9 +85,14 @@ This keeps paid search calls at zero. Model usage is bounded by the fixed task r
 
 ## Expanding Official Source Coverage
 
-By default only OpenAI and GitHub blogs ship as built-in RSS feeds, plus the Cursor and Anthropic pages. To broaden first-party vendor coverage without paid search, set the `CHANGELOG_FEEDS` and `CHANGELOG_PAGES` repository variables. Items are `name=url`, comma-separated. RSS feeds are preferred (the feed parser handles RSS 2.0, RSS 1.0/RDF, and Atom, including attribute-bearing `<item rdf:about=...>` / `<entry>` tags); pages are anchor-scraped when no feed exists.
+The Python code ships only OpenAI and GitHub blogs as built-in RSS feeds plus the Cursor and Anthropic pages, but `.github/workflows/cloud-agent.yml` now enables a broader vendor set **by default** (no repository variable required). The workflow default adds:
 
-Recommended starting set (verify each URL resolves from your runner environment before enabling — a bad feed/page is recorded in `automation/source-health.md` but does not block the run, and the collector auto-recovers once it works again):
+- Feeds: Google Developers Blog, Hugging Face Blog, AWS What's New, Vercel changelog.
+- Pages: Devin release notes, Replit updates, Warp changelog, Cloudflare changelog, Factory news, Amp Chronicle, Raycast changelog.
+
+Items are `name=url`, comma-separated. RSS feeds are preferred (the parser handles RSS 2.0, RSS 1.0/RDF, and Atom, including attribute-bearing `<item rdf:about=...>` / `<entry>` tags); pages are anchor-scraped when no feed exists. A feed or page that 404s is recorded in `automation/source-health.md` but does not block the run, and the collector auto-recovers once it works again.
+
+To change the set, override the `CHANGELOG_FEEDS` / `CHANGELOG_PAGES` repository variables (Settings → Secrets and variables → Actions → Variables); any value there replaces the workflow default. To pin an exact set from a `.env`-style config:
 
 ```env
 CHANGELOG_FEEDS=google-developers-blog=https://developers.googleblog.com/feed.xml,huggingface-blog=https://huggingface.co/blog/feed.xml,aws-whats-new=https://aws.amazon.com/about-aws/whats-new/recent/feed/,vercel-changelog=https://vercel.com/atom

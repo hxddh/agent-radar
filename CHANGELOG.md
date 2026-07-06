@@ -12,7 +12,7 @@
 
 ### Added
 - GitHub API throttle (`GITHUB_API_MIN_INTERVAL`, default 0.5s) that spaces `api.github.com` calls across the concurrent collector pool so the search/release/tag lanes stop hitting GitHub's secondary (burst) rate limit, which returned 403 even with a valid token.
-- `docs/cloud-agent.md` "Expanding Official Source Coverage": a ready-to-paste `CHANGELOG_FEEDS`/`CHANGELOG_PAGES` vendor config plus source-reliability notes (GitHub throttle, Reddit rate limiting, X token).
+- Broader official source coverage enabled **by default** in `cloud-agent.yml` (no repo variable needed): Google Developers, Hugging Face, AWS What's New, and Vercel feeds, plus Devin, Replit, Warp, Cloudflare, Factory, Amp, and Raycast changelog pages; `CHANGELOG_FEEDS`/`CHANGELOG_PAGES` repo variables still override. Documented in `docs/cloud-agent.md`.
 - `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle, attribute-bearing feed parsing).
 
 ### Fixed (source collection)
