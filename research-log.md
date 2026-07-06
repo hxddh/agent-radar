@@ -1355,3 +1355,81 @@ Follow-up gaps:
 - Watch whether browser-context handoff tools converge on replayable artifacts, MCP browser sessions, or issue attachments.
 - Continue probing repo memory projects for differentiation versus existing memory candidates.
 - X/Twitter, authorized logged-in sources, and user-provided private sources were not available in this run.
+
+### Daily update - meta-harness, MCP gateway, and browser-context handoff
+
+Purpose:
+- Run the 2026-07-06 daily automation end to end using the workspace date and public source collectors, then replace the blank 2026-07-06 daily template with public-safe findings.
+
+Accepted sources:
+- MetaHarness: https://github.com/ruvnet/metaharness
+- Lunar.dev repo: https://github.com/TheLunarCompany/lunar
+- Lunar.dev MCP Gateway page: https://www.lunar.dev/product/mcp
+- Heckle Show HN: https://news.ycombinator.com/item?id=48795580
+- Heckle repo: https://github.com/rbsriram/heckle
+- memory-lane: https://github.com/ribbons-digital/memory-lane
+- AegisAgent: https://github.com/lavkushry/AegisAgent
+- Nox: https://github.com/Nox-HQ/nox
+- OpenAI Codex changelog: https://developers.openai.com/codex/changelog
+- Cursor changelog: https://cursor.com/changelog
+
+Collector snapshot:
+- `python3 scripts/cloud_agent_runner.py --task daily --date 2026-07-06 --collect-only` collected 188 public source items and scored 50.
+- Collectors covered arxiv, Bluesky, crates, dev.to, Docker, official feeds/pages, GitHub, HN, Lobsters, npm, Open VSX, PyPI, Reddit RSS, releases, and tags.
+- Lane coverage was 0.985; priority lane share was 0.52; breadth_degraded=False.
+- Public collectors only. No authorized logged-in or user-provided private sources were available.
+- Degraded lanes included several GitHub search/release/tag collectors due to rate limits, three Bluesky topic collectors with 403 responses, npm observability with 429, and Reddit RSS agentdevelopment with 429. The accepted claims were therefore grounded in public repo/product pages and labeled where adoption evidence was weak.
+
+Candidate inbox (compact, ranked):
+1. MetaHarness (`ruvnet/metaharness`) - meta-harness for branded agent runtimes with `npx` CLI, MCP server, memory namespace, governance policy, and Ed25519 witness-signed releases.
+   - Why it matters: Reinforces meta-harness and provenance themes; direct relevance to reusable agent runtime packaging. Relevance score: 8.
+   - Evidence strength: Medium for technical relevance; weak for adoption because no independent user workflow report was found.
+   - Promotion status: deferred; overlaps with existing Omnigent/Agentrove watchlist themes and needs adoption or integration evidence before another promotion.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 45
+2. Lunar.dev MCP Gateway (`TheLunarCompany/lunar`) - open-source platform and product page for governing MCP/API traffic between agents and tools.
+   - Why it matters: Strong governance/control-plane pattern for MCP proliferation: auth, policy, interception, and organization-level tool traffic controls. Relevance score: 8.
+   - Evidence strength: Medium for infrastructure relevance; user adoption evidence still needs corroboration.
+   - Promotion status: deferred; monitor for enterprise/user reports or integration evidence.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 45
+3. Heckle (`rbsriram/heckle`) - browser bug context handoff to coding agents.
+   - Why it matters: Concrete workflow around packaging browser state for agent debugging, complementing Safari MCP and Copilot browser tools. Relevance score: 7.
+   - Evidence strength: Weak-to-medium; Show HN plus repo, but early and not independently validated.
+   - Promotion status: daily/playbook candidate only; needs another independent workflow report before promotion.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 30
+4. `ribbons-digital/memory-lane` - local-first persistent memory for AI coding agents with semantic retrieval and approval workflows.
+   - Why it matters: Continues the repo-memory/context layer pattern. Relevance score: 7.
+   - Evidence strength: Weak (0 stars in collector snapshot; no independent user reports).
+   - Promotion status: deferred.
+   - candidate_seen_at: 2026-07-06
+   - last_checked_at: 2026-07-06
+   - defer_count: 1
+   - stale_after_days: 30
+5. `AegisAgent` and `Nox` - security/runtime candidates surfaced by the collector.
+   - Why it matters: Security and zero-trust framing remain important for tool-using agents.
+   - Evidence strength: Weak; relation to agent workflows or integration evidence needs validation.
+   - Promotion status: deferred.
+
+Changes:
+- Replaced the blank `daily/2026-07.md` 2026-07-06 template with a bilingual daily report covering MetaHarness, Lunar.dev MCP Gateway, Heckle, Codex remote workspace signals, Cursor Team MCP/cloud-agent context, weak memory/security candidates, and collector limitations.
+- Appended this research-log entry.
+- Did not update `agent-watchlist.md`, `playbook.md`, `storage-angle.md`, or `radar.md`: today's evidence reinforces existing theses but does not exceed promotion thresholds beyond the daily/research-log level.
+
+Rejected or deprioritized:
+- Generic package-marketplace items and low-context GitHub repos with agent keywords were left in the source cache only.
+- Social posts without repo/product corroboration were treated as discovery hints.
+- Existing already-promoted or recently covered signals (`agentos`, `patient-zero`, Safari MCP, Copilot browser/session streaming, Lovable field report) were not duplicated.
+
+Follow-up gaps:
+- Seek independent user evidence for MetaHarness and Lunar.dev gateway workflows.
+- Watch whether browser-context handoff tools converge on replayable artifacts, MCP browser sessions, or issue attachments.
+- Continue probing repo memory projects for differentiation versus existing memory candidates.
+- X/Twitter, authorized logged-in sources, and user-provided private sources were not available in this run.
