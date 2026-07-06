@@ -3,3 +3,5 @@ __pycache__/
 .env
 .env.*
 docs/release-draft.md
+automation/collector-state.json.bak
+automation/collector-state.json.tmp

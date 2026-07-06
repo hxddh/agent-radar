@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- **Data-loss guards**: `corpus-audit --fix` now archives only `### Pass:` blocks instead of everything after the first one (the canonical `## Candidate inbox` and later sections are preserved); the bilingual converters no longer silently drop unpaired bullets, prose, narrative paragraphs, or trailing sections, and fall back to the original content if a rewrite would lose any URL, word, or CJK character.
+- **Collector state machine**: a single transient 404 no longer permanently rejects a repo (three consecutive with no success are required); a later success recovers a rejected repo; intermittently-flaky collectors are no longer permanently disabled (`degraded_runs` resets on success); permanent errors on a previously-healthy collector now back off; `collector-state.json` writes are atomic with a `.bak` fallback so a killed run cannot wipe history.
+- **Cloud runner**: `truncate_keep_ends` respects small prompt budgets (no longer returns the whole string when the tail is zero); `replace_section` bounds its anchor search to the `within` section so it cannot corrupt the other language block; a null `message.content` and non-JSON/error-envelope 200 responses degrade gracefully; one collector's unexpected exception or the collection timeout no longer aborts the run or penalizes never-started collectors; `source-health.md` is written on the shared/auto path; the screening artifact is written in single-task mode; feed URLs are whitespace-sanitized before entering the prompt; per-task failures are isolated so one bad task no longer discards its siblings' work.
+- **CLI**: `init --force` no longer overwrites `CHANGELOG.md`, `prompts/`, `automation/`, `docs/`, or short curated files; `ensure_reports` honors its `root` argument; `trigger validate` and `today()` use the current UTC date instead of a hardcoded one; day-heading checks are line-anchored; `warn_weekly_sparse` counts `###` sections; `github_token` handles a missing `gh`; `release-draft` creates `docs/` and stops at the next version heading.
+- **CI**: `cloud-agent.yml` commits new/untracked files (`git status --porcelain`); `validate.yml` strict-bilingual / require-chinese flags actually take effect on dispatch and the hardcoded validation date is removed; dispatch inputs are passed through env instead of interpolated into the shell; `release.yml` refuses to publish a non-existent tag.
+- **Reports**: `daily/2026-07.md` day blocks are chronological and the duplicate `2026-07-02` heading is relabeled; empty `Sources:` fields are filled from real URLs or removed; `weekly/2026-W28.md` is disambiguated against W27 and its unverifiable item is downgraded; monthly field stutters and a `Curser`→`Cursor` typo are fixed.
+
+### Added
+- `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection).
+
 ## v0.6.0 - 2026-07-03
 
 ### Added

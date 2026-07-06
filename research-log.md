@@ -2,6 +2,10 @@
 
 Record research passes, accepted sources, rejected sources, and follow-up gaps. This keeps the radar auditable without turning it into a database.
 
+## Candidate inbox
+
+Canonical inbox of discovered-but-not-promoted candidates. New candidates should be appended here (or under the dated research passes below) rather than creating additional inbox sections. Promote entries into `agent-watchlist.md`, `radar.md`, or `storage-angle.md` when adoption, integration, or real workflow evidence appears.
+
 ## 2026-07-02
 
 ### Pass 1: Initial Daily Radar
