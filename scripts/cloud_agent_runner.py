@@ -80,6 +80,10 @@ DEFAULT_RELEASE_REPOS = [
     "modelcontextprotocol/typescript-sdk",
     "elizaOS/eliza",
 ]
+# A browser-compatible User-Agent. Several feed/CDN hosts (reddit RSS in
+# particular) return 403 to bare tool identifiers; a descriptive Mozilla UA is
+# widely accepted for polite RSS polling.
+FEED_USER_AGENT = "Mozilla/5.0 (compatible; AgentRadar/1.0; +https://github.com/hxddh/agent-radar)"
 DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
@@ -1776,27 +1780,34 @@ def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen
         add_source_item(items, seen, f"github-tag:{repo}", name or f"{repo} tag", tag_url, note)
 
 
+FEED_ITEM_SPLIT_RE = re.compile(r"<(?:\w+:)?item(?:\s[^>]*)?>")
+FEED_ENTRY_SPLIT_RE = re.compile(r"<(?:\w+:)?entry(?:\s[^>]*)?>")
+FEED_TITLE_RE = re.compile(r"<(?:\w+:)?title(?:\s[^>]*)?>(.*?)</(?:\w+:)?title>", re.DOTALL)
+FEED_LINK_RE = re.compile(r"<(?:\w+:)?link(?:\s[^>]*)?>(.*?)</(?:\w+:)?link>", re.DOTALL)
+
+
 def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
-    request = urllib.request.Request(feed_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    request = urllib.request.Request(feed_url, headers={"User-Agent": FEED_USER_AGENT}, method="GET")
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
-    chunks = text.split("<item>")[1:]
+    # Split on <item> and <entry> WITH or WITHOUT attributes/namespace prefixes.
+    # arXiv's export RSS is RSS 1.0/RDF (`<item rdf:about="...">`), so a literal
+    # "<item>" split matched nothing and the lane collected zero items.
+    chunks = FEED_ITEM_SPLIT_RE.split(text)[1:]
     if not chunks:
-        chunks = text.split("<entry>")[1:]
+        chunks = FEED_ENTRY_SPLIT_RE.split(text)[1:]
     for chunk in chunks[:limit]:
-        title = ""
-        link = ""
-        if "<title>" in chunk:
-            title = chunk.split("<title>", 1)[1].split("</title>", 1)[0]
-        if "<link>" in chunk:
-            link = chunk.split("<link>", 1)[1].split("</link>", 1)[0]
+        title_match = FEED_TITLE_RE.search(chunk)
+        title = title_match.group(1).strip() if title_match else ""
+        link_match = FEED_LINK_RE.search(chunk)
+        link = link_match.group(1).strip() if link_match else ""
         if not link and 'href="' in chunk:
             link = chunk.split('href="', 1)[1].split('"', 1)[0]
         add_source_item(items, seen, source, title or source, link, "rss/feed item")
 
 
 def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
-    request = urllib.request.Request(page_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    request = urllib.request.Request(page_url, headers={"User-Agent": FEED_USER_AGENT}, method="GET")
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
     anchors = re.findall(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)

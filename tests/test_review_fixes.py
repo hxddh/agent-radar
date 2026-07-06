@@ -195,6 +195,26 @@ class CloudRunnerTest(unittest.TestCase):
         # Must not raise re.error.
         cloud_agent_runner.apply_screened_summary_to_prompt(prompt, screen)
 
+    def test_feed_parser_handles_attribute_bearing_items(self) -> None:
+        # arXiv's export RSS is RSS 1.0/RDF: <item rdf:about="...">. The old
+        # literal "<item>" split matched nothing, so the lane collected zero.
+        rdf = (
+            '<rdf:RDF><item rdf:about="http://arxiv.org/abs/1">'
+            "<title>Agentic Memory</title><link>http://arxiv.org/abs/1</link></item>"
+            '<item rdf:about="http://arxiv.org/abs/2">'
+            "<title>MCP Routing</title><link>http://arxiv.org/abs/2</link></item></rdf:RDF>"
+        )
+        fake = mock.MagicMock()
+        fake.read.return_value = rdf.encode("utf-8")
+        fake.__enter__ = lambda s: fake
+        fake.__exit__ = lambda *a: False
+        items: list[dict[str, str]] = []
+        seen: set[str] = set()
+        with mock.patch("urllib.request.urlopen", return_value=fake):
+            cloud_agent_runner.collect_feed_items("http://x", "arxiv:cs-ai", 20, items, seen)
+        self.assertEqual(len(items), 2)
+        self.assertEqual(items[0]["url"], "http://arxiv.org/abs/1")
+
     def test_github_throttle_spaces_calls_and_can_be_disabled(self) -> None:
         import time as _time
 

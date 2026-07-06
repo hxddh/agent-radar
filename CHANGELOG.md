@@ -12,7 +12,11 @@
 
 ### Added
 - GitHub API throttle (`GITHUB_API_MIN_INTERVAL`, default 0.5s) that spaces `api.github.com` calls across the concurrent collector pool so the search/release/tag lanes stop hitting GitHub's secondary (burst) rate limit, which returned 403 even with a valid token.
-- `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle).
+- `docs/cloud-agent.md` "Expanding Official Source Coverage": a ready-to-paste `CHANGELOG_FEEDS`/`CHANGELOG_PAGES` vendor config plus source-reliability notes (GitHub throttle, Reddit rate limiting, X token).
+- `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle, attribute-bearing feed parsing).
+
+### Fixed (source collection)
+- Feed parser now splits on `<item>`/`<entry>` **with attributes or namespace prefixes**, so arXiv's RSS 1.0/RDF feed (`<item rdf:about="...">`) is parsed instead of silently collecting zero items; feed/page/reddit requests use a browser-compatible User-Agent to reduce 403 blocks.
 
 ## v0.6.0 - 2026-07-03
 

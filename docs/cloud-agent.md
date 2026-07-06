@@ -83,6 +83,23 @@ Model routing stays bounded but discovery-oriented:
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
+## Expanding Official Source Coverage
+
+By default only OpenAI and GitHub blogs ship as built-in RSS feeds, plus the Cursor and Anthropic pages. To broaden first-party vendor coverage without paid search, set the `CHANGELOG_FEEDS` and `CHANGELOG_PAGES` repository variables. Items are `name=url`, comma-separated. RSS feeds are preferred (the feed parser handles RSS 2.0, RSS 1.0/RDF, and Atom, including attribute-bearing `<item rdf:about=...>` / `<entry>` tags); pages are anchor-scraped when no feed exists.
+
+Recommended starting set (verify each URL resolves from your runner environment before enabling — a bad feed/page is recorded in `automation/source-health.md` but does not block the run, and the collector auto-recovers once it works again):
+
+```env
+CHANGELOG_FEEDS=google-developers-blog=https://developers.googleblog.com/feed.xml,huggingface-blog=https://huggingface.co/blog/feed.xml,aws-whats-new=https://aws.amazon.com/about-aws/whats-new/recent/feed/,vercel-changelog=https://vercel.com/atom
+CHANGELOG_PAGES=devin-releases=https://docs.devin.ai/release-notes/overview,replit-updates=https://docs.replit.com/updates,warp-changelog=https://docs.warp.dev/changelog,cloudflare-changelog=https://developers.cloudflare.com/changelog/,factory-news=https://factory.ai/news,amp-chronicle=https://ampcode.com/chronicle,raycast-changelog=https://www.raycast.com/changelog
+```
+
+Notes on source reliability:
+
+- `api.github.com` calls (search, release, tag lanes) are throttled by `GITHUB_API_MIN_INTERVAL` (default `0.5` seconds) so concurrent workers do not trip GitHub's secondary (burst) rate limit, which returns 403 even with a valid token. Lower it only if you see the github lanes finishing well under `MAX_COLLECT_SECONDS`; raise it if 403s persist.
+- Reddit RSS is aggressively rate-limited by Reddit; `REDDIT_RSS_BATCH_SIZE=1` (default) polls one subreddit per run window. Persistent 429s mean Reddit is blocking the runner IP — reduce `REDDIT_SUBREDDITS`, or disable with `COLLECT_REDDIT_RSS=false` and rely on HN/Bluesky/Lobsters for community signal.
+- X/Twitter requires a paid `X_BEARER_TOKEN`; it stays off unless the secret and `X_SEARCH_QUERIES` are set.
+
 Recommended source budgets (code defaults when `MAX_PUBLIC_SOURCE_ITEMS` is unset):
 
 - `daily`: 50 public source items (screening pass compresses the shortlist)
