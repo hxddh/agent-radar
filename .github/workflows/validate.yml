@@ -36,7 +36,7 @@ jobs:
           python-version: "3.10"
 
       - name: Compile CLI
-        run: python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py
+        run: python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py scripts/radar_corpus_audit.py
 
       - name: Run tests
         run: python -m unittest discover -s tests
@@ -53,27 +53,48 @@ jobs:
 
       - name: Validate structure
         env:
-          VALIDATE_DATE: ${{ github.event.client_payload.date || github.event.inputs.date || '2026-07-02' }}
-          STRICT_BILINGUAL: ${{ github.event.client_payload.strict_bilingual != false && github.event.inputs.strict_bilingual != false }}
-          REQUIRE_CHINESE: ${{ github.event.client_payload.require_chinese == true || github.event.inputs.require_chinese == true }}
+          EVENT_NAME: ${{ github.event_name }}
+          # Raw context values are passed through env (never interpolated into
+          # the shell) and compared as strings, which is null-safe. GitHub's
+          # expression coercion makes `null != false` evaluate true, so the old
+          # inline booleans could never enable the strict flags on dispatch.
+          INPUT_DATE: ${{ github.event.inputs.date }}
+          PAYLOAD_DATE: ${{ github.event.client_payload.date }}
+          INPUT_STRICT: ${{ github.event.inputs.strict_bilingual }}
+          PAYLOAD_STRICT: ${{ github.event.client_payload.strict_bilingual }}
+          INPUT_REQUIRE_CN: ${{ github.event.inputs.require_chinese }}
+          PAYLOAD_REQUIRE_CN: ${{ github.event.client_payload.require_chinese }}
         run: |
+          set -eu
+          # Default push/PR to the repo invariant: strict bilingual + require CN.
+          STRICT_BILINGUAL=true
+          REQUIRE_CHINESE=true
+          VALIDATE_DATE="${INPUT_DATE:-${PAYLOAD_DATE:-}}"
+          case "$EVENT_NAME" in
+            workflow_dispatch)
+              [ "${INPUT_STRICT:-true}" = "false" ] && STRICT_BILINGUAL=false
+              REQUIRE_CHINESE=false
+              [ "${INPUT_REQUIRE_CN:-false}" = "true" ] && REQUIRE_CHINESE=true
+              ;;
+            repository_dispatch)
+              [ "${PAYLOAD_STRICT:-true}" = "false" ] && STRICT_BILINGUAL=false
+              REQUIRE_CHINESE=false
+              [ "${PAYLOAD_REQUIRE_CN:-false}" = "true" ] && REQUIRE_CHINESE=true
+              ;;
+          esac
           STRICT_ARGS=""
-          MANUAL_TRIGGER=false
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event_name }}" = "repository_dispatch" ]; then
-            MANUAL_TRIGGER=true
+          [ "$STRICT_BILINGUAL" = "true" ] && STRICT_ARGS="--strict-bilingual"
+          [ "$REQUIRE_CHINESE" = "true" ] && STRICT_ARGS="$STRICT_ARGS --require-chinese"
+
+          # When an explicit date is provided, strictly validate that date's
+          # committed reports; there is no hardcoded fallback date anymore.
+          if [ -n "$VALIDATE_DATE" ]; then
+            python scripts/agent_radar.py bilingualize --date "$VALIDATE_DATE"
+            python scripts/agent_radar.py validate --date "$VALIDATE_DATE" $STRICT_ARGS
           fi
-          if [ "$MANUAL_TRIGGER" != "true" ] || [ "$STRICT_BILINGUAL" = "true" ]; then
-            STRICT_ARGS="--strict-bilingual"
-          fi
-          if [ "$MANUAL_TRIGGER" != "true" ] || [ "$REQUIRE_CHINESE" = "true" ]; then
-            if [ "$MANUAL_TRIGGER" != "true" ]; then
-              STRICT_ARGS="$STRICT_ARGS --require-chinese"
-            elif [ "$REQUIRE_CHINESE" = "true" ]; then
-              STRICT_ARGS="$STRICT_ARGS --require-chinese"
-            fi
-          fi
-          python scripts/agent_radar.py bilingualize --date "$VALIDATE_DATE"
-          python scripts/agent_radar.py validate --date "$VALIDATE_DATE" $STRICT_ARGS
+
+          # Always ensure and validate today's reports (UTC), so current
+          # structure is checked on every push instead of only a fixed date.
           TODAY="$(date -u +%F)"
           python scripts/agent_radar.py ensure --date "$TODAY"
           python scripts/agent_radar.py bilingualize --date "$TODAY"

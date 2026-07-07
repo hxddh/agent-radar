@@ -43,6 +43,50 @@ WEEKLY_CHINESE_SOURCE_INDEX = (
 )
 
 
+_CONTENT_WORD_RE = re.compile(r"[A-Za-z]{5,}")
+
+
+def _content_signature(text: str) -> tuple[set[str], set[str], int]:
+    """Content fingerprint used to detect silent data loss during conversion.
+
+    Blockquote note lines (format banners) are ignored because the converters
+    legitimately rewrite them. Everything else — URLs, longer English words,
+    and CJK characters — must survive a rewrite.
+    """
+    kept: list[str] = []
+    for line in text.splitlines():
+        if line.lstrip().startswith(">"):
+            continue
+        # Drop the "中文："/"English:" label scaffolding so the structural
+        # markers (which conversion legitimately adds or removes) are not
+        # mistaken for lost content — keep only the text after the label.
+        chinese_match = CHINESE_LABEL_RE.match(line)
+        if chinese_match:
+            kept.append(chinese_match.group(2))
+            continue
+        english_match = ENGLISH_LABEL_RE.match(line)
+        if english_match:
+            kept.append(english_match.group(2))
+            continue
+        kept.append(line)
+    body = "\n".join(kept)
+    urls = set(URL_RE.findall(body))
+    words = {word.lower() for word in _CONTENT_WORD_RE.findall(body)}
+    cjk = sum(1 for ch in body if "一" <= ch <= "鿿")
+    return urls, words, cjk
+
+
+def preserves_content(source: str, converted: str) -> bool:
+    """True when every URL, long word, and CJK character in source survives."""
+    src_urls, src_words, src_cjk = _content_signature(source)
+    out_urls, out_words, out_cjk = _content_signature(converted)
+    if not src_urls <= out_urls:
+        return False
+    if not src_words <= out_words:
+        return False
+    return out_cjk >= src_cjk
+
+
 def is_report_content(content: str) -> bool:
     return any(marker in content for marker in REPORT_MARKERS)
 
@@ -391,7 +435,12 @@ def _extract_paired_items(section_lines: list[str]) -> list[dict[str, object]]:
     index = 0
     while index < len(section_lines):
         line = section_lines[index]
-        if not line.strip() or HEADING_RE.match(line):
+        if not line.strip():
+            index += 1
+            continue
+        if HEADING_RE.match(line):
+            # Preserve sub-headings (#### ...) verbatim in both language blocks.
+            items.append({"raw": line})
             index += 1
             continue
 
@@ -432,6 +481,9 @@ def _extract_paired_items(section_lines: list[str]) -> list[dict[str, object]]:
 
         label_match = BULLET_RE.match(line)
         if not label_match or label_match.group(1).strip():
+            # Indented bullet or non-bullet prose that isn't part of a pair:
+            # preserve it verbatim instead of dropping it.
+            items.append({"raw": line})
             index += 1
             continue
 
@@ -452,6 +504,8 @@ def _extract_paired_items(section_lines: list[str]) -> list[dict[str, object]]:
                 index = next_index
                 continue
 
+        # Top-level bullet with no bilingual pair (e.g. a plain note): preserve.
+        items.append({"raw": line})
         index += 1
     return items
 
@@ -462,12 +516,17 @@ def _split_daily_section_items(section_lines: list[str]) -> list[list[str]]:
     for line in section_lines:
         if not line.strip():
             continue
-        if BULLET_RE.match(line) and not BULLET_RE.match(line).group(1):
+        match = BULLET_RE.match(line)
+        if match and not match.group(1):
             if current:
                 items.append(current)
             current = [line]
         elif current:
             current.append(line)
+        else:
+            # Narrative / non-bullet line before the first bullet: keep it as
+            # its own passthrough item instead of dropping it.
+            items.append([line])
     if current:
         items.append(current)
     return items
@@ -495,7 +554,10 @@ def _render_daily_item(item_lines: list[str]) -> tuple[list[str], list[str]]:
     if not item_lines:
         return [], []
     label_match = BULLET_RE.match(item_lines[0])
-    label = label_match.group(2).strip().rstrip(":") if label_match else "Item"
+    if not label_match:
+        # Non-bullet narrative block: pass through verbatim to both languages.
+        return list(item_lines), list(item_lines)
+    label = label_match.group(2).strip().rstrip(":")
     english: list[str] = []
     chinese: list[str] = []
     index = 1
@@ -519,7 +581,12 @@ def _render_daily_item(item_lines: list[str]) -> tuple[list[str], list[str]]:
     while index < len(item_lines):
         line = item_lines[index]
         if not line.startswith("  "):
-            break
+            # Top-level continuation line inside an item: preserve it verbatim
+            # in both blocks rather than dropping the rest of the item.
+            english.append(line)
+            chinese.append(line)
+            index += 1
+            continue
         field_match = re.match(r"^  - (.+)$", line)
         if not field_match:
             index += 1
@@ -567,11 +634,13 @@ def convert_daily_paired_to_block(content: str) -> str:
 
     lines = content.splitlines()
     prefix_lines: list[str] = []
+    suffix_lines: list[str] = []
     day_sections: list[tuple[str, list[str]]] = []
+    in_suffix = False
     index = 0
     while index < len(lines):
         line = lines[index]
-        if re.match(r"^## \d{4}-\d{2}-\d{2}\s*$", line):
+        if not in_suffix and re.match(r"^## \d{4}-\d{2}-\d{2}\s*$", line):
             title = line
             body: list[str] = []
             index += 1
@@ -584,6 +653,13 @@ def convert_daily_paired_to_block(content: str) -> str:
             continue
         if not day_sections:
             prefix_lines.append(line)
+        else:
+            # Content after the days that is neither a separator nor a day
+            # heading is a trailing section (e.g. "## Notes"): preserve it.
+            if not in_suffix and line.strip() and not SECTION_BREAK_RE.match(line):
+                in_suffix = True
+            if in_suffix:
+                suffix_lines.append(line)
         index += 1
 
     output: list[str] = [line for line in prefix_lines if line.strip() and not line.startswith("> Format:")]
@@ -618,7 +694,23 @@ def convert_daily_paired_to_block(content: str) -> str:
         output.pop()
     while output and not output[-1].strip():
         output.pop()
-    return "\n".join(output) + "\n"
+
+    trailing = [line for line in suffix_lines]
+    while trailing and not trailing[0].strip():
+        trailing.pop(0)
+    while trailing and not trailing[-1].strip():
+        trailing.pop()
+    if trailing:
+        output.append("")
+        output.append("---")
+        output.append("")
+        output.extend(trailing)
+
+    result = "\n".join(output) + "\n"
+    # Data-loss backstop: fall back to the original if anything was dropped.
+    if not preserves_content(content, result):
+        return content
+    return result
 
 
 def convert_paired_to_block(content: str) -> str:
@@ -666,6 +758,10 @@ def convert_paired_to_block(content: str) -> str:
             chinese_lines.append("")
             continue
         for item in items:
+            if "raw" in item:
+                english_lines.append(str(item["raw"]))
+                chinese_lines.append(str(item["raw"]))
+                continue
             label = str(item.get("label", "")).strip()
             english = str(item.get("english", "")).strip()
             chinese = str(item.get("chinese", "")).strip()
@@ -698,6 +794,10 @@ def convert_paired_to_block(content: str) -> str:
         header = (header + "\n\n" if header else "") + BLOCK_FORMAT_NOTE
     result = header.rstrip() + "\n\n"
     result += "\n".join(english_lines).rstrip() + "\n\n---\n\n" + "\n".join(chinese_lines).rstrip() + "\n"
+    # Data-loss backstop: if the rewrite would drop any URL, word, or Chinese
+    # character, keep the original (paired) content, which validation accepts.
+    if not preserves_content(content, result):
+        return content
     return result
 
 

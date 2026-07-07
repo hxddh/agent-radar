@@ -25,9 +25,19 @@ jobs:
 
       - name: Resolve tag
         id: meta
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TAG="${{ github.event.inputs.tag }}"
+          set -eu
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG="$INPUT_TAG"
+            # The input is documented as an EXISTING tag. Verify it actually
+            # exists so a typo cannot silently create a new tag at branch HEAD.
+            if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+              echo "Tag '$TAG' does not exist. Create and push the tag first." >&2
+              exit 1
+            fi
           else
             TAG="${GITHUB_REF_NAME}"
           fi
@@ -45,8 +55,11 @@ jobs:
           TAG: ${{ steps.meta.outputs.tag }}
           NOTES: ${{ steps.meta.outputs.notes }}
         run: |
+          set -eu
+          # The tag is guaranteed to exist by the resolve step, so `gh release
+          # create` publishes the existing tag rather than fabricating one.
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release edit "$TAG" --notes-file "$NOTES" --title "Agent Radar $TAG"
           else
-            gh release create "$TAG" --notes-file "$NOTES" --title "Agent Radar $TAG"
+            gh release create "$TAG" --verify-tag --notes-file "$NOTES" --title "Agent Radar $TAG"
           fi

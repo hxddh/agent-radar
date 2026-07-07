@@ -50,10 +50,15 @@ INIT_PROTECTED_FILES = {
     "sources.md",
     "research-log.md",
     "README.md",
+    "CHANGELOG.md",
 }
 
+# Directories whose files hold curated content or history and must never be
+# clobbered by `init --force` when they already have real content.
+INIT_PROTECTED_DIRS = ("prompts", "automation", "docs")
 
-__version__ = "0.6.0"
+
+__version__ = "0.7.0"
 
 CORE_FILES = [
     "README.md",
@@ -98,7 +103,10 @@ CORE_FILES = [
 
 
 def today() -> dt.date:
-    return dt.date.today()
+    # Use UTC to match the workflows (which compute dates with `date -u`), so a
+    # contributor running without --date does not write a different day than CI
+    # validates.
+    return dt.datetime.now(dt.timezone.utc).date()
 
 
 def parse_date(value: str | None) -> dt.date:
@@ -125,13 +133,30 @@ def find_root(start: Path | None = None) -> Path:
     return current
 
 
-def write_file(path: Path, content: str, force: bool = False) -> str:
+def _is_protected_target(rel_path: str, name: str) -> bool:
+    if name in INIT_PROTECTED_FILES:
+        return True
+    top = rel_path.replace("\\", "/").split("/", 1)[0] if rel_path else ""
+    return top in INIT_PROTECTED_DIRS
+
+
+def resolve_root(args: argparse.Namespace | None = None) -> Path:
+    """Honor an explicit ``root`` on args (e.g. from ensure_reports); else find it."""
+    explicit = getattr(args, "root", None) if args is not None else None
+    if explicit:
+        return Path(explicit).resolve()
+    return find_root()
+
+
+def write_file(path: Path, content: str, force: bool = False, rel_path: str | None = None) -> str:
     existed = path.exists()
     if existed and not force:
         return "skipped"
-    if force and existed and path.name in INIT_PROTECTED_FILES:
+    if force and existed and _is_protected_target(rel_path or path.name, path.name):
         existing = path.read_text(encoding="utf-8")
-        if len(existing.strip()) > 400:
+        # Any real content is curated data or history: never overwrite it on
+        # --force, regardless of length.
+        if existing.strip():
             return "skipped-protected"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
@@ -207,7 +232,7 @@ def command_init(args: argparse.Namespace) -> int:
     for rel_path, content in template_files(parse_date(args.date)).items():
         if rel_path == "scripts/agent_radar.py":
             continue
-        result = write_file(root / rel_path, content, force=args.force)
+        result = write_file(root / rel_path, content, force=args.force, rel_path=rel_path)
         results.append((rel_path, result))
 
     script_path = root / "scripts" / "agent_radar.py"
@@ -215,14 +240,14 @@ def command_init(args: argparse.Namespace) -> int:
         results.append(("scripts/agent_radar.py", "skipped"))
     else:
         script_content = Path(__file__).read_text(encoding="utf-8")
-        result = write_file(script_path, script_content, force=args.force)
+        result = write_file(script_path, script_content, force=args.force, rel_path="scripts/agent_radar.py")
         results.append(("scripts/agent_radar.py", result))
 
     cloud_runner_path = root / "scripts" / "cloud_agent_runner.py"
     source_cloud_runner = Path(__file__).with_name("cloud_agent_runner.py")
     if source_cloud_runner.exists() and cloud_runner_path.resolve() != source_cloud_runner.resolve():
         runner_content = source_cloud_runner.read_text(encoding="utf-8")
-        result = write_file(cloud_runner_path, runner_content, force=args.force)
+        result = write_file(cloud_runner_path, runner_content, force=args.force, rel_path="scripts/cloud_agent_runner.py")
         results.append(("scripts/cloud_agent_runner.py", result))
 
     for helper_name in ("radar_bilingual.py", "radar_collector_state.py", "radar_corpus_audit.py"):
@@ -230,7 +255,7 @@ def command_init(args: argparse.Namespace) -> int:
         source_helper = Path(__file__).with_name(helper_name)
         if source_helper.exists() and helper_path.resolve() != source_helper.resolve():
             helper_content = source_helper.read_text(encoding="utf-8")
-            result = write_file(helper_path, helper_content, force=args.force)
+            result = write_file(helper_path, helper_content, force=args.force, rel_path=f"scripts/{helper_name}")
             results.append((f"scripts/{helper_name}", result))
         elif helper_path.resolve() == source_helper.resolve():
             results.append((f"scripts/{helper_name}", "skipped"))
@@ -402,8 +427,18 @@ def daily_entry(day: dt.date) -> str:
 """
 
 
+def daily_heading_present(content: str, day: dt.date) -> bool:
+    """Line-anchored check for a `## YYYY-MM-DD` day heading (bare or suffixed).
+
+    Substring matching gives false positives for `### YYYY-MM-DD` sub-headings
+    or prose mentions; anchor to the start of the line like the sibling tools.
+    """
+    pattern = re.compile(rf"^## {re.escape(day.isoformat())}\b", re.MULTILINE)
+    return bool(pattern.search(content))
+
+
 def command_daily(args: argparse.Namespace) -> int:
-    root = find_root()
+    root = resolve_root(args)
     day = parse_date(args.date)
     path = daily_path(root, day)
     heading = f"# Daily Agent Radar - {day:%Y-%m}\n"
@@ -416,7 +451,7 @@ def command_daily(args: argparse.Namespace) -> int:
         return 0
 
     content = path.read_text(encoding="utf-8")
-    if entry_heading in content:
+    if daily_heading_present(content, day):
         print(f"exists  {path} ({entry_heading})")
         return 0
 
@@ -519,7 +554,7 @@ def weekly_template(day: dt.date) -> str:
 
 
 def command_weekly(args: argparse.Namespace) -> int:
-    root = find_root()
+    root = resolve_root(args)
     day = parse_date(args.date)
     path = weekly_path(root, day)
     if path.exists():
@@ -601,7 +636,7 @@ def monthly_template(day: dt.date) -> str:
 
 
 def command_monthly(args: argparse.Namespace) -> int:
-    root = find_root()
+    root = resolve_root(args)
     day = parse_date(args.date)
     path = monthly_path(root, day)
     if path.exists():
@@ -681,8 +716,11 @@ def warn_weekly_sparse(path: Path) -> list[str]:
     if not path.exists():
         return []
     content = path.read_text(encoding="utf-8")
-    heading_count = sum(1 for line in content.splitlines() if line.startswith("## "))
-    bullet_count = sum(1 for line in content.splitlines() if line.startswith("- "))
+    # The weekly template emits its numbered sections as `### ` headings (only
+    # `## English`/`## 中文` are level 2), so count `###` to detect an empty
+    # shell rather than the level-2 headings, which never reach 10.
+    heading_count = sum(1 for line in content.splitlines() if line.startswith("### "))
+    bullet_count = sum(1 for line in content.splitlines() if line.strip().startswith("- "))
     if heading_count >= 10 and bullet_count <= 5:
         return [f"{path}: weekly file appears mostly empty"]
     return []
@@ -771,16 +809,16 @@ def command_bilingualize(args: argparse.Namespace) -> int:
 def warn_daily_entry_missing(path: Path, day: dt.date) -> list[str]:
     if not path.exists():
         return []
-    if f"## {day.isoformat()}" in path.read_text(encoding="utf-8"):
+    if daily_heading_present(path.read_text(encoding="utf-8"), day):
         return []
     return [f"{path}: missing entry heading for {day.isoformat()}"]
 
 
 def ensure_reports(root: Path, day: dt.date) -> None:
-    """Create missing daily, weekly, and monthly report shells."""
-    command_daily(argparse.Namespace(date=day.isoformat()))
-    command_weekly(argparse.Namespace(date=day.isoformat()))
-    command_monthly(argparse.Namespace(date=day.isoformat()))
+    """Create missing daily, weekly, and monthly report shells under ``root``."""
+    command_daily(argparse.Namespace(date=day.isoformat(), root=str(root)))
+    command_weekly(argparse.Namespace(date=day.isoformat(), root=str(root)))
+    command_monthly(argparse.Namespace(date=day.isoformat(), root=str(root)))
 
 
 def command_ensure(args: argparse.Namespace) -> int:
@@ -800,12 +838,8 @@ def command_validate(args: argparse.Namespace) -> int:
     current_weekly = weekly_path(root, day)
     current_monthly = monthly_path(root, day)
 
-    if tier == "daily":
-        if not current_daily.exists():
-            errors.append(str(current_daily.relative_to(root)))
-    else:
-        if not current_daily.exists():
-            errors.append(str(current_daily.relative_to(root)))
+    if not current_daily.exists():
+        errors.append(str(current_daily.relative_to(root)))
 
     warnings: list[str] = []
     if tier == "full":
@@ -842,14 +876,19 @@ def command_validate(args: argparse.Namespace) -> int:
         for path in report_paths:
             warnings.extend(warn_missing_chinese_substance(path))
 
-    if tier == "full":
-        audit = radar_corpus_audit.audit_corpus(root, day)
-        for issue in audit.get("issues", []):
-            code = str(issue.get("code", ""))
-            if code in {"multiple-candidate-inbox", "legacy-pass-sections"}:
-                warnings.append(f"{issue.get('path')}: {issue.get('message')}")
-            elif code == "duplicate-daily-date":
-                errors.append(f"{issue.get('path')}: {issue.get('message')}")
+    audit = radar_corpus_audit.audit_corpus(root, day)
+    error_codes = {"duplicate-daily-date"}
+    for issue in audit.get("issues", []):
+        code = str(issue.get("code", ""))
+        message = f"{issue.get('path')}: {issue.get('message')}"
+        # Duplicate day headings corrupt the report and always block; every
+        # other audit finding (out-of-order days, legacy passes, missing or
+        # duplicate candidate inbox) is surfaced as a warning so nothing is
+        # silently dropped.
+        if code in error_codes:
+            errors.append(message)
+        else:
+            warnings.append(message)
 
     if errors:
         print("Validation failed. Missing required files or directories:")
@@ -1078,7 +1117,10 @@ def unreleased_changelog(root: Path) -> str:
     if marker not in text:
         return ""
     section = text.split(marker, 1)[1]
-    next_heading = re.search(r"\n## v", section)
+    # Stop at the next version heading. Match `## <digit>` (with or without a
+    # leading `v`) so headings like `## 0.7.0` don't leak older entries into the
+    # Unreleased section.
+    next_heading = re.search(r"\n## v?\d", section)
     if next_heading:
         section = section[: next_heading.start()]
     return section.strip()
@@ -1116,6 +1158,7 @@ def command_release_draft(args: argparse.Namespace) -> int:
             "- [ ] Tag vX.Y.Z and push the tag.",
         ]
     )
+    target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"created {target}")
     return 0
@@ -1145,7 +1188,11 @@ def github_token() -> str:
     token = os.environ.get("GITHUB_TOKEN", "").strip()
     if token:
         return token
-    result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=False)
+    try:
+        result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=False)
+    except FileNotFoundError:
+        # gh not installed: fall through to the friendly "no token" message.
+        return ""
     if result.returncode == 0:
         return result.stdout.strip()
     return ""
@@ -1211,7 +1258,7 @@ def command_trigger(args: argparse.Namespace) -> int:
         event_type = "cloud-agent"
     else:
         payload = {
-            "date": args.date or "2026-07-02",
+            "date": args.date or today().isoformat(),
             "strict_bilingual": not args.no_strict_bilingual,
             "require_chinese": args.require_chinese,
         }

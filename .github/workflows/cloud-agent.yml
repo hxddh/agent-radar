@@ -65,9 +65,14 @@ jobs:
       MAX_RELEASES_PER_REPO: ${{ vars.MAX_RELEASES_PER_REPO || '3' }}
       MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '12' }}
       MAX_COLLECT_SECONDS: ${{ vars.MAX_COLLECT_SECONDS || '60' }}
+      GITHUB_API_MIN_INTERVAL: ${{ vars.GITHUB_API_MIN_INTERVAL || '0.5' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
-      CHANGELOG_FEEDS: ${{ vars.CHANGELOG_FEEDS || '' }}
-      CHANGELOG_PAGES: ${{ vars.CHANGELOG_PAGES || '' }}
+      # Vendor changelog feeds/pages are enabled by default here (no repo variable
+      # needed). Set the `CHANGELOG_FEEDS` / `CHANGELOG_PAGES` repo variables to
+      # override. A feed/page that 404s is recorded in source-health.md but does
+      # not block the run and the collector auto-recovers once it works again.
+      CHANGELOG_FEEDS: "${{ vars.CHANGELOG_FEEDS || 'huggingface-blog=https://huggingface.co/blog/feed.xml,aws-whats-new=https://aws.amazon.com/about-aws/whats-new/recent/feed/,vercel-changelog=https://vercel.com/atom' }}"
+      CHANGELOG_PAGES: "${{ vars.CHANGELOG_PAGES || 'devin-releases=https://docs.devin.ai/release-notes/overview,replit-updates=https://docs.replit.com/updates,warp-changelog=https://docs.warp.dev/changelog,cloudflare-changelog=https://developers.cloudflare.com/changelog/,factory-news=https://factory.ai/news,amp-chronicle=https://ampcode.com/chronicle,raycast-changelog=https://www.raycast.com/changelog' }}"
       COLLECT_REDDIT: ${{ vars.COLLECT_REDDIT || 'false' }}
       COLLECT_REDDIT_RSS: ${{ vars.COLLECT_REDDIT_RSS || 'true' }}
       COLLECT_BLUESKY: ${{ vars.COLLECT_BLUESKY || 'true' }}
@@ -115,9 +120,17 @@ jobs:
           echo "Max collect seconds: $MAX_COLLECT_SECONDS"
 
       - name: Run cloud agent
+        env:
+          # Pass dispatch inputs through env instead of interpolating them into
+          # the script, so a repository_dispatch payload cannot inject shell.
+          PAYLOAD_TASK: ${{ github.event.client_payload.task }}
+          INPUT_TASK: ${{ github.event.inputs.task }}
+          PAYLOAD_DATE: ${{ github.event.client_payload.date }}
+          INPUT_DATE: ${{ github.event.inputs.date }}
         run: |
-          TASK="${{ github.event.client_payload.task || github.event.inputs.task || 'auto' }}"
-          DATE_INPUT="${{ github.event.client_payload.date || github.event.inputs.date }}"
+          set -eu
+          TASK="${PAYLOAD_TASK:-${INPUT_TASK:-auto}}"
+          DATE_INPUT="${PAYLOAD_DATE:-${INPUT_DATE:-}}"
           if [ -n "$DATE_INPUT" ]; then
             python scripts/cloud_agent_runner.py --task "$TASK" --date "$DATE_INPUT"
           else
@@ -151,13 +164,16 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          if git diff --quiet; then
+          # Use --porcelain (not `git diff --quiet`) so runs whose only output is
+          # NEW files — a new-month daily file, telemetry/screening artifacts —
+          # are detected and committed instead of silently discarded.
+          if [ -z "$(git status --porcelain)" ]; then
             echo "No changes to commit."
             exit 0
           fi
           git config user.name "agent-radar-cloud"
           git config user.email "agent-radar-cloud@users.noreply.github.com"
-          git add .
+          git add -A
           git commit -m "Cloud agent radar update $(date -u +%F)"
           git pull --rebase origin "${GITHUB_REF_NAME:-main}"
           git push

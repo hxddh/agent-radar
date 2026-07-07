@@ -19,6 +19,7 @@ import os
 import re
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -79,6 +80,10 @@ DEFAULT_RELEASE_REPOS = [
     "modelcontextprotocol/typescript-sdk",
     "elizaOS/eliza",
 ]
+# A browser-compatible User-Agent. Several feed/CDN hosts (reddit RSS in
+# particular) return 403 to bare tool identifiers; a descriptive Mozilla UA is
+# widely accepted for polite RSS polling.
+FEED_USER_AGENT = "Mozilla/5.0 (compatible; AgentRadar/1.0; +https://github.com/hxddh/agent-radar)"
 DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
@@ -184,6 +189,11 @@ RUN_AUDIT: dict[str, Any] = {
     "synthesis_recall": 0.0,
     "screening_candidate_ids": [],
 }
+
+# Snapshot of per-source health captured during shared collection, so per-task
+# runs (which reset RUN_AUDIT and read from cache) can still write source-health.
+SHARED_SOURCE_STATUS: list[dict[str, str]] = []
+SHARED_SOURCE_LANES: dict[str, dict[str, Any]] = {}
 
 
 TASK_CONFIG = {
@@ -497,10 +507,17 @@ def truncate_keep_ends(value: str, limit: int) -> str:
     """Trim the middle, keeping the head (titles, thesis) and the tail (recent entries)."""
     if len(value) <= limit:
         return value
-    budget = max(0, limit - len(TRUNCATION_MARKER))
+    if limit <= 0:
+        return ""
+    if limit <= len(TRUNCATION_MARKER):
+        # No room for the marker plus a head and tail: hard-cut to the limit so
+        # the result never exceeds it (value[-0:] would return the whole string).
+        return value[:limit]
+    budget = limit - len(TRUNCATION_MARKER)
     head = budget // 3
     tail = budget - head
-    return value[:head] + TRUNCATION_MARKER + value[-tail:]
+    tail_text = value[-tail:] if tail > 0 else ""
+    return value[:head] + TRUNCATION_MARKER + tail_text
 
 
 def read_text(path: Path, *, limit: int | None = None) -> str:
@@ -592,6 +609,10 @@ def slice_daily_month_file(content: str, day: dt.date, limit: int) -> str:
     date_heading = f"## {day.isoformat()}"
     parts = re.split(r"\n(?=## )", content)
     header = parts[0] if parts else content
+    # When the file starts directly with a day heading there is no separate
+    # header block; treating parts[0] as a header would duplicate that day.
+    if header.split("\n", 1)[0].strip() == date_heading:
+        header = ""
     today_blocks: list[str] = []
     for part in parts:
         first_line = part.split("\n", 1)[0].strip()
@@ -600,7 +621,10 @@ def slice_daily_month_file(content: str, day: dt.date, limit: int) -> str:
     today_block = today_blocks[-1] if today_blocks else ""
     if not today_block:
         return truncate_keep_ends(content, limit)
-    sliced = header.rstrip() + DAILY_CONTEXT_SLICE_NOTE + today_block
+    if header.strip():
+        sliced = header.rstrip() + DAILY_CONTEXT_SLICE_NOTE + today_block
+    else:
+        sliced = today_block
     return truncate_keep_ends(sliced, limit)
 
 
@@ -1111,10 +1135,13 @@ def apply_screened_summary_to_prompt(prompt: str, screen_text: str, root: Path |
         "Screening pass (primary evidence for this run):\n"
         f"{truncate_text(compact, source_block_char_budget(max_prompt))}"
     )
+    # Use a callable replacement so backslashes in the model-derived screening
+    # text (e.g. "\d" from scraped titles) are inserted literally instead of
+    # being interpreted as regex escape sequences (which raises re.error).
     if "Public source snapshot:" in prompt:
         return re.sub(
             r"Public source snapshot:\n.*?(?=\n\nRepository context:)",
-            screened_block,
+            lambda _match: screened_block,
             prompt,
             count=1,
             flags=re.DOTALL,
@@ -1122,7 +1149,7 @@ def apply_screened_summary_to_prompt(prompt: str, screen_text: str, root: Path |
     if "Screening pass (primary evidence for this run):" in prompt:
         return re.sub(
             r"Screening pass \(primary evidence for this run\):\n.*?(?=\n\nRepository context:)",
-            screened_block,
+            lambda _match: screened_block,
             prompt,
             count=1,
             flags=re.DOTALL,
@@ -1182,6 +1209,31 @@ def request_json(url: str, headers: dict[str, str] | None = None, timeout: int =
         return json.loads(response.read().decode("utf-8"))
 
 
+_GITHUB_API_LOCK = threading.Lock()
+_GITHUB_API_LAST_CALL = 0.0
+
+
+def github_throttle() -> None:
+    """Space out api.github.com calls so concurrent workers don't trip GitHub's
+    secondary (burst) rate limit, which returns 403 "rate limit exceeded" even
+    with a valid token. Set GITHUB_API_MIN_INTERVAL=0 to disable (e.g. in tests).
+    """
+    interval = env_float("GITHUB_API_MIN_INTERVAL", 0.5)
+    if interval <= 0:
+        return
+    global _GITHUB_API_LAST_CALL
+    with _GITHUB_API_LOCK:
+        wait = _GITHUB_API_LAST_CALL + interval - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        _GITHUB_API_LAST_CALL = time.monotonic()
+
+
+def github_request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 10) -> Any:
+    github_throttle()
+    return request_json(url, headers=headers, timeout=timeout)
+
+
 def strip_html(value: str) -> str:
     text = html.unescape(value)
     pieces: list[str] = []
@@ -1198,7 +1250,13 @@ def strip_html(value: str) -> str:
     return " ".join("".join(pieces).split())
 
 
+def sanitize_url(url: str) -> str:
+    """Collapse whitespace/control chars so a feed URL cannot inject prompt structure."""
+    return "".join(url.split())
+
+
 def add_source_item(items: list[dict[str, str]], seen: set[str], source: str, title: str, url: str, note: str = "") -> None:
+    url = sanitize_url(url)
     if not url or url in seen:
         return
     seen.add(url)
@@ -1206,7 +1264,7 @@ def add_source_item(items: list[dict[str, str]], seen: set[str], source: str, ti
         {
             "source": source,
             "title": strip_html(title)[:220],
-            "url": url,
+            "url": url[:400],
             "note": strip_html(note)[:420],
         }
     )
@@ -1341,6 +1399,12 @@ def prepare_shared_source_collection(
     tasks: list[str],
 ) -> tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int]:
     raw_items, lane_stats, errors = collect_source_items_raw("source-sweep", root, day)
+    # collect_source_items_raw records per-source health into RUN_AUDIT during
+    # collection; snapshot it so per-task runs (which reset RUN_AUDIT and read
+    # from cache without re-collecting) can still write source-health.md.
+    global SHARED_SOURCE_STATUS, SHARED_SOURCE_LANES
+    SHARED_SOURCE_STATUS = list(RUN_AUDIT.get("source_status", []))
+    SHARED_SOURCE_LANES = dict(lane_stats)
     scored = score_source_items(raw_items, root)
     pool = scored[: max_public_source_budget_for_tasks(tasks)]
     update_source_cache(root, pool, day)
@@ -1505,7 +1569,7 @@ def collect_github_items(query: str, limit: int, items: list[dict[str, str]], se
         headers["Authorization"] = f"Bearer {token}"
     encoded = urllib.parse.quote(f"{query} pushed:>{(dt.datetime.now(dt.timezone.utc).date() - dt.timedelta(days=45)).isoformat()}")
     url = f"https://api.github.com/search/repositories?q={encoded}&sort=updated&order=desc&per_page={limit}"
-    data = request_json(url, headers=headers)
+    data = github_request_json(url, headers=headers)
     for repo in data.get("items", [])[:limit]:
         note = f"stars={repo.get('stargazers_count', 0)}; updated={repo.get('updated_at', '')}; {repo.get('description') or ''}"
         add_source_item(items, seen, "github", repo.get("full_name", "GitHub repo"), repo.get("html_url", ""), note)
@@ -1664,7 +1728,7 @@ def github_repo_exists(root: Path, repo: str) -> bool:
     if repo in radar_collector_state.rejected_repos(root):
         return False
     try:
-        request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
+        github_request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
         return True
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
@@ -1699,7 +1763,7 @@ def release_repos_from_context(root: Path, limit: int) -> list[str]:
 
 def collect_github_releases(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     url = f"https://api.github.com/repos/{repo}/releases?per_page={limit}"
-    data = request_json(url, headers=github_headers())
+    data = github_request_json(url, headers=github_headers())
     for release in data[:limit]:
         title = release.get("name") or release.get("tag_name") or f"{repo} release"
         note = f"published={release.get('published_at', '')}; prerelease={release.get('prerelease', False)}"
@@ -1708,7 +1772,7 @@ def collect_github_releases(repo: str, limit: int, items: list[dict[str, str]], 
 
 def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     url = f"https://api.github.com/repos/{repo}/tags?per_page={limit}"
-    data = request_json(url, headers=github_headers())
+    data = github_request_json(url, headers=github_headers())
     for tag in data[:limit]:
         name = tag.get("name", "")
         tag_url = f"https://github.com/{repo}/releases/tag/{urllib.parse.quote(name)}" if name else ""
@@ -1716,27 +1780,34 @@ def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen
         add_source_item(items, seen, f"github-tag:{repo}", name or f"{repo} tag", tag_url, note)
 
 
+FEED_ITEM_SPLIT_RE = re.compile(r"<(?:\w+:)?item(?:\s[^>]*)?>")
+FEED_ENTRY_SPLIT_RE = re.compile(r"<(?:\w+:)?entry(?:\s[^>]*)?>")
+FEED_TITLE_RE = re.compile(r"<(?:\w+:)?title(?:\s[^>]*)?>(.*?)</(?:\w+:)?title>", re.DOTALL)
+FEED_LINK_RE = re.compile(r"<(?:\w+:)?link(?:\s[^>]*)?>(.*?)</(?:\w+:)?link>", re.DOTALL)
+
+
 def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
-    request = urllib.request.Request(feed_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    request = urllib.request.Request(feed_url, headers={"User-Agent": FEED_USER_AGENT}, method="GET")
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
-    chunks = text.split("<item>")[1:]
+    # Split on <item> and <entry> WITH or WITHOUT attributes/namespace prefixes.
+    # arXiv's export RSS is RSS 1.0/RDF (`<item rdf:about="...">`), so a literal
+    # "<item>" split matched nothing and the lane collected zero items.
+    chunks = FEED_ITEM_SPLIT_RE.split(text)[1:]
     if not chunks:
-        chunks = text.split("<entry>")[1:]
+        chunks = FEED_ENTRY_SPLIT_RE.split(text)[1:]
     for chunk in chunks[:limit]:
-        title = ""
-        link = ""
-        if "<title>" in chunk:
-            title = chunk.split("<title>", 1)[1].split("</title>", 1)[0]
-        if "<link>" in chunk:
-            link = chunk.split("<link>", 1)[1].split("</link>", 1)[0]
+        title_match = FEED_TITLE_RE.search(chunk)
+        title = title_match.group(1).strip() if title_match else ""
+        link_match = FEED_LINK_RE.search(chunk)
+        link = link_match.group(1).strip() if link_match else ""
         if not link and 'href="' in chunk:
             link = chunk.split('href="', 1)[1].split('"', 1)[0]
         add_source_item(items, seen, source, title or source, link, "rss/feed item")
 
 
 def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
-    request = urllib.request.Request(page_url, headers={"User-Agent": "agent-radar-cloud"}, method="GET")
+    request = urllib.request.Request(page_url, headers={"User-Agent": FEED_USER_AGENT}, method="GET")
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
     anchors = re.findall(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)
@@ -1930,7 +2001,9 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     for query in queries["packages"][:3]:
         if collector_enabled("docker"):
             collectors.append((f"docker:{query}", "docker", query, per_query))
-    collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://export.arxiv.org/rss/cs.AI", per_feed))
+    # arXiv moved its RSS feeds to rss.arxiv.org (2024); export.arxiv.org/rss
+    # still responds but returns no parseable items, so the lane collected zero.
+    collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://rss.arxiv.org/rss/cs.AI", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
     for source_name, page_url in changelog_pages():
@@ -2015,8 +2088,11 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
             elif kind == "tag":
                 collect_github_tags(value, limit, local_items, local_seen)
             return index, name, local_items, None
-        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError) as exc:
-            return index, name, [], str(exc)
+        except Exception as exc:  # noqa: BLE001 - a single collector must never abort the run
+            # Includes URL/HTTP/timeout/JSON errors plus schema surprises
+            # (e.g. an API returning a dict where a list is expected) and
+            # partial-read/connection-reset errors. Record and move on.
+            return index, name, [], str(exc) or exc.__class__.__name__
 
     worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 8))
     collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 60))
@@ -2044,8 +2120,13 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
         for future in done:
             results.append(future.result())
         for future in pending:
-            future.cancel()
+            cancelled = future.cancel()
             index, entry = future_map[future]
+            if cancelled:
+                # Never started (still queued when the deadline hit): don't
+                # record it as an error, or the auto-disable state machine
+                # penalizes collectors that simply didn't get a turn.
+                continue
             results.append((index, entry[0], [], f"collector timed out after {collect_seconds}s"))
 
     lane_stats: dict[str, dict[str, Any]] = {}
@@ -2209,7 +2290,9 @@ def response_output_text(data: dict[str, Any]) -> str:
     if "choices" in data:
         choices = data.get("choices") or []
         if choices:
-            return choices[0].get("message", {}).get("content", "")
+            # content may be explicitly null (reasoning-only output, content
+            # filter); coerce to "" so callers get a clean empty string.
+            return (choices[0].get("message", {}) or {}).get("content") or ""
 
     if isinstance(data.get("output_text"), str):
         return data["output_text"]
@@ -2328,11 +2411,18 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
         "response_format": {"type": "json_object"},
     }
     last_error = ""
-    for candidate_model in openrouter_fallback_models(model):
+    # 400/404/409 are client errors: replaying the same payload against a
+    # fallback model will not help, so only retry genuinely transient statuses.
+    retryable_status = {408, 429, 500, 502, 503, 504}
+    models = openrouter_fallback_models(model)
+    for attempt, candidate_model in enumerate(models):
         payload["model"] = candidate_model
         audit_model(candidate_model)
         if candidate_model != model:
             RUN_AUDIT["fallbacks"].append(f"{model}->{candidate_model}")
+        if attempt > 0:
+            # Brief backoff before retrying a transient failure.
+            time.sleep(min(8, 2 ** attempt))
         request = urllib.request.Request(
             OPENROUTER_URL,
             data=json.dumps(payload).encode("utf-8"),
@@ -2341,14 +2431,28 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
         )
         try:
             with urllib.request.urlopen(request, timeout=900) as response:
-                return json.loads(response.read().decode("utf-8"))
+                raw = response.read().decode("utf-8")
         except urllib.error.HTTPError as exc:
             body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
             last_error = f"OpenRouter API error for {candidate_model} ({exc.code}): {body}"
-            if exc.code not in {400, 404, 408, 409, 429, 500, 502, 503, 504}:
+            if exc.code not in retryable_status:
                 break
+            continue
         except urllib.error.URLError as exc:
             last_error = f"OpenRouter transport error for {candidate_model}: {exc}"
+            continue
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            # A 200 with a non-JSON body: treat as a transient failure and try
+            # the next model rather than crashing with a raw traceback.
+            last_error = f"OpenRouter returned a non-JSON 200 body for {candidate_model}: {raw[:300]}"
+            continue
+        if isinstance(parsed, dict) and parsed.get("error") and "choices" not in parsed:
+            # A 200 error envelope (OpenRouter does return these).
+            last_error = f"OpenRouter error envelope for {candidate_model}: {str(parsed.get('error'))[:300]}"
+            continue
+        return parsed
     raise SystemExit(last_error or "OpenRouter API error.")
 
 
@@ -2440,6 +2544,11 @@ def invoke_model(
                 screen_text = response_output_text(
                     call_openrouter_model(build_screen_prompt(task, public_sources), active_models[0])
                 )
+                # Persist the screening artifact in single-task mode too, so the
+                # prompt's reference to automation/screening/<date>.json is real
+                # and recall gating / sweep-skip logic can operate.
+                if root is not None:
+                    write_screening_artifact(root, day, screen_text)
             prompt = build_prompt(
                 task, day, allowed, context, root=root, screened_summary=screen_text
             )
@@ -2538,26 +2647,40 @@ def replace_section_content(
     anchor_level = heading_level(anchor_line)
     lines = old.splitlines()
     start_search = 0
+    search_end = len(lines)
     if within:
         within_line = normalize_section_anchor(within)
+        within_level = heading_level(within_line)
         found_within = False
         for index, line in enumerate(lines):
             if line.strip() == within_line.strip():
                 start_search = index + 1
+                # Bound the anchor search to the end of the `within` section so a
+                # subsection that exists only in another block (e.g. the same
+                # `### N.` title under `## 中文`) is never matched by mistake.
+                search_end = len(lines)
+                for follow in range(index + 1, len(lines)):
+                    level = heading_level(lines[follow])
+                    if level and level <= within_level:
+                        search_end = follow
+                        break
                 found_within = True
                 break
         if not found_within:
             raise SystemExit(f"Refusing to replace section: within anchor not found: {within_line!r}")
     start = None
-    for index in range(start_search, len(lines)):
+    for index in range(start_search, search_end):
         line = lines[index]
         if line.strip() == anchor_line.strip():
             start = index
             break
     if start is None:
-        raise SystemExit(f"Refusing to replace section: anchor not found: {anchor_line!r}")
-    end = len(lines)
-    for index in range(start + 1, len(lines)):
+        raise SystemExit(
+            f"Refusing to replace section: anchor not found: {anchor_line!r}"
+            + (f" within {within!r}" if within else "")
+        )
+    end = search_end
+    for index in range(start + 1, search_end):
         level = heading_level(lines[index])
         if level and level <= anchor_level:
             end = index
@@ -2922,12 +3045,32 @@ def run_task(
             public_sources = collect_public_sources_from_cache(
                 items, lane_stats, errors, task, root, day, raw_collected_count=raw_count
             )
+            # Reading from cache does not re-record per-source health, so restore
+            # the snapshot captured during shared collection; otherwise
+            # update_source_health() sees an empty list and never writes.
+            if not RUN_AUDIT["source_status"] and SHARED_SOURCE_STATUS:
+                RUN_AUDIT["source_status"] = list(SHARED_SOURCE_STATUS)
+            if not RUN_AUDIT["source_lanes"] and SHARED_SOURCE_LANES:
+                RUN_AUDIT["source_lanes"] = dict(SHARED_SOURCE_LANES)
         else:
             public_sources = collect_public_sources(task, root, day)
     screen_text: str | None = None
-    if task_uses_screening(task) and shared_screened:
-        screen_text = shared_screened
-        RUN_AUDIT["shared_screening"] = True
+    if task_uses_screening(task):
+        if shared_screened:
+            screen_text = shared_screened
+            RUN_AUDIT["shared_screening"] = True
+        elif model_provider() == "openrouter" and public_sources:
+            # Single-task mode: run the screening pass up front so the sweep-skip
+            # and synthesis-recall gates apply (and the artifact is written), then
+            # reuse the result for the synthesis call instead of screening twice.
+            screen_text = response_output_text(
+                call_openrouter_model(
+                    build_screen_prompt(task, public_sources, root),
+                    openrouter_models_for_task(task)[0],
+                )
+            )
+            write_screening_artifact(root, day, screen_text)
+            RUN_AUDIT["openrouter_calls"] = int(RUN_AUDIT.get("openrouter_calls", 0)) + 1
     if task == "source-sweep" and screen_text:
         skip, reason = should_skip_source_sweep(root, screen_text)
         if skip:
@@ -3048,15 +3191,36 @@ def main(argv: list[str] | None = None) -> int:
     ):
         shared_screened, preflight_screen_calls = preflight_shared_screening(shared_collection, root, day)
 
+    failures: list[str] = []
+    succeeded = 0
     for index, task in enumerate(tasks):
-        run_task(
-            root,
-            task,
-            day,
-            shared_collection=shared_collection,
-            shared_screened=shared_screened if task_uses_screening(task) else None,
-            preflight_screen_calls=preflight_screen_calls if index == 0 and shared_screened else 0,
-        )
+        try:
+            run_task(
+                root,
+                task,
+                day,
+                shared_collection=shared_collection,
+                shared_screened=shared_screened if task_uses_screening(task) else None,
+                preflight_screen_calls=preflight_screen_calls if index == 0 and shared_screened else 0,
+            )
+            succeeded += 1
+        except SystemExit as exc:
+            # Isolate per-task failures so one bad task (e.g. a rejected model
+            # update in source-sweep) does not discard the completed work of its
+            # siblings; the later validate step still gates what gets committed.
+            message = str(exc.code) if exc.code not in (None, 0) else "task failed"
+            failures.append(f"{task}: {message}")
+            print(f"Task {task} failed: {message}", file=sys.stderr)
+            append_telemetry(root, task, day, 0, f"Task failed: {message}", [])
+        except Exception as exc:  # noqa: BLE001 - keep sibling tasks alive
+            failures.append(f"{task}: {exc}")
+            print(f"Task {task} errored: {exc}", file=sys.stderr)
+            append_telemetry(root, task, day, 0, f"Task errored: {exc}", [])
+    if failures:
+        print(f"{len(failures)} task(s) failed: " + "; ".join(failures), file=sys.stderr)
+        # Fail only if nothing succeeded; otherwise exit 0 so the workflow can
+        # commit the tasks that did complete (validation still runs before commit).
+        return 0 if succeeded else 1
     return 0
 
 

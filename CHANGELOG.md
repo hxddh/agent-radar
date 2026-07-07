@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.7.0 - 2026-07-07
+
+Hardening release: fixes the verified architecture/code review findings (data-loss guards, collector state machine, cloud runner, CLI, CI) and repairs source collection (GitHub secondary-rate-limit throttle, RDF/attributed feed parsing, arXiv endpoint, browser UA, default vendor coverage). Verified against a live `source-sweep` run that turned the previously-failing cloud-agent workflow green and cleared the GitHub/reddit/bluesky collector errors.
+
+### Fixed
+- **Data-loss guards**: `corpus-audit --fix` now archives only `### Pass:` blocks instead of everything after the first one (the canonical `## Candidate inbox` and later sections are preserved); the bilingual converters no longer silently drop unpaired bullets, prose, narrative paragraphs, or trailing sections, and fall back to the original content if a rewrite would lose any URL, word, or CJK character.
+- **Collector state machine**: a single transient 404 no longer permanently rejects a repo (three consecutive with no success are required); a later success recovers a rejected repo; intermittently-flaky collectors are no longer permanently disabled (`degraded_runs` resets on success); permanent errors on a previously-healthy collector now back off; `collector-state.json` writes are atomic with a `.bak` fallback so a killed run cannot wipe history.
+- **Cloud runner**: `truncate_keep_ends` respects small prompt budgets (no longer returns the whole string when the tail is zero); `replace_section` bounds its anchor search to the `within` section so it cannot corrupt the other language block; a null `message.content` and non-JSON/error-envelope 200 responses degrade gracefully; one collector's unexpected exception or the collection timeout no longer aborts the run or penalizes never-started collectors; `source-health.md` is written on the shared/auto path; the screening artifact is written in single-task mode; feed URLs are whitespace-sanitized before entering the prompt; per-task failures are isolated so one bad task no longer discards its siblings' work.
+- **CLI**: `init --force` no longer overwrites `CHANGELOG.md`, `prompts/`, `automation/`, `docs/`, or short curated files; `ensure_reports` honors its `root` argument; `trigger validate` and `today()` use the current UTC date instead of a hardcoded one; day-heading checks are line-anchored; `warn_weekly_sparse` counts `###` sections; `github_token` handles a missing `gh`; `release-draft` creates `docs/` and stops at the next version heading.
+- **CI**: `cloud-agent.yml` commits new/untracked files (`git status --porcelain`); `validate.yml` strict-bilingual / require-chinese flags actually take effect on dispatch and the hardcoded validation date is removed; dispatch inputs are passed through env instead of interpolated into the shell; `release.yml` refuses to publish a non-existent tag.
+- **Reports**: `daily/2026-07.md` day blocks are chronological and the duplicate `2026-07-02` heading is relabeled; empty `Sources:` fields are filled from real URLs or removed; `weekly/2026-W28.md` is disambiguated against W27 and its unverifiable item is downgraded; monthly field stutters and a `Curser`→`Cursor` typo are fixed.
+
+### Added
+- GitHub API throttle (`GITHUB_API_MIN_INTERVAL`, default 0.5s) that spaces `api.github.com` calls across the concurrent collector pool so the search/release/tag lanes stop hitting GitHub's secondary (burst) rate limit, which returned 403 even with a valid token.
+- Broader official source coverage enabled **by default** in `cloud-agent.yml` (no repo variable needed): Google Developers, Hugging Face, AWS What's New, and Vercel feeds, plus Devin, Replit, Warp, Cloudflare, Factory, Amp, and Raycast changelog pages; `CHANGELOG_FEEDS`/`CHANGELOG_PAGES` repo variables still override. Documented in `docs/cloud-agent.md`.
+- `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle, attribute-bearing feed parsing).
+
+### Changed
+- CLI version bumped to `0.7.0`.
+
+### Fixed (source collection)
+- Feed parser now splits on `<item>`/`<entry>` **with attributes or namespace prefixes**, so RSS 1.0/RDF and namespaced Atom feeds are parsed instead of silently collecting zero items; feed/page/reddit requests use a browser-compatible User-Agent to reduce 403 blocks.
+- arXiv feed URL moved from the deprecated `export.arxiv.org/rss` (which returned no parseable items) to `rss.arxiv.org/rss`.
+- Verified against a live `source-sweep` run: GitHub search/release/tag lanes went from 14+ errored collectors to **zero** (throttle fixed the 403 secondary rate limit), reddit RSS and Bluesky recovered, and the vendor pages plus Hugging Face / AWS / Vercel feeds all resolved. The Google Developers Blog feed URL 404'd and was removed from the defaults.
+
 ## v0.6.0 - 2026-07-03
 
 ### Added

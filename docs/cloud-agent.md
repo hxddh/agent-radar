@@ -83,6 +83,28 @@ Model routing stays bounded but discovery-oriented:
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
+## Expanding Official Source Coverage
+
+The Python code ships only OpenAI and GitHub blogs as built-in RSS feeds plus the Cursor and Anthropic pages, but `.github/workflows/cloud-agent.yml` now enables a broader vendor set **by default** (no repository variable required). The workflow default adds:
+
+- Feeds: Hugging Face Blog, AWS What's New, Vercel changelog. (All verified working in a live run. The Google Developers Blog feed URL returned 404 and was dropped; add it back via `CHANGELOG_FEEDS` once you confirm its current RSS path.)
+- Pages: Devin release notes, Replit updates, Warp changelog, Cloudflare changelog, Factory news, Amp Chronicle, Raycast changelog. (All verified working in a live run.)
+
+Items are `name=url`, comma-separated. RSS feeds are preferred (the parser handles RSS 2.0, RSS 1.0/RDF, and Atom, including attribute-bearing `<item rdf:about=...>` / `<entry>` tags); pages are anchor-scraped when no feed exists. A feed or page that 404s is recorded in `automation/source-health.md` but does not block the run, and the collector auto-recovers once it works again.
+
+To change the set, override the `CHANGELOG_FEEDS` / `CHANGELOG_PAGES` repository variables (Settings → Secrets and variables → Actions → Variables); any value there replaces the workflow default. To pin an exact set from a `.env`-style config:
+
+```env
+CHANGELOG_FEEDS=huggingface-blog=https://huggingface.co/blog/feed.xml,aws-whats-new=https://aws.amazon.com/about-aws/whats-new/recent/feed/,vercel-changelog=https://vercel.com/atom
+CHANGELOG_PAGES=devin-releases=https://docs.devin.ai/release-notes/overview,replit-updates=https://docs.replit.com/updates,warp-changelog=https://docs.warp.dev/changelog,cloudflare-changelog=https://developers.cloudflare.com/changelog/,factory-news=https://factory.ai/news,amp-chronicle=https://ampcode.com/chronicle,raycast-changelog=https://www.raycast.com/changelog
+```
+
+Notes on source reliability:
+
+- `api.github.com` calls (search, release, tag lanes) are throttled by `GITHUB_API_MIN_INTERVAL` (default `0.5` seconds) so concurrent workers do not trip GitHub's secondary (burst) rate limit, which returns 403 even with a valid token. Lower it only if you see the github lanes finishing well under `MAX_COLLECT_SECONDS`; raise it if 403s persist.
+- Reddit RSS is aggressively rate-limited by Reddit; `REDDIT_RSS_BATCH_SIZE=1` (default) polls one subreddit per run window. Persistent 429s mean Reddit is blocking the runner IP — reduce `REDDIT_SUBREDDITS`, or disable with `COLLECT_REDDIT_RSS=false` and rely on HN/Bluesky/Lobsters for community signal.
+- X/Twitter requires a paid `X_BEARER_TOKEN`; it stays off unless the secret and `X_SEARCH_QUERIES` are set.
+
 Recommended source budgets (code defaults when `MAX_PUBLIC_SOURCE_ITEMS` is unset):
 
 - `daily`: 50 public source items (screening pass compresses the shortlist)

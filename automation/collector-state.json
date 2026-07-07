@@ -6,8 +6,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "bluesky:AI agent": {
@@ -16,8 +17,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "bluesky:Claude Code": {
@@ -26,8 +28,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "bluesky:MCP server": {
@@ -36,18 +39,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "bluesky:agent eval": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: Forbidden",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "bluesky:agent memory": {
@@ -56,28 +61,31 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "bluesky:agent sandbox": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: Forbidden",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "bluesky:browser agent": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: Forbidden",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "bluesky:coding agent": {
@@ -86,8 +94,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:agent eval": {
@@ -96,8 +105,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:agent memory": {
@@ -106,8 +116,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:agent observability": {
@@ -116,8 +127,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:agent sandbox": {
@@ -126,8 +138,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:agent security": {
@@ -136,8 +149,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:ai agent": {
@@ -146,8 +160,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:browser agent": {
@@ -156,8 +171,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:coding agent": {
@@ -166,8 +182,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "crates:mcp server": {
@@ -176,8 +193,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "devto:ai": {
@@ -186,28 +204,31 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "devto:devops": {
-      "degraded_runs": 0,
-      "error": 3,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 4,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "next_retry_after": "2026-07-06T23:59:35+00:00",
       "ok": 9,
-      "ok_streak": 4,
-      "status": "ok"
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "devto:machinelearning": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 1,
+      "ok": 12,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "devto:opensource": {
@@ -216,19 +237,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "devto:productivity": {
-      "degraded_runs": 0,
-      "error": 1,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 2,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "next_retry_after": "2026-07-06T23:59:35+00:00",
       "ok": 5,
-      "ok_streak": 1,
-      "status": "ok"
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "devto:programming": {
       "degraded_runs": 0,
@@ -236,8 +259,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "docker:ai agent": {
@@ -246,8 +270,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "docker:coding agent": {
@@ -256,8 +281,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "docker:mcp server": {
@@ -266,8 +292,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "feed:aws-whats-new": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "feed:github-changelog": {
@@ -276,8 +314,31 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "feed:google-developers-blog": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 404: Not Found",
+      "last_status": "error",
+      "next_retry_after": "2026-07-06T23:59:35+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 1,
+      "status": "degraded"
+    },
+    "feed:huggingface-blog": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "feed:openai-blog": {
@@ -286,8 +347,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "feed:vercel-changelog": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "github:AI agent framework": {
@@ -296,18 +369,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "github:AI agent sandbox": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 11,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 12,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:MCP server agent": {
@@ -316,98 +391,108 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "github:agent deployment workflow": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:agent eval framework": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 2,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 10,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 11,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:agent memory MCP": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 11,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 12,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:agent observability": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:agent security MCP": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 11,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 12,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:browser agent automation": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:coding agent CLI": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 11,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 12,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:computer use agent": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 2,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 10,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 11,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "github:multi agent orchestration": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "hn:AI agent": {
@@ -416,8 +501,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:AI agent evaluation": {
@@ -426,8 +512,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:MCP agent": {
@@ -436,8 +523,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:agent deployment": {
@@ -446,8 +534,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:agent memory": {
@@ -456,8 +545,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:agent sandbox": {
@@ -466,8 +556,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:browser agent": {
@@ -476,8 +567,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "hn:coding agent": {
@@ -486,8 +578,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "lobsters:newest": {
@@ -496,8 +589,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:agent eval": {
@@ -506,8 +600,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:agent memory": {
@@ -516,18 +611,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:agent observability": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 429: Too Many Requests",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 5,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 6,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "npm:agent sandbox": {
@@ -536,8 +633,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:agent security": {
@@ -546,8 +644,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:ai agent": {
@@ -556,8 +655,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:browser agent": {
@@ -566,8 +666,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:coding agent": {
@@ -576,8 +677,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "npm:mcp server": {
@@ -586,8 +688,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:agent eval": {
@@ -596,8 +699,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:agent memory": {
@@ -606,8 +710,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:agent observability": {
@@ -616,8 +721,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:agent sandbox": {
@@ -626,8 +732,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:agent security": {
@@ -636,8 +743,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:ai agent": {
@@ -646,8 +754,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:browser agent": {
@@ -656,8 +765,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:coding agent": {
@@ -666,8 +776,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "open-vsx:mcp server": {
@@ -676,8 +787,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:amp-chronicle": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "page:anthropic-engineering": {
@@ -686,8 +809,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "page:anthropic-news": {
@@ -696,8 +820,20 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:cloudflare-changelog": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "page:cursor-blog": {
@@ -706,8 +842,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "page:cursor-changelog": {
@@ -716,8 +853,64 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:devin-releases": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:factory-news": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:raycast-changelog": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:replit-updates": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "page:warp-changelog": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:anthropic": {
@@ -726,8 +919,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:autogen-agentchat": {
@@ -736,8 +930,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:crewai": {
@@ -746,8 +941,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:langchain": {
@@ -756,8 +952,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:llama-index": {
@@ -766,8 +963,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:mcp": {
@@ -776,8 +974,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:openai": {
@@ -786,8 +985,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:semantic-kernel": {
@@ -796,8 +996,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:agent eval": {
@@ -806,8 +1007,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:agent memory": {
@@ -816,8 +1018,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:agent observability": {
@@ -826,8 +1029,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:agent sandbox": {
@@ -836,8 +1040,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:agent security": {
@@ -846,8 +1051,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:ai agent": {
@@ -856,8 +1062,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:browser agent": {
@@ -866,8 +1073,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 1,
+      "ok": 7,
+      "ok_streak": 2,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:coding agent": {
@@ -876,8 +1084,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-updates:mcp server": {
@@ -886,8 +1095,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "reddit-rss:ChatGPT": {
@@ -913,13 +1123,14 @@
       "ok": 4
     },
     "reddit-rss:agentdevelopment": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 429: Too Many Requests",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 2,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 3,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "reddit-rss:mcp": {
@@ -933,10 +1144,15 @@
       "status": "ok"
     },
     "release:AdelElo13/neuromcp": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:GCWing/BitFun": {
       "degraded_runs": 0,
@@ -985,10 +1201,15 @@
       "status": "degraded"
     },
     "release:alexmond/jvmlens": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:askalf/warden": {
       "degraded_runs": 1,
@@ -1001,28 +1222,48 @@
       "status": "degraded"
     },
     "release:bobmatnyc/trusty-tools": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:chriswu727/argus": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:clidey/deptrust": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:coldzero94/cold-frame": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:contexa-security/contexa": {
       "degraded_runs": 0,
@@ -1045,26 +1286,37 @@
       "status": "degraded"
     },
     "release:danilkryachko/dukememory": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:elizaOS/eliza": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 10,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 11,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "release:envibagus/cortex": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:fu351/Doberman-Core": {
       "error": 0,
@@ -1093,19 +1345,25 @@
       "status": "ok"
     },
     "release:kinqsradiollc/BrainRouter": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:macro-inc/macro": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 8,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 9,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "release:metorial/metorial": {
@@ -1130,8 +1388,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "release:modelcontextprotocol/servers": {
@@ -1140,8 +1399,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "release:modelcontextprotocol/typescript-sdk": {
@@ -1150,21 +1410,32 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "release:navyforses/ALEKSANDRA_BRAIN_v4": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:ncz-os/mnemos": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:nirholas/three.ws": {
       "error": 0,
@@ -1173,10 +1444,15 @@
       "ok": 1
     },
     "release:omnigent-ai/omnigent": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:openai/codex": {
       "degraded_runs": 0,
@@ -1184,8 +1460,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "release:rexleimo/harness-cli": {
@@ -1199,10 +1476,15 @@
       "status": "ok"
     },
     "release:ronie-aduana/mcp-ai-memory": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "release:shreyasks094/Zeus": {
       "degraded_runs": 0,
@@ -1235,10 +1517,15 @@
       "status": "ok"
     },
     "release:takashikiari/GOAT2-General-Orchestrated-Agent-Topology": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "social-feed:lobsters": {
       "error": 0,
@@ -1247,10 +1534,15 @@
       "ok": 2
     },
     "tag:AdelElo13/neuromcp": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:GCWing/BitFun": {
       "degraded_runs": 0,
@@ -1299,10 +1591,15 @@
       "status": "degraded"
     },
     "tag:alexmond/jvmlens": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:askalf/warden": {
       "degraded_runs": 1,
@@ -1315,28 +1612,48 @@
       "status": "degraded"
     },
     "tag:bobmatnyc/trusty-tools": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:chriswu727/argus": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:clidey/deptrust": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:coldzero94/cold-frame": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:contexa-security/contexa": {
       "degraded_runs": 0,
@@ -1359,10 +1676,15 @@
       "status": "degraded"
     },
     "tag:danilkryachko/dukememory": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:elizaOS/eliza": {
       "degraded_runs": 0,
@@ -1370,15 +1692,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "tag:envibagus/cortex": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:fu351/Doberman-Core": {
       "error": 0,
@@ -1407,19 +1735,25 @@
       "status": "ok"
     },
     "tag:kinqsradiollc/BrainRouter": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:macro-inc/macro": {
-      "degraded_runs": 1,
+      "degraded_runs": 0,
       "error": 1,
-      "last_detail": "HTTP Error 403: rate limit exceeded",
-      "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
-      "ok": 8,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 9,
+      "ok_streak": 1,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "tag:metorial/metorial": {
@@ -1444,8 +1778,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "tag:modelcontextprotocol/servers": {
@@ -1454,8 +1789,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "tag:modelcontextprotocol/typescript-sdk": {
@@ -1464,21 +1800,32 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 4,
+      "ok": 13,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "tag:navyforses/ALEKSANDRA_BRAIN_v4": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:ncz-os/mnemos": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:nirholas/three.ws": {
       "error": 0,
@@ -1487,10 +1834,15 @@
       "ok": 1
     },
     "tag:omnigent-ai/omnigent": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:openai/codex": {
       "degraded_runs": 0,
@@ -1498,8 +1850,9 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 11,
-      "ok_streak": 4,
+      "ok": 12,
+      "ok_streak": 5,
+      "permanent_streak": 0,
       "status": "ok"
     },
     "tag:rexleimo/harness-cli": {
@@ -1513,10 +1866,15 @@
       "status": "ok"
     },
     "tag:ronie-aduana/mcp-ai-memory": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 7
+      "next_retry_after": "",
+      "ok": 8,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     },
     "tag:shreyasks094/Zeus": {
       "degraded_runs": 0,
@@ -1549,10 +1907,15 @@
       "status": "ok"
     },
     "tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology": {
+      "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
-      "ok": 6
+      "next_retry_after": "",
+      "ok": 7,
+      "ok_streak": 1,
+      "permanent_streak": 0,
+      "status": "ok"
     }
   },
   "disabled": [
