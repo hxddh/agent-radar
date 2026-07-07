@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## v0.7.0 - 2026-07-07
+
+Hardening release: fixes the verified architecture/code review findings (data-loss guards, collector state machine, cloud runner, CLI, CI) and repairs source collection (GitHub secondary-rate-limit throttle, RDF/attributed feed parsing, arXiv endpoint, browser UA, default vendor coverage). Verified against a live `source-sweep` run that turned the previously-failing cloud-agent workflow green and cleared the GitHub/reddit/bluesky collector errors.
 
 ### Fixed
 - **Data-loss guards**: `corpus-audit --fix` now archives only `### Pass:` blocks instead of everything after the first one (the canonical `## Candidate inbox` and later sections are preserved); the bilingual converters no longer silently drop unpaired bullets, prose, narrative paragraphs, or trailing sections, and fall back to the original content if a rewrite would lose any URL, word, or CJK character.
@@ -14,6 +16,9 @@
 - GitHub API throttle (`GITHUB_API_MIN_INTERVAL`, default 0.5s) that spaces `api.github.com` calls across the concurrent collector pool so the search/release/tag lanes stop hitting GitHub's secondary (burst) rate limit, which returned 403 even with a valid token.
 - Broader official source coverage enabled **by default** in `cloud-agent.yml` (no repo variable needed): Google Developers, Hugging Face, AWS What's New, and Vercel feeds, plus Devin, Replit, Warp, Cloudflare, Factory, Amp, and Raycast changelog pages; `CHANGELOG_FEEDS`/`CHANGELOG_PAGES` repo variables still override. Documented in `docs/cloud-agent.md`.
 - `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle, attribute-bearing feed parsing).
+
+### Changed
+- CLI version bumped to `0.7.0`.
 
 ### Fixed (source collection)
 - Feed parser now splits on `<item>`/`<entry>` **with attributes or namespace prefixes**, so RSS 1.0/RDF and namespaced Atom feeds are parsed instead of silently collecting zero items; feed/page/reddit requests use a browser-compatible User-Agent to reduce 403 blocks.
