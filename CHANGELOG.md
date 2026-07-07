@@ -16,7 +16,9 @@
 - `tests/test_review_fixes.py` pinning the above behaviors (archiver preservation, collector recovery, bilingual content preservation, small-budget truncation, `within`-bounded replace, `init --force` protection, GitHub throttle, attribute-bearing feed parsing).
 
 ### Fixed (source collection)
-- Feed parser now splits on `<item>`/`<entry>` **with attributes or namespace prefixes**, so arXiv's RSS 1.0/RDF feed (`<item rdf:about="...">`) is parsed instead of silently collecting zero items; feed/page/reddit requests use a browser-compatible User-Agent to reduce 403 blocks.
+- Feed parser now splits on `<item>`/`<entry>` **with attributes or namespace prefixes**, so RSS 1.0/RDF and namespaced Atom feeds are parsed instead of silently collecting zero items; feed/page/reddit requests use a browser-compatible User-Agent to reduce 403 blocks.
+- arXiv feed URL moved from the deprecated `export.arxiv.org/rss` (which returned no parseable items) to `rss.arxiv.org/rss`.
+- Verified against a live `source-sweep` run: GitHub search/release/tag lanes went from 14+ errored collectors to **zero** (throttle fixed the 403 secondary rate limit), reddit RSS and Bluesky recovered, and the vendor pages plus Hugging Face / AWS / Vercel feeds all resolved. The Google Developers Blog feed URL 404'd and was removed from the defaults.
 
 ## v0.6.0 - 2026-07-03
 

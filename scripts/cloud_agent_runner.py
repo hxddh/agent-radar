@@ -2001,7 +2001,9 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     for query in queries["packages"][:3]:
         if collector_enabled("docker"):
             collectors.append((f"docker:{query}", "docker", query, per_query))
-    collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://export.arxiv.org/rss/cs.AI", per_feed))
+    # arXiv moved its RSS feeds to rss.arxiv.org (2024); export.arxiv.org/rss
+    # still responds but returns no parseable items, so the lane collected zero.
+    collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://rss.arxiv.org/rss/cs.AI", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
     for source_name, page_url in changelog_pages():
