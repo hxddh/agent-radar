@@ -1,0 +1,176 @@
+{
+  "summary": "Agent infrastructure signals this cycle: MCP servers, memory systems, evals, sandboxing, and multi-agent orchestration tools. Microsoft Agent Framework, RAG memory projects, and security-focused red-teaming stand out.",
+  "candidates": [
+    {
+      "id": "scr-msftaf",
+      "title": "Microsoft Agent Framework",
+      "why_it_matters": "Official Microsoft multi-agent orchestration and deployment framework.",
+      "evidence": [
+        "https://github.com/microsoft/agent-framework"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-mcpobs",
+      "title": "agent-observability-mcp npm package",
+      "why_it_matters": "MCP server agent observability with cost tracking & audit trails.",
+      "evidence": [
+        "https://www.npmjs.com/package/agent-observability-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-sandmvm",
+      "title": "CocoonStack sandbox MicroVMs for AI agents",
+      "why_it_matters": "Fast cold-boot MicroVM sandbox for secure agent execution.",
+      "evidence": [
+        "https://github.com/cocoonstack/sandbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-mempkl",
+      "title": "nmem-cli 0.10.18 – CLI/TUI for Nowledge Mem memory",
+      "why_it_matters": "CLI memory management tool for AI agents.",
+      "evidence": [
+        "https://pypi.org/project/nmem-cli/0.10.18/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-mcpper",
+      "title": "klappy/bee-ai-auth-mcp – self-host OAuth MCP server",
+      "why_it_matters": "Self-hosted OAuth MCP server for secure agent conversations.",
+      "evidence": [
+        "https://github.com/klappy/bee-ai-auth-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-eval01",
+      "title": "shiyongyin/agent-eval-lite – lightweight agent eval",
+      "why_it_matters": "Lightweight local framework for AI agent evaluation.",
+      "evidence": [
+        "https://github.com/shiyongyin/agent-eval-lite"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-sand2",
+      "title": "ionalpha/flynn – self-hosted agent OS in Go",
+      "why_it_matters": "Single-binary agent OS with sandboxed, governed actions.",
+      "evidence": [
+        "https://github.com/ionalpha/flynn"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-mem02",
+      "title": "zycaskevin/Vault-Agent-Memory – local memory governance",
+      "why_it_matters": "Local-first shared, auditable agent memory via SQLite+MCP.",
+      "evidence": [
+        "https://github.com/zycaskevin/Vault-Agent-Memory"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-eval02",
+      "title": "AgentEvalHQ/AgentEval – .NET evaluation toolkit",
+      "why_it_matters": "Comprehensive .NET eval toolkit for tool usage & RAG metrics.",
+      "evidence": [
+        "https://github.com/AgentEvalHQ/AgentEval"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-runtime",
+      "title": "bitfun/GCWing BitFun – desktop agent runtime with memory & evolution",
+      "why_it_matters": "Desktop-grade agent runtime with code agent, cowork, memory & evolution.",
+      "evidence": [
+        "https://github.com/GCWing/BitFun"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-mcp03",
+      "title": "edobusy/agenthold – shared versioned MCP server for multi-agent",
+      "why_it_matters": "MCP server for shared versioned state in multi-agent workflows.",
+      "evidence": [
+        "https://github.com/edobusy/agenthold"
+      ],
+      "confidence": "low",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    },
+    {
+      "id": "scr-sec01",
+      "title": "yv1ing/Z3r0 – AI red-team workbench",
+      "why_it_matters": "AI-native red-team workbench with sandboxed tooling & evidence.",
+      "evidence": [
+        "https://github.com/yv1ing/Z3r0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "weekly"
+    }
+  ],
+  "gaps": [
+    "missing storage infra signals"
+  ]
+}

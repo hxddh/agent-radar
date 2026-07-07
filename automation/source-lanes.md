@@ -1,15 +1,15 @@
 # Source Lanes
 
-Last checked: 2026-07-06
+Last checked: 2026-07-07
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
-| arxiv | 1 | 0 | 0 |
+| arxiv | 1 | 0 | 6 |
 | bluesky | 8 | 0 | 32 |
 | crates | 9 | 0 | 45 |
-| devto | 4 | 2 | 16 |
+| devto | 3 | 3 | 12 |
 | docker | 3 | 0 | 15 |
-| feed | 5 | 1 | 30 |
+| feed | 5 | 0 | 30 |
 | github | 12 | 0 | 60 |
 | hn | 8 | 0 | 40 |
 | lobsters | 1 | 0 | 6 |

@@ -323,3 +323,15 @@ Ignore or deprioritize:
 - memcove: https://pypi.org/project/memcove/0.3.4/
 - searchts: https://pypi.org/project/searchts/0.5.1/
 - msaad00/agent-bom: https://github.com/msaad00/agent-bom
+
+
+## Additional sources from 2026-07-07 source sweep
+
+- Microsoft Agent Framework: https://github.com/microsoft/agent-framework
+- agent-observability-mcp npm package: https://www.npmjs.com/package/agent-observability-mcp
+- CocoonStack sandbox MicroVMs: https://github.com/cocoonstack/sandbox
+- nmem-cli 0.10.18: https://pypi.org/project/nmem-cli/0.10.18/
+- klappy/bee-ai-auth-mcp: https://github.com/klappy/bee-ai-auth-mcp
+- shiyongyin/agent-eval-lite: https://github.com/shiyongyin/agent-eval-lite
+- ionalpha/flynn: https://github.com/ionalpha/flynn
+- zycaskevin/Vault-Agent-Memory: https://github.com/zycaskevin/Vault-Agent-Memory

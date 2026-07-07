@@ -1,9 +1,10 @@
 # Source Health
 
-Last checked: 2026-07-06
+Last checked: 2026-07-07
 
 | Source | Status | Detail |
 | --- | --- | --- |
+| npm:agent eval | ok |  |
 | pypi-updates:agent eval | ok |  |
 | crates:agent eval | ok |  |
 | open-vsx:agent eval | ok |  |
@@ -21,7 +22,6 @@ Last checked: 2026-07-06
 | arxiv:cs-ai | ok |  |
 | feed:openai-blog | ok |  |
 | feed:github-changelog | ok |  |
-| feed:google-developers-blog | error | HTTP Error 404: Not Found |
 | feed:huggingface-blog | ok |  |
 | feed:aws-whats-new | ok |  |
 | feed:vercel-changelog | ok |  |
