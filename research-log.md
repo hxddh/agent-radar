@@ -1437,3 +1437,37 @@ Follow-up gaps:
 - Watch whether browser-context handoff tools converge on replayable artifacts, MCP browser sessions, or issue attachments.
 - Continue probing repo memory projects for differentiation versus existing memory candidates.
 - X/Twitter, authorized logged-in sources, and user-provided private sources were not available in this run.
+
+## 2026-07-06 Source-sweep Pass
+
+Purpose: Run source-sweep from screening pass (automation/screening/2026-07-06.json). Add new candidates to inbox and record gaps.
+
+Accepted sources:
+- bug-ops/zeph: https://github.com/bug-ops/zeph
+- inite-ai/inite-brain-service: https://github.com/inite-ai/inite-brain-service
+- osaurus-ai/osaurus: https://github.com/osaurus-ai/osaurus
+- AgentEvalHQ/AgentEval: https://github.com/AgentEvalHQ/AgentEval
+- mitos-run/mitos: https://github.com/mitos-run/mitos
+- memcove: https://pypi.org/project/memcove/0.3.4/
+- searchts: https://pypi.org/project/searchts/0.5.1/
+- msaad00/agent-bom: https://github.com/msaad00/agent-bom
+
+New candidates (compact):
+- bug-ops/zeph (scr-zeph): Memory-first AI agent with graph memory, self-learning, multi-model routing, sandboxed tools. Relevance score: 9. Evidence strength: Weak. Promotion status: deferred.
+- inite-ai/inite-brain-service (scr-inite-brain): Bitemporal knowledge graph for agent memory, hybrid retrieval, conflict-aware ingest, GDPR forget. Relevance score: 9. Evidence strength: Weak. Promotion status: deferred.
+- osaurus-ai/osaurus (scr-osaurus): Native macOS harness for AI agents; offline, persistent memory, autonomous execution, cryptographic identity. Relevance score: 9. Evidence strength: Weak. Promotion status: deferred.
+- AgentEvalHQ/AgentEval (scr-agenteval): .NET toolkit for agent evaluation; tool usage, RAG, stochastic evaluation, model comparison. Relevance score: 8. Evidence strength: Weak. Promotion status: deferred.
+- mitos-run/mitos (scr-mitos): microVM sandbox forking for AI agents on K8s; millisecond Firecracker VM fork, durable workspaces, self-hostable CRDs. Relevance score: 8. Evidence strength: Weak. Promotion status: deferred.
+- memcove (scr-memcove): Lakehouse-backed memory service for LLM agents over MCP. Relevance score: 8. Evidence strength: Weak. Promotion status: deferred.
+- searchts (scr-searchts): Web unlocker for AI with MCP server; escalating web access (fetch, JS render, stealth browser). Relevance score: 7. Evidence strength: Weak. Promotion status: deferred.
+- msaad00/agent-bom (scr-agent-bom): Self-hosted security control plane for AI infra; unifies packages, MCP, agents, cloud into blast-radius findings. Relevance score: 7. Evidence strength: Weak. Promotion status: deferred.
+
+Gaps:
+- arxiv paper on CLI AI coding agent adoption at Microsoft (score 36) not included.
+- crates.io gigacode sandbox agent CLI (score 34) not included.
+- docker sandbox images for agent isolation not represented.
+
+Follow-up gaps:
+- Validate candidate maturity and adoption evidence.
+- Explore missing gap items (arxiv paper, crates, docker) with direct research.
+- Monitor memory, sandbox, eval, and security candidates for integration or user reports.

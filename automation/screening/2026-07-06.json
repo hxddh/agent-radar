@@ -1,0 +1,178 @@
+{
+  "summary": "Screened 120 scored items from GitHub, PyPI, npm, Open VSX, Bluesky, and changelogs. Top signals cluster around agent memory (bitemporal, semantic, vector), MCP server proliferation, agent evaluation frameworks, sandbox/security tooling, and deployment infrastructure. Key projects: Zeph (memory-first agent), Inite Brain (knowledge graph), Osaurus (macOS harness), AgentEval (.NET eval), mitos (microVM sandbox), memcove (lakehouse memory), searchts (web unlocker), agent-bom (security control plane), forcefield (vibe coding guardrails), agenticow (memory branching), tinysandbox (in-process sandbox), and Vercel Agent Runs (deployment).",
+  "candidates": [
+    {
+      "id": "scr-zeph",
+      "title": "bug-ops/zeph: memory-first AI agent with MCP/ACP/A2A",
+      "why_it_matters": "Memory-first agent with graph memory, self-learning, multi-model routing, sandboxed tools.",
+      "evidence": [
+        "https://github.com/bug-ops/zeph"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-inite-brain",
+      "title": "inite-ai/inite-brain-service: bitemporal knowledge graph for agent memory",
+      "why_it_matters": "Open-source bitemporal KG with hybrid retrieval, conflict-aware ingest, GDPR forget.",
+      "evidence": [
+        "https://github.com/inite-ai/inite-brain-service"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-osaurus",
+      "title": "osaurus-ai/osaurus: native macOS harness for AI agents",
+      "why_it_matters": "Offline, persistent memory, autonomous execution, cryptographic identity.",
+      "evidence": [
+        "https://github.com/osaurus-ai/osaurus"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agenteval",
+      "title": "AgentEvalHQ/AgentEval: .NET toolkit for agent evaluation",
+      "why_it_matters": "Comprehensive eval for tool usage, RAG, stochastic evaluation, model comparison.",
+      "evidence": [
+        "https://github.com/AgentEvalHQ/AgentEval"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mitos",
+      "title": "mitos-run/mitos: microVM sandbox forking for AI agents on K8s",
+      "why_it_matters": "Millisecond Firecracker VM fork, durable workspaces, self-hostable CRDs.",
+      "evidence": [
+        "https://github.com/mitos-run/mitos"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-memcove",
+      "title": "memcove: lakehouse-backed memory service for LLM agents over MCP",
+      "why_it_matters": "Persistent memory service exposed via MCP, lakehouse backend.",
+      "evidence": [
+        "https://pypi.org/project/memcove/0.3.4/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-searchts",
+      "title": "searchts: web unlocker for AI with MCP server",
+      "why_it_matters": "Escalating web access (fetch, JS render, stealth browser) for agents.",
+      "evidence": [
+        "https://pypi.org/project/searchts/0.5.1/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agent-bom",
+      "title": "msaad00/agent-bom: self-hosted security control plane for AI infra",
+      "why_it_matters": "Unifies packages, MCP, agents, cloud into blast-radius findings.",
+      "evidence": [
+        "https://github.com/msaad00/agent-bom"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-forcefield",
+      "title": "DataScienceTech.forcefield: security guardrails for vibe coding",
+      "why_it_matters": "Monitors AI coding agents, blocks dangerous actions, runs security evals.",
+      "evidence": [
+        "https://open-vsx.org/extension/DataScienceTech/forcefield"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agenticow",
+      "title": "agenticow: Git for Agent Memory – copy-on-write vector branching",
+      "why_it_matters": "Efficient multi-agent memory branching, 83x faster than full copy.",
+      "evidence": [
+        "https://www.npmjs.com/package/agenticow"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-tinysandbox",
+      "title": "@tinysandbox/tinysandbox: in-process AI agent sandbox for Node.js",
+      "why_it_matters": "Lightweight sandbox for running agent code in-process.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40tinysandbox/tinysandbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-agent-runs",
+      "title": "Vercel Agent Runs in MCP and CLI",
+      "why_it_matters": "Official Vercel feature for agent deployment and management.",
+      "evidence": [
+        "https://vercel.com/changelog/agent-runs-vercel-mcp-cli"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": [
+    "arxiv paper on CLI AI coding agent adoption at Microsoft (score 36) not included",
+    "crates.io gigacode sandbox agent CLI (score 34) not included",
+    "docker sandbox images for agent isolation not represented"
+  ]
+}

@@ -313,3 +313,13 @@ Ignore or deprioritize:
 - AWS Agent Toolkit: https://aws.amazon.com/products/developer-tools/agent-toolkit-for-aws/ and https://github.com/aws/agent-toolkit-for-aws (official AWS MCP server, skills, and plugins for coding agents)
 - Okta MCP Server: https://pypi.org/project/okta-mcp-server/1.1.2/ (GA identity/admin MCP server for AI agents with scope-based tool loading and confirmations)
 - AegisAgent: https://github.com/lavkushry/AegisAgent (zero-trust API firewall and integrity layer for autonomous agents and MCP tool execution)
+
+## Additional sources from 2026-07-06 source sweep (screening pass)
+- bug-ops/zeph: https://github.com/bug-ops/zeph
+- inite-ai/inite-brain-service: https://github.com/inite-ai/inite-brain-service
+- osaurus-ai/osaurus: https://github.com/osaurus-ai/osaurus
+- AgentEvalHQ/AgentEval: https://github.com/AgentEvalHQ/AgentEval
+- mitos-run/mitos: https://github.com/mitos-run/mitos
+- memcove: https://pypi.org/project/memcove/0.3.4/
+- searchts: https://pypi.org/project/searchts/0.5.1/
+- msaad00/agent-bom: https://github.com/msaad00/agent-bom
