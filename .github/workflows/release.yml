@@ -7,9 +7,14 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing tag to publish, for example v0.2.0"
+        description: "Tag to publish, for example v0.2.0"
         required: true
         type: string
+      create_tag:
+        description: "Create the tag at the dispatched ref if it does not exist"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -28,15 +33,24 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           INPUT_TAG: ${{ github.event.inputs.tag }}
+          CREATE_TAG: ${{ github.event.inputs.create_tag }}
         run: |
           set -eu
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             TAG="$INPUT_TAG"
-            # The input is documented as an EXISTING tag. Verify it actually
-            # exists so a typo cannot silently create a new tag at branch HEAD.
             if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
-              echo "Tag '$TAG' does not exist. Create and push the tag first." >&2
-              exit 1
+              # A missing tag is only created when the operator explicitly opts
+              # in via create_tag; otherwise refuse, so a typo cannot silently
+              # fabricate a tag at branch HEAD.
+              if [ "${CREATE_TAG:-false}" = "true" ]; then
+                git config user.name "agent-radar-release"
+                git config user.email "agent-radar-release@users.noreply.github.com"
+                git tag -a "$TAG" -m "Agent Radar $TAG"
+                git push origin "refs/tags/$TAG"
+              else
+                echo "Tag '$TAG' does not exist. Re-run with create_tag=true to tag this ref, or push the tag first." >&2
+                exit 1
+              fi
             fi
           else
             TAG="${GITHUB_REF_NAME}"
