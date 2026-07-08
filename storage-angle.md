@@ -80,6 +80,11 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong.
   - Source: https://developers.cloudflare.com/changelog/post/2026-06-19-temporary-accounts-for-agents/
 
+- 2026-07-08: Replit Agent can create/connect a Whop account and build checkout into an app without external setup or pasted API keys. This makes checkout configuration, account-linking state, and payment-flow audit trails agent-created business artifacts.
+  - Source class: Official public source.
+  - Evidence strength: Strong for product capability; user reliability and compliance evidence still needed.
+  - Source: https://docs.replit.com/updates/2026/07/03/changelog
+
 ### Logs, Traces, and Replay
 
 - 2026-07-02: Codex CLI 0.142.5 prevents full Responses WebSocket payloads from being written to trace logs. Agent trace storage should be treated as sensitive because request payloads can contain code, prompts, credentials, or private context.
@@ -116,6 +121,11 @@ AI Agent workloads create demand for:
   - Source class: Official public source.
   - Evidence strength: Medium for technical relevance; weak for adoption.
   - Source: https://github.com/Mng-dev-ai/agentrove
+
+- 2026-07-08: Codex iOS task management, GitHub Copilot desktop sessions, Claude Code background-session recovery, and Devin Desktop event-cache fixes all point to the same storage need: task state, diffs, host pairings, background outputs, and session caches must survive reconnects, restarts, and cross-device supervision.
+  - Source class: Official public sources.
+  - Evidence strength: Strong for product capability; inference for storage architecture.
+  - Sources: https://developers.openai.com/codex/changelog, https://github.blog/changelog/2026-07-07-github-copilot-app-available-to-all/, https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md, https://docs.devin.ai/desktop/changelog
 
 ### Knowledge Base as Object Storage Workload
 

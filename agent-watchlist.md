@@ -55,14 +55,14 @@ Status:
 - Category: Coding agent / software engineering agent
 - Maturity: Enterprise-oriented product with active release notes; adoption strength still needs external user evidence.
 - Core use case: Software engineering sessions, code review, automations, Slack/Linear workflows, and enterprise review loops.
-- Recent changes: Release notes mention Slack thread context, `!agent` routing, Slack updates for automation runs, Linear project filters, MCP error logs, Axiom MCP integration, structured playbook outputs, enterprise knowledge limit increase, and Devin Review support for GHES.
-- Strengths: Deep workflow integration across Slack, Linear, MCP, playbooks, enterprise knowledge, and code review.
+- Recent changes: Release notes mention Slack thread context, `!agent` routing, Slack updates for automation runs, Linear project filters, MCP error logs, Axiom MCP integration, structured playbook outputs, enterprise knowledge limit increase, Devin Review support for GHES, and Devin Desktop/Windsurf fixes for autonomous diffs, cloud-session reconnect, MCP status, permission frontmatter, sandbox exclusions, and large session event caches.
+- Strengths: Deep workflow integration across Slack, Linear, MCP, playbooks, enterprise knowledge, code review, local desktop sessions, and sandbox policy.
 - Weaknesses: Needs more public evidence on reliability, cost, and how often sessions close without human rescue.
 - User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: MCP observability, structured outputs, enterprise knowledge stores, Slack synchronization, Linear-triggered automations, GHES review.
-- Storage implications: Session history, enterprise knowledge, playbook output, MCP logs, Slack context, and review artifacts become governed storage surfaces.
-- Watch next: Whether Devin's enterprise integrations produce stronger field evidence than generic autonomous-coding claims.
-- Source: https://docs.devin.ai/release-notes/overview
+- Infra signals: MCP observability, structured outputs, enterprise knowledge stores, Slack synchronization, Linear-triggered automations, GHES review, event-cache handling, sandbox exclusions, CLI usage reporting, and MCP status panels.
+- Storage implications: Session history, enterprise knowledge, playbook output, MCP logs, Slack context, review artifacts, worktrees, and session event caches become governed storage surfaces.
+- Watch next: Whether Devin's enterprise integrations and local/desktop hardening produce stronger field evidence than generic autonomous-coding claims.
+- Sources: https://docs.devin.ai/release-notes/overview and https://docs.devin.ai/desktop/changelog
 
 ## GitHub Copilot / Coding Agent
 
@@ -70,14 +70,14 @@ Status:
 - Category: Coding assistant / coding agent
 - Maturity: Broad enterprise/devtool footprint; agentic features are expanding across VS Code and JetBrains surfaces.
 - Core use case: IDE assistance, code review, coding agent workflows, browser-backed app inspection.
-- Recent changes: Copilot agent session streaming is in public preview for Enterprise Cloud customers with enterprise managed users; Copilot vision is generally available; Copilot CLI can run in GitHub Actions using the built-in `GITHUB_TOKEN`; browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant.
-- Strengths: Strong IDE distribution and enterprise controls around browser access, workflow-token auth, session streaming, organization billing, and session limits.
-- Weaknesses: Weak public field evidence on real-world reliability of browser-driven workflows; official controls exist but user reports are sparse.
-- User feedback: One weak public Reddit signal says Copilot remains the work default for at least some users, even when personal usage spans multiple tools.
-- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts, `copilot-requests: write`, session usage-record streaming, REST retrieval for the last 48 hours, organization-level cost centers, and session credit limits.
-- Storage implications: Prompts, responses, tool calls, browser screenshots, console output, live app state, image/PDF attachments, per-agent tabs, Actions logs, and org-billed CLI sessions become runtime artifacts that need retention and governance.
-- Watch next: Whether session streaming becomes a standard enterprise audit requirement, and whether Actions-native Copilot CLI becomes a pattern for scheduled repo maintenance.
-- Sources: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/, https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/, https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/, and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
+- Recent changes: The standalone Copilot app is available on every Copilot plan across macOS, Windows, and Linux, including Copilot Free and GitHub Education; BYOK sessions can run without a Copilot subscription. Copilot agent session streaming is in public preview for Enterprise Cloud customers with enterprise managed users; Copilot vision is generally available; Copilot CLI can run in GitHub Actions using the built-in `GITHUB_TOKEN`; browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant.
+- Strengths: Strong IDE and desktop distribution plus enterprise controls around browser access, workflow-token auth, session streaming, organization billing, session limits, and admin policy for CLI/app access.
+- Weaknesses: Weak public field evidence on real-world reliability of browser-driven and desktop-agent workflows; official controls exist but user reports are sparse.
+- User feedback: Weak public Reddit signals show mixed early reaction to the Copilot app and continued cost/tooling comparison against Claude Code, Codex, and terminal multiplexing workflows.
+- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts, `copilot-requests: write`, session usage-record streaming, REST retrieval for the last 48 hours, organization-level cost centers, session credit limits, desktop app sessions, and BYOK provider routing.
+- Storage implications: Prompts, responses, tool calls, browser screenshots, console output, live app state, image/PDF attachments, per-agent tabs, desktop session state, Actions logs, and org-billed CLI sessions become runtime artifacts that need retention and governance.
+- Watch next: Whether the desktop app becomes the preferred Copilot agent surface, whether session streaming becomes a standard enterprise audit requirement, and whether Actions-native Copilot CLI becomes a pattern for scheduled repo maintenance.
+- Sources: https://github.blog/changelog/2026-07-07-github-copilot-app-available-to-all/, https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/, https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/, https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/, and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
 
 ## Replit Agent
 
@@ -85,14 +85,14 @@ Status:
 - Category: App-building agent
 - Maturity: Productized app-building agent with active official changelog.
 - Core use case: Creating, updating, deploying, and asking questions about Replit apps.
-- Recent changes: Replit became available as a Claude connector; Claude Design can send designs into Replit as runnable apps; Agent added Voice Mode; new MCP servers were added to the one-click MCP catalog.
-- Strengths: Strong app-building loop and cross-agent handoff from Claude into Replit.
-- Weaknesses: Weak public field evidence on reliability for larger apps and production handoff; official changelog is strong but user reports are sparse.
+- Recent changes: Replit's redesigned desktop app exposes the full Replit experience with Agent status visibility and previews; users can ask Agent to add Whop payments, where Agent creates/connects the Whop account and builds checkout without external setup or pasted API keys. Replit also became available as a Claude connector; Claude Design can send designs into Replit as runnable apps; Agent added Voice Mode; new MCP servers were added to the one-click MCP catalog.
+- Strengths: Strong app-building loop, desktop supervision, cross-agent handoff from Claude into Replit, and emerging business-flow setup.
+- Weaknesses: Weak public field evidence on reliability for larger apps, payment setup correctness, compliance boundaries, and production handoff; official changelog is strong but user reports are sparse.
 - User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Claude connector, MCP catalog, voice-to-agent input, design-to-runnable-app handoff, enterprise guest access.
-- Storage implications: Runnable app state, design imports, guest-scoped app access, and MCP-connected project context require workspace and permission boundaries.
-- Watch next: Whether Replit-from-Claude becomes a common front door for non-developer app generation.
-- Source: https://docs.replit.com/updates/2026/06/19/changelog
+- Infra signals: Claude connector, MCP catalog, voice-to-agent input, design-to-runnable-app handoff, enterprise guest access, desktop app status/preview surfaces, and agent-created payment integration state.
+- Storage implications: Runnable app state, design imports, guest-scoped app access, MCP-connected project context, checkout configuration, account-linking state, and payment-flow audit trails require workspace and permission boundaries.
+- Watch next: Whether Replit-from-Claude becomes a common front door for non-developer app generation, and whether Agent-created payment setup produces reliable public field reports.
+- Sources: https://docs.replit.com/updates/2026/07/03/changelog and https://docs.replit.com/updates/2026/06/19/changelog
 
 ## Warp
 

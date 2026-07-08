@@ -1509,3 +1509,44 @@ Follow-up gaps:
   - Source: https://github.com/sabbour/agentweaver
 - **DeepSeek-Infra** (scr-deepseek-infra): Local-first agent infrastructure with LLM Gateway, Agent DAG Runtime, MCP Tool Hub, A2A Mesh, Tool Sandbox, Observability. Why it matters: Comprehensive local agent platform. Evidence strength: Weak (early repo). Relevance score: 5. Defer reason: Needs performance benchmarks and adoption evidence. Follow-up needed: Compare with other agent runtimes. candidate_seen_at: 2026-07-08, last_checked_at: 2026-07-08, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
   - Source: https://github.com/leizd/DeepSeek-Infra
+
+## 2026-07-08 Daily Cloud Run
+
+Purpose:
+- Replace the weak screening-only daily block with stronger official product updates from the last 24-48 hours and keep early infrastructure candidates labeled as weak.
+
+Accepted sources:
+- GitHub Copilot app available to all: https://github.blog/changelog/2026-07-07-github-copilot-app-available-to-all/
+  - Why accepted: Official product update; direct signal for desktop agent access expansion, BYOK, and enterprise policy gate.
+  - Evidence strength: Strong for product capability; user impact needs field evidence.
+- OpenAI Codex changelog, July 6 ChatGPT iOS update: https://developers.openai.com/codex/changelog
+  - Why accepted: Official product update; direct signal for mobile task management, diff review, SSH host connection, usage limits, and reconnect recovery.
+  - Evidence strength: Strong.
+- Anthropic Claude Code public changelog: https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md
+  - Why accepted: Public developer evidence; latest entries focus on background agents, worktrees, MCP roots/list, workflow OTel attributes, Remote Control, and session recovery.
+  - Evidence strength: Strong for release evidence; adoption/reliability impact still needs user corroboration.
+- Devin Desktop/Windsurf changelog: https://docs.devin.ai/desktop/changelog
+  - Why accepted: Official product update; direct signal for autonomous diffs, cloud session reconnect, MCP status, permission frontmatter, sandbox excluded-command policy, and event-cache stability.
+  - Evidence strength: Strong for release evidence.
+- Replit July 3 changelog: https://docs.replit.com/updates/2026/07/03/changelog
+  - Why accepted: Official product update; direct signal for desktop Agent supervision and Agent-created Whop checkout setup.
+  - Evidence strength: Strong for product capability; payments reliability/compliance evidence still needed.
+- GitHub Copilot app Reddit launch thread: https://www.reddit.com/r/GithubCopilot/comments/1u8f5kt/the_github_copilot_app_is_now_ga/
+  - Why accepted: Public user/community signal showing mixed early reaction and a concrete desktop-vs-terminal workflow question.
+  - Evidence strength: Weak anecdote; missing corroboration.
+- Prismor, Tree-Ring Memory, and AgentWeaver repo reachability checks: https://github.com/PrismorSec/prismor, https://github.com/TerminallyLazy/Tree-Ring-Memory, https://github.com/sabbour/agentweaver
+  - Why accepted: Public developer evidence for existing 2026-07-08 screening candidates; kept as weak/deferred.
+  - Evidence strength: Weak; no independent adoption evidence.
+
+Rejected or deprioritized:
+- Releasebot summaries were used only as discovery hints when official pages were available.
+- Generic AI-agent news articles about model launches were deprioritized when they did not add a concrete agent workflow, infra, storage, or user signal.
+- Future-dated MCP release-candidate search results were not used because the run date is 2026-07-08 and the page title referred to 2026-07-28.
+- Older Replit billing complaints and older Copilot pricing threads were not promoted into today's daily note because they were outside the 24-48 hour window or lacked a direct tie to the new product changes.
+
+Follow-up gaps:
+- Find independent workflow reports for GitHub Copilot app versus Copilot CLI/tmux/client-server usage.
+- Watch whether Codex mobile task management produces real cross-device delegated-work reports.
+- Track whether Claude Code and Devin Desktop reliability fixes reduce public complaints about stale background sessions, worktree isolation, or large session crashes.
+- Seek public evidence on Replit Agent-created payment flows: correctness, approval boundaries, audit trail, and failure recovery.
+- Continue monitoring Prismor, Tree-Ring Memory, AgentWeaver, and other 2026-07-08 screening candidates for adoption or differentiation before promotion.

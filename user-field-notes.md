@@ -98,3 +98,21 @@ Public-safe summary: A Bluesky post announced that Apple shipped a Safari MCP se
 Source: https://bsky.app/profile/saganote.bsky.social/post/3mpn6wyjvck2n
 Public corroboration: Needed; no independent user workflow reports or official Apple documentation yet.
 Do not publish: No private data used.
+
+### 2026-07-08
+
+Date: 2026-07-08
+Tool: GitHub Copilot app
+User type: Developer comparing desktop and terminal agent workflows
+Scenario: Deciding whether a first-party desktop app is more useful than running Copilot CLI, Claude, Codex, and other harnesses in terminal multiplexers.
+Positive experience: At least one public commenter reported liking the app so far.
+Pain point: Users are still asking how the app differs from terminal/client-server setups and whether it improves switching, notifications, or multi-agent supervision.
+Reusable trick: Treat desktop agent clients as supervision surfaces and compare them against terminal multiplexing on session switching, notification quality, BYOK support, and artifact review.
+Failure mode: Treating a launch thread as broad adoption evidence.
+Source class: Public user report.
+Source visibility: Public.
+Evidence strength: Weak anecdote.
+Public-safe summary: A Reddit launch thread for the Copilot app showed mixed early reaction: some positive first impressions, some skepticism, and a concrete comparison question against tmux/cmux-style multi-agent terminal workflows.
+Source: https://www.reddit.com/r/GithubCopilot/comments/1u8f5kt/the_github_copilot_app_is_now_ga/
+Public corroboration: Needed; no independent workflow write-up found in this run.
+Do not publish: Reddit usernames beyond what is visible at source; no private data used.
