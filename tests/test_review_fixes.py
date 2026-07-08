@@ -263,5 +263,49 @@ class InitForceProtectionTest(unittest.TestCase):
                 self.assertEqual(agent_radar.github_token(), "")
 
 
+class DailyLimitsAndPruneTest(unittest.TestCase):
+    def test_daily_signal_limits_are_soft_warnings_not_rejections(self) -> None:
+        # 25 sections + a section with 15 URLs exceeds both soft caps: it must
+        # return warnings (so the content is still written), never raise.
+        content = "".join(f"#### {i}. Section\n\n- Signal: x\n\n" for i in range(1, 26))
+        content += "#### 26. Sources\n\n- Sources: " + " ".join(
+            f"https://ex.com/{i}" for i in range(15)
+        ) + "\n"
+        warnings = cloud_agent_runner.daily_signal_limit_warnings("daily/2026-07.md", content)
+        self.assertTrue(any("signal sections" in w for w in warnings))
+        self.assertTrue(any("public URLs" in w for w in warnings))
+
+    def test_rich_daily_report_within_soft_caps_has_no_warnings(self) -> None:
+        # A normal rich daily (14 sections, a 4-URL sources section) is fine now.
+        content = "".join(f"#### {i}. Section\n\n- Signal: x\n\n" for i in range(1, 15))
+        content += "#### 15. Sources\n\n- Sources: https://a https://b https://c https://d\n"
+        self.assertEqual(
+            cloud_agent_runner.daily_signal_limit_warnings("daily/2026-07.md", content), []
+        )
+
+    def test_prune_removes_empty_shell_but_preserves_filled_days(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir()
+            empty = agent_radar.daily_entry(dt.date(2026, 7, 8))
+            filled = (
+                "## 2026-07-07\n\n### English\n\n#### 1. New Signals\n\n"
+                "- Signal: Real thing shipped.\n  - Source: https://example.com/x\n\n"
+                "### 中文\n\n#### 1. New Signals\n\n- 信号：真实内容。\n"
+            )
+            (root / "daily" / "2026-07.md").write_text(
+                "# Daily Agent Radar - 2026-07\n\n" + filled + "\n\n---\n\n" + empty,
+                encoding="utf-8",
+            )
+            removed = agent_radar.prune_empty_daily_block(root, dt.date(2026, 7, 8))
+            self.assertTrue(removed)
+            text = (root / "daily" / "2026-07.md").read_text(encoding="utf-8")
+            self.assertNotIn("## 2026-07-08", text)
+            self.assertIn("Real thing shipped.", text)
+            self.assertIn("## 2026-07-07", text)
+            # A second prune of the filled day must NOT remove it.
+            self.assertFalse(agent_radar.prune_empty_daily_block(root, dt.date(2026, 7, 7)))
+
+
 if __name__ == "__main__":
     unittest.main()

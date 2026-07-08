@@ -71,8 +71,13 @@ DEFAULT_LANE_COVERAGE_DEGRADED_THRESHOLD = 0.5
 CANDIDATE_INBOX_ANCHOR = "## Candidate inbox"
 CANDIDATE_INBOX_HEADING = re.compile(r"^## Candidate inbox\s*$", re.MULTILINE | re.IGNORECASE)
 LEGACY_PASS_HEADING = re.compile(r"^### Pass:", re.MULTILINE)
-MAX_DAILY_SIGNAL_SECTIONS = 8
-MAX_URLS_PER_DAILY_SIGNAL = 3
+# Soft compactness guidance for daily reports. Exceeding these is recorded as a
+# warning, NOT a hard rejection: the daily format legitimately runs 10-14 signal
+# sections across its research passes, and screening-integration sections list
+# many source URLs. Rejecting the whole daily update over these (the old
+# behavior) discarded good reports and left an empty ensure shell.
+MAX_DAILY_SIGNAL_SECTIONS = 20
+MAX_URLS_PER_DAILY_SIGNAL = 12
 DEFAULT_RELEASE_REPOS = [
     "openai/codex",
     "modelcontextprotocol/servers",
@@ -188,6 +193,7 @@ RUN_AUDIT: dict[str, Any] = {
     "bilingual_repair_applied": False,
     "synthesis_recall": 0.0,
     "screening_candidate_ids": [],
+    "apply_warnings": [],
 }
 
 # Snapshot of per-source health captured during shared collection, so per-task
@@ -1013,19 +1019,27 @@ def count_urls_in_text(text: str) -> int:
     return len(re.findall(r"https?://\S+", text))
 
 
-def validate_daily_signal_limits(rel_path: str, content: str) -> None:
+def daily_signal_limit_warnings(rel_path: str, content: str) -> list[str]:
+    """Return soft compactness warnings for a daily update.
+
+    These used to raise SystemExit, which discarded the entire (good) daily
+    report when it was slightly over the compactness heuristics and left an
+    empty ensure shell behind. They are now advisory: the content is still
+    written and the warnings are recorded in telemetry/run logs.
+    """
+    warnings: list[str] = []
     signals = radar_bilingual.count_daily_signal_sections(content)
     if signals > MAX_DAILY_SIGNAL_SECTIONS:
-        raise SystemExit(
-            f"Refusing daily append for {rel_path}: {signals} signal sections exceeds "
-            f"max {MAX_DAILY_SIGNAL_SECTIONS}."
+        warnings.append(
+            f"{rel_path}: {signals} signal sections exceeds soft max {MAX_DAILY_SIGNAL_SECTIONS}"
         )
     for section in re.split(r"^#### \d+\.", content, flags=re.MULTILINE)[1:]:
         if count_urls_in_text(section) > MAX_URLS_PER_DAILY_SIGNAL:
-            raise SystemExit(
-                f"Refusing daily append for {rel_path}: a signal section has more than "
-                f"{MAX_URLS_PER_DAILY_SIGNAL} public URLs."
+            warnings.append(
+                f"{rel_path}: a signal section has more than {MAX_URLS_PER_DAILY_SIGNAL} public URLs"
             )
+            break
+    return warnings
 
 
 def validate_research_log_append(old: str, content: str) -> None:
@@ -2820,7 +2834,9 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
         validate_daily_update_content(rel_path, old, mode, content)
         validate_daily_append_size(rel_path, mode, content)
         if is_daily_month_path(rel_path) and mode in {"append", "replace_section"}:
-            validate_daily_signal_limits(rel_path, content)
+            for warning in daily_signal_limit_warnings(rel_path, content):
+                if warning not in RUN_AUDIT["apply_warnings"]:
+                    RUN_AUDIT["apply_warnings"].append(warning)
         if mode == "full" and legacy and old.strip():
             if is_daily_month_path(rel_path):
                 raise SystemExit(
@@ -2908,6 +2924,10 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
     if source_errors:
         entry.append("- Source errors:")
         entry.extend(f"  - {error}" for error in source_errors[:10])
+    apply_warnings = RUN_AUDIT.get("apply_warnings", [])
+    if apply_warnings:
+        entry.append("- Apply warnings:")
+        entry.extend(f"  - {warning}" for warning in apply_warnings[:10])
     entry.append("")
     previous = path.read_text(encoding="utf-8") if path.exists() else f"# Cloud Agent Runs - {month_label(day)}\n\n"
     path.write_text(previous + "\n".join(entry) + "\n", encoding="utf-8")
@@ -2946,6 +2966,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "bilingual_ratio": RUN_AUDIT.get("bilingual_ratio", 0.0),
         "synthesis_recall": RUN_AUDIT.get("synthesis_recall", 0.0),
         "screening_candidate_ids": RUN_AUDIT.get("screening_candidate_ids", []),
+        "apply_warnings": RUN_AUDIT.get("apply_warnings", []),
     }
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
@@ -3034,6 +3055,7 @@ def run_task(
     RUN_AUDIT["bilingual_ratio"] = 0.0
     RUN_AUDIT["synthesis_recall"] = 0.0
     RUN_AUDIT["screening_candidate_ids"] = []
+    RUN_AUDIT["apply_warnings"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:
         run_cli(root, config["ensure"], day)

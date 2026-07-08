@@ -1,178 +1,179 @@
 {
-  "summary": "Agent infrastructure signals: sandbox escapes, memory persistence, MCP tooling, and evaluation frameworks dominate. Key themes include local-first memory, secure sandboxing, and multi-agent orchestration.",
+  "summary": "Agent security, memory, and runtime infrastructure dominate today's signals. Notable: Prismor runtime security, OpenClaw SOC automation, memory projects (Tree-Ring, Mnestic, StateFuse), and MCP server security scanning.",
   "candidates": [
     {
-      "id": "scr-63478ruv",
-      "title": "ruvnet/ruflo - Agent meta-harness",
-      "why_it_matters": "Leading agent meta-harness with adaptive memory and multi-agent swarms",
+      "id": "scr-prismor",
+      "title": "Prismor: Runtime security for AI agents",
+      "why_it_matters": "Blocks dangerous commands, secret leaks, prompt injection, and risky packages with policy enforcement.",
       "evidence": [
-        "https://github.com/ruvnet/ruflo"
+        "https://github.com/PrismorSec/prismor",
+        "https://pypi.org/project/prismor/1.17.6/"
       ],
       "confidence": "high",
-      "relevance_score": 60,
-      "source_diversity": 1,
-      "infra_angle": "runtime",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "infra_angle": "security",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     },
     {
-      "id": "scr-8539ten",
-      "title": "TencentCloud/CubeSandbox - Secure sandbox",
-      "why_it_matters": "Instant, concurrent, lightweight sandbox for AI agents",
+      "id": "scr-openclaw-autopilot",
+      "title": "OpenClaw Autopilot: SOC automation with MCP",
+      "why_it_matters": "Automates alert triage and incident response using agents and MCP for security ops.",
       "evidence": [
-        "https://github.com/TencentCloud/CubeSandbox"
+        "https://github.com/Loune3213/Wazuh-Openclaw-Autopilot"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-09"
+    },
+    {
+      "id": "scr-tree-ring-memory",
+      "title": "Tree-Ring Memory: Framework-agnostic memory lifecycle",
+      "why_it_matters": "Local-first, SQLite-based memory with recall, forgetting, audit, and consolidation for agents.",
+      "evidence": [
+        "https://github.com/TerminallyLazy/Tree-Ring-Memory"
       ],
       "confidence": "high",
-      "relevance_score": 57,
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-09"
+    },
+    {
+      "id": "scr-mnestic",
+      "title": "Mnestic: Embedded graph+vector+FTS database for agent memory",
+      "why_it_matters": "CozoDB fork tuned as agentic memory substrate with datalog support.",
+      "evidence": [
+        "https://pypi.org/project/mnestic/0.10.6/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-09"
+    },
+    {
+      "id": "scr-statefuse",
+      "title": "StateFuse: Deterministic conflict-preserving memory for multi-agent",
+      "why_it_matters": "New arXiv paper on multi-agent memory with deterministic conflict handling.",
+      "evidence": [
+        "https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq4b4uhl2c2r"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 2,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-09"
+    },
+    {
+      "id": "scr-aguara",
+      "title": "Aguara: Security scanning for MCP servers and agent skills",
+      "why_it_matters": "Scans AI agent skills and MCP servers for prompt injection, data leaks, and supply-chain threats.",
+      "evidence": [
+        "https://github.com/salasi1204/aguara"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-09"
+    },
+    {
+      "id": "scr-agentweaver",
+      "title": "AgentWeaver: Sandboxed agent with MCP server and human review gate",
+      "why_it_matters": "Runs agents in git worktree sandbox, streams steps live, gates merges behind human review.",
+      "evidence": [
+        "https://github.com/sabbour/agentweaver"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
       "source_diversity": 1,
       "infra_angle": "sandbox",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     },
     {
-      "id": "scr-10mama",
-      "title": "MAMA - Local-first operating memory",
-      "why_it_matters": "Local-first memory with SQLite and on-device embeddings",
+      "id": "scr-deepseek-infra",
+      "title": "DeepSeek-Infra: Local-first agent infrastructure platform",
+      "why_it_matters": "LLM Gateway, Agent DAG Runtime, MCP Tool Hub, A2A Agent Mesh, Tool Sandbox, Observability.",
       "evidence": [
-        "https://github.com/jungjaehoon-lifegamez/MAMA"
+        "https://github.com/leizd/DeepSeek-Infra"
       ],
-      "confidence": "high",
-      "relevance_score": 59,
-      "source_diversity": 1,
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "2026-07-15"
-    },
-    {
-      "id": "scr-5359open",
-      "title": "openagent - Personal AI assistant",
-      "why_it_matters": "Next-gen assistant with computer-use, browser-use, and coding agent",
-      "evidence": [
-        "https://github.com/the-open-agent/openagent"
-      ],
-      "confidence": "high",
-      "relevance_score": 46,
+      "confidence": "medium",
+      "relevance_score": 5,
       "source_diversity": 1,
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     },
     {
-      "id": "scr-2memory",
-      "title": "mcp-ai-memory - Semantic memory MCP server",
-      "why_it_matters": "Production-ready MCP server for semantic memory management",
+      "id": "scr-desktop-touch-mcp",
+      "title": "Desktop Touch MCP: Windows computer-use via MCP",
+      "why_it_matters": "Drives desktop apps with semantic targeting and per-action perception guards.",
       "evidence": [
-        "https://github.com/ronie-aduana/mcp-ai-memory"
+        "https://github.com/Harusame64/desktop-touch-mcp"
       ],
       "confidence": "medium",
-      "relevance_score": 53,
-      "source_diversity": 1,
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "2026-07-15"
-    },
-    {
-      "id": "scr-0harness",
-      "title": "harness-code - Multi-model coding agent",
-      "why_it_matters": "Desktop coding agent supporting 340+ models via OpenRouter",
-      "evidence": [
-        "https://github.com/TheRealJadenKwek/harness-code"
-      ],
-      "confidence": "medium",
-      "relevance_score": 53,
-      "source_diversity": 1,
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "2026-07-15"
-    },
-    {
-      "id": "scr-0agloom",
-      "title": "agloom - Production agent framework",
-      "why_it_matters": "Nine execution patterns, persistent memory, MCP, and observability",
-      "evidence": [
-        "https://github.com/HELLOMEDHIRA/agloom",
-        "https://pypi.org/project/agloom/0.0.1.17/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 53,
-      "source_diversity": 2,
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "2026-07-15"
-    },
-    {
-      "id": "scr-6rusty",
-      "title": "rusty-imap-mcp - Security-first IMAP MCP",
-      "why_it_matters": "Security-first MCP server for agentic email access",
-      "evidence": [
-        "https://github.com/randomparity/rusty-imap-mcp"
-      ],
-      "confidence": "medium",
-      "relevance_score": 49,
+      "relevance_score": 4,
       "source_diversity": 1,
       "infra_angle": "mcp",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     },
     {
-      "id": "scr-1nevoflux",
-      "title": "nevoflux-agent - Browser automation agent",
-      "why_it_matters": "Rust-based browser/desktop automation with MCP and WASM skills",
+      "id": "scr-quantgist-mcp",
+      "title": "QuantGist MCP server for macro event tools",
+      "why_it_matters": "Exposes QuantGist macro event tools to Claude and AI agents via MCP.",
       "evidence": [
-        "https://github.com/nevoflux-browser/nevoflux-agent"
+        "https://pypi.org/project/quantgist-mcp/0.5.1/"
       ],
-      "confidence": "medium",
-      "relevance_score": 48,
+      "confidence": "low",
+      "relevance_score": 3,
       "source_diversity": 1,
-      "infra_angle": "runtime",
+      "infra_angle": "mcp",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     },
     {
-      "id": "scr-14calibrate",
-      "title": "calibrate - AI agent evaluation framework",
-      "why_it_matters": "Framework for evaluating speech, LLM, and end-to-end agent simulations",
+      "id": "scr-selfevals",
+      "title": "Selfevals: Self-improving evals framework for agents",
+      "why_it_matters": "Agents improve their own evaluations over time via self-supervised learning.",
       "evidence": [
-        "https://github.com/ARTPARK-SAHAI-ORG/calibrate"
+        "https://github.com/patovaldezf/selfevals"
       ],
       "confidence": "medium",
-      "relevance_score": 46,
-      "source_diversity": 1,
-      "infra_angle": "eval",
-      "promotion_status": "candidate",
-      "next_check": "2026-07-15"
-    },
-    {
-      "id": "scr-2stackunderflow",
-      "title": "StackUnderflow - Local agent observability",
-      "why_it_matters": "Local observability for coding agents with offline replay",
-      "evidence": [
-        "https://github.com/0bserver07/StackUnderflow"
-      ],
-      "confidence": "medium",
-      "relevance_score": 46,
+      "relevance_score": 4,
       "source_diversity": 1,
       "infra_angle": "eval",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     },
     {
-      "id": "scr-5substrate",
-      "title": "substrate - Multi-agent orchestration daemon",
-      "why_it_matters": "Daemon for orchestrating multiple AI coding agents",
+      "id": "scr-memory-sidecar",
+      "title": "Memory Sidecar v3.5.1: Operational hardening for agent memory",
+      "why_it_matters": "Agent-agnostic memory layer with production hardening, from Nous Research.",
       "evidence": [
-        "https://github.com/johnplanow/substrate"
+        "https://bsky.app/profile/swagger82.bsky.social/post/3mq4acuolph2n"
       ],
       "confidence": "medium",
-      "relevance_score": 46,
-      "source_diversity": 1,
-      "infra_angle": "runtime",
+      "relevance_score": 4,
+      "source_diversity": 2,
+      "infra_angle": "memory",
       "promotion_status": "candidate",
-      "next_check": "2026-07-15"
+      "next_check": "2026-07-09"
     }
   ],
   "gaps": [
-    "No strong signals for deployment or storage infrastructure",
-    "Limited coverage of agent security beyond sandbox escapes"
+    "No evaluation frameworks or benchmarks captured from public sources (e.g., new agent eval libraries).",
+    "Missing signals from storage/infrastructure layers for agent data persistence.",
+    "Limited coverage of agent runtime deployment channels (e.g., new Docker images, serverless frameworks)."
   ]
 }

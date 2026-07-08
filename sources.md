@@ -338,7 +338,6 @@ Ignore or deprioritize:
 
 
 ## Additional sources from 2026-07-08 source sweep
-
 - ruvnet/ruflo - Agent meta-harness: https://github.com/ruvnet/ruflo
 - TencentCloud/CubeSandbox - Secure sandbox: https://github.com/TencentCloud/CubeSandbox
 - MAMA - Local-first operating memory: https://github.com/jungjaehoon-lifegamez/MAMA
@@ -347,3 +346,11 @@ Ignore or deprioritize:
 - harness-code - Multi-model coding agent: https://github.com/TheRealJadenKwek/harness-code
 - agloom - Production agent framework: https://github.com/HELLOMEDHIRA/agloom
 - rusty-imap-mcp - Security-first IMAP MCP: https://github.com/randomparity/rusty-imap-mcp
+- Prismor: https://github.com/PrismorSec/prismor
+- OpenClaw Autopilot: https://github.com/Loune3213/Wazuh-Openclaw-Autopilot
+- Tree-Ring Memory: https://github.com/TerminallyLazy/Tree-Ring-Memory
+- mnestic: https://pypi.org/project/mnestic/0.10.6/
+- StateFuse: https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq4b4uhl2c2r
+- Aguara: https://github.com/salasi1204/aguara
+- AgentWeaver: https://github.com/sabbour/agentweaver
+- DeepSeek-Infra: https://github.com/leizd/DeepSeek-Infra
