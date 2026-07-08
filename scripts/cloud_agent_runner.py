@@ -2707,12 +2707,51 @@ def replace_section_content(
     return result
 
 
+def section_anchor_exists(old: str, anchor: str, within: str | None = None) -> bool:
+    """True when ``anchor`` exists as a heading (respecting a ``within`` block)."""
+    anchor_line = normalize_section_anchor(anchor).strip()
+    lines = old.splitlines()
+    start_search = 0
+    search_end = len(lines)
+    if within:
+        within_line = normalize_section_anchor(within)
+        within_level = heading_level(within_line)
+        found = False
+        for index, line in enumerate(lines):
+            if line.strip() == within_line.strip():
+                start_search = index + 1
+                for follow in range(index + 1, len(lines)):
+                    level = heading_level(lines[follow])
+                    if level and level <= within_level:
+                        search_end = follow
+                        break
+                found = True
+                break
+        if not found:
+            return False
+    return any(lines[index].strip() == anchor_line for index in range(start_search, search_end))
+
+
+def clean_section_heading(anchor: str) -> str:
+    """Normalize a possibly-malformed anchor into a clean `## Title` heading.
+
+    Models sometimes pass an anchor like ``## - **ruvnet/ruflo**`` (heading prefix
+    glued onto a markdown bullet) when they mean to add a new section.
+    """
+    text = anchor.strip()
+    text = re.sub(r"^#+\s*", "", text)
+    text = re.sub(r"^[-*]\s+", "", text)
+    text = text.replace("**", "").strip()
+    return f"## {text}".rstrip()
+
+
 def merge_update_content(
     old: str,
     mode: str,
     content: str,
     anchor: str | None = None,
     within: str | None = None,
+    allow_append_fallback: bool = False,
 ) -> str:
     mode = (mode or "full").strip().lower()
     if mode == "append":
@@ -2724,6 +2763,18 @@ def merge_update_content(
     if mode == "replace_section":
         if not anchor:
             raise SystemExit("replace_section update requires anchor")
+        if allow_append_fallback and old.strip() and not section_anchor_exists(old, anchor, within):
+            # The model used replace_section with an anchor that doesn't exist —
+            # almost always it meant to ADD a new section (e.g. promote a new
+            # candidate). Append a clean new section instead of discarding the
+            # whole task; the malformed/absent anchor is recorded as a warning.
+            RUN_AUDIT["apply_warnings"].append(
+                f"replace_section anchor not found ({anchor!r}); appended a new section instead"
+            )
+            heading = clean_section_heading(anchor)
+            body = content.strip()
+            block = heading + ("\n\n" + body if body else "")
+            return old.rstrip() + "\n\n" + block.rstrip() + "\n"
         return replace_section_content(old, anchor, content, within=within)
     if mode in {"full", "replace"}:
         return content if content.endswith("\n") else content + "\n"
@@ -2854,12 +2905,14 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
             raise SystemExit(WEEKLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
         if mode == "full" and is_monthly_path(rel_path) and old.strip():
             raise SystemExit(MONTHLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
+        is_report_file = rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/"))
         merged = merge_update_content(
             old,
             mode,
             content,
             str(anchor) if anchor else None,
             str(within) if within else None,
+            allow_append_fallback=not is_report_file,
         )
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
