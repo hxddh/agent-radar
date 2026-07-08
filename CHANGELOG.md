@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## v0.7.2 - 2026-07-08
+
+Resilience follow-up: `promote-candidates` no longer discards the whole task when the model emits a `replace_section` update whose anchor does not exist — the same wholesale-rejection anti-pattern fixed for daily reports in v0.7.1.
+
+### Changed
+- CLI version bumped to `0.7.2`.
 
 ### Fixed
 - **`promote-candidates` failed whole-task when the model used a `replace_section` anchor that didn't exist** (e.g. `## - **ruvnet/ruflo**` — a heading prefix glued onto a bullet for a *new* agent). It now falls back to appending a clean new section (heading normalized from the anchor) on non-report files, records an `apply_warnings` entry, and no longer discards the promotion. Report files (daily/weekly/monthly) stay strict. `prompts/runner-rules.md` now tells the model to use `append` with a full `## AgentName` heading for new watchlist entries and reserve `replace_section` for existing headings copied verbatim.
