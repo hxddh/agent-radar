@@ -427,6 +427,80 @@ def daily_entry(day: dt.date) -> str:
 """
 
 
+def _normalize_bullet_body(body: str) -> str:
+    return body.strip().rstrip(":").rstrip("：").strip().lower()
+
+
+def daily_block_is_empty(block: str, day: dt.date | None = None) -> bool:
+    """True when a `## YYYY-MM-DD` day block holds only empty template scaffolding.
+
+    Any URL, or any bullet whose body is not an unfilled template field/placeholder,
+    makes it non-empty. Placeholders are derived from ``daily_entry`` so template
+    lines like ``- Change now? yes / no`` are recognized. Chinese fields use a
+    fullwidth colon, which is handled too.
+    """
+    placeholders: set[str] = set()
+    for template_day in {day, dt.date(2000, 1, 1)}:
+        if template_day is None:
+            continue
+        for raw in daily_entry(template_day).splitlines():
+            match = re.match(r"^\s*-\s*(.*)$", raw)
+            if match:
+                placeholders.add(_normalize_bullet_body(match.group(1)))
+    for raw in block.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or line.startswith(">") or line == "---":
+            continue
+        if "http://" in line or "https://" in line:
+            return False
+        match = re.match(r"^-\s*(.*)$", line)
+        if not match:
+            return False
+        body = match.group(1).strip()
+        if not body or body.endswith(":") or body.endswith("："):
+            continue
+        if _normalize_bullet_body(body) in placeholders:
+            continue
+        return False
+    return True
+
+
+def prune_empty_daily_block(root: Path, day: dt.date) -> bool:
+    """Remove today's day block if it is an empty shell. Returns True if removed."""
+    path = daily_path(root, day)
+    if not path.exists():
+        return False
+    content = path.read_text(encoding="utf-8")
+    heading = re.compile(rf"^## {re.escape(day.isoformat())}\b.*$", re.MULTILINE)
+    match = heading.search(content)
+    if not match:
+        return False
+    start = match.start()
+    next_day = re.compile(r"^## \d{4}-\d{2}-\d{2}\b", re.MULTILINE)
+    following = next_day.search(content, match.end())
+    end = following.start() if following else len(content)
+    block = content[start:end]
+    if not daily_block_is_empty(block, day):
+        return False
+    # Drop the block plus a trailing `---` separator and surrounding blank lines.
+    before = content[:start].rstrip()
+    after = content[end:].lstrip()
+    after = re.sub(r"^---\s*\n+", "", after, count=1)
+    joined = before + ("\n\n" if before and after else "") + after
+    path.write_text(joined.rstrip() + "\n", encoding="utf-8")
+    return True
+
+
+def command_prune_empty_daily(args: argparse.Namespace) -> int:
+    root = resolve_root(args)
+    day = parse_date(args.date)
+    if prune_empty_daily_block(root, day):
+        print(f"pruned empty daily block for {day.isoformat()}")
+    else:
+        print(f"no empty daily block to prune for {day.isoformat()}")
+    return 0
+
+
 def daily_heading_present(content: str, day: dt.date) -> bool:
     """Line-anchored check for a `## YYYY-MM-DD` day heading (bare or suffixed).
 
@@ -1303,6 +1377,12 @@ def build_parser() -> argparse.ArgumentParser:
     ensure_parser = subparsers.add_parser("ensure", help="Create missing daily, weekly, and monthly report shells.")
     ensure_parser.add_argument("--date", help="Date for report paths, YYYY-MM-DD.")
     ensure_parser.set_defaults(func=command_ensure)
+
+    prune_daily_parser = subparsers.add_parser(
+        "prune-empty-daily", help="Remove today's daily day block if it is an empty template shell."
+    )
+    prune_daily_parser.add_argument("--date", help="Date for the daily path, YYYY-MM-DD.")
+    prune_daily_parser.set_defaults(func=command_prune_empty_daily)
 
     bilingual_parser = subparsers.add_parser("bilingualize", help="Add bilingual labels to current report files.")
     bilingual_parser.add_argument("--date", help="Date for report paths, YYYY-MM-DD.")

@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.7.0 - 2026-07-07
+## Unreleased
+
+### Fixed
+- **Daily reports were silently discarded when slightly over the compactness heuristics.** The daily signal-section-count and per-section-URL caps used to `raise SystemExit`, throwing away the entire (good) daily report and leaving an empty `ensure` template shell — which the v0.7.0 per-task isolation then committed on a green run, so it looked like "nothing was gathered." The caps are now advisory (recorded in run-log/telemetry `apply_warnings`) and the content is written; the section cap is raised 8→20 and the per-section URL cap 3→12 to match the multi-pass daily format.
+- New `agent_radar.py prune-empty-daily` command (run in `cloud-agent.yml` before commit) removes a daily day block that is still an empty template shell, so a failed/empty daily task no longer commits a blank day. Purged the already-committed empty `2026-07-07` and `2026-07-08` shells.
 
 Hardening release: fixes the verified architecture/code review findings (data-loss guards, collector state machine, cloud runner, CLI, CI) and repairs source collection (GitHub secondary-rate-limit throttle, RDF/attributed feed parsing, arXiv endpoint, browser UA, default vendor coverage). Verified against a live `source-sweep` run that turned the previously-failing cloud-agent workflow green and cleared the GitHub/reddit/bluesky collector errors.
 
