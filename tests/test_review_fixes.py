@@ -283,6 +283,39 @@ class DailyLimitsAndPruneTest(unittest.TestCase):
             cloud_agent_runner.daily_signal_limit_warnings("daily/2026-07.md", content), []
         )
 
+    def test_replace_section_missing_anchor_appends_new_section(self) -> None:
+        # A promote-candidates update used replace_section with an invented,
+        # malformed anchor for a NEW agent. Instead of discarding the whole
+        # task, a non-report file appends a clean new section.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        old = "# Watchlist\n\n## Cursor\n\n- existing\n"
+        out = cloud_agent_runner.merge_update_content(
+            old,
+            "replace_section",
+            "- What it is: orchestrator\n- Source: https://github.com/ruvnet/ruflo\n",
+            anchor="## - **ruvnet/ruflo**",
+            allow_append_fallback=True,
+        )
+        self.assertIn("## ruvnet/ruflo", out)
+        self.assertIn("orchestrator", out)
+        self.assertIn("- existing", out)  # existing content untouched
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+
+    def test_replace_section_missing_anchor_stays_strict_for_reports(self) -> None:
+        old = "## English\n\n### 1. Intro\n\n- x\n"
+        with self.assertRaises(SystemExit):
+            cloud_agent_runner.merge_update_content(
+                old, "replace_section", "- body", anchor="### 99. Nope", allow_append_fallback=False
+            )
+
+    def test_existing_anchor_is_still_replaced(self) -> None:
+        old = "# Watchlist\n\n## Cursor\n\n- old body\n"
+        out = cloud_agent_runner.merge_update_content(
+            old, "replace_section", "- new body\n", anchor="## Cursor", allow_append_fallback=True
+        )
+        self.assertIn("new body", out)
+        self.assertNotIn("old body", out)
+
     def test_prune_removes_empty_shell_but_preserves_filled_days(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

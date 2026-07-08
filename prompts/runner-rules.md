@@ -26,7 +26,8 @@ Prefer `updates[]`. Legacy `files[]` is accepted only for new/empty files; the r
 ## Update modes
 
 - Prefer `append` for `research-log.md` and for adding a new `## YYYY-MM-DD` day block in monthly daily files.
-- Prefer `replace_section` when changing one watchlist agent, one radar thesis block, or one weekly/monthly report subsection.
+- Prefer `replace_section` when changing **an existing** watchlist agent, radar thesis block, or weekly/monthly report subsection. The `anchor` must be an existing heading copied verbatim (e.g. `## Cursor`).
+- To **add a new** watchlist agent (or any new section), use `append` with a full `## AgentName` heading and its body — do NOT use `replace_section` with an invented anchor. A `replace_section` whose anchor does not exist is treated as an append of a new section and logged as a warning.
 - Use `full` only when a weekly/monthly report file is new/empty.
 - Never use `full` for `research-log.md`, `sources.md`, `radar.md`, `agent-watchlist.md`, `playbook.md`, `storage-angle.md`, or `user-field-notes.md` when existing content is present.
 - Never use `full` for `daily/YYYY-MM.md` when the monthly file already exists; **append** a new `## YYYY-MM-DD` day block instead. The runner rejects `full` rewrites of existing daily month files.
@@ -55,7 +56,7 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
 }
 ```
 
-### Watchlist replace_section example
+### Watchlist replace_section example (existing agent)
 
 ```json
 {
@@ -65,6 +66,22 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
       "mode": "replace_section",
       "anchor": "## GitHub Copilot",
       "content": "- Recent changes: ...\n- Source: https://example.com\n"
+    }
+  ]
+}
+```
+
+### Watchlist append example (new agent)
+
+Add a new agent as a full section with `append`; never invent a `replace_section` anchor.
+
+```json
+{
+  "updates": [
+    {
+      "path": "agent-watchlist.md",
+      "mode": "append",
+      "content": "\n\n## ruvnet/ruflo\n\n- What it is: ...\n- Why it matters: ...\n- Evidence strength: Weak\n- Source: https://github.com/ruvnet/ruflo\n"
     }
   ]
 }

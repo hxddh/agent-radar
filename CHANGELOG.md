@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- **`promote-candidates` failed whole-task when the model used a `replace_section` anchor that didn't exist** (e.g. `## - **ruvnet/ruflo**` — a heading prefix glued onto a bullet for a *new* agent). It now falls back to appending a clean new section (heading normalized from the anchor) on non-report files, records an `apply_warnings` entry, and no longer discards the promotion. Report files (daily/weekly/monthly) stay strict. `prompts/runner-rules.md` now tells the model to use `append` with a full `## AgentName` heading for new watchlist entries and reserve `replace_section` for existing headings copied verbatim.
+
 ## v0.7.1 - 2026-07-08
 
 Fixes a daily-report regression surfaced after v0.7.0: rich daily reports were being discarded wholesale and committed as empty template shells. Verified against a live `daily` run that wrote a real 2026-07-08 report (changed=3) where the previous scheduled run had failed.
