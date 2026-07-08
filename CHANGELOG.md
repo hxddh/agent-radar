@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## v0.7.1 - 2026-07-08
+
+Fixes a daily-report regression surfaced after v0.7.0: rich daily reports were being discarded wholesale and committed as empty template shells. Verified against a live `daily` run that wrote a real 2026-07-08 report (changed=3) where the previous scheduled run had failed.
+
+### Changed
+- CLI version bumped to `0.7.1`.
 
 ### Fixed
 - **Daily reports were silently discarded when slightly over the compactness heuristics.** The daily signal-section-count and per-section-URL caps used to `raise SystemExit`, throwing away the entire (good) daily report and leaving an empty `ensure` template shell — which the v0.7.0 per-task isolation then committed on a green run, so it looked like "nothing was gathered." The caps are now advisory (recorded in run-log/telemetry `apply_warnings`) and the content is written; the section cap is raised 8→20 and the per-section URL cap 3→12 to match the multi-pass daily format.
