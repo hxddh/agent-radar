@@ -1,0 +1,178 @@
+{
+  "summary": "Agent infrastructure signals: sandbox escapes, memory persistence, MCP tooling, and evaluation frameworks dominate. Key themes include local-first memory, secure sandboxing, and multi-agent orchestration.",
+  "candidates": [
+    {
+      "id": "scr-63478ruv",
+      "title": "ruvnet/ruflo - Agent meta-harness",
+      "why_it_matters": "Leading agent meta-harness with adaptive memory and multi-agent swarms",
+      "evidence": [
+        "https://github.com/ruvnet/ruflo"
+      ],
+      "confidence": "high",
+      "relevance_score": 60,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-8539ten",
+      "title": "TencentCloud/CubeSandbox - Secure sandbox",
+      "why_it_matters": "Instant, concurrent, lightweight sandbox for AI agents",
+      "evidence": [
+        "https://github.com/TencentCloud/CubeSandbox"
+      ],
+      "confidence": "high",
+      "relevance_score": 57,
+      "source_diversity": 1,
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-10mama",
+      "title": "MAMA - Local-first operating memory",
+      "why_it_matters": "Local-first memory with SQLite and on-device embeddings",
+      "evidence": [
+        "https://github.com/jungjaehoon-lifegamez/MAMA"
+      ],
+      "confidence": "high",
+      "relevance_score": 59,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-5359open",
+      "title": "openagent - Personal AI assistant",
+      "why_it_matters": "Next-gen assistant with computer-use, browser-use, and coding agent",
+      "evidence": [
+        "https://github.com/the-open-agent/openagent"
+      ],
+      "confidence": "high",
+      "relevance_score": 46,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-2memory",
+      "title": "mcp-ai-memory - Semantic memory MCP server",
+      "why_it_matters": "Production-ready MCP server for semantic memory management",
+      "evidence": [
+        "https://github.com/ronie-aduana/mcp-ai-memory"
+      ],
+      "confidence": "medium",
+      "relevance_score": 53,
+      "source_diversity": 1,
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-0harness",
+      "title": "harness-code - Multi-model coding agent",
+      "why_it_matters": "Desktop coding agent supporting 340+ models via OpenRouter",
+      "evidence": [
+        "https://github.com/TheRealJadenKwek/harness-code"
+      ],
+      "confidence": "medium",
+      "relevance_score": 53,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-0agloom",
+      "title": "agloom - Production agent framework",
+      "why_it_matters": "Nine execution patterns, persistent memory, MCP, and observability",
+      "evidence": [
+        "https://github.com/HELLOMEDHIRA/agloom",
+        "https://pypi.org/project/agloom/0.0.1.17/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 53,
+      "source_diversity": 2,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-6rusty",
+      "title": "rusty-imap-mcp - Security-first IMAP MCP",
+      "why_it_matters": "Security-first MCP server for agentic email access",
+      "evidence": [
+        "https://github.com/randomparity/rusty-imap-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 49,
+      "source_diversity": 1,
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-1nevoflux",
+      "title": "nevoflux-agent - Browser automation agent",
+      "why_it_matters": "Rust-based browser/desktop automation with MCP and WASM skills",
+      "evidence": [
+        "https://github.com/nevoflux-browser/nevoflux-agent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 48,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-14calibrate",
+      "title": "calibrate - AI agent evaluation framework",
+      "why_it_matters": "Framework for evaluating speech, LLM, and end-to-end agent simulations",
+      "evidence": [
+        "https://github.com/ARTPARK-SAHAI-ORG/calibrate"
+      ],
+      "confidence": "medium",
+      "relevance_score": 46,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-2stackunderflow",
+      "title": "StackUnderflow - Local agent observability",
+      "why_it_matters": "Local observability for coding agents with offline replay",
+      "evidence": [
+        "https://github.com/0bserver07/StackUnderflow"
+      ],
+      "confidence": "medium",
+      "relevance_score": 46,
+      "source_diversity": 1,
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    },
+    {
+      "id": "scr-5substrate",
+      "title": "substrate - Multi-agent orchestration daemon",
+      "why_it_matters": "Daemon for orchestrating multiple AI coding agents",
+      "evidence": [
+        "https://github.com/johnplanow/substrate"
+      ],
+      "confidence": "medium",
+      "relevance_score": 46,
+      "source_diversity": 1,
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-15"
+    }
+  ],
+  "gaps": [
+    "No strong signals for deployment or storage infrastructure",
+    "Limited coverage of agent security beyond sandbox escapes"
+  ]
+}

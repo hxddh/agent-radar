@@ -1,6 +1,6 @@
 # Source Lanes
 
-Last checked: 2026-07-07
+Last checked: 2026-07-08
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
@@ -19,8 +19,8 @@ Last checked: 2026-07-07
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 9 | 0 | 45 |
 | reddit-rss | 1 | 0 | 4 |
-| release | 20 | 0 | 44 |
-| tag | 20 | 0 | 49 |
+| release | 20 | 0 | 45 |
+| tag | 20 | 0 | 50 |
 
 Failure handling:
 - Collector failures are recorded here and in `automation/source-health.md`.

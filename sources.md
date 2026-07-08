@@ -335,3 +335,15 @@ Ignore or deprioritize:
 - shiyongyin/agent-eval-lite: https://github.com/shiyongyin/agent-eval-lite
 - ionalpha/flynn: https://github.com/ionalpha/flynn
 - zycaskevin/Vault-Agent-Memory: https://github.com/zycaskevin/Vault-Agent-Memory
+
+
+## Additional sources from 2026-07-08 source sweep
+
+- ruvnet/ruflo - Agent meta-harness: https://github.com/ruvnet/ruflo
+- TencentCloud/CubeSandbox - Secure sandbox: https://github.com/TencentCloud/CubeSandbox
+- MAMA - Local-first operating memory: https://github.com/jungjaehoon-lifegamez/MAMA
+- openagent - Personal AI assistant: https://github.com/the-open-agent/openagent
+- mcp-ai-memory - Semantic memory MCP server: https://github.com/ronie-aduana/mcp-ai-memory
+- harness-code - Multi-model coding agent: https://github.com/TheRealJadenKwek/harness-code
+- agloom - Production agent framework: https://github.com/HELLOMEDHIRA/agloom
+- rusty-imap-mcp - Security-first IMAP MCP: https://github.com/randomparity/rusty-imap-mcp
