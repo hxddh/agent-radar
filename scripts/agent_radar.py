@@ -58,7 +58,7 @@ INIT_PROTECTED_FILES = {
 INIT_PROTECTED_DIRS = ("prompts", "automation", "docs")
 
 
-__version__ = "0.7.6"
+__version__ = "0.7.7"
 
 CORE_FILES = [
     "README.md",

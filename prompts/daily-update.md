@@ -33,7 +33,7 @@ Daily direction quota (required):
 - At most **2 infra_primitive** emerging-repo bullets in the day block; additional infra candidates go to `research-log.md` only.
 - Do not fill the day with GitHub long-tail memory/MCP/sandbox repos when mainstream or user signals are missing.
 - Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.
-- Prefer 24–48h deltas. Monthly/quarterly roundups older than about a week must be labeled `Freshness: stale-roundup` or moved to `research-log.md`.
+- Prefer 24–48h deltas. Monthly/quarterly roundups older than about a week should be labeled `Freshness: stale-roundup` or moved to `research-log.md` (the runner auto-labels if omitted).
 
 Rules:
 - Report format, JSON output, bilingual gates, and append-vs-full rules: see `prompts/runner-rules.md`.
