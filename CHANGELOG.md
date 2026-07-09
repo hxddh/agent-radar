@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.7.11 - 2026-07-09
+
+Reserve discussion/social slots in the shared source pool and screening injection so Bluesky/Reddit/HN survive GitHub long-tail crowding.
+
+### Added
+- Discussion lane floor in `select_scored_items_with_lane_balance` (`DISCUSSION_LANE_FLOOR_RATIO` / `DISCUSSION_LANE_FLOOR_MIN`).
+- Shared collection pool and screening compact list use lane balance (not pure score cut).
+- Screening diversify prefers discussion-backed `user_workflow` before generic user notes.
+- Telemetry: `discussion_lane_reserved`, `screening_actionable_user`.
+- CLI version bumped to `0.7.11`.
+
+### Changed
+- Prompts tell the model to promote snapshot Bluesky/Reddit/HN URLs into candidates or Gaps.
+- Daily refusal for missing user_workflow mentions screening actionable-user count when present.
+
 ## v0.7.10 - 2026-07-09
 
 Treat social/discussion platforms as first-class radar sources: label instead of demote, boost scoring, and require coverage when screening found discussion candidates.
