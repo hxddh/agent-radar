@@ -53,6 +53,12 @@ Required synthesis sections (the runner rejects a new weekly without them):
   week's evidence (e.g. "MongoDB MCP image 500K pulls" vs "all new memory repos <2
   stars"). State which side the evidence currently favors and what would flip it.
 
+- **By the Numbers** — the runner injects telemetry-computed weekly metrics
+  (vendor/theme coverage, mainstream recall, repeats labeled, dead citations
+  blocked, numeric claims flagged, social candidates) with week-over-week deltas.
+  Reproduce them under `### By the Numbers` and interpret the movement in 2-3
+  sentences; do not invent your own counts.
+
 Consistency rule: an item may not appear as verified fact in one section and
 unverified in another. If a claim was flagged `needs-corroboration` anywhere,
 every later mention must carry that label until corroborated.

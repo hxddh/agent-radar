@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.9.0 - 2026-07-09
+
+Signal-depth release: verify claims (not just links), upgrade social/discussion evidence instead of demoting it, thread storylines across days, and make weekly trends telemetry-computed.
+
+### Added
+- **Social signal upgrades** (social stays first-class, never demoted): multi-platform coverage (≥2 distinct social hosts) is upgraded to Strong as multiple independent user reports (`social_multi_platform_upgraded`); social-sourced mainstream product claims get the matching official snapshot URL attached automatically (`social_official_attached`); `corroboration: pending-official` is informational only.
+- **Number check**: significant numeric claims (money, %, k/m/b/t suffixes, magnitudes ≥1000) in day-block bullets are compared against the cited source's snapshot title/note; unmatched numbers get a `Number check: ... verify before trusting` label (`numeric_claims_flagged`). Applies to all source classes equally; never rejects. Env: `NUMBER_CLAIM_CHECK`.
+- **Storyline continuity**: URLs covered on ≥2 recent days (14-day window) are injected into the daily prompt as ongoing storylines with day counts (`storylines_active`); repeats must carry the delta and `Freshness: follow-up`.
+- **Weekly By the Numbers**: runner-computed weekly telemetry aggregates (vendor/theme coverage, mainstream recall, repeats labeled, dead citations blocked, numeric claims flagged, social candidates) with week-over-week deltas, injected into the weekly prompt; a missing `### By the Numbers` section is warned post-apply.
+- **Candidate id hygiene**: `scr-` ids are now URL-canonical (same URL → same id regardless of retitles); research-log appends that re-add already-tracked URLs trigger a warning (`research_log_duplicate_urls`).
+- **Breadth**: Hugging Face blog and 机器之心 (jiqizhixin) feeds; SWE-bench / agent-benchmark queries.
+- CLI version bumped to `0.9.0`.
+
+### Changed
+- Prompts (`daily-update`, `weekly-review`, `runner-rules`, `screening-schema`) document number checks, social upgrade rules, storylines, and By the Numbers.
+
 ## v0.8.0 - 2026-07-09
 
 Content-truthfulness and direction release: verify what the model cites, stop re-reporting old news, gate low-reputation repos, encode the storage thesis in scoring, and turn weekly/monthly reports into real synthesis.

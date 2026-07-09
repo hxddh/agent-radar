@@ -20,6 +20,7 @@ Rules:
   - 3 `infra_primitive` max in the top 8 shown for synthesis
 - Do not invent facts.
 - Social/discussion sources (Bluesky, Reddit, HN, X, Lobsters) are **first-class**. Prefer them for early awareness and `user_workflow`; label Evidence strength instead of dropping them.
+- When the same story appears on **multiple platforms or from multiple independent posters**, list every URL in `evidence` — the runner upgrades multi-platform social coverage to Strong (multiple independent user reports) and attaches matching official URLs to social product claims.
 - When the source snapshot includes Bluesky/Reddit/HN/X URLs, promote at least 1–2 into candidates (or Gaps: `Missing social/discussion: ...`). Do not let GitHub long-tail crowd them out.
 - Keep weak single-anecdote social posts labeled (`confidence: low` / Evidence strength: Weak), but still include high-signal discussion threads.
 - Prefer **direction-changing** signals over another zero-star memory/MCP/sandbox repo.

@@ -308,6 +308,9 @@ DEFAULT_CHANGELOG_FEEDS = [
     ("minio-blog", "https://blog.min.io/rss/"),
     ("aws-storage-blog", "https://aws.amazon.com/blogs/storage/feed/"),
     ("cloudflare-blog", "https://blog.cloudflare.com/rss/"),
+    # Ecosystem/media breadth: model-hub blog + Chinese AI media.
+    ("hf-blog", "https://huggingface.co/blog/feed.xml"),
+    ("jiqizhixin", "https://www.jiqizhixin.com/rss"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -422,6 +425,16 @@ COVERAGE_LEDGER_RE = re.compile(r"coverage ledger|vendors checked", re.IGNORECAS
 WEEKLY_SCORECARD_RE = re.compile(r"thesis scorecard", re.IGNORECASE)
 COUNTER_SIGNAL_RE = re.compile(r"counter-?signal", re.IGNORECASE)
 MONTHLY_WEEK_COVERAGE_RE = re.compile(r"weekly coverage", re.IGNORECASE)
+WEEKLY_BY_THE_NUMBERS_RE = re.compile(r"by the numbers", re.IGNORECASE)
+# --- Numeric-claim verification and storyline continuity (v0.9.0) ---
+NUMBER_TOKEN_RE = re.compile(r"(?<![\w.])(\$?\d[\d,]*(?:\.\d+)?)\s*([kKmMbBtT]\b|%)?")
+MULTIPART_VERSION_RE = re.compile(r"\b\d+(?:\.\d+){2,}(?:-[\w.]+)?\b")
+ISO_DATE_RE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
+NUMBER_SUFFIX_MULTIPLIERS = {"k": 1e3, "m": 1e6, "b": 1e9, "t": 1e12}
+NUMBER_MATCH_TOLERANCE = 0.05
+STORYLINE_LOOKBACK_DAYS = 14
+STORYLINE_MIN_DAYS = 2
+STORYLINE_PROMPT_LIMIT = 8
 # Thesis-aligned scoring: keep the storage/containment/economics theses
 # (radar.md) visible in deterministic source ranking, not only in prompts.
 # automation/thesis-keywords.json overrides/extends these weights.
@@ -1238,6 +1251,91 @@ def candidate_has_discussion_evidence(candidate: dict[str, Any]) -> bool:
     return any(marker in hay for marker in DISCUSSION_SOURCE_MARKERS)
 
 
+def social_hosts_in_urls(urls: list[str]) -> set[str]:
+    hosts: set[str] = set()
+    for url in urls:
+        for host in SOCIAL_EVIDENCE_HOSTS:
+            if host in url:
+                hosts.add(host)
+    return hosts
+
+
+def official_corroboration_url(candidate: dict[str, Any], cache: dict[str, dict[str, Any]]) -> str:
+    """Find an official-lane snapshot URL whose title overlaps the candidate title."""
+    tokens = set(candidate_title_tokens(str(candidate.get("title", ""))))
+    if len(tokens) < 2:
+        return ""
+    best = ""
+    best_overlap = 0
+    for url, record in cache.items():
+        if record.get("lane") != "official":
+            continue
+        record_tokens = set(candidate_title_tokens(str(record.get("title", ""))))
+        overlap = len(tokens & record_tokens)
+        if overlap >= 2 and overlap > best_overlap:
+            best, best_overlap = url, overlap
+    return best
+
+
+def enrich_social_candidates(data: dict[str, Any], root: Path | None) -> dict[str, Any]:
+    """Social/discussion sources are first-class; this pass *upgrades* them.
+
+    - Cross-platform coverage (>=2 distinct social hosts) counts as multiple
+      independent user reports => Strong per the evidence rules.
+    - Social-sourced mainstream product claims get the matching official
+      snapshot URL attached when one exists, raising confidence instead of
+      demoting the social signal.
+    Never demotes or drops a social candidate.
+    """
+    candidates = data.get("candidates", [])
+    if not isinstance(candidates, list):
+        return data
+    cache = load_source_cache(root)
+    upgraded = 0
+    attached = 0
+    for cand in candidates:
+        if not isinstance(cand, dict) or cand.get("corroboration"):
+            continue
+        urls = candidate_evidence_urls(cand)
+        hosts = social_hosts_in_urls(urls)
+        if not hosts:
+            continue
+        if len(hosts) >= 2:
+            cand["evidence_strength"] = "Strong (multiple independent user reports)"
+            cand["corroboration"] = "multi-platform"
+            if str(cand.get("confidence", "")).lower() == "low":
+                cand["confidence"] = "medium"
+            upgraded += 1
+            continue
+        if is_social_only_evidence(cand) and infer_signal_class(cand) == "mainstream_product":
+            official = official_corroboration_url(cand, cache)
+            if official:
+                evidence = cand.get("evidence")
+                if isinstance(evidence, list) and official not in [str(item).strip().lower() for item in evidence]:
+                    evidence.append(official)
+                cand["corroboration"] = "official-url-attached"
+                if str(cand.get("confidence", "")).lower() == "low":
+                    cand["confidence"] = "medium"
+                attached += 1
+            else:
+                # Informational only — the signal stays first-class.
+                cand["corroboration"] = "pending-official"
+    RUN_AUDIT["social_multi_platform_upgraded"] = upgraded
+    RUN_AUDIT["social_official_attached"] = attached
+    if upgraded:
+        warning = (
+            f"Upgraded {upgraded} social candidate(s) to Strong "
+            "(multiple independent platforms reporting)"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if attached:
+        warning = f"Attached official corroboration URL(s) to {attached} social candidate(s)"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return data
+
+
 def content_has_social_discussion_signal(text: str) -> bool:
     lower = text.lower()
     if "missing social" in lower or "missing discussion" in lower:
@@ -1511,7 +1609,10 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         title = str(cand.get("title", ""))[:80]
         evidence = cand.get("evidence", [])
         url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
-        slug = hashlib.sha256(f"{title}|{url}".encode("utf-8")).hexdigest()[:8]
+        # URL-canonical ids: retitled candidates for the same URL keep one id,
+        # so research-log stops accumulating duplicate scr- entries per source.
+        basis = url.lower().rstrip("/") if url else title
+        slug = hashlib.sha256(basis.encode("utf-8")).hexdigest()[:8]
         cand_id = f"scr-{slug}"
         cand["id"] = cand_id
         ids.append(cand_id)
@@ -1568,6 +1669,7 @@ def write_screening_artifact(root: Path, day: dt.date, screen_text: str) -> Path
     if not data:
         data = {"summary": "unparsed screening output", "raw": screen_text.strip()}
     data = enrich_screening_with_ids(data)
+    data = enrich_social_candidates(data, root)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
 
@@ -1581,6 +1683,7 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
         )
     # Repair collapsed scores / demote star-hype before ranking and MUST-cover.
     data = enrich_screening_with_ids(data)
+    data = enrich_social_candidates(data, root)
 
     max_candidates = env_int("SCREEN_PROMPT_CANDIDATES", DEFAULT_SCREEN_PROMPT_CANDIDATES)
     max_gaps = env_int("SCREEN_GAPS_IN_PROMPT", DEFAULT_SCREEN_GAPS_IN_PROMPT)
@@ -1924,6 +2027,19 @@ def validate_research_log_append(old: str, content: str) -> None:
             "Refusing research-log append that adds another ## Candidate inbox section; "
             "append bullets under the existing inbox."
         )
+    old_lower = old.lower()
+    duplicates = sorted(
+        {url for url in extract_all_urls(content) if url.lower() in old_lower}
+    )
+    RUN_AUDIT["research_log_duplicate_urls"] = len(duplicates)
+    if duplicates:
+        sample = "; ".join(duplicates[:3])
+        warning = (
+            f"research-log append re-adds {len(duplicates)} already-tracked URL(s) "
+            f"({sample}); update the existing candidate entry instead"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
 
 
 def candidate_title_tokens(title: str) -> list[str]:
@@ -2467,6 +2583,222 @@ def repair_repeated_url_freshness(result: dict[str, Any], root: Path | None, day
     return labeled
 
 
+def _strip_unnumberable_spans(text: str) -> str:
+    """Remove URLs, CVE ids, multi-part versions, and dates before number extraction."""
+    text = GENERIC_URL_RE.sub(" ", text)
+    text = CVE_ID_RE.sub(" ", text)
+    text = ISO_DATE_RE.sub(" ", text)
+    text = MULTIPART_VERSION_RE.sub(" ", text)
+    return text
+
+
+def extract_significant_numbers(text: str, *, significant_only: bool = True) -> set[float]:
+    """Normalized numeric values worth verifying: money, percentages, k/m/b/t
+    suffixes, or magnitudes >= 1000 (years excluded)."""
+    values: set[float] = set()
+    for raw, suffix in NUMBER_TOKEN_RE.findall(_strip_unnumberable_spans(text)):
+        has_dollar = raw.startswith("$")
+        digits = raw.lstrip("$").replace(",", "")
+        try:
+            value = float(digits)
+        except ValueError:
+            continue
+        suffix = suffix.lower()
+        if suffix in NUMBER_SUFFIX_MULTIPLIERS:
+            value *= NUMBER_SUFFIX_MULTIPLIERS[suffix]
+        significant = bool(suffix) or has_dollar or value >= 1000
+        if significant_only and not significant:
+            continue
+        # Bare years are context, not claims.
+        if not suffix and not has_dollar and value.is_integer() and 1900 <= value <= 2100:
+            continue
+        values.add(value)
+    return values
+
+
+def numbers_supported_by_text(numbers: set[float], source_text: str) -> set[float]:
+    """Subset of `numbers` matched (within tolerance) by numbers in source_text."""
+    if not numbers:
+        return set()
+    source_numbers = extract_significant_numbers(source_text, significant_only=False)
+    supported: set[float] = set()
+    for value in numbers:
+        for candidate in source_numbers:
+            larger = max(abs(value), abs(candidate), 1e-9)
+            if abs(value - candidate) / larger <= NUMBER_MATCH_TOLERANCE:
+                supported.add(value)
+                break
+    return supported
+
+
+def format_claim_number(value: float) -> str:
+    if value >= 1e12:
+        return f"{value / 1e12:g}T"
+    if value >= 1e9:
+        return f"{value / 1e9:g}B"
+    if value >= 1e6:
+        return f"{value / 1e6:g}M"
+    if value >= 1e3 and value == int(value):
+        return f"{int(value):,}"
+    return f"{value:g}"
+
+
+def repair_unverified_numbers(result: dict[str, Any], root: Path | None) -> int:
+    """Label bullets whose significant numbers are absent from their cited
+    snapshot sources — the most common hallucination class (parameter counts,
+    star counts, revenue figures). Labels apply to every source class equally;
+    they never reject or demote the bullet."""
+    if root is None or not env_bool("NUMBER_CLAIM_CHECK", True):
+        return 0
+    cache = load_source_cache(root)
+    if not cache:
+        return 0
+    cache_by_key = {url.lower().rstrip("/"): record for url, record in cache.items()}
+
+    def _label(bullet: str) -> str:
+        if "number check:" in bullet.lower():
+            return bullet
+        numbers = extract_significant_numbers(bullet)
+        if not numbers:
+            return bullet
+        source_texts: list[str] = []
+        for url in extract_all_urls(bullet):
+            record = cache_by_key.get(url.lower().rstrip("/"))
+            if record:
+                source_texts.append(f"{record.get('title', '')} {record.get('note', '')}")
+        if not source_texts:
+            # No snapshot record to compare against; nothing to verify.
+            return bullet
+        supported = numbers_supported_by_text(numbers, " ".join(source_texts))
+        missing = sorted(numbers - supported)
+        if not missing:
+            return bullet
+        rendered = ", ".join(format_claim_number(value) for value in missing[:3])
+        lines = bullet.splitlines()
+        lines.append(f"  - Number check: {rendered} not found in cited snapshot source; verify before trusting.")
+        return "\n".join(lines)
+
+    labeled = transform_report_update_bullets(result, _label, daily_only=True)
+    RUN_AUDIT["numeric_claims_flagged"] = labeled
+    if labeled:
+        warning = f"Labeled {labeled} bullet(s) with unverified numeric claims (Number check)"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return labeled
+
+
+def ongoing_storylines(
+    root: Path | None,
+    day: dt.date,
+    *,
+    lookback_days: int = STORYLINE_LOOKBACK_DAYS,
+    limit: int = STORYLINE_PROMPT_LIMIT,
+) -> list[tuple[str, int, str]]:
+    """URLs covered on >=2 distinct recent days: (url, day_count, last_date)."""
+    if root is None:
+        return []
+    seen_dates: dict[str, set[str]] = {}
+    months = {month_label(day), month_label(day - dt.timedelta(days=lookback_days))}
+    for month in sorted(months):
+        path = root / "daily" / f"{month}.md"
+        if not path.exists():
+            continue
+        for date_label, block in daily_day_blocks(read_text_full(path)):
+            try:
+                block_day = dt.date.fromisoformat(date_label)
+            except ValueError:
+                continue
+            if block_day >= day or (day - block_day).days > lookback_days:
+                continue
+            for url in extract_all_urls(block):
+                seen_dates.setdefault(url.lower().rstrip("/"), set()).add(date_label)
+    storylines = [
+        (url, len(dates), max(dates))
+        for url, dates in seen_dates.items()
+        if len(dates) >= STORYLINE_MIN_DAYS
+    ]
+    storylines.sort(key=lambda entry: (-entry[1], entry[2]), reverse=False)
+    return storylines[:limit]
+
+
+def storylines_prompt_note(root: Path | None, day: dt.date) -> str:
+    storylines = ongoing_storylines(root, day)
+    RUN_AUDIT["storylines_active"] = len(storylines)
+    if not storylines:
+        return ""
+    lines = [
+        "Ongoing storylines (already covered on multiple recent days — if citing "
+        "again, write only the delta and label `Freshness: follow-up`):"
+    ]
+    for url, count, last in storylines:
+        lines.append(f"- {url} (covered {count} days, last {last})")
+    return "\n".join(lines)
+
+
+def telemetry_records_for_range(root: Path | None, start: dt.date, end: dt.date, task: str = "daily") -> list[dict[str, Any]]:
+    if root is None:
+        return []
+    records: list[dict[str, Any]] = []
+    months = {month_label(start), month_label(end)}
+    for month in sorted(months):
+        path = root / "automation" / "telemetry" / f"{month}.jsonl"
+        if not path.exists():
+            continue
+        for line in read_text_full(path).splitlines():
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if record.get("task") != task:
+                continue
+            try:
+                record_day = dt.date.fromisoformat(str(record.get("date", "")))
+            except ValueError:
+                continue
+            if start <= record_day <= end:
+                records.append(record)
+    return records
+
+
+def weekly_numbers_note(root: Path | None, day: dt.date) -> str:
+    """Runner-computed week metrics with week-over-week deltas; injected into
+    the weekly prompt so trend lines come from telemetry, not model memory."""
+    week_start, week_end = week_date_range(day)
+    current = telemetry_records_for_range(root, week_start, week_end)
+    previous = telemetry_records_for_range(
+        root, week_start - dt.timedelta(days=7), week_end - dt.timedelta(days=7)
+    )
+    if not current:
+        return ""
+
+    def _agg(records: list[dict[str, Any]]) -> dict[str, float]:
+        if not records:
+            return {}
+        count = len(records)
+        return {
+            "daily_runs": count,
+            "avg_vendor_families": round(sum(r.get("vendor_families_covered", 0) for r in records) / count, 1),
+            "avg_breadth_themes": round(sum(r.get("breadth_themes_covered", 0) for r in records) / count, 1),
+            "avg_mainstream_recall": round(sum(r.get("mainstream_recall", 0.0) for r in records) / count, 2),
+            "repeat_urls_labeled": sum(r.get("repeat_url_labeled", 0) for r in records),
+            "dead_citations_blocked": sum(r.get("citation_urls_unreachable", 0) for r in records),
+            "numeric_claims_flagged": sum(r.get("numeric_claims_flagged", 0) for r in records),
+            "repo_reputation_demoted": sum(r.get("repo_reputation_demoted", 0) for r in records),
+            "social_candidates_labeled": sum(r.get("social_discussion_labeled", 0) for r in records),
+        }
+
+    cur = _agg(current)
+    prev = _agg(previous)
+    lines = ["Runner-computed weekly metrics (reproduce under `### By the Numbers`, then interpret):"]
+    for key, value in cur.items():
+        prev_value = prev.get(key)
+        delta = f" (prev week: {prev_value})" if prev_value is not None else ""
+        lines.append(f"- {key}: {value}{delta}")
+    return "\n".join(lines)
+
+
 def daily_english_section_headings(text: str) -> list[str]:
     """`#### ` headings inside the `### English` block of a day block."""
     headings: list[str] = []
@@ -2591,7 +2923,11 @@ def warn_missing_report_sections(root: Path, task: str, day: dt.date) -> None:
     """Post-apply soft check that the on-disk weekly/monthly keeps synthesis sections."""
     if task == "weekly":
         path = root / "weekly" / f"{week_label(day)}.md"
-        checks = [("Thesis Scorecard", WEEKLY_SCORECARD_RE), ("Signal vs Counter-signal", COUNTER_SIGNAL_RE)]
+        checks = [
+            ("Thesis Scorecard", WEEKLY_SCORECARD_RE),
+            ("Signal vs Counter-signal", COUNTER_SIGNAL_RE),
+            ("By the Numbers", WEEKLY_BY_THE_NUMBERS_RE),
+        ]
     elif task == "monthly":
         path = root / "monthly" / f"{month_label(day)}.md"
         checks = [("Weekly Coverage", MONTHLY_WEEK_COVERAGE_RE)]
@@ -2821,6 +3157,7 @@ def validate_synthesis_result(
         repair_daily_freshness_labels(result)
         validate_daily_freshness(result)
         repair_repeated_url_freshness(result, root, day)
+        repair_unverified_numbers(result, root)
     elif task == "weekly":
         validate_weekly_synthesis(result)
     elif task == "monthly":
@@ -3715,6 +4052,9 @@ def source_queries_for_task(task: str, root: Path | None = None) -> dict[str, li
         # Storage/market thesis lane (radar.md storage thesis).
         common["hn"].extend(["object storage agent", "agent workspace snapshot"])
         common["github"].extend(["agent workspace snapshot", "agent artifact storage"])
+        # Benchmark/eval lane: leaderboards are adoption-grade evidence.
+        common["hn"].extend(["SWE-bench", "agent benchmark"])
+        common["github"].extend(["swe-bench evaluation"])
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
         common["reddit"].extend(["agent security", "agent automation"])
@@ -4492,6 +4832,13 @@ def build_prompt(
             + checked_note
             + ".\n"
         )
+        storylines_note = storylines_prompt_note(root, day)
+        if storylines_note:
+            task_rules += "\n" + storylines_note + "\n"
+    elif task == "weekly":
+        numbers_note = weekly_numbers_note(root, day)
+        if numbers_note:
+            task_rules = "\n" + numbers_note + "\n"
     elif task == "monthly":
         weeks = ", ".join(iso_weeks_in_month(day))
         task_rules = (
@@ -4978,6 +5325,11 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "citation_urls_unreachable": RUN_AUDIT.get("citation_urls_unreachable", 0),
         "citation_urls_unverified": RUN_AUDIT.get("citation_urls_unverified", 0),
         "repeat_url_labeled": RUN_AUDIT.get("repeat_url_labeled", 0),
+        "numeric_claims_flagged": RUN_AUDIT.get("numeric_claims_flagged", 0),
+        "storylines_active": RUN_AUDIT.get("storylines_active", 0),
+        "social_multi_platform_upgraded": RUN_AUDIT.get("social_multi_platform_upgraded", 0),
+        "social_official_attached": RUN_AUDIT.get("social_official_attached", 0),
+        "research_log_duplicate_urls": RUN_AUDIT.get("research_log_duplicate_urls", 0),
         "coverage_ledger_present": RUN_AUDIT.get("coverage_ledger_present", False),
         "daily_sections_canonical": RUN_AUDIT.get("daily_sections_canonical", False),
         "weekly_scorecard_present": RUN_AUDIT.get("weekly_scorecard_present", False),
@@ -5093,6 +5445,11 @@ def run_task(
     RUN_AUDIT["breadth_themes_covered"] = 0
     RUN_AUDIT["repo_reputation_demoted"] = 0
     RUN_AUDIT["cve_primary_source_added"] = 0
+    RUN_AUDIT["numeric_claims_flagged"] = 0
+    RUN_AUDIT["storylines_active"] = 0
+    RUN_AUDIT["social_multi_platform_upgraded"] = 0
+    RUN_AUDIT["social_official_attached"] = 0
+    RUN_AUDIT["research_log_duplicate_urls"] = 0
     RUN_AUDIT["citation_urls_checked"] = 0
     RUN_AUDIT["citation_urls_unreachable"] = 0
     RUN_AUDIT["citation_urls_unverified"] = 0
