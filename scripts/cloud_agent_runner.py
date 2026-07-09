@@ -5744,7 +5744,10 @@ def run_task(
     RUN_AUDIT["numeric_claims_flagged"] = 0
     RUN_AUDIT["storylines_active"] = 0
     RUN_AUDIT["claim_audit_flags"] = 0
-    RUN_AUDIT["screening_shards"] = 0
+    # Preflight sharded screening runs before run_task and already recorded its
+    # shard count; keep it when this task consumes that shared screening.
+    if not shared_screened:
+        RUN_AUDIT["screening_shards"] = 0
     RUN_AUDIT["corroboration_queue_size"] = 0
     RUN_AUDIT["stale_watchlist_count"] = 0
     RUN_AUDIT["open_questions_count"] = 0
@@ -5798,6 +5801,9 @@ def run_task(
             )
             write_screening_artifact(root, day, screen_text)
             RUN_AUDIT["openrouter_calls"] = int(RUN_AUDIT.get("openrouter_calls", 0)) + 1
+            # Single-task mode screens once over the formatted snapshot (raw
+            # items are not retained here, so lane sharding does not apply).
+            RUN_AUDIT["screening_shards"] = 1
     if task == "source-sweep" and screen_text:
         skip, reason = should_skip_source_sweep(root, screen_text)
         if skip:

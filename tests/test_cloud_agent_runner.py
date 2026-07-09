@@ -2471,6 +2471,28 @@ class AuditLoopTest(unittest.TestCase):
         self.assertEqual(len(queue), 1)
         self.assertIn("Grok 4.5", queue[0])
 
+    def test_shared_screening_preserves_shard_count_in_run_task(self) -> None:
+        payload = {"choices": [{"message": {"content": '{"summary":"ok","updates":[]}'}}]}
+        cloud_agent_runner.RUN_AUDIT["screening_shards"] = 2
+        with mock.patch.object(cloud_agent_runner, "task_uses_screening", return_value=True):
+            with mock.patch.object(cloud_agent_runner, "invoke_model", return_value=payload):
+                with mock.patch.object(cloud_agent_runner, "build_context", return_value=(["research-log.md"], "ctx")):
+                    with mock.patch.object(cloud_agent_runner, "collect_public_sources", return_value="sources"):
+                        with mock.patch.object(cloud_agent_runner, "apply_updates", return_value=0):
+                            with tempfile.TemporaryDirectory() as tmp:
+                                cloud_agent_runner.run_task(
+                                    Path(tmp),
+                                    "source-sweep",
+                                    cloud_agent_runner.parse_date("2026-07-02"),
+                                    shared_screened=(
+                                        '{"summary":"s","candidates":['
+                                        '{"title":"Fresh","evidence":["https://fresh.example/x"],'
+                                        '"promotion_status":"candidate"}]}'
+                                    ),
+                                    preflight_screen_calls=2,
+                                )
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["screening_shards"], 2)
+
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")
         with tempfile.TemporaryDirectory() as tmp:
