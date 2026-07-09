@@ -20,12 +20,26 @@ Collect and summarize high-signal AI Agent updates from the last 24-48 hours.
 Use all available authorized sources. Do not artificially limit research to public webpages. Public sources, authorized logged-in sources, and user-provided private signals can all be useful. Because this repository is public, publish only public-safe summaries.
 
 Focus on (direction order matters):
-1. Mainstream product / platform deltas (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, etc.)
+1. Mainstream product / platform deltas (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, DeepSeek, Qwen/Tongyi, ByteDance Trae, etc.)
 2. Real user experience and operator workflows
 3. Emerging agents worth tracking (max 2–3; rest stay in research-log)
 4. Reusable workflow / prompt / setup tricks
 5. Infrastructure signals: sandbox, MCP, tools, memory, browser, eval, cloud runtime (rotate; do not dump all)
 6. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
+
+Canonical day-block sections (required; the runner rejects other English `####` section titles):
+
+```
+#### 1. New Signals
+#### 2. Mainstream Agent Progress
+#### 3. User Workflow & Field Notes
+#### 4. Emerging Agents / Infra Primitives
+#### 5. Storage / Infra Angle
+#### 6. Assessment & Gaps
+```
+
+Sections 1, 5, and 6 are mandatory; 2–4 may be omitted only when empty. Keep the same
+order. Mirror the section titles in the `### 中文` block.
 
 Daily direction quota (required):
 - At least **1 mainstream_product** signal from a real product delta (changelog/blog/release), OR an explicit Gaps bullet naming which vendors were checked and missing. GitHub star counts alone do not count.
@@ -38,6 +52,11 @@ Daily direction quota (required):
 - Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.
 - When replacing an existing day block, keep prior Strong official URLs unless obsolete (or name them under Gaps).
 - Prefer 24–48h deltas. Monthly/quarterly roundups older than about a week should be labeled `Freshness: stale-roundup` or moved to `research-log.md` (the runner auto-labels if omitted).
+- **Coverage ledger (required)**: `#### 6. Assessment & Gaps` must contain a line `- Coverage ledger: checked=<lanes/vendors actually checked>; missed=<vendors not reachable>`. Gaps bullets only count as escape hatches when this ledger is present.
+- **No re-reporting**: a URL already covered in a recent day block is not a New Signal. If you must revisit it, label the bullet `Freshness: follow-up` and state the delta (the runner auto-labels repeats within 14 days).
+- **CVE claims need a primary source**: cite NVD (`https://nvd.nist.gov/vuln/detail/CVE-...`) or GitHub Advisories, not only aggregator/news sites (the runner appends the canonical NVD link if omitted).
+- **Repo reputation**: a GitHub repo with only its own README as evidence and a throwaway-pattern owner cannot appear in the day block; it stays in research-log until a second independent source (user report, adoption metric, vendor integration) exists.
+- **Citations must resolve**: only cite URLs that appear in the source snapshot/screening evidence or that you know resolve; the runner rejects updates containing dead citation links.
 
 Rules:
 - Report format, JSON output, bilingual gates, and append-vs-full rules: see `prompts/runner-rules.md`.

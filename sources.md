@@ -89,6 +89,27 @@ Use broad source coverage by default. The radar should not be limited to public 
 - Tigris blog / docs
 - E2B / Modal / Daytona / Supabase / Neon / Railway / Fly.io updates
 
+### China Coding-Agent Lane
+
+The radar output is bilingual; the input universe must include the China ecosystem, not only Anglophone vendors.
+
+- DeepSeek news / API changelog (collector: `deepseek-news`)
+- Qwen / Tongyi Lingma blog (collector: `qwen-blog`)
+- ByteDance Trae / MarsCode updates (query lane; no stable feed yet)
+- Zhipu GLM / Moonshot Kimi coding-agent updates (query lane)
+
+### Storage & Market Lane
+
+The storage thesis (radar.md) needs first-party storage-vendor and market inputs, not only agent-vendor changelogs.
+
+- MinIO blog (collector: `minio-blog`)
+- AWS Storage blog (collector: `aws-storage-blog`)
+- Cloudflare blog — R2 / Workers storage posts (collector: `cloudflare-blog`)
+- Benchmark leaderboards: SWE-bench, Terminal-Bench, Aider leaderboard (query lane; cite the leaderboard page)
+- Funding rounds / earnings commentary on agent-infra and storage vendors (query lane; label Evidence strength)
+
+Query pools for these lanes live in the runner defaults and can be extended without code changes via `automation/source-queries.json` (`{"hn": [...], "reddit": [...], "github": [...], "packages": [...]}`); thesis-scoring keyword weights via `automation/thesis-keywords.json`.
+
 ## Community Sources
 
 - Hacker News

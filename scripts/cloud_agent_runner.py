@@ -303,6 +303,11 @@ FEED_USER_AGENT = "Mozilla/5.0 (compatible; AgentRadar/1.0; +https://github.com/
 DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
+    # Storage/market lane: the storage thesis needs first-party storage-vendor
+    # inputs, not only agent-vendor changelogs.
+    ("minio-blog", "https://blog.min.io/rss/"),
+    ("aws-storage-blog", "https://aws.amazon.com/blogs/storage/feed/"),
+    ("cloudflare-blog", "https://blog.cloudflare.com/rss/"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -310,6 +315,9 @@ DEFAULT_CHANGELOG_PAGES = [
     ("anthropic-news", "https://www.anthropic.com/news"),
     ("anthropic-engineering", "https://www.anthropic.com/engineering"),
     ("google-developers-blog", "https://developers.googleblog.com/"),
+    # China-ecosystem coding-agent lane (bilingual radar; see sources.md).
+    ("qwen-blog", "https://qwenlm.github.io/blog/"),
+    ("deepseek-news", "https://api-docs.deepseek.com/news"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -369,6 +377,8 @@ DEFAULT_BLUESKY_QUERIES = [
     "MCP server",
     "Claude Code",
     "agent memory",
+    "DeepSeek agent",
+    "agent workspace",
 ]
 DEFAULT_DEVTO_TAGS = [
     "ai",
@@ -377,6 +387,63 @@ DEFAULT_DEVTO_TAGS = [
     "devops",
 ]
 DEFAULT_SOCIAL_FEED_SPECS: list[tuple[str, str]] = []
+# --- Citation verification, cross-day freshness, repo reputation (v0.8.0) ---
+GENERIC_URL_RE = re.compile(r"https?://[^\s)>\]]+", re.IGNORECASE)
+CVE_ID_RE = re.compile(r"\bCVE-\d{4}-\d{4,7}\b", re.IGNORECASE)
+CVE_PRIMARY_SOURCE_HOSTS = (
+    "nvd.nist.gov",
+    "github.com/advisories",
+    "www.cve.org",
+    "cve.mitre.org",
+)
+NVD_DETAIL_URL_PREFIX = "https://nvd.nist.gov/vuln/detail/"
+DEFAULT_CITATION_CHECK_MAX_URLS = 15
+DAILY_REPEAT_URL_LOOKBACK_DAYS = 14
+# Owner names like `Charlesfrederickmenningerdateplum166` (long concatenated
+# words plus trailing digits) match the throwaway-account pattern used by
+# ZIP-download malware repos; repo-only evidence from them cannot ship as
+# day-block evidence without a second independent source.
+SUSPICIOUS_GITHUB_OWNER_RE = re.compile(r"^[A-Za-z]{16,}\d{2,}$")
+REPO_RISK_WHY_SUFFIX = "; low-reputation repo: needs second source"
+DAILY_CANONICAL_SECTIONS = (
+    "#### 1. New Signals",
+    "#### 2. Mainstream Agent Progress",
+    "#### 3. User Workflow & Field Notes",
+    "#### 4. Emerging Agents / Infra Primitives",
+    "#### 5. Storage / Infra Angle",
+    "#### 6. Assessment & Gaps",
+)
+DAILY_REQUIRED_SECTIONS = (
+    "#### 1. New Signals",
+    "#### 5. Storage / Infra Angle",
+    "#### 6. Assessment & Gaps",
+)
+COVERAGE_LEDGER_RE = re.compile(r"coverage ledger|vendors checked", re.IGNORECASE)
+WEEKLY_SCORECARD_RE = re.compile(r"thesis scorecard", re.IGNORECASE)
+COUNTER_SIGNAL_RE = re.compile(r"counter-?signal", re.IGNORECASE)
+MONTHLY_WEEK_COVERAGE_RE = re.compile(r"weekly coverage", re.IGNORECASE)
+# Thesis-aligned scoring: keep the storage/containment/economics theses
+# (radar.md) visible in deterministic source ranking, not only in prompts.
+# automation/thesis-keywords.json overrides/extends these weights.
+DEFAULT_THESIS_KEYWORD_WEIGHTS = {
+    "object storage": 8,
+    "workspace": 5,
+    "snapshot": 6,
+    "checkpoint": 6,
+    "artifact": 5,
+    "replay": 5,
+    "knowledge base": 4,
+    "blob storage": 4,
+    "containment": 6,
+    "isolation": 5,
+    "worktree": 5,
+    "supply chain": 5,
+    "sandbox escape": 6,
+    "token cost": 6,
+    "pricing": 4,
+    "cost efficiency": 4,
+    "usage quota": 4,
+}
 RUN_AUDIT: dict[str, Any] = {
     "provider": "",
     "models": [],
@@ -582,7 +649,8 @@ def auto_tasks(day: dt.date) -> list[str]:
         tasks.append("weekly")
     if day.weekday() in {2, 6}:
         tasks.append("promote-candidates")
-    if (day + dt.timedelta(days=1)).month != day.month:
+    # Mid-month refresh keeps the monthly from staying a day-1 seed until month end.
+    if day.day == 15 or (day + dt.timedelta(days=1)).month != day.month:
         tasks.append("monthly")
     return tasks
 
@@ -1075,6 +1143,49 @@ def is_github_repo_only_evidence(candidate: dict[str, Any]) -> bool:
     return all("github.com/" in url and "github.blog" not in url for url in urls)
 
 
+def github_owner_from_url(url: str) -> str:
+    match = re.search(r"github\.com/([A-Za-z0-9_.-]+)/", url)
+    return match.group(1) if match else ""
+
+
+def repo_reputation_risks(candidate: dict[str, Any]) -> list[str]:
+    """Deterministic reputation heuristics for repo-only candidates."""
+    if not is_github_repo_only_evidence(candidate):
+        return []
+    risks: list[str] = []
+    urls = candidate_evidence_urls(candidate)
+    owners = sorted({github_owner_from_url(url) for url in urls} - {""})
+    for owner in owners:
+        if SUSPICIOUS_GITHUB_OWNER_RE.match(owner):
+            risks.append(f"suspicious-owner:{owner}")
+    try:
+        diversity = int(candidate.get("source_diversity") or 1)
+    except (TypeError, ValueError):
+        diversity = 1
+    if len(urls) <= 1 and diversity <= 1:
+        risks.append("single-repo-source")
+    return risks
+
+
+def demote_low_reputation_repo(candidate: dict[str, Any]) -> bool:
+    """Defer repo-only candidates whose owner matches the throwaway-account
+    pattern; they stay in research-log until a second independent source shows up."""
+    risks = repo_reputation_risks(candidate)
+    if not any(risk.startswith("suspicious-owner:") for risk in risks):
+        if risks:
+            candidate["risk_flags"] = sorted(set(list(candidate.get("risk_flags") or []) + risks))
+        return False
+    candidate["risk_flags"] = sorted(set(list(candidate.get("risk_flags") or []) + risks))
+    candidate["promotion_status"] = "defer"
+    candidate["evidence_strength"] = "Weak"
+    if str(candidate.get("confidence", "")).lower() in {"high", "medium"}:
+        candidate["confidence"] = "low"
+    why = str(candidate.get("why_it_matters", "")).strip()
+    if why and "low-reputation" not in why.lower():
+        candidate["why_it_matters"] = truncate_text(why + REPO_RISK_WHY_SUFFIX, 120)
+    return True
+
+
 def has_official_product_evidence(candidate: dict[str, Any]) -> bool:
     hay = candidate_haystack(candidate)
     if has_official_evidence_url(candidate):
@@ -1377,6 +1488,7 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     demoted = 0
     social_labeled = 0
     reclassified = 0
+    repo_risky = 0
     ids: list[str] = []
     class_counts: dict[str, int] = {}
     for cand in candidates:
@@ -1388,6 +1500,8 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         cand["signal_class"] = signal_class
         if demote_star_only_mainstream(cand):
             demoted += 1
+        if demote_low_reputation_repo(cand):
+            repo_risky += 1
         if label_social_discussion_candidate(cand):
             social_labeled += 1
         class_counts[signal_class] = class_counts.get(signal_class, 0) + 1
@@ -1409,6 +1523,7 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     # Keep legacy key at 0 so older dashboards do not imply demotion still happens.
     RUN_AUDIT["social_only_demoted"] = 0
     RUN_AUDIT["user_repo_reclassified"] = reclassified
+    RUN_AUDIT["repo_reputation_demoted"] = repo_risky
     actionable_user_n = sum(
         1
         for cand in candidates
@@ -1434,6 +1549,13 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
             RUN_AUDIT["apply_warnings"].append(warning)
     if reclassified:
         warning = f"Reclassified {reclassified} GitHub/PyPI user_workflow candidate(s) to infra_primitive"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if repo_risky:
+        warning = (
+            f"Deferred {repo_risky} low-reputation repo candidate(s) "
+            "(throwaway-owner pattern; needs second independent source)"
+        )
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
     return data
@@ -1591,6 +1713,12 @@ def candidate_already_tracked(root: Path, candidate: dict[str, Any]) -> bool:
     for rel in ("research-log.md", "sources.md"):
         path = root / rel
         if path.exists():
+            haystacks.append(read_text_full(path))
+    # Published day blocks count as tracked too, so candidates already covered
+    # in a recent daily do not re-trigger a source-sweep pass.
+    daily_dir = root / "daily"
+    if daily_dir.is_dir():
+        for path in sorted(daily_dir.glob("*.md"))[-2:]:
             haystacks.append(read_text_full(path))
     if not haystacks:
         return False
@@ -1901,6 +2029,67 @@ def daily_update_bodies(result: dict[str, Any]) -> list[str]:
     return bodies
 
 
+def report_update_bodies(result: dict[str, Any]) -> list[str]:
+    """Content bodies of daily/weekly/monthly report updates."""
+    bodies: list[str] = []
+    for update in normalize_result_updates(result):
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if rel_path.startswith(("daily/", "weekly/", "monthly/")):
+            bodies.append(str(update.get("content", "")))
+    return bodies
+
+
+def extract_all_urls(text: str) -> set[str]:
+    return {url.rstrip(".,;:!?'\")") for url in GENERIC_URL_RE.findall(text)}
+
+
+def transform_signal_bullets(text: str, transform) -> tuple[str, int]:
+    """Apply transform to each signal bullet; return (new_text, bullets_changed)."""
+    if not text:
+        return text, 0
+    bullets = split_daily_signal_bullets(text)
+    if not bullets:
+        return text, 0
+    changed = 0
+    new_text = text
+    for bullet in reversed(bullets):
+        new_bullet = transform(bullet)
+        if new_bullet == bullet:
+            continue
+        index = new_text.rfind(bullet)
+        if index < 0:
+            continue
+        new_text = new_text[:index] + new_bullet + new_text[index + len(bullet) :]
+        changed += 1
+    return new_text, changed
+
+
+def transform_report_update_bullets(result: dict[str, Any], transform, *, daily_only: bool = False) -> int:
+    """Mutate report update bodies (content + language blocks) bullet-by-bullet."""
+    changed_total = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for item in raw_updates:
+        if not isinstance(item, dict):
+            continue
+        rel_path = str(item.get("path", "")).replace("\\", "/")
+        if daily_only:
+            if not is_daily_month_path(rel_path):
+                continue
+        elif not rel_path.startswith(("daily/", "weekly/", "monthly/")):
+            continue
+        keys = ["content", "english_block", "chinese_block"]
+        for key in keys:
+            block = item.get(key)
+            if isinstance(block, str) and block:
+                new_block, changed = transform_signal_bullets(block, transform)
+                if changed:
+                    item[key] = new_block
+                    changed_total += changed
+    return changed_total
+
+
 def content_has_mainstream_signal(text: str) -> bool:
     lower = text.lower()
     if "missing mainstream_product" in lower:
@@ -2075,6 +2264,349 @@ def validate_daily_freshness(result: dict[str, Any]) -> None:
         )
 
 
+def add_cve_primary_source_to_bullet(bullet: str) -> str:
+    """Append canonical NVD links when a bullet cites a CVE without a primary source."""
+    ids = sorted({match.upper() for match in CVE_ID_RE.findall(bullet)})
+    if not ids:
+        return bullet
+    lower = bullet.lower()
+    if any(host in lower for host in CVE_PRIMARY_SOURCE_HOSTS):
+        return bullet
+    lines = bullet.splitlines()
+    for cve_id in ids:
+        lines.append(f"  - Primary source: {NVD_DETAIL_URL_PREFIX}{cve_id}")
+    return "\n".join(lines)
+
+
+def repair_cve_primary_sources(result: dict[str, Any]) -> int:
+    """CVE claims must carry an NVD/GHSA primary source, not only aggregator sites."""
+    labeled = transform_report_update_bullets(result, add_cve_primary_source_to_bullet)
+    if labeled:
+        warning = (
+            f"Added canonical NVD primary-source link(s) to {labeled} CVE bullet(s); "
+            "prefer citing NVD/GHSA directly over aggregator sites"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    RUN_AUDIT["cve_primary_source_added"] = labeled
+    return labeled
+
+
+def url_reachability(url: str, timeout: int = 8) -> tuple[str, str]:
+    """Return ("ok"|"missing"|"unknown", detail) for a synthesis-emitted URL."""
+
+    def _attempt(method: str) -> tuple[str, str]:
+        request = urllib.request.Request(url, headers={"User-Agent": FEED_USER_AGENT}, method=method)
+        with urllib.request.urlopen(request, timeout=timeout):
+            return "ok", ""
+
+    for method in ("HEAD", "GET"):
+        try:
+            return _attempt(method)
+        except urllib.error.HTTPError as exc:
+            if exc.code in {404, 410}:
+                return "missing", f"HTTP {exc.code}"
+            if method == "HEAD" and exc.code in {405, 501}:
+                continue
+            return "unknown", f"HTTP {exc.code}"
+        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+            return "unknown", "network error"
+    return "unknown", "network error"
+
+
+def trusted_snapshot_urls(root: Path | None, screen_text: str | None) -> set[str]:
+    """URLs already fetched by collectors or screened as evidence need no re-check."""
+    trusted: set[str] = set()
+    for url in load_source_cache(root):
+        trusted.add(url.lower().rstrip("/"))
+    if screen_text:
+        data = parse_screening_json(screen_text)
+        candidates = data.get("candidates", []) if data else []
+        if isinstance(candidates, list):
+            for cand in candidates:
+                if isinstance(cand, dict):
+                    for url in candidate_evidence_urls(cand):
+                        trusted.add(url.rstrip("/"))
+    return trusted
+
+
+def verify_emitted_citations(root: Path | None, result: dict[str, Any], screen_text: str | None) -> None:
+    """Hard-fail dead citations the model emitted; warn on unverifiable ones.
+
+    Recall gates only check that screened candidates were mentioned; nothing else
+    stops the synthesis model from inventing URLs. Trusted (collector-fetched)
+    URLs are skipped, so this normally checks only the model's own additions.
+    """
+    if root is None or not env_bool("CITATION_VERIFICATION", True):
+        return
+    bodies = report_update_bodies(result)
+    if not bodies:
+        return
+    trusted = trusted_snapshot_urls(root, screen_text)
+    to_check: list[str] = []
+    seen: set[str] = set()
+    for url in sorted(extract_all_urls("\n".join(bodies))):
+        key = url.lower().rstrip("/")
+        if key in seen or key in trusted:
+            continue
+        # Canonical NVD links are constructed deterministically by the CVE repair.
+        if key.startswith(NVD_DETAIL_URL_PREFIX.lower()):
+            continue
+        seen.add(key)
+        to_check.append(url)
+    limit = env_int("CITATION_CHECK_MAX_URLS", DEFAULT_CITATION_CHECK_MAX_URLS)
+    skipped = max(0, len(to_check) - limit)
+    unreachable: list[str] = []
+    unverified: list[str] = []
+    for url in to_check[:limit]:
+        status, detail = url_reachability(url)
+        if status == "missing":
+            unreachable.append(f"{url} ({detail})")
+        elif status == "unknown":
+            unverified.append(f"{url} ({detail})")
+    RUN_AUDIT["citation_urls_checked"] = min(len(to_check), limit)
+    RUN_AUDIT["citation_urls_unreachable"] = len(unreachable)
+    RUN_AUDIT["citation_urls_unverified"] = len(unverified)
+    if skipped:
+        warning = f"Citation check skipped {skipped} URL(s) over CITATION_CHECK_MAX_URLS"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if unverified:
+        sample = "; ".join(unverified[:3])
+        warning = (
+            f"{len(unverified)} citation URL(s) could not be verified ({sample}); "
+            "keep Evidence strength labels conservative for these"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if unreachable:
+        sample = "; ".join(unreachable[:3])
+        raise SystemExit(
+            f"Refusing update: model-emitted citation URL(s) do not resolve ({sample}). "
+            "Remove or replace hallucinated citations with URLs from the source snapshot."
+        )
+
+
+def daily_day_blocks(content: str) -> list[tuple[str, str]]:
+    """Split a monthly daily file into (date_label, block) pairs."""
+    matches = list(STRICT_DAILY_DATE_HEADING.finditer(content))
+    blocks: list[tuple[str, str]] = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+        blocks.append((match.group(1), content[match.start() : end]))
+    return blocks
+
+
+def published_daily_url_dates(
+    root: Path | None,
+    day: dt.date,
+    lookback_days: int = DAILY_REPEAT_URL_LOOKBACK_DAYS,
+) -> dict[str, str]:
+    """Map URL -> most recent prior date it appeared in a published day block."""
+    if root is None:
+        return {}
+    url_dates: dict[str, str] = {}
+    months = {month_label(day), month_label(day - dt.timedelta(days=lookback_days))}
+    for month in sorted(months):
+        path = root / "daily" / f"{month}.md"
+        if not path.exists():
+            continue
+        for date_label, block in daily_day_blocks(read_text_full(path)):
+            try:
+                block_day = dt.date.fromisoformat(date_label)
+            except ValueError:
+                continue
+            if block_day >= day or (day - block_day).days > lookback_days:
+                continue
+            for url in extract_all_urls(block):
+                key = url.lower().rstrip("/")
+                previous = url_dates.get(key)
+                if previous is None or previous < date_label:
+                    url_dates[key] = date_label
+    return url_dates
+
+
+def repair_repeated_url_freshness(result: dict[str, Any], root: Path | None, day: dt.date | None) -> int:
+    """Auto-label bullets that re-cite URLs already published in recent day blocks.
+
+    Cross-day dedup previously only covered research-log/sources, so an old
+    launch could be re-reported as a New Signal days later. The label keeps the
+    bullet but makes the repeat explicit.
+    """
+    if root is None or day is None:
+        return 0
+    url_dates = published_daily_url_dates(root, day)
+    if not url_dates:
+        return 0
+
+    def _label(bullet: str) -> str:
+        if re.search(r"freshness:\s*(follow-up|stale-roundup)", bullet, re.IGNORECASE):
+            return bullet
+        dates = sorted(
+            {
+                url_dates[url.lower().rstrip("/")]
+                for url in extract_all_urls(bullet)
+                if url.lower().rstrip("/") in url_dates
+            }
+        )
+        if not dates:
+            return bullet
+        lines = bullet.splitlines()
+        lines.append(f"  - Freshness: follow-up (previously covered {dates[-1]})")
+        return "\n".join(lines)
+
+    labeled = transform_report_update_bullets(result, _label, daily_only=True)
+    RUN_AUDIT["repeat_url_labeled"] = labeled
+    if labeled:
+        warning = (
+            f"Auto-labeled {labeled} bullet(s) as `Freshness: follow-up` "
+            "(URL already covered in a recent day block)"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return labeled
+
+
+def daily_english_section_headings(text: str) -> list[str]:
+    """`#### ` headings inside the `### English` block of a day block."""
+    headings: list[str] = []
+    in_english = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("### "):
+            in_english = stripped.lower().startswith("### english")
+            continue
+        if in_english and stripped.startswith("#### "):
+            headings.append(stripped)
+    return headings
+
+
+def validate_daily_section_structure(result: dict[str, Any]) -> None:
+    """Lock the daily template so section sets stop drifting day to day."""
+    if not env_bool("STRICT_DAILY_SECTIONS", True):
+        return
+    for body in daily_update_bodies(result):
+        headings = daily_english_section_headings(body)
+        if not headings:
+            continue
+        unknown = [heading for heading in headings if heading not in DAILY_CANONICAL_SECTIONS]
+        missing = [heading for heading in DAILY_REQUIRED_SECTIONS if heading not in headings]
+        if unknown or missing:
+            raise SystemExit(
+                "Refusing daily update: English day-block sections must use the canonical "
+                f"template {list(DAILY_CANONICAL_SECTIONS)}. "
+                f"Unknown: {unknown or 'none'}; missing required: {missing or 'none'}."
+            )
+        order = [DAILY_CANONICAL_SECTIONS.index(heading) for heading in headings]
+        if order != sorted(order):
+            raise SystemExit(
+                "Refusing daily update: canonical daily sections are out of order "
+                f"({headings})."
+            )
+    RUN_AUDIT["daily_sections_canonical"] = True
+
+
+def weekly_update_bodies(result: dict[str, Any]) -> list[tuple[str, str]]:
+    bodies: list[tuple[str, str]] = []
+    for update in normalize_result_updates(result):
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if is_weekly_path(rel_path):
+            bodies.append((str(update.get("mode", "")), str(update.get("content", ""))))
+    return bodies
+
+
+def validate_weekly_synthesis(result: dict[str, Any]) -> None:
+    """New weekly reports must score every thesis and name a contradiction pair."""
+    bodies = weekly_update_bodies(result)
+    if not bodies:
+        return
+    text = "\n".join(content for _, content in bodies)
+    has_scorecard = bool(WEEKLY_SCORECARD_RE.search(text))
+    has_counter = bool(COUNTER_SIGNAL_RE.search(text))
+    RUN_AUDIT["weekly_scorecard_present"] = has_scorecard
+    RUN_AUDIT["weekly_counter_signal_present"] = has_counter
+    creates_full = any(mode == "full" for mode, _ in bodies)
+    if not creates_full:
+        return
+    if not has_scorecard:
+        raise SystemExit(
+            "Refusing weekly update: missing `Thesis Scorecard` section. Rate every "
+            "radar.md thesis (confidence ↑/→/↓, strongest new evidence, strongest "
+            "counter-evidence) instead of re-bucketing daily items."
+        )
+    if not has_counter:
+        raise SystemExit(
+            "Refusing weekly update: missing a `Signal vs Counter-signal` pair. Name at "
+            "least one explicit contradiction from this week's evidence."
+        )
+
+
+def iso_weeks_in_month(day: dt.date) -> list[str]:
+    """ISO week labels overlapping this month, up to and including `day`."""
+    labels: list[str] = []
+    current = day.replace(day=1)
+    while current <= day:
+        label = week_label(current)
+        if label not in labels:
+            labels.append(label)
+        current += dt.timedelta(days=7)
+    label = week_label(day)
+    if label not in labels:
+        labels.append(label)
+    return labels
+
+
+def validate_monthly_synthesis(result: dict[str, Any], day: dt.date | None) -> None:
+    """New monthly reports must aggregate the month's weeklies, not review one day."""
+    bodies: list[tuple[str, str]] = []
+    for update in normalize_result_updates(result):
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if is_monthly_path(rel_path):
+            bodies.append((str(update.get("mode", "")), str(update.get("content", ""))))
+    if not bodies:
+        return
+    text = "\n".join(content for _, content in bodies)
+    has_week_coverage = bool(MONTHLY_WEEK_COVERAGE_RE.search(text))
+    RUN_AUDIT["monthly_week_coverage_present"] = has_week_coverage
+    if not any(mode == "full" for mode, _ in bodies):
+        return
+    if not has_week_coverage:
+        raise SystemExit(
+            "Refusing monthly update: missing `Weekly Coverage` section. Aggregate the "
+            "month's weekly reports (thesis-score trend, watchlist movement, resolved "
+            "open questions) instead of reviewing a single day."
+        )
+    if day is not None:
+        missing_weeks = [label for label in iso_weeks_in_month(day) if label not in text]
+        if missing_weeks:
+            warning = (
+                f"Monthly update does not reference week(s) {', '.join(missing_weeks)}; "
+                "cover every ISO week of the month or name the gap"
+            )
+            if warning not in RUN_AUDIT["apply_warnings"]:
+                RUN_AUDIT["apply_warnings"].append(warning)
+
+
+def warn_missing_report_sections(root: Path, task: str, day: dt.date) -> None:
+    """Post-apply soft check that the on-disk weekly/monthly keeps synthesis sections."""
+    if task == "weekly":
+        path = root / "weekly" / f"{week_label(day)}.md"
+        checks = [("Thesis Scorecard", WEEKLY_SCORECARD_RE), ("Signal vs Counter-signal", COUNTER_SIGNAL_RE)]
+    elif task == "monthly":
+        path = root / "monthly" / f"{month_label(day)}.md"
+        checks = [("Weekly Coverage", MONTHLY_WEEK_COVERAGE_RE)]
+    else:
+        return
+    if not path.exists():
+        return
+    content = read_text_full(path)
+    for label, pattern in checks:
+        if not pattern.search(content):
+            warning = f"{path.name}: missing `{label}` section; add it in the next {task} pass"
+            if warning not in RUN_AUDIT["apply_warnings"]:
+                RUN_AUDIT["apply_warnings"].append(warning)
+
+
 def vendor_families_in_text(text: str) -> list[str]:
     lower = text.lower()
     found: list[str] = []
@@ -2135,8 +2667,20 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     text = "\n".join(bodies)
     has_mainstream = content_has_mainstream_signal(text)
     has_user = content_has_user_workflow_signal(text)
-    mainstream_gap = content_has_direction_gap(text, "mainstream")
-    user_gap = content_has_direction_gap(text, "user")
+    has_ledger = bool(COVERAGE_LEDGER_RE.search(text))
+    RUN_AUDIT["coverage_ledger_present"] = has_ledger
+    if not has_ledger:
+        warning = (
+            "Daily update missing Coverage ledger "
+            "(`- Coverage ledger: checked=...; missed=...` under Assessment & Gaps)"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    # Gaps escape hatches only count when the ledger shows what was actually
+    # checked; otherwise the model can declare a gap instead of covering it.
+    require_ledger = env_bool("REQUIRE_COVERAGE_LEDGER", True)
+    mainstream_gap = content_has_direction_gap(text, "mainstream") and (has_ledger or not require_ledger)
+    user_gap = content_has_direction_gap(text, "user") and (has_ledger or not require_ledger)
     infra_count = count_infra_primitive_bullets(text)
     vendors = vendor_families_in_text(text)
     themes = breadth_themes_in_text(text)
@@ -2158,7 +2702,8 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     if not has_mainstream and not mainstream_gap:
         raise SystemExit(
             "Refusing daily update: missing mainstream_product signal and no Gaps bullet "
-            "named 'Missing mainstream_product: ...'."
+            "named 'Missing mainstream_product: ...' (Gaps require a Coverage ledger line: "
+            "`- Coverage ledger: checked=...; missed=...`)."
         )
     if not has_user and not user_gap:
         actionable_n = int(RUN_AUDIT.get("screening_actionable_user", 0) or 0)
@@ -2170,7 +2715,8 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
         )
         raise SystemExit(
             "Refusing daily update: missing user_workflow signal and no Gaps bullet "
-            f"named 'Missing user_workflow: ...'.{detail}"
+            "named 'Missing user_workflow: ...' (Gaps require a Coverage ledger line)."
+            f"{detail}"
         )
     if infra_count > MAX_DAILY_INFRA_PRIMITIVE_BULLETS:
         raise SystemExit(
@@ -2231,7 +2777,13 @@ def validate_must_cover_mainstream(result: dict[str, Any], screen_text: str | No
         )
 
 
-def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: str | None) -> None:
+def validate_synthesis_result(
+    task: str,
+    result: dict[str, Any],
+    screen_text: str | None,
+    root: Path | None = None,
+    day: dt.date | None = None,
+) -> None:
     if task not in {"daily", "weekly", "monthly"}:
         return
     details = compute_synthesis_recall_details(screen_text, result)
@@ -2264,9 +2816,18 @@ def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: st
             )
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text)
+        validate_daily_section_structure(result)
         # Prefer auto-label over discarding an otherwise-valid bilingual day block.
         repair_daily_freshness_labels(result)
         validate_daily_freshness(result)
+        repair_repeated_url_freshness(result, root, day)
+    elif task == "weekly":
+        validate_weekly_synthesis(result)
+    elif task == "monthly":
+        validate_monthly_synthesis(result, day)
+    # All report tiers: primary-source CVE links, then live citation check.
+    repair_cve_primary_sources(result)
+    verify_emitted_citations(root, result, screen_text)
 
 
 def record_bilingual_telemetry(root: Path, result: dict[str, Any]) -> None:
@@ -2476,7 +3037,19 @@ def source_lane(source: str) -> str:
         return "package-marketplace"
     if source.startswith("arxiv"):
         return "papers"
-    if source in {"openai-blog", "github-changelog", "cursor-changelog", "cursor-blog", "anthropic-news", "anthropic-engineering"}:
+    if source in {
+        "openai-blog",
+        "github-changelog",
+        "cursor-changelog",
+        "cursor-blog",
+        "anthropic-news",
+        "anthropic-engineering",
+        "minio-blog",
+        "aws-storage-blog",
+        "cloudflare-blog",
+        "qwen-blog",
+        "deepseek-news",
+    }:
         return "official"
     return "feeds-pages"
 
@@ -2505,7 +3078,30 @@ def load_source_cache(root: Path | None) -> dict[str, dict[str, Any]]:
     return cache
 
 
-def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) -> int:
+def thesis_keyword_weights(root: Path | None) -> dict[str, int]:
+    """Thesis-aligned keyword weights; automation/thesis-keywords.json extends/overrides."""
+    weights = dict(DEFAULT_THESIS_KEYWORD_WEIGHTS)
+    if root is None:
+        return weights
+    path = root / "automation" / "thesis-keywords.json"
+    if not path.exists():
+        return weights
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return weights
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if isinstance(key, str) and isinstance(value, int):
+                weights[key.lower()] = value
+    return weights
+
+
+def score_source_item(
+    item: dict[str, str],
+    cache: dict[str, dict[str, Any]],
+    thesis_weights: dict[str, int] | None = None,
+) -> int:
     title = item.get("title", "")
     note = item.get("note", "")
     url = item.get("url", "")
@@ -2552,6 +3148,11 @@ def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) ->
     for keyword, weight in keyword_weights.items():
         if keyword in text:
             score += weight
+    # Thesis alignment (storage / containment / cost economics) shapes ranking
+    # deterministically instead of living only in prompt text.
+    for keyword, weight in (thesis_weights or {}).items():
+        if keyword in text:
+            score += weight
     if any(marker in text for marker in MAINSTREAM_VENDOR_MARKERS):
         score += 8
     # Penalize repetitive long-tail infra README noise unless adoption evidence exists.
@@ -2582,9 +3183,10 @@ def items_are_scored(items: list[dict[str, str]]) -> bool:
 
 def score_source_items(items: list[dict[str, str]], root: Path | None) -> list[dict[str, str]]:
     cache = load_source_cache(root)
+    weights = thesis_keyword_weights(root)
     scored = [dict(item) for item in items]
     for item in scored:
-        item["score"] = str(score_source_item(item, cache))
+        item["score"] = str(score_source_item(item, cache, weights))
     scored.sort(key=lambda item: int(item.get("score", "0")), reverse=True)
     return scored
 
@@ -3047,7 +3649,27 @@ def public_source_budget(task: str) -> int:
     return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
 
 
-def source_queries_for_task(task: str) -> dict[str, list[str]]:
+def load_source_query_overrides(root: Path | None) -> dict[str, list[str]]:
+    """Optional automation/source-queries.json extends the hardcoded query pool,
+    so breadth is data-driven instead of requiring a code change per vendor."""
+    if root is None:
+        return {}
+    path = root / "automation" / "source-queries.json"
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    overrides: dict[str, list[str]] = {}
+    if isinstance(data, dict):
+        for lane, queries in data.items():
+            if isinstance(lane, str) and isinstance(queries, list):
+                overrides[lane] = [str(query) for query in queries if str(query).strip()]
+    return overrides
+
+
+def source_queries_for_task(task: str, root: Path | None = None) -> dict[str, list[str]]:
     common = {
         "hn": [
             "AI agent",
@@ -3085,6 +3707,14 @@ def source_queries_for_task(task: str) -> dict[str, list[str]]:
     if task in {"daily", "source-sweep", "weekly", "monthly"}:
         common["hn"].extend(["OpenAI agent", "Anthropic Claude", "Gemini agent", "Microsoft Copilot"])
         common["reddit"].extend(["Claude Code experience", "Cursor agent", "Copilot agent"])
+        # China-ecosystem coding agents: the radar is bilingual but the input
+        # universe was Anglophone-only (see sources.md China lane).
+        common["hn"].extend(["DeepSeek agent", "Qwen coding agent"])
+        common["reddit"].extend(["DeepSeek coder", "Qwen agent"])
+        common["github"].extend(["Qwen agent framework", "Trae agent"])
+        # Storage/market thesis lane (radar.md storage thesis).
+        common["hn"].extend(["object storage agent", "agent workspace snapshot"])
+        common["github"].extend(["agent workspace snapshot", "agent artifact storage"])
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
         common["reddit"].extend(["agent security", "agent automation"])
@@ -3092,6 +3722,11 @@ def source_queries_for_task(task: str) -> dict[str, list[str]]:
             ["browser agent automation", "agent observability", "agent deployment workflow", "agent security MCP"]
         )
         common["packages"].extend(["browser agent", "agent memory", "agent sandbox", "agent security"])
+    for lane, queries in load_source_query_overrides(root).items():
+        base = common.setdefault(lane, [])
+        for query in queries:
+            if query not in base:
+                base.append(query)
     return common
 
 
@@ -3183,7 +3818,7 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     repo_limit = env_int("MAX_RELEASE_REPOS", 12)
     release_limit = env_int("MAX_RELEASES_PER_REPO", 2)
 
-    queries = source_queries_for_task(task)
+    queries = source_queries_for_task(task, root)
     collectors: list[tuple[str, str, str, int]] = []
     for query in queries["hn"]:
         collectors.append((f"hn:{query}", "hn", query, per_query))
@@ -3840,6 +4475,30 @@ def build_prompt(
         task_rules = "\nApply the **Source-sweep task gate** in `prompts/runner-rules.md`.\n"
     elif task == "promote-candidates":
         task_rules = "\nApply the **Promote-candidates task gate** in `prompts/runner-rules.md`.\n"
+    elif task == "daily":
+        checked = sorted(
+            {
+                str(entry.get("name", "")).split(":", 1)[0]
+                for entry in RUN_AUDIT.get("source_status", [])
+                if isinstance(entry, dict) and entry.get("status") == "ok" and entry.get("name")
+            }
+        )
+        checked_note = ", ".join(checked[:24]) if checked else "unknown (collector snapshot unavailable)"
+        task_rules = (
+            "\nUse the canonical English day-block sections exactly: "
+            + "; ".join(DAILY_CANONICAL_SECTIONS)
+            + ".\nInclude a `- Coverage ledger: checked=...; missed=...` line under "
+            "`#### 6. Assessment & Gaps`. Collector lanes checked today: "
+            + checked_note
+            + ".\n"
+        )
+    elif task == "monthly":
+        weeks = ", ".join(iso_weeks_in_month(day))
+        task_rules = (
+            "\nAggregate this month's weekly reports rather than reviewing a single day. "
+            f"ISO weeks so far this month: {weeks}. Include a `### Weekly Coverage` section "
+            "that names each week with its thesis-score movement and key deltas.\n"
+        )
 
     max_prompt = env_int("MAX_PROMPT_CHARS", DEFAULT_MAX_PROMPT_CHARS)
     source_budget = source_block_char_budget(max_prompt)
@@ -4313,6 +4972,16 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "user_repo_reclassified": RUN_AUDIT.get("user_repo_reclassified", 0),
         "vendor_families_covered": RUN_AUDIT.get("vendor_families_covered", 0),
         "breadth_themes_covered": RUN_AUDIT.get("breadth_themes_covered", 0),
+        "repo_reputation_demoted": RUN_AUDIT.get("repo_reputation_demoted", 0),
+        "cve_primary_source_added": RUN_AUDIT.get("cve_primary_source_added", 0),
+        "citation_urls_checked": RUN_AUDIT.get("citation_urls_checked", 0),
+        "citation_urls_unreachable": RUN_AUDIT.get("citation_urls_unreachable", 0),
+        "citation_urls_unverified": RUN_AUDIT.get("citation_urls_unverified", 0),
+        "repeat_url_labeled": RUN_AUDIT.get("repeat_url_labeled", 0),
+        "coverage_ledger_present": RUN_AUDIT.get("coverage_ledger_present", False),
+        "daily_sections_canonical": RUN_AUDIT.get("daily_sections_canonical", False),
+        "weekly_scorecard_present": RUN_AUDIT.get("weekly_scorecard_present", False),
+        "monthly_week_coverage_present": RUN_AUDIT.get("monthly_week_coverage_present", False),
         "apply_warnings": RUN_AUDIT.get("apply_warnings", []),
     }
     with path.open("a", encoding="utf-8") as handle:
@@ -4422,6 +5091,17 @@ def run_task(
     RUN_AUDIT["user_repo_reclassified"] = 0
     RUN_AUDIT["vendor_families_covered"] = 0
     RUN_AUDIT["breadth_themes_covered"] = 0
+    RUN_AUDIT["repo_reputation_demoted"] = 0
+    RUN_AUDIT["cve_primary_source_added"] = 0
+    RUN_AUDIT["citation_urls_checked"] = 0
+    RUN_AUDIT["citation_urls_unreachable"] = 0
+    RUN_AUDIT["citation_urls_unverified"] = 0
+    RUN_AUDIT["repeat_url_labeled"] = 0
+    RUN_AUDIT["coverage_ledger_present"] = False
+    RUN_AUDIT["daily_sections_canonical"] = False
+    RUN_AUDIT["weekly_scorecard_present"] = False
+    RUN_AUDIT["weekly_counter_signal_present"] = False
+    RUN_AUDIT["monthly_week_coverage_present"] = False
     RUN_AUDIT["apply_warnings"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:
@@ -4499,8 +5179,9 @@ def run_task(
     except json.JSONDecodeError as exc:
         raise SystemExit(f"Model did not return valid JSON: {output_text[:1000]}") from exc
 
-    validate_synthesis_result(task, result, screen_text)
+    validate_synthesis_result(task, result, screen_text, root=root, day=day)
     changed = apply_updates(root, allowed, result, task=task)
+    warn_missing_report_sections(root, task, day)
     sources = result.get("sources", [])
     if not isinstance(sources, list):
         sources = []

@@ -1,6 +1,6 @@
 # AI Agent Radar
 
-Last updated: 2026-07-06
+Last updated: 2026-07-09
 
 ## Current Thesis
 
@@ -10,12 +10,20 @@ Last updated: 2026-07-06
 4. Real user experience is still uneven: success depends heavily on repo size, task framing, testability, and tool access.
 5. Object storage may become an important layer for agent workspace, snapshots, artifacts, logs, knowledge bases, and replayable execution history.
 6. Agent meta-harnesses and cross-runtime orchestration are emerging as a response to fragmentation across Claude Code, Codex, Cursor, and other coding agents.
-7. Agent memory is evolving from simple context windows to time-travel debugging and root-cause tracing.
-8. Knowledge bases (e.g., Obsidian vaults) are becoming agent-accessible through MCP servers, enabling agents to read, write, and search personal/team knowledge.
-9. The MCP server ecosystem is rapidly expanding into memory, web access, observability, governance, and security, raising both standardization opportunities and fragmentation risks.
-10. Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
+7. Agent memory, knowledge bases, and the broader MCP server ecosystem are converging into one agent-integration layer (memory lifecycle/time-travel debugging, KB access such as Obsidian vaults, web/observability/governance servers), with an unresolved standardization-vs-fragmentation tension.
+8. Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
+9. Agent containment and security (blast-radius isolation, sandbox/worktree boundaries, tool scoping, supply-chain hardening) are becoming first-class agent infrastructure, driven by first-party engineering practice and real agent CVEs.
+10. Agent cost economics (model pricing pressure, token budgets, quota windows) increasingly shape agent adoption and tool choice; operators route work across tools by remaining quota rather than committing to one.
 
 ## Changed Thesis
+
+### 2026-07-09
+
+- Merged: former theses 7 (agent memory time-travel), 8 (knowledge bases via MCP), and 9 (MCP ecosystem expansion) into a single thesis 7 (memory + KB + MCP as one converging integration layer). The three tracked the same signal cluster and were scored separately without independent evidence.
+- Renumbered: former thesis 10 (platform vendors entering MCP) is now thesis 8.
+- Added thesis 9 (agent containment/security as first-class infrastructure). Evidence: Anthropic containment engineering post (https://www.anthropic.com/engineering/how-we-contain-claude), Cline CVE-2026-59723 (https://nvd.nist.gov/vuln/detail/CVE-2026-59723), GitHub npm install-time security and GAT bypass-2FA deprecation, recurring sandbox/worktree isolation fixes across Claude Code and Devin. Confidence: Medium-High.
+- Added thesis 10 (agent cost economics shape adoption). Evidence: cost-positioned model launches (labeled Medium; parameter/pricing claims need first-party corroboration), user field notes on mixing free/paid quota across Cursor/Codex/Copilot/Claude, recurring pricing open question. Confidence: Medium.
+- Note: daily/weekly reports before 2026-07-09 reference the old thesis numbering (7/8/9/10 = pre-merge).
 
 ### 2026-07-06
 
