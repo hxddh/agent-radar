@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.7.3 - 2026-07-09
+
+Direction and breadth correction: stop collapsing daily reports into GitHub infra-parts lists.
+
+### Added
+- Screening `signal_class` taxonomy: `mainstream_product | user_workflow | infra_primitive | research | noise`.
+- Direction-diversified screening prompt injection (prefer mainstream/user before infra).
+- Daily direction quota gate: require a mainstream signal **or** `Missing mainstream_product` gap; require a user-workflow signal **or** `Missing user_workflow` gap; cap infra emerging bullets at 2.
+- Telemetry fields: `screening_signal_classes`, `direction_mainstream`, `direction_user_workflow`, `direction_infra_count`, `direction_gaps_present`.
+
+### Changed
+- Source queries and scoring rebalanced toward official changelogs, vendor blogs, and user/workflow evidence; zero-star infra README noise is penalized.
+- Default changelog coverage adds Microsoft Azure AI feed plus Google Developers / OpenAI index pages.
+- `prompts/daily-update.md`, `prompts/runner-rules.md`, and `prompts/screening-schema.md` document the direction quota.
+- CLI version bumped to `0.7.3`.
+
 ## v0.7.2 - 2026-07-08
 
 Resilience follow-up: `promote-candidates` no longer discards the whole task when the model emits a `replace_section` update whose anchor does not exist — the same wholesale-rejection anti-pattern fixed for daily reports in v0.7.1.

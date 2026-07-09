@@ -3,13 +3,25 @@
 Return only valid JSON:
 
 ```json
-{"summary":"short screening summary","candidates":[{"id":"scr-abc12345","title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}],"gaps":["missing source"]}
+{"summary":"short screening summary","candidates":[{"id":"scr-abc12345","title":"signal","why_it_matters":"reason","evidence":["url"],"confidence":"high|medium|low","relevance_score":1,"source_diversity":1,"signal_class":"mainstream_product|user_workflow|infra_primitive|research|noise","infra_angle":"runtime|mcp|memory|sandbox|eval|security|storage|deployment|none","promotion_status":"candidate|defer|reject","next_check":"follow-up"}],"gaps":["missing source class or vendor"]}
 ```
 
 Rules:
 - Each candidate should include a stable `id` when possible (`scr-` + short hash); the runner backfills ids when missing.
+- Every candidate **must** include `signal_class`. Prefer this taxonomy:
+  - `mainstream_product`: OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta, or other major platform product/changelog deltas
+  - `user_workflow`: concrete operator/user field reports, PR/review workflows, adoption friction (not README claims)
+  - `infra_primitive`: sandbox, MCP, memory, eval, runtime, security tooling, storage primitives
+  - `research`: papers / benchmarks with agent relevance
+  - `noise`: launch hype, zero-evidence repos, off-topic
+- **Direction quota (hard preference):** among the top candidates, include at least:
+  - 2 `mainstream_product` (or list explicit gaps if none found)
+  - 2 `user_workflow` (or list explicit gaps if none found)
+  - 3 `infra_primitive` max in the top 8 shown for synthesis
 - Do not invent facts.
-- Keep weak social/community evidence labeled as weak.
-- Prefer agent infrastructure, agent runtimes, MCP/tool-use, memory, evals, storage, and deployment signals.
+- Keep weak social/community evidence labeled as weak (`confidence: low`).
+- Prefer **direction-changing** signals over another zero-star memory/MCP/sandbox repo.
+- Reject or mark `noise` for zero-star launches with only self-reported README evidence.
 - Return at most **12 candidates** per screening pass.
 - Keep each `why_it_matters` under **120 characters**.
+- `gaps` must name missing direction classes when quotas are unmet, e.g. `Missing mainstream_product: Anthropic/OpenAI/Google/Microsoft/Cursor changelog`.

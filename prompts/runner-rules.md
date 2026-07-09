@@ -135,6 +135,17 @@ Do not `full`-rewrite an existing weekly file.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
 
+## Daily direction quota (breadth)
+
+Daily synthesis must not collapse into a GitHub infra-parts list. Enforce this shape:
+
+1. **Mainstream product / platform** — at least one signal from major vendors (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta), **or** a Gaps bullet: `Missing mainstream_product: ...`.
+2. **User workflow** — at least one concrete operator/user experience signal (may be weak and labeled), **or** a Gaps bullet: `Missing user_workflow: ...`.
+3. **Infra primitives** — at most **2** emerging-repo / infra-primitive bullets in the day block; put the rest in `research-log.md` Candidate inbox.
+4. Prefer direction-changing evidence over another memory/MCP/sandbox README.
+
+The runner records direction coverage in telemetry and rejects daily updates that omit both the mainstream signal and the corresponding Gaps bullet.
+
 ## Evidence and safety
 
 - Use broad source coverage and keep going when evidence is weak.
