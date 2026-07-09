@@ -98,6 +98,8 @@ The radar output is bilingual; the input universe must include the China ecosyst
 - ByteDance Trae / MarsCode updates (query lane; no stable feed yet)
 - Zhipu GLM / Moonshot Kimi coding-agent updates (query lane)
 
+Citation rule: cover this lane through official vendor pages (English where available). **Cite Simplified-Chinese media sparingly** — such hosts (机器之心/量子位/36kr/CSDN/知乎/公众号, etc.) are deprioritized in source scoring and are a last resort; when one is the only evidence for a unique signal, label it `Source language: zh-CN` and follow up for the official/English source.
+
 ### Storage & Market Lane
 
 The storage thesis (radar.md) needs first-party storage-vendor and market inputs, not only agent-vendor changelogs.

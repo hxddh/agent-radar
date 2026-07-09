@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.10.1 - 2026-07-09
+
+Citation-source policy: cover the China ecosystem via official vendor pages; cite Simplified-Chinese media sparingly.
+
+### Changed
+- Removed the 机器之心 (jiqizhixin) RSS feed from default collectors; China-ecosystem coverage stays on official vendor pages (`qwen-blog`, `deepseek-news`) and query lanes.
+- Simplified-Chinese media hosts (`SIMPLIFIED_CHINESE_MEDIA_HOSTS`) are deprioritized in source scoring (`SIMPLIFIED_CHINESE_MEDIA_PENALTY`) — a last resort, not banned; unique signals keep them with a `Source language: zh-CN` label and a follow-up for the official/English source.
+- Prompts (`daily-update`, `runner-rules`) and `sources.md` document the citation rule.
+- CLI version bumped to `0.10.1`.
+
 ## v0.10.0 - 2026-07-09
 
 Audit-loop release: widen the screening funnel with lane shards, audit claims semantically, and make direction assets (open questions, watchlist, verification labels) move every week instead of piling up.

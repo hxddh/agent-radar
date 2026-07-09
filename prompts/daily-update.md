@@ -60,6 +60,7 @@ Daily direction quota (required):
 - **Numbers must come from the source**: parameter counts, star counts, revenue, percentages, and context-window sizes must appear in the cited source; the runner labels unmatched numbers `Number check: ... verify before trusting` (applies to every source class equally).
 - **Social/discussion sources are first-class and get upgraded, not demoted**: the same story reported on ≥2 platforms counts as multiple independent user reports (Strong); social-sourced product claims get the official snapshot URL attached automatically when one exists (`corroboration: official-url-attached`). Keep social field reports prominent; a `corroboration: pending-official` tag is informational, never a reason to drop the signal.
 - **Ongoing storylines**: the runner lists URLs already covered on multiple recent days; if citing one again, write only the delta and label `Freshness: follow-up`.
+- **Cite Simplified-Chinese sources sparingly**: track the China ecosystem, but link the vendor's official page (English where available) as evidence, not Simplified-Chinese media/blog coverage. If a Simplified-Chinese source is the only one available for a unique signal, keep it with an explicit `Source language: zh-CN` note and add a follow-up to find the official/English source.
 
 Rules:
 - Report format, JSON output, bilingual gates, and append-vs-full rules: see `prompts/runner-rules.md`.

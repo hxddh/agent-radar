@@ -308,9 +308,11 @@ DEFAULT_CHANGELOG_FEEDS = [
     ("minio-blog", "https://blog.min.io/rss/"),
     ("aws-storage-blog", "https://aws.amazon.com/blogs/storage/feed/"),
     ("cloudflare-blog", "https://blog.cloudflare.com/rss/"),
-    # Ecosystem/media breadth: model-hub blog + Chinese AI media.
+    # Ecosystem breadth: model-hub blog. China-ecosystem coverage stays on
+    # official vendor pages (qwen-blog / deepseek-news, English where
+    # available); Simplified-Chinese media are not default collectors — cite
+    # them sparingly and prefer the vendor's official/English page.
     ("hf-blog", "https://huggingface.co/blog/feed.xml"),
-    ("jiqizhixin", "https://www.jiqizhixin.com/rss"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -435,6 +437,25 @@ NUMBER_MATCH_TOLERANCE = 0.05
 STORYLINE_LOOKBACK_DAYS = 14
 STORYLINE_MIN_DAYS = 2
 STORYLINE_PROMPT_LIMIT = 8
+# Cite Simplified-Chinese media sparingly: prefer the vendor's official
+# (English where available) page as the linked evidence. These hosts are
+# deprioritized in source scoring, not banned — a unique signal still passes
+# with an explicit language label.
+SIMPLIFIED_CHINESE_MEDIA_HOSTS = (
+    "jiqizhixin.com",
+    "qbitai.com",
+    "36kr.com",
+    "infoq.cn",
+    "csdn.net",
+    "cnblogs.com",
+    "juejin.cn",
+    "oschina.net",
+    "zhihu.com",
+    "weixin.qq.com",
+    "bilibili.com",
+    "sspai.com",
+)
+SIMPLIFIED_CHINESE_MEDIA_PENALTY = 12
 # Thesis-aligned scoring: keep the storage/containment/economics theses
 # (radar.md) visible in deterministic source ranking, not only in prompts.
 # automation/thesis-keywords.json overrides/extends these weights.
@@ -3798,6 +3819,10 @@ def score_source_item(
             score += 4
         elif stars == 0 and lane == "github":
             score -= 6
+    # Simplified-Chinese media are deprioritized as *citation* sources; the
+    # China ecosystem itself is covered via official vendor pages/queries.
+    if any(host in url for host in SIMPLIFIED_CHINESE_MEDIA_HOSTS):
+        score -= SIMPLIFIED_CHINESE_MEDIA_PENALTY
     if url not in cache:
         score += 8
     else:
