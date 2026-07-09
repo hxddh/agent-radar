@@ -1237,14 +1237,34 @@ def preflight_shared_screening(
 
 
 def strip_daily_day_block_wrapper(content: str, date_label: str) -> str:
-    """Remove leading --- separator and ## YYYY-MM-DD from an append payload."""
+    """Remove --- separators and ## YYYY-MM-DD wrappers from a day payload.
+
+    ``replace_section`` keeps the anchor heading, so any copy of that heading left
+    in the body becomes a duplicate day block after merge.
+    """
     text = content.lstrip("\n")
-    if text.startswith("---"):
-        text = re.sub(r"^---\s*\n+", "", text, count=1)
     heading_pattern = re.compile(rf"^## {re.escape(date_label)}\s*$", re.MULTILINE)
-    match = heading_pattern.search(text)
-    if match:
-        text = text[match.end() :].lstrip("\n")
+    # Models sometimes emit --- / ## date more than once (e.g. before each language).
+    for _ in range(6):
+        stripped = False
+        if text.startswith("---"):
+            text = re.sub(r"^---\s*\n+", "", text, count=1)
+            stripped = True
+        match = heading_pattern.match(text)
+        if match:
+            text = text[match.end() :].lstrip("\n")
+            stripped = True
+        else:
+            match = heading_pattern.search(text)
+            if match and text[: match.start()].strip("\n- \t") == "":
+                text = text[match.end() :].lstrip("\n")
+                stripped = True
+        if not stripped:
+            break
+    # Drop any remaining exact day-heading lines from the body. The anchor already
+    # owns that heading; leaving another copy creates Duplicate day headings.
+    text = heading_pattern.sub("", text)
+    text = re.sub(r"\n{3,}", "\n\n", text).lstrip("\n")
     return text
 
 
@@ -1264,6 +1284,23 @@ def coerce_daily_duplicate_append(update: dict[str, Any], old: str, rel_path: st
     coerced["anchor"] = f"## {date_label}"
     coerced["content"] = strip_daily_day_block_wrapper(content, date_label)
     return coerced
+
+
+def normalize_daily_day_replace(update: dict[str, Any], rel_path: str) -> dict[str, Any]:
+    """Strip ## YYYY-MM-DD from replace_section bodies that target a day heading."""
+    if not is_daily_month_path(rel_path) or update.get("mode") != "replace_section":
+        return update
+    anchor = str(update.get("anchor", "")).strip()
+    match = re.match(r"^## (\d{4}-\d{2}-\d{2})$", anchor)
+    if not match:
+        return update
+    date_label = match.group(1)
+    content = str(update.get("content", ""))
+    if not STRICT_DAILY_DATE_HEADING.search(content):
+        return update
+    normalized = dict(update)
+    normalized["content"] = strip_daily_day_block_wrapper(content, date_label)
+    return normalized
 
 
 def validate_daily_update_content(rel_path: str, old: str, mode: str, content: str) -> None:
@@ -3422,6 +3459,7 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
         update = coerce_daily_duplicate_append(update, old, rel_path)
+        update = normalize_daily_day_replace(update, rel_path)
         mode = update["mode"]
         content = update["content"]
         anchor = update.get("anchor")
@@ -3458,6 +3496,14 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
             str(within) if within else None,
             allow_append_fallback=not is_report_file,
         )
+        if is_daily_month_path(rel_path):
+            day_labels = STRICT_DAILY_DATE_HEADING.findall(merged)
+            dupes = sorted({label for label in day_labels if day_labels.count(label) > 1})
+            if dupes:
+                raise SystemExit(
+                    f"Refusing daily update for {rel_path}: duplicate day headings after merge: "
+                    + ", ".join(dupes)
+                )
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
             if radar_bilingual.missing_chinese_substance(merged):

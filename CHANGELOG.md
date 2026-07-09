@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.7.5 - 2026-07-09
+
+Hotfix: daily `replace_section` bodies that still include `## YYYY-MM-DD` no longer create duplicate day headings after merge.
+
+### Fixed
+- Strip day-heading wrappers from daily `replace_section` content (and from coerced duplicate appends) before merge.
+- Refuse daily updates that would leave duplicate `## YYYY-MM-DD` headings after apply.
+- CLI version bumped to `0.7.5`.
+
 ## v0.7.4 - 2026-07-09
 
 Daily synthesis recall and freshness follow-up: force high-value mainstream into the day block, weight recall by signal class, and reject unlabeled stale roundups.
