@@ -368,5 +368,10 @@ Ignore or deprioritize:
 
 
 ## Source-sweep 2026-07-09
-
-No new sources added beyond those already listed in the daily run sources section. Screening pass sourced from automation/screening/2026-07-09.json.
+- The Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- Introducing Claude Sonnet 5: https://www.anthropic.com/news/claude-sonnet-5
+- CVE-2026-59723 (Cline WebSocket Hijacking): https://bsky.app/profile/cve.skyfleet.blue/post/3mq6ii3a55f27
+- Google Vibe Coding Course (Kaggle): https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d
+- How Anthropic Contains Claude Across Products: https://www.anthropic.com/engineering/how-we-contain-claude
+- Go Agent Harness (micro/go-micro): https://github.com/micro/go-micro
+- Stealth Chrome DevTools MCP: https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp

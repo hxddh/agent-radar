@@ -1587,3 +1587,27 @@ Follow-up gaps:
 - Used screening pass `automation/screening/2026-07-09.json` to capture new candidates.
 - All candidates identified in the screening pass were already captured in the `## 2026-07-09 Daily Run Candidates` section.
 - Follow-up gap: Missing academic papers with agent relevance (benchmarks, papers) – consider adding Databricks benchmarking or Dan Luu analysis if needed.
+
+
+- **The Making of Claude Code** (scr-making-claude-code): Inside story of Claude Code's evolution from internal CLI to Anthropic's coding agent. Why it matters: Reveals design decisions and architecture for a mainstream coding agent; high confidence mainstream signal. Evidence strength: Strong (official Anthropic blog). Relevance score: 9. Defer reason: Product deep-dive, not a new infrastructure candidate; may be promoted later. Follow-up needed: Monitor for design pattern adoption. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
+  - Source: https://www.anthropic.com/features/making-of-claude-code
+
+- **Introducing Claude Sonnet 5** (scr-claude-sonnet5): New frontier model from Anthropic with strong coding and agent performance. Why it matters: Direct improvement to agent capabilities; mainstream product signal. Evidence strength: Strong (official announcement). Relevance score: 9. Defer reason: Model launch, not a standalone agent infrastructure candidate; may be promoted as a product update. Follow-up needed: Monitor benchmarks and developer adoption. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
+  - Source: https://www.anthropic.com/news/claude-sonnet-5
+
+- **CVE-2026-59723: Cline WebSocket Hijacking** (scr-cve-cline-ws): Real vulnerability in Cline agent dashboard—highlights agent security risks. Why it matters: Explicit security vulnerability in a popular coding agent; raises security awareness for agent deployments. Evidence strength: Medium (CVE report citing specific vulnerability, but via Bluesky). Relevance score: 8. Defer reason: Security advisory; may be promoted to watchlist as a security incident. Follow-up needed: Confirm CVE details, check for mitigations and patch releases. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://bsky.app/profile/cve.skyfleet.blue/post/3mq6ii3a55f27
+
+- **Google Vibe Coding Course on Kaggle** (scr-vibe-coding-course): User report of Google's agentic engineering course covering workflows and security. Why it matters: Indicates educational push for agentic workflows; user workflow signal. Evidence strength: Weak (single Bluesky report). Relevance score: 7. Defer reason: Needs official confirmation or more user reports. Follow-up needed: Verify course existence and content. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d
+
+- **How Anthropic Contains Claude Across Products** (scr-anthropic-contain): Engineering deep-dive on agent containment and blast radius reduction strategies. Why it matters: Directly addresses agent safety and security infrastructure; high confidence infra primitive. Evidence strength: Strong (official engineering blog). Relevance score: 9. Defer reason: Informational; may be promoted as a security practice reference. Follow-up needed: Monitor adoption of these containment practices by other agent platforms. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
+  - Source: https://www.anthropic.com/engineering/how-we-contain-claude
+
+- **Go Agent Harness (micro/go-micro)** (scr-go-agent-harness): Mature Go framework for building agent services—highly starred and widely used. Why it matters: Infrastructure for building agent runtimes; infra primitive. Evidence strength: Medium (popular repo with 20k+ stars, but agent harness claim may be inferred). Relevance score: 8. Defer reason: Needs verification of direct agent use cases. Follow-up needed: Check for agent-specific examples and community adoption. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
+  - Source: https://github.com/micro/go-micro
+
+- **Stealth Chrome DevTools MCP** (scr-stealth-chrome-mcp): Undetectable browser automation for AI agents via MCP—anti-detection and CDP access. Why it matters: Enables stealth browser operations for agents; relevant infra primitive. Evidence strength: Weak (early repo, no stars). Relevance score: 7. Defer reason: Niche and potential misuse; needs legitimate use-case documentation. Follow-up needed: Monitor for official documentation and integration guides. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp
+
+Follow-up gaps: Microsoft Flint and user automation stack signals from screening pass lack source URLs; queue for future sweeps.

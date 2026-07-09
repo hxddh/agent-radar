@@ -4,6 +4,8 @@ Last checked: 2026-07-09
 
 | Source | Status | Detail |
 | --- | --- | --- |
+| pypi-updates:agent memory | ok |  |
+| crates:agent memory | ok |  |
 | open-vsx:agent memory | ok |  |
 | npm:agent sandbox | ok |  |
 | pypi-updates:agent sandbox | ok |  |
@@ -19,7 +21,6 @@ Last checked: 2026-07-09
 | arxiv:cs-ai | ok |  |
 | feed:openai-blog | ok |  |
 | feed:github-changelog | ok |  |
-| feed:microsoft-azure-ai | error | HTTP Error 404: Not Found |
 | feed:huggingface-blog | ok |  |
 | feed:aws-whats-new | ok |  |
 | feed:vercel-changelog | ok |  |
@@ -28,7 +29,6 @@ Last checked: 2026-07-09
 | page:anthropic-news | ok |  |
 | page:anthropic-engineering | ok |  |
 | page:google-developers-blog | ok |  |
-| page:openai-index | error | HTTP Error 403: Forbidden |
 | page:devin-releases | ok |  |
 | page:replit-updates | ok |  |
 | page:warp-changelog | ok |  |
