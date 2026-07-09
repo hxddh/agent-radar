@@ -424,3 +424,14 @@ Ignore or deprioritize:
 
 - Bluesky tool-call corruption report (newer models breaking nested edit schemas): https://bsky.app/profile/benjaminhan.sigmoid.social.ap.brid.gy/post/3mq6pyct736w2
 - Bluesky user agent‑stack automation (OpenHuman/Ollama/MiMoCode CLI): https://bsky.app/profile/swastik2209.bsky.social/post/3mq6qcchxws24
+
+
+## Source-sweep 2026-07-09 (screening candidates)
+
+- CVE-2026-59723 (Cline WebSocket Hijacking): https://www.thehackerwire.com/vulnerability/CVE-2026-59723/
+- How to kill bloat in Claude Code's system prompt: https://www.aihero.dev/how-to-kill-the-bloat-in-claude-codes-system-prompt
+- Contextify: cross-agent transcript sharing: https://contextify.sh/
+- AgentLens: trajectory-based eval: https://arxiv.org/abs/2607.06624
+- nothumansearch: agentic readiness search engine: https://github.com/unitedideas/nothumansearch
+- code-airlock: secure Docker microVM for coding agents: https://github.com/Screwnephropsnorvegicus769/code-airlock
+- kb-mcp-lite 0.5.22: https://pypi.org/project/kb-mcp-lite/0.5.22/
