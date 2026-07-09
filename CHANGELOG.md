@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.7.9 - 2026-07-09
+
+Content quality / breadth follow-up: demote social-only mainstream, stop counting GitHub repos as user_workflow, require multi-vendor/theme breadth, and warn when day replaces drop Strong official URLs.
+
+### Added
+- Social-only mainstream demotion (Bluesky/Reddit/X/HN cannot be MUST/high without official corroboration).
+- Reclassify GitHub/PyPI `user_workflow` candidates to `infra_primitive`.
+- Daily breadth gate: ≥2 vendor families and ≥2 themes (security/eval/orchestration/MCP/user-ops), or Gaps.
+- Soft warning when a day `replace_section` drops prior official URLs.
+- Telemetry: `social_only_demoted`, `user_repo_reclassified`, `vendor_families_covered`, `breadth_themes_covered`.
+
+### Changed
+- Prompts document social-only / repo-as-user / breadth / preserve-strong-URL rules.
+- CLI version bumped to `0.7.9`.
+
 ## v0.7.8 - 2026-07-09
 
 Screening/synthesis quality: stop collapsed relevance scores, demote star-count "mainstream", and require actionable user_workflow detail.

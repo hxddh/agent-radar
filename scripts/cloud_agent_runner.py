@@ -202,6 +202,58 @@ MAINSTREAM_PRODUCT_EVIDENCE_MARKERS = (
     "generally available",
     "preview",
 )
+OFFICIAL_EVIDENCE_HOSTS = (
+    "openai.com",
+    "anthropic.com",
+    "github.blog",
+    "developers.googleblog.com",
+    "blog.google",
+    "ai.google.dev",
+    "cursor.com",
+    "docs.devin.ai",
+    "docs.replit.com",
+    "docs.warp.dev",
+    "ampcode.com",
+    "factory.ai",
+    "aws.amazon.com",
+    "microsoft.com",
+    "devblogs.microsoft.com",
+    "azure.microsoft.com",
+    "huggingface.co",
+    "vercel.com",
+    "cloudflare.com",
+    "meta.com",
+    "ai.meta.com",
+    "x.ai",
+)
+SOCIAL_EVIDENCE_HOSTS = (
+    "bsky.app",
+    "reddit.com",
+    "x.com",
+    "twitter.com",
+    "news.ycombinator.com",
+    "lobste.rs",
+    "threads.net",
+)
+VENDOR_FAMILIES = (
+    ("openai", ("openai", "codex", "chatgpt")),
+    ("anthropic", ("anthropic", "claude")),
+    ("google", ("google", "gemini", "adk", "deepmind")),
+    ("microsoft", ("microsoft", "azure", "copilot", "github.blog", "github changelog", "innersource")),
+    ("github", ("github.blog", "github changelog", "innersource", "copilot")),
+    ("apple", ("apple", "webkit")),
+    ("amazon", ("aws", "amazon", "bedrock")),
+    ("meta", ("meta", "llama")),
+    ("cursor", ("cursor",)),
+    ("xai", ("xai", "grok")),
+)
+BREADTH_THEME_MARKERS = {
+    "security": ("security", "advisory", "advisories", "containment", "sandbox", "cve-", "vulnerabilit"),
+    "eval": ("eval", "benchmark", "evaluation"),
+    "orchestration": ("multi-agent", "orchestration", "workflow engine", "adk", "agent-framework"),
+    "mcp_platform": ("mcp server", "model context protocol", "first-party mcp"),
+    "user_ops": tuple(ACTIONABLE_USER_WORKFLOW_MARKERS),
+}
 STAR_HYPE_RE = re.compile(
     r"\b\d+(?:\.\d+)?k?\+?\s*stars?\b|\bstars?\s*[:=]\s*\d+",
     re.IGNORECASE,
@@ -344,6 +396,10 @@ RUN_AUDIT: dict[str, Any] = {
     "must_cover_missing": 0,
     "screening_scores_repaired": 0,
     "star_hype_demoted": 0,
+    "social_only_demoted": 0,
+    "user_repo_reclassified": 0,
+    "vendor_families_covered": 0,
+    "breadth_themes_covered": 0,
     "apply_warnings": [],
 }
 
@@ -958,14 +1014,94 @@ def candidate_haystack(candidate: dict[str, Any]) -> str:
     return f"{title} {why} {urls}"
 
 
+def candidate_evidence_urls(candidate: dict[str, Any]) -> list[str]:
+    evidence = candidate.get("evidence", [])
+    if not isinstance(evidence, list):
+        return []
+    return [str(item).strip().lower() for item in evidence if str(item).strip()]
+
+
+def url_host_matches(url: str, hosts: tuple[str, ...] | list[str]) -> bool:
+    lower = url.lower()
+    return any(host in lower for host in hosts)
+
+
+def has_official_evidence_url(candidate: dict[str, Any]) -> bool:
+    return any(url_host_matches(url, OFFICIAL_EVIDENCE_HOSTS) for url in candidate_evidence_urls(candidate))
+
+
+def is_social_only_evidence(candidate: dict[str, Any]) -> bool:
+    urls = candidate_evidence_urls(candidate)
+    if not urls:
+        return False
+    return all(url_host_matches(url, SOCIAL_EVIDENCE_HOSTS) for url in urls)
+
+
+def is_github_repo_only_evidence(candidate: dict[str, Any]) -> bool:
+    urls = candidate_evidence_urls(candidate)
+    if not urls:
+        return False
+    return all("github.com/" in url and "github.blog" not in url for url in urls)
+
+
 def has_official_product_evidence(candidate: dict[str, Any]) -> bool:
     hay = candidate_haystack(candidate)
+    if has_official_evidence_url(candidate):
+        return True
     if any(marker in hay for marker in MAINSTREAM_PRODUCT_EVIDENCE_MARKERS):
         return True
     # Vendor non-GitHub pages count as product evidence even without changelog keywords.
     if any(marker in hay for marker in MAINSTREAM_VENDOR_MARKERS) and "github.com/" not in hay:
         return True
     return False
+
+
+def demote_social_only_mainstream(candidate: dict[str, Any]) -> bool:
+    """Social-only mainstream cannot be high-confidence MUST-cover."""
+    if infer_signal_class(candidate) != "mainstream_product":
+        return False
+    if not is_social_only_evidence(candidate):
+        return False
+    if has_official_evidence_url(candidate):
+        return False
+    changed = False
+    if str(candidate.get("confidence", "")).lower() == "high":
+        candidate["confidence"] = "medium"
+        changed = True
+    try:
+        score = int(candidate.get("relevance_score", 5) or 5)
+    except (TypeError, ValueError):
+        score = 5
+    if score > 4:
+        candidate["relevance_score"] = 4
+        changed = True
+    why = str(candidate.get("why_it_matters", "")).strip()
+    if why and "social-only" not in why.lower():
+        candidate["why_it_matters"] = truncate_text(why + "; social-only, needs official corroboration", 120)
+        changed = True
+    return changed
+
+
+def reclassify_repo_as_user_workflow(candidate: dict[str, Any]) -> bool:
+    """GitHub/PyPI repos are infra primitives, not user_workflow field reports."""
+    if infer_signal_class(candidate) != "user_workflow":
+        return False
+    urls = candidate_evidence_urls(candidate)
+    if not urls:
+        return False
+    repo_like = all(
+        ("github.com/" in url and "github.blog" not in url) or "pypi.org/" in url
+        for url in urls
+    )
+    if not repo_like:
+        return False
+    candidate["signal_class"] = "infra_primitive"
+    if str(candidate.get("confidence", "")).lower() == "high":
+        candidate["confidence"] = "medium"
+    why = str(candidate.get("why_it_matters", "")).strip()
+    if why and "reclassified" not in why.lower():
+        candidate["why_it_matters"] = truncate_text(why + "; reclassified repo→infra", 120)
+    return True
 
 
 def is_star_hype_mainstream(candidate: dict[str, Any]) -> bool:
@@ -1034,6 +1170,8 @@ def repair_collapsed_relevance_scores(candidates: list[dict[str, Any]]) -> int:
             base = min(base, 2)
         if is_star_hype_mainstream(cand):
             base = min(base, 3)
+        if is_social_only_evidence(cand) and signal_class == "mainstream_product":
+            base = min(base, 4)
         if signal_class == "infra_primitive":
             base = min(base, 6)
         cand["relevance_score"] = max(1, min(10, base))
@@ -1103,8 +1241,8 @@ def high_confidence_mainstream_candidates(candidates: list[dict[str, Any]]) -> l
             continue
         if str(cand.get("promotion_status", "candidate")).lower() == "reject":
             continue
-        # Star-count GitHub repos are not 24-48h product deltas; keep them out of MUST.
-        if is_star_hype_mainstream(cand):
+        # Star-count GitHub repos / social-only rumors are not MUST product deltas.
+        if is_star_hype_mainstream(cand) or is_social_only_evidence(cand):
             continue
         selected.append(cand)
     selected.sort(key=candidate_priority_key)
@@ -1170,15 +1308,21 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         return data
     repaired = repair_collapsed_relevance_scores(candidates)
     demoted = 0
+    social_demoted = 0
+    reclassified = 0
     ids: list[str] = []
     class_counts: dict[str, int] = {}
     for cand in candidates:
         if not isinstance(cand, dict):
             continue
+        if reclassify_repo_as_user_workflow(cand):
+            reclassified += 1
         signal_class = infer_signal_class(cand)
         cand["signal_class"] = signal_class
         if demote_star_only_mainstream(cand):
             demoted += 1
+        if demote_social_only_mainstream(cand):
+            social_demoted += 1
         class_counts[signal_class] = class_counts.get(signal_class, 0) + 1
         if cand.get("id"):
             ids.append(str(cand["id"]))
@@ -1194,12 +1338,22 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     RUN_AUDIT["screening_signal_classes"] = class_counts
     RUN_AUDIT["screening_scores_repaired"] = repaired
     RUN_AUDIT["star_hype_demoted"] = demoted
+    RUN_AUDIT["social_only_demoted"] = social_demoted
+    RUN_AUDIT["user_repo_reclassified"] = reclassified
     if repaired:
         warning = f"Repaired collapsed screening relevance_score for {repaired} candidate(s)"
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
     if demoted:
         warning = f"Demoted {demoted} star-hype mainstream candidate(s) (repo stars ≠ product delta)"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if social_demoted:
+        warning = f"Demoted {social_demoted} social-only mainstream candidate(s) (need official corroboration)"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if reclassified:
+        warning = f"Reclassified {reclassified} GitHub/PyPI user_workflow candidate(s) to infra_primitive"
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
     return data
@@ -1282,8 +1436,12 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             "(concrete operator detail), then at most 2 infra_primitive emerging bullets."
         )
         lines.append(
-            "Freshness: prefer 24-48h product deltas (changelog/blog/release). "
+            "Freshness/quality: prefer 24-48h product deltas (changelog/blog/release). "
             "GitHub star counts alone are not mainstream product news. "
+            "Social-only claims (Bluesky/Reddit/X) need official corroboration before MUST/high. "
+            "GitHub/PyPI repos are infra_primitive, not user_workflow. "
+            "When replacing an existing day block, keep prior Strong official URLs unless obsolete. "
+            "Aim for ≥2 vendor families and ≥2 themes (security/eval/orchestration/MCP/user-ops). "
             "Monthly/quarterly roundups older than ~7 days must be labeled "
             "`Freshness: stale-roundup` or moved to research-log."
         )
@@ -1531,13 +1689,6 @@ def candidate_title_tokens(title: str) -> list[str]:
         for token in re.findall(r"[a-z0-9][a-z0-9+./-]{3,}", title.lower())
         if token not in STOPWORD_TITLE_TOKENS
     ]
-
-
-def candidate_evidence_urls(candidate: dict[str, Any]) -> list[str]:
-    evidence = candidate.get("evidence", [])
-    if not isinstance(evidence, list):
-        return []
-    return [str(item).strip().lower() for item in evidence if str(item).strip()]
 
 
 def candidate_mentioned_in_text(candidate: dict[str, Any], hay: str, *, strict: bool = False) -> bool:
@@ -1809,6 +1960,59 @@ def validate_daily_freshness(result: dict[str, Any]) -> None:
         )
 
 
+def vendor_families_in_text(text: str) -> list[str]:
+    lower = text.lower()
+    found: list[str] = []
+    for family, markers in VENDOR_FAMILIES:
+        if any(marker in lower for marker in markers):
+            found.append(family)
+    return found
+
+
+def breadth_themes_in_text(text: str) -> list[str]:
+    lower = text.lower()
+    found: list[str] = []
+    for theme, markers in BREADTH_THEME_MARKERS.items():
+        if any(marker in lower for marker in markers):
+            found.append(theme)
+    return found
+
+
+def extract_official_urls(text: str) -> set[str]:
+    urls = set(re.findall(r"https?://[^\s)>\]]+", text, flags=re.IGNORECASE))
+    official: set[str] = set()
+    for url in urls:
+        cleaned = url.rstrip(".,;")
+        if url_host_matches(cleaned, OFFICIAL_EVIDENCE_HOSTS):
+            official.add(cleaned.lower())
+    return official
+
+
+def warn_dropped_official_urls(old: str, new: str, rel_path: str) -> None:
+    """Soft-warn when a day replace drops Strong official URLs from the prior block."""
+    if not old or not new:
+        return
+    dropped = sorted(extract_official_urls(old) - extract_official_urls(new))
+    if not dropped:
+        return
+    lower_new = new.lower()
+    unexplained = []
+    for url in dropped:
+        slug = url.rstrip("/").rsplit("/", 1)[-1][:32]
+        if slug and slug in lower_new:
+            continue
+        unexplained.append(url)
+    if not unexplained:
+        return
+    sample = "; ".join(unexplained[:3])
+    warning = (
+        f"{rel_path}: day replace dropped {len(unexplained)} prior official URL(s) "
+        f"({sample}). Prefer keeping Strong official signals or naming them under Gaps."
+    )
+    if warning not in RUN_AUDIT["apply_warnings"]:
+        RUN_AUDIT["apply_warnings"].append(warning)
+
+
 def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     bodies = daily_update_bodies(result)
     if not bodies:
@@ -1819,10 +2023,14 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     mainstream_gap = content_has_direction_gap(text, "mainstream")
     user_gap = content_has_direction_gap(text, "user")
     infra_count = count_infra_primitive_bullets(text)
+    vendors = vendor_families_in_text(text)
+    themes = breadth_themes_in_text(text)
     RUN_AUDIT["direction_mainstream"] = has_mainstream
     RUN_AUDIT["direction_user_workflow"] = has_user
     RUN_AUDIT["direction_infra_count"] = infra_count
     RUN_AUDIT["direction_gaps_present"] = mainstream_gap or user_gap
+    RUN_AUDIT["vendor_families_covered"] = len(vendors)
+    RUN_AUDIT["breadth_themes_covered"] = len(themes)
 
     if not has_mainstream and not mainstream_gap:
         raise SystemExit(
@@ -1838,6 +2046,17 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
         raise SystemExit(
             f"Refusing daily update: {infra_count} infra_primitive emerging bullets exceeds "
             f"max {MAX_DAILY_INFRA_PRIMITIVE_BULLETS}; move extras to research-log.md."
+        )
+    if len(vendors) < 2 and not mainstream_gap:
+        raise SystemExit(
+            "Refusing daily update: need signals from at least 2 vendor families "
+            f"(found {vendors or 'none'}) or a Gaps bullet naming missing vendors."
+        )
+    if len(themes) < 2 and not (mainstream_gap or user_gap):
+        raise SystemExit(
+            "Refusing daily update: need at least 2 themes among "
+            "security/eval/orchestration/MCP/user-ops "
+            f"(found {themes or 'none'}) or an explicit Gaps bullet."
         )
 
 
@@ -3757,6 +3976,17 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
                     f"Refusing daily update for {rel_path}: duplicate day headings after merge: "
                     + ", ".join(dupes)
                 )
+            if mode == "replace_section" and anchor:
+                anchor_label = str(anchor).strip()
+                match = re.match(r"^## (\d{4}-\d{2}-\d{2})$", anchor_label)
+                if match:
+                    date_label = match.group(1)
+                    old_block_match = re.search(
+                        rf"(?ms)^## {re.escape(date_label)}\s*\n(.*?)(?=^## |\Z)",
+                        old,
+                    )
+                    old_block = old_block_match.group(0) if old_block_match else ""
+                    warn_dropped_official_urls(old_block, content, rel_path)
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
             if radar_bilingual.missing_chinese_substance(merged):
@@ -3828,6 +4058,10 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Stale roundup count: {RUN_AUDIT.get('stale_roundup_count', 0)}",
         f"- Screening scores repaired: {RUN_AUDIT.get('screening_scores_repaired', 0)}",
         f"- Star-hype demoted: {RUN_AUDIT.get('star_hype_demoted', 0)}",
+        f"- Social-only demoted: {RUN_AUDIT.get('social_only_demoted', 0)}",
+        f"- User-repo reclassified: {RUN_AUDIT.get('user_repo_reclassified', 0)}",
+        f"- Vendor families covered: {RUN_AUDIT.get('vendor_families_covered', 0)}",
+        f"- Breadth themes covered: {RUN_AUDIT.get('breadth_themes_covered', 0)}",
     ]
     if source_errors:
         entry.append("- Source errors:")
@@ -3886,6 +4120,10 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "stale_roundup_count": RUN_AUDIT.get("stale_roundup_count", 0),
         "screening_scores_repaired": RUN_AUDIT.get("screening_scores_repaired", 0),
         "star_hype_demoted": RUN_AUDIT.get("star_hype_demoted", 0),
+        "social_only_demoted": RUN_AUDIT.get("social_only_demoted", 0),
+        "user_repo_reclassified": RUN_AUDIT.get("user_repo_reclassified", 0),
+        "vendor_families_covered": RUN_AUDIT.get("vendor_families_covered", 0),
+        "breadth_themes_covered": RUN_AUDIT.get("breadth_themes_covered", 0),
         "apply_warnings": RUN_AUDIT.get("apply_warnings", []),
     }
     with path.open("a", encoding="utf-8") as handle:
@@ -3987,6 +4225,10 @@ def run_task(
     RUN_AUDIT["must_cover_missing"] = 0
     RUN_AUDIT["screening_scores_repaired"] = 0
     RUN_AUDIT["star_hype_demoted"] = 0
+    RUN_AUDIT["social_only_demoted"] = 0
+    RUN_AUDIT["user_repo_reclassified"] = 0
+    RUN_AUDIT["vendor_families_covered"] = 0
+    RUN_AUDIT["breadth_themes_covered"] = 0
     RUN_AUDIT["apply_warnings"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:
