@@ -32,7 +32,7 @@ Daily direction quota (required):
 - Cover at least **2 vendor families** (e.g. OpenAI + Anthropic, or GitHub + Google), OR Gaps naming the missing vendors.
 - Cover at least **2 themes** among security / eval / orchestration / MCP platform / user-ops, OR an explicit Gaps bullet.
 - At least **1 actionable user_workflow** signal (scenario / pain point / useful trick / concrete command), OR an explicit Gaps bullet for missing user evidence. Bare "users like X" and GitHub repos do not count as user_workflow.
-- **Social/discussion sources are first-class** (Bluesky/Reddit/HN/X/Lobsters). Keep high-signal discussion and field reports; label Evidence strength. If screening had discussion candidates, cover at least one or Gaps: `Missing social/discussion: ...`.
+- **Social/discussion sources are first-class** (Bluesky/Reddit/HN/X/Lobsters). Keep high-signal discussion and field reports; label Evidence strength. If screening had discussion candidates **or** actionable `user_workflow`, cover at least one or Gaps (`Missing social/discussion` / `Missing user_workflow`).
 - At most **2 infra_primitive** emerging-repo bullets in the day block; additional infra candidates go to `research-log.md` only.
 - Do not fill the day with GitHub long-tail memory/MCP/sandbox repos when mainstream or user signals are missing.
 - Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.

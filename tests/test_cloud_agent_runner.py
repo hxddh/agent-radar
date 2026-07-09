@@ -887,6 +887,76 @@ class CloudAgentRunnerTest(unittest.TestCase):
         lanes = {cloud_agent_runner.source_lane(item["source"]) for item in selected}
         self.assertTrue(lanes & cloud_agent_runner.PRIORITY_BREADTH_LANES)
 
+    def test_lane_balance_reserves_discussion_lanes(self) -> None:
+        # Many high-score GitHub items would otherwise crowd out discussion.
+        scored = [
+            {
+                "source": f"github",
+                "title": f"repo-{i}",
+                "url": f"https://github.com/example/repo-{i}",
+                "score": str(90 - i),
+            }
+            for i in range(20)
+        ] + [
+            {
+                "source": "bluesky",
+                "title": "operator field report",
+                "url": "https://bsky.app/profile/example/post/1",
+                "score": "30",
+            },
+            {
+                "source": "reddit-rss:LocalLLaMA",
+                "title": "claude code pain point thread",
+                "url": "https://www.reddit.com/r/LocalLLaMA/comments/abc",
+                "score": "28",
+            },
+            {
+                "source": "hacker-news",
+                "title": "HN discussion on coding agents",
+                "url": "https://news.ycombinator.com/item?id=1",
+                "score": "27",
+            },
+            {
+                "source": "openai-blog",
+                "title": "official delta",
+                "url": "https://openai.com/index/agents",
+                "score": "80",
+            },
+        ]
+        selected = cloud_agent_runner.select_scored_items_with_lane_balance(scored, 20)
+        discussion = [
+            item
+            for item in selected
+            if cloud_agent_runner.source_lane(item["source"])
+            in cloud_agent_runner.DISCUSSION_BREADTH_LANES
+        ]
+        self.assertGreaterEqual(len(discussion), 2)
+        urls = {item["url"] for item in selected}
+        self.assertIn("https://bsky.app/profile/example/post/1", urls)
+        self.assertIn("https://www.reddit.com/r/LocalLLaMA/comments/abc", urls)
+        self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT.get("discussion_lane_reserved", 0), 2)
+
+    def test_screening_format_lane_balances_discussion(self) -> None:
+        items = [
+            {
+                "source": "github",
+                "title": f"repo-{i}",
+                "url": f"https://github.com/example/r-{i}",
+                "score": str(80 - i),
+            }
+            for i in range(30)
+        ] + [
+            {
+                "source": "bluesky",
+                "title": "field report",
+                "url": "https://bsky.app/profile/x/post/2",
+                "score": "20",
+            }
+        ]
+        text = cloud_agent_runner.format_scored_items_for_screening(items, 15)
+        self.assertIn("bsky.app", text)
+        self.assertIn("lane-balanced", text)
+
     def test_enrich_screening_with_ids(self) -> None:
         data = {"candidates": [{"title": "Signal", "evidence": ["https://example.com/x"]}]}
         enriched = cloud_agent_runner.enrich_screening_with_ids(data)
@@ -1503,6 +1573,73 @@ class CloudAgentRunnerTest(unittest.TestCase):
         }
         cloud_agent_runner.validate_daily_direction_quota(result)
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_social_discussion"])
+
+    def test_diversify_prefers_discussion_user_workflow(self) -> None:
+        candidates = [
+            {
+                "id": "scr-blog-user",
+                "title": "Generic blog user note",
+                "confidence": "medium",
+                "relevance_score": 8,
+                "signal_class": "user_workflow",
+                "evidence": ["https://example.com/blog/user-note"],
+                "why_it_matters": "Useful trick for review loops in a long blog post",
+            },
+            {
+                "id": "scr-bsky-user",
+                "title": "Bluesky operator pain point",
+                "confidence": "medium",
+                "relevance_score": 5,
+                "signal_class": "user_workflow",
+                "evidence": ["https://bsky.app/profile/example/post/9"],
+                "why_it_matters": "Pain point: /doctor fails mid-session for Claude Code users",
+            },
+            {
+                "id": "scr-m1",
+                "title": "OpenAI agents preview",
+                "confidence": "high",
+                "relevance_score": 9,
+                "signal_class": "mainstream_product",
+                "evidence": ["https://openai.com/index/agents"],
+                "why_it_matters": "Product delta",
+            },
+            {
+                "id": "scr-m2",
+                "title": "Anthropic containment",
+                "confidence": "high",
+                "relevance_score": 8,
+                "signal_class": "mainstream_product",
+                "evidence": ["https://www.anthropic.com/engineering/how-we-contain-claude"],
+                "why_it_matters": "Security post",
+            },
+        ]
+        ranked = cloud_agent_runner.diversify_screening_candidates(candidates, 4)
+        ids = [str(c.get("id")) for c in ranked]
+        self.assertIn("scr-bsky-user", ids)
+
+    def test_daily_user_gap_mentions_screening_actionable_count(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["screening_actionable_user"] = 2
+        cloud_agent_runner.RUN_AUDIT["social_discussion_labeled"] = 0
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "- Signal: Anthropic published a containment engineering post.\n"
+                        "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
+                    ),
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("actionable user_workflow", str(ctx.exception))
 
     def test_github_repo_user_workflow_reclassified_to_infra(self) -> None:
         cand = {

@@ -68,7 +68,12 @@ DEFAULT_SCREEN_PROMPT_CANDIDATES = 8
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 3
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
+# Social/discussion collectors map to these lanes via source_lane().
+DISCUSSION_BREADTH_LANES = frozenset({"social", "reddit"})
 DEFAULT_PRIORITY_LANE_FLOOR_RATIO = 0.4
+# Reserve discussion slots so Bluesky/Reddit/HN are not crowded out by GitHub long-tail.
+DEFAULT_DISCUSSION_LANE_FLOOR_RATIO = 0.2
+DEFAULT_DISCUSSION_LANE_FLOOR_MIN = 6
 DEFAULT_LANE_COVERAGE_DEGRADED_THRESHOLD = 0.5
 SIGNAL_CLASSES = frozenset(
     {"mainstream_product", "user_workflow", "infra_primitive", "research", "noise"}
@@ -415,6 +420,8 @@ RUN_AUDIT: dict[str, Any] = {
     "social_only_demoted": 0,
     "social_discussion_labeled": 0,
     "direction_social_discussion": False,
+    "discussion_lane_reserved": 0,
+    "screening_actionable_user": 0,
     "user_repo_reclassified": 0,
     "vendor_families_covered": 0,
     "breadth_themes_covered": 0,
@@ -988,11 +995,17 @@ def slice_sources_for_context(content: str, limit: int) -> str:
 
 
 def format_scored_items_for_screening(items: list[dict[str, str]], limit: int) -> str:
+    # Lane-balance so discussion sources survive the screening top-N cut.
+    limited = select_scored_items_with_lane_balance(items, limit) if limit > 0 else []
+    discussion_n = sum(
+        1 for item in limited if source_lane(item.get("source", "")) in DISCUSSION_BREADTH_LANES
+    )
     lines = [
-        "Scored source items (compact):",
-        f"- Items shown: {min(limit, len(items))}/{len(items)}",
+        "Scored source items (compact, lane-balanced):",
+        f"- Items shown: {len(limited)}/{len(items)} (discussion reserved≈{discussion_n})",
+        "- Prefer Bluesky/Reddit/HN/X field reports for user_workflow; keep with Evidence strength.",
     ]
-    for item in items[:limit]:
+    for item in limited:
         note = f" -- {item['note']}" if item.get("note") else ""
         lines.append(
             f"- [{item['source']} score={item.get('score', '0')}] {item['title']} | {item['url']}{note}"
@@ -1291,7 +1304,11 @@ def high_confidence_mainstream_candidates(candidates: list[dict[str, Any]]) -> l
 
 
 def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
-    """Prefer a mix of mainstream/user/infra over an infra-only top-N list."""
+    """Prefer a mix of mainstream/user/infra over an infra-only top-N list.
+
+    Also reserves discussion/social user_workflow slots so field reports survive
+    the synthesis top-N cut.
+    """
     if limit <= 0 or not candidates:
         return []
     buckets: dict[str, list[dict[str, Any]]] = {name: [] for name in SIGNAL_CLASSES}
@@ -1311,19 +1328,28 @@ def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int)
     selected: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
 
-    def take(signal_class: str, count: int) -> None:
+    def cand_key(cand: dict[str, Any]) -> str:
+        return str(cand.get("id") or cand.get("title") or id(cand))
+
+    def take(signal_class: str, count: int, *, discussion_only: bool = False) -> None:
         for cand in buckets.get(signal_class, []):
             if len(selected) >= limit or count <= 0:
                 return
-            cand_id = str(cand.get("id") or cand.get("title") or id(cand))
-            if cand_id in seen_ids:
+            if discussion_only and not (
+                is_social_only_evidence(cand) or candidate_has_discussion_evidence(cand)
+            ):
+                continue
+            key = cand_key(cand)
+            if key in seen_ids:
                 continue
             selected.append(cand)
-            seen_ids.add(cand_id)
+            seen_ids.add(key)
             count -= 1
 
     # Reserve slots so infra cannot crowd out direction classes in the top-N.
     take("mainstream_product", min(2, limit))
+    # Prefer discussion-backed user_workflow before generic blog user notes.
+    take("user_workflow", min(2, max(0, limit - len(selected))), discussion_only=True)
     take("user_workflow", min(2, max(0, limit - len(selected))))
     take("research", min(1, max(0, limit - len(selected))))
     infra_budget = min(3, max(0, limit - len(selected)))
@@ -1336,10 +1362,10 @@ def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int)
     for cand in unknown:
         if len(selected) >= limit:
             break
-        cand_id = str(cand.get("id") or cand.get("title") or id(cand))
-        if cand_id not in seen_ids:
+        key = cand_key(cand)
+        if key not in seen_ids:
             selected.append(cand)
-            seen_ids.add(cand_id)
+            seen_ids.add(key)
     return selected[:limit]
 
 
@@ -1383,6 +1409,14 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     # Keep legacy key at 0 so older dashboards do not imply demotion still happens.
     RUN_AUDIT["social_only_demoted"] = 0
     RUN_AUDIT["user_repo_reclassified"] = reclassified
+    actionable_user_n = sum(
+        1
+        for cand in candidates
+        if isinstance(cand, dict)
+        and infer_signal_class(cand) == "user_workflow"
+        and candidate_has_actionable_user_detail(cand)
+    )
+    RUN_AUDIT["screening_actionable_user"] = actionable_user_n
     if repaired:
         warning = f"Repaired collapsed screening relevance_score for {repaired} candidate(s)"
         if warning not in RUN_AUDIT["apply_warnings"]:
@@ -1509,10 +1543,18 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
                 "cover at least one actionable discussion/user signal in the day block."
             )
         else:
-            lines.append(
-                "Discussion note: no social/discussion candidates in this screen; "
-                "daily should record Gaps if public discussion lanes were empty."
-            )
+            reserved = int(RUN_AUDIT.get("discussion_lane_reserved", 0) or 0)
+            if reserved > 0:
+                lines.append(
+                    f"Discussion note: source snapshot reserved {reserved} discussion-lane "
+                    "item(s) but screening produced no social/discussion candidates — "
+                    "re-check Bluesky/Reddit/HN URLs or Gaps: Missing social/discussion: ..."
+                )
+            else:
+                lines.append(
+                    "Discussion note: no social/discussion candidates in this screen; "
+                    "daily should record Gaps if public discussion lanes were empty."
+                )
         if class_counts.get("mainstream_product", 0) == 0:
             lines.append(
                 "Direction note: no mainstream_product candidates; daily must record a Gaps bullet."
@@ -1527,6 +1569,11 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             lines.append(
                 "Direction note: no actionable user_workflow candidates; daily must include "
                 "concrete operator detail (scenario/pain/trick) or a Gaps bullet."
+            )
+        elif actionable_user:
+            lines.append(
+                "Direction note: actionable user_workflow present — keep at least one in the "
+                "day block (prefer social/discussion evidence) or Gaps."
             )
 
     gaps = data.get("gaps", [])
@@ -2114,9 +2161,16 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
             "named 'Missing mainstream_product: ...'."
         )
     if not has_user and not user_gap:
+        actionable_n = int(RUN_AUDIT.get("screening_actionable_user", 0) or 0)
+        detail = (
+            f" Screening had {actionable_n} actionable user_workflow candidate(s); "
+            "cover one or Gaps."
+            if actionable_n > 0
+            else ""
+        )
         raise SystemExit(
             "Refusing daily update: missing user_workflow signal and no Gaps bullet "
-            "named 'Missing user_workflow: ...'."
+            f"named 'Missing user_workflow: ...'.{detail}"
         )
     if infra_count > MAX_DAILY_INFRA_PRIMITIVE_BULLETS:
         raise SystemExit(
@@ -2564,7 +2618,9 @@ def prepare_shared_source_collection(
     SHARED_SOURCE_STATUS = list(RUN_AUDIT.get("source_status", []))
     SHARED_SOURCE_LANES = dict(lane_stats)
     scored = score_source_items(raw_items, root)
-    pool = scored[: max_public_source_budget_for_tasks(tasks)]
+    # Lane-balance the shared pool so discussion sources are not truncated away
+    # before screening / per-task snapshots see them.
+    pool = select_scored_items_with_lane_balance(scored, max_public_source_budget_for_tasks(tasks))
     update_source_cache(root, pool, day)
     return pool, lane_stats, errors, len(raw_items)
 
@@ -3313,24 +3369,47 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     return items, lane_stats, errors
 
 
+def discussion_lane_floor_count(budget: int) -> int:
+    """How many discussion/social slots to reserve inside a source budget."""
+    if budget <= 0:
+        return 0
+    ratio = env_float("DISCUSSION_LANE_FLOOR_RATIO", DEFAULT_DISCUSSION_LANE_FLOOR_RATIO)
+    minimum = env_int("DISCUSSION_LANE_FLOOR_MIN", DEFAULT_DISCUSSION_LANE_FLOOR_MIN)
+    # Cap so official/github priority floor still has room in small budgets.
+    return max(0, min(budget // 2, max(minimum if budget >= minimum else budget // 3, int(budget * ratio))))
+
+
 def select_scored_items_with_lane_balance(scored: list[dict[str, str]], budget: int) -> list[dict[str, str]]:
     if budget <= 0 or not scored:
         return []
     floor_ratio = env_float("PRIORITY_LANE_FLOOR_RATIO", DEFAULT_PRIORITY_LANE_FLOOR_RATIO)
     floor_count = max(1, int(budget * floor_ratio))
+    discussion_floor = discussion_lane_floor_count(budget)
     selected: list[dict[str, str]] = []
     seen_urls: set[str] = set()
 
-    for item in scored:
-        if len(selected) >= floor_count:
-            break
-        lane = source_lane(item.get("source", ""))
-        if lane not in PRIORITY_BREADTH_LANES:
-            continue
-        url = item.get("url", "")
-        if url and url not in seen_urls:
+    def take_from_lanes(lanes: frozenset[str], count: int) -> int:
+        taken = 0
+        for item in scored:
+            if taken >= count or len(selected) >= budget:
+                break
+            lane = source_lane(item.get("source", ""))
+            if lane not in lanes:
+                continue
+            url = item.get("url", "")
+            if url and url in seen_urls:
+                continue
             selected.append(item)
-            seen_urls.add(url)
+            if url:
+                seen_urls.add(url)
+            taken += 1
+        return taken
+
+    # 1) Official/GitHub priority floor (product deltas).
+    take_from_lanes(PRIORITY_BREADTH_LANES, floor_count)
+    # 2) Discussion/social floor so Bluesky/Reddit/HN survive GitHub long-tail crowding.
+    reserved = take_from_lanes(DISCUSSION_BREADTH_LANES, discussion_floor)
+    RUN_AUDIT["discussion_lane_reserved"] = reserved
 
     for item in scored:
         if len(selected) >= budget:
@@ -3355,7 +3434,12 @@ def update_lane_coverage_audit(lane_stats: dict[str, dict[str, Any]], limited: l
         priority_count = sum(
             1 for item in limited if source_lane(item.get("source", "")) in PRIORITY_BREADTH_LANES
         )
+        discussion_count = sum(
+            1 for item in limited if source_lane(item.get("source", "")) in DISCUSSION_BREADTH_LANES
+        )
         RUN_AUDIT["priority_lane_share"] = round(priority_count / len(limited), 3)
+        if "discussion_lane_reserved" not in RUN_AUDIT or not RUN_AUDIT.get("discussion_lane_reserved"):
+            RUN_AUDIT["discussion_lane_reserved"] = discussion_count
 
 
 def format_public_source_snapshot(
@@ -4158,6 +4242,8 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Social-only demoted: {RUN_AUDIT.get('social_only_demoted', 0)}",
         f"- Social/discussion labeled: {RUN_AUDIT.get('social_discussion_labeled', 0)}",
         f"- Direction social discussion: {RUN_AUDIT.get('direction_social_discussion', False)}",
+        f"- Discussion lane reserved: {RUN_AUDIT.get('discussion_lane_reserved', 0)}",
+        f"- Screening actionable user: {RUN_AUDIT.get('screening_actionable_user', 0)}",
         f"- User-repo reclassified: {RUN_AUDIT.get('user_repo_reclassified', 0)}",
         f"- Vendor families covered: {RUN_AUDIT.get('vendor_families_covered', 0)}",
         f"- Breadth themes covered: {RUN_AUDIT.get('breadth_themes_covered', 0)}",
@@ -4222,6 +4308,8 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "social_only_demoted": RUN_AUDIT.get("social_only_demoted", 0),
         "social_discussion_labeled": RUN_AUDIT.get("social_discussion_labeled", 0),
         "direction_social_discussion": RUN_AUDIT.get("direction_social_discussion", False),
+        "discussion_lane_reserved": RUN_AUDIT.get("discussion_lane_reserved", 0),
+        "screening_actionable_user": RUN_AUDIT.get("screening_actionable_user", 0),
         "user_repo_reclassified": RUN_AUDIT.get("user_repo_reclassified", 0),
         "vendor_families_covered": RUN_AUDIT.get("vendor_families_covered", 0),
         "breadth_themes_covered": RUN_AUDIT.get("breadth_themes_covered", 0),
@@ -4329,6 +4417,8 @@ def run_task(
     RUN_AUDIT["social_only_demoted"] = 0
     RUN_AUDIT["social_discussion_labeled"] = 0
     RUN_AUDIT["direction_social_discussion"] = False
+    RUN_AUDIT["discussion_lane_reserved"] = 0
+    RUN_AUDIT["screening_actionable_user"] = 0
     RUN_AUDIT["user_repo_reclassified"] = 0
     RUN_AUDIT["vendor_families_covered"] = 0
     RUN_AUDIT["breadth_themes_covered"] = 0
