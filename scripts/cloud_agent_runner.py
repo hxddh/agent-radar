@@ -235,6 +235,22 @@ SOCIAL_EVIDENCE_HOSTS = (
     "lobste.rs",
     "threads.net",
 )
+# Discussion / social sources are first-class radar inputs (early signal + user ops).
+DISCUSSION_SOURCE_MARKERS = (
+    "bsky.app",
+    "reddit.com",
+    "news.ycombinator.com",
+    "lobste.rs",
+    "x.com",
+    "twitter.com",
+    "threads.net",
+    "field report",
+    "operator",
+    "discussion",
+    "thread",
+    "commenters",
+    "from the field",
+)
 VENDOR_FAMILIES = (
     ("openai", ("openai", "codex", "chatgpt")),
     ("anthropic", ("anthropic", "claude")),
@@ -397,6 +413,8 @@ RUN_AUDIT: dict[str, Any] = {
     "screening_scores_repaired": 0,
     "star_hype_demoted": 0,
     "social_only_demoted": 0,
+    "social_discussion_labeled": 0,
+    "direction_social_discussion": False,
     "user_repo_reclassified": 0,
     "vendor_families_covered": 0,
     "breadth_themes_covered": 0,
@@ -1056,30 +1074,51 @@ def has_official_product_evidence(candidate: dict[str, Any]) -> bool:
     return False
 
 
-def demote_social_only_mainstream(candidate: dict[str, Any]) -> bool:
-    """Social-only mainstream cannot be high-confidence MUST-cover."""
-    if infer_signal_class(candidate) != "mainstream_product":
-        return False
-    if not is_social_only_evidence(candidate):
-        return False
-    if has_official_evidence_url(candidate):
+def label_social_discussion_candidate(candidate: dict[str, Any]) -> bool:
+    """Mark social/discussion evidence without demoting it out of synthesis priority.
+
+    Social platforms and discussion threads are first-class sources for early
+    product awareness and user_workflow. We label them so synthesis keeps the
+    signal and states evidence strength, instead of discarding or demoting them.
+    """
+    if not (is_social_only_evidence(candidate) or candidate_has_discussion_evidence(candidate)):
         return False
     changed = False
-    if str(candidate.get("confidence", "")).lower() == "high":
-        candidate["confidence"] = "medium"
-        changed = True
-    try:
-        score = int(candidate.get("relevance_score", 5) or 5)
-    except (TypeError, ValueError):
-        score = 5
-    if score > 4:
-        candidate["relevance_score"] = 4
-        changed = True
-    why = str(candidate.get("why_it_matters", "")).strip()
-    if why and "social-only" not in why.lower():
-        candidate["why_it_matters"] = truncate_text(why + "; social-only, needs official corroboration", 120)
+    candidate["source_visibility"] = candidate.get("source_visibility") or "Public"
+    if is_social_only_evidence(candidate):
+        candidate["evidence_basis"] = "social_discussion"
+        # Keep model confidence; only ensure evidence strength is explicit for synthesis.
+        if not candidate.get("evidence_strength"):
+            conf = str(candidate.get("confidence", "")).lower()
+            candidate["evidence_strength"] = {
+                "high": "Medium",
+                "medium": "Medium",
+                "low": "Weak",
+            }.get(conf, "Weak")
+            changed = True
+        why = str(candidate.get("why_it_matters", "")).strip()
+        if why and "social/discussion" not in why.lower():
+            candidate["why_it_matters"] = truncate_text(
+                why + "; social/discussion source (keep; label evidence)",
+                120,
+            )
+            changed = True
+    elif candidate_has_discussion_evidence(candidate) and not candidate.get("evidence_basis"):
+        candidate["evidence_basis"] = "mixed_discussion"
         changed = True
     return changed
+
+
+def candidate_has_discussion_evidence(candidate: dict[str, Any]) -> bool:
+    hay = candidate_haystack(candidate)
+    return any(marker in hay for marker in DISCUSSION_SOURCE_MARKERS)
+
+
+def content_has_social_discussion_signal(text: str) -> bool:
+    lower = text.lower()
+    if "missing social" in lower or "missing discussion" in lower:
+        return False
+    return any(marker in lower for marker in DISCUSSION_SOURCE_MARKERS)
 
 
 def reclassify_repo_as_user_workflow(candidate: dict[str, Any]) -> bool:
@@ -1170,8 +1209,9 @@ def repair_collapsed_relevance_scores(candidates: list[dict[str, Any]]) -> int:
             base = min(base, 2)
         if is_star_hype_mainstream(cand):
             base = min(base, 3)
-        if is_social_only_evidence(cand) and signal_class == "mainstream_product":
-            base = min(base, 4)
+        # Social/discussion evidence stays valuable; slight boost for actionable user posts.
+        if signal_class == "user_workflow" and candidate_has_discussion_evidence(cand):
+            base = min(10, base + 1)
         if signal_class == "infra_primitive":
             base = min(base, 6)
         cand["relevance_score"] = max(1, min(10, base))
@@ -1241,8 +1281,9 @@ def high_confidence_mainstream_candidates(candidates: list[dict[str, Any]]) -> l
             continue
         if str(cand.get("promotion_status", "candidate")).lower() == "reject":
             continue
-        # Star-count GitHub repos / social-only rumors are not MUST product deltas.
-        if is_star_hype_mainstream(cand) or is_social_only_evidence(cand):
+        # Star-count GitHub repos are not 24-48h product deltas; social/discussion
+        # sources remain eligible (labeled) because they are first-class radar inputs.
+        if is_star_hype_mainstream(cand):
             continue
         selected.append(cand)
     selected.sort(key=candidate_priority_key)
@@ -1308,7 +1349,7 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         return data
     repaired = repair_collapsed_relevance_scores(candidates)
     demoted = 0
-    social_demoted = 0
+    social_labeled = 0
     reclassified = 0
     ids: list[str] = []
     class_counts: dict[str, int] = {}
@@ -1321,8 +1362,8 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         cand["signal_class"] = signal_class
         if demote_star_only_mainstream(cand):
             demoted += 1
-        if demote_social_only_mainstream(cand):
-            social_demoted += 1
+        if label_social_discussion_candidate(cand):
+            social_labeled += 1
         class_counts[signal_class] = class_counts.get(signal_class, 0) + 1
         if cand.get("id"):
             ids.append(str(cand["id"]))
@@ -1338,7 +1379,9 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     RUN_AUDIT["screening_signal_classes"] = class_counts
     RUN_AUDIT["screening_scores_repaired"] = repaired
     RUN_AUDIT["star_hype_demoted"] = demoted
-    RUN_AUDIT["social_only_demoted"] = social_demoted
+    RUN_AUDIT["social_discussion_labeled"] = social_labeled
+    # Keep legacy key at 0 so older dashboards do not imply demotion still happens.
+    RUN_AUDIT["social_only_demoted"] = 0
     RUN_AUDIT["user_repo_reclassified"] = reclassified
     if repaired:
         warning = f"Repaired collapsed screening relevance_score for {repaired} candidate(s)"
@@ -1348,8 +1391,11 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         warning = f"Demoted {demoted} star-hype mainstream candidate(s) (repo stars ≠ product delta)"
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
-    if social_demoted:
-        warning = f"Demoted {social_demoted} social-only mainstream candidate(s) (need official corroboration)"
+    if social_labeled:
+        warning = (
+            f"Labeled {social_labeled} social/discussion candidate(s) "
+            "(kept as first-class evidence; do not drop)"
+        )
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
     if reclassified:
@@ -1438,13 +1484,35 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
         lines.append(
             "Freshness/quality: prefer 24-48h product deltas (changelog/blog/release). "
             "GitHub star counts alone are not mainstream product news. "
-            "Social-only claims (Bluesky/Reddit/X) need official corroboration before MUST/high. "
+            "Social/discussion sources (Bluesky/Reddit/HN/X) are FIRST-CLASS: keep them, "
+            "label Evidence strength, and prefer them for user_workflow / early awareness. "
+            "Do not drop social field reports just because an official URL is missing. "
             "GitHub/PyPI repos are infra_primitive, not user_workflow. "
             "When replacing an existing day block, keep prior Strong official URLs unless obsolete. "
             "Aim for ≥2 vendor families and ≥2 themes (security/eval/orchestration/MCP/user-ops). "
             "Monthly/quarterly roundups older than ~7 days must be labeled "
             "`Freshness: stale-roundup` or moved to research-log."
         )
+        social_count = sum(
+            1
+            for cand in candidates
+            if isinstance(cand, dict)
+            and (
+                is_social_only_evidence(cand)
+                or candidate_has_discussion_evidence(cand)
+                or str(cand.get("evidence_basis", "")).startswith("social")
+            )
+        )
+        if social_count:
+            lines.append(
+                f"Discussion note: {social_count} social/discussion candidate(s) present — "
+                "cover at least one actionable discussion/user signal in the day block."
+            )
+        else:
+            lines.append(
+                "Discussion note: no social/discussion candidates in this screen; "
+                "daily should record Gaps if public discussion lanes were empty."
+            )
         if class_counts.get("mainstream_product", 0) == 0:
             lines.append(
                 "Direction note: no mainstream_product candidates; daily must record a Gaps bullet."
@@ -2025,10 +2093,18 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     infra_count = count_infra_primitive_bullets(text)
     vendors = vendor_families_in_text(text)
     themes = breadth_themes_in_text(text)
+    has_discussion = content_has_social_discussion_signal(text)
+    discussion_gap = (
+        "missing social" in text.lower()
+        or "missing discussion" in text.lower()
+        or ("gap" in text.lower() and "discussion" in text.lower())
+        or ("gap" in text.lower() and "social" in text.lower())
+    )
     RUN_AUDIT["direction_mainstream"] = has_mainstream
     RUN_AUDIT["direction_user_workflow"] = has_user
     RUN_AUDIT["direction_infra_count"] = infra_count
-    RUN_AUDIT["direction_gaps_present"] = mainstream_gap or user_gap
+    RUN_AUDIT["direction_gaps_present"] = mainstream_gap or user_gap or discussion_gap
+    RUN_AUDIT["direction_social_discussion"] = has_discussion
     RUN_AUDIT["vendor_families_covered"] = len(vendors)
     RUN_AUDIT["breadth_themes_covered"] = len(themes)
 
@@ -2058,6 +2134,21 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
             "security/eval/orchestration/MCP/user-ops "
             f"(found {themes or 'none'}) or an explicit Gaps bullet."
         )
+    if not has_discussion and not discussion_gap:
+        warning = (
+            "Daily update has no social/discussion evidence "
+            "(Bluesky/Reddit/HN/X/field thread). Prefer keeping discussion "
+            "sources; if lanes were empty, add Gaps: Missing social/discussion: ..."
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+        # If screening already surfaced social/discussion candidates, require coverage.
+        if int(RUN_AUDIT.get("social_discussion_labeled", 0) or 0) > 0:
+            raise SystemExit(
+                "Refusing daily update: screening had social/discussion candidates "
+                "but the day block omitted them. Cover at least one discussion/"
+                "user-field signal or add Gaps: Missing social/discussion: ..."
+            )
 
 
 def validate_must_cover_mainstream(result: dict[str, Any], screen_text: str | None) -> None:
@@ -2372,9 +2463,10 @@ def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) ->
         "github-release": 16,
         "github": 12,
         "package-marketplace": 8,
-        "hacker-news": 12,
-        "social": 9,
-        "reddit": 10,
+        # Discussion lanes are first-class early/user evidence, not filler.
+        "hacker-news": 14,
+        "social": 13,
+        "reddit": 13,
         "papers": 8,
     }.get(lane, 5)
     keyword_weights = {
@@ -2395,8 +2487,13 @@ def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) ->
         "changelog": 6,
         "preview": 4,
         "generally available": 5,
-        "field report": 7,
-        "user experience": 6,
+        "field report": 9,
+        "user experience": 8,
+        "operator": 6,
+        "discussion": 5,
+        "thread": 4,
+        "pain point": 6,
+        "in practice": 5,
     }
     for keyword, weight in keyword_weights.items():
         if keyword in text:
@@ -4059,6 +4156,8 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Screening scores repaired: {RUN_AUDIT.get('screening_scores_repaired', 0)}",
         f"- Star-hype demoted: {RUN_AUDIT.get('star_hype_demoted', 0)}",
         f"- Social-only demoted: {RUN_AUDIT.get('social_only_demoted', 0)}",
+        f"- Social/discussion labeled: {RUN_AUDIT.get('social_discussion_labeled', 0)}",
+        f"- Direction social discussion: {RUN_AUDIT.get('direction_social_discussion', False)}",
         f"- User-repo reclassified: {RUN_AUDIT.get('user_repo_reclassified', 0)}",
         f"- Vendor families covered: {RUN_AUDIT.get('vendor_families_covered', 0)}",
         f"- Breadth themes covered: {RUN_AUDIT.get('breadth_themes_covered', 0)}",
@@ -4121,6 +4220,8 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "screening_scores_repaired": RUN_AUDIT.get("screening_scores_repaired", 0),
         "star_hype_demoted": RUN_AUDIT.get("star_hype_demoted", 0),
         "social_only_demoted": RUN_AUDIT.get("social_only_demoted", 0),
+        "social_discussion_labeled": RUN_AUDIT.get("social_discussion_labeled", 0),
+        "direction_social_discussion": RUN_AUDIT.get("direction_social_discussion", False),
         "user_repo_reclassified": RUN_AUDIT.get("user_repo_reclassified", 0),
         "vendor_families_covered": RUN_AUDIT.get("vendor_families_covered", 0),
         "breadth_themes_covered": RUN_AUDIT.get("breadth_themes_covered", 0),
@@ -4226,6 +4327,8 @@ def run_task(
     RUN_AUDIT["screening_scores_repaired"] = 0
     RUN_AUDIT["star_hype_demoted"] = 0
     RUN_AUDIT["social_only_demoted"] = 0
+    RUN_AUDIT["social_discussion_labeled"] = 0
+    RUN_AUDIT["direction_social_discussion"] = False
     RUN_AUDIT["user_repo_reclassified"] = 0
     RUN_AUDIT["vendor_families_covered"] = 0
     RUN_AUDIT["breadth_themes_covered"] = 0

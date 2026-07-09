@@ -28,10 +28,11 @@ Focus on (direction order matters):
 6. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
 
 Daily direction quota (required):
-- At least **1 mainstream_product** signal from a real product delta (changelog/blog/release), OR an explicit Gaps bullet naming which vendors were checked and missing. GitHub star counts alone do not count. Social-only rumors need official corroboration.
+- At least **1 mainstream_product** signal from a real product delta (changelog/blog/release), OR an explicit Gaps bullet naming which vendors were checked and missing. GitHub star counts alone do not count.
 - Cover at least **2 vendor families** (e.g. OpenAI + Anthropic, or GitHub + Google), OR Gaps naming the missing vendors.
 - Cover at least **2 themes** among security / eval / orchestration / MCP platform / user-ops, OR an explicit Gaps bullet.
 - At least **1 actionable user_workflow** signal (scenario / pain point / useful trick / concrete command), OR an explicit Gaps bullet for missing user evidence. Bare "users like X" and GitHub repos do not count as user_workflow.
+- **Social/discussion sources are first-class** (Bluesky/Reddit/HN/X/Lobsters). Keep high-signal discussion and field reports; label Evidence strength. If screening had discussion candidates, cover at least one or Gaps: `Missing social/discussion: ...`.
 - At most **2 infra_primitive** emerging-repo bullets in the day block; additional infra candidates go to `research-log.md` only.
 - Do not fill the day with GitHub long-tail memory/MCP/sandbox repos when mainstream or user signals are missing.
 - Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.
@@ -40,7 +41,7 @@ Daily direction quota (required):
 
 Rules:
 - Report format, JSON output, bilingual gates, and append-vs-full rules: see `prompts/runner-rules.md`.
-- Prefer official sources and real user reports over another zero-star infra repo.
+- Prefer official product deltas **and** real social/discussion user reports over another zero-star infra repo.
 - Do not collect low-value launch hype.
 - Do not rewrite old files unless a thesis genuinely changed.
 - Append a new `## YYYY-MM-DD` day block to the current monthly daily file (do not `full`-rewrite the month file).

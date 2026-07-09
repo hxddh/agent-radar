@@ -19,13 +19,13 @@ Rules:
   - 2 `user_workflow` (or list explicit gaps if none found)
   - 3 `infra_primitive` max in the top 8 shown for synthesis
 - Do not invent facts.
-- Keep weak social/community evidence labeled as weak (`confidence: low`).
+- Social/discussion sources (Bluesky, Reddit, HN, X, Lobsters) are **first-class**. Prefer them for early awareness and `user_workflow`; label Evidence strength instead of dropping them.
+- Keep weak single-anecdote social posts labeled (`confidence: low` / Evidence strength: Weak), but still include high-signal discussion threads.
 - Prefer **direction-changing** signals over another zero-star memory/MCP/sandbox repo.
 - Rank high-confidence `mainstream_product` first (security advisories, official changelogs, platform releases). The runner promotes the top 3 high-confidence mainstream items as MUST-cover for daily synthesis.
-- `relevance_score` must use a real 1–10 spread (do not set every candidate to 1). Prefer official product deltas over GitHub star counts.
+- `relevance_score` must use a real 1–10 spread (do not set every candidate to 1). Prefer official product deltas over GitHub star counts, while still ranking strong discussion evidence highly for user/early signals.
 - GitHub star counts alone are **not** `mainstream_product` product news; mark those `infra_primitive` or lower confidence unless there is a changelog/release/blog delta.
-- Social-only evidence (Bluesky/Reddit/X/HN) for mainstream claims must be `confidence: medium|low` until an official URL corroborates; do not mark them MUST/high.
-- GitHub/PyPI repos are `infra_primitive` (or noise), **not** `user_workflow`. Reserve `user_workflow` for operator field reports.
+- GitHub/PyPI repos are `infra_primitive` (or noise), **not** `user_workflow`. Reserve `user_workflow` for operator field reports (often from social/discussion).
 - `user_workflow` `why_it_matters` must name a concrete operator detail (scenario, pain point, trick, command, or workflow step) — not just "users are talking about X".
 - Prefer covering ≥2 vendor families and ≥2 themes (security / eval / orchestration / MCP platform / user-ops) among top candidates.
 - Reject or mark `noise` for zero-star launches with only self-reported README evidence.

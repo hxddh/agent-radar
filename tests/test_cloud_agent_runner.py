@@ -1399,7 +1399,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         must = cloud_agent_runner.high_confidence_mainstream_candidates(candidates)
         self.assertEqual([c["id"] for c in must], ["scr-blog"])
 
-    def test_social_only_mainstream_demoted_from_must_cover(self) -> None:
+    def test_social_discussion_is_labeled_not_demoted_from_must_cover(self) -> None:
         candidates = [
             {
                 "id": "scr-grok",
@@ -1424,10 +1424,85 @@ class CloudAgentRunnerTest(unittest.TestCase):
             },
         ]
         self.assertTrue(cloud_agent_runner.is_social_only_evidence(candidates[0]))
-        self.assertTrue(cloud_agent_runner.demote_social_only_mainstream(candidates[0]))
-        self.assertEqual(candidates[0]["confidence"], "medium")
+        self.assertTrue(cloud_agent_runner.label_social_discussion_candidate(candidates[0]))
+        # Social/discussion stays first-class: confidence kept, evidence labeled.
+        self.assertEqual(candidates[0]["confidence"], "high")
+        self.assertEqual(candidates[0].get("evidence_basis"), "social_discussion")
         must = cloud_agent_runner.high_confidence_mainstream_candidates(candidates)
-        self.assertEqual([c["id"] for c in must], ["scr-gh"])
+        self.assertEqual({c["id"] for c in must}, {"scr-grok", "scr-gh"})
+        # Social candidate remains eligible for MUST (not demoted out).
+        self.assertIn("scr-grok", {c["id"] for c in must})
+
+    def test_social_discussion_lane_scores_above_generic_github(self) -> None:
+        social = {
+            "source": "bluesky",
+            "title": "Operator field report: Claude Code /doctor pain point",
+            "url": "https://bsky.app/profile/example/post/1",
+            "note": "discussion thread",
+        }
+        github = {
+            "source": "github",
+            "title": "Tiny memory MCP sandbox",
+            "url": "https://github.com/example/tiny-memory-mcp",
+            "note": "stars=0",
+        }
+        self.assertGreater(
+            cloud_agent_runner.score_source_item(social, {}),
+            cloud_agent_runner.score_source_item(github, {}),
+        )
+
+    def test_daily_requires_discussion_when_screening_labeled_social(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["social_discussion_labeled"] = 2
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        # Actionable user markers that are NOT discussion-host / DISCUSSION_SOURCE_MARKERS.
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "- Signal: Anthropic published a containment engineering post.\n"
+                        "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
+                        "#### 4. User Field Notes\n\n"
+                        "- Signal: Useful trick for agent review loops.\n"
+                        "  - Source: https://example.com/internal-note\n"
+                    ),
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("social/discussion", str(ctx.exception))
+
+    def test_daily_accepts_bluesky_discussion_coverage(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["social_discussion_labeled"] = 1
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "- Signal: Anthropic published a containment engineering post.\n"
+                        "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
+                        "#### 4. User Field Notes\n\n"
+                        "- Signal: Useful trick for agent review loops from Bluesky.\n"
+                        "  - Source: https://bsky.app/profile/example/post/1\n"
+                        "  - Evidence strength: Weak\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_social_discussion"])
 
     def test_github_repo_user_workflow_reclassified_to_infra(self) -> None:
         cand = {

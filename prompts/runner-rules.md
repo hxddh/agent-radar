@@ -139,14 +139,15 @@ Do not `full`-rewrite an existing weekly file.
 
 Daily synthesis must not collapse into a GitHub infra-parts list. Enforce this shape:
 
-1. **Mainstream product / platform** — at least one real product delta from major vendors with changelog/blog/release evidence, **or** a Gaps bullet: `Missing mainstream_product: ...`. High GitHub star counts and social-only rumors are not enough for MUST/high.
+1. **Mainstream product / platform** — at least one real product delta from major vendors with changelog/blog/release evidence, **or** a Gaps bullet: `Missing mainstream_product: ...`. High GitHub star counts alone are not mainstream product news.
 2. **Vendor + theme breadth** — at least **2 vendor families** and **2 themes** (security / eval / orchestration / MCP platform / user-ops), **or** Gaps naming what is missing.
 3. **User workflow** — at least one actionable operator signal (scenario, pain point, useful trick, concrete command), **or** a Gaps bullet: `Missing user_workflow: ...`. Attitude posts and GitHub/PyPI repos do not count.
-4. **Infra primitives** — at most **2** emerging-repo / infra-primitive bullets in the day block; put the rest in `research-log.md` Candidate inbox.
-5. Prefer direction-changing evidence over another memory/MCP/sandbox README.
-6. **Must-cover mainstream** — if screening marks high-confidence mainstream candidates as MUST, include them in New Signals / Mainstream Agent Progress (or explain omission under Gaps). Do not drop security advisories or official product posts for emerging repos.
-7. **Preserve strong evidence** — when replacing an existing day block, keep prior Strong official URLs unless obsolete (or name them under Gaps). The runner warns if they disappear.
-8. **Freshness** — prefer last 24–48 hours. Month-named roundups such as `June 2026 releases` should include `Freshness: stale-roundup` unless they are truly new today. If omitted, the runner auto-labels them and records a warning.
+4. **Social/discussion first-class** — Bluesky/Reddit/HN/X/Lobsters field reports and threads are valued early/user evidence. Keep them, label Evidence strength, and do not drop them merely for lacking an official URL. If screening labeled discussion candidates, cover at least one or Gaps: `Missing social/discussion: ...`.
+5. **Infra primitives** — at most **2** emerging-repo / infra-primitive bullets in the day block; put the rest in `research-log.md` Candidate inbox.
+6. Prefer direction-changing evidence over another memory/MCP/sandbox README.
+7. **Must-cover mainstream** — if screening marks high-confidence mainstream candidates as MUST, include them in New Signals / Mainstream Agent Progress (or explain omission under Gaps). Do not drop security advisories or official product posts for emerging repos.
+8. **Preserve strong evidence** — when replacing an existing day block, keep prior Strong official URLs unless obsolete (or name them under Gaps). The runner warns if they disappear.
+9. **Freshness** — prefer last 24–48 hours. Month-named roundups such as `June 2026 releases` should include `Freshness: stale-roundup` unless they are truly new today. If omitted, the runner auto-labels them and records a warning.
 
 The runner records direction coverage and weighted/mainstream recall in telemetry. It rejects daily updates that omit both the mainstream signal and the corresponding Gaps bullet, or drop must-cover mainstream candidates.
 

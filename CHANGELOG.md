@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.7.10 - 2026-07-09
+
+Treat social/discussion platforms as first-class radar sources: label instead of demote, boost scoring, and require coverage when screening found discussion candidates.
+
+### Changed
+- Removed social-only MUST demotion; social/discussion candidates are labeled (`evidence_basis`) and kept eligible.
+- Raised Bluesky/Reddit/HN lane scores and discussion keyword weights in source scoring.
+- Daily synthesis must cover labeled social/discussion candidates (or Gaps: `Missing social/discussion`).
+- Prompts emphasize keeping field reports/threads with Evidence strength labels.
+- CLI version bumped to `0.7.10`.
+
+### Added
+- Telemetry: `social_discussion_labeled`, `direction_social_discussion`.
+
 ## v0.7.9 - 2026-07-09
 
 Content quality / breadth follow-up: demote social-only mainstream, stop counting GitHub repos as user_workflow, require multi-vendor/theme breadth, and warn when day replaces drop Strong official URLs.
