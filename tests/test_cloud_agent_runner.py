@@ -2273,10 +2273,25 @@ class SignalDepthTest(unittest.TestCase):
             any("already-tracked" in warning for warning in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
         )
 
-    def test_breadth_feeds_include_hf_and_jiqizhixin(self) -> None:
+    def test_breadth_feeds_include_hf_but_no_simplified_chinese_media(self) -> None:
         names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_FEEDS]
         self.assertIn("hf-blog", names)
-        self.assertIn("jiqizhixin", names)
+        self.assertNotIn("jiqizhixin", names)
+
+    def test_simplified_chinese_media_url_penalized(self) -> None:
+        base = {"source": "hacker-news", "title": "AI agent launch coverage", "note": ""}
+        chinese_media = dict(base, url="https://www.jiqizhixin.com/articles/agent-launch")
+        neutral = dict(base, url="https://example.com/agent-launch")
+        self.assertLess(
+            cloud_agent_runner.score_source_item(chinese_media, {}),
+            cloud_agent_runner.score_source_item(neutral, {}),
+        )
+
+    def test_official_china_vendor_pages_not_penalized(self) -> None:
+        base = {"source": "qwen-blog", "title": "Qwen coding agent update", "note": ""}
+        vendor = dict(base, url="https://qwenlm.github.io/blog/qwen-agent")
+        score = cloud_agent_runner.score_source_item(vendor, {})
+        self.assertGreater(score, 20)  # official lane weight intact, no media penalty
 
 
 class AuditLoopTest(unittest.TestCase):
