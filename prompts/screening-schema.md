@@ -22,8 +22,12 @@ Rules:
 - Keep weak social/community evidence labeled as weak (`confidence: low`).
 - Prefer **direction-changing** signals over another zero-star memory/MCP/sandbox repo.
 - Rank high-confidence `mainstream_product` first (security advisories, official changelogs, platform releases). The runner promotes the top 3 high-confidence mainstream items as MUST-cover for daily synthesis.
+- `relevance_score` must use a real 1–10 spread (do not set every candidate to 1). Prefer official product deltas over GitHub star counts.
+- GitHub star counts alone are **not** `mainstream_product` product news; mark those `infra_primitive` or lower confidence unless there is a changelog/release/blog delta.
+- `user_workflow` `why_it_matters` must name a concrete operator detail (scenario, pain point, trick, command, or workflow step) — not just "users are talking about X".
 - Reject or mark `noise` for zero-star launches with only self-reported README evidence.
 - Return at most **12 candidates** per screening pass.
 - Keep each `why_it_matters` under **120 characters**.
 - `gaps` must name missing direction classes when quotas are unmet, e.g. `Missing mainstream_product: Anthropic/OpenAI/Google/Microsoft/Cursor changelog`.
 - Prefer fresh 24–48h evidence; mark older monthly roundups clearly in `why_it_matters` (e.g. stale-roundup) when unavoidable.
+- Do not invent product names or version numbers that are not in the source snapshot.
