@@ -1,30 +1,60 @@
 {
-  "summary": "Anthropic's Claude Code containment engineering, Google ADK Go 2.0, Microsoft Copilot OS leak, and CVE-2026-59723 in Cline dominate. User workflow reports highlight bloat in Claude Code prompts and cross-agent transcript sharing. Infra primitives include agent-native search, memory MCP servers, and sandboxed execution.",
+  "summary": "Screening of 80 items yields 12 candidates: 5 mainstream product releases (Anthropic Sonnet 5, Claude Code origin, OpenAI eval paper, Google ADK 2.0, GitHub security advisories, Anthropic containment), 3 user workflow reports (free automation stack, SubChat for learning, NanoBanana MCP image editing), 2 infra primitives (Cline CVE, Omnigent meta-harness), and 1 research white paper. Top 8 meet direction quotas.",
   "candidates": [
     {
-      "id": "scr-anthropic-contain",
-      "title": "Anthropic details Claude containment across products",
-      "why_it_matters": "Official engineering post on blast radius capping for agents",
+      "id": "scr-3a8f2c1b",
+      "title": "Anthropic Claude Sonnet 5 launch",
+      "why_it_matters": "New frontier model for coding, agents, and professional work at scale.",
       "evidence": [
-        "https://www.anthropic.com/engineering/how-we-contain-claude"
+        "https://www.anthropic.com/news/claude-sonnet-5"
       ],
       "confidence": "high",
       "relevance_score": 10,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "security",
+      "infra_angle": "none",
       "promotion_status": "candidate",
       "next_check": "follow-up"
     },
     {
-      "id": "scr-adk-go-20",
-      "title": "Google ADK Go 2.0 with graph-based workflow engine",
-      "why_it_matters": "Major platform release for multi-agent applications",
+      "id": "scr-7b4e1d9f",
+      "title": "The Making of Claude Code",
+      "why_it_matters": "Inside story of Claude Code's evolution from internal CLI to Anthropic's coding agent.",
+      "evidence": [
+        "https://www.anthropic.com/features/making-of-claude-code"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-9c2e5f0a",
+      "title": "OpenAI: Separating Signal from Noise in Coding Evaluations",
+      "why_it_matters": "New approach to coding agent evaluations, crucial for benchmarking.",
+      "evidence": [
+        "https://openai.com/index/separating-signal-from-noise-coding-evaluations"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-1d4f6a3e",
+      "title": "Google ADK Go 2.0 for Multi-Agent Applications",
+      "why_it_matters": "Graph-based workflow engine, human-in-the-loop, and production-ready multi-agent framework.",
       "evidence": [
         "https://developers.googleblog.com/announcing-adk-go-20/"
       ],
       "confidence": "high",
-      "relevance_score": 9,
+      "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "runtime",
@@ -32,29 +62,14 @@
       "next_check": "follow-up"
     },
     {
-      "id": "scr-copilot-os-leak",
-      "title": "Microsoft Copilot OS (Project Aion) leaked video",
-      "why_it_matters": "Agentic OS built entirely around Copilot and AI",
+      "id": "scr-8b3c7d2e",
+      "title": "GitHub Innersource Security Advisories GA",
+      "why_it_matters": "Innersource security advisories now generally available, improving internal vulnerability management.",
       "evidence": [
-        "https://www.windowscentral.com/microsoft/windows-11/microsoft-copilot-os-revealed-in-leaked-video-lightweight-windows-os-exploration-features-new-desktop-ui-built-entirely-around-copilot-and-agentic-ai"
-      ],
-      "confidence": "medium",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "deployment",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-cve-cline",
-      "title": "CVE-2026-59723 in Cline (CVSS 8.8)",
-      "why_it_matters": "High-severity vulnerability in popular coding agent",
-      "evidence": [
-        "https://www.thehackerwire.com/vulnerability/CVE-2026-59723/"
+        "https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available"
       ],
       "confidence": "high",
-      "relevance_score": 9,
+      "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "security",
@@ -62,127 +77,121 @@
       "next_check": "follow-up"
     },
     {
-      "id": "scr-claude-code-bloat",
-      "title": "How to kill bloat in Claude Code's system prompt",
-      "why_it_matters": "User workflow: practical tip to reduce prompt overhead",
+      "id": "scr-2e4f8b1c",
+      "title": "User automation stack: OpenHuman, Ollama, MiMoCode",
+      "why_it_matters": "Concrete free automation\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://www.aihero.dev/how-to-kill-the-bloat-in-claude-codes-system-prompt"
+        "https://bsky.app/profile/swastik2209.bsky.social/post/3mq6rhftghj24"
       ],
       "confidence": "medium",
       "relevance_score": 7,
-      "source_diversity": 1,
+      "source_diversity": 2,
       "signal_class": "user_workflow",
       "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
     },
     {
-      "id": "scr-cross-agent-transcripts",
-      "title": "Pull Claude Code transcripts into Codex sessions",
-      "why_it_matters": "User workflow: cross-agent context sharing tool",
+      "id": "scr-6a1c3d5e",
+      "title": "User built SubChat for learning with Claude",
+      "why_it_matters": "Pain point: losing place\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://contextify.sh/"
+        "https://www.reddit.com/r/ClaudeAI/comments/1urfla8/i_got_tired_of_losing_my_place_while_learning/"
       ],
       "confidence": "medium",
       "relevance_score": 6,
-      "source_diversity": 1,
+      "source_diversity": 2,
       "signal_class": "user_workflow",
       "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
     },
     {
-      "id": "scr-nothumansearch",
-      "title": "Search engine ranking sites by agentic readiness",
-      "why_it_matters": "Infra primitive: indexes llms.txt, OpenAPI, MCP, ai-plugin",
+      "id": "scr-9f3b6c1d",
+      "title": "CVE-2026-59723: High severity vulnerability in Cline coding agent",
+      "why_it_matters": "High severity (8.8) vulnerability in autonomous coding agent Cline, prior to 3.0.30.",
       "evidence": [
-        "https://github.com/unitedideas/nothumansearch"
+        "https://www.thehackerwire.com/vulnerability/CVE-2026-59723/"
       ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
       "signal_class": "infra_primitive",
-      "infra_angle": "mcp",
+      "infra_angle": "security",
       "promotion_status": "candidate",
       "next_check": "follow-up"
     },
     {
-      "id": "scr-kb-mcp-lite",
-      "title": "kb-mcp-lite: lightweight agent-native knowledge base",
-      "why_it_matters": "Infra primitive: SQLite+FTS5+vec0+MCP server",
+      "id": "scr-5f6a2c4d",
+      "title": "Anthropic: How We Contain Claude Across Products",
+      "why_it_matters": "Engineering details on containment strategies for agentic AI across claude.ai and products.",
       "evidence": [
-        "https://pypi.org/project/kb-mcp-lite/0.5.22/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-code-airlock",
-      "title": "code-airlock: run coding agents in secure Docker microVM",
-      "why_it_matters": "Infra primitive: sandboxed agent execution with git merge",
-      "evidence": [
-        "https://github.com/Screwnephropsnorvegicus769/code-airlock"
-      ],
-      "confidence": "low",
-      "relevance_score": 5,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "sandbox",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-agentlens-eval",
-      "title": "AgentLens: production-assessed trajectory reviews for coding agent eval",
-      "why_it_matters": "Research paper on agent evaluation methodology",
-      "evidence": [
-        "https://arxiv.org/abs/2607.06624"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "research",
-      "infra_angle": "eval",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-claude-code-making",
-      "title": "The Making of Claude Code – inside story from Anthropic",
-      "why_it_matters": "Official feature article on Claude Code's evolution",
-      "evidence": [
-        "https://www.anthropic.com/features/making-of-claude-code"
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
       ],
       "confidence": "high",
       "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "none",
+      "infra_angle": "sandbox",
       "promotion_status": "candidate",
       "next_check": "follow-up"
     },
     {
-      "id": "scr-sonnet-5",
-      "title": "Claude Sonnet 5 released – frontier performance",
-      "why_it_matters": "New model from Anthropic for coding and agents",
+      "id": "scr-0a4e8f2b",
+      "title": "Omnigent: Open-source meta-harness for AI agent orchestration",
+      "why_it_matters": "6.8k stars, orchestrates Claude Code, Codex, Cursor, Pi with policy sandboxing.",
       "evidence": [
-        "https://www.anthropic.com/news/claude-sonnet-5"
+        "https://github.com/omnigent-ai/omnigent"
       ],
-      "confidence": "high",
-      "relevance_score": 9,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-4d7e2f8a",
+      "title": "NanoBanana MCP: Image editing from Claude Code terminal",
+      "why_it_matters": "MCP server for image editing via Claude Code commands, no tab jungle.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/acedatacloud.bsky.social/post/3mq6rrm25le2h"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-3b6c1d9a",
+      "title": "Google Vibe Coding vs. Agentic Engineering White Paper",
+      "why_it_matters": "White paper analyzing new SDLC with vibe coding and agentic engineering.",
+      "evidence": [
+        "https://www.kaggle.com/whitepaper-the-new-SDLC-with-vibe-coding"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "research",
       "infra_angle": "none",
       "promotion_status": "candidate",
       "next_check": "follow-up"
     }
   ],
   "gaps": [
-    "Missing user_workflow: concrete operator field reports from social/discussion (e.g., Bluesky, Reddit, HN) with specific pain points or workflow steps beyond prompt bloat and transcript sharing."
+    "No missing direction classes; quotas met: 5 mainstream_product, 3 user_workflow, 2 infra_primitive, 1 research."
   ]
 }
