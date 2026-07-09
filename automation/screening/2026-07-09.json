@@ -1,189 +1,189 @@
 {
-  "summary": "Mixed repository and signal landscape: main agent coding platform releases (Claude Code origins, GitHub Copilot update, Google ADK Go 2.0), new coding model Grok 4.5 (cost challenges to Opus), emphasis on memory infrastructures, MCP tool proliferation, and some maturity in agent security advisories.",
+  "summary": "Anthropic's Claude Sonnet 5 launch and the making of Claude Code are the top mainstream stories; Google ADK Go 2.0 adds graph-based multi-agent workflows; GitHub ships Copilot June releases and MDM-managed settings; security advisories, npm install-time security, and agent containment engineering from Anthropic highlight infra priorities. A Bluesky report warns that newer models can corrupt tool calls, reinforcing the need for strict tool-scoping. Low-star new MCP/sandbox repos are deprioritized.",
   "candidates": [
     {
-      "id": "scr-anthropic-code1",
-      "title": "Anthropic details Claude Code's origins and evolution",
-      "why_it_matters": "Official post shows alpha CLI to product journey, annual run-rate $2.5B, critical for investment signals.",
+      "id": "scr-anthropic-sonnet5",
+      "title": "Claude Sonnet 5 delivers frontier performance for agents",
+      "why_it_matters": "Anthropic's latest model targets coding and agent use cases at scale",
+      "evidence": [
+        "https://www.anthropic.com/news/claude-sonnet-5"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anthropic-claude-code-inside",
+      "title": "Inside story of Claude Code's evolution",
+      "why_it_matters": "Official narrative shows how an internal CLI became a coding agent",
       "evidence": [
         "https://www.anthropic.com/features/making-of-claude-code"
       ],
       "confidence": "high",
       "relevance_score": 9,
-      "source_diversity": 2,
-      "signal_class": "mainstream_product",
-      "infra_angle": "deployment",
-      "promotion_status": "candidate",
-      "next_check": "next release"
-    },
-    {
-      "id": "scr-grok45-code2",
-      "title": "Grok 4.5 launches as cost-efficient coding model",
-      "why_it_matters": "1.5T params, 500K context, lower token cost vs Opus — disrupts coding agent economics.",
-      "evidence": [
-        "https://bsky.app/profile/yomimonoid.bsky.social/post/3mq6ncue55p23",
-        "https://bsky.app/profile/kautious.com/post/3mq6lqhwdlh2f"
-      ],
-      "confidence": "high",
-      "relevance_score": 8,
-      "source_diversity": 2,
-      "signal_class": "mainstream_product",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "benchmarks validation"
-    },
-    {
-      "id": "scr-anthro-sonnet5",
-      "title": "Claude Sonnet 5 released (Jun 30)",
-      "why_it_matters": "New frontier model from Anthropic — key for coding/agent performance at scale.",
-      "evidence": [
-        "https://www.anthropic.com/news/claude-sonnet-5"
-      ],
-      "confidence": "high",
-      "relevance_score": 7,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "adoption reports"
+      "next_check": "follow-up"
     },
     {
-      "id": "scr-google-adkgo20",
-      "title": "Google ADK Go 2.0 announced — graph-based workflow, HITL",
-      "why_it_matters": "ADK Go evolves multi-agent orchestration with built-in human-in-loop, semantic memory.",
+      "id": "scr-google-adk-go20",
+      "title": "Google ADK Go 2.0 with graph-based multi-agent engine",
+      "why_it_matters": "Graph-based orchestration and human-in-the-loop in ADK Go 2.0",
       "evidence": [
         "https://developers.googleblog.com/announcing-adk-go-20/"
       ],
       "confidence": "high",
-      "relevance_score": 7,
+      "relevance_score": 9,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "deployment",
+      "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "release notes"
+      "next_check": "follow-up"
     },
     {
-      "id": "scr-github-copilot-jun26",
-      "title": "GitHub Copilot June 2026 VS Code updates",
-      "why_it_matters": "Routine but wide-reaching Copilot improvements for everyday coding workflow.",
+      "id": "scr-github-copilot-june26",
+      "title": "GitHub Copilot in VS Code: June 2026 releases",
+      "why_it_matters": "Official changelog with new features for Copilot in editor",
       "evidence": [
         "https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases"
       ],
       "confidence": "high",
-      "relevance_score": 5,
+      "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "feature adoption"
+      "next_check": "follow-up"
     },
     {
-      "id": "scr-zed-adoption",
-      "title": "User reports shift from VS Code/Cursor to Zed + agents",
-      "why_it_matters": "Concrete user workflow change: coding agents outgrow traditional IDEs for many.",
-      "evidence": [
-        "https://bsky.app/profile/inn42.bsky.social/post/3mq6pbmmtr22p"
-      ],
-      "confidence": "low",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "survey data"
-    },
-    {
-      "id": "scr-2mcp-for-openclaw",
-      "title": "Coze-MCP bridge to OpenClaw via no-setup skill wrapping",
-      "why_it_matters": "User gets MCP tools from Coze workflows without complex config — lowers barrier to MCP adoption.",
-      "evidence": [
-        "https://github.com/genusscardiniuslaugh243/coze-mcp-for-openclaw"
-      ],
-      "confidence": "low",
-      "relevance_score": 4,
-      "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "mcp",
-      "promotion_status": "candidate",
-      "next_check": "star growth"
-    },
-    {
-      "id": "scr-memory-daemon",
-      "title": "Filesystem-native agent memory daemon (markdown, consolidation)",
-      "why_it_matters": "Practical persistent memory approach — no DB needed, filesystem-based, integrates with many agents.",
-      "evidence": [
-        "https://github.com/Charlesfrederickmenningerdateplum166/agent-memory-daemon"
-      ],
-      "confidence": "medium",
-      "relevance_score": 5,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "adoption"
-    },
-    {
-      "id": "scr-kb-mcp-lite",
-      "title": "kb-mcp-lite: lightweight agent-native knowledge base (SQLite+FTS5+vec0+MCP)",
-      "why_it_matters": "Provides local, vector-capable knowledge base for agents via MCP — simple integration.",
-      "evidence": [
-        "https://pypi.org/project/kb-mcp-lite/0.5.21/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 4,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "maturity"
-    },
-    {
-      "id": "scr-automox-visual",
-      "title": "Automox MCP Server 2.2 adds patch policy creation and visual review",
-      "why_it_matters": "MCP-enabled security/patch management — concrete infra use case.",
-      "evidence": [
-        "https://bsky.app/profile/hacker.at.thenote.app/post/3mq6ltymin22a"
-      ],
-      "confidence": "medium",
-      "relevance_score": 4,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "usage reports"
-    },
-    {
-      "id": "scr-github-advisory-ga",
-      "title": "GitHub Innersource security advisories generally available",
-      "why_it_matters": "SA provides internal advisory distribution, impacts agent security policies.",
+      "id": "scr-github-security-advisories-ga",
+      "title": "Innersource security advisories generally available",
+      "why_it_matters": "New GA security feature for GitHub advisory workflows",
       "evidence": [
         "https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available"
       ],
       "confidence": "high",
-      "relevance_score": 5,
+      "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "security",
       "promotion_status": "candidate",
-      "next_check": "integration"
+      "next_check": "follow-up"
     },
     {
-      "id": "scr-anthro-containment",
-      "title": "How Anthropic contains Claude across products — sandbox, tool-scoping",
-      "why_it_matters": "Key engineering post: containment patterns (sandboxing, least-privilege, audit) vital for agent safety.",
+      "id": "scr-anthropic-agent-containment",
+      "title": "How Anthropic contains Claude across products",
+      "why_it_matters": "Engineering post on blast radius capping for agent deployments",
       "evidence": [
         "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-bsky-tool-call-corruption",
+      "title": "Newer models can corrupt tool calls: user field report",
+      "why_it_matters": "Concrete pain point: newer Claude models break nested edit-tool schemas",
+      "evidence": [
+        "https://bsky.app/profile/benjaminhan.sigmoid.social.ap.brid.gy/post/3mq6pyct736w2"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-bsky-agent-stack-automation",
+      "title": "User automation stack: OpenHuman, Ollama, MiMoCode CLI",
+      "why_it_matters": "Concrete agent stack handles email, content, reports; templates sold",
+      "evidence": [
+        "https://bsky.app/profile/swastik2209.bsky.social/post/3mq6qcchxws24"
+      ],
+      "confidence": "low",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-github-enterprise-otel",
+      "title": "Enterprise-managed OpenTelemetry export for VS Code and CLI",
+      "why_it_matters": "Observability export for enterprise Copilot deployments",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-08-enterprise-managed-opentelemetry-export-for-vs-code-and-cli"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-github-copilot-mdm-settings",
+      "title": "Deploy managed Copilot settings via MDM in VS Code and CLI",
+      "why_it_matters": "Corp IT can enforce agent settings via MDM",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-08-deploy-managed-copilot-settings-via-mdm-in-vs-code-and-cli"
       ],
       "confidence": "high",
       "relevance_score": 6,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "sandbox",
+      "infra_angle": "deployment",
       "promotion_status": "candidate",
-      "next_check": "follow-up talks"
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-github-npm-install-time-security",
+      "title": "npm install-time security and GAT bypass2fa deprecation",
+      "why_it_matters": "Supply-chain security improvement at package install time",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-grok45",
+      "title": "Grok 4.5 available on Vercel AI Gateway",
+      "why_it_matters": "New model option via Vercel's AI infrastructure",
+      "evidence": [
+        "https://vercel.com/changelog/grok-4-5-now-available-on-ai-gateway"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
     }
   ],
   "gaps": [
-    "Missing user_workflow: need two concrete user reports with scenario detail beyond tool shifts (e.g., specific workflow adoption or pain point)."
+    "Missing mainstream_product: Microsoft/AWS/Apple/Cursor changelog",
+    "Missing user_workflow: only 2 low-confidence user reports found; need more field reports with concrete scenarios"
   ]
 }

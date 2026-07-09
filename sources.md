@@ -418,3 +418,9 @@ Ignore or deprioritize:
 - Automox MCP Server 2.2: https://bsky.app/profile/hacker.at.thenote.app/post/3mq6ltymin22a
 - Agent memory daemon: https://github.com/Charlesfrederickmenningerdateplum166/agent-memory-daemon
 - kb-mcp-lite 0.5.21: https://pypi.org/project/kb-mcp-lite/0.5.21/
+
+
+## Source-sweep 2026-07-09 (supplementary Bluesky field reports)
+
+- Bluesky tool-call corruption report (newer models breaking nested edit schemas): https://bsky.app/profile/benjaminhan.sigmoid.social.ap.brid.gy/post/3mq6pyct736w2
+- Bluesky user agent‑stack automation (OpenHuman/Ollama/MiMoCode CLI): https://bsky.app/profile/swastik2209.bsky.social/post/3mq6qcchxws24
