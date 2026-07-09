@@ -375,3 +375,19 @@ Ignore or deprioritize:
 - How Anthropic Contains Claude Across Products: https://www.anthropic.com/engineering/how-we-contain-claude
 - Go Agent Harness (micro/go-micro): https://github.com/micro/go-micro
 - Stealth Chrome DevTools MCP: https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp
+
+
+## Additional sources from 2026-07-09 source sweep (supplementary)
+
+- Anthropic Containment Engineering: https://www.anthropic.com/engineering/how-we-contain-claude
+- The Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- Google ADK Go 2.0 Announcement: https://developers.googleblog.com/announcing-adk-go-20/
+- Groundcrew: dispatch agents to sandboxed worktrees: https://github.com/ClipboardHealth/groundcrew
+- Pipelock: AI agent firewall for MCP security: https://github.com/luckyPipewrench/pipelock
+- Codenotary AgentMon 3 (runtime adaptive security): https://bsky.app/profile/hacker.at.thenote.app/post/3mq6ixqjjbk2a
+- WebMCP SDK: browser automation without source code changes: https://github.com/opentiny/webmcp-sdk
+- Microsoft Flint: visualization language for AI agents: https://microsoft.github.io/flint-chart/#/
+- Go Agent Harness (micro/go-micro): https://github.com/micro/go-micro
+- Stealth Chrome DevTools MCP: https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp
+- CVE-2026-59723 (Cline WebSocket Hijacking): https://bsky.app/profile/cve.skyfleet.blue/post/3mq6ii3a55f27
+- Google Vibe Coding Course (Kaggle): https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d
