@@ -166,6 +166,9 @@ The runner records direction coverage and weighted/mainstream recall in telemetr
 11. **Storyline continuity** — the runner lists URLs covered on multiple recent days in the daily prompt; repeats must carry the delta and `Freshness: follow-up`.
 12. **Weekly By the Numbers** — runner-computed telemetry metrics with week-over-week deltas are injected into the weekly prompt; reproduce them under `### By the Numbers` (a missing section is warned post-apply).
 13. **Candidate id hygiene** — `scr-` ids are URL-canonical; re-adding an already-tracked URL to research-log triggers a warning. Update the existing entry instead of appending a duplicate.
+14. **Sharded screening** — the runner screens discussion sources and official/repo sources in separate passes and merges candidates (dedup by evidence URL), so social items get a full screening pass instead of competing with the GitHub long tail. Env: `SCREENING_SHARDS`.
+15. **Claim audit** — a cheap-model pass compares daily bullets against their cited snapshot titles/notes and labels clear overreach (`Claim audit: ...`). Applies to all source classes equally; labels only, fail-open. Env: `CLAIM_AUDIT`.
+16. **Direction assets must move** — the weekly prompt carries radar.md Open Questions (record movement under `### Open Questions Delta`), stale watchlist entries (refresh or deprioritize), and the corroboration queue (resolve verification labels by finding primary sources, upgrading, or dropping). Labels are work items, not decoration.
 
 ## Evidence and safety
 

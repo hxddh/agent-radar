@@ -59,6 +59,17 @@ Required synthesis sections (the runner rejects a new weekly without them):
   Reproduce them under `### By the Numbers` and interpret the movement in 2-3
   sentences; do not invent your own counts.
 
+- **Open Questions Delta** — the runner injects radar.md's Open Questions list.
+  Under `### Open Questions Delta`, mark each question resolved / new evidence /
+  unchanged; retire answered questions (update radar.md) and add new ones raised
+  by this week's evidence.
+
+- **Corroboration queue & stale watchlist** — the runner injects unresolved
+  verification labels (Number check / pending-official / Claim audit) from recent
+  dailies and watchlist entries with no dated update in 21 days. Resolve queue
+  items (find the primary source, upgrade, or drop) and refresh or deprioritize
+  stale entries; do not let either list grow week over week.
+
 Consistency rule: an item may not appear as verified fact in one section and
 unverified in another. If a claim was flagged `needs-corroboration` anywhere,
 every later mention must carry that label until corroborated.
