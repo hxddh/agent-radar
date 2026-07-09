@@ -151,6 +151,17 @@ Daily synthesis must not collapse into a GitHub infra-parts list. Enforce this s
 
 The runner records direction coverage and weighted/mainstream recall in telemetry. It rejects daily updates that omit both the mainstream signal and the corresponding Gaps bullet, or drop must-cover mainstream candidates.
 
+## Truthfulness gates (daily / weekly / monthly)
+
+1. **Canonical daily sections** — English day blocks must use exactly these `####` sections, in order (1, 5, 6 mandatory): `#### 1. New Signals`, `#### 2. Mainstream Agent Progress`, `#### 3. User Workflow & Field Notes`, `#### 4. Emerging Agents / Infra Primitives`, `#### 5. Storage / Infra Angle`, `#### 6. Assessment & Gaps`. The runner rejects other section titles.
+2. **Coverage ledger** — `#### 6. Assessment & Gaps` must contain `- Coverage ledger: checked=...; missed=...`. Gaps escape hatches (`Missing mainstream_product` / `Missing user_workflow`) only count when the ledger is present.
+3. **Citation liveness** — the runner HTTP-checks URLs that were not in the source snapshot/screening evidence and rejects updates citing dead links (404/410). Unverifiable links (network errors) get a warning; keep their Evidence strength conservative.
+4. **CVE primary source** — CVE mentions must cite NVD or GitHub Advisories; the runner appends the canonical NVD link when only aggregator sites are cited.
+5. **Cross-day freshness** — URLs already covered in a day block within the last 14 days get auto-labeled `Freshness: follow-up (previously covered YYYY-MM-DD)`. Do not present repeats as New Signals; state the delta.
+6. **Repo reputation** — repo-only candidates whose owner matches a throwaway pattern are deferred with `risk_flags`; do not surface them in day blocks. Any repo-only candidate needs a second independent source before promotion.
+7. **Weekly synthesis** — a new weekly must include a `Thesis Scorecard` (every radar.md thesis: confidence ↑/→/↓ + strongest evidence + strongest counter-evidence) and at least one `Signal vs Counter-signal` pair; the runner rejects it otherwise and warns when later passes drop these sections.
+8. **Monthly aggregation** — a new monthly must include a `### Weekly Coverage` section referencing each ISO week of the month; the monthly is an aggregation of weeklies, refreshed mid-month and at month end.
+
 ## Evidence and safety
 
 - Use broad source coverage and keep going when evidence is weak.

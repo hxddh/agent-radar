@@ -33,6 +33,30 @@ Cover these dimensions:
 12. Ecosystem standards
 13. Anti-signals
 
+Required synthesis sections (the runner rejects a new weekly without them):
+
+- **Thesis Scorecard** — one row per numbered thesis in `radar.md`:
+
+```
+### Thesis Scorecard
+
+| # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter-evidence |
+|---|----------------|--------------|------------------------|----------------------------|
+| 1 | Task-based execution | ↑ | ... | ... |
+```
+
+  Use `↑` / `→` / `↓` for confidence movement. Every thesis gets a row, even `→`
+  with "no new evidence this week". This is the weekly's core deliverable — a
+  judgment trend, not a re-bucketing of daily items.
+
+- **Signal vs Counter-signal** — at least one explicit contradiction pair from this
+  week's evidence (e.g. "MongoDB MCP image 500K pulls" vs "all new memory repos <2
+  stars"). State which side the evidence currently favors and what would flip it.
+
+Consistency rule: an item may not appear as verified fact in one section and
+unverified in another. If a claim was flagged `needs-corroboration` anywhere,
+every later mention must carry that label until corroborated.
+
 Report language:
 - See `prompts/runner-rules.md` for block bilingual format and coverage gates.
 

@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.8.0 - 2026-07-09
+
+Content-truthfulness and direction release: verify what the model cites, stop re-reporting old news, gate low-reputation repos, encode the storage thesis in scoring, and turn weekly/monthly reports into real synthesis.
+
+### Added
+- **Citation verification**: synthesis-emitted URLs not present in the collector snapshot/screening evidence are HTTP-checked; dead links (404/410) reject the update, unverifiable links get a warning. Telemetry: `citation_urls_checked/unreachable/unverified`. Env: `CITATION_VERIFICATION`, `CITATION_CHECK_MAX_URLS`.
+- **CVE primary-source repair**: CVE mentions citing only aggregator sites get the canonical NVD link appended (`cve_primary_source_added`).
+- **Repo reputation gate**: repo-only candidates whose GitHub owner matches the throwaway-account pattern (long concatenated words + trailing digits) are deferred with `risk_flags` and Weak evidence; single-repo-source candidates get a soft `risk_flags` marker for the promotion gate (`repo_reputation_demoted`).
+- **Cross-day freshness**: URLs already covered in a day block within 14 days are auto-labeled `Freshness: follow-up (previously covered YYYY-MM-DD)` (`repeat_url_labeled`); published dailies now count as "already tracked" for the source-sweep skip.
+- **Canonical daily template**: English day blocks must use the fixed 6-section template (New Signals / Mainstream Agent Progress / User Workflow & Field Notes / Emerging Agents & Infra Primitives / Storage & Infra Angle / Assessment & Gaps). Env: `STRICT_DAILY_SECTIONS`.
+- **Coverage ledger**: `Assessment & Gaps` must carry `- Coverage ledger: checked=...; missed=...`; Gaps escape hatches only count when the ledger is present (env: `REQUIRE_COVERAGE_LEDGER`). The runner injects the collector lanes actually checked into the daily prompt.
+- **Weekly Thesis Scorecard**: new weeklies must rate every radar.md thesis (↑/→/↓ + strongest evidence + counter-evidence) and include at least one Signal vs Counter-signal pair; later passes that drop the sections get a warning.
+- **Monthly aggregation**: monthlies must include `### Weekly Coverage` referencing each ISO week; `auto_tasks` now also runs monthly on day 15 so the file stops being a day-1 seed.
+- **Thesis-aligned scoring**: storage/containment/cost-economics keywords boost source scores; extend via `automation/thesis-keywords.json`.
+- **China + storage/market source lanes**: DeepSeek/Qwen/Trae queries and `qwen-blog`/`deepseek-news` pages; MinIO/AWS-storage/Cloudflare feeds; extend query pools without code via `automation/source-queries.json`.
+- CLI version bumped to `0.8.0`.
+
+### Changed
+- `radar.md` thesis cleanup: merged former theses 7/8/9 into one memory+KB+MCP thesis, added agent containment/security and agent cost economics theses (see Changed Thesis 2026-07-09).
+- Prompts (`daily-update`, `weekly-review`, `monthly-review`, `runner-rules`, `screening-schema`) document the new truthfulness gates.
+- `sources.md` adds the China coding-agent lane and the storage & market lane.
+
 ## v0.7.11 - 2026-07-09
 
 Reserve discussion/social slots in the shared source pool and screening injection so Bluesky/Reddit/HN survive GitHub long-tail crowding.

@@ -1087,6 +1087,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         "- Signal: OpenAI shipped a coding-agent preview.\n"
                         "  - Source: https://openai.com/index/agents\n\n"
                         "#### 7. Gaps\n\n"
+                        "- Coverage ledger: checked=github-changelog, openai-blog; missed=anthropic, google.\n"
                         "- Missing user_workflow: no concrete operator reports in this pass.\n"
                         "- Missing mainstream_product: Anthropic/Google/Microsoft not covered beyond OpenAI.\n"
                     ),
@@ -1096,6 +1097,29 @@ class CloudAgentRunnerTest(unittest.TestCase):
         cloud_agent_runner.validate_daily_direction_quota(result)
         # Gap text suppresses the mainstream marker match by design; Gaps still pass the gate.
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_gaps_present"])
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["coverage_ledger_present"])
+
+    def test_daily_gaps_without_coverage_ledger_rejected(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: emerging repo only.\n"
+                        "  - Source: https://example.com/repo\n\n"
+                        "#### 7. Gaps\n\n"
+                        "- Missing user_workflow: no concrete operator reports in this pass.\n"
+                        "- Missing mainstream_product: vendors not covered.\n"
+                    ),
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("Coverage ledger", str(ctx.exception))
 
     def test_daily_direction_quota_rejects_attitude_only_user_signal(self) -> None:
         result = {
@@ -1702,6 +1726,318 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertTrue(
             any("dropped" in warning and "anthropic.com" in warning for warning in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
         )
+
+
+class ContentTruthfulnessTest(unittest.TestCase):
+    """v0.8.0 gates: citations, repo reputation, cross-day freshness, templates."""
+
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+
+    def test_repo_reputation_demotes_suspicious_owner(self) -> None:
+        cand = {
+            "id": "scr-mem",
+            "title": "agent-memory-daemon",
+            "confidence": "medium",
+            "relevance_score": 6,
+            "signal_class": "infra_primitive",
+            "evidence": ["https://github.com/Charlesfrederickmenningerdateplum166/agent-memory-daemon"],
+            "why_it_matters": "Filesystem-native agent memory daemon",
+        }
+        self.assertTrue(cloud_agent_runner.demote_low_reputation_repo(cand))
+        self.assertEqual(cand["promotion_status"], "defer")
+        self.assertEqual(cand["evidence_strength"], "Weak")
+        self.assertEqual(cand["confidence"], "low")
+        self.assertTrue(any(risk.startswith("suspicious-owner:") for risk in cand["risk_flags"]))
+
+    def test_repo_reputation_keeps_normal_repo(self) -> None:
+        cand = {
+            "id": "scr-ok",
+            "title": "vestige",
+            "confidence": "medium",
+            "relevance_score": 6,
+            "signal_class": "infra_primitive",
+            "evidence": ["https://github.com/samvallad33/vestige"],
+            "why_it_matters": "Time-travel agent memory",
+        }
+        self.assertFalse(cloud_agent_runner.demote_low_reputation_repo(cand))
+        self.assertNotEqual(cand.get("promotion_status"), "defer")
+        # Single-repo evidence still gets a soft risk flag for the promotion gate.
+        self.assertIn("single-repo-source", cand.get("risk_flags", []))
+
+    def test_official_blog_evidence_has_no_repo_risks(self) -> None:
+        cand = {
+            "id": "scr-blog",
+            "title": "Anthropic containment",
+            "evidence": ["https://www.anthropic.com/engineering/how-we-contain-claude"],
+        }
+        self.assertEqual(cloud_agent_runner.repo_reputation_risks(cand), [])
+
+    def test_cve_bullet_gets_canonical_nvd_link(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: CVE-2026-59723 disclosed in Cline.\n"
+                        "  - Source: https://www.thehackerwire.com/vulnerability/CVE-2026-59723/\n"
+                    ),
+                }
+            ]
+        }
+        labeled = cloud_agent_runner.repair_cve_primary_sources(result)
+        self.assertEqual(labeled, 1)
+        content = result["updates"][0]["content"]
+        self.assertIn("https://nvd.nist.gov/vuln/detail/CVE-2026-59723", content)
+
+    def test_cve_bullet_with_primary_source_untouched(self) -> None:
+        content = (
+            "## 2026-07-09\n\n### English\n\n"
+            "#### 1. New Signals\n\n"
+            "- Signal: CVE-2026-59723 disclosed in Cline.\n"
+            "  - Source: https://nvd.nist.gov/vuln/detail/CVE-2026-59723\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        self.assertEqual(cloud_agent_runner.repair_cve_primary_sources(result), 0)
+        self.assertEqual(result["updates"][0]["content"], content)
+
+    def test_verify_emitted_citations_rejects_dead_url(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": "- Signal: x.\n  - Source: https://example.com/gone\n",
+                }
+            ]
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with mock.patch.object(
+                cloud_agent_runner, "url_reachability", return_value=("missing", "HTTP 404")
+            ):
+                with self.assertRaises(SystemExit) as ctx:
+                    cloud_agent_runner.verify_emitted_citations(root, result, None)
+        self.assertIn("do not resolve", str(ctx.exception))
+
+    def test_verify_emitted_citations_warns_on_unknown(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": "- Signal: x.\n  - Source: https://example.com/maybe\n",
+                }
+            ]
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with mock.patch.object(
+                cloud_agent_runner, "url_reachability", return_value=("unknown", "HTTP 403")
+            ):
+                cloud_agent_runner.verify_emitted_citations(root, result, None)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["citation_urls_unverified"], 1)
+        self.assertTrue(
+            any("could not be verified" in warning for warning in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_verify_emitted_citations_skips_trusted_snapshot_urls(self) -> None:
+        screen = json.dumps(
+            {"candidates": [{"title": "x", "evidence": ["https://example.com/known"]}]}
+        )
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": "- Signal: x.\n  - Source: https://example.com/known\n",
+                }
+            ]
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with mock.patch.object(cloud_agent_runner, "url_reachability") as reach_mock:
+                cloud_agent_runner.verify_emitted_citations(root, result, screen)
+        reach_mock.assert_not_called()
+
+    def test_repeated_url_gets_follow_up_label(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-09")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text(
+                "## 2026-07-02\n\n- Signal: Sonnet launch.\n"
+                "  - Source: https://www.anthropic.com/news/claude-sonnet-5\n\n---\n",
+                encoding="utf-8",
+            )
+            result = {
+                "updates": [
+                    {
+                        "path": "daily/2026-07.md",
+                        "mode": "append",
+                        "content": (
+                            "## 2026-07-09\n\n### English\n\n"
+                            "#### 1. New Signals\n\n"
+                            "- Signal: Claude Sonnet 5 launches.\n"
+                            "  - Source: https://www.anthropic.com/news/claude-sonnet-5\n"
+                        ),
+                    }
+                ]
+            }
+            labeled = cloud_agent_runner.repair_repeated_url_freshness(result, root, day)
+        self.assertEqual(labeled, 1)
+        self.assertIn(
+            "Freshness: follow-up (previously covered 2026-07-02)",
+            result["updates"][0]["content"],
+        )
+
+    def test_daily_section_structure_rejects_drifted_sections(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\ntext\n\n"
+                        "#### 2. Public User / Community Signals\n\ntext\n"
+                    ),
+                }
+            ]
+        }
+        with mock.patch.dict(os.environ, {}, clear=False):
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.validate_daily_section_structure(result)
+        self.assertIn("canonical", str(ctx.exception))
+
+    def test_daily_section_structure_accepts_canonical_template(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\ntext\n\n"
+                        "#### 5. Storage / Infra Angle\n\ntext\n\n"
+                        "#### 6. Assessment & Gaps\n\n"
+                        "- Coverage ledger: checked=github; missed=none.\n\n"
+                        "### 中文\n\n#### 1. 新信号\n\ntext\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.validate_daily_section_structure(result)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["daily_sections_canonical"])
+
+    def test_weekly_full_requires_scorecard_and_counter_signal(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "weekly/2026-W28.md",
+                    "mode": "full",
+                    "content": "# Weekly\n\n## English\n\n### 1. Product changes\n\ntext\n",
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_weekly_synthesis(result)
+        self.assertIn("Thesis Scorecard", str(ctx.exception))
+        result["updates"][0]["content"] += "\n### Thesis Scorecard\n\n| 1 | ... | ↑ | e | c |\n"
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_weekly_synthesis(result)
+        self.assertIn("Counter-signal", str(ctx.exception))
+        result["updates"][0]["content"] += "\n### Signal vs Counter-signal\n\n- pair\n"
+        cloud_agent_runner.validate_weekly_synthesis(result)
+
+    def test_weekly_replace_section_not_blocked_by_scorecard_gate(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "weekly/2026-W28.md",
+                    "mode": "replace_section",
+                    "anchor": "### 1. Product changes",
+                    "content": "updated bullet\n",
+                }
+            ]
+        }
+        cloud_agent_runner.validate_weekly_synthesis(result)
+
+    def test_monthly_full_requires_weekly_coverage(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-15")
+        result = {
+            "updates": [
+                {
+                    "path": "monthly/2026-07.md",
+                    "mode": "full",
+                    "content": "# Monthly\n\n## English\n\ntext\n",
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_monthly_synthesis(result, day)
+        self.assertIn("Weekly Coverage", str(ctx.exception))
+        result["updates"][0]["content"] += "\n### Weekly Coverage\n\n- 2026-W27: ...\n- 2026-W28: ...\n- 2026-W29: ...\n"
+        cloud_agent_runner.validate_monthly_synthesis(result, day)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["monthly_week_coverage_present"])
+
+    def test_iso_weeks_in_month(self) -> None:
+        weeks = cloud_agent_runner.iso_weeks_in_month(cloud_agent_runner.parse_date("2026-07-15"))
+        self.assertIn("2026-W27", weeks)
+        self.assertIn("2026-W29", weeks)
+
+    def test_auto_tasks_monthly_mid_month_refresh(self) -> None:
+        tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-15"))
+        self.assertIn("monthly", tasks)
+
+    def test_thesis_keywords_boost_storage_source_score(self) -> None:
+        weights = cloud_agent_runner.thesis_keyword_weights(None)
+        plain = {
+            "source": "hacker-news",
+            "title": "New AI agent framework",
+            "url": "https://example.com/a",
+            "note": "",
+        }
+        storage = {
+            "source": "hacker-news",
+            "title": "New AI agent framework with workspace snapshot and object storage",
+            "url": "https://example.com/b",
+            "note": "",
+        }
+        self.assertGreater(
+            cloud_agent_runner.score_source_item(storage, {}, weights),
+            cloud_agent_runner.score_source_item(plain, {}, weights),
+        )
+
+    def test_source_queries_include_china_and_storage_lanes(self) -> None:
+        queries = cloud_agent_runner.source_queries_for_task("daily")
+        self.assertIn("DeepSeek agent", queries["hn"])
+        self.assertIn("agent workspace snapshot", queries["github"])
+
+    def test_source_query_overrides_extend_pool(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            (root / "automation" / "source-queries.json").write_text(
+                json.dumps({"hn": ["Kimi coding agent"]}), encoding="utf-8"
+            )
+            queries = cloud_agent_runner.source_queries_for_task("daily", root)
+        self.assertIn("Kimi coding agent", queries["hn"])
+
+    def test_candidate_already_tracked_sees_published_dailies(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir(parents=True)
+            (root / "research-log.md").write_text("# log\n", encoding="utf-8")
+            (root / "daily" / "2026-07.md").write_text(
+                "## 2026-07-08\n\n- Signal: covered.\n  - Source: https://example.com/covered\n",
+                encoding="utf-8",
+            )
+            cand = {"title": "Something else", "evidence": ["https://example.com/covered"]}
+            self.assertTrue(cloud_agent_runner.candidate_already_tracked(root, cand))
 
 
 if __name__ == "__main__":
