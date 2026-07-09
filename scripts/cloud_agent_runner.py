@@ -71,7 +71,57 @@ DEFAULT_LANE_COVERAGE_DEGRADED_THRESHOLD = 0.5
 SIGNAL_CLASSES = frozenset(
     {"mainstream_product", "user_workflow", "infra_primitive", "research", "noise"}
 )
+SIGNAL_CLASS_RECALL_WEIGHTS = {
+    "mainstream_product": 3.0,
+    "user_workflow": 2.0,
+    "research": 1.5,
+    "infra_primitive": 1.0,
+    "noise": 0.0,
+}
+DEFAULT_MIN_WEIGHTED_SYNTHESIS_RECALL = 0.35
+DEFAULT_MIN_MAINSTREAM_RECALL = 0.5
+MAX_MUST_COVER_MAINSTREAM = 3
 MAX_DAILY_INFRA_PRIMITIVE_BULLETS = 2
+STALE_ROUNDUP_RE = re.compile(
+    r"\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+20\d{2}\s+releases?\b",
+    re.IGNORECASE,
+)
+STOPWORD_TITLE_TOKENS = frozenset(
+    {
+        "with",
+        "from",
+        "for",
+        "and",
+        "the",
+        "into",
+        "over",
+        "under",
+        "just",
+        "new",
+        "update",
+        "updates",
+        "release",
+        "releases",
+        "agent",
+        "agents",
+        "code",
+        "coding",
+    }
+)
+MONTH_NAME_TO_NUM = {
+    "january": 1,
+    "february": 2,
+    "march": 3,
+    "april": 4,
+    "may": 5,
+    "june": 6,
+    "july": 7,
+    "august": 8,
+    "september": 9,
+    "october": 10,
+    "november": 11,
+    "december": 12,
+}
 INFRA_THEME_MARKERS = (
     "mcp",
     "memory",
@@ -135,7 +185,6 @@ FEED_USER_AGENT = "Mozilla/5.0 (compatible; AgentRadar/1.0; +https://github.com/
 DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
-    ("microsoft-azure-ai", "https://azure.microsoft.com/en-us/blog/category/ai/feed/"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -143,7 +192,6 @@ DEFAULT_CHANGELOG_PAGES = [
     ("anthropic-news", "https://www.anthropic.com/news"),
     ("anthropic-engineering", "https://www.anthropic.com/engineering"),
     ("google-developers-blog", "https://developers.googleblog.com/"),
-    ("openai-index", "https://openai.com/index/"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -244,6 +292,11 @@ RUN_AUDIT: dict[str, Any] = {
     "direction_user_workflow": False,
     "direction_infra_count": 0,
     "direction_gaps_present": False,
+    "weighted_synthesis_recall": 0.0,
+    "mainstream_recall": 0.0,
+    "stale_roundup_count": 0,
+    "must_cover_mainstream": 0,
+    "must_cover_missing": 0,
     "apply_warnings": [],
 }
 
@@ -875,6 +928,45 @@ def infer_signal_class(candidate: dict[str, Any]) -> str:
     return "infra_primitive"
 
 
+def candidate_priority_key(candidate: dict[str, Any]) -> tuple[int, int, int, int]:
+    confidence = str(candidate.get("confidence", "")).lower()
+    conf_rank = {"high": 0, "medium": 1, "low": 2}.get(confidence, 3)
+    try:
+        score = int(candidate.get("relevance_score", 0) or 0)
+    except (TypeError, ValueError):
+        score = 0
+    title = str(candidate.get("title", "")).lower()
+    infra = str(candidate.get("infra_angle", "")).lower()
+    # Prefer security advisories / vulnerability posts among equal-score mainstream.
+    security_rank = 0 if (
+        infra == "security"
+        or "vulnerabilit" in title
+        or "advisory" in title
+        or "advisories" in title
+        or "cve-" in title
+    ) else 1
+    # Higher relevance first within the same confidence; security before peers.
+    return (conf_rank, security_rank, -score, 0)
+
+
+def high_confidence_mainstream_candidates(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    selected: list[dict[str, Any]] = []
+    for cand in candidates:
+        if not isinstance(cand, dict):
+            continue
+        signal_class = infer_signal_class(cand)
+        cand["signal_class"] = signal_class
+        if signal_class != "mainstream_product":
+            continue
+        if str(cand.get("confidence", "")).lower() != "high":
+            continue
+        if str(cand.get("promotion_status", "candidate")).lower() == "reject":
+            continue
+        selected.append(cand)
+    selected.sort(key=candidate_priority_key)
+    return selected
+
+
 def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
     """Prefer a mix of mainstream/user/infra over an infra-only top-N list."""
     if limit <= 0 or not candidates:
@@ -890,6 +982,8 @@ def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int)
             buckets[signal_class].append(cand)
         else:
             unknown.append(cand)
+    for signal_class, rows in buckets.items():
+        rows.sort(key=candidate_priority_key)
 
     selected: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
@@ -984,6 +1078,7 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
     candidates = data.get("candidates", [])
     if isinstance(candidates, list) and candidates:
         ranked = diversify_screening_candidates(candidates, max_candidates)
+        must_cover = high_confidence_mainstream_candidates(candidates)[:MAX_MUST_COVER_MAINSTREAM]
         class_counts: dict[str, int] = {}
         for cand in candidates:
             if isinstance(cand, dict):
@@ -992,6 +1087,16 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
         if class_counts:
             coverage = "; ".join(f"{name}={count}" for name, count in sorted(class_counts.items()))
             lines.append(f"Signal-class coverage: {coverage}")
+        if must_cover:
+            lines.append("Must-cover high-confidence mainstream (do not drop for emerging repos):")
+            for cand in must_cover:
+                cand_id = str(cand.get("id", ""))
+                title = str(cand.get("title", "?"))
+                score = cand.get("relevance_score", "")
+                evidence = cand.get("evidence", [])
+                url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
+                id_prefix = f"{cand_id} " if cand_id else ""
+                lines.append(f"- MUST {id_prefix}[high class=mainstream_product score={score}] {title} | {url}")
         lines.append(f"Top candidates ({len(ranked)} shown, direction-diversified):")
         for cand in ranked:
             cand_id = str(cand.get("id", ""))
@@ -999,6 +1104,7 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             status = cand.get("promotion_status", "candidate")
             score = cand.get("relevance_score", "")
             signal_class = cand.get("signal_class", infer_signal_class(cand))
+            confidence = cand.get("confidence", "")
             infra = cand.get("infra_angle", "")
             evidence = cand.get("evidence", [])
             url = ""
@@ -1007,10 +1113,18 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             why = truncate_text(str(cand.get("why_it_matters", "")), why_limit)
             id_prefix = f"{cand_id} " if cand_id else ""
             lines.append(
-                f"- {id_prefix}[{status} class={signal_class} score={score} infra={infra}] {title} | {url}"
+                f"- {id_prefix}[{status} class={signal_class} conf={confidence} score={score} infra={infra}] {title} | {url}"
             )
             if why:
                 lines.append(f"  why: {why}")
+        lines.append(
+            "Synthesis priority: cover MUST mainstream first, then user_workflow, "
+            "then at most 2 infra_primitive emerging bullets."
+        )
+        lines.append(
+            "Freshness: prefer 24-48h deltas. Monthly/quarterly roundups older than ~7 days "
+            "must be labeled `Freshness: stale-roundup` or moved to research-log."
+        )
         if class_counts.get("mainstream_product", 0) == 0:
             lines.append(
                 "Direction note: no mainstream_product candidates; daily must record a Gaps bullet."
@@ -1205,26 +1319,105 @@ def validate_research_log_append(old: str, content: str) -> None:
         )
 
 
-def compute_synthesis_recall(screen_text: str | None, result: dict[str, Any]) -> float:
+def candidate_title_tokens(title: str) -> list[str]:
+    return [
+        token
+        for token in re.findall(r"[a-z0-9][a-z0-9+./-]{3,}", title.lower())
+        if token not in STOPWORD_TITLE_TOKENS
+    ]
+
+
+def candidate_evidence_urls(candidate: dict[str, Any]) -> list[str]:
+    evidence = candidate.get("evidence", [])
+    if not isinstance(evidence, list):
+        return []
+    return [str(item).strip().lower() for item in evidence if str(item).strip()]
+
+
+def candidate_mentioned_in_text(candidate: dict[str, Any], hay: str, *, strict: bool = False) -> bool:
+    cand_id = str(candidate.get("id", "")).strip()
+    title = str(candidate.get("title", "")).strip().lower()
+    if cand_id and cand_id.lower() in hay:
+        return True
+    if len(title) >= 4 and title in hay:
+        return True
+    for url in candidate_evidence_urls(candidate):
+        if url and url in hay:
+            return True
+        # Match path tail when the model cites a shortened or host-stripped form.
+        path = re.sub(r"^https?://", "", url).split("?", 1)[0]
+        if len(path) >= 24 and path in hay:
+            return True
+        slug = path.rsplit("/", 1)[-1]
+        if len(slug) >= 12 and slug in hay:
+            return True
+    tokens = candidate_title_tokens(title)
+    if not tokens:
+        return False
+    needed = 3 if strict else 2
+    window = tokens[:5] if strict else tokens[:4]
+    if len(tokens) >= needed and sum(1 for token in window if token in hay) >= needed:
+        return True
+    return False
+
+
+def candidate_explained_in_gaps(candidate: dict[str, Any], hay: str) -> bool:
+    """Allow Gaps bullets to satisfy must-cover when they name the dropped item."""
+    gap_markers = (
+        "#### 7. gaps",
+        "### gaps",
+        "gaps\n",
+        "missing mainstream",
+        "dropped:",
+        "deferred:",
+        "not covering",
+        "omitted:",
+    )
+    if not any(marker in hay for marker in gap_markers) and "gap" not in hay:
+        return False
+    return candidate_mentioned_in_text(candidate, hay, strict=True)
+
+
+def compute_synthesis_recall_details(screen_text: str | None, result: dict[str, Any]) -> dict[str, float]:
     if not screen_text:
-        return 1.0
+        return {"recall": 1.0, "weighted_recall": 1.0, "mainstream_recall": 1.0}
     data = enrich_screening_with_ids(parse_screening_json(screen_text))
     candidates = screening_actionable_candidates(data)
     if not candidates:
-        return 1.0
+        return {"recall": 1.0, "weighted_recall": 1.0, "mainstream_recall": 1.0}
     hay_parts = [str(result.get("summary", ""))]
     for update in normalize_result_updates(result):
         hay_parts.append(str(update.get("content", "")))
     hay = "\n".join(hay_parts).lower()
     matched = 0
+    weight_total = 0.0
+    weight_matched = 0.0
+    mainstream_total = 0
+    mainstream_matched = 0
     for cand in candidates:
-        cand_id = str(cand.get("id", "")).strip()
-        title = str(cand.get("title", "")).strip().lower()
-        if cand_id and cand_id.lower() in hay:
+        signal_class = infer_signal_class(cand)
+        weight = float(SIGNAL_CLASS_RECALL_WEIGHTS.get(signal_class, 1.0))
+        weight_total += weight
+        hit = candidate_mentioned_in_text(cand, hay)
+        if hit:
             matched += 1
-        elif len(title) >= 4 and title in hay:
-            matched += 1
-    return round(matched / len(candidates), 3)
+            weight_matched += weight
+        if signal_class == "mainstream_product" and str(cand.get("confidence", "")).lower() == "high":
+            mainstream_total += 1
+            if hit:
+                mainstream_matched += 1
+    recall = matched / len(candidates)
+    weighted = weight_matched / weight_total if weight_total else 1.0
+    mainstream = mainstream_matched / mainstream_total if mainstream_total else 1.0
+    return {
+        "recall": round(recall, 3),
+        "weighted_recall": round(weighted, 3),
+        "mainstream_recall": round(mainstream, 3),
+    }
+
+
+def compute_synthesis_recall(screen_text: str | None, result: dict[str, Any]) -> float:
+    return compute_synthesis_recall_details(screen_text, result)["recall"]
 
 
 def daily_update_bodies(result: dict[str, Any]) -> list[str]:
@@ -1280,6 +1473,54 @@ def count_infra_primitive_bullets(text: str) -> int:
     return count
 
 
+def split_daily_signal_bullets(text: str) -> list[str]:
+    bullets: list[str] = []
+    current: list[str] = []
+    for line in text.splitlines():
+        if re.match(r"^- \*\*", line) or re.match(r"^- Signal:", line) or re.match(r"^- Candidate:", line):
+            if current:
+                bullets.append("\n".join(current))
+            current = [line]
+        elif current:
+            if line.startswith("  ") or not line.strip():
+                current.append(line)
+            elif line.startswith("- "):
+                bullets.append("\n".join(current))
+                current = [line]
+            else:
+                current.append(line)
+    if current:
+        bullets.append("\n".join(current))
+    return bullets
+
+
+def stale_roundup_unlabeled(text: str) -> list[str]:
+    issues: list[str] = []
+    for bullet in split_daily_signal_bullets(text):
+        match = STALE_ROUNDUP_RE.search(bullet)
+        if not match:
+            continue
+        if re.search(r"freshness:\s*stale-roundup", bullet, re.IGNORECASE):
+            continue
+        issues.append(match.group(0))
+    return issues
+
+
+def validate_daily_freshness(result: dict[str, Any]) -> None:
+    bodies = daily_update_bodies(result)
+    if not bodies:
+        return
+    text = "\n".join(bodies)
+    issues = stale_roundup_unlabeled(text)
+    RUN_AUDIT["stale_roundup_count"] = len(issues)
+    if issues:
+        sample = issues[0]
+        raise SystemExit(
+            "Refusing daily update: monthly/quarterly roundup looks stale "
+            f"({sample!r}). Label it `Freshness: stale-roundup` or move it to research-log.md."
+        )
+
+
 def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     bodies = daily_update_bodies(result)
     if not bodies:
@@ -1312,11 +1553,42 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
         )
 
 
+def validate_must_cover_mainstream(result: dict[str, Any], screen_text: str | None) -> None:
+    if not screen_text:
+        return
+    data = enrich_screening_with_ids(parse_screening_json(screen_text))
+    must_cover = high_confidence_mainstream_candidates(data.get("candidates", []))[:MAX_MUST_COVER_MAINSTREAM]
+    if not must_cover:
+        return
+    hay = "\n".join(daily_update_bodies(result) + [str(result.get("summary", ""))]).lower()
+    missing = [
+        str(cand.get("title", "?"))
+        for cand in must_cover
+        if not (
+            candidate_mentioned_in_text(cand, hay, strict=True)
+            or candidate_explained_in_gaps(cand, hay)
+        )
+    ]
+    RUN_AUDIT["must_cover_mainstream"] = len(must_cover)
+    RUN_AUDIT["must_cover_missing"] = len(missing)
+    if missing:
+        preview = "; ".join(missing[:2])
+        raise SystemExit(
+            "Refusing daily update: high-confidence mainstream candidates were dropped "
+            f"({preview}). Cover them in New Signals/Mainstream or explain in Gaps."
+        )
+
+
 def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: str | None) -> None:
     if task not in {"daily", "weekly", "monthly"}:
         return
-    recall = compute_synthesis_recall(screen_text, result)
+    details = compute_synthesis_recall_details(screen_text, result)
+    recall = details["recall"]
+    weighted = details["weighted_recall"]
+    mainstream = details["mainstream_recall"]
     RUN_AUDIT["synthesis_recall"] = recall
+    RUN_AUDIT["weighted_synthesis_recall"] = weighted
+    RUN_AUDIT["mainstream_recall"] = mainstream
     min_recall = env_float("MIN_SYNTHESIS_RECALL", 0.0)
     if min_recall > 0 and recall < min_recall:
         raise SystemExit(
@@ -1324,7 +1596,23 @@ def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: st
             "Reference more screened candidates in the daily synthesis."
         )
     if task == "daily":
+        min_weighted = env_float("MIN_WEIGHTED_SYNTHESIS_RECALL", DEFAULT_MIN_WEIGHTED_SYNTHESIS_RECALL)
+        min_mainstream = env_float("MIN_MAINSTREAM_RECALL", DEFAULT_MIN_MAINSTREAM_RECALL)
+        if weighted < min_weighted:
+            raise SystemExit(
+                f"Weighted synthesis recall {weighted:.3f} is below "
+                f"MIN_WEIGHTED_SYNTHESIS_RECALL ({min_weighted}). "
+                "Prioritize mainstream_product and user_workflow candidates."
+            )
+        if mainstream < min_mainstream:
+            raise SystemExit(
+                f"Mainstream recall {mainstream:.3f} is below "
+                f"MIN_MAINSTREAM_RECALL ({min_mainstream}). "
+                "Cover high-confidence mainstream candidates before emerging repos."
+            )
         validate_daily_direction_quota(result)
+        validate_must_cover_mainstream(result, screen_text)
+        validate_daily_freshness(result)
 
 
 def record_bilingual_telemetry(root: Path, result: dict[str, Any]) -> None:
@@ -3234,6 +3522,11 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Direction infra count: {RUN_AUDIT.get('direction_infra_count', 0)}",
         f"- Direction gaps present: {RUN_AUDIT.get('direction_gaps_present', False)}",
         f"- Screening signal classes: {RUN_AUDIT.get('screening_signal_classes', {})}",
+        f"- Weighted synthesis recall: {RUN_AUDIT.get('weighted_synthesis_recall', 0.0)}",
+        f"- Mainstream recall: {RUN_AUDIT.get('mainstream_recall', 0.0)}",
+        f"- Must-cover mainstream: {RUN_AUDIT.get('must_cover_mainstream', 0)}",
+        f"- Must-cover missing: {RUN_AUDIT.get('must_cover_missing', 0)}",
+        f"- Stale roundup count: {RUN_AUDIT.get('stale_roundup_count', 0)}",
     ]
     if source_errors:
         entry.append("- Source errors:")
@@ -3285,6 +3578,11 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "direction_user_workflow": RUN_AUDIT.get("direction_user_workflow", False),
         "direction_infra_count": RUN_AUDIT.get("direction_infra_count", 0),
         "direction_gaps_present": RUN_AUDIT.get("direction_gaps_present", False),
+        "weighted_synthesis_recall": RUN_AUDIT.get("weighted_synthesis_recall", 0.0),
+        "mainstream_recall": RUN_AUDIT.get("mainstream_recall", 0.0),
+        "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
+        "must_cover_missing": RUN_AUDIT.get("must_cover_missing", 0),
+        "stale_roundup_count": RUN_AUDIT.get("stale_roundup_count", 0),
         "apply_warnings": RUN_AUDIT.get("apply_warnings", []),
     }
     with path.open("a", encoding="utf-8") as handle:
@@ -3379,6 +3677,11 @@ def run_task(
     RUN_AUDIT["direction_user_workflow"] = False
     RUN_AUDIT["direction_infra_count"] = 0
     RUN_AUDIT["direction_gaps_present"] = False
+    RUN_AUDIT["weighted_synthesis_recall"] = 0.0
+    RUN_AUDIT["mainstream_recall"] = 0.0
+    RUN_AUDIT["stale_roundup_count"] = 0
+    RUN_AUDIT["must_cover_mainstream"] = 0
+    RUN_AUDIT["must_cover_missing"] = 0
     RUN_AUDIT["apply_warnings"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:

@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.7.4 - 2026-07-09
+
+Daily synthesis recall and freshness follow-up: force high-value mainstream into the day block, weight recall by signal class, and reject unlabeled stale roundups.
+
+### Added
+- Must-cover gate: top high-confidence `mainstream_product` screening candidates (security first) must appear in New Signals/Mainstream or be named under Gaps.
+- Weighted synthesis recall (`MIN_WEIGHTED_SYNTHESIS_RECALL`, default 0.35) and mainstream recall (`MIN_MAINSTREAM_RECALL`, default 0.5).
+- Freshness gate: month-named roundups such as `June 2026 releases` require `Freshness: stale-roundup` (or research-log only).
+- Telemetry: `weighted_synthesis_recall`, `mainstream_recall`, `must_cover_mainstream`, `must_cover_missing`, `stale_roundup_count`.
+
+### Changed
+- Screening prompt injection lists MUST-cover mainstream before diversified top candidates.
+- Candidate matching uses ids, evidence URLs, and stricter title tokens for must-cover checks.
+- `prompts/daily-update.md`, `prompts/runner-rules.md`, and `prompts/screening-schema.md` document must-cover and freshness rules.
+- CLI version bumped to `0.7.4`.
+
 ## v0.7.3 - 2026-07-09
 
 Direction and breadth correction: stop collapsing daily reports into GitHub infra-parts lists.

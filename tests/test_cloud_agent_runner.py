@@ -1043,6 +1043,246 @@ class CloudAgentRunnerTest(unittest.TestCase):
         strong_score = cloud_agent_runner.score_source_item(strong, {})
         self.assertGreater(strong_score, weak_score)
 
+    def test_high_confidence_mainstream_prefers_security(self) -> None:
+        candidates = [
+            {
+                "id": "scr-a",
+                "title": "OpenAI Codex alpha",
+                "confidence": "high",
+                "relevance_score": 5,
+                "signal_class": "mainstream_product",
+                "evidence": ["https://openai.com/codex"],
+            },
+            {
+                "id": "scr-b",
+                "title": "China security vulnerabilities in Claude Code",
+                "confidence": "high",
+                "relevance_score": 5,
+                "signal_class": "mainstream_product",
+                "infra_angle": "security",
+                "evidence": ["https://example.com/claude-security"],
+            },
+            {
+                "id": "scr-c",
+                "title": "Random memory MCP",
+                "confidence": "high",
+                "relevance_score": 5,
+                "signal_class": "infra_primitive",
+                "evidence": ["https://github.com/x/memory"],
+            },
+        ]
+        must = cloud_agent_runner.high_confidence_mainstream_candidates(candidates)
+        self.assertEqual(must[0]["id"], "scr-b")
+        self.assertEqual(len(must), 2)
+
+    def test_weighted_and_mainstream_recall(self) -> None:
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "id": "scr-m1",
+                        "title": "OpenAI eval framework",
+                        "confidence": "high",
+                        "signal_class": "mainstream_product",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://openai.com/eval"],
+                    },
+                    {
+                        "id": "scr-u1",
+                        "title": "Operator review workflow note",
+                        "confidence": "medium",
+                        "signal_class": "user_workflow",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://example.com/field"],
+                    },
+                    {
+                        "id": "scr-i1",
+                        "title": "Tiny sandbox runtime",
+                        "confidence": "high",
+                        "signal_class": "infra_primitive",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://github.com/x/sandbox"],
+                    },
+                ]
+            }
+        )
+        # Cover only mainstream + user; miss infra.
+        result = {
+            "summary": "Covered OpenAI eval and operator review",
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": "scr-m1 OpenAI eval framework\nscr-u1 Operator review workflow note\n",
+                }
+            ],
+        }
+        details = cloud_agent_runner.compute_synthesis_recall_details(screen, result)
+        self.assertLess(details["recall"], 1.0)
+        self.assertGreaterEqual(details["weighted_recall"], 0.8)
+        self.assertEqual(details["mainstream_recall"], 1.0)
+
+    def test_must_cover_rejects_dropped_mainstream(self) -> None:
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "id": "scr-sec",
+                        "title": "Security advisories for Claude Code",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "signal_class": "mainstream_product",
+                        "infra_angle": "security",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://example.com/claude-advisory"],
+                    },
+                    {
+                        "id": "scr-oa",
+                        "title": "OpenAI launches automated evaluations",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "signal_class": "mainstream_product",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://openai.com/evals"],
+                    },
+                    {
+                        "id": "scr-adk",
+                        "title": "Google ADK Go 2.0 multi-agent",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "signal_class": "mainstream_product",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://developers.googleblog.com/adk"],
+                    },
+                ]
+            }
+        )
+        result = {
+            "summary": "Only covered OpenAI",
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI launches automated evaluations.\n"
+                        "  - Source: https://openai.com/evals\n"
+                    ),
+                }
+            ],
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_must_cover_mainstream(result, screen)
+        self.assertIn("high-confidence mainstream", str(ctx.exception))
+
+    def test_must_cover_accepts_gaps_explanation(self) -> None:
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "id": "scr-sec",
+                        "title": "Security advisories for Claude Code",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "signal_class": "mainstream_product",
+                        "infra_angle": "security",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://example.com/claude-advisory"],
+                    }
+                ]
+            }
+        )
+        result = {
+            "summary": "Deferred security item",
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped eval tooling.\n"
+                        "  - Source: https://openai.com/evals\n\n"
+                        "#### 7. Gaps\n\n"
+                        "- Dropped: Security advisories for Claude Code (scr-sec) pending corroboration.\n"
+                    ),
+                }
+            ],
+        }
+        cloud_agent_runner.validate_must_cover_mainstream(result, screen)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["must_cover_missing"], 0)
+
+    def test_stale_roundup_requires_label(self) -> None:
+        unlabeled = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: GitHub Copilot in VS Code June 2026 releases.\n"
+                        "  - Source: https://github.blog/changelog/copilot\n"
+                    ),
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_freshness(unlabeled)
+        self.assertIn("stale-roundup", str(ctx.exception))
+
+        labeled = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: GitHub Copilot in VS Code June 2026 releases.\n"
+                        "  - Freshness: stale-roundup\n"
+                        "  - Source: https://github.blog/changelog/copilot\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.validate_daily_freshness(labeled)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["stale_roundup_count"], 0)
+
+    def test_compact_screening_lists_must_cover(self) -> None:
+        screen = json.dumps(
+            {
+                "summary": "test",
+                "candidates": [
+                    {
+                        "id": "scr-sec",
+                        "title": "Security advisories for Claude Code",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "signal_class": "mainstream_product",
+                        "infra_angle": "security",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://example.com/claude-advisory"],
+                        "why_it_matters": "Security",
+                    },
+                    {
+                        "id": "scr-oa",
+                        "title": "OpenAI launches automated evaluations",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "signal_class": "mainstream_product",
+                        "promotion_status": "candidate",
+                        "evidence": ["https://openai.com/evals"],
+                        "why_it_matters": "Eval",
+                    },
+                ],
+            }
+        )
+        compact = cloud_agent_runner.compact_screening_for_prompt(screen)
+        self.assertIn("Must-cover high-confidence mainstream", compact)
+        self.assertIn("MUST scr-sec", compact)
+
 
 if __name__ == "__main__":
     unittest.main()
