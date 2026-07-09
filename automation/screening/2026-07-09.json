@@ -1,0 +1,189 @@
+{
+  "summary": "Agent Radar screening: major platform updates (OpenAI, Google, Anthropic, Apple, Microsoft) and user workflow reports dominate. MCP becomes standard infrastructure; security vulnerabilities in Claude Code and Cline surfaced. Debugging tools (agent-inspect) and evals (vibesec-evals) gain traction.",
+  "candidates": [
+    {
+      "id": "scr-4a1b2c3d",
+      "title": "OpenAI: Separating Signal from Noise Coding Evaluations",
+      "why_it_matters": "New evaluation framework for coding agents from OpenAI.",
+      "evidence": [
+        "https://openai.com/index/separating-signal-from-noise-coding-evaluations"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5e6f7g8h",
+      "title": "Google ADK Go 2.0: Multi-Agent Applications",
+      "why_it_matters": "Graph-based workflow engine for multi-agent apps.",
+      "evidence": [
+        "https://developers.googleblog.com/announcing-adk-go-20/"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-9i0j1k2l",
+      "title": "agent-inspect: Local Execution Trees for Agents",
+      "why_it_matters": "Debugging tool for TypeScript agents with 208 stars.",
+      "evidence": [
+        "https://github.com/rajudandigam/agent-inspect"
+      ],
+      "confidence": "high",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3m4n5o6p",
+      "title": "Apple Ships Second MCP Server",
+      "why_it_matters": "MCP becoming standard platform infrastructure.",
+      "evidence": [
+        "https://bsky.app/profile/thenewstack.io/post/3mq67xgxcb32m"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-7q8r9s0t",
+      "title": "GitHub Copilot in VS Code June 2026 Releases",
+      "why_it_matters": "Ongoing improvements to leading coding agent.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases"
+      ],
+      "confidence": "high",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-1u2v3w4x",
+      "title": "The Making of Claude Code",
+      "why_it_matters": "Behind-the-scenes look at Anthropic's coding agent.",
+      "evidence": [
+        "https://www.anthropic.com/features/making-of-claude-code"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5y6z7a8b",
+      "title": "OpenAI Codex 0.144.0 Alpha",
+      "why_it_matters": "Active development of OpenAI's coding agent.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.144.0-alpha.2"
+      ],
+      "confidence": "high",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-9c0d1e2f",
+      "title": "Microsoft Flint: Visualization Language for AI Agents",
+      "why_it_matters": "New tool for understanding agent behavior.",
+      "evidence": [
+        "https://microsoft.github.io/flint-chart/#/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3g4h5i6j",
+      "title": "Claude Code Changes: /doctor, /checkup, Cowork VM-mode",
+      "why_it_matters": "Field report of recent Claude Code feature updates.",
+      "evidence": [
+        "https://bsky.app/profile/claudecodechanges.bsky.social/post/3mq63l67apb2a"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-7k8l9m0n",
+      "title": "Claude Sci Discussion on Reddit",
+      "why_it_matters": "User reaction to Anthropic's new scientific agent.",
+      "evidence": [
+        "https://www.reddit.com/r/ClaudeAI/comments/1uradyh/claude_sci_just_dropped_and_its_got_me_thinking/"
+      ],
+      "confidence": "low",
+      "relevance_score": 2,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-1o2p3q4r",
+      "title": "Fortress: Stealth Chromium for Browser Agents",
+      "why_it_matters": "Avoids detection for automated browser agents.",
+      "evidence": [
+        "https://github.com/tiliondev/fortress"
+      ],
+      "confidence": "high",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5s6t7u8v",
+      "title": "China Security Vulnerabilities in Claude Code",
+      "why_it_matters": "State-level security concern for Anthropic's agent.",
+      "evidence": [
+        "https://www.wsj.com/tech/ai/china-says-it-has-found-security-vulnerabilities-in-anthropics-claude-code-5ecf05dc",
+        "https://www.reuters.com/legal/litigation/china-issues-backdoor-security-alert-over-anthropics-claude-code-2026-07-08/"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": [
+    "Missing research: academic papers with agent relevance (e.g., benchmarks, papers) – consider adding Databricks benchmarking or Dan Luu analysis if needed."
+  ]
+}

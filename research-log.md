@@ -1550,3 +1550,40 @@ Follow-up gaps:
 - Track whether Claude Code and Devin Desktop reliability fixes reduce public complaints about stale background sessions, worktree isolation, or large session crashes.
 - Seek public evidence on Replit Agent-created payment flows: correctness, approval boundaries, audit trail, and failure recovery.
 - Continue monitoring Prismor, Tree-Ring Memory, AgentWeaver, and other 2026-07-08 screening candidates for adoption or differentiation before promotion.
+
+
+### 2026-07-09 Daily Run Candidates
+
+- **OpenAI: Separating Signal from Noise Coding Evaluations** (scr-4a1b2c3d): New evaluation framework for coding agents from OpenAI. Why it matters: May set industry standard for coding agent benchmarks. Evidence strength: Strong (official blog). Relevance score: 5 (eval infra). Defer reason: Await community adoption and comparison with existing benchmarks. Follow-up needed: Monitor benchmark usage and third-party analysis. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
+  - Source: https://openai.com/index/separating-signal-from-noise-coding-evaluations
+
+- **Google ADK Go 2.0: Multi-Agent Applications** (scr-5e6f7g8h): Graph-based workflow engine for multi-agent apps from Google. Why it matters: Robust orchestration for multi-agent systems. Evidence strength: Strong (official blog). Relevance score: 5 (framework). Defer reason: Needs adoption evidence and integration with other agent frameworks. Follow-up needed: Watch for user projects and third-party tooling. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 45.
+  - Source: https://developers.googleblog.com/announcing-adk-go-20/
+
+- **Claude Code Changes: /doctor, /checkup, Cowork VM-mode** (scr-3g4h5i6j): Field report of recent Claude Code feature updates. Why it matters: Improving developer experience for reliable agent operation. Evidence strength: Weak (single social media report). Relevance score: 3 (user workflow). Defer reason: Wait for official release notes or multiple user reports. Follow-up needed: Check Anthropic changelog for these features. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://bsky.app/profile/claudecodechanges.bsky.social/post/3mq63l67apb2a
+
+- **Claude Sci Discussion on Reddit** (scr-7k8l9m0n): User reaction to Anthropic's new scientific agent. Why it matters: Indicates community interest in domain-specific agents. Evidence strength: Weak (single Reddit thread). Relevance score: 2 (user workflow). Defer reason: Needs more widespread user feedback or official announcements about Claude Sci's capabilities. Follow-up needed: Monitor for Anthropic blog post or academic evaluations. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1uradyh/claude_sci_just_dropped_and_its_got_me_thinking/
+
+- **agent-inspect: Local Execution Trees for Agents** (scr-9i0j1k2l): Debugging tool for TypeScript agents with 208 stars. Why it matters: Improves agent observability and debugging. Evidence strength: Medium (208 stars, active repo). Relevance score: 4 (debugging infra). Defer reason: Needs integration with major agent frameworks. Follow-up needed: Test with popular agent systems. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://github.com/rajudandigam/agent-inspect
+
+- **Fortress: Stealth Chromium for Browser Agents** (scr-1o2p3q4r): Avoids detection for automated browser agents. Why it matters: Enables stealth operation for browser agents. Evidence strength: Weak (early repo, no star count). Relevance score: 3 (infra). Defer reason: Potential for misuse; needs legitimate use-case documentation. Follow-up needed: Check for official blog or integration guides. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://github.com/tiliondev/fortress
+
+- **Apple Ships Second MCP Server** (scr-3m4n5o6p): MCP becoming standard platform infrastructure. Why it matters: Reinforces platform adoption of MCP. Evidence strength: Medium (news report). Relevance score: 4 (infra). Defer reason: No official Apple announcement; rely on secondary source. Follow-up needed: Confirm with Apple's official developer communications. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://bsky.app/profile/thenewstack.io/post/3mq67xgxcb32m
+
+- **GitHub Copilot in VS Code June 2026 Releases** (scr-7q8r9s0t): Ongoing improvements to leading coding agent. Why it matters: Continuous evolution of a widely used coding agent. Evidence strength: Strong (official changelog). Relevance score: 4 (product). Defer reason: Frequent updates; track for major feature changes rather than routine improvements. Follow-up needed: Note any agent mode expansions. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases
+
+Follow-up gaps:
+- Missing academic papers with agent relevance (benchmarks, papers) – consider adding Databricks benchmarking or Dan Luu analysis if needed.
+
+
+## Source-sweep pass (2026-07-09)
+
+- Used screening pass `automation/screening/2026-07-09.json` to capture new candidates.
+- All candidates identified in the screening pass were already captured in the `## 2026-07-09 Daily Run Candidates` section.
+- Follow-up gap: Missing academic papers with agent relevance (benchmarks, papers) – consider adding Databricks benchmarking or Dan Luu analysis if needed.

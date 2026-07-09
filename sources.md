@@ -354,3 +354,19 @@ Ignore or deprioritize:
 - Aguara: https://github.com/salasi1204/aguara
 - AgentWeaver: https://github.com/sabbour/agentweaver
 - DeepSeek-Infra: https://github.com/leizd/DeepSeek-Infra
+
+
+## Additional sources from 2026-07-09 daily run
+- OpenAI: Separating Signal from Noise Coding Evaluations: https://openai.com/index/separating-signal-from-noise-coding-evaluations
+- Google ADK Go 2.0: https://developers.googleblog.com/announcing-adk-go-20/
+- agent-inspect: https://github.com/rajudandigam/agent-inspect
+- Fortress: https://github.com/tiliondev/fortress
+- Claude Code Changes (Bluesky): https://bsky.app/profile/claudecodechanges.bsky.social/post/3mq63l67apb2a
+- Apple MCP Server (News): https://bsky.app/profile/thenewstack.io/post/3mq67xgxcb32m
+- Claude Sci Reddit discussion: https://www.reddit.com/r/ClaudeAI/comments/1uradyh/claude_sci_just_dropped_and_its_got_me_thinking/
+- GitHub Copilot June 2026 releases: https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases
+
+
+## Source-sweep 2026-07-09
+
+No new sources added beyond those already listed in the daily run sources section. Screening pass sourced from automation/screening/2026-07-09.json.
