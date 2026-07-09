@@ -284,6 +284,41 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertIn("updated content here", text)
             self.assertNotIn("shell", text)
 
+    def test_replace_section_strips_day_heading_from_body(self) -> None:
+        """Models often put ## YYYY-MM-DD inside replace_section content; strip it."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Daily\n\n## 2026-07-09\n\n### English\n\n- Signal: shell\n\n### 中文\n\n- 信号：占位\n",
+                encoding="utf-8",
+            )
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["daily/2026-07.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "daily/2026-07.md",
+                            "mode": "replace_section",
+                            "anchor": "## 2026-07-09",
+                            "content": (
+                                "## 2026-07-09\n\n### English\n\n"
+                                "- Signal: Anthropic containment note.\n\n"
+                                "### 中文\n\n"
+                                "- 信号：Anthropic 隔离说明。\n"
+                            ),
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertEqual(text.count("## 2026-07-09"), 1)
+            self.assertIn("Anthropic containment", text)
+            self.assertNotIn("shell", text)
+
     def test_rejects_append_spanning_multiple_existing_days(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
