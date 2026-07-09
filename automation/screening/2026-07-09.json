@@ -1,304 +1,219 @@
 {
-  "summary": "Anthropic expands Claude Cowork to mobile/web; security concerns rise with GitLost prompt injection; open-source sandbox and agent orchestration tools gain traction.",
+  "summary": "Key signals: Claude Cowork mobile/web launch, Anthropic's Claude Code story, GhostApproval symlink attack, and AWS S3/FSx storage patterns. Also: MemOS, Omnigent, MCP Zoho Books, and memory security research.",
   "candidates": [
     {
-      "id": "scr-abc12345",
-      "title": "Claude Cowork expands to mobile and web for Max subscribers",
-      "why_it_matters": "Anthropic shifts Cowork \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "id": "scr-abc001",
+      "title": "Claude Cowork now on mobile and web",
+      "why_it_matters": "Agent workspace moves to cloud, non-code tasks now cross-device; social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://bsky.app/profile/thedurabilitycurve.bsky.social/post/3mq65x2bzqz2f",
-        "https://bsky.app/profile/nexttool.bsky.social/post/3mq6u4zp2wj2i"
+        "https://bsky.app/profile/aifoundersczech.bsky.social/post/3mq74geil2p2p",
+        "https://bsky.app/profile/thedurabilitycurve.bsky.social/post/3mq65x2bzqz2f"
       ],
       "confidence": "high",
-      "relevance_score": 10,
+      "relevance_score": 9,
       "source_diversity": 2,
       "signal_class": "mainstream_product",
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "follow-up",
+      "next_check": "anthropic.com official post",
       "source_visibility": "Public",
       "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium"
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
     },
     {
-      "id": "scr-abc12346",
-      "title": "GitLost: prompt injection via GitHub Issue leaks private repo data",
-      "why_it_matters": "Demonstrates concrete se\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
-      "evidence": [
-        "https://bsky.app/profile/nestwhirr.bsky.social/post/3mq62jomgnz2p"
-      ],
-      "confidence": "medium",
-      "relevance_score": 9,
-      "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium"
-    },
-    {
-      "id": "scr-abc12347",
-      "title": "Verification loop 4x's DeepSeek intelligence, matching Opus at 1/7 cost",
-      "why_it_matters": "Shows a simple verification loop dramatically improves coding agent performance at lower cost.",
-      "evidence": [
-        "https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e"
-      ],
-      "confidence": "medium",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "signal_class": "research",
-      "infra_angle": "eval",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-abc12348",
-      "title": "OpenSandbox: 11.9k stars sandbox runtime for AI agents",
-      "why_it_matters": "High-star open-source sandbox runtime signals strong community interest in secure agent execution.",
-      "evidence": [
-        "https://github.com/opensandbox-group/OpenSandbox"
-      ],
-      "confidence": "high",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "sandbox",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-abc12349",
-      "title": "Claude Cowork usage data: only 8.7% coding, mostly reports/spreadsheets",
-      "why_it_matters": "Reveals real-world agent\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
-      "evidence": [
-        "https://bsky.app/profile/nexttool.bsky.social/post/3mq6u4zp2wj2i"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium"
-    },
-    {
-      "id": "scr-abc12350",
-      "title": "OpenAI Codex 0.144.0-alpha.4 release",
-      "why_it_matters": "Latest alpha of OpenAI's coding agent, indicates ongoing development and new features.",
-      "evidence": [
-        "https://github.com/openai/codex/releases/tag/rust-v0.144.0-alpha.4"
-      ],
-      "confidence": "high",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-abc12350",
-      "title": "Anthropic publishes 'The Making of Claude Code'",
-      "why_it_matters": "Official inside story of Claude Code's evolution from internal CLI to product, with engineering insights.",
+      "id": "scr-abc002",
+      "title": "Anthropic publishes 'Making of Claude Code' behind-the-scenes",
+      "why_it_matters": "First-party deep dive on agent coding tool origins and design",
       "evidence": [
         "https://www.anthropic.com/features/making-of-claude-code"
       ],
       "confidence": "high",
-      "relevance_score": 7,
+      "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": ""
     },
     {
-      "id": "scr-abc12350",
-      "title": "Memory Poisoning Attacks on LLM Agents (arXiv paper)",
-      "why_it_matters": "Research highlights new \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "id": "scr-abc003",
+      "title": "GhostApproval: AI coding agents tricked by symlink attack",
+      "why_it_matters": "Security vulnerability f\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq6ttnkr5d2r"
+        "https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22"
       ],
       "confidence": "medium",
-      "relevance_score": 6,
+      "relevance_score": 8,
       "source_diversity": 1,
-      "signal_class": "research",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium"
-    },
-    {
-      "id": "scr-abc12351",
-      "title": "HelixDB: graph database built on object storage",
-      "why_it_matters": "New graph DB on object storage could impact agent memory and data persistence patterns.",
-      "evidence": [
-        "https://github.com/HelixDB/helix-db/tree/main"
-      ],
-      "confidence": "medium",
-      "relevance_score": 5,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "storage",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-abc12352",
-      "title": "Agent-desktop: native desktop automation CLI for AI agents",
-      "why_it_matters": "Enables agents to control desktop environments, expanding automation scope beyond code.",
-      "evidence": [
-        "https://github.com/lahfir/agent-desktop"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-abc12353",
-      "title": "DeepSeek V4 gaining agentic token share",
-      "why_it_matters": "DeepSeek V4 adoption in agent workflows signals a shift in the model landscape for agents.",
-      "evidence": [
-        "https://openrouter.ai/blog/insights/deepseek-v4-adoption/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-abc12354",
-      "title": "Blackpoint AI SOC Agent autonomously contains identity-based attacks",
-      "why_it_matters": "Production AI agent for \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
-      "evidence": [
-        "https://bsky.app/profile/hapsis.bsky.social/post/3mq5rjvwlec2g"
-      ],
-      "confidence": "medium",
-      "relevance_score": 5,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
+      "signal_class": "user_workflow",
       "infra_angle": "security",
       "promotion_status": "candidate",
-      "next_check": "follow-up",
+      "next_check": "official disclosure post",
       "source_visibility": "Public",
       "evidence_basis": "social_discussion",
       "evidence_strength": "Medium"
     },
     {
-      "id": "scr-abc12355",
-      "title": "OpenAI blog: separating signal from noise in coding evaluations",
-      "why_it_matters": "OpenAI's approach to coding eval could influence how agent performance is measured industry-wide.",
+      "id": "scr-abc004",
+      "title": "Claude Code workflow: write failing test first, then pass it",
+      "why_it_matters": "Concrete prompt technique from a user: test-driven agent workflow; social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://openai.com/index/separating-signal-from-noise-coding-evaluations"
+        "https://bsky.app/profile/happy-homhom.bsky.social/post/3mq74kpxfox2y"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "more user reports",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-abc005",
+      "title": "DaVinci Resolve MCP Server – full scripting API via MCP",
+      "why_it_matters": "Concrete MCP integration\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/githubprojects.bsky.social/post/3mq6z2ls4cw2d"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "official repo docs",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-abc006",
+      "title": "MemOS: self-evolving persistent memory for agents",
+      "why_it_matters": "10k stars, hybrid retrieval with 35% token savings; agent memory infra",
+      "evidence": [
+        "https://github.com/MemTensor/MemOS"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "user adoption metrics",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-abc007",
+      "title": "Omnigent: open-source agent meta-harness orchestration",
+      "why_it_matters": "6.8k stars, orchestrates Claude Code/Codex/Cursor; policy and sandboxing",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "release notes",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-abc008",
+      "title": "Zoho Books MCP: safety-gated bookkeeping for agents",
+      "why_it_matters": "Autonomous GL and bank feed access via MCP, read-only default",
+      "evidence": [
+        "https://github.com/Operamatix/zoho-books-mcp"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "user reports or official blog",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-abc009",
+      "title": "AW S S3 versioning zero-downtime patterns",
+      "why_it_matters": "Mission-critical S3 versioning patterns for agent-managed storage",
+      "evidence": [
+        "https://aws.amazon.com/blogs/storage/zero-downtime-amazon-s3-versioning-architectural-patterns-for-mission-critical-workloads/"
       ],
       "confidence": "high",
       "relevance_score": 6,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "eval",
+      "infra_angle": "storage",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": ""
     },
     {
-      "id": "scr-abc12356",
-      "title": "Reddit: Claude Tag in Slack stale session survived reinstall, security model rebuilt",
-      "why_it_matters": "Real-world security inci\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "id": "scr-abc010",
+      "title": "Memory poisoning attacks on LLM agents: new paper",
+      "why_it_matters": "Security research showing agents vulnerable to memory corruption; social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://www.reddit.com/r/ClaudeAI/comments/1urgf6n/i_rolled_out_claude_tag_in_slack_a_stale_session/"
+        "https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq6zqcp56424"
       ],
       "confidence": "medium",
-      "relevance_score": 6,
+      "relevance_score": 7,
       "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "security",
+      "signal_class": "research",
+      "infra_angle": "memory",
       "promotion_status": "candidate",
-      "next_check": "follow-up",
+      "next_check": "full paper on arXiv",
       "source_visibility": "Public",
       "evidence_basis": "social_discussion",
       "evidence_strength": "Medium"
     },
     {
-      "id": "scr-abc12357",
-      "title": "Mitos: millisecond microVM sandbox forking for AI agents on K8s",
-      "why_it_matters": "Enables fast sandbox forking for agents, improving isolation and scalability.",
+      "id": "scr-abc011",
+      "title": "DeepSeek pricing page update",
+      "why_it_matters": "Major model provider changes pricing; impacts agent cost calculations",
       "evidence": [
-        "https://github.com/mitos-run/mitos"
+        "https://api-docs.deepseek.com/quick_start/pricing",
+        "https://api-docs.deepseek.com/"
       ],
-      "confidence": "medium",
+      "confidence": "high",
       "relevance_score": 5,
       "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "sandbox",
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
+      "next_check": "changelog for new models"
     },
     {
-      "id": "scr-abc12358",
-      "title": "Hyperframes: write HTML, render video, built for agents",
-      "why_it_matters": "Enables agents to generate video content from HTML, expanding agent output modalities.",
+      "id": "scr-abc012",
+      "title": "User reports $165k cost for pre-merge agent run",
+      "why_it_matters": "Concrete cost data: 5.9B\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
       "evidence": [
-        "https://github.com/heygen-com/hyperframes"
+        "https://bsky.app/profile/hazelweakly.me/post/3mq75exdrkk2n"
       ],
-      "confidence": "medium",
-      "relevance_score": 4,
+      "confidence": "low",
+      "relevance_score": 7,
       "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "runtime",
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-abc12358",
-      "title": "Orca: ADE for parallel agent fleets, 14.4k stars",
-      "why_it_matters": "High-star agent development environment for running multiple agents in parallel.",
-      "evidence": [
-        "https://github.com/stablyai/orca"
-      ],
-      "confidence": "medium",
-      "relevance_score": 5,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
+      "next_check": "more context from user",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
     }
   ],
   "gaps": [
-    "Missing mainstream_product: Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta changelog or product news.",
-    "Missing user_workflow: additional concrete operator field reports beyond GitLost and Claude Tag Slack incident."
+    "Missing mainstream_product: Google/Microsoft/Cursor/GitHub changelog or release",
+    "Missing user_workflow: more concrete field reports from different domains"
   ]
 }

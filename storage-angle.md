@@ -169,3 +169,12 @@ AI Agent workloads create demand for:
 - Will agent memory be stored as documents, vectors, logs, or versioned objects?
 - Will enterprise data layers (databases, secrets, identity, workflow) become standard agent-accessible storage surfaces via MCP?
 - How should agent access to production databases and secrets be governed, audited, and retained?
+
+
+## 2026-07-09
+
+- **AWS S3 versioning zero-downtime patterns**: AWS published architectural patterns for zero-downtime S3 versioning in mission-critical workloads, covering lifecycle transitions, cross-region replication, and versioning for data protection. Directly relevant to agent workspace storage — versioned object storage enables agent artifact snapshots, replayable execution history, and rollback for agent-generated files. Evidence strength: Strong (official AWS blog). Source: https://aws.amazon.com/blogs/storage/zero-downtime-amazon-s3-versioning-architectural-patterns-for-mission-critical-workloads/
+
+- **Memory poisoning implies storage-level memory isolation**: ArXiv paper on memory poisoning attacks against LLM agents suggests that agent memory systems need storage-level isolation — separate memory namespaces, integrity checks on persisted memory objects, and versioned memory snapshots for rollback after corruption detection. This connects agent memory infrastructure to storage versioning and integrity patterns. Evidence strength: Medium (academic paper). Source: https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq6zqcp56424
+
+- **MemOS hybrid retrieval memory**: MemOS claims 35% token savings with self-evolving persistent memory using hybrid retrieval. If validated, this implies that agent memory storage can be optimized at the retrieval layer, reducing both storage footprint and inference cost. Evidence strength: Medium (GitHub repo, 10k+ stars). Source: https://github.com/MemTensor/MemOS

@@ -12,9 +12,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Source: https://github.com/openai/codex/releases/tag/rust-v0.144.0-alpha.4
 ## Claude Code
 - Category: Coding agent
-- Maturity: Active coding-agent product with growing developer adoption; broad market-share evidence still sparse.
-- Recent changes: Anthropic published "The Making of Claude Code," detailing origins from alpha CLI to $2.5B annual run-rate product. Public security reporting around a 0DIN proof of concept focused on Claude Code and clean-looking repositories.
-- Source: https://www.anthropic.com/features/making-of-claude-code
+- Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
+- Recent changes: Anthropic published 'The Making of Claude Code' behind-the-scenes article detailing origins and design rationale. GhostApproval symlink attack disclosed — coding agents tricked by symlinks into approving malicious changes. User workflow reports include TDD prompt technique (write failing test first) and $165k pre-merge run cost anecdote.
+- Evidence strength: Strong (official blog); Medium (security and user reports).
+- Sources: https://www.anthropic.com/features/making-of-claude-code, https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22, https://bsky.app/profile/happy-homhom.bsky.social/post/3mq74kpxfox2y
+- Watch next: Whether GhostApproval gets CVE assignment; whether cost reports drive official cost-management features.
 ## Cursor
 
 Status:
@@ -301,10 +303,9 @@ Name:
 
 
 ## Claude Cowork
-
 - Category: Task agent / productivity agent
 - Maturity: Expanding from web to mobile; currently available to Max subscribers.
-- Recent changes: Expanded to mobile and web for Max subscribers (2026-07-09).
-- Evidence strength: Medium (social/discussion source)
-- Source: https://bsky.app/profile/thedurabilitycurve.bsky.social/post/3mq65x2bzqz2f
-- replace_section anchor: `## Claude Cowork`
+- Recent changes: Expanded to mobile and web for Max subscribers (2026-07-09). Social discussion confirms non-code tasks (reports, spreadsheets) dominate early usage at 8.7% coding; signals enterprise office automation as leading use case rather than coding.
+- Evidence strength: Medium (social discussion corroboration).
+- Source: https://bsky.app/profile/aifoundersczech.bsky.social/post/3mq74geil2p2p
+- Watch next: Whether Claude Cowork expands beyond Max tier; whether non-code task patterns stabilize into repeatable workflows.

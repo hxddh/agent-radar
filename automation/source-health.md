@@ -4,8 +4,6 @@ Last checked: 2026-07-09
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| crates:agent eval | ok |  |
-| open-vsx:agent eval | ok |  |
 | npm:agent observability | ok |  |
 | pypi-updates:agent observability | ok |  |
 | crates:agent observability | ok |  |
@@ -19,6 +17,8 @@ Last checked: 2026-07-09
 | feed:minio-blog | ok |  |
 | feed:aws-storage-blog | ok |  |
 | feed:cloudflare-blog | ok |  |
+| feed:hf-blog | ok |  |
+| feed:jiqizhixin | ok |  |
 | feed:huggingface-blog | ok |  |
 | feed:aws-whats-new | ok |  |
 | feed:vercel-changelog | ok |  |
@@ -28,7 +28,7 @@ Last checked: 2026-07-09
 | page:anthropic-engineering | ok |  |
 | page:google-developers-blog | ok |  |
 | page:qwen-blog | ok |  |
-| page:deepseek-news | error | HTTP Error 404: Not Found |
+| page:deepseek-news | ok |  |
 | page:devin-releases | ok |  |
 | page:replit-updates | ok |  |
 | page:warp-changelog | ok |  |

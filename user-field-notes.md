@@ -116,3 +116,14 @@ Public-safe summary: A Reddit launch thread for the Copilot app showed mixed ear
 Source: https://www.reddit.com/r/GithubCopilot/comments/1u8f5kt/the_github_copilot_app_is_now_ga/
 Public corroboration: Needed; no independent workflow write-up found in this run.
 Do not publish: Reddit usernames beyond what is visible at source; no private data used.
+
+
+## 2026-07-09
+
+- **$165k pre-merge agent run cost**: User on Bluesky reported a $165k cost for a pre-merge agent run, citing 5.9B token consumption. Concrete cost data point for large-scale agent operations. Number check: $165k and 5.9B tokens — verify before trusting. Evidence strength: Low (single anecdote). Source: https://bsky.app/profile/hazelweakly.me/post/3mq75exdrkk2n
+
+- **TDD agent workflow trick**: User shared a concrete prompt technique for Claude Code — instruct the agent to write a failing test first, then implement code to pass it. This constrains agent output and provides automatic verification. Evidence strength: Low (single social post). Source: https://bsky.app/profile/happy-homhom.bsky.social/post/3mq74kpxfox2y
+
+- **Claude Cowork non-code usage dominance**: Early usage data shows only 8.7% of Claude Cowork tasks are coding; majority are reports and spreadsheets. Counters assumption that agent usage starts with coding. Evidence strength: Medium. Source: https://bsky.app/profile/nexttool.bsky.social/post/3mq6u4zp2wj2i
+
+- **GhostApproval symlink attack**: AI coding agents can be tricked by symlinks into approving malicious changes or leaking files. Real-world security exploit targeting agent approval workflows. Evidence strength: Medium. Source: https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22

@@ -456,3 +456,15 @@ Ignore or deprioritize:
 - nothumansearch: agentic readiness search engine: https://github.com/unitedideas/nothumansearch
 - code-airlock: secure Docker microVM for coding agents: https://github.com/Screwnephropsnorvegicus769/code-airlock
 - kb-mcp-lite 0.5.22: https://pypi.org/project/kb-mcp-lite/0.5.22/
+
+
+## Additional sources from 2026-07-09 daily run (afternoon)
+
+- Claude Cowork mobile/web launch: https://bsky.app/profile/aifoundersczech.bsky.social/post/3mq74geil2p2p
+- GhostApproval symlink attack: https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22
+- $165k pre-merge agent run cost: https://bsky.app/profile/hazelweakly.me/post/3mq75exdrkk2n
+- TDD agent workflow (write failing test first): https://bsky.app/profile/happy-homhom.bsky.social/post/3mq74kpxfox2y
+- Memory poisoning attacks on LLM agents: https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq6zqcp56424
+- MemOS self-evolving persistent memory: https://github.com/MemTensor/MemOS
+- DaVinci Resolve MCP Server: https://bsky.app/profile/githubprojects.bsky.social/post/3mq6z2ls4cw2d
+- AWS S3 versioning zero-downtime patterns: https://aws.amazon.com/blogs/storage/zero-downtime-amazon-s3-versioning-architectural-patterns-for-mission-critical-workloads/
