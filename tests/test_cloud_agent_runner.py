@@ -2040,5 +2040,244 @@ class ContentTruthfulnessTest(unittest.TestCase):
             self.assertTrue(cloud_agent_runner.candidate_already_tracked(root, cand))
 
 
+class SignalDepthTest(unittest.TestCase):
+    """v0.9.0: social upgrades, number checks, storylines, weekly numbers."""
+
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+
+    def test_multi_platform_social_upgraded_to_strong(self) -> None:
+        data = {
+            "candidates": [
+                {
+                    "id": "scr-x",
+                    "title": "Claude Cowork mobile expansion",
+                    "confidence": "low",
+                    "signal_class": "mainstream_product",
+                    "evidence": [
+                        "https://bsky.app/profile/a/post/1",
+                        "https://www.reddit.com/r/ClaudeAI/comments/xyz/",
+                    ],
+                }
+            ]
+        }
+        enriched = cloud_agent_runner.enrich_social_candidates(data, None)
+        cand = enriched["candidates"][0]
+        self.assertEqual(cand["corroboration"], "multi-platform")
+        self.assertIn("Strong", cand["evidence_strength"])
+        self.assertEqual(cand["confidence"], "medium")
+
+    def test_social_mainstream_gets_official_url_attached(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            record = {
+                "url": "https://www.anthropic.com/news/claude-cowork-mobile",
+                "title": "Claude Cowork mobile expansion for Max subscribers",
+                "lane": "official",
+            }
+            (root / "automation" / "source-cache.jsonl").write_text(
+                json.dumps(record) + "\n", encoding="utf-8"
+            )
+            data = {
+                "candidates": [
+                    {
+                        "id": "scr-y",
+                        "title": "Claude Cowork mobile expansion",
+                        "confidence": "low",
+                        "signal_class": "mainstream_product",
+                        "evidence": ["https://bsky.app/profile/a/post/1"],
+                    }
+                ]
+            }
+            enriched = cloud_agent_runner.enrich_social_candidates(data, root)
+        cand = enriched["candidates"][0]
+        self.assertEqual(cand["corroboration"], "official-url-attached")
+        self.assertIn("https://www.anthropic.com/news/claude-cowork-mobile", cand["evidence"])
+
+    def test_social_without_official_match_stays_first_class(self) -> None:
+        data = {
+            "candidates": [
+                {
+                    "id": "scr-z",
+                    "title": "Grok new coding model rumor",
+                    "confidence": "medium",
+                    "signal_class": "mainstream_product",
+                    "evidence": ["https://bsky.app/profile/a/post/2"],
+                }
+            ]
+        }
+        enriched = cloud_agent_runner.enrich_social_candidates(data, None)
+        cand = enriched["candidates"][0]
+        self.assertEqual(cand["corroboration"], "pending-official")
+        # No demotion: confidence and class untouched.
+        self.assertEqual(cand["confidence"], "medium")
+        self.assertEqual(cand["signal_class"], "mainstream_product")
+
+    def test_extract_significant_numbers_filters_noise(self) -> None:
+        text = (
+            "Grok 4.5 has 1.5T parameters, 500K context, costs $2.5B; "
+            "CVE-2026-59723 CVSS 8.8, version 3.0.30, released 2026-07-09, 11.9k stars"
+        )
+        numbers = cloud_agent_runner.extract_significant_numbers(text)
+        self.assertIn(1.5e12, numbers)
+        self.assertIn(5e5, numbers)
+        self.assertIn(2.5e9, numbers)
+        self.assertIn(11.9e3, numbers)
+        self.assertNotIn(8.8, numbers)  # CVSS: small, insignificant
+        self.assertNotIn(2026.0, numbers)  # year/date stripped
+
+    def test_unverified_number_gets_labeled(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            record = {
+                "url": "https://bsky.app/profile/a/post/3",
+                "title": "Grok 4.5 released",
+                "note": "context window 500K",
+            }
+            (root / "automation" / "source-cache.jsonl").write_text(
+                json.dumps(record) + "\n", encoding="utf-8"
+            )
+            result = {
+                "updates": [
+                    {
+                        "path": "daily/2026-07.md",
+                        "mode": "append",
+                        "content": (
+                            "## 2026-07-09\n\n### English\n\n"
+                            "#### 1. New Signals\n\n"
+                            "- Signal: Grok 4.5 with 1.5T parameters and 500K context.\n"
+                            "  - Source: https://bsky.app/profile/a/post/3\n"
+                        ),
+                    }
+                ]
+            }
+            labeled = cloud_agent_runner.repair_unverified_numbers(result, root)
+        self.assertEqual(labeled, 1)
+        content = result["updates"][0]["content"]
+        self.assertIn("Number check: 1.5T not found", content)
+        # 500K matched the snapshot note, so it is not flagged.
+        self.assertNotIn("500", content.split("Number check:")[1])
+
+    def test_supported_numbers_not_labeled(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            record = {
+                "url": "https://github.com/x/y",
+                "title": "sandbox runtime",
+                "note": "stars=11900",
+            }
+            (root / "automation" / "source-cache.jsonl").write_text(
+                json.dumps(record) + "\n", encoding="utf-8"
+            )
+            result = {
+                "updates": [
+                    {
+                        "path": "daily/2026-07.md",
+                        "mode": "append",
+                        "content": (
+                            "## 2026-07-09\n\n"
+                            "- Signal: sandbox repo hits 11.9k stars.\n"
+                            "  - Source: https://github.com/x/y\n"
+                        ),
+                    }
+                ]
+            }
+            labeled = cloud_agent_runner.repair_unverified_numbers(result, root)
+        self.assertEqual(labeled, 0)
+
+    def test_ongoing_storylines_detects_multi_day_urls(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-09")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text(
+                "## 2026-07-03\n\n- Signal: OpenSandbox.\n"
+                "  - Source: https://github.com/opensandbox-group/OpenSandbox\n\n---\n\n"
+                "## 2026-07-06\n\n- Signal: OpenSandbox again.\n"
+                "  - Source: https://github.com/opensandbox-group/OpenSandbox\n\n---\n\n"
+                "## 2026-07-08\n\n- Signal: one-off.\n"
+                "  - Source: https://example.com/once\n",
+                encoding="utf-8",
+            )
+            storylines = cloud_agent_runner.ongoing_storylines(root, day)
+            note = cloud_agent_runner.storylines_prompt_note(root, day)
+        self.assertEqual(len(storylines), 1)
+        url, count, last = storylines[0]
+        self.assertIn("opensandbox", url)
+        self.assertEqual(count, 2)
+        self.assertEqual(last, "2026-07-06")
+        self.assertIn("Freshness: follow-up", note)
+
+    def test_weekly_numbers_note_aggregates_telemetry(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-09")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation" / "telemetry").mkdir(parents=True)
+            records = [
+                {
+                    "date": "2026-07-08",
+                    "task": "daily",
+                    "vendor_families_covered": 6,
+                    "breadth_themes_covered": 4,
+                    "mainstream_recall": 0.8,
+                    "repeat_url_labeled": 1,
+                    "citation_urls_unreachable": 0,
+                    "numeric_claims_flagged": 2,
+                    "repo_reputation_demoted": 0,
+                    "social_discussion_labeled": 3,
+                },
+                {"date": "2026-07-08", "task": "source-sweep"},
+                {
+                    "date": "2026-07-02",
+                    "task": "daily",
+                    "vendor_families_covered": 4,
+                    "breadth_themes_covered": 3,
+                    "mainstream_recall": 0.5,
+                    "repeat_url_labeled": 0,
+                    "citation_urls_unreachable": 0,
+                    "numeric_claims_flagged": 0,
+                    "repo_reputation_demoted": 0,
+                    "social_discussion_labeled": 1,
+                },
+            ]
+            (root / "automation" / "telemetry" / "2026-07.jsonl").write_text(
+                "\n".join(json.dumps(r) for r in records) + "\n", encoding="utf-8"
+            )
+            note = cloud_agent_runner.weekly_numbers_note(root, day)
+        self.assertIn("By the Numbers", note)
+        self.assertIn("avg_vendor_families: 6", note)
+        self.assertIn("prev week: 4", note)
+
+    def test_candidate_id_is_url_canonical(self) -> None:
+        base = {
+            "confidence": "medium",
+            "signal_class": "infra_primitive",
+            "evidence": ["https://github.com/x/y"],
+        }
+        first = cloud_agent_runner.enrich_screening_with_ids(
+            {"candidates": [dict(base, title="Title one")]}
+        )["candidates"][0]["id"]
+        second = cloud_agent_runner.enrich_screening_with_ids(
+            {"candidates": [dict(base, title="A different title")]}
+        )["candidates"][0]["id"]
+        self.assertEqual(first, second)
+
+    def test_research_log_duplicate_url_warns(self) -> None:
+        old = "## Candidate inbox\n\n- **Old entry** (scr-a): https://example.com/tracked\n"
+        content = "\n- **New duplicate** (scr-b): https://example.com/tracked\n"
+        cloud_agent_runner.validate_research_log_append(old, content)
+        self.assertTrue(
+            any("already-tracked" in warning for warning in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_breadth_feeds_include_hf_and_jiqizhixin(self) -> None:
+        names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_FEEDS]
+        self.assertIn("hf-blog", names)
+        self.assertIn("jiqizhixin", names)
+
+
 if __name__ == "__main__":
     unittest.main()

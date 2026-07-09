@@ -161,6 +161,11 @@ The runner records direction coverage and weighted/mainstream recall in telemetr
 6. **Repo reputation** — repo-only candidates whose owner matches a throwaway pattern are deferred with `risk_flags`; do not surface them in day blocks. Any repo-only candidate needs a second independent source before promotion.
 7. **Weekly synthesis** — a new weekly must include a `Thesis Scorecard` (every radar.md thesis: confidence ↑/→/↓ + strongest evidence + strongest counter-evidence) and at least one `Signal vs Counter-signal` pair; the runner rejects it otherwise and warns when later passes drop these sections.
 8. **Monthly aggregation** — a new monthly must include a `### Weekly Coverage` section referencing each ISO week of the month; the monthly is an aggregation of weeklies, refreshed mid-month and at month end.
+9. **Number check** — significant numeric claims (money, %, k/m/b/t suffixes, magnitudes ≥1000) are compared against the cited source's snapshot title/note; unmatched numbers get a `Number check: ... verify before trusting` label. Applies to all source classes equally.
+10. **Social upgrade, never demote** — social/discussion candidates covered on ≥2 platforms are upgraded to Strong (multiple independent user reports); social-sourced mainstream claims get an official snapshot URL attached when one matches. `corroboration: pending-official` is informational only.
+11. **Storyline continuity** — the runner lists URLs covered on multiple recent days in the daily prompt; repeats must carry the delta and `Freshness: follow-up`.
+12. **Weekly By the Numbers** — runner-computed telemetry metrics with week-over-week deltas are injected into the weekly prompt; reproduce them under `### By the Numbers` (a missing section is warned post-apply).
+13. **Candidate id hygiene** — `scr-` ids are URL-canonical; re-adding an already-tracked URL to research-log triggers a warning. Update the existing entry instead of appending a duplicate.
 
 ## Evidence and safety
 
