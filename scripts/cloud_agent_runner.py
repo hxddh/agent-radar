@@ -1894,6 +1894,68 @@ def validate_daily_append_size(rel_path: str, mode: str, content: str) -> None:
         )
 
 
+def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
+    """Split scored items into a discussion shard and an official/repo shard.
+
+    Screening each shard separately doubles the effective candidate pool and
+    guarantees social/discussion items get a full screening pass instead of
+    competing with the GitHub long tail for the same 12 candidate slots."""
+    discussion: list[dict[str, str]] = []
+    rest: list[dict[str, str]] = []
+    for item in items:
+        lane = source_lane(item.get("source", ""))
+        if lane in DISCUSSION_BREADTH_LANES or lane == "hacker-news":
+            discussion.append(item)
+        else:
+            rest.append(item)
+    shards: list[tuple[str, list[dict[str, str]]]] = []
+    if rest:
+        shards.append(("official/repo", rest))
+    if discussion:
+        shards.append(("discussion", discussion))
+    return shards
+
+
+def candidate_dedupe_key(candidate: dict[str, Any]) -> str:
+    urls = candidate_evidence_urls(candidate)
+    if urls:
+        return urls[0].rstrip("/")
+    return str(candidate.get("title", "")).strip().lower()
+
+
+def merge_screening_payloads(payloads: list[dict[str, Any]]) -> dict[str, Any]:
+    """Merge shard screening results; first occurrence wins per evidence URL."""
+    merged: dict[str, Any] = {"summary": "", "candidates": [], "gaps": []}
+    summaries: list[str] = []
+    seen_keys: set[str] = set()
+    seen_gaps: set[str] = set()
+    for payload in payloads:
+        if not isinstance(payload, dict):
+            continue
+        summary = str(payload.get("summary", "")).strip()
+        if summary:
+            summaries.append(summary)
+        candidates = payload.get("candidates", [])
+        if isinstance(candidates, list):
+            for cand in candidates:
+                if not isinstance(cand, dict):
+                    continue
+                key = candidate_dedupe_key(cand)
+                if key and key in seen_keys:
+                    continue
+                seen_keys.add(key)
+                merged["candidates"].append(cand)
+        gaps = payload.get("gaps", [])
+        if isinstance(gaps, list):
+            for gap in gaps:
+                gap_text = str(gap).strip()
+                if gap_text and gap_text.lower() not in seen_gaps:
+                    seen_gaps.add(gap_text.lower())
+                    merged["gaps"].append(gap_text)
+    merged["summary"] = " | ".join(summaries)
+    return merged
+
+
 def preflight_shared_screening(
     shared_collection: tuple[Any, ...],
     root: Path,
@@ -1901,12 +1963,31 @@ def preflight_shared_screening(
 ) -> tuple[str, int]:
     items, _lane_stats, _errors, _raw_count = unpack_shared_collection(shared_collection)
     cap = env_int("MAX_SCREEN_SOURCE_ITEMS", DEFAULT_MAX_SCREEN_SOURCE_ITEMS)
-    compact = format_scored_items_for_screening(items, cap)
     screen_model = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
-    data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
-    screen_text = response_output_text(data)
+    shard_count = max(1, env_int("SCREENING_SHARDS", 2))
+    shards = screening_shard_items(items) if shard_count > 1 else []
+    if len(shards) < 2:
+        compact = format_scored_items_for_screening(items, cap)
+        data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
+        screen_text = response_output_text(data)
+        write_screening_artifact(root, day, screen_text)
+        RUN_AUDIT["screening_shards"] = 1
+        return screen_text, 1
+    payloads: list[dict[str, Any]] = []
+    calls = 0
+    for shard_name, shard_items in shards:
+        compact = format_scored_items_for_screening(shard_items, cap)
+        compact = f"Screening shard: {shard_name} sources only.\n{compact}"
+        data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
+        calls += 1
+        payload = parse_screening_json(response_output_text(data))
+        if payload:
+            payloads.append(payload)
+    merged = merge_screening_payloads(payloads)
+    RUN_AUDIT["screening_shards"] = calls
+    screen_text = json.dumps(merged, ensure_ascii=False)
     write_screening_artifact(root, day, screen_text)
-    return screen_text, 1
+    return screen_text, calls
 
 
 def strip_daily_day_block_wrapper(content: str, date_label: str) -> str:
@@ -2799,6 +2880,215 @@ def weekly_numbers_note(root: Path | None, day: dt.date) -> str:
     return "\n".join(lines)
 
 
+def claim_audit_bullets(result: dict[str, Any], cache: dict[str, dict[str, Any]]) -> list[tuple[int, str, str]]:
+    """(index, bullet, source_notes) for daily bullets that cite snapshot URLs."""
+    cache_by_key = {url.lower().rstrip("/"): record for url, record in cache.items()}
+    entries: list[tuple[int, str, str]] = []
+    index = 0
+    for body in daily_update_bodies(result):
+        for bullet in split_daily_signal_bullets(body):
+            index += 1
+            notes: list[str] = []
+            for url in extract_all_urls(bullet):
+                record = cache_by_key.get(url.lower().rstrip("/"))
+                if record:
+                    notes.append(f"{record.get('title', '')} -- {record.get('note', '')}".strip(" -"))
+            if notes:
+                entries.append((index, bullet, " | ".join(notes)))
+    return entries
+
+
+def build_claim_audit_prompt(entries: list[tuple[int, str, str]]) -> str:
+    lines = [
+        "You are auditing a daily report against its collected source snippets.",
+        "For each BULLET, compare its claims to SOURCE (title/note captured at collection time).",
+        "Flag ONLY clear overreach: facts, launches, availability status (GA vs preview),",
+        "attributions, or superlatives stated in the bullet but absent from or contradicted by SOURCE.",
+        "Missing detail in SOURCE alone is NOT overreach — snippets are short; do not flag",
+        "plausible elaboration, translations, or the bullet's own analysis/why-it-matters.",
+        'Return ONLY JSON: {"flags":[{"bullet":<number>,"reason":"<max 100 chars>"}]}.',
+        'Return {"flags":[]} when nothing clearly overreaches.',
+        "",
+    ]
+    for index, bullet, notes in entries:
+        head = bullet.splitlines()[0][:200]
+        detail = " ".join(bullet.split())[:500]
+        lines.append(f"BULLET {index}: {head}")
+        lines.append(f"  FULL: {detail}")
+        lines.append(f"  SOURCE: {notes[:500]}")
+    return "\n".join(lines)
+
+
+def run_claim_audit(root: Path | None, task: str, result: dict[str, Any]) -> int:
+    """Cheap-model audit that bullet claims stay within their cited sources.
+
+    Complements the deterministic number check with semantic overreach detection
+    (wrong availability status, misattribution). Applies to all source classes
+    equally; labels only, never rejects; fail-open on any error."""
+    if task != "daily" or root is None:
+        return 0
+    if not env_bool("CLAIM_AUDIT", True) or model_provider() != "openrouter":
+        return 0
+    cache = load_source_cache(root)
+    entries = claim_audit_bullets(result, cache)
+    if not entries:
+        return 0
+    try:
+        screen_model = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
+        data = call_openrouter_model(build_claim_audit_prompt(entries), screen_model)
+        RUN_AUDIT["openrouter_calls"] = int(RUN_AUDIT.get("openrouter_calls", 0)) + 1
+        payload = parse_screening_json(response_output_text(data))
+    except Exception as exc:  # Fail-open: an audit outage must not block the daily.
+        warning = f"Claim audit skipped ({str(exc)[:120]})"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+        return 0
+    flags = payload.get("flags", []) if isinstance(payload, dict) else []
+    reasons_by_index: dict[int, str] = {}
+    if isinstance(flags, list):
+        for flag in flags[:5]:
+            if not isinstance(flag, dict):
+                continue
+            try:
+                bullet_index = int(flag.get("bullet"))
+            except (TypeError, ValueError):
+                continue
+            reason = " ".join(str(flag.get("reason", "")).split())[:100]
+            if reason:
+                reasons_by_index[bullet_index] = reason
+    if not reasons_by_index:
+        RUN_AUDIT["claim_audit_flags"] = 0
+        return 0
+    counter = {"index": 0}
+
+    def _label(bullet: str) -> str:
+        counter["index"] += 1
+        reason = reasons_by_index.get(counter["index"])
+        if not reason or "claim audit:" in bullet.lower():
+            return bullet
+        lines = bullet.splitlines()
+        lines.append(f"  - Claim audit: {reason}; verify against source before trusting.")
+        return "\n".join(lines)
+
+    labeled = transform_report_update_bullets(result, _label, daily_only=True)
+    RUN_AUDIT["claim_audit_flags"] = labeled
+    if labeled:
+        warning = f"Claim audit labeled {labeled} bullet(s) as possibly exceeding their source"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return labeled
+
+
+def radar_open_questions(root: Path | None) -> list[str]:
+    if root is None:
+        return []
+    path = root / "radar.md"
+    if not path.exists():
+        return []
+    questions: list[str] = []
+    in_section = False
+    for line in read_text_full(path).splitlines():
+        if line.startswith("## "):
+            in_section = line.strip().lower() == "## open questions"
+            continue
+        if in_section and line.strip().startswith("- "):
+            questions.append(line.strip()[2:].strip())
+    return questions
+
+
+def stale_watchlist_entries(root: Path | None, day: dt.date, max_age_days: int = 21) -> list[str]:
+    """Watchlist sections whose newest ISO date is older than max_age_days (or undated)."""
+    if root is None:
+        return []
+    path = root / "agent-watchlist.md"
+    if not path.exists():
+        return []
+    stale: list[str] = []
+    current_name = ""
+    current_dates: list[str] = []
+
+    def _flush() -> None:
+        if not current_name or current_name.lower() in WATCHLIST_INDEX_SKIP_SECTIONS:
+            return
+        if not current_dates:
+            stale.append(f"{current_name} (undated)")
+            return
+        newest = max(current_dates)
+        try:
+            newest_day = dt.date.fromisoformat(newest)
+        except ValueError:
+            return
+        if (day - newest_day).days > max_age_days:
+            stale.append(f"{current_name} (last {newest})")
+
+    for line in read_text_full(path).splitlines():
+        if line.startswith("## "):
+            _flush()
+            current_name = line[3:].strip()
+            current_dates = []
+            continue
+        current_dates.extend(ISO_DATE_RE.findall(line))
+    _flush()
+    return stale
+
+
+def corroboration_queue(root: Path | None, day: dt.date, lookback_days: int = 14) -> list[str]:
+    """Unresolved verification labels from recent day blocks — work items, not noise."""
+    if root is None:
+        return []
+    queue: list[str] = []
+    markers = ("number check:", "pending-official", "needs corroboration", "claim audit:")
+    months = {month_label(day), month_label(day - dt.timedelta(days=lookback_days))}
+    for month in sorted(months):
+        path = root / "daily" / f"{month}.md"
+        if not path.exists():
+            continue
+        for date_label, block in daily_day_blocks(read_text_full(path)):
+            try:
+                block_day = dt.date.fromisoformat(date_label)
+            except ValueError:
+                continue
+            if block_day > day or (day - block_day).days > lookback_days:
+                continue
+            for bullet in split_daily_signal_bullets(block):
+                lower = bullet.lower()
+                if any(marker in lower for marker in markers):
+                    head = " ".join(bullet.splitlines()[0].split())[:120]
+                    queue.append(f"{date_label}: {head}")
+    return queue[-12:]
+
+
+def weekly_direction_notes(root: Path | None, day: dt.date) -> str:
+    """Direction assets injected into the weekly prompt so they keep moving:
+    open questions get scored, stale watchlist entries get refreshed or
+    deprioritized, and verification labels get resolved instead of piling up."""
+    sections: list[str] = []
+    questions = radar_open_questions(root)
+    RUN_AUDIT["open_questions_count"] = len(questions)
+    if questions:
+        sections.append(
+            "Open questions from radar.md — record movement under `### Open Questions Delta` "
+            "(resolved / new evidence / unchanged; retire questions answered by evidence):\n"
+            + "\n".join(f"- {question}" for question in questions)
+        )
+    stale = stale_watchlist_entries(root, day)
+    RUN_AUDIT["stale_watchlist_count"] = len(stale)
+    if stale:
+        sections.append(
+            "Stale watchlist entries (no dated update in 21 days) — refresh with new evidence "
+            "or mark deprioritized:\n" + "\n".join(f"- {entry}" for entry in stale[:8])
+        )
+    queue = corroboration_queue(root, day)
+    RUN_AUDIT["corroboration_queue_size"] = len(queue)
+    if queue:
+        sections.append(
+            "Corroboration queue — verification labels awaiting resolution; find the "
+            "primary/official source, upgrade the item, or mark it dropped:\n"
+            + "\n".join(f"- {entry}" for entry in queue)
+        )
+    return "\n\n".join(sections)
+
+
 def daily_english_section_headings(text: str) -> list[str]:
     """`#### ` headings inside the `### English` block of a day block."""
     headings: list[str] = []
@@ -2927,6 +3217,7 @@ def warn_missing_report_sections(root: Path, task: str, day: dt.date) -> None:
             ("Thesis Scorecard", WEEKLY_SCORECARD_RE),
             ("Signal vs Counter-signal", COUNTER_SIGNAL_RE),
             ("By the Numbers", WEEKLY_BY_THE_NUMBERS_RE),
+            ("Open Questions Delta", re.compile(r"open questions delta", re.IGNORECASE)),
         ]
     elif task == "monthly":
         path = root / "monthly" / f"{month_label(day)}.md"
@@ -4836,9 +5127,10 @@ def build_prompt(
         if storylines_note:
             task_rules += "\n" + storylines_note + "\n"
     elif task == "weekly":
-        numbers_note = weekly_numbers_note(root, day)
-        if numbers_note:
-            task_rules = "\n" + numbers_note + "\n"
+        notes = [weekly_numbers_note(root, day), weekly_direction_notes(root, day)]
+        combined = "\n\n".join(note for note in notes if note)
+        if combined:
+            task_rules = "\n" + combined + "\n"
     elif task == "monthly":
         weeks = ", ".join(iso_weeks_in_month(day))
         task_rules = (
@@ -5327,6 +5619,10 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "repeat_url_labeled": RUN_AUDIT.get("repeat_url_labeled", 0),
         "numeric_claims_flagged": RUN_AUDIT.get("numeric_claims_flagged", 0),
         "storylines_active": RUN_AUDIT.get("storylines_active", 0),
+        "claim_audit_flags": RUN_AUDIT.get("claim_audit_flags", 0),
+        "screening_shards": RUN_AUDIT.get("screening_shards", 0),
+        "corroboration_queue_size": RUN_AUDIT.get("corroboration_queue_size", 0),
+        "stale_watchlist_count": RUN_AUDIT.get("stale_watchlist_count", 0),
         "social_multi_platform_upgraded": RUN_AUDIT.get("social_multi_platform_upgraded", 0),
         "social_official_attached": RUN_AUDIT.get("social_official_attached", 0),
         "research_log_duplicate_urls": RUN_AUDIT.get("research_log_duplicate_urls", 0),
@@ -5447,6 +5743,11 @@ def run_task(
     RUN_AUDIT["cve_primary_source_added"] = 0
     RUN_AUDIT["numeric_claims_flagged"] = 0
     RUN_AUDIT["storylines_active"] = 0
+    RUN_AUDIT["claim_audit_flags"] = 0
+    RUN_AUDIT["screening_shards"] = 0
+    RUN_AUDIT["corroboration_queue_size"] = 0
+    RUN_AUDIT["stale_watchlist_count"] = 0
+    RUN_AUDIT["open_questions_count"] = 0
     RUN_AUDIT["social_multi_platform_upgraded"] = 0
     RUN_AUDIT["social_official_attached"] = 0
     RUN_AUDIT["research_log_duplicate_urls"] = 0
@@ -5537,6 +5838,7 @@ def run_task(
         raise SystemExit(f"Model did not return valid JSON: {output_text[:1000]}") from exc
 
     validate_synthesis_result(task, result, screen_text, root=root, day=day)
+    run_claim_audit(root, task, result)
     changed = apply_updates(root, allowed, result, task=task)
     warn_missing_report_sections(root, task, day)
     sources = result.get("sources", [])

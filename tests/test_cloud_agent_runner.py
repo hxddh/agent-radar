@@ -2279,5 +2279,218 @@ class SignalDepthTest(unittest.TestCase):
         self.assertIn("jiqizhixin", names)
 
 
+class AuditLoopTest(unittest.TestCase):
+    """v0.10.0: sharded screening, claim audit, direction-asset injection."""
+
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+
+    def test_screening_shard_split_by_lane(self) -> None:
+        items = [
+            {"source": "github", "title": "repo", "url": "https://github.com/a/b"},
+            {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1"},
+            {"source": "hacker-news", "title": "thread", "url": "https://news.ycombinator.com/item?id=1"},
+            {"source": "openai-blog", "title": "release", "url": "https://openai.com/x"},
+        ]
+        shards = dict(cloud_agent_runner.screening_shard_items(items))
+        self.assertEqual(len(shards["official/repo"]), 2)
+        self.assertEqual(len(shards["discussion"]), 2)
+
+    def test_merge_screening_payloads_dedupes_by_url(self) -> None:
+        merged = cloud_agent_runner.merge_screening_payloads(
+            [
+                {
+                    "summary": "official",
+                    "candidates": [
+                        {"title": "A", "evidence": ["https://example.com/a"]},
+                        {"title": "B", "evidence": ["https://example.com/b"]},
+                    ],
+                    "gaps": ["Missing user_workflow: x"],
+                },
+                {
+                    "summary": "discussion",
+                    "candidates": [
+                        {"title": "A retitled", "evidence": ["https://example.com/a"]},
+                        {"title": "C", "evidence": ["https://bsky.app/p/1"]},
+                    ],
+                    "gaps": ["Missing user_workflow: x", "Missing mainstream_product: y"],
+                },
+            ]
+        )
+        titles = [cand["title"] for cand in merged["candidates"]]
+        self.assertEqual(titles, ["A", "B", "C"])
+        self.assertEqual(len(merged["gaps"]), 2)
+        self.assertIn("official", merged["summary"])
+        self.assertIn("discussion", merged["summary"])
+
+    def test_preflight_shards_screening_calls(self) -> None:
+        items = [
+            {"source": "github", "title": "repo", "url": "https://github.com/a/b", "score": "10"},
+            {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1", "score": "10"},
+        ]
+        payloads = [
+            {"choices": [{"message": {"content": json.dumps({"summary": "s1", "candidates": [{"title": "A", "evidence": ["https://github.com/a/b"]}], "gaps": []})}}]},
+            {"choices": [{"message": {"content": json.dumps({"summary": "s2", "candidates": [{"title": "B", "evidence": ["https://bsky.app/p/1"]}], "gaps": []})}}]},
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation" / "screening").mkdir(parents=True)
+            (root / "prompts").mkdir(parents=True)
+            (root / "prompts" / "screening-schema.md").write_text("# schema\n", encoding="utf-8")
+            with mock.patch.object(
+                cloud_agent_runner, "call_openrouter_model", side_effect=payloads
+            ) as model_mock:
+                screen_text, calls = cloud_agent_runner.preflight_shared_screening(
+                    ([dict(item) for item in items], {}, [], 2),
+                    root,
+                    cloud_agent_runner.parse_date("2026-07-10"),
+                )
+        self.assertEqual(calls, 2)
+        self.assertEqual(model_mock.call_count, 2)
+        data = json.loads(screen_text)
+        self.assertEqual(len(data["candidates"]), 2)
+
+    def test_claim_audit_labels_flagged_bullet(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            record = {
+                "url": "https://bsky.app/p/9",
+                "title": "Copilot desktop app preview discussion",
+                "note": "preview build feedback",
+            }
+            (root / "automation" / "source-cache.jsonl").write_text(
+                json.dumps(record) + "\n", encoding="utf-8"
+            )
+            result = {
+                "updates": [
+                    {
+                        "path": "daily/2026-07.md",
+                        "mode": "append",
+                        "content": (
+                            "## 2026-07-10\n\n### English\n\n"
+                            "#### 1. New Signals\n\n"
+                            "- Signal: Copilot desktop app is generally available.\n"
+                            "  - Source: https://bsky.app/p/9\n"
+                        ),
+                    }
+                ]
+            }
+            audit_payload = {
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {"flags": [{"bullet": 1, "reason": "source says preview, bullet says GA"}]}
+                            )
+                        }
+                    }
+                ]
+            }
+            env = {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}
+            with mock.patch.dict(os.environ, env, clear=False):
+                with mock.patch.object(
+                    cloud_agent_runner, "call_openrouter_model", return_value=audit_payload
+                ):
+                    labeled = cloud_agent_runner.run_claim_audit(root, "daily", result)
+        self.assertEqual(labeled, 1)
+        self.assertIn("Claim audit: source says preview", result["updates"][0]["content"])
+
+    def test_claim_audit_fails_open(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "automation").mkdir(parents=True)
+            record = {"url": "https://bsky.app/p/9", "title": "t", "note": "n"}
+            (root / "automation" / "source-cache.jsonl").write_text(
+                json.dumps(record) + "\n", encoding="utf-8"
+            )
+            result = {
+                "updates": [
+                    {
+                        "path": "daily/2026-07.md",
+                        "mode": "append",
+                        "content": "- Signal: x.\n  - Source: https://bsky.app/p/9\n",
+                    }
+                ]
+            }
+            env = {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}
+            with mock.patch.dict(os.environ, env, clear=False):
+                with mock.patch.object(
+                    cloud_agent_runner,
+                    "call_openrouter_model",
+                    side_effect=RuntimeError("model down"),
+                ):
+                    labeled = cloud_agent_runner.run_claim_audit(root, "daily", result)
+        self.assertEqual(labeled, 0)
+        self.assertTrue(
+            any("Claim audit skipped" in warning for warning in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_radar_open_questions_parsed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "radar.md").write_text(
+                "# Radar\n\n## Current Thesis\n\n1. X.\n\n## Open Questions\n\n"
+                "- Will MCP become the default?\n- Who pays for agent storage?\n",
+                encoding="utf-8",
+            )
+            questions = cloud_agent_runner.radar_open_questions(root)
+        self.assertEqual(len(questions), 2)
+        self.assertIn("Will MCP become the default?", questions)
+
+    def test_stale_watchlist_entries_detected(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-10")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "agent-watchlist.md").write_text(
+                "# Agent Watchlist\n\n"
+                "## Fresh Agent\n\n- Updated: 2026-07-08 with news\n\n"
+                "## Old Agent\n\n- Updated: 2026-06-01 long ago\n\n"
+                "## Undated Agent\n\n- No dates here\n",
+                encoding="utf-8",
+            )
+            stale = cloud_agent_runner.stale_watchlist_entries(root, day)
+        self.assertEqual(len(stale), 2)
+        self.assertTrue(any("Old Agent" in entry for entry in stale))
+        self.assertTrue(any("Undated Agent (undated)" in entry for entry in stale))
+
+    def test_corroboration_queue_collects_labels(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-10")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text(
+                "## 2026-07-09\n\n"
+                "- Signal: Grok 4.5 claims.\n"
+                "  - Number check: 1.5T not found in cited snapshot source; verify before trusting.\n\n"
+                "- Signal: clean bullet.\n"
+                "  - Source: https://example.com/ok\n",
+                encoding="utf-8",
+            )
+            queue = cloud_agent_runner.corroboration_queue(root, day)
+        self.assertEqual(len(queue), 1)
+        self.assertIn("Grok 4.5", queue[0])
+
+    def test_weekly_direction_notes_combines_assets(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-10")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir(parents=True)
+            (root / "radar.md").write_text(
+                "## Open Questions\n\n- Will MCP win?\n", encoding="utf-8"
+            )
+            (root / "agent-watchlist.md").write_text(
+                "## Old Agent\n\n- 2026-06-01\n", encoding="utf-8"
+            )
+            (root / "daily" / "2026-07.md").write_text(
+                "## 2026-07-09\n\n- Signal: x.\n  - Claim audit: overreach; verify against source before trusting.\n",
+                encoding="utf-8",
+            )
+            notes = cloud_agent_runner.weekly_direction_notes(root, day)
+        self.assertIn("Open Questions Delta", notes)
+        self.assertIn("Old Agent", notes)
+        self.assertIn("Corroboration queue", notes)
+
+
 if __name__ == "__main__":
     unittest.main()

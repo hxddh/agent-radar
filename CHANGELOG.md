@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.10.0 - 2026-07-09
+
+Audit-loop release: widen the screening funnel with lane shards, audit claims semantically, and make direction assets (open questions, watchlist, verification labels) move every week instead of piling up.
+
+### Added
+- **Sharded screening**: the preflight screening runs discussion sources (Bluesky/Reddit/HN) and official/repo sources as separate cheap-model passes and merges candidates (dedup by evidence URL) — the candidate pool effectively doubles and social items get a full screening pass instead of competing with the GitHub long tail. Env: `SCREENING_SHARDS` (default 2). Telemetry: `screening_shards`.
+- **Claim audit**: an optional cheap-model pass compares each daily bullet against its cited snapshot title/note and labels clear semantic overreach (wrong availability status, misattribution) with `Claim audit: ...`. All source classes audited equally; labels only; fail-open on any error. Env: `CLAIM_AUDIT` (default on for openrouter). Telemetry: `claim_audit_flags`.
+- **Corroboration queue**: unresolved verification labels (Number check / pending-official / Claim audit) from the last 14 days are injected into the weekly prompt as work items — resolve by finding the primary source, upgrading, or dropping. Telemetry: `corroboration_queue_size`.
+- **Open Questions Delta**: radar.md's Open Questions are injected into the weekly prompt; the weekly records movement (resolved / new evidence / unchanged) under `### Open Questions Delta` (soft-checked post-apply). Telemetry: `open_questions_count`.
+- **Watchlist staleness**: watchlist entries with no dated update in 21 days (or undated) are injected into the weekly prompt for refresh or deprioritization. Telemetry: `stale_watchlist_count`.
+- CLI version bumped to `0.10.0`.
+
+### Changed
+- Prompts (`weekly-review`, `runner-rules`) document sharded screening, claim audit, and the direction-asset loop.
+
 ## v0.9.0 - 2026-07-09
 
 Signal-depth release: verify claims (not just links), upgrade social/discussion evidence instead of demoting it, thread storylines across days, and make weekly trends telemetry-computed.
