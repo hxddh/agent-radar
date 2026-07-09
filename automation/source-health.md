@@ -4,23 +4,21 @@ Last checked: 2026-07-09
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| pypi-updates:agent memory | ok |  |
-| crates:agent memory | ok |  |
-| open-vsx:agent memory | ok |  |
-| npm:agent sandbox | ok |  |
-| pypi-updates:agent sandbox | ok |  |
-| crates:agent sandbox | ok |  |
-| open-vsx:agent sandbox | ok |  |
-| npm:agent security | ok |  |
-| pypi-updates:agent security | ok |  |
-| crates:agent security | ok |  |
-| open-vsx:agent security | ok |  |
+| crates:agent eval | ok |  |
+| open-vsx:agent eval | ok |  |
+| npm:agent observability | ok |  |
+| pypi-updates:agent observability | ok |  |
+| crates:agent observability | ok |  |
+| open-vsx:agent observability | ok |  |
 | docker:mcp server | ok |  |
 | docker:ai agent | ok |  |
 | docker:coding agent | ok |  |
 | arxiv:cs-ai | ok |  |
 | feed:openai-blog | ok |  |
 | feed:github-changelog | ok |  |
+| feed:minio-blog | ok |  |
+| feed:aws-storage-blog | ok |  |
+| feed:cloudflare-blog | ok |  |
 | feed:huggingface-blog | ok |  |
 | feed:aws-whats-new | ok |  |
 | feed:vercel-changelog | ok |  |
@@ -29,6 +27,8 @@ Last checked: 2026-07-09
 | page:anthropic-news | ok |  |
 | page:anthropic-engineering | ok |  |
 | page:google-developers-blog | ok |  |
+| page:qwen-blog | ok |  |
+| page:deepseek-news | error | HTTP Error 404: Not Found |
 | page:devin-releases | ok |  |
 | page:replit-updates | ok |  |
 | page:warp-changelog | ok |  |

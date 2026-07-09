@@ -5,20 +5,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-
-Status:
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users, but external market-wide adoption still needs corroboration.
-- Core use case: Delegated coding and task execution, increasingly including longer and parallel agent work.
-- Recent changes: Codex CLI 0.142.5 fixed trace logging so full Responses WebSocket payloads are not written to trace logs.
-- Strengths: Parallelizable task execution and growing usage for work estimated beyond short chat answers.
-- Weaknesses: External user reliability and cost experience need more public field evidence.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Trace logs, payload privacy, long-running agent turns, parallel task orchestration.
-- Storage implications: Logs, traces, task state, artifacts, and replay history become sensitive storage surfaces.
-- Watch next: Whether OpenAI exposes more controls for logs, replay, workspace persistence, and enterprise governance.
-- Sources: https://developers.openai.com/codex/changelog and https://openai.com/index/how-agents-are-transforming-work/
-
+- Recent changes: Codex CLI 0.144.0-alpha.4 released; fixes and feature improvements.
+- Evidence strength: Strong (official release)
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.144.0-alpha.4
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; broad market-share evidence still sparse.
@@ -297,3 +288,23 @@ Name:
 - Maturity: Mature product with millions of users; expanding agent capabilities.
 - Recent changes: June 2026 VS Code releases brought better inline suggestions, context awareness, and agent mode enhancements. GitHub Innersource security advisories now generally available, impacting enterprise agent security.
 - Source: https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases, https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available
+
+
+## Cline
+
+- Category: Coding agent
+- Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
+- Recent changes: CVE-2026-59723 (CVSS 8.8) disclosed, allowing WebSocket hijacking and potential remote code execution in versions before 3.0.30.
+- Evidence strength: Medium (CVE advisory)
+- Source: https://nvd.nist.gov/vuln/detail/CVE-2026-59723
+- replace_section anchor: `## Cline`
+
+
+## Claude Cowork
+
+- Category: Task agent / productivity agent
+- Maturity: Expanding from web to mobile; currently available to Max subscribers.
+- Recent changes: Expanded to mobile and web for Max subscribers (2026-07-09).
+- Evidence strength: Medium (social/discussion source)
+- Source: https://bsky.app/profile/thedurabilitycurve.bsky.social/post/3mq65x2bzqz2f
+- replace_section anchor: `## Claude Cowork`

@@ -1718,3 +1718,19 @@ Follow-up gaps:
 - **scr-securevector-agent-security** (SecureVector: audit every tool call, block prompt injection/data leaks). Why it matters: Security observability for agent tool calls across multiple agents; addresses MCP blast radius concerns. Evidence strength: Medium (repo with description). Relevance score: 7. Defer reason: Needs integration with major agent frameworks and real-world usage evidence. Follow-up needed: Test with popular coding agents; evaluate overhead. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30. Source: https://github.com/Secure-Vector/securevector-ai-threat-monitor
 - **scr-mcp-permission-guard** (mcp-permission-guard: tool call allow/deny rules for AI agents). Why it matters: Practical access control for MCP tool ecosystems; addresses emerging MCP security concern. Evidence strength: Medium (PyPI package). Relevance score: 6. Defer reason: Needs adoption and security audit; may conflict with MCP protocol-level permissions. Follow-up needed: Check for integration with MCP gateways. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30. Source: https://pypi.org/project/mcp-permission-guard/1.0.1/
 - **scr-sandbox-agentos** (rivet-dev/agentos: lighter, cheaper sandbox alternative with agent orchestration). Why it matters: Sandbox infra cost and speed improvement for agent execution; potential alternative to heavier VMs. Evidence strength: Medium (GitHub repo). Relevance score: 8. Defer reason: Needs benchmarks and integration with coding agents; sandbox market is crowded. Follow-up needed: Compare with mitos-run, Flyte, and other sandbox solutions. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30. Source: https://github.com/rivet-dev/agentos
+
+
+## 2026-07-09 daily pass
+
+Promoted to watchlist: Cline (due to CVE-2026-59723) and Claude Cowork (due to mobile/web expansion). Updated Codex with 0.144.0-alpha.4 release.
+
+Candidate inbox additions (from screening pass):
+- **OpenSandbox** (scr-12348): High-star sandbox, promoted to infra primitive in day block but retained in inbox for further evaluation.
+- **agent-desktop** (scr-12352): Desktop automation CLI, also promoted to day block.
+- **CVE-2026-59723**: Already in watchlist.
+- **GitLost**: Prompt injection technique, kept as New Signal; not promoted to watchlist.
+- **Verification loop research** (scr-12347): Deferred; medium evidence.
+- **Claude Cowork usage data** (scr-12349): Deferred; single Bluesky post.
+- **Claude Tag Slack incident** (scr-12356): Deferred; single Reddit post.
+
+Gaps: Missing mainstream vendor deltas from Amazon, Meta, Apple, and Microsoft outside of GitHub. Follow-up: monitor official blogs.
