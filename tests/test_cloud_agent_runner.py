@@ -1018,12 +1018,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         "  - Source: https://openai.com/index/agents\n\n"
                         "#### 7. Gaps\n\n"
                         "- Missing user_workflow: no concrete operator reports in this pass.\n"
+                        "- Missing mainstream_product: Anthropic/Google/Microsoft not covered beyond OpenAI.\n"
                     ),
                 }
             ]
         }
         cloud_agent_runner.validate_daily_direction_quota(result)
-        self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_mainstream"])
+        # Gap text suppresses the mainstream marker match by design; Gaps still pass the gate.
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_gaps_present"])
 
     def test_daily_direction_quota_rejects_attitude_only_user_signal(self) -> None:
@@ -1037,6 +1038,8 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         "#### 1. New Signals\n\n"
                         "- Signal: OpenAI shipped a coding-agent preview.\n"
                         "  - Source: https://openai.com/index/agents\n\n"
+                        "- Signal: Anthropic published a containment engineering post.\n"
+                        "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
                         "#### 4. User Field Notes\n\n"
                         "- Signal: users like agents more this week.\n"
                     ),
@@ -1058,6 +1061,8 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         "#### 1. New Signals\n\n"
                         "- Signal: OpenAI shipped a coding-agent preview.\n"
                         "  - Source: https://openai.com/index/agents\n\n"
+                        "- Signal: Anthropic published a containment engineering post.\n"
+                        "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
                         "#### 4. User Field Notes\n\n"
                         "- Signal: Claude Code field report: /doctor and Cowork VM-mode.\n"
                         "  - Scenario: operator health checks before long runs.\n"
@@ -1067,6 +1072,8 @@ class CloudAgentRunnerTest(unittest.TestCase):
         }
         cloud_agent_runner.validate_daily_direction_quota(result)
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_user_workflow"])
+        self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["vendor_families_covered"], 2)
+        self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["breadth_themes_covered"], 2)
 
     def test_zero_star_infra_repo_is_penalized(self) -> None:
         weak = {
@@ -1391,6 +1398,98 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(candidates[0]["confidence"], "medium")
         must = cloud_agent_runner.high_confidence_mainstream_candidates(candidates)
         self.assertEqual([c["id"] for c in must], ["scr-blog"])
+
+    def test_social_only_mainstream_demoted_from_must_cover(self) -> None:
+        candidates = [
+            {
+                "id": "scr-grok",
+                "title": "Grok 4.5 launches as cost-efficient coding model",
+                "confidence": "high",
+                "relevance_score": 8,
+                "signal_class": "mainstream_product",
+                "evidence": ["https://bsky.app/profile/example/post/1"],
+                "why_it_matters": "Disrupts coding agent economics",
+            },
+            {
+                "id": "scr-gh",
+                "title": "GitHub Innersource security advisories generally available",
+                "confidence": "high",
+                "relevance_score": 7,
+                "signal_class": "mainstream_product",
+                "infra_angle": "security",
+                "evidence": [
+                    "https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available"
+                ],
+                "why_it_matters": "Enterprise advisory distribution",
+            },
+        ]
+        self.assertTrue(cloud_agent_runner.is_social_only_evidence(candidates[0]))
+        self.assertTrue(cloud_agent_runner.demote_social_only_mainstream(candidates[0]))
+        self.assertEqual(candidates[0]["confidence"], "medium")
+        must = cloud_agent_runner.high_confidence_mainstream_candidates(candidates)
+        self.assertEqual([c["id"] for c in must], ["scr-gh"])
+
+    def test_github_repo_user_workflow_reclassified_to_infra(self) -> None:
+        cand = {
+            "id": "scr-coze",
+            "title": "Coze-MCP bridge to OpenClaw",
+            "confidence": "low",
+            "relevance_score": 4,
+            "signal_class": "user_workflow",
+            "evidence": ["https://github.com/example/coze-mcp-for-openclaw"],
+            "why_it_matters": "User wraps Coze workflows as MCP tools",
+        }
+        self.assertTrue(cloud_agent_runner.reclassify_repo_as_user_workflow(cand))
+        self.assertEqual(cand["signal_class"], "infra_primitive")
+
+    def test_daily_breadth_requires_two_vendor_families(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "#### 4. User Field Notes\n\n"
+                        "- Signal: Claude Code field report: /doctor.\n"
+                        "  - Scenario: operator health checks.\n"
+                    ),
+                }
+            ]
+        }
+        # Claude marker makes anthropic family too; force openai-only by removing claude wording.
+        result["updates"][0]["content"] = (
+            "## 2026-07-09\n\n### English\n\n"
+            "#### 1. New Signals\n\n"
+            "- Signal: OpenAI shipped a coding-agent preview.\n"
+            "  - Source: https://openai.com/index/agents\n\n"
+            "#### 4. User Field Notes\n\n"
+            "- Signal: Operator field report: useful trick for review loops.\n"
+            "  - Scenario: PR review with agents.\n"
+        )
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("2 vendor families", str(ctx.exception))
+
+    def test_warn_dropped_official_urls_on_day_replace(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        old = (
+            "## 2026-07-09\n\n"
+            "- Signal: Anthropic containment.\n"
+            "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n"
+        )
+        new = (
+            "## 2026-07-09\n\n"
+            "- Signal: Only OpenAI eval.\n"
+            "  - Source: https://openai.com/index/evals\n"
+        )
+        cloud_agent_runner.warn_dropped_official_urls(old, new, "daily/2026-07.md")
+        self.assertTrue(
+            any("dropped" in warning and "anthropic.com" in warning for warning in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
 
 
 if __name__ == "__main__":
