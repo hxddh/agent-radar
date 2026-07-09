@@ -28,8 +28,8 @@ Focus on (direction order matters):
 6. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
 
 Daily direction quota (required):
-- At least **1 mainstream_product** signal, OR an explicit Gaps bullet naming which vendors were checked and missing.
-- At least **1 user_workflow** signal (may be weak/labeled), OR an explicit Gaps bullet for missing user evidence.
+- At least **1 mainstream_product** signal from a real product delta (changelog/blog/release), OR an explicit Gaps bullet naming which vendors were checked and missing. GitHub star counts alone do not count.
+- At least **1 actionable user_workflow** signal (scenario / pain point / useful trick / concrete command), OR an explicit Gaps bullet for missing user evidence. Bare "users like X" does not count.
 - At most **2 infra_primitive** emerging-repo bullets in the day block; additional infra candidates go to `research-log.md` only.
 - Do not fill the day with GitHub long-tail memory/MCP/sandbox repos when mainstream or user signals are missing.
 - Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.

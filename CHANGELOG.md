@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.7.8 - 2026-07-09
+
+Screening/synthesis quality: stop collapsed relevance scores, demote star-count "mainstream", and require actionable user_workflow detail.
+
+### Added
+- Repair path when every screening `relevance_score` collapses to the same value (re-derive 1–10 from confidence/class/evidence).
+- Star-hype demotion: GitHub-only repos sold on star counts are not MUST-cover mainstream product deltas.
+- Stricter daily user_workflow gate: require actionable operator markers (scenario/pain/trick/command) or an explicit Gaps bullet.
+- Telemetry: `screening_scores_repaired`, `star_hype_demoted`.
+
+### Changed
+- `prompts/screening-schema.md`, `prompts/daily-update.md`, `prompts/runner-rules.md` document score spread, star≠delta, and actionable user evidence.
+- CLI version bumped to `0.7.8`.
+
 ## v0.7.7 - 2026-07-09
 
 Freshness follow-up: auto-label unlabeled month-named roundups instead of discarding the whole daily update.

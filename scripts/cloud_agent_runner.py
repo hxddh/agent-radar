@@ -163,6 +163,49 @@ USER_WORKFLOW_MARKERS = (
     "adoption",
     "friction",
 )
+# Stricter markers for daily direction quota: attitude posts alone do not count.
+ACTIONABLE_USER_WORKFLOW_MARKERS = (
+    "field report",
+    "operator",
+    "merged pr",
+    "pain point",
+    "useful trick",
+    "scenario:",
+    "in practice",
+    "from the field",
+    "how i ",
+    "how we ",
+    "workflow friction",
+    "adoption friction",
+    "/doctor",
+    "/checkup",
+    "cowork",
+    "vm-mode",
+    "vm mode",
+)
+MAINSTREAM_PRODUCT_EVIDENCE_MARKERS = (
+    "changelog",
+    "release notes",
+    "release note",
+    "/news/",
+    "/engineering/",
+    "/blog/",
+    "/index/",
+    "developers.googleblog",
+    "openai.com/",
+    "anthropic.com/",
+    "github.blog/",
+    "advisory",
+    "advisories",
+    "vulnerabilit",
+    "cve-",
+    "generally available",
+    "preview",
+)
+STAR_HYPE_RE = re.compile(
+    r"\b\d+(?:\.\d+)?k?\+?\s*stars?\b|\bstars?\s*[:=]\s*\d+",
+    re.IGNORECASE,
+)
 CANDIDATE_INBOX_ANCHOR = "## Candidate inbox"
 CANDIDATE_INBOX_HEADING = re.compile(r"^## Candidate inbox\s*$", re.MULTILINE | re.IGNORECASE)
 LEGACY_PASS_HEADING = re.compile(r"^### Pass:", re.MULTILINE)
@@ -299,6 +342,8 @@ RUN_AUDIT: dict[str, Any] = {
     "stale_roundup_count": 0,
     "must_cover_mainstream": 0,
     "must_cover_missing": 0,
+    "screening_scores_repaired": 0,
+    "star_hype_demoted": 0,
     "apply_warnings": [],
 }
 
@@ -905,16 +950,110 @@ def parse_screening_json(text: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def candidate_haystack(candidate: dict[str, Any]) -> str:
+    title = str(candidate.get("title", "")).lower()
+    why = str(candidate.get("why_it_matters", "")).lower()
+    evidence = candidate.get("evidence", [])
+    urls = " ".join(str(item).lower() for item in evidence) if isinstance(evidence, list) else ""
+    return f"{title} {why} {urls}"
+
+
+def has_official_product_evidence(candidate: dict[str, Any]) -> bool:
+    hay = candidate_haystack(candidate)
+    if any(marker in hay for marker in MAINSTREAM_PRODUCT_EVIDENCE_MARKERS):
+        return True
+    # Vendor non-GitHub pages count as product evidence even without changelog keywords.
+    if any(marker in hay for marker in MAINSTREAM_VENDOR_MARKERS) and "github.com/" not in hay:
+        return True
+    return False
+
+
+def is_star_hype_mainstream(candidate: dict[str, Any]) -> bool:
+    """True when mainstream claim is mostly GitHub star count, not a product delta."""
+    if infer_signal_class(candidate) != "mainstream_product":
+        return False
+    hay = candidate_haystack(candidate)
+    evidence = candidate.get("evidence", [])
+    urls = [str(item).lower() for item in evidence] if isinstance(evidence, list) else []
+    github_only = bool(urls) and all("github.com/" in url and "github.blog" not in url for url in urls)
+    release_tag = any(marker in hay for marker in ("changelog", "releases/tag", "/releases/", "advisory", "cve-"))
+    star_hype = bool(STAR_HYPE_RE.search(hay))
+    # GitHub-only repo pages without release/changelog evidence are not 24-48h product deltas.
+    if github_only and not release_tag:
+        return True
+    # Explicit star-count marketing without official product evidence.
+    if star_hype and not has_official_product_evidence(candidate):
+        return True
+    return False
+
+
+def demote_star_only_mainstream(candidate: dict[str, Any]) -> bool:
+    """Demote star-count mainstream so it cannot become MUST-cover. Returns True if demoted."""
+    if not is_star_hype_mainstream(candidate):
+        return False
+    changed = False
+    if str(candidate.get("confidence", "")).lower() == "high":
+        candidate["confidence"] = "medium"
+        changed = True
+    try:
+        score = int(candidate.get("relevance_score", 5) or 5)
+    except (TypeError, ValueError):
+        score = 5
+    if score > 3:
+        candidate["relevance_score"] = 3
+        changed = True
+    why = str(candidate.get("why_it_matters", "")).strip()
+    if why and "repo-star" not in why.lower() and "not a 24-48h" not in why.lower():
+        candidate["why_it_matters"] = truncate_text(why + "; repo-star ≠ product delta", 120)
+        changed = True
+    return changed
+
+
+def repair_collapsed_relevance_scores(candidates: list[dict[str, Any]]) -> int:
+    """When the model sets every relevance_score equal, re-derive a usable 1-10 spread."""
+    actionable = [cand for cand in candidates if isinstance(cand, dict)]
+    if len(actionable) < 3:
+        return 0
+    scores: list[int] = []
+    for cand in actionable:
+        try:
+            scores.append(int(cand.get("relevance_score", 0) or 0))
+        except (TypeError, ValueError):
+            scores.append(0)
+    if not scores or max(scores) != min(scores):
+        return 0
+    for cand in actionable:
+        confidence = str(cand.get("confidence", "")).lower()
+        base = {"high": 7, "medium": 5, "low": 3}.get(confidence, 4)
+        signal_class = infer_signal_class(cand)
+        if signal_class == "mainstream_product" and has_official_product_evidence(cand):
+            base = min(10, base + 2)
+        if signal_class == "user_workflow" and candidate_has_actionable_user_detail(cand):
+            base = min(10, base + 1)
+        if signal_class == "noise":
+            base = min(base, 2)
+        if is_star_hype_mainstream(cand):
+            base = min(base, 3)
+        if signal_class == "infra_primitive":
+            base = min(base, 6)
+        cand["relevance_score"] = max(1, min(10, base))
+    return len(actionable)
+
+
+def candidate_has_actionable_user_detail(candidate: dict[str, Any]) -> bool:
+    why = str(candidate.get("why_it_matters", "")).lower()
+    title = str(candidate.get("title", "")).lower()
+    hay = f"{title} {why}"
+    if len(why.strip()) < 24:
+        return False
+    return any(marker in hay for marker in ACTIONABLE_USER_WORKFLOW_MARKERS)
+
+
 def infer_signal_class(candidate: dict[str, Any]) -> str:
     explicit = str(candidate.get("signal_class", "")).strip().lower()
     if explicit in SIGNAL_CLASSES:
         return explicit
-    title = str(candidate.get("title", "")).lower()
-    why = str(candidate.get("why_it_matters", "")).lower()
-    text = f"{title} {why}"
-    evidence = candidate.get("evidence", [])
-    urls = " ".join(str(item).lower() for item in evidence) if isinstance(evidence, list) else ""
-    hay = f"{text} {urls}"
+    hay = candidate_haystack(candidate)
     if any(marker in hay for marker in MAINSTREAM_VENDOR_MARKERS) and any(
         marker in hay for marker in ("changelog", "release", "preview", "ga", "generally available", "blog")
     ):
@@ -963,6 +1102,9 @@ def high_confidence_mainstream_candidates(candidates: list[dict[str, Any]]) -> l
         if str(cand.get("confidence", "")).lower() != "high":
             continue
         if str(cand.get("promotion_status", "candidate")).lower() == "reject":
+            continue
+        # Star-count GitHub repos are not 24-48h product deltas; keep them out of MUST.
+        if is_star_hype_mainstream(cand):
             continue
         selected.append(cand)
     selected.sort(key=candidate_priority_key)
@@ -1026,6 +1168,8 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     candidates = data.get("candidates", [])
     if not isinstance(candidates, list):
         return data
+    repaired = repair_collapsed_relevance_scores(candidates)
+    demoted = 0
     ids: list[str] = []
     class_counts: dict[str, int] = {}
     for cand in candidates:
@@ -1033,6 +1177,8 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
             continue
         signal_class = infer_signal_class(cand)
         cand["signal_class"] = signal_class
+        if demote_star_only_mainstream(cand):
+            demoted += 1
         class_counts[signal_class] = class_counts.get(signal_class, 0) + 1
         if cand.get("id"):
             ids.append(str(cand["id"]))
@@ -1046,6 +1192,16 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         ids.append(cand_id)
     RUN_AUDIT["screening_candidate_ids"] = ids
     RUN_AUDIT["screening_signal_classes"] = class_counts
+    RUN_AUDIT["screening_scores_repaired"] = repaired
+    RUN_AUDIT["star_hype_demoted"] = demoted
+    if repaired:
+        warning = f"Repaired collapsed screening relevance_score for {repaired} candidate(s)"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if demoted:
+        warning = f"Demoted {demoted} star-hype mainstream candidate(s) (repo stars ≠ product delta)"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
     return data
 
 
@@ -1067,6 +1223,8 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             screen_text,
             env_int("MAX_SCREEN_PROMPT_SUMMARY_CHARS", 4000),
         )
+    # Repair collapsed scores / demote star-hype before ranking and MUST-cover.
+    data = enrich_screening_with_ids(data)
 
     max_candidates = env_int("SCREEN_PROMPT_CANDIDATES", DEFAULT_SCREEN_PROMPT_CANDIDATES)
     max_gaps = env_int("SCREEN_GAPS_IN_PROMPT", DEFAULT_SCREEN_GAPS_IN_PROMPT)
@@ -1120,20 +1278,29 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             if why:
                 lines.append(f"  why: {why}")
         lines.append(
-            "Synthesis priority: cover MUST mainstream first, then user_workflow, "
-            "then at most 2 infra_primitive emerging bullets."
+            "Synthesis priority: cover MUST mainstream first, then actionable user_workflow "
+            "(concrete operator detail), then at most 2 infra_primitive emerging bullets."
         )
         lines.append(
-            "Freshness: prefer 24-48h deltas. Monthly/quarterly roundups older than ~7 days "
-            "must be labeled `Freshness: stale-roundup` or moved to research-log."
+            "Freshness: prefer 24-48h product deltas (changelog/blog/release). "
+            "GitHub star counts alone are not mainstream product news. "
+            "Monthly/quarterly roundups older than ~7 days must be labeled "
+            "`Freshness: stale-roundup` or moved to research-log."
         )
         if class_counts.get("mainstream_product", 0) == 0:
             lines.append(
                 "Direction note: no mainstream_product candidates; daily must record a Gaps bullet."
             )
-        if class_counts.get("user_workflow", 0) == 0:
+        actionable_user = any(
+            isinstance(cand, dict)
+            and infer_signal_class(cand) == "user_workflow"
+            and candidate_has_actionable_user_detail(cand)
+            for cand in candidates
+        )
+        if class_counts.get("user_workflow", 0) == 0 or not actionable_user:
             lines.append(
-                "Direction note: no user_workflow candidates; daily must record a Gaps bullet."
+                "Direction note: no actionable user_workflow candidates; daily must include "
+                "concrete operator detail (scenario/pain/trick) or a Gaps bullet."
             )
 
     gaps = data.get("gaps", [])
@@ -1476,10 +1643,11 @@ def content_has_mainstream_signal(text: str) -> bool:
 
 
 def content_has_user_workflow_signal(text: str) -> bool:
+    """Require actionable operator detail, not bare 'user'/'workflow' substrings."""
     lower = text.lower()
     if "missing user_workflow" in lower:
         return False
-    return any(marker in lower for marker in USER_WORKFLOW_MARKERS)
+    return any(marker in lower for marker in ACTIONABLE_USER_WORKFLOW_MARKERS)
 
 
 def content_has_direction_gap(text: str, kind: str) -> bool:
@@ -3658,6 +3826,8 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Must-cover mainstream: {RUN_AUDIT.get('must_cover_mainstream', 0)}",
         f"- Must-cover missing: {RUN_AUDIT.get('must_cover_missing', 0)}",
         f"- Stale roundup count: {RUN_AUDIT.get('stale_roundup_count', 0)}",
+        f"- Screening scores repaired: {RUN_AUDIT.get('screening_scores_repaired', 0)}",
+        f"- Star-hype demoted: {RUN_AUDIT.get('star_hype_demoted', 0)}",
     ]
     if source_errors:
         entry.append("- Source errors:")
@@ -3714,6 +3884,8 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
         "must_cover_missing": RUN_AUDIT.get("must_cover_missing", 0),
         "stale_roundup_count": RUN_AUDIT.get("stale_roundup_count", 0),
+        "screening_scores_repaired": RUN_AUDIT.get("screening_scores_repaired", 0),
+        "star_hype_demoted": RUN_AUDIT.get("star_hype_demoted", 0),
         "apply_warnings": RUN_AUDIT.get("apply_warnings", []),
     }
     with path.open("a", encoding="utf-8") as handle:
@@ -3813,6 +3985,8 @@ def run_task(
     RUN_AUDIT["stale_roundup_count"] = 0
     RUN_AUDIT["must_cover_mainstream"] = 0
     RUN_AUDIT["must_cover_missing"] = 0
+    RUN_AUDIT["screening_scores_repaired"] = 0
+    RUN_AUDIT["star_hype_demoted"] = 0
     RUN_AUDIT["apply_warnings"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:

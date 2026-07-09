@@ -139,8 +139,8 @@ Do not `full`-rewrite an existing weekly file.
 
 Daily synthesis must not collapse into a GitHub infra-parts list. Enforce this shape:
 
-1. **Mainstream product / platform** — at least one signal from major vendors (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta), **or** a Gaps bullet: `Missing mainstream_product: ...`.
-2. **User workflow** — at least one concrete operator/user experience signal (may be weak and labeled), **or** a Gaps bullet: `Missing user_workflow: ...`.
+1. **Mainstream product / platform** — at least one real product delta from major vendors (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta) with changelog/blog/release evidence, **or** a Gaps bullet: `Missing mainstream_product: ...`. High GitHub star counts alone are not mainstream product news.
+2. **User workflow** — at least one actionable operator signal (scenario, pain point, useful trick, concrete command), **or** a Gaps bullet: `Missing user_workflow: ...`. Attitude posts without operational detail do not count.
 3. **Infra primitives** — at most **2** emerging-repo / infra-primitive bullets in the day block; put the rest in `research-log.md` Candidate inbox.
 4. Prefer direction-changing evidence over another memory/MCP/sandbox README.
 5. **Must-cover mainstream** — if screening marks high-confidence mainstream candidates as MUST, include them in New Signals / Mainstream Agent Progress (or explain omission under Gaps). Do not drop security advisories or official product posts for emerging repos.

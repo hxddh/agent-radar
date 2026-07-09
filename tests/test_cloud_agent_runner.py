@@ -1026,6 +1026,48 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_mainstream"])
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_gaps_present"])
 
+    def test_daily_direction_quota_rejects_attitude_only_user_signal(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "#### 4. User Field Notes\n\n"
+                        "- Signal: users like agents more this week.\n"
+                    ),
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("Missing user_workflow", str(ctx.exception))
+
+    def test_daily_direction_quota_accepts_actionable_user_signal(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "#### 4. User Field Notes\n\n"
+                        "- Signal: Claude Code field report: /doctor and Cowork VM-mode.\n"
+                        "  - Scenario: operator health checks before long runs.\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_user_workflow"])
+
     def test_zero_star_infra_repo_is_penalized(self) -> None:
         weak = {
             "source": "github",
@@ -1285,6 +1327,70 @@ class CloudAgentRunnerTest(unittest.TestCase):
         compact = cloud_agent_runner.compact_screening_for_prompt(screen)
         self.assertIn("Must-cover high-confidence mainstream", compact)
         self.assertIn("MUST scr-sec", compact)
+
+    def test_repair_collapsed_relevance_scores(self) -> None:
+        candidates = [
+            {
+                "id": "scr-a",
+                "title": "OpenAI eval blog",
+                "confidence": "high",
+                "relevance_score": 1,
+                "signal_class": "mainstream_product",
+                "evidence": ["https://openai.com/index/evals"],
+                "why_it_matters": "Official eval guidance",
+            },
+            {
+                "id": "scr-b",
+                "title": "Tiny sandbox",
+                "confidence": "low",
+                "relevance_score": 1,
+                "signal_class": "infra_primitive",
+                "evidence": ["https://github.com/x/sandbox"],
+                "why_it_matters": "Early infra",
+            },
+            {
+                "id": "scr-c",
+                "title": "Operator field report on review workflow",
+                "confidence": "medium",
+                "relevance_score": 1,
+                "signal_class": "user_workflow",
+                "evidence": ["https://example.com/field"],
+                "why_it_matters": "Field report: pain point in PR review loop",
+            },
+        ]
+        repaired = cloud_agent_runner.repair_collapsed_relevance_scores(candidates)
+        self.assertEqual(repaired, 3)
+        scores = [int(c["relevance_score"]) for c in candidates]
+        self.assertGreater(max(scores), min(scores))
+        self.assertGreater(candidates[0]["relevance_score"], candidates[1]["relevance_score"])
+
+    def test_star_hype_mainstream_demoted_from_must_cover(self) -> None:
+        candidates = [
+            {
+                "id": "scr-stars",
+                "title": "Microsoft agent-framework: 11k+ stars",
+                "confidence": "high",
+                "relevance_score": 9,
+                "signal_class": "mainstream_product",
+                "evidence": ["https://github.com/microsoft/agent-framework"],
+                "why_it_matters": "Official multi-agent framework now at 11k+ stars.",
+            },
+            {
+                "id": "scr-blog",
+                "title": "Anthropic containment engineering post",
+                "confidence": "high",
+                "relevance_score": 8,
+                "signal_class": "mainstream_product",
+                "infra_angle": "security",
+                "evidence": ["https://www.anthropic.com/engineering/how-we-contain-claude"],
+                "why_it_matters": "Production containment patterns",
+            },
+        ]
+        self.assertTrue(cloud_agent_runner.is_star_hype_mainstream(candidates[0]))
+        self.assertTrue(cloud_agent_runner.demote_star_only_mainstream(candidates[0]))
+        self.assertEqual(candidates[0]["confidence"], "medium")
+        must = cloud_agent_runner.high_confidence_mainstream_candidates(candidates)
+        self.assertEqual([c["id"] for c in must], ["scr-blog"])
 
 
 if __name__ == "__main__":
