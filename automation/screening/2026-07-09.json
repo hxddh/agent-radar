@@ -1,34 +1,29 @@
 {
-  "summary": "Key signals: Claude Cowork mobile/web launch, Anthropic's Claude Code story, GhostApproval symlink attack, and AWS S3/FSx storage patterns. Also: MemOS, Omnigent, MCP Zoho Books, and memory security research.",
+  "summary": "Screening of official/repo sources: notable Anthropic Claude Sonnet 5 release, Claude Code making-of, containment engineering, OpenAI coding eval blog, Microsoft agent governance/framework, Mitos sandbox, Codex alpha, among others. Missing user workflow reports and social sources. | Discussion sources highlight agent security risks, eval practices, and memory architectures. Key signals include AI agents triggering endpoint security rules, the 'ratchet' eval pattern, and hierarchical memory for long-horizon tasks. Mainstream product news is sparse; user workflow reports are present but limited.",
   "candidates": [
     {
-      "id": "scr-abc001",
-      "title": "Claude Cowork now on mobile and web",
-      "why_it_matters": "Agent workspace moves to cloud, non-code tasks now cross-device; social/discussion source (keep; label evidence)",
+      "id": "scr-sonnet5",
+      "title": "Claude Sonnet 5 Release",
+      "why_it_matters": "Frontier model for coding and agents, official Anthropic release.",
       "evidence": [
-        "https://bsky.app/profile/aifoundersczech.bsky.social/post/3mq74geil2p2p",
-        "https://bsky.app/profile/thedurabilitycurve.bsky.social/post/3mq65x2bzqz2f"
+        "https://www.anthropic.com/news/claude-sonnet-5"
       ],
       "confidence": "high",
-      "relevance_score": 9,
-      "source_diversity": 2,
+      "relevance_score": 10,
+      "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "runtime",
+      "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "anthropic.com official post",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium",
-      "corroboration": "pending-official"
+      "next_check": ""
     },
     {
-      "id": "scr-abc002",
-      "title": "Anthropic publishes 'Making of Claude Code' behind-the-scenes",
-      "why_it_matters": "First-party deep dive on agent coding tool origins and design",
+      "id": "scr-making-claude-code",
+      "title": "The Making of Claude Code",
+      "why_it_matters": "Insider story of how Claude Code evolved from internal CLI to Anthropic's coding agent.",
       "evidence": [
         "https://www.anthropic.com/features/making-of-claude-code"
       ],
-      "confidence": "high",
+      "confidence": "medium",
       "relevance_score": 8,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
@@ -37,83 +32,77 @@
       "next_check": ""
     },
     {
-      "id": "scr-abc003",
-      "title": "GhostApproval: AI coding agents tricked by symlink attack",
-      "why_it_matters": "Security vulnerability f\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "id": "scr-contain-claude",
+      "title": "How we contain Claude across products",
+      "why_it_matters": "Engineering containment strategies for agent blast radius at Anthropic.",
       "evidence": [
-        "https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22"
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
       ],
-      "confidence": "medium",
-      "relevance_score": 8,
+      "confidence": "high",
+      "relevance_score": 9,
       "source_diversity": 1,
-      "signal_class": "user_workflow",
+      "signal_class": "mainstream_product",
       "infra_angle": "security",
       "promotion_status": "candidate",
-      "next_check": "official disclosure post",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium"
+      "next_check": ""
     },
     {
-      "id": "scr-abc004",
-      "title": "Claude Code workflow: write failing test first, then pass it",
-      "why_it_matters": "Concrete prompt technique from a user: test-driven agent workflow; social/discussion source (keep; label evidence)",
+      "id": "scr-openai-coding-eval",
+      "title": "OpenAI separating signal from noise in coding evaluations",
+      "why_it_matters": "Official blog on improving coding agent evaluation methodologies.",
       "evidence": [
-        "https://bsky.app/profile/happy-homhom.bsky.social/post/3mq74kpxfox2y"
+        "https://openai.com/index/separating-signal-from-noise-coding-evaluations"
       ],
-      "confidence": "low",
-      "relevance_score": 6,
+      "confidence": "high",
+      "relevance_score": 8,
       "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "none",
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
       "promotion_status": "candidate",
-      "next_check": "more user reports",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Weak"
+      "next_check": ""
     },
     {
-      "id": "scr-abc005",
-      "title": "DaVinci Resolve MCP Server – full scripting API via MCP",
-      "why_it_matters": "Concrete MCP integration\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "id": "scr-ms-agent-governance",
+      "title": "Microsoft Agent Governance Toolkit",
+      "why_it_matters": "Policy enforcement, zero-trust, sandbox for agents; 4.7k stars, OWASP top 10 coverage.",
       "evidence": [
-        "https://bsky.app/profile/githubprojects.bsky.social/post/3mq6z2ls4cw2d"
+        "https://github.com/microsoft/agent-governance-toolkit"
       ],
-      "confidence": "medium",
+      "confidence": "high",
       "relevance_score": 7,
       "source_diversity": 1,
       "signal_class": "infra_primitive",
-      "infra_angle": "mcp",
+      "infra_angle": "security",
       "promotion_status": "candidate",
-      "next_check": "official repo docs",
-      "source_visibility": "Public",
-      "evidence_basis": "social_discussion",
-      "evidence_strength": "Medium"
-    },
-    {
-      "id": "scr-abc006",
-      "title": "MemOS: self-evolving persistent memory for agents",
-      "why_it_matters": "10k stars, hybrid retrieval with 35% token savings; agent memory infra",
-      "evidence": [
-        "https://github.com/MemTensor/MemOS"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "user adoption metrics",
+      "next_check": "",
       "risk_flags": [
         "single-repo-source"
       ]
     },
     {
-      "id": "scr-abc007",
-      "title": "Omnigent: open-source agent meta-harness orchestration",
-      "why_it_matters": "6.8k stars, orchestrates Claude Code/Codex/Cursor; policy and sandboxing",
+      "id": "scr-ms-agent-framework",
+      "title": "Microsoft Agent Framework",
+      "why_it_matters": "Official framework for building and orchestrating multi-agent workflows; 11.9k stars.",
       "evidence": [
-        "https://github.com/omnigent-ai/omnigent"
+        "https://github.com/microsoft/agent-framework"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-mitos-sandbox",
+      "title": "Mitos microVM sandbox for AI agents",
+      "why_it_matters": "Millisecond Firecracker VM forking on K8s; durable versioned workspaces.",
+      "evidence": [
+        "https://github.com/mitos-run/mitos"
       ],
       "confidence": "medium",
       "relevance_score": 6,
@@ -121,99 +110,386 @@
       "signal_class": "infra_primitive",
       "infra_angle": "sandbox",
       "promotion_status": "candidate",
-      "next_check": "release notes",
+      "next_check": "",
       "risk_flags": [
         "single-repo-source"
       ]
     },
     {
-      "id": "scr-abc008",
-      "title": "Zoho Books MCP: safety-gated bookkeeping for agents",
-      "why_it_matters": "Autonomous GL and bank feed access via MCP, read-only default",
+      "id": "scr-codex-alpha",
+      "title": "OpenAI Codex v0.144.0-alpha.4",
+      "why_it_matters": "Prerelease of Codex, OpenAI's coding agent CLI.",
       "evidence": [
-        "https://github.com/Operamatix/zoho-books-mcp"
+        "https://github.com/openai/codex/releases/tag/rust-v0.144.0-alpha.4"
       ],
-      "confidence": "low",
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cyberstrike",
+      "title": "CyberStrikeAI security agent",
+      "why_it_matters": "Agentic execution layer for cybersecurity; MCP-native, 5k stars.",
+      "evidence": [
+        "https://github.com/Ed1s0nZ/CyberStrikeAI"
+      ],
+      "confidence": "medium",
       "relevance_score": 5,
       "source_diversity": 1,
       "signal_class": "infra_primitive",
-      "infra_angle": "mcp",
+      "infra_angle": "security",
       "promotion_status": "candidate",
-      "next_check": "user reports or official blog",
+      "next_check": "",
       "risk_flags": [
         "single-repo-source"
       ]
     },
     {
-      "id": "scr-abc009",
-      "title": "AW S S3 versioning zero-downtime patterns",
-      "why_it_matters": "Mission-critical S3 versioning patterns for agent-managed storage",
+      "id": "scr-nebius-contree",
+      "title": "Nebius ConTree MCP sandbox",
+      "why_it_matters": "Isolated cloud containers for agent code execution with root access.",
       "evidence": [
-        "https://aws.amazon.com/blogs/storage/zero-downtime-amazon-s3-versioning-architectural-patterns-for-mission-critical-workloads/"
+        "https://github.com/nebius/contree-mcp"
       ],
-      "confidence": "high",
-      "relevance_score": 6,
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "need independent user report",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-deepseek-rate-limit",
+      "title": "DeepSeek Rate Limit & Isolation docs",
+      "why_it_matters": "Official DeepSeek API rate limit and isolation documentation.",
+      "evidence": [
+        "https://api-docs.deepseek.com/quick_start/rate_limit"
+      ],
+      "confidence": "low",
+      "relevance_score": 3,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
-      "infra_angle": "storage",
+      "infra_angle": "none",
       "promotion_status": "candidate",
       "next_check": ""
     },
     {
-      "id": "scr-abc010",
-      "title": "Memory poisoning attacks on LLM agents: new paper",
-      "why_it_matters": "Security research showing agents vulnerable to memory corruption; social/discussion source (keep; label evidence)",
+      "id": "scr-openloomi",
+      "title": "OpenLoomi AI coworker workspace",
+      "why_it_matters": "Local-first AI work memory and coworker workspace; 620 stars.",
       "evidence": [
-        "https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3mq6zqcp56424"
+        "https://github.com/melandlabs/openloomi"
       ],
       "confidence": "medium",
-      "relevance_score": 7,
+      "relevance_score": 4,
       "source_diversity": 1,
-      "signal_class": "research",
+      "signal_class": "infra_primitive",
       "infra_angle": "memory",
       "promotion_status": "candidate",
-      "next_check": "full paper on arXiv",
+      "next_check": "",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-001",
+      "title": "AI coding agents trigger endpoint security rules built for attackers",
+      "why_it_matters": "Security tools flag benign agent actions as attacks, creating operational friction.",
+      "evidence": [
+        "https://bsky.app/profile/kitafox.bsky.social/post/3mq763yfsq227",
+        "https://www.thehackernews.com/2026/07/ai-c..."
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-002",
+      "title": "Ratchet eval pattern: each agent failure becomes a permanent detection rule",
+      "why_it_matters": "Production harness grew \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/therobertta.bsky.social/post/3mq75uf4a5l22",
+        "https://bsky.app/profile/therobertta.bsky.social/post/3mq75ue5jtg23",
+        "https://bsky.app/profile/therobertta.bsky.social/post/3mq75ucfdz42o"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
       "source_visibility": "Public",
       "evidence_basis": "social_discussion",
       "evidence_strength": "Medium"
     },
     {
-      "id": "scr-abc011",
-      "title": "DeepSeek pricing page update",
-      "why_it_matters": "Major model provider changes pricing; impacts agent cost calculations",
+      "id": "scr-003",
+      "title": "Senior SWE-Bench: open-source benchmark for senior-level agent eval",
+      "why_it_matters": "Assesses agents as senior engineers, filling a gap in realistic eval.",
       "evidence": [
-        "https://api-docs.deepseek.com/quick_start/pricing",
-        "https://api-docs.deepseek.com/"
+        "https://senior-swe-bench.snorkel.ai/"
       ],
       "confidence": "high",
-      "relevance_score": 5,
+      "relevance_score": 7,
       "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "none",
+      "signal_class": "research",
+      "infra_angle": "eval",
       "promotion_status": "candidate",
-      "next_check": "changelog for new models"
+      "next_check": "2026-07-10"
     },
     {
-      "id": "scr-abc012",
-      "title": "User reports $165k cost for pre-merge agent run",
-      "why_it_matters": "Concrete cost data: 5.9B\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "id": "scr-004",
+      "title": "Hierarchical memory architecture for long-horizon multi-agent modeling",
+      "why_it_matters": "Overcomes context limits in multi-agent systems via structured memory.",
       "evidence": [
-        "https://bsky.app/profile/hazelweakly.me/post/3mq75exdrkk2n"
+        "https://arxiv.org/abs/2607.07666"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10"
+    },
+    {
+      "id": "scr-005",
+      "title": "Anthropic Claude Cowork expands to mobile and web (beta)",
+      "why_it_matters": "Agent workspace moves to cloud, unbinding from desktop.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/thedurabilitycurve.bsky.social/post/3mq65x2bzqz2f",
+        "https://www.anthropic.com/features/making-of-claude-code"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "official-url-attached"
+    },
+    {
+      "id": "scr-006",
+      "title": "Microsoft 365 price hike up to 42% due to AI (Copilot tax)",
+      "why_it_matters": "AI features drive significant cost increases for enterprise users.",
+      "evidence": [
+        "https://www.windowslatest.com/2026/07/05/microsoft-365-just-got-a-price-hike-over-continuous-innovation-but-copilot-is-the-ai-tax-on-businesses/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10"
+    },
+    {
+      "id": "scr-007",
+      "title": "Malicious AI agent skills evade security scanners",
+      "why_it_matters": "Agent skills can bypass existing security checks, raising supply chain risks.",
+      "evidence": [
+        "https://bsky.app/profile/hapsis.bsky.social/post/3mq7225e6ys27",
+        "https://www.helpnetsecurity.com/2026/07/09/m..."
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-007",
+      "title": "AgentLens: production trajectory review for agent evaluation",
+      "why_it_matters": "Goes beyond pass/fail to\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/uswatch.nzcow.com/post/3mq766mpvgp2p"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-008",
+      "title": "Memory layer for Claude Code (+10.2 pts on SWE-bench Verified)",
+      "why_it_matters": "Demonstrates significant SWE-bench improvement via persistent memory.",
+      "evidence": [
+        "https://github.com/SaravananJaichandar/world-model-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-009",
+      "title": "Tarit: self-hosted sandbox cloud and hypervisor for AI agents",
+      "why_it_matters": "Enables secure, isolated execution environments for agent workloads.",
+      "evidence": [
+        "https://github.com/instavm/tarit"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-010",
+      "title": "Kintsugi: local-first safety net for AI agents and humans",
+      "why_it_matters": "Provides a safety layer for agent actions, reducing risk of unintended outcomes.",
+      "evidence": [
+        "https://github.com/arrowassassin/kintsugi"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-011",
+      "title": "Agd: content-addressed DAG for tracking AI agent actions",
+      "why_it_matters": "Provides verifiable audit trail for agent workflows.",
+      "evidence": [
+        "https://github.com/frontman-ai/agd"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-013",
+      "title": "Hermes Agent Desktop: centralized agent management interface",
+      "why_it_matters": "Reduces browser friction for multi-agent workflow management.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/deepakgupta.org/post/3mq6ytxw66x2z"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-014",
+      "title": "Reuters launches MCP server for AI agents",
+      "why_it_matters": "Major news org provides \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/promptrocker.bsky.social/post/3mq6xejr6bk2l"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-015",
+      "title": "SpaceX (owns Grok) acquires cursor.com",
+      "why_it_matters": "Major consolidation: Spa\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/hypersprite.com/post/3mq76x2cuw22x"
       ],
       "confidence": "low",
       "relevance_score": 7,
       "source_diversity": 1,
-      "signal_class": "user_workflow",
+      "signal_class": "mainstream_product",
       "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "more context from user",
+      "next_check": "2026-07-10",
       "source_visibility": "Public",
       "evidence_basis": "social_discussion",
-      "evidence_strength": "Weak"
+      "evidence_strength": "Weak",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-017",
+      "title": "Qwen and Fable: open-weights agentic coding model (35B MoE)",
+      "why_it_matters": "Open-weight model for agentic coding, enabling local deployment.",
+      "evidence": [
+        "https://huggingface.co/lordx64/Qwable-v1"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "2026-07-10"
     }
   ],
   "gaps": [
-    "Missing mainstream_product: Google/Microsoft/Cursor/GitHub changelog or release",
-    "Missing user_workflow: more concrete field reports from different domains"
+    "Missing user_workflow: no operator field reports or social/discussion sources in this shard",
+    "Missing social/discussion: Bluesky/Reddit/HN/X sources not present",
+    "Missing mainstream_product: Anthropic/OpenAI/Google/Microsoft/Cursor changelog (only Claude Cowork and M365 price hike found)",
+    "Missing user_workflow: concrete operator field reports from social/discussion (only security friction and ratchet pattern found)",
+    "Missing social/discussion: Bluesky/Reddit/HN/X field reports for user_workflow (only security and eval patterns found)"
   ]
 }

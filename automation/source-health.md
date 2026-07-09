@@ -4,10 +4,10 @@ Last checked: 2026-07-09
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| npm:agent observability | ok |  |
-| pypi-updates:agent observability | ok |  |
-| crates:agent observability | ok |  |
-| open-vsx:agent observability | ok |  |
+| npm:agent security | ok |  |
+| pypi-updates:agent security | ok |  |
+| crates:agent security | ok |  |
+| open-vsx:agent security | ok |  |
 | docker:mcp server | ok |  |
 | docker:ai agent | ok |  |
 | docker:coding agent | ok |  |

@@ -4,21 +4,21 @@ Last checked: 2026-07-09
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
-| arxiv | 1 | 0 | 4 |
-| bluesky | 7 | 0 | 21 |
-| crates | 5 | 0 | 15 |
-| devto | 4 | 0 | 12 |
-| docker | 3 | 0 | 9 |
-| feed | 10 | 0 | 32 |
-| github | 13 | 0 | 39 |
-| hn | 16 | 0 | 48 |
-| lobsters | 1 | 0 | 4 |
-| npm | 5 | 0 | 15 |
-| open-vsx | 5 | 0 | 15 |
-| page | 14 | 0 | 52 |
+| arxiv | 1 | 0 | 6 |
+| bluesky | 10 | 0 | 40 |
+| crates | 9 | 0 | 45 |
+| devto | 6 | 0 | 24 |
+| docker | 3 | 0 | 15 |
+| feed | 10 | 0 | 48 |
+| github | 17 | 0 | 84 |
+| hn | 19 | 0 | 95 |
+| lobsters | 1 | 0 | 6 |
+| npm | 9 | 0 | 45 |
+| open-vsx | 9 | 0 | 45 |
+| page | 14 | 0 | 78 |
 | pypi-package | 8 | 0 | 8 |
-| pypi-updates | 5 | 0 | 15 |
-| reddit-rss | 1 | 0 | 2 |
+| pypi-updates | 9 | 0 | 45 |
+| reddit-rss | 1 | 0 | 4 |
 | release | 20 | 0 | 45 |
 | tag | 20 | 0 | 50 |
 

@@ -468,3 +468,26 @@ Ignore or deprioritize:
 - MemOS self-evolving persistent memory: https://github.com/MemTensor/MemOS
 - DaVinci Resolve MCP Server: https://bsky.app/profile/githubprojects.bsky.social/post/3mq6z2ls4cw2d
 - AWS S3 versioning zero-downtime patterns: https://aws.amazon.com/blogs/storage/zero-downtime-amazon-s3-versioning-architectural-patterns-for-mission-critical-workloads/
+
+
+## Additional sources from 2026-07-09 daily run (screening)
+- Claude Sonnet 5 release: https://www.anthropic.com/news/claude-sonnet-5
+- OpenAI coding eval blog: https://openai.com/index/separating-signal-from-noise-coding-evaluations
+- AI coding agents trigger endpoint security rules: https://bsky.app/profile/kitafox.bsky.social/post/3mq763yfsq227
+- Malicious AI agent skills evade security scanners: https://bsky.app/profile/hapsis.bsky.social/post/3mq7225e6ys27
+- Ratchet eval pattern: https://bsky.app/profile/therobertta.bsky.social/post/3mq75uf4a5l22
+- Senior SWE-Bench: https://senior-swe-bench.snorkel.ai/
+- Microsoft Agent Governance Toolkit: https://github.com/microsoft/agent-governance-toolkit
+- MemOS: https://github.com/MemTensor/MemOS
+- DaVinci Resolve MCP Server: https://bsky.app/profile/githubprojects.bsky.social/post/3mq6z2ls4cw2d
+
+
+## Source-sweep 2026-07-09 (additional URLs from screening)
+
+- How we contain Claude across products: https://www.anthropic.com/engineering/how-we-contain-claude
+- Claude Sonnet 5 Release: https://www.anthropic.com/news/claude-sonnet-5
+- OpenAI separating signal from noise in coding evaluations: https://openai.com/index/separating-signal-from-noise-coding-evaluations
+- AI coding agents trigger endpoint security rules: https://bsky.app/profile/kitafox.bsky.social/post/3mq763yfsq227
+- Malicious AI agent skills evade security scanners: https://bsky.app/profile/hapsis.bsky.social/post/3mq7225e6ys27
+- Ratchet eval pattern: https://bsky.app/profile/therobertta.bsky.social/post/3mq75uf4a5l22
+- Microsoft Agent Framework: https://github.com/microsoft/agent-framework
