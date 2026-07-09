@@ -58,7 +58,7 @@ Read large artifacts from disk; do not paste full `daily/YYYY-MM.md` or screenin
 - Prefer `append` for new `## YYYY-MM-DD` daily blocks
 - Never `full`-rewrite existing daily/weekly/monthly files
 - Daily append must stay under `MAX_DAILY_APPEND_CHARS` (default 10k)
-- Model JSON response must stay under `MAX_RESPONSE_CHARS` (default 16k)
+- Model JSON response must stay under `MAX_RESPONSE_CHARS` (default 32k)
 
 ## Token Discipline
 

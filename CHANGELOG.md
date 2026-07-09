@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.7.6 - 2026-07-09
+
+Raise default `MAX_RESPONSE_CHARS` so bilingual daily JSON with must-cover mainstream is not rejected before apply.
+
+### Changed
+- Default `MAX_RESPONSE_CHARS` 16k → 32k (override still via env).
+- `prompts/runner-rules.md` documents the 32k response budget.
+- CLI version bumped to `0.7.6`.
+
 ## v0.7.5 - 2026-07-09
 
 Hotfix: daily `replace_section` bodies that still include `## YYYY-MM-DD` no longer create duplicate day headings after merge.
