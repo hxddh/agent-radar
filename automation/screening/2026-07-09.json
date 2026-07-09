@@ -1,190 +1,189 @@
 {
-  "summary": "Multiple agent framework releases (Microsoft ADK Go 2.0, Microsoft agent-framework), security focus (containment, tool-scoping, permission guards), and new memory/observability tools dominate the signal landscape.",
+  "summary": "Mixed repository and signal landscape: main agent coding platform releases (Claude Code origins, GitHub Copilot update, Google ADK Go 2.0), new coding model Grok 4.5 (cost challenges to Opus), emphasis on memory infrastructures, MCP tool proliferation, and some maturity in agent security advisories.",
   "candidates": [
     {
-      "id": "scr-1a2b3c4d",
-      "title": "ADK Go 2.0: graph-based workflow engine, human-in-the-loop, multi-agent reliability",
-      "why_it_matters": "Google's upgraded agent framework introduces graph-based orchestration and HITL detection.",
+      "id": "scr-anthropic-code1",
+      "title": "Anthropic details Claude Code's origins and evolution",
+      "why_it_matters": "Official post shows alpha CLI to product journey, annual run-rate $2.5B, critical for investment signals.",
       "evidence": [
-        "https://developers.googleblog.com/announcing-adk-go-20/",
-        "https://developers.googleblog.com/why-we-built-adk-20/"
+        "https://www.anthropic.com/features/making-of-claude-code"
       ],
       "confidence": "high",
-      "relevance_score": 1,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "runtime",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-2b3c4d5e",
-      "title": "Microsoft agent-framework: multi-agent orchestration with Python/.NET support",
-      "why_it_matters": "Microsoft's official multi-agent framework now at 11k+ stars.",
-      "evidence": [
-        "https://github.com/microsoft/agent-framework"
-      ],
-      "confidence": "high",
-      "relevance_score": 1,
-      "source_diversity": 0,
+      "relevance_score": 9,
+      "source_diversity": 2,
       "signal_class": "mainstream_product",
       "infra_angle": "deployment",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "next release"
     },
     {
-      "id": "scr-3c4d5e6f",
-      "title": "Anthropic: How we contain Claude across products (blast radius containment)",
-      "why_it_matters": "Detailed ingestion of containment patterns offers production security design patterns.",
+      "id": "scr-grok45-code2",
+      "title": "Grok 4.5 launches as cost-efficient coding model",
+      "why_it_matters": "1.5T params, 500K context, lower token cost vs Opus — disrupts coding agent economics.",
       "evidence": [
-        "https://www.anthropic.com/engineering/how-we-contain-claude"
+        "https://bsky.app/profile/yomimonoid.bsky.social/post/3mq6ncue55p23",
+        "https://bsky.app/profile/kautious.com/post/3mq6lqhwdlh2f"
       ],
       "confidence": "high",
-      "relevance_score": 1,
-      "source_diversity": 1,
+      "relevance_score": 8,
+      "source_diversity": 2,
       "signal_class": "mainstream_product",
-      "infra_angle": "security",
+      "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "benchmarks validation"
     },
     {
-      "id": "scr-4d5e6f7g",
-      "title": "OpenAI: separating signal from noise in coding evaluations",
-      "why_it_matters": "Official guidance on eval rigor for coding agents.",
-      "evidence": [
-        "https://openai.com/index/separating-signal-from-noise-coding-evaluations"
-      ],
-      "confidence": "high",
-      "relevance_score": 1,
-      "source_diversity": 0,
-      "signal_class": "mainstream_product",
-      "infra_angle": "eval",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-5e6f7g8h",
-      "title": "Claude Sonnet 5: frontier performance for coding/agents",
-      "why_it_matters": "New frontier model with direct coding/agent improvements.",
+      "id": "scr-anthro-sonnet5",
+      "title": "Claude Sonnet 5 released (Jun 30)",
+      "why_it_matters": "New frontier model from Anthropic — key for coding/agent performance at scale.",
       "evidence": [
         "https://www.anthropic.com/news/claude-sonnet-5"
       ],
       "confidence": "high",
-      "relevance_score": 1,
-      "source_diversity": 0,
-      "signal_class": "mainstream_product",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-6f7g8h9i",
-      "title": "user reports: completing Google vibe coding course with agentic engineering",
-      "why_it_matters": "Community learning path for agent building practices.",
-      "evidence": [
-        "https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d"
-      ],
-      "confidence": "low",
-      "relevance_score": 1,
-      "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-7g8h9i0j",
-      "title": "strict tool-scoping/sandboxing required for agent memory security",
-      "why_it_matters": "Security practitioner highlighting practical least-privilege architecture needs.",
-      "evidence": [
-        "https://bsky.app/profile/markhuangai.bsky.social/post/3mq6jt6es2r24"
-      ],
-      "confidence": "medium",
-      "relevance_score": 1,
-      "source_diversity": 1,
-      "signal_class": "user_workflow",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-8h9i0j1k",
-      "title": "GitHub Copilot in VS Code June 2026 releases (changelog)",
-      "why_it_matters": "Official product update with likely agent workflow enhancements.",
-      "evidence": [
-        "https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases"
-      ],
-      "confidence": "medium",
-      "relevance_score": 1,
-      "source_diversity": 0,
-      "signal_class": "mainstream_product",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-9i0j1k2l",
-      "title": "Microsoft Flint: visualization language for AI agents",
-      "why_it_matters": "New approach to understanding multi-agent workflows through visualization.",
-      "evidence": [
-        "https://microsoft.github.io/flint-chart/#/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 1,
+      "relevance_score": 7,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "runtime",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "adoption reports"
     },
     {
-      "id": "scr-0j1k2l3m",
-      "title": "agent-armor: framework to detect AI Agent Traps (content injection, jailbreaks, exfiltration)",
-      "why_it_matters": "Addresses emerging security taxonomies from DeepMind with practical tool.",
+      "id": "scr-google-adkgo20",
+      "title": "Google ADK Go 2.0 announced — graph-based workflow, HITL",
+      "why_it_matters": "ADK Go evolves multi-agent orchestration with built-in human-in-loop, semantic memory.",
       "evidence": [
-        "https://github.com/stylusnexus/agent-armor"
+        "https://developers.googleblog.com/announcing-adk-go-20/"
       ],
-      "confidence": "medium",
-      "relevance_score": 1,
+      "confidence": "high",
+      "relevance_score": 7,
       "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "security",
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "release notes"
     },
     {
-      "id": "scr-1k2l3m4n",
-      "title": "stealth-chrome-devtools-mcp: undetectable browser automation via MCP",
-      "why_it_matters": "Enables stealth browser control for agents; defense/red-team angle.",
+      "id": "scr-github-copilot-jun26",
+      "title": "GitHub Copilot June 2026 VS Code updates",
+      "why_it_matters": "Routine but wide-reaching Copilot improvements for everyday coding workflow.",
       "evidence": [
-        "https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp"
+        "https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases"
       ],
-      "confidence": "medium",
-      "relevance_score": 1,
-      "source_diversity": 0,
-      "signal_class": "infra_primitive",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-2l3m4n5o",
-      "title": "opencloudcosts MCP server: cloud pricing for AWS/GCP/Azure as agent tool",
-      "why_it_matters": "New MCP primitive for cost-aware agent decisions in cloud environments.",
-      "evidence": [
-        "https://pypi.org/project/opencloudcosts/1.3.0/"
-      ],
-      "confidence": "medium",
-      "relevance_score": 1,
+      "confidence": "high",
+      "relevance_score": 5,
       "source_diversity": 1,
-      "signal_class": "infra_primitive",
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "feature adoption"
+    },
+    {
+      "id": "scr-zed-adoption",
+      "title": "User reports shift from VS Code/Cursor to Zed + agents",
+      "why_it_matters": "Concrete user workflow change: coding agents outgrow traditional IDEs for many.",
+      "evidence": [
+        "https://bsky.app/profile/inn42.bsky.social/post/3mq6pbmmtr22p"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "survey data"
+    },
+    {
+      "id": "scr-2mcp-for-openclaw",
+      "title": "Coze-MCP bridge to OpenClaw via no-setup skill wrapping",
+      "why_it_matters": "User gets MCP tools from Coze workflows without complex config — lowers barrier to MCP adoption.",
+      "evidence": [
+        "https://github.com/genusscardiniuslaugh243/coze-mcp-for-openclaw"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
       "infra_angle": "mcp",
       "promotion_status": "candidate",
-      "next_check": "follow-up"
+      "next_check": "star growth"
+    },
+    {
+      "id": "scr-memory-daemon",
+      "title": "Filesystem-native agent memory daemon (markdown, consolidation)",
+      "why_it_matters": "Practical persistent memory approach — no DB needed, filesystem-based, integrates with many agents.",
+      "evidence": [
+        "https://github.com/Charlesfrederickmenningerdateplum166/agent-memory-daemon"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "adoption"
+    },
+    {
+      "id": "scr-kb-mcp-lite",
+      "title": "kb-mcp-lite: lightweight agent-native knowledge base (SQLite+FTS5+vec0+MCP)",
+      "why_it_matters": "Provides local, vector-capable knowledge base for agents via MCP — simple integration.",
+      "evidence": [
+        "https://pypi.org/project/kb-mcp-lite/0.5.21/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "maturity"
+    },
+    {
+      "id": "scr-automox-visual",
+      "title": "Automox MCP Server 2.2 adds patch policy creation and visual review",
+      "why_it_matters": "MCP-enabled security/patch management — concrete infra use case.",
+      "evidence": [
+        "https://bsky.app/profile/hacker.at.thenote.app/post/3mq6ltymin22a"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "usage reports"
+    },
+    {
+      "id": "scr-github-advisory-ga",
+      "title": "GitHub Innersource security advisories generally available",
+      "why_it_matters": "SA provides internal advisory distribution, impacts agent security policies.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "integration"
+    },
+    {
+      "id": "scr-anthro-containment",
+      "title": "How Anthropic contains Claude across products — sandbox, tool-scoping",
+      "why_it_matters": "Key engineering post: containment patterns (sandboxing, least-privilege, audit) vital for agent safety.",
+      "evidence": [
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up talks"
     }
   ],
   "gaps": [
-    "Missing user_workflow: additional concrete field reports from operators",
-    "Missing infra_primitive: memory or storage primitives with high confidence"
+    "Missing user_workflow: need two concrete user reports with scenario detail beyond tool shifts (e.g., specific workflow adoption or pain point)."
   ]
 }

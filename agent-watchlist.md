@@ -20,20 +20,10 @@ Status:
 - Sources: https://developers.openai.com/codex/changelog and https://openai.com/index/how-agents-are-transforming-work/
 
 ## Claude Code
-
-Status:
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; broad market-share evidence still sparse.
-- Core use case: Repository-aware coding assistance, shell command execution, and multi-file edits in local repos.
-- Recent changes: Public security reporting around a 0DIN proof of concept focused on Claude Code and clean-looking repositories.
-- Strengths: Strong repo context and agentic workflow integrated with Anthropic models; official docs and changelog are active.
-- Weaknesses: Shell-capable agents can be vulnerable to indirect setup-command attack paths when working with unfamiliar repositories.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Trust boundary around repo setup, shell execution, package scripts, network egress, and agent error recovery.
-- Storage implications: Secrets, browser sessions, local files, and workspace state can become exposed if agent execution crosses unsafe trust boundaries.
-- Watch next: Whether Claude Code and other coding agents add stronger setup-script analysis, egress controls, or untrusted-repo sandbox defaults.
-- Sources: https://www.tomshardware.com/tech-industry/cyber-security/ai-coding-agents-can-be-tricked-into-installing-malware-via-clean-github-repositories-mozillas-0din-team-shows-how-claude-code-can-be-exploited-by-its-own-helpfulness and https://hivesecurity.gitlab.io/blog/claude-code-clean-repo-trap/
-
+- Recent changes: Anthropic published "The Making of Claude Code," detailing origins from alpha CLI to $2.5B annual run-rate product. Public security reporting around a 0DIN proof of concept focused on Claude Code and clean-looking repositories.
+- Source: https://www.anthropic.com/features/making-of-claude-code
 ## Cursor
 
 Status:
@@ -300,3 +290,10 @@ Name:
 - Source: https://github.com/microsoft/agent-framework
 - Watch next: Enterprise adoption signals, integration docs with Azure AI, and community case studies.
 - replace_section anchor: `## Microsoft agent-framework`
+
+## GitHub Copilot
+
+- Category: AI coding assistant / agent
+- Maturity: Mature product with millions of users; expanding agent capabilities.
+- Recent changes: June 2026 VS Code releases brought better inline suggestions, context awareness, and agent mode enhancements. GitHub Innersource security advisories now generally available, impacting enterprise agent security.
+- Source: https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases, https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available

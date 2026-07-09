@@ -399,3 +399,22 @@ Ignore or deprioritize:
 - agent-armor (AI Agent Traps detection): https://github.com/stylusnexus/agent-armor
 - opencloudcosts MCP server: https://pypi.org/project/opencloudcosts/1.3.0/
 - Tool-scoping/sandboxing for agent memory security (Bluesky): https://bsky.app/profile/markhuangai.bsky.social/post/3mq6jt6es2r24
+
+
+## Additional sources from 2026-07-09 daily run
+- GitHub Innersource security advisories GA: https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available
+- Anthropic Claude Code origins: https://www.anthropic.com/features/making-of-claude-code
+- Grok 4.5 coding model: https://bsky.app/profile/yomimonoid.bsky.social/post/3mq6ncue55p23
+- Zed adoption shift: https://bsky.app/profile/inn42.bsky.social/post/3mq6pbmmtr22p
+- Coze-MCP bridge: https://github.com/genusscardiniuslaugh243/coze-mcp-for-openclaw
+- Agent memory daemon: https://github.com/Charlesfrederickmenningerdateplum166/agent-memory-daemon
+- kb-mcp-lite: https://pypi.org/project/kb-mcp-lite/0.5.21/
+
+
+## Source-sweep 2026-07-09 (additional URLs)
+- Grok 4.5 coding model: https://bsky.app/profile/yomimonoid.bsky.social/post/3mq6ncue55p23
+- Zed adoption shift: https://bsky.app/profile/inn42.bsky.social/post/3mq6pbmmtr22p
+- Coze-MCP bridge: https://github.com/genusscardiniuslaugh243/coze-mcp-for-openclaw
+- Automox MCP Server 2.2: https://bsky.app/profile/hacker.at.thenote.app/post/3mq6ltymin22a
+- Agent memory daemon: https://github.com/Charlesfrederickmenningerdateplum166/agent-memory-daemon
+- kb-mcp-lite 0.5.21: https://pypi.org/project/kb-mcp-lite/0.5.21/
