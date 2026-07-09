@@ -143,8 +143,10 @@ Daily synthesis must not collapse into a GitHub infra-parts list. Enforce this s
 2. **User workflow** — at least one concrete operator/user experience signal (may be weak and labeled), **or** a Gaps bullet: `Missing user_workflow: ...`.
 3. **Infra primitives** — at most **2** emerging-repo / infra-primitive bullets in the day block; put the rest in `research-log.md` Candidate inbox.
 4. Prefer direction-changing evidence over another memory/MCP/sandbox README.
+5. **Must-cover mainstream** — if screening marks high-confidence mainstream candidates as MUST, include them in New Signals / Mainstream Agent Progress (or explain omission under Gaps). Do not drop security advisories or official product posts for emerging repos.
+6. **Freshness** — prefer last 24–48 hours. Month-named roundups such as `June 2026 releases` must include `Freshness: stale-roundup` unless they are truly new today.
 
-The runner records direction coverage in telemetry and rejects daily updates that omit both the mainstream signal and the corresponding Gaps bullet.
+The runner records direction coverage and weighted/mainstream recall in telemetry. It rejects daily updates that omit both the mainstream signal and the corresponding Gaps bullet, drop must-cover mainstream candidates, or include unlabeled stale roundups.
 
 ## Evidence and safety
 
