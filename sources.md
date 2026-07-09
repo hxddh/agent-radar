@@ -391,3 +391,11 @@ Ignore or deprioritize:
 - Stealth Chrome DevTools MCP: https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp
 - CVE-2026-59723 (Cline WebSocket Hijacking): https://bsky.app/profile/cve.skyfleet.blue/post/3mq6ii3a55f27
 - Google Vibe Coding Course (Kaggle): https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d
+
+
+## Additional sources from 2026-07-09 daily run (supplementary)
+- Anthropic containment engineering: https://www.anthropic.com/engineering/how-we-contain-claude
+- Microsoft agent-framework: https://github.com/microsoft/agent-framework
+- agent-armor (AI Agent Traps detection): https://github.com/stylusnexus/agent-armor
+- opencloudcosts MCP server: https://pypi.org/project/opencloudcosts/1.3.0/
+- Tool-scoping/sandboxing for agent memory security (Bluesky): https://bsky.app/profile/markhuangai.bsky.social/post/3mq6jt6es2r24

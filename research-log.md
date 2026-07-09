@@ -1627,3 +1627,24 @@ Follow-up gaps: Microsoft Flint and user automation stack signals from screening
 - **Stealth Chrome DevTools MCP** (scr-stealth-chrome-mcp): Undetectable browser automation for AI agents via MCP. Why it matters: Enables stealth browser operations; niche infra. Evidence strength: Weak (early repo). Relevance score: 6. Defer reason: Potential misuse; needs legitimate use-case documentation. Follow-up needed: Monitor for official documentation. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30. Source: https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp
 - **CVE-2026-59723 (Cline WebSocket Hijacking)** (scr-cve-cline-ws): Security vulnerability in Cline agent dashboard, highlighting agent security risks. Why it matters: Explicit security vulnerability in a popular coding agent; raises awareness. Evidence strength: Medium (CVE report). Relevance score: 7. Defer reason: Security advisory; may be promoted as a security incident. Follow-up needed: Confirm CVE details, check for mitigations. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30. Source: https://bsky.app/profile/cve.skyfleet.blue/post/3mq6ii3a55f27
 - **Google Vibe Coding Course (Kaggle)** (scr-vibe-coding-course): User report of Google's agentic engineering course. Why it matters: Indicates educational push for agentic workflows; user workflow signal. Evidence strength: Weak (single report). Relevance score: 6. Defer reason: Needs official confirmation. Follow-up needed: Verify course existence and content. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30. Source: https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d
+
+
+## 2026-07-09 Daily Run — Additional Candidates
+
+- **agent-armor** (scr-0j1k2l3m): Framework to detect AI Agent Traps (content injection, jailbreaks, exfiltration). Why it matters: Addresses emerging security taxonomies from DeepMind with practical tool; security infra primitive. Evidence strength: Medium (repo with clear security focus). Relevance score: 8. Defer reason: Needs integration with major agent frameworks and real-world testing. Follow-up needed: Evaluate detection effectiveness; check for Claude Code/Cursor/Codex integration. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://github.com/stylusnexus/agent-armor
+
+- **opencloudcosts MCP server** (scr-2l3m4n5o): Cloud pricing for AWS/GCP/Azure exposed as MCP server for cost-aware agent decisions. Why it matters: New MCP primitive for cost-aware agent decisions in cloud environments; bridges infra cost and agent tooling. Evidence strength: Medium (PyPI package, active). Relevance score: 7. Defer reason: Niche; needs broader agent framework integration. Follow-up needed: Test with agent frameworks; assess pricing data freshness. candidate_seen_at: 2026-07-09, last_checked_at: 2026-07-09, promotion_status: deferred, defer_count: 1, stale_after_days: 30.
+  - Source: https://pypi.org/project/opencloudcosts/1.3.0/
+
+- **Microsoft Agent Framework** (scr-msftaf): UPDATE — promoted to agent-watchlist.md. Evidence now Strong (11k+ stars, official Microsoft repo, MUST-cover screening item). promotion_status: promoted. Promoted reason: Official Microsoft multi-agent orchestration framework with strong adoption signal (11k+ stars); directly relevant to agent infrastructure thesis. last_checked_at: 2026-07-09.
+  - Source: https://github.com/microsoft/agent-framework
+
+- **Anthropic containment engineering** (scr-anthropic-contain): UPDATE — covered in daily 2026-07-09. Evidence Strong (official engineering blog). promotion_status: covered-in-daily. last_checked_at: 2026-07-09. Retained as reference for security design patterns; may inform future thesis update on agent containment as first-class infra.
+  - Source: https://www.anthropic.com/engineering/how-we-contain-claude
+
+Follow-up gaps:
+- Missing user_workflow: additional concrete field reports from operators beyond social posts; need authenticated community sources.
+- Missing infra_primitive: memory or storage primitives with high confidence; current memory candidates remain weak/early.
+- agent-armor and opencloudcosts MCP are promising but need integration evidence with major agent frameworks.
+- Anthropic containment patterns may drive a new thesis point on agent security as first-class infrastructure; defer to weekly review.

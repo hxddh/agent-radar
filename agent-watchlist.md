@@ -290,3 +290,13 @@ Name:
 - Risk:
 - Public corroboration:
 - Watch next:
+
+
+## Microsoft agent-framework
+- Category: Multi-agent orchestration framework
+- Maturity: Official Microsoft framework with 11k+ stars; Python and .NET support; production-grade multi-agent orchestration.
+- Recent changes: Gaining traction as a production-grade multi-agent framework; complements Google ADK Go 2.0 in the orchestration space.
+- Evidence strength: Strong (official repo, 11k+ stars).
+- Source: https://github.com/microsoft/agent-framework
+- Watch next: Enterprise adoption signals, integration docs with Azure AI, and community case studies.
+- replace_section anchor: `## Microsoft agent-framework`

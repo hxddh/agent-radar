@@ -1,45 +1,16 @@
 {
-  "summary": "Agent security, memory, and sandboxing dominate; Anthropic details Claude Code's origin and containment; Google ADK Go 2.0 and Microsoft Flint emerge; OpenAI Codex releases continue.",
+  "summary": "Multiple agent framework releases (Microsoft ADK Go 2.0, Microsoft agent-framework), security focus (containment, tool-scoping, permission guards), and new memory/observability tools dominate the signal landscape.",
   "candidates": [
     {
-      "id": "scr-anthropic-making-claude-code",
-      "title": "Anthropic publishes inside story of Claude Code's development",
-      "why_it_matters": "Official origin story from researchers and engineers; key for understanding agent design philosophy.",
+      "id": "scr-1a2b3c4d",
+      "title": "ADK Go 2.0: graph-based workflow engine, human-in-the-loop, multi-agent reliability",
+      "why_it_matters": "Google's upgraded agent framework introduces graph-based orchestration and HITL detection.",
       "evidence": [
-        "https://www.anthropic.com/features/making-of-claude-code"
+        "https://developers.googleblog.com/announcing-adk-go-20/",
+        "https://developers.googleblog.com/why-we-built-adk-20/"
       ],
       "confidence": "high",
-      "relevance_score": 10,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-anthropic-containment",
-      "title": "Anthropic engineering details agent containment across products",
-      "why_it_matters": "First-party containment patterns for claude.ai and Claude Code; critical for security infra.",
-      "evidence": [
-        "https://www.anthropic.com/engineering/how-we-contain-claude"
-      ],
-      "confidence": "high",
-      "relevance_score": 10,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-google-adk-go-20",
-      "title": "Google announces ADK Go 2.0 with graph-based workflow engine",
-      "why_it_matters": "Major update to Google's agent development kit; graph workflows and human-in-the-loop.",
-      "evidence": [
-        "https://developers.googleblog.com/announcing-adk-go-20/"
-      ],
-      "confidence": "high",
-      "relevance_score": 9,
+      "relevance_score": 1,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "runtime",
@@ -47,144 +18,173 @@
       "next_check": "follow-up"
     },
     {
-      "id": "scr-microsoft-flint",
-      "title": "Microsoft releases Flint, a visualization language for AI agents",
-      "why_it_matters": "New tool for debugging and understanding agent behavior visually.",
+      "id": "scr-2b3c4d5e",
+      "title": "Microsoft agent-framework: multi-agent orchestration with Python/.NET support",
+      "why_it_matters": "Microsoft's official multi-agent framework now at 11k+ stars.",
       "evidence": [
-        "https://microsoft.github.io/flint-chart/#/"
+        "https://github.com/microsoft/agent-framework"
       ],
       "confidence": "high",
-      "relevance_score": 8,
+      "relevance_score": 1,
+      "source_diversity": 0,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Anthropic: How we contain Claude across products (blast radius containment)",
+      "why_it_matters": "Detailed ingestion of containment patterns offers production security design patterns.",
+      "evidence": [
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 1,
       "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-4d5e6f7g",
+      "title": "OpenAI: separating signal from noise in coding evaluations",
+      "why_it_matters": "Official guidance on eval rigor for coding agents.",
+      "evidence": [
+        "https://openai.com/index/separating-signal-from-noise-coding-evaluations"
+      ],
+      "confidence": "high",
+      "relevance_score": 1,
+      "source_diversity": 0,
       "signal_class": "mainstream_product",
       "infra_angle": "eval",
       "promotion_status": "candidate",
       "next_check": "follow-up"
     },
     {
-      "id": "scr-openai-codex-01430",
-      "title": "OpenAI Codex CLI v0.143.0 released",
-      "why_it_matters": "Stable release of OpenAI's local coding agent; frequent updates indicate active development.",
+      "id": "scr-5e6f7g8h",
+      "title": "Claude Sonnet 5: frontier performance for coding/agents",
+      "why_it_matters": "New frontier model with direct coding/agent improvements.",
       "evidence": [
-        "https://github.com/openai/codex/releases/tag/rust-v0.143.0"
+        "https://www.anthropic.com/news/claude-sonnet-5"
       ],
       "confidence": "high",
-      "relevance_score": 8,
-      "source_diversity": 1,
+      "relevance_score": 1,
+      "source_diversity": 0,
       "signal_class": "mainstream_product",
       "infra_angle": "none",
       "promotion_status": "candidate",
       "next_check": "follow-up"
     },
     {
-      "id": "scr-github-copilot-june-2026",
-      "title": "GitHub Copilot in VS Code June 2026 releases",
-      "why_it_matters": "Monthly changelog for Copilot; includes new features and fixes for coding agent.",
+      "id": "scr-6f7g8h9i",
+      "title": "user reports: completing Google vibe coding course with agentic engineering",
+      "why_it_matters": "Community learning path for agent building practices.",
       "evidence": [
-        "https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases"
+        "https://bsky.app/profile/travislcraft.bsky.social/post/3mq6iu2ujon2d"
       ],
-      "confidence": "high",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-pipelock-agent-firewall",
-      "title": "Pipelock: open-source AI agent firewall for MCP security",
-      "why_it_matters": "First open-source firewall for agent egress; scans MCP/A2A/WebSocket for exfiltration.",
-      "evidence": [
-        "https://github.com/luckyPipewrench/pipelock"
-      ],
-      "confidence": "high",
-      "relevance_score": 9,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-webmcp-sdk",
-      "title": "OpenTiny WebMCP SDK: browser automation without source code changes",
-      "why_it_matters": "Enables LLM agents to remote-control any webpage via MCP; no code mods needed.",
-      "evidence": [
-        "https://github.com/opentiny/webmcp-sdk"
-      ],
-      "confidence": "medium",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "mcp",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-mneme-memory-system",
-      "title": "Mneme: persistent memory system for AI coding agents via MCP",
-      "why_it_matters": "Hybrid retrieval (BM25+vector+graph) with multi-scope memory; agent-agnostic MCP interface.",
-      "evidence": [
-        "https://github.com/wirvii/mneme"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-agent-sandboxes",
-      "title": "Agent sandboxes: disposable container sandbox for coding agents",
-      "why_it_matters": "Multiple sandbox projects (samaritanark, ray4f55) indicate growing need for safe agent execution.",
-      "evidence": [
-        "https://github.com/samaritanark/agent-sandboxes",
-        "https://github.com/ray4f55/agent-sandbox"
-      ],
-      "confidence": "medium",
-      "relevance_score": 7,
-      "source_diversity": 2,
-      "signal_class": "infra_primitive",
-      "infra_angle": "sandbox",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-codenotary-agentmon3",
-      "title": "Codenotary launches AgentMon 3 for adaptive runtime security",
-      "why_it_matters": "Enterprise AI security platform learning from agent behavior; adaptive policies.",
-      "evidence": [
-        "https://bsky.app/profile/hacker.at.thenote.app/post/3mq6ixqjjbk2a"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "security",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
-    },
-    {
-      "id": "scr-groundcrew-task-dispatch",
-      "title": "Groundcrew: dispatch task backlog to local AI coding agents",
-      "why_it_matters": "Practical workflow for managing multiple agent sessions with sandboxed worktrees.",
-      "evidence": [
-        "https://github.com/ClipboardHealth/groundcrew"
-      ],
-      "confidence": "medium",
-      "relevance_score": 6,
+      "confidence": "low",
+      "relevance_score": 1,
       "source_diversity": 1,
       "signal_class": "user_workflow",
       "infra_angle": "none",
       "promotion_status": "candidate",
       "next_check": "follow-up"
+    },
+    {
+      "id": "scr-7g8h9i0j",
+      "title": "strict tool-scoping/sandboxing required for agent memory security",
+      "why_it_matters": "Security practitioner highlighting practical least-privilege architecture needs.",
+      "evidence": [
+        "https://bsky.app/profile/markhuangai.bsky.social/post/3mq6jt6es2r24"
+      ],
+      "confidence": "medium",
+      "relevance_score": 1,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-8h9i0j1k",
+      "title": "GitHub Copilot in VS Code June 2026 releases (changelog)",
+      "why_it_matters": "Official product update with likely agent workflow enhancements.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases"
+      ],
+      "confidence": "medium",
+      "relevance_score": 1,
+      "source_diversity": 0,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-9i0j1k2l",
+      "title": "Microsoft Flint: visualization language for AI agents",
+      "why_it_matters": "New approach to understanding multi-agent workflows through visualization.",
+      "evidence": [
+        "https://microsoft.github.io/flint-chart/#/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 1,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-0j1k2l3m",
+      "title": "agent-armor: framework to detect AI Agent Traps (content injection, jailbreaks, exfiltration)",
+      "why_it_matters": "Addresses emerging security taxonomies from DeepMind with practical tool.",
+      "evidence": [
+        "https://github.com/stylusnexus/agent-armor"
+      ],
+      "confidence": "medium",
+      "relevance_score": 1,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-1k2l3m4n",
+      "title": "stealth-chrome-devtools-mcp: undetectable browser automation via MCP",
+      "why_it_matters": "Enables stealth browser control for agents; defense/red-team angle.",
+      "evidence": [
+        "https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 1,
+      "source_diversity": 0,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-2l3m4n5o",
+      "title": "opencloudcosts MCP server: cloud pricing for AWS/GCP/Azure as agent tool",
+      "why_it_matters": "New MCP primitive for cost-aware agent decisions in cloud environments.",
+      "evidence": [
+        "https://pypi.org/project/opencloudcosts/1.3.0/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 1,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
     }
   ],
   "gaps": [
-    "Missing user_workflow: need 2 concrete operator/field reports; only one found (Groundcrew).",
-    "Missing mainstream_product: Apple, AWS, Meta, Cursor changelog not represented."
+    "Missing user_workflow: additional concrete field reports from operators",
+    "Missing infra_primitive: memory or storage primitives with high confidence"
   ]
 }
