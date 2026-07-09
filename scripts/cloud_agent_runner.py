@@ -1545,6 +1545,87 @@ def stale_roundup_unlabeled(text: str) -> list[str]:
     return issues
 
 
+def label_stale_roundup_bullet(bullet: str) -> str:
+    """Insert a Freshness label under an unlabeled month-named roundup bullet."""
+    if re.search(r"freshness:\s*stale-roundup", bullet, re.IGNORECASE):
+        return bullet
+    if not STALE_ROUNDUP_RE.search(bullet):
+        return bullet
+    lines = bullet.splitlines()
+    if not lines:
+        return bullet
+    insert_at = 1
+    for index, line in enumerate(lines[1:], start=1):
+        if line.startswith("  - ") or line.startswith("\t- "):
+            insert_at = index
+            break
+        if line.startswith("  ") or line.startswith("\t"):
+            insert_at = index + 1
+            continue
+        break
+    label = "  - Freshness: stale-roundup"
+    lines.insert(insert_at, label)
+    return "\n".join(lines)
+
+
+def label_stale_roundups_in_text(text: str) -> tuple[str, int]:
+    """Auto-label unlabeled month-named roundups; return (text, labels_added)."""
+    if not text or not STALE_ROUNDUP_RE.search(text):
+        return text, 0
+    bullets = split_daily_signal_bullets(text)
+    if not bullets:
+        return text, 0
+    labeled = 0
+    new_text = text
+    for bullet in reversed(bullets):
+        if not STALE_ROUNDUP_RE.search(bullet):
+            continue
+        if re.search(r"freshness:\s*stale-roundup", bullet, re.IGNORECASE):
+            continue
+        new_bullet = label_stale_roundup_bullet(bullet)
+        index = new_text.rfind(bullet)
+        if index < 0:
+            continue
+        new_text = new_text[:index] + new_bullet + new_text[index + len(bullet) :]
+        labeled += 1
+    return new_text, labeled
+
+
+def repair_daily_freshness_labels(result: dict[str, Any]) -> int:
+    """Mutate daily update bodies to auto-label stale roundups. Returns labels added."""
+    labeled_total = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for item in raw_updates:
+        if not isinstance(item, dict):
+            continue
+        rel_path = str(item.get("path", "")).replace("\\", "/")
+        if not is_daily_month_path(rel_path):
+            continue
+        content = item.get("content")
+        if isinstance(content, str) and content:
+            new_content, count = label_stale_roundups_in_text(content)
+            if count:
+                item["content"] = new_content
+                labeled_total += count
+        for key in ("english_block", "chinese_block"):
+            block = item.get(key)
+            if isinstance(block, str) and block:
+                new_block, count = label_stale_roundups_in_text(block)
+                if count:
+                    item[key] = new_block
+                    labeled_total += count
+    if labeled_total:
+        warning = (
+            f"Auto-labeled {labeled_total} stale-roundup bullet(s) with "
+            "`Freshness: stale-roundup`"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return labeled_total
+
+
 def validate_daily_freshness(result: dict[str, Any]) -> None:
     bodies = daily_update_bodies(result)
     if not bodies:
@@ -1651,6 +1732,8 @@ def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: st
             )
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text)
+        # Prefer auto-label over discarding an otherwise-valid bilingual day block.
+        repair_daily_freshness_labels(result)
         validate_daily_freshness(result)
 
 

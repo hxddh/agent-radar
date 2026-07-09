@@ -1213,7 +1213,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         cloud_agent_runner.validate_must_cover_mainstream(result, screen)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["must_cover_missing"], 0)
 
-    def test_stale_roundup_requires_label(self) -> None:
+    def test_stale_roundup_auto_labels_instead_of_rejecting(self) -> None:
         unlabeled = {
             "updates": [
                 {
@@ -1228,11 +1228,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
                 }
             ]
         }
-        with self.assertRaises(SystemExit) as ctx:
-            cloud_agent_runner.validate_daily_freshness(unlabeled)
-        self.assertIn("stale-roundup", str(ctx.exception))
+        added = cloud_agent_runner.repair_daily_freshness_labels(unlabeled)
+        self.assertEqual(added, 1)
+        self.assertIn("Freshness: stale-roundup", unlabeled["updates"][0]["content"])
+        cloud_agent_runner.validate_daily_freshness(unlabeled)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["stale_roundup_count"], 0)
 
-        labeled = {
+        already = {
             "updates": [
                 {
                     "path": "daily/2026-07.md",
@@ -1247,7 +1249,8 @@ class CloudAgentRunnerTest(unittest.TestCase):
                 }
             ]
         }
-        cloud_agent_runner.validate_daily_freshness(labeled)
+        self.assertEqual(cloud_agent_runner.repair_daily_freshness_labels(already), 0)
+        cloud_agent_runner.validate_daily_freshness(already)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["stale_roundup_count"], 0)
 
     def test_compact_screening_lists_must_cover(self) -> None:

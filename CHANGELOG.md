@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.7 - 2026-07-09
+
+Freshness follow-up: auto-label unlabeled month-named roundups instead of discarding the whole daily update.
+
+### Changed
+- Daily synthesis auto-inserts `Freshness: stale-roundup` on unlabeled `Month YYYY releases` bullets, records an apply warning, then re-checks.
+- CLI version bumped to `0.7.7`.
+
 ## v0.7.6 - 2026-07-09
 
 Raise default `MAX_RESPONSE_CHARS` so bilingual daily JSON with must-cover mainstream is not rejected before apply.
