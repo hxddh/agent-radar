@@ -68,6 +68,49 @@ DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
 DEFAULT_PRIORITY_LANE_FLOOR_RATIO = 0.4
 DEFAULT_LANE_COVERAGE_DEGRADED_THRESHOLD = 0.5
+SIGNAL_CLASSES = frozenset(
+    {"mainstream_product", "user_workflow", "infra_primitive", "research", "noise"}
+)
+MAX_DAILY_INFRA_PRIMITIVE_BULLETS = 2
+INFRA_THEME_MARKERS = (
+    "mcp",
+    "memory",
+    "sandbox",
+    "runtime",
+    "eval",
+    "observability",
+    "security",
+)
+MAINSTREAM_VENDOR_MARKERS = (
+    "openai",
+    "anthropic",
+    "google",
+    "gemini",
+    "microsoft",
+    "github.blog",
+    "github changelog",
+    "copilot",
+    "cursor",
+    "apple",
+    "webkit",
+    "aws",
+    "amazon",
+    "meta",
+    "llama",
+    "replit",
+    "devin",
+)
+USER_WORKFLOW_MARKERS = (
+    "user",
+    "workflow",
+    "field report",
+    "operator",
+    "merged pr",
+    "review",
+    "experience",
+    "adoption",
+    "friction",
+)
 CANDIDATE_INBOX_ANCHOR = "## Candidate inbox"
 CANDIDATE_INBOX_HEADING = re.compile(r"^## Candidate inbox\s*$", re.MULTILINE | re.IGNORECASE)
 LEGACY_PASS_HEADING = re.compile(r"^### Pass:", re.MULTILINE)
@@ -92,12 +135,15 @@ FEED_USER_AGENT = "Mozilla/5.0 (compatible; AgentRadar/1.0; +https://github.com/
 DEFAULT_CHANGELOG_FEEDS = [
     ("openai-blog", "https://openai.com/news/rss.xml"),
     ("github-changelog", "https://github.blog/changelog/feed/"),
+    ("microsoft-azure-ai", "https://azure.microsoft.com/en-us/blog/category/ai/feed/"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
     ("cursor-blog", "https://cursor.com/blog"),
     ("anthropic-news", "https://www.anthropic.com/news"),
     ("anthropic-engineering", "https://www.anthropic.com/engineering"),
+    ("google-developers-blog", "https://developers.googleblog.com/"),
+    ("openai-index", "https://openai.com/index/"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -193,6 +239,11 @@ RUN_AUDIT: dict[str, Any] = {
     "bilingual_repair_applied": False,
     "synthesis_recall": 0.0,
     "screening_candidate_ids": [],
+    "screening_signal_classes": {},
+    "direction_mainstream": False,
+    "direction_user_workflow": False,
+    "direction_infra_count": 0,
+    "direction_gaps_present": False,
     "apply_warnings": [],
 }
 
@@ -799,14 +850,94 @@ def parse_screening_json(text: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def infer_signal_class(candidate: dict[str, Any]) -> str:
+    explicit = str(candidate.get("signal_class", "")).strip().lower()
+    if explicit in SIGNAL_CLASSES:
+        return explicit
+    title = str(candidate.get("title", "")).lower()
+    why = str(candidate.get("why_it_matters", "")).lower()
+    text = f"{title} {why}"
+    evidence = candidate.get("evidence", [])
+    urls = " ".join(str(item).lower() for item in evidence) if isinstance(evidence, list) else ""
+    hay = f"{text} {urls}"
+    if any(marker in hay for marker in MAINSTREAM_VENDOR_MARKERS) and any(
+        marker in hay for marker in ("changelog", "release", "preview", "ga", "generally available", "blog")
+    ):
+        return "mainstream_product"
+    if any(marker in hay for marker in MAINSTREAM_VENDOR_MARKERS) and "github.com" not in hay:
+        return "mainstream_product"
+    if any(marker in hay for marker in USER_WORKFLOW_MARKERS):
+        return "user_workflow"
+    if "arxiv" in hay or "paper" in hay or "benchmark" in hay:
+        return "research"
+    if any(marker in hay for marker in INFRA_THEME_MARKERS):
+        return "infra_primitive"
+    return "infra_primitive"
+
+
+def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    """Prefer a mix of mainstream/user/infra over an infra-only top-N list."""
+    if limit <= 0 or not candidates:
+        return []
+    buckets: dict[str, list[dict[str, Any]]] = {name: [] for name in SIGNAL_CLASSES}
+    unknown: list[dict[str, Any]] = []
+    for cand in candidates:
+        if not isinstance(cand, dict):
+            continue
+        signal_class = infer_signal_class(cand)
+        cand["signal_class"] = signal_class
+        if signal_class in buckets:
+            buckets[signal_class].append(cand)
+        else:
+            unknown.append(cand)
+
+    selected: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+
+    def take(signal_class: str, count: int) -> None:
+        for cand in buckets.get(signal_class, []):
+            if len(selected) >= limit or count <= 0:
+                return
+            cand_id = str(cand.get("id") or cand.get("title") or id(cand))
+            if cand_id in seen_ids:
+                continue
+            selected.append(cand)
+            seen_ids.add(cand_id)
+            count -= 1
+
+    # Reserve slots so infra cannot crowd out direction classes in the top-N.
+    take("mainstream_product", min(2, limit))
+    take("user_workflow", min(2, max(0, limit - len(selected))))
+    take("research", min(1, max(0, limit - len(selected))))
+    infra_budget = min(3, max(0, limit - len(selected)))
+    take("infra_primitive", infra_budget)
+    # Fill remaining slots without letting infra exceed its budget.
+    for signal_class in ("mainstream_product", "user_workflow", "research", "noise"):
+        take(signal_class, max(0, limit - len(selected)))
+    infra_selected = sum(1 for cand in selected if cand.get("signal_class") == "infra_primitive")
+    take("infra_primitive", max(0, min(3 - infra_selected, limit - len(selected))))
+    for cand in unknown:
+        if len(selected) >= limit:
+            break
+        cand_id = str(cand.get("id") or cand.get("title") or id(cand))
+        if cand_id not in seen_ids:
+            selected.append(cand)
+            seen_ids.add(cand_id)
+    return selected[:limit]
+
+
 def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
     candidates = data.get("candidates", [])
     if not isinstance(candidates, list):
         return data
     ids: list[str] = []
+    class_counts: dict[str, int] = {}
     for cand in candidates:
         if not isinstance(cand, dict):
             continue
+        signal_class = infer_signal_class(cand)
+        cand["signal_class"] = signal_class
+        class_counts[signal_class] = class_counts.get(signal_class, 0) + 1
         if cand.get("id"):
             ids.append(str(cand["id"]))
             continue
@@ -818,6 +949,7 @@ def enrich_screening_with_ids(data: dict[str, Any]) -> dict[str, Any]:
         cand["id"] = cand_id
         ids.append(cand_id)
     RUN_AUDIT["screening_candidate_ids"] = ids
+    RUN_AUDIT["screening_signal_classes"] = class_counts
     return data
 
 
@@ -851,14 +983,22 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
 
     candidates = data.get("candidates", [])
     if isinstance(candidates, list) and candidates:
-        lines.append(f"Top candidates ({min(max_candidates, len(candidates))} shown):")
-        for cand in candidates[:max_candidates]:
-            if not isinstance(cand, dict):
-                continue
+        ranked = diversify_screening_candidates(candidates, max_candidates)
+        class_counts: dict[str, int] = {}
+        for cand in candidates:
+            if isinstance(cand, dict):
+                signal_class = infer_signal_class(cand)
+                class_counts[signal_class] = class_counts.get(signal_class, 0) + 1
+        if class_counts:
+            coverage = "; ".join(f"{name}={count}" for name, count in sorted(class_counts.items()))
+            lines.append(f"Signal-class coverage: {coverage}")
+        lines.append(f"Top candidates ({len(ranked)} shown, direction-diversified):")
+        for cand in ranked:
             cand_id = str(cand.get("id", ""))
             title = str(cand.get("title", "?"))
             status = cand.get("promotion_status", "candidate")
             score = cand.get("relevance_score", "")
+            signal_class = cand.get("signal_class", infer_signal_class(cand))
             infra = cand.get("infra_angle", "")
             evidence = cand.get("evidence", [])
             url = ""
@@ -866,9 +1006,19 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
                 url = str(evidence[0])
             why = truncate_text(str(cand.get("why_it_matters", "")), why_limit)
             id_prefix = f"{cand_id} " if cand_id else ""
-            lines.append(f"- {id_prefix}[{status} score={score} infra={infra}] {title} | {url}")
+            lines.append(
+                f"- {id_prefix}[{status} class={signal_class} score={score} infra={infra}] {title} | {url}"
+            )
             if why:
                 lines.append(f"  why: {why}")
+        if class_counts.get("mainstream_product", 0) == 0:
+            lines.append(
+                "Direction note: no mainstream_product candidates; daily must record a Gaps bullet."
+            )
+        if class_counts.get("user_workflow", 0) == 0:
+            lines.append(
+                "Direction note: no user_workflow candidates; daily must record a Gaps bullet."
+            )
 
     gaps = data.get("gaps", [])
     if isinstance(gaps, list) and gaps:
@@ -1077,6 +1227,91 @@ def compute_synthesis_recall(screen_text: str | None, result: dict[str, Any]) ->
     return round(matched / len(candidates), 3)
 
 
+def daily_update_bodies(result: dict[str, Any]) -> list[str]:
+    bodies: list[str] = []
+    for update in normalize_result_updates(result):
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if is_daily_month_path(rel_path):
+            bodies.append(str(update.get("content", "")))
+    return bodies
+
+
+def content_has_mainstream_signal(text: str) -> bool:
+    lower = text.lower()
+    if "missing mainstream_product" in lower:
+        return False
+    return any(marker in lower for marker in MAINSTREAM_VENDOR_MARKERS)
+
+
+def content_has_user_workflow_signal(text: str) -> bool:
+    lower = text.lower()
+    if "missing user_workflow" in lower:
+        return False
+    return any(marker in lower for marker in USER_WORKFLOW_MARKERS)
+
+
+def content_has_direction_gap(text: str, kind: str) -> bool:
+    lower = text.lower()
+    if kind == "mainstream":
+        return "missing mainstream_product" in lower or (
+            "gap" in lower and "mainstream" in lower
+        )
+    if kind == "user":
+        return "missing user_workflow" in lower or (
+            "gap" in lower and ("user_workflow" in lower or "user evidence" in lower or "user field" in lower)
+        )
+    return False
+
+
+def count_infra_primitive_bullets(text: str) -> int:
+    count = 0
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("- "):
+            continue
+        lower = stripped.lower()
+        if any(marker in lower for marker in ("github.com/", "candidate:", "agent / project:", "deferred")):
+            if any(marker in lower for marker in INFRA_THEME_MARKERS):
+                count += 1
+                continue
+        if lower.startswith("- candidate:") or lower.startswith("- agent / project:"):
+            if any(marker in lower for marker in INFRA_THEME_MARKERS):
+                count += 1
+    return count
+
+
+def validate_daily_direction_quota(result: dict[str, Any]) -> None:
+    bodies = daily_update_bodies(result)
+    if not bodies:
+        return
+    text = "\n".join(bodies)
+    has_mainstream = content_has_mainstream_signal(text)
+    has_user = content_has_user_workflow_signal(text)
+    mainstream_gap = content_has_direction_gap(text, "mainstream")
+    user_gap = content_has_direction_gap(text, "user")
+    infra_count = count_infra_primitive_bullets(text)
+    RUN_AUDIT["direction_mainstream"] = has_mainstream
+    RUN_AUDIT["direction_user_workflow"] = has_user
+    RUN_AUDIT["direction_infra_count"] = infra_count
+    RUN_AUDIT["direction_gaps_present"] = mainstream_gap or user_gap
+
+    if not has_mainstream and not mainstream_gap:
+        raise SystemExit(
+            "Refusing daily update: missing mainstream_product signal and no Gaps bullet "
+            "named 'Missing mainstream_product: ...'."
+        )
+    if not has_user and not user_gap:
+        raise SystemExit(
+            "Refusing daily update: missing user_workflow signal and no Gaps bullet "
+            "named 'Missing user_workflow: ...'."
+        )
+    if infra_count > MAX_DAILY_INFRA_PRIMITIVE_BULLETS:
+        raise SystemExit(
+            f"Refusing daily update: {infra_count} infra_primitive emerging bullets exceeds "
+            f"max {MAX_DAILY_INFRA_PRIMITIVE_BULLETS}; move extras to research-log.md."
+        )
+
+
 def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: str | None) -> None:
     if task not in {"daily", "weekly", "monthly"}:
         return
@@ -1088,6 +1323,8 @@ def validate_synthesis_result(task: str, result: dict[str, Any], screen_text: st
             f"Synthesis recall {recall:.3f} is below MIN_SYNTHESIS_RECALL ({min_recall}). "
             "Reference more screened candidates in the daily synthesis."
         )
+    if task == "daily":
+        validate_daily_direction_quota(result)
 
 
 def record_bilingual_telemetry(root: Path, result: dict[str, Any]) -> None:
@@ -1329,52 +1566,65 @@ def load_source_cache(root: Path | None) -> dict[str, dict[str, Any]]:
 def score_source_item(item: dict[str, str], cache: dict[str, dict[str, Any]]) -> int:
     title = item.get("title", "")
     note = item.get("note", "")
-    text = f"{title} {note}".lower()
+    url = item.get("url", "")
+    text = f"{title} {note} {url}".lower()
     score = 10
     lane = source_lane(item.get("source", ""))
     score += {
-        "official": 18,
+        "official": 22,
         "github-release": 16,
-        "github": 14,
-        "package-marketplace": 12,
-        "hacker-news": 10,
+        "github": 12,
+        "package-marketplace": 8,
+        "hacker-news": 12,
         "social": 9,
-        "reddit": 7,
+        "reddit": 10,
         "papers": 8,
     }.get(lane, 5)
     keyword_weights = {
         "agent": 5,
-        "mcp": 6,
-        "memory": 5,
-        "sandbox": 6,
+        "mcp": 4,
+        "memory": 3,
+        "sandbox": 3,
         "browser": 5,
-        "eval": 5,
-        "observability": 5,
-        "security": 6,
+        "eval": 4,
+        "observability": 4,
+        "security": 4,
         "deployment": 4,
-        "workflow": 4,
+        "workflow": 6,
         "multi-agent": 5,
         "coding": 4,
         "cli": 3,
-        "release": 3,
-        "changelog": 3,
+        "release": 5,
+        "changelog": 6,
+        "preview": 4,
+        "generally available": 5,
+        "field report": 7,
+        "user experience": 6,
     }
     for keyword, weight in keyword_weights.items():
         if keyword in text:
             score += weight
+    if any(marker in text for marker in MAINSTREAM_VENDOR_MARKERS):
+        score += 8
+    # Penalize repetitive long-tail infra README noise unless adoption evidence exists.
+    infra_hits = sum(1 for marker in INFRA_THEME_MARKERS if marker in text)
     stars_match = re.search(r"stars=(\d+)", note)
+    stars = int(stars_match.group(1)) if stars_match else 0
+    if infra_hits >= 2 and stars < 50 and lane in {"github", "package-marketplace"}:
+        score -= 10
     if stars_match:
-        stars = int(stars_match.group(1))
         if stars >= 1000:
             score += 14
         elif stars >= 100:
             score += 8
         elif stars >= 10:
             score += 4
-    if item.get("url", "") not in cache:
+        elif stars == 0 and lane == "github":
+            score -= 6
+    if url not in cache:
         score += 8
     else:
-        score -= min(12, int(cache[item["url"]].get("seen_count", 1)) * 2)
+        score -= min(12, int(cache[url].get("seen_count", 1)) * 2)
     return max(1, score)
 
 
@@ -1851,41 +2101,47 @@ def source_queries_for_task(task: str) -> dict[str, list[str]]:
     common = {
         "hn": [
             "AI agent",
-            "MCP agent",
-            "agent memory",
             "coding agent",
-            "agent sandbox",
+            "Claude Code",
+            "OpenAI Codex",
+            "agent workflow",
+            "MCP agent",
         ],
         "reddit": [
             "AI coding agent",
             "Claude Code Codex Cursor",
+            "AI coding assistant experience",
+            "agent workflow",
             "MCP server AI agent",
-            "AI agent memory",
-            "agent automation",
         ],
         "github": [
             "AI agent framework",
+            "coding agent CLI",
+            "computer use agent",
+            "multi agent orchestration",
+            "agent eval framework",
             "MCP server agent",
             "agent memory MCP",
-            "coding agent CLI",
             "AI agent sandbox",
-            "agent eval framework",
-            "agent security MCP",
-            "computer use agent",
         ],
         "packages": [
             "mcp server",
             "ai agent",
             "coding agent",
-            "agent memory",
-            "agent sandbox",
+            "agent eval",
+            "agent observability",
         ],
     }
+    if task in {"daily", "source-sweep", "weekly", "monthly"}:
+        common["hn"].extend(["OpenAI agent", "Anthropic Claude", "Gemini agent", "Microsoft Copilot"])
+        common["reddit"].extend(["Claude Code experience", "Cursor agent", "Copilot agent"])
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
-        common["reddit"].extend(["AI agent workflow", "AI coding assistant experience", "agent security"])
-        common["github"].extend(["browser agent automation", "multi agent orchestration", "agent observability", "agent deployment workflow"])
-        common["packages"].extend(["browser agent", "agent eval", "agent observability", "agent security"])
+        common["reddit"].extend(["agent security", "agent automation"])
+        common["github"].extend(
+            ["browser agent automation", "agent observability", "agent deployment workflow", "agent security MCP"]
+        )
+        common["packages"].extend(["browser agent", "agent memory", "agent sandbox", "agent security"])
     return common
 
 
@@ -2973,6 +3229,11 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Breadth degraded: {RUN_AUDIT.get('breadth_degraded', False)}",
         f"- Synthesis recall: {RUN_AUDIT.get('synthesis_recall', 0.0)}",
         f"- Bilingual ratio: {RUN_AUDIT.get('bilingual_ratio', 0.0)}",
+        f"- Direction mainstream: {RUN_AUDIT.get('direction_mainstream', False)}",
+        f"- Direction user workflow: {RUN_AUDIT.get('direction_user_workflow', False)}",
+        f"- Direction infra count: {RUN_AUDIT.get('direction_infra_count', 0)}",
+        f"- Direction gaps present: {RUN_AUDIT.get('direction_gaps_present', False)}",
+        f"- Screening signal classes: {RUN_AUDIT.get('screening_signal_classes', {})}",
     ]
     if source_errors:
         entry.append("- Source errors:")
@@ -3019,6 +3280,11 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "bilingual_ratio": RUN_AUDIT.get("bilingual_ratio", 0.0),
         "synthesis_recall": RUN_AUDIT.get("synthesis_recall", 0.0),
         "screening_candidate_ids": RUN_AUDIT.get("screening_candidate_ids", []),
+        "screening_signal_classes": RUN_AUDIT.get("screening_signal_classes", {}),
+        "direction_mainstream": RUN_AUDIT.get("direction_mainstream", False),
+        "direction_user_workflow": RUN_AUDIT.get("direction_user_workflow", False),
+        "direction_infra_count": RUN_AUDIT.get("direction_infra_count", 0),
+        "direction_gaps_present": RUN_AUDIT.get("direction_gaps_present", False),
         "apply_warnings": RUN_AUDIT.get("apply_warnings", []),
     }
     with path.open("a", encoding="utf-8") as handle:
@@ -3108,6 +3374,11 @@ def run_task(
     RUN_AUDIT["bilingual_ratio"] = 0.0
     RUN_AUDIT["synthesis_recall"] = 0.0
     RUN_AUDIT["screening_candidate_ids"] = []
+    RUN_AUDIT["screening_signal_classes"] = {}
+    RUN_AUDIT["direction_mainstream"] = False
+    RUN_AUDIT["direction_user_workflow"] = False
+    RUN_AUDIT["direction_infra_count"] = 0
+    RUN_AUDIT["direction_gaps_present"] = False
     RUN_AUDIT["apply_warnings"] = []
     config = TASK_CONFIG[task]
     if config["ensure"]:

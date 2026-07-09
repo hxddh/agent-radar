@@ -19,18 +19,23 @@ Collect and summarize high-signal AI Agent updates from the last 24-48 hours.
 
 Use all available authorized sources. Do not artificially limit research to public webpages. Public sources, authorized logged-in sources, and user-provided private signals can all be useful. Because this repository is public, publish only public-safe summaries.
 
-Focus on:
-1. New AI Agent product signals
-2. Mainstream agent progress
-3. Emerging agents worth tracking
-4. Real user experience
-5. Reusable workflow / prompt / setup tricks
-6. Infrastructure signals: sandbox, MCP, tools, memory, browser, eval, cloud runtime
-7. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
+Focus on (direction order matters):
+1. Mainstream product / platform deltas (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, etc.)
+2. Real user experience and operator workflows
+3. Emerging agents worth tracking (max 2–3; rest stay in research-log)
+4. Reusable workflow / prompt / setup tricks
+5. Infrastructure signals: sandbox, MCP, tools, memory, browser, eval, cloud runtime (rotate; do not dump all)
+6. Storage implications: workspace, snapshot, checkpoint, artifact, logs, replay, knowledge base
+
+Daily direction quota (required):
+- At least **1 mainstream_product** signal, OR an explicit Gaps bullet naming which vendors were checked and missing.
+- At least **1 user_workflow** signal (may be weak/labeled), OR an explicit Gaps bullet for missing user evidence.
+- At most **2 infra_primitive** emerging-repo bullets in the day block; additional infra candidates go to `research-log.md` only.
+- Do not fill the day with GitHub long-tail memory/MCP/sandbox repos when mainstream or user signals are missing.
 
 Rules:
 - Report format, JSON output, bilingual gates, and append-vs-full rules: see `prompts/runner-rules.md`.
-- Prefer official sources and real user reports.
+- Prefer official sources and real user reports over another zero-star infra repo.
 - Do not collect low-value launch hype.
 - Do not rewrite old files unless a thesis genuinely changed.
 - Append a new `## YYYY-MM-DD` day block to the current monthly daily file (do not `full`-rewrite the month file).

@@ -795,7 +795,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
             day=cloud_agent_runner.parse_date("2026-07-02"),
         )
         self.assertLess(len(compact), len(raw) // 2)
-        self.assertIn("Top candidates (8 shown)", compact)
+        self.assertIn("direction-diversified", compact)
+        self.assertIn("Signal-class coverage", compact)
+        self.assertIn("no mainstream_product candidates", compact)
         self.assertIn("automation/screening/2026-07-02.json", compact)
 
     def test_should_skip_source_sweep_when_candidates_already_tracked(self) -> None:
@@ -952,6 +954,94 @@ class CloudAgentRunnerTest(unittest.TestCase):
         }
         recall = cloud_agent_runner.compute_synthesis_recall(screen, result)
         self.assertEqual(recall, 1.0)
+
+    def test_diversify_screening_prefers_mainstream_and_user(self) -> None:
+        candidates = [
+            {"title": f"memory mcp {i}", "infra_angle": "memory", "evidence": [f"https://github.com/x/{i}"]}
+            for i in range(8)
+        ]
+        candidates.insert(
+            0,
+            {
+                "title": "OpenAI Agents changelog",
+                "why_it_matters": "Official product preview",
+                "evidence": ["https://openai.com/index/agents"],
+                "signal_class": "mainstream_product",
+            },
+        )
+        candidates.insert(
+            1,
+            {
+                "title": "Operator field report on review workflow",
+                "why_it_matters": "User experience friction",
+                "evidence": ["https://example.com/field"],
+                "signal_class": "user_workflow",
+            },
+        )
+        ranked = cloud_agent_runner.diversify_screening_candidates(candidates, 6)
+        classes = [c.get("signal_class") for c in ranked]
+        self.assertIn("mainstream_product", classes)
+        self.assertIn("user_workflow", classes)
+        self.assertLessEqual(classes.count("infra_primitive"), 3)
+        self.assertEqual(classes[0], "mainstream_product")
+        self.assertEqual(classes[1], "user_workflow")
+
+    def test_daily_direction_quota_requires_mainstream_or_gap(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Candidate: another memory MCP sandbox\n"
+                        "  - Source: https://github.com/example/memory-mcp\n"
+                    ),
+                }
+            ]
+        }
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("Missing mainstream_product", str(ctx.exception))
+
+    def test_daily_direction_quota_accepts_gaps(self) -> None:
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-09\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: OpenAI shipped a coding-agent preview.\n"
+                        "  - Source: https://openai.com/index/agents\n\n"
+                        "#### 7. Gaps\n\n"
+                        "- Missing user_workflow: no concrete operator reports in this pass.\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_mainstream"])
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_gaps_present"])
+
+    def test_zero_star_infra_repo_is_penalized(self) -> None:
+        weak = {
+            "source": "github",
+            "title": "Tiny memory MCP sandbox",
+            "url": "https://github.com/example/tiny-memory-mcp",
+            "note": "stars=0",
+        }
+        strong = {
+            "source": "openai-blog",
+            "title": "OpenAI Agents changelog preview",
+            "url": "https://openai.com/index/agents",
+            "note": "",
+        }
+        weak_score = cloud_agent_runner.score_source_item(weak, {})
+        strong_score = cloud_agent_runner.score_source_item(strong, {})
+        self.assertGreater(strong_score, weak_score)
 
 
 if __name__ == "__main__":
