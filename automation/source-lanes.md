@@ -18,7 +18,7 @@ Last checked: 2026-07-10
 | page | 21 | 1 | 120 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 9 | 0 | 45 |
-| reddit-rss | 1 | 2 | 4 |
+| reddit-rss | 1 | 3 | 4 |
 | release | 26 | 0 | 78 |
 | tag | 26 | 0 | 78 |
 

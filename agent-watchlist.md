@@ -12,8 +12,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: Anthropic published 'The Making of Claude Code' blog (2026-07-10) detailing design decisions and productization path. China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. Anthropic published containment engineering post (2026-07-09, covered). GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), and async long-running task pattern. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
-- Source: https://www.anthropic.com/features/making-of-claude-code
+- Recent changes: v2.1.206 released (2026-07-10). Anthropic published 'The Making of Claude Code' blog (2026-07-10) detailing design decisions and productization path. Anthropic published containment engineering post (2026-07-09, covered). China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), and async long-running task pattern. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.206
 ## Cursor
 
 Status:
@@ -308,8 +308,5 @@ Name:
 ## Gemini CLI
 - Category: CLI coding agent
 - Maturity: Rapid release cadence; v0.50.0 stable and v0.51.0-preview.0 available.
-- Recent changes: v0.51.0-preview.0 released 2026-07-10; v0.50.0 stable also available. Free CLI agent gaining traction as Claude Code alternative.
-- Evidence strength: Strong (official GitHub releases)
+- Recent changes: v0.51.0-preview.0 released 2026-07-10; v0.50.0 stable also available. Google also adopted remote MCP server integration for Gemini managed agents, making MCP the default tool layer for Gemini's agent platform. Free CLI agent gaining traction as Claude Code alternative.
 - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
-- Watch next: Feature parity with Claude Code, enterprise adoption signals, and integration with Google Cloud agent infrastructure.
-- replace_section anchor: `## Gemini CLI`

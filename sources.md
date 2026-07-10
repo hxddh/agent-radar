@@ -638,3 +638,19 @@ Ignore or deprioritize:
 - OpenCode as Claude Code replacement: https://bsky.app/profile/aixxe.net/post/3mqbnvyrcdc2k
 - Multi-agent worktree workflow: https://www.reddit.com/r/AI_Agents/comments/1ushzdp/running_more_than_one_coding_agent_at_once/
 - Session rename tip: https://bsky.app/profile/code-coach.bsky.social/post/3mqbswrp6gs22
+
+
+## Source-sweep 2026-07-10 (additional)
+- Google MCP adoption for Gemini: https://bsky.app/profile/aifoundersczech.bsky.social/post/3mqbxtrpzk62f
+- OpenAI GPT-5.6 launch: https://openai.com/index/gpt-5-6
+- Anthropic Claude containment engineering: https://www.anthropic.com/engineering/how-we-contain-claude
+- HN: AI-editor carousel frustration: https://news.ycombinator.com/item?id=47709343
+- Eval and context engineering insight: https://bsky.app/profile/ai-nerd.bsky.social/post/3mqbxk4szp62o
+- OpenHuman + Ollama + MiMoCode stack: https://bsky.app/profile/swastik2209.bsky.social/post/3mqbyfkmv2x2z
+- Twelve LangGraph projects article: https://dev.to/debashish_ghosal_2026/two-langgraph-projects-that-taught-me-how-to-design-multi-agent-systems-53n1
+- ScopeJudge paper: https://arxiv.org/abs/2607.07774
+- Dialogflow CX agent impersonation flaw: https://bsky.app/profile/z3usalmighty.bsky.social/post/3mqby542doo2i
+- Langfuse v3.211.0: https://github.com/langfuse/langfuse/releases/tag/v3.211.0
+- Agenticow npm package: https://www.npmjs.com/package/agenticow
+- Claude Code v2.1.206: https://github.com/anthropics/claude-code/releases/tag/v2.1.206
+- CNBC article on GPT-5.6 efficiency: https://www.cnbc.com/2026/07/09/open-ai-sam-altman-chatgpt-5-6-sol.html
