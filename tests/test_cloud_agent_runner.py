@@ -800,9 +800,12 @@ class CloudAgentRunnerTest(unittest.TestCase):
             raw,
             day=cloud_agent_runner.parse_date("2026-07-02"),
         )
-        self.assertLess(len(compact), len(raw) // 2)
+        # The compact form now carries a Radar Sweep pool for breadth, so it is
+        # only required to be smaller than the raw JSON, not half its size.
+        self.assertLess(len(compact), len(raw))
         self.assertIn("direction-diversified", compact)
         self.assertIn("Signal-class coverage", compact)
+        self.assertIn("Radar Sweep pool (17", compact)
         self.assertIn("no mainstream_product candidates", compact)
         self.assertIn("automation/screening/2026-07-02.json", compact)
 
@@ -1927,9 +1930,11 @@ class ContentTruthfulnessTest(unittest.TestCase):
                     "mode": "append",
                     "content": (
                         "## 2026-07-09\n\n### English\n\n"
-                        "#### 1. New Signals\n\ntext\n\n"
-                        "#### 5. Storage / Infra Angle\n\ntext\n\n"
-                        "#### 6. Assessment & Gaps\n\n"
+                        "#### 1. Lead Analysis\n\ntext\n\n"
+                        "#### 2. New Signals\n\ntext\n\n"
+                        "#### 6. Storage / Infra Angle\n\ntext\n\n"
+                        "#### 7. Radar Sweep\n\n- [x] item | https://example.com\n\n"
+                        "#### 8. Assessment & Gaps\n\n"
                         "- Coverage ledger: checked=github; missed=none.\n\n"
                         "### 中文\n\n#### 1. 新信号\n\ntext\n"
                     ),
@@ -2619,12 +2624,14 @@ class AuditLoopTest(unittest.TestCase):
                     "mode": "append",
                     "content": (
                         "## 2026-07-10\n\n### English\n\n"
-                        "#### 1. New Signals\n\n"
+                        "#### 1. Lead Analysis\n\n"
+                        "One short line.\n\n"
+                        "#### 2. New Signals\n\n"
                         "- Signal: only one thin signal.\n"
                         "  - Source: https://example.com/a\n\n"
-                        "#### 5. Storage / Infra Angle\n\n"
+                        "#### 6. Storage / Infra Angle\n\n"
                         "- Signal: single storage bullet without trigger.\n\n"
-                        "#### 6. Assessment & Gaps\n\n"
+                        "#### 8. Assessment & Gaps\n\n"
                         "- Coverage ledger: checked=github; missed=none\n\n"
                         "### 中文\n\n#### 1. 新信号\n\n- 信号：略。\n"
                     ),
@@ -2635,8 +2642,10 @@ class AuditLoopTest(unittest.TestCase):
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["daily_signal_count"], 1)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["storage_angle_bullets"], 1)
         warnings = cloud_agent_runner.RUN_AUDIT["apply_warnings"]
-        self.assertTrue(any("New Signals (target 4-6)" in w for w in warnings))
+        self.assertTrue(any("New Signals (target 6-8)" in w for w in warnings))
         self.assertTrue(any("Storage / Infra Angle has 1" in w for w in warnings))
+        self.assertTrue(any("Lead Analysis is thin" in w for w in warnings))
+        self.assertTrue(any("Radar Sweep has only 0" in w for w in warnings))
 
     def test_audit_daily_depth_quiet_on_deep_day(self) -> None:
         cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
@@ -2646,7 +2655,22 @@ class AuditLoopTest(unittest.TestCase):
             f"  - Evidence strength: Strong.\n"
             f"  - So what: watch vendor {index} pricing.\n"
             f"  - Source: https://example.com/{index}"
-            for index in range(4)
+            for index in range(6)
+        )
+        lead = (
+            "Today's dominant storyline is the convergence of sandbox checkpointing and "
+            "agent memory: three vendors shipped snapshot-adjacent features within 24 "
+            "hours, which strengthens thesis 4 while the pricing counter-signal from "
+            "operators on HN cuts against thesis 10.\n\n"
+            "The second thread is eval infrastructure consolidating around trace replay; "
+            "if a second enterprise vendor names replay in a changelog this week, the "
+            "storage angle moves from speculative to confirmed. Evidence conflicts on "
+            "adoption speed: vendor blogs claim production use, operator threads report "
+            "pilot-stage friction and cost overruns."
+        )
+        sweep = "\n".join(
+            f"- [infra_primitive] Sweep item {index} — one-line why | https://example.com/s{index}"
+            for index in range(8)
         )
         result = {
             "updates": [
@@ -2655,24 +2679,33 @@ class AuditLoopTest(unittest.TestCase):
                     "mode": "append",
                     "content": (
                         "## 2026-07-10\n\n### English\n\n"
-                        "#### 1. New Signals\n\n"
+                        "#### 1. Lead Analysis\n\n"
+                        f"{lead}\n\n"
+                        "#### 2. New Signals\n\n"
                         f"{signals}\n\n"
-                        "#### 5. Storage / Infra Angle\n\n"
+                        "#### 6. Storage / Infra Angle\n\n"
                         "- Signal: snapshots standardizing.\n"
                         "  - Watch trigger: a second vendor ships checkpoint APIs.\n"
                         "- Signal: replay demand rising.\n"
                         "  - Watch trigger: replay named in an enterprise changelog.\n\n"
-                        "#### 6. Assessment & Gaps\n\n"
+                        "#### 7. Radar Sweep\n\n"
+                        f"{sweep}\n\n"
+                        "#### 8. Assessment & Gaps\n\n"
                         "- Coverage ledger: checked=github; missed=none\n"
                     ),
                 }
             ]
         }
         cloud_agent_runner.audit_daily_depth(result)
-        self.assertEqual(cloud_agent_runner.RUN_AUDIT["daily_signal_count"], 4)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["daily_signal_count"], 6)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["storage_angle_bullets"], 2)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["radar_sweep_count"], 8)
+        self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["lead_analysis_chars"], 400)
         self.assertFalse(
-            any("Daily depth" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+            any(
+                "Daily depth" in w or "Daily breadth" in w
+                for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"]
+            )
         )
 
     def test_ecosystem_vendors_count_as_mainstream(self) -> None:
@@ -2837,12 +2870,12 @@ class AuditLoopTest(unittest.TestCase):
                     "mode": "append",
                     "content": (
                         "## 2026-07-11\n\n### English\n\n"
-                        "#### 1. New Signals\n\n"
+                        "#### 2. New Signals\n\n"
                         "- Signal: vendor thing.\n"
                         "  - Why it matters: x.\n"
                         "  - Evidence strength: Strong.\n"
                         "  - Source: https://openai.com/news/a\n\n"
-                        "#### 3. User Workflow & Field Notes\n\n"
+                        "#### 4. User Workflow & Field Notes\n\n"
                         "- Tool: agent loop.\n"
                         "  - Why it matters: y.\n"
                         "  - Evidence strength: Medium.\n"

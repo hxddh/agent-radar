@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.18.0 - 2026-07-10
+
+Publishing-surface restructure: the pipeline was already producing ~64 screened candidates per run, but the day block only surfaced ~10 bullets — breadth died between screening and publication, and no section carried cross-signal analysis. v0.18 makes the report as wide and as deep as the funnel behind it.
+
+### Added
+- **`#### 1. Lead Analysis`** (mandatory): 2–4 paragraphs of cross-signal narrative opening every day block — dominant storyline, connections between today's signals and active storylines/theses, and where the evidence conflicts. Audited: `lead_analysis_chars` telemetry with a thinness warning under 400 chars.
+- **`#### 7. Radar Sweep`** (mandatory): one line per remaining fresh screening candidate (`- [class] title — one-line why | URL`). `compact_screening_for_prompt` now appends a "Radar Sweep pool" listing every merged candidate beyond the top-16 (whitespace-collapsed one-liners, `SCREEN_RADAR_SWEEP_LINES` default 60) so the synthesis model finally sees the whole funnel. Audited: `radar_sweep_count` telemetry with a warning under 8 lines.
+
+### Changed
+- Canonical daily template is now 8 sections (1 Lead Analysis, 2 New Signals, 3 Mainstream Agent Progress, 4 User Workflow & Field Notes, 5 Emerging Agents / Infra Primitives, 6 Storage / Infra Angle, 7 Radar Sweep, 8 Assessment & Gaps); mandatory set is 1/2/6/7/8. Coverage ledger moves to `#### 8. Assessment & Gaps`.
+- New Signals target 4–6 → **6–8** (depth-audit warning threshold 4 → 5).
+- Day-block append cap `MAX_DAILY_APPEND_CHARS` 14,000 → **22,000**; model response cap `MAX_RESPONSE_CHARS` 48,000 → **64,000** — the old caps could not fit 8 sections plus a full sweep.
+- CLI version bumped to `0.18.0`.
+
 ## v0.17.0 - 2026-07-10
 
 Scale screening by shards, not window size: the binding constraint had shifted from numeric caps to cheap-model attention per call.
