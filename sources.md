@@ -758,3 +758,79 @@ Ignore or deprioritize:
 - [infra_primitive] DevCoreAI autonomous coding agent: https://open-vsx.org/extension/devcoreai-coding-agent/devcoreai-coding-agent
 - [infra_primitive] Google ADK tools VS Code extension: https://open-vsx.org/extension/lenixbyte/adk-tools
 - [infra_primitive] workmux: orchestrate git worktrees and tmux: https://crates.io/crates/workmux
+
+- [mainstream_product] Anthropic: How we contain Claude across products: https://www.anthropic.com/engineering/how-we-contain-claude
+- [mainstream_product] GitHub Innersource security advisories GA: https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available
+- [mainstream_product] The Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- [mainstream_product] OpenAI Codex CLI v0.144.1: https://www.npmjs.com/package/@openai/codex
+- [mainstream_product] GitHub Copilot CLI v1.0.70: https://www.npmjs.com/package/@github/copilot
+- [mainstream_product] Grok 4.5 undercuts coding agent pricing (Reuters): https://www.reuters.com/business/media-telecom/spacexai-launches-grok-45-model-coding-agentic-tasks-2026-07-08/
+- [mainstream_product] GPT-5.6 54% more token efficient on agentic coding: https://www.cnbc.com/2026/07/09/open-ai-sam-altman-chatgpt-5-6-sol.html
+- [mainstream_product] Vercel agent-eval-playground v0.1.3: https://www.npmjs.com/package/@vercel/agent-eval-playground
+- [mainstream_product] Vercel detect-agent v1.2.3: https://www.npmjs.com/package/@vercel/detect-agent
+- [mainstream_product] LangChain Python SDK v1.3.12: https://pypi.org/project/langchain/
+- [mainstream_product] Semantic Kernel Python SDK v1.44.0: https://pypi.org/project/semantic-kernel/
+- [mainstream_product] China warns of Anthropic Claude Code backdoor: https://www.channelnewsasia.com/east-asia/china-anthropic-claude-code-ai-backdoor-security-alert-6240476
+- [mainstream_product] DeepSeek V4 earning agentic token share: https://openrouter.ai/blog/insights/deepseek-v4-adoption/
+- [mainstream_product] Microsoft Copilot OS leak reveals agentic AI OS: https://www.windowscentral.com/microsoft/windows-11/project-aion-copilot-os-faq
+- [mainstream_product] AutoGen 1.0 ships stable multi-agent framework: https://bsky.app/profile/ctsmithiii.bsky.social/post/3mqc7sghers2a
+- [mainstream_product] Agentic Coding on Supabase with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] Mistral Vibe AI agent for coding: https://mistral.ai/products/vibe/code/
+- [mainstream_product] ADK Go 2.0 multi-agent framework: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Vercel Agent production-safe agent: https://vercel.com/blog/vercel-agent
+- [mainstream_product] Daytona raises $24M Series A for agent sandboxes: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [mainstream_product] E2B raises $21M Series A for agent sandboxes: https://e2b.dev/blog/series-a
+- [mainstream_product] GPT-5.6 preferred model for Microsoft 365 Copilot: https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot
+- [mainstream_product] OpenAI Government National Security Partnerships: https://openai.com/index/government-national-security-partnerships
+- [mainstream_product] Cloudflare Agentic Internet Bot Report: https://blog.cloudflare.com/agentic-internet-bot-report/
+- [mainstream_product] Meta Muse Spark model and API: https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/
+- [mainstream_product] Gemma 4 12B local agentic workflows: https://developers.googleblog.com/gemma-4-12b-the-developer-guide/
+- [mainstream_product] Ampcode Agents Anywhere remote startup: https://ampcode.com/news/agents-anywhere
+- [mainstream_product] Fly.io Building Agents that Don't Break Themselves: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [mainstream_product] Block Goose v1.41.0 released: https://github.com/aaif-goose/goose/releases/tag/v1.41.0
+- [mainstream_product] Composio 1000+ toolkits for AI agents: https://github.com/ComposioHQ/composio
+- [mainstream_product] TesterArmy YC P26 agent testing: https://tester.army
+- [research] Databricks benchmarks coding agents on multi-million line codebase: https://www.databricks.com/blog/benchmarking-coding-agents-databricks-multi-million-line-codebase
+- [research] Senior SWE-Bench for agents as senior engineers: https://senior-swe-bench.snorkel.ai/
+- [research] DeepSWE measuring frontier coding agents on long-horizon tasks: https://arxiv.org/abs/2607.07946
+- [research] Verification loop 4x'd DeepSeek intelligence matching Opus at 1/7 cost: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- [infra_primitive] OAuth support for AWS MCP Server: https://aws.amazon.com/about-aws/whats-new/2026/07/oauth-aws-mcp-server/
+- [infra_primitive] Fly.io Sprites Now Speak MCP: https://fly.io/blog/unfortunately-mcp/
+- [infra_primitive] llm-meta-ai 0.1 LLM access to Meta AI models: https://simonwillison.net/2026/Jul/9/llm-meta-ai/
+- [infra_primitive] Manufact MCP Cloud launch: https://manufact.com
+- [infra_primitive] SonarQube MCP Server code quality for AI agents: https://github.com/SonarSource/sonarqube-mcp-server
+- [infra_primitive] agent-desktop CLI for native desktop automation: https://github.com/lahfir/agent-desktop
+- [infra_primitive] Tencent CubeSandbox instant secure sandbox: https://github.com/TencentCloud/CubeSandbox
+- [infra_primitive] Mitos microVM sandbox forking for AI agents on K8s: https://github.com/mitos-run/mitos
+- [infra_primitive] Cleat one-command Docker sandbox for AI coding agents: https://github.com/cleatdev/cleat
+- [infra_primitive] Bernstein audit-grade multi-agent orchestration: https://github.com/sipyourdrink-ltd/bernstein
+- [infra_primitive] Future AGI open-source evaluation and observation: https://github.com/future-agi/future-agi
+- [infra_primitive] AI-Agentic MCPscan offline MCP security scanner: https://github.com/IRsoctierDT/ai-agentic-mcpscan
+- [infra_primitive] Mem0 Pi Agent Plugin v0.1.3: https://github.com/mem0ai/mem0/releases/tag/pi-agent-v0.1.3
+- [infra_primitive] Langfuse v3.211.0 LLM observability: https://github.com/langfuse/langfuse/releases/tag/v3.211.0
+- [infra_primitive] sup-mem 0.9.0 self-hosted memory layer: https://pypi.org/project/sup-mem/0.9.0/
+- [infra_primitive] greprag v5.53.1 agent memory: https://www.npmjs.com/package/greprag
+- [infra_primitive] agenticow Copy-On-Write vector branching: https://www.npmjs.com/package/agenticow
+- [infra_primitive] atomr-agents-eval eval suites with replay: https://crates.io/crates/atomr-agents-eval
+- [infra_primitive] agent-eval-harness-suite v0.1.2: https://www.npmjs.com/package/@reaatech/agent-eval-harness-suite
+- [infra_primitive] is-ai-agent detect AI agent CLI invocation: https://crates.io/crates/is-ai-agent
+- [infra_primitive] agentic-coding-protocol v0.0.0: https://crates.io/crates/agentic-coding-protocol
+- [infra_primitive] baponi 0.5.1 sandboxed code execution: https://pypi.org/project/baponi/0.5.1/
+- [infra_primitive] container-manager-mcp 2.1.4 Docker/Podman MCP: https://pypi.org/project/container-manager-mcp/2.1.4/
+- [infra_primitive] AgentLens dashboard OTEL traces: https://open-vsx.org/extension/agentlens/agentlens-dashboard
+- [infra_primitive] Okahu AI observability for VS Code: https://open-vsx.org/extension/OkahuAI/okahu-ai-observability
+- [infra_primitive] agent-browser fast browser automation CLI: https://crates.io/crates/agent-browser
+- [infra_primitive] browser-agent-driver v0.35.2: https://www.npmjs.com/package/@tangle-network/browser-agent-driver
+- [infra_primitive] Mnemoverse persistent memory for Copilot: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+- [infra_primitive] Terraform MCP Server Docker: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
+- [infra_primitive] codebuff v1.0.683 AI coding agent: https://www.npmjs.com/package/codebuff
+- [infra_primitive] Drylake scan MCP servers and agent rules: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] Junter MCP servers for regional payments: https://github.com/junter1989k-ai/mexico-payments-mcp
+- [infra_primitive] AutoApply AI agentic browser automation for job search: https://github.com/Rayyan9477/AutoApply-AI-Agentic-Browser-Automation-for-Job-Search
+- [infra_primitive] GxP toolkit AI-agent-ready regulated project template: https://github.com/carlolidres/gxp-toolkit
+- [user_workflow] User built DM agent on self-hosted n8n + Gemini + DeepSeek: https://bsky.app/profile/automate-n8n.bsky.social/post/3mqbsyofjws2o
+- [user_workflow] Automatic hourly ping to keep Codex 5hr usage windows rolling: https://www.reddit.com/r/cursor/comments/1uslqtv/automatic_hourly_ping_to_keep_your_5hr_codex/
+- [user_workflow] Runtime validation still broken in AI coding agents: https://news.ycombinator.com/item?id=46963340
+- [user_workflow] OpenCode desktop Electron bugs frustrate user: https://bsky.app/profile/asa.engineer/post/3mqbxnj4m3c2f
+- [user_workflow] GhostApproval symlink attack tricks agents into writing outside workspace: https://bsky.app/profile/ralphdev.bsky.social/post/3mqbymztjxq22
+- [user_workflow] Memory Sidecar v3.5.1 operational hardening: https://bsky.app/profile/swagger82.bsky.social/post/3mqc3yxfyud2x

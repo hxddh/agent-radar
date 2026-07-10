@@ -5,7 +5,7 @@ Last checked: 2026-07-10
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
 | arxiv | 3 | 0 | 18 |
-| bluesky | 10 | 4 | 40 |
+| bluesky | 10 | 2 | 40 |
 | crates | 9 | 0 | 45 |
 | devto | 6 | 0 | 24 |
 | docker | 3 | 0 | 15 |
@@ -15,12 +15,12 @@ Last checked: 2026-07-10
 | lobsters | 1 | 0 | 6 |
 | npm | 9 | 0 | 45 |
 | open-vsx | 9 | 0 | 45 |
-| page | 21 | 1 | 120 |
+| page | 21 | 0 | 120 |
 | pypi-package | 8 | 0 | 8 |
-| pypi-updates | 9 | 0 | 45 |
-| reddit-rss | 1 | 3 | 4 |
-| release | 26 | 0 | 78 |
-| tag | 26 | 0 | 78 |
+| pypi-updates | 9 | 0 | 28 |
+| reddit-rss | 2 | 6 | 8 |
+| release | 32 | 0 | 88 |
+| tag | 32 | 0 | 93 |
 
 Failure handling:
 - Collector failures are recorded here and in `automation/source-health.md`.

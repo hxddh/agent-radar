@@ -13,7 +13,6 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
 - Recent changes: v2.1.206 released (2026-07-10). Anthropic published 'The Making of Claude Code' blog (2026-07-10) and 'hard questions' invitation with Fable 5 jailbreak scoring framework (2026-07-10). Anthropic published containment engineering post (2026-07-09, covered). China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), async long-running task pattern, and /checkup command for CLAUDE.md hygiene. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
-- replace_section anchor: `## Claude Code`
 ## Cursor
 
 Status:

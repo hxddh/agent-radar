@@ -4,18 +4,6 @@ Last checked: 2026-07-10
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| page:anthropic-news | ok |  |
-| page:anthropic-engineering | ok |  |
-| page:google-developers-blog | ok |  |
-| page:qwen-blog | ok |  |
-| page:deepseek-news | ok |  |
-| page:xai-news | ok |  |
-| page:e2b-blog | ok |  |
-| page:mistral-news | ok |  |
-| page:github-trending | ok |  |
-| page:modal-blog | ok |  |
-| page:daytona-blog | ok |  |
-| page:openrouter-announcements | error | HTTP Error 308: Permanent Redirect |
 | page:meta-ai-blog | ok |  |
 | page:devin-releases | ok |  |
 | page:replit-updates | ok |  |
@@ -84,3 +72,15 @@ Last checked: 2026-07-10
 | tag:mastra-ai/mastra | ok |  |
 | release:huggingface/smolagents | ok |  |
 | tag:huggingface/smolagents | ok |  |
+| release:omnigent-ai/omnigent | ok |  |
+| tag:omnigent-ai/omnigent | ok |  |
+| release:ncz-os/mnemos | ok |  |
+| tag:ncz-os/mnemos | ok |  |
+| release:AdelElo13/neuromcp | ok |  |
+| tag:AdelElo13/neuromcp | ok |  |
+| release:danilkryachko/dukememory | ok |  |
+| tag:danilkryachko/dukememory | ok |  |
+| release:ronie-aduana/mcp-ai-memory | ok |  |
+| tag:ronie-aduana/mcp-ai-memory | ok |  |
+| release:bobmatnyc/trusty-tools | ok |  |
+| tag:bobmatnyc/trusty-tools | ok |  |
