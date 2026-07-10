@@ -283,15 +283,10 @@ Name:
 - Recent changes: GPT-5.6 Sol, Terra, and Luna models now available in GitHub Copilot (2026-07-09 changelog). Three new model tiers give operators model-routing choices within Copilot, aligning with cost-economics thesis. GitHub Innersource security advisories now generally available, impacting enterprise agent security.
 - Source: https://github.blog/changelog/2026-07-09-openais-gpt-5-6-sol-terra-and-luna-are-now-available-in-github-copilot
 ## Cline
-
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
-- Recent changes: CVE-2026-59723 (CVSS 8.8) disclosed, allowing WebSocket hijacking and potential remote code execution in versions before 3.0.30.
-- Evidence strength: Medium (CVE advisory)
-- Source: https://nvd.nist.gov/vuln/detail/CVE-2026-59723
-- replace_section anchor: `## Cline`
-
-
+- Recent changes: v4.0.7 released (2026-07-10), continuing active maintenance after CVE-2026-59723 (CVSS 8.8) fix in v3.0.30. Patch releases imply product health and ongoing development.
+- Source: https://github.com/cline/cline/releases/tag/v4.0.7
 ## Claude Cowork
 - Category: Task agent / productivity agent
 - Maturity: Expanding from web to mobile; currently available to Max subscribers.
@@ -299,3 +294,22 @@ Name:
 - Evidence strength: Medium (social discussion corroboration).
 - Source: https://bsky.app/profile/aifoundersczech.bsky.social/post/3mq74geil2p2p
 - Watch next: Whether Claude Cowork expands beyond Max tier; whether non-code task patterns stabilize into repeatable workflows.
+
+
+## Mistral Vibe
+- Category: Coding agent (terminal, IDE, background)
+- Maturity: New product launch from Mistral; early adoption stage.
+- Recent changes: Launched 2026-07-10 with terminal, IDE, and background execution modes. Open-weight model approach may differentiate on cost and self-hosted deployment flexibility.
+- Evidence strength: Strong (official product page)
+- Source: https://mistral.ai/products/vibe/code/
+- Watch next: User adoption reports, enterprise integration evidence, and comparison with Claude Code / Gemini CLI.
+- replace_section anchor: `## Mistral Vibe`
+
+## Gemini CLI
+- Category: CLI coding agent
+- Maturity: Rapid release cadence; v0.50.0 stable and v0.51.0-preview.0 available.
+- Recent changes: v0.51.0-preview.0 released 2026-07-10; v0.50.0 stable also available. Free CLI agent gaining traction as Claude Code alternative.
+- Evidence strength: Strong (official GitHub releases)
+- Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+- Watch next: Feature parity with Claude Code, enterprise adoption signals, and integration with Google Cloud agent infrastructure.
+- replace_section anchor: `## Gemini CLI`

@@ -608,3 +608,33 @@ Ignore or deprioritize:
 - DeepSeek V3.2 agent on ARC-AGI-1: https://bsky.app/profile/karanluthra.bsky.social/post/3mqbqegjhm52n
 - A2A and MCP agent security: https://www.glukhov.org/llm-architecture/guardrails/a2a-mcp-agent-security/
 - Agent sandboxing infra battleground: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
+
+## Source-sweep 2026-07-10 (daily update additions)
+- Google Gemini CLI v0.51.0-preview.0: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+- Google Gemini CLI v0.50.0 stable: https://github.com/google-gemini/gemini-cli/releases/tag/v0.50.0
+- Mistral Vibe for Code: https://mistral.ai/products/vibe/code/
+- Grok 4.5 pricing (DevOps.com): https://devops.com/spacexais-grok-4-5-undercuts-anthropic-and-openai-on-coding-agent-pricing/
+- Grok 4.5 pricing (Bluesky): https://bsky.app/profile/roxsross.bsky.social/post/3mqbmlnt7xb2c
+- JetBrains Kotlin Benchmark: https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- Daytona $24M Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- Daytona Stripe Projects: https://www.daytona.io/dotfiles/daytona-stripe-projects
+- Cline v4.0.7: https://github.com/cline/cline/releases/tag/v4.0.7
+- OpenCode as Claude Code replacement: https://bsky.app/profile/aixxe.net/post/3mqbnvyrcdc2k
+- Multi-agent worktree workflow: https://www.reddit.com/r/AI_Agents/comments/1ushzdp/running_more_than_one_coding_agent_at_once/
+- Session rename tip: https://bsky.app/profile/code-coach.bsky.social/post/3mqbswrp6gs22
+
+## Source-sweep 2026-07-10 (daily update additions)
+- Google Gemini CLI v0.51.0-preview.0: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+- Google Gemini CLI v0.50.0 stable: https://github.com/google-gemini/gemini-cli/releases/tag/v0.50.0
+- Mistral Vibe for Code: https://mistral.ai/products/vibe/code/
+- Grok 4.5 pricing (DevOps.com): https://devops.com/spacexais-grok-4-5-undercuts-anthropic-and-openai-on-coding-agent-pricing/
+- Grok 4.5 pricing (Bluesky): https://bsky.app/profile/roxsross.bsky.social/post/3mqbmlnt7xb2c
+- JetBrains Kotlin Benchmark: https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- Daytona $24M Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- Daytona Stripe Projects: https://www.daytona.io/dotfiles/daytona-stripe-projects
+- Cline v4.0.7: https://github.com/cline/cline/releases/tag/v4.0.7
+- OpenCode as Claude Code replacement: https://bsky.app/profile/aixxe.net/post/3mqbnvyrcdc2k
+- Multi-agent worktree workflow: https://www.reddit.com/r/AI_Agents/comments/1ushzdp/running_more_than_one_coding_agent_at_once/
+- Session rename tip: https://bsky.app/profile/code-coach.bsky.social/post/3mqbswrp6gs22
