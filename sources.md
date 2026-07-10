@@ -564,3 +564,19 @@ Ignore or deprioritize:
 ## Source-sweep 2026-07-10 (additional social sources)
 
 - Anthropic publishes making-of Claude Code blog (social discussion): https://bsky.app/profile/inautilo.bsky.social/post/3mqbprsnfd42m
+
+
+## Source-sweep 2026-07-10 (additional screening sources)
+
+- JetBrains Kotlin Benchmark for AI Coding Agents: https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- Mistral Vibe Coding Agent: https://mistral.ai/products/vibe/code/
+- Supabase agentic coding with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- Grok 4.5 pricing: https://devops.com/spacexais-grok-4-5-undercuts-anthropic-and-openai-on-coding-agent-pricing/
+- Multi-agent worktree workflow: https://www.reddit.com/r/AI_Agents/comments/1ushzdp/running_more_than_one_coding_agent_at_once/
+- n8n cost-efficient DM reply agent: https://bsky.app/profile/automate-n8n.bsky.social/post/3mqbsyofjws2o
+- QA PR browser agent (Show HN): https://www.notesasm.com/
+- DeepSeek V3.2 agent on ARC-AGI-1: https://bsky.app/profile/karanluthra.bsky.social/post/3mqbqegjhm52n
+- A2A and MCP agent security: https://www.glukhov.org/llm-architecture/guardrails/a2a-mcp-agent-security/
+- Agent sandboxing infra battleground: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
+- E2B Series A $21M: https://e2b.dev/blog/series-a
+- Google Gemini CLI v0.51.0 Preview: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0

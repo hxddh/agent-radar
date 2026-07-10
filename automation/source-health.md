@@ -4,31 +4,19 @@ Last checked: 2026-07-10
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| open-vsx:agent sandbox | ok |  |
-| npm:agent security | ok |  |
-| pypi-updates:agent security | ok |  |
-| crates:agent security | ok |  |
-| open-vsx:agent security | ok |  |
-| docker:mcp server | ok |  |
-| docker:ai agent | ok |  |
-| docker:coding agent | ok |  |
-| arxiv:cs-ai | ok |  |
-| feed:openai-blog | ok |  |
-| feed:github-changelog | ok |  |
-| feed:minio-blog | ok |  |
-| feed:aws-storage-blog | ok |  |
-| feed:cloudflare-blog | ok |  |
-| feed:hf-blog | ok |  |
-| feed:huggingface-blog | ok |  |
-| feed:aws-whats-new | ok |  |
-| feed:vercel-changelog | ok |  |
-| page:cursor-changelog | ok |  |
-| page:cursor-blog | ok |  |
 | page:anthropic-news | ok |  |
 | page:anthropic-engineering | ok |  |
 | page:google-developers-blog | ok |  |
 | page:qwen-blog | ok |  |
 | page:deepseek-news | ok |  |
+| page:xai-news | ok |  |
+| page:e2b-blog | ok |  |
+| page:mistral-news | ok |  |
+| page:github-trending | ok |  |
+| page:modal-blog | ok |  |
+| page:daytona-blog | ok |  |
+| page:openrouter-announcements | error | HTTP Error 308: Permanent Redirect |
+| page:meta-ai-blog | ok |  |
 | page:devin-releases | ok |  |
 | page:replit-updates | ok |  |
 | page:warp-changelog | ok |  |
@@ -54,33 +42,45 @@ Last checked: 2026-07-10
 | tag:modelcontextprotocol/typescript-sdk | ok |  |
 | release:elizaOS/eliza | ok |  |
 | tag:elizaOS/eliza | ok |  |
-| release:omnigent-ai/omnigent | ok |  |
-| tag:omnigent-ai/omnigent | ok |  |
-| release:ncz-os/mnemos | ok |  |
-| tag:ncz-os/mnemos | ok |  |
-| release:AdelElo13/neuromcp | ok |  |
-| tag:AdelElo13/neuromcp | ok |  |
-| release:danilkryachko/dukememory | ok |  |
-| tag:danilkryachko/dukememory | ok |  |
-| release:ronie-aduana/mcp-ai-memory | ok |  |
-| tag:ronie-aduana/mcp-ai-memory | ok |  |
-| release:bobmatnyc/trusty-tools | ok |  |
-| tag:bobmatnyc/trusty-tools | ok |  |
-| release:kinqsradiollc/BrainRouter | ok |  |
-| tag:kinqsradiollc/BrainRouter | ok |  |
-| release:macro-inc/macro | ok |  |
-| tag:macro-inc/macro | ok |  |
-| release:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
-| tag:takashikiari/GOAT2-General-Orchestrated-Agent-Topology | ok |  |
-| release:clidey/deptrust | ok |  |
-| tag:clidey/deptrust | ok |  |
-| release:chriswu727/argus | ok |  |
-| tag:chriswu727/argus | ok |  |
-| release:alexmond/jvmlens | ok |  |
-| tag:alexmond/jvmlens | ok |  |
-| release:coldzero94/cold-frame | ok |  |
-| tag:coldzero94/cold-frame | ok |  |
-| release:envibagus/cortex | ok |  |
-| tag:envibagus/cortex | ok |  |
-| release:navyforses/ALEKSANDRA_BRAIN_v4 | ok |  |
-| tag:navyforses/ALEKSANDRA_BRAIN_v4 | ok |  |
+| release:anthropics/claude-code | ok |  |
+| tag:anthropics/claude-code | ok |  |
+| release:sst/opencode | ok |  |
+| tag:sst/opencode | ok |  |
+| release:e2b-dev/E2B | ok |  |
+| tag:e2b-dev/E2B | ok |  |
+| release:vercel/ai | ok |  |
+| tag:vercel/ai | ok |  |
+| release:cloudflare/agents | ok |  |
+| tag:cloudflare/agents | ok |  |
+| release:cline/cline | ok |  |
+| tag:cline/cline | ok |  |
+| release:Aider-AI/aider | ok |  |
+| tag:Aider-AI/aider | ok |  |
+| release:google-gemini/gemini-cli | ok |  |
+| tag:google-gemini/gemini-cli | ok |  |
+| release:QwenLM/qwen-code | ok |  |
+| tag:QwenLM/qwen-code | ok |  |
+| release:All-Hands-AI/OpenHands | ok |  |
+| tag:All-Hands-AI/OpenHands | ok |  |
+| release:browser-use/browser-use | ok |  |
+| tag:browser-use/browser-use | ok |  |
+| release:block/goose | ok |  |
+| tag:block/goose | ok |  |
+| release:continuedev/continue | ok |  |
+| tag:continuedev/continue | ok |  |
+| release:RooCodeInc/Roo-Code | ok |  |
+| tag:RooCodeInc/Roo-Code | ok |  |
+| release:zed-industries/zed | ok |  |
+| tag:zed-industries/zed | ok |  |
+| release:letta-ai/letta | ok |  |
+| tag:letta-ai/letta | ok |  |
+| release:mem0ai/mem0 | ok |  |
+| tag:mem0ai/mem0 | ok |  |
+| release:langfuse/langfuse | ok |  |
+| tag:langfuse/langfuse | ok |  |
+| release:pydantic/pydantic-ai | ok |  |
+| tag:pydantic/pydantic-ai | ok |  |
+| release:mastra-ai/mastra | ok |  |
+| tag:mastra-ai/mastra | ok |  |
+| release:huggingface/smolagents | ok |  |
+| tag:huggingface/smolagents | ok |  |

@@ -4,23 +4,23 @@ Last checked: 2026-07-10
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
-| arxiv | 1 | 0 | 6 |
-| bluesky | 10 | 0 | 40 |
+| arxiv | 3 | 0 | 18 |
+| bluesky | 10 | 4 | 40 |
 | crates | 9 | 0 | 45 |
-| devto | 4 | 2 | 16 |
+| devto | 5 | 1 | 20 |
 | docker | 3 | 0 | 15 |
-| feed | 9 | 0 | 48 |
+| feed | 15 | 0 | 84 |
 | github | 17 | 0 | 84 |
-| hn | 19 | 0 | 95 |
+| hn | 28 | 0 | 139 |
 | lobsters | 1 | 0 | 6 |
 | npm | 9 | 0 | 45 |
 | open-vsx | 9 | 0 | 45 |
-| page | 14 | 0 | 78 |
+| page | 21 | 1 | 120 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 9 | 0 | 45 |
-| reddit-rss | 1 | 0 | 4 |
-| release | 20 | 0 | 45 |
-| tag | 20 | 0 | 50 |
+| reddit-rss | 1 | 2 | 4 |
+| release | 26 | 0 | 78 |
+| tag | 26 | 0 | 78 |
 
 Failure handling:
 - Collector failures are recorded here and in `automation/source-health.md`.
