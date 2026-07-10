@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.14.2 - 2026-07-10
+
+### Fixed
+- **Response cap raised 32k→48k chars**: the strong daily synthesis model plus the v0.11 depth spec legitimately produces ~40k-char JSON (bilingual day block + research-log updates); the 32k cap set before those changes rejected it. `runner-rules.md` updated.
+- Partial-task-failure alert now appends the failed-task lines to the captured log so the alert issue quotes the actual failure instead of whatever test output was in the tail.
+- CLI version bumped to `0.14.2`.
+
 ## v0.14.1 - 2026-07-10
 
 Reliability fixes from the first v0.14.0 live run.
