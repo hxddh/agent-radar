@@ -493,3 +493,15 @@ Ignore or deprioritize:
 - Malicious AI agent skills evade security scanners: https://bsky.app/profile/hapsis.bsky.social/post/3mq7225e6ys27
 - Ratchet eval pattern: https://bsky.app/profile/therobertta.bsky.social/post/3mq75uf4a5l22
 - Microsoft Agent Framework: https://github.com/microsoft/agent-framework
+
+
+## Source-sweep 2026-07-10
+
+- China warns of 'security backdoor' in Anthropic Claude Code: https://www.channelnewsasia.com/east-asia/china-anthropic-claude-code-ai-backdoor-security-alert-6240476
+- OpenAI launches ChatGPT Work and new desktop app combining Chat, Work, and Codex: https://bsky.app/profile/renaudjoly.bsky.social/post/3mqbiewnbzk23
+- User workflow: 'I stopped trusting the agent's done' – prove-it gate: https://dev.to/whynext/i-stopped-trusting-the-agents-done-prove-it-a-verifysh-gate-25ci
+- User workflow: Claude Code for long-running tasks, async results: https://bsky.app/profile/happy-homhom.bsky.social/post/3mqbicd7mol2b
+- User workflow: Build or buy an agent developer workspace?: https://bsky.app/profile/hn100.bsky.social/post/3mqamakvwtl2n
+- GitLost: prompt-injection class every AI coding agent inherits: https://bsky.app/profile/rohitgupta2432.bsky.social/post/3mqbceumko52p
+- Agent sandboxing: Gemini Enterprise, AWS Lambda, k8s, Nvidia OpenShell, Modal, E2B: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
+- Why sandboxing your agent is not enough (CNCF blog): https://bsky.app/profile/jmsunico.bsky.social/post/3mqatughjjt2g

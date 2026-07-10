@@ -1,6 +1,6 @@
 # Source Lanes
 
-Last checked: 2026-07-09
+Last checked: 2026-07-10
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
@@ -9,7 +9,7 @@ Last checked: 2026-07-09
 | crates | 9 | 0 | 45 |
 | devto | 6 | 0 | 24 |
 | docker | 3 | 0 | 15 |
-| feed | 10 | 0 | 48 |
+| feed | 9 | 0 | 48 |
 | github | 17 | 0 | 84 |
 | hn | 19 | 0 | 95 |
 | lobsters | 1 | 0 | 6 |

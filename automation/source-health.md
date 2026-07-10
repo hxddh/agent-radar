@@ -1,9 +1,10 @@
 # Source Health
 
-Last checked: 2026-07-09
+Last checked: 2026-07-10
 
 | Source | Status | Detail |
 | --- | --- | --- |
+| open-vsx:agent sandbox | ok |  |
 | npm:agent security | ok |  |
 | pypi-updates:agent security | ok |  |
 | crates:agent security | ok |  |
@@ -18,7 +19,6 @@ Last checked: 2026-07-09
 | feed:aws-storage-blog | ok |  |
 | feed:cloudflare-blog | ok |  |
 | feed:hf-blog | ok |  |
-| feed:jiqizhixin | ok |  |
 | feed:huggingface-blog | ok |  |
 | feed:aws-whats-new | ok |  |
 | feed:vercel-changelog | ok |  |
