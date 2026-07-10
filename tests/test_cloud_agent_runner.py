@@ -2772,6 +2772,92 @@ class AuditLoopTest(unittest.TestCase):
                     repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 5)
         self.assertGreaterEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
 
+    def test_discussion_shard_runs_first(self) -> None:
+        items = [
+            {"source": "github", "title": "repo", "url": "https://github.com/a/b"},
+            {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1"},
+        ]
+        shards = cloud_agent_runner.screening_shard_items(items)
+        self.assertEqual(shards[0][0], "discussion")
+
+    def test_diversify_reserves_three_discussion_user_slots(self) -> None:
+        candidates = []
+        for index in range(4):
+            candidates.append(
+                {
+                    "id": f"scr-m{index}",
+                    "title": f"OpenAI delta {index}",
+                    "confidence": "high",
+                    "relevance_score": 10,
+                    "signal_class": "mainstream_product",
+                    "evidence": [f"https://openai.com/news/{index}"],
+                }
+            )
+        for index in range(4):
+            candidates.append(
+                {
+                    "id": f"scr-d{index}",
+                    "title": f"Operator field report {index}",
+                    "confidence": "medium",
+                    "relevance_score": 6,
+                    "signal_class": "user_workflow",
+                    "evidence": [f"https://www.reddit.com/r/ClaudeAI/comments/{index}/"],
+                    "why_it_matters": f"Pain point {index} with concrete detail",
+                }
+            )
+        for index in range(6):
+            candidates.append(
+                {
+                    "id": f"scr-i{index}",
+                    "title": f"infra repo {index}",
+                    "confidence": "medium",
+                    "relevance_score": 7,
+                    "signal_class": "infra_primitive",
+                    "evidence": [f"https://github.com/x/i{index}"],
+                }
+            )
+        selected = cloud_agent_runner.diversify_screening_candidates(candidates, 12)
+        discussion_users = [
+            cand
+            for cand in selected
+            if cand.get("signal_class") == "user_workflow"
+            and cloud_agent_runner.is_social_only_evidence(cand)
+        ]
+        self.assertGreaterEqual(len(discussion_users), 3)
+
+    def test_discussion_signal_count_and_warning(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-11\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: vendor thing.\n"
+                        "  - Why it matters: x.\n"
+                        "  - Evidence strength: Strong.\n"
+                        "  - Source: https://openai.com/news/a\n\n"
+                        "#### 3. User Workflow & Field Notes\n\n"
+                        "- Tool: agent loop.\n"
+                        "  - Why it matters: y.\n"
+                        "  - Evidence strength: Medium.\n"
+                        "  - Source: https://www.reddit.com/r/ClaudeAI/comments/x/\n\n"
+                        "- Tool: eval trick.\n"
+                        "  - Why it matters: z.\n"
+                        "  - Evidence strength: Medium.\n"
+                        "  - Source: https://news.ycombinator.com/item?id=1\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.audit_daily_depth(result)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["discussion_signal_count"], 2)
+        self.assertTrue(
+            any("Community share" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")
         with tempfile.TemporaryDirectory() as tmp:

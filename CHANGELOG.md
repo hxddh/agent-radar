@@ -13,6 +13,15 @@ Threshold audit release: remove every remaining cap that silently constrained br
 - Screening: per-shard window (`MAX_SCREEN_SOURCE_ITEMS`) 110→130; screen prompt budget 40k→56k chars; candidates per screening pass 12→16 (merged up to 32); synthesis injection (`SCREEN_PROMPT_CANDIDATES`) 12→14.
 - Reddit poll batch 3→4 of 10 subreddits per day.
 - CLI version bumped to `0.16.0`.
+## v0.15.0 - 2026-07-10
+
+Community-voice share: discussion content from Reddit/HN/Bluesky/Lobsters/dev.to gets a guaranteed slice of the published report, not only of collection and screening.
+
+### Added
+- **Day-block community quota**: ≥3 discussion-sourced bullets per day block, 3–5 field reports in the User Workflow section, and community-first stories get full New Signals ("a heated HN/Reddit thread IS a signal"). The runner counts published discussion bullets (`discussion_signal_count`), warns below 3, and feeds the weekly By-the-Numbers trend (`discussion_signals_published`).
+- **Discussion shard runs first** in sharded screening: merge dedup keeps the first occurrence per URL, so stories covered by both shards keep their community framing (official corroboration URLs still get attached).
+- **Bigger discussion reserve in the synthesis top-N**: discussion-backed `user_workflow` slots 2→3 (of 12 injected candidates).
+- CLI version bumped to `0.15.0`.
 
 ## v0.14.2 - 2026-07-10
 

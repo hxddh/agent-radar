@@ -53,6 +53,13 @@ Depth spec (the runner audits these and records warnings):
   context sizes) — specifics are what make a signal reusable next week.
 - **Storage / Infra Angle: at least 2 bullets**, each ending with
   `- Watch trigger: <observable event that would confirm or deny this implication>`.
+- **Community voice: at least 3 discussion-sourced items across the day block**
+  (a Reddit/HN/Bluesky/Lobsters/dev.to URL as the cited source). Target 3–5
+  field reports in `#### 3. User Workflow & Field Notes`, and when the
+  community surfaced or is debating something first, give it a full New Signal —
+  a wave of operator experience or a heated HN/Reddit thread IS a signal, not
+  garnish. Vendor changelogs tell you what shipped; discussion tells you what
+  it is actually like — the radar needs both in every block.
 - Use the full injected screening list (up to 14 candidates); each uncovered
   fresh candidate needs a Gaps mention or a research-log entry.
 

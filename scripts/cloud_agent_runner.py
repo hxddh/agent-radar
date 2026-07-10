@@ -1734,8 +1734,9 @@ def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int)
 
     # Reserve slots so infra cannot crowd out direction classes in the top-N.
     take("mainstream_product", min(3, limit))
-    # Prefer discussion-backed user_workflow before generic blog user notes.
-    take("user_workflow", min(2, max(0, limit - len(selected))), discussion_only=True)
+    # Prefer discussion-backed user_workflow before generic blog user notes;
+    # community discussion share in the report starts with these slots.
+    take("user_workflow", min(3, max(0, limit - len(selected))), discussion_only=True)
     take("user_workflow", min(2, max(0, limit - len(selected))))
     take("research", min(1, max(0, limit - len(selected))))
     infra_budget = min(3, max(0, limit - len(selected)))
@@ -2088,10 +2089,13 @@ def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[d
         else:
             rest.append(item)
     shards: list[tuple[str, list[dict[str, str]]]] = []
-    if rest:
-        shards.append(("official/repo", rest))
+    # Discussion first: merge dedup keeps the first occurrence per URL, so a
+    # story covered by both shards keeps its community framing (the official
+    # URL still gets attached by the social-corroboration pass).
     if discussion:
         shards.append(("discussion", discussion))
+    if rest:
+        shards.append(("official/repo", rest))
     return shards
 
 
@@ -3060,6 +3064,7 @@ def weekly_numbers_note(root: Path | None, day: dt.date) -> str:
             "numeric_claims_flagged": sum(r.get("numeric_claims_flagged", 0) for r in records),
             "repo_reputation_demoted": sum(r.get("repo_reputation_demoted", 0) for r in records),
             "social_candidates_labeled": sum(r.get("social_discussion_labeled", 0) for r in records),
+            "discussion_signals_published": sum(r.get("discussion_signal_count", 0) for r in records),
         }
 
     cur = _agg(current)
@@ -3369,6 +3374,14 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         if section == "#### 5. Storage / Infra Angle":
             storage_bullets += 1
     storage_watch_triggers = english.lower().count("watch trigger")
+    # Community share: bullets citing a discussion platform anywhere in the block.
+    discussion_hosts = SOCIAL_EVIDENCE_HOSTS + ("dev.to",)
+    discussion_signals = sum(
+        1
+        for bullet in split_daily_signal_bullets(english)
+        if bullet.startswith("- ") and any(host in bullet.lower() for host in discussion_hosts)
+    )
+    RUN_AUDIT["discussion_signal_count"] = discussion_signals
     RUN_AUDIT["daily_signal_count"] = signal_section_count
     RUN_AUDIT["storage_angle_bullets"] = storage_bullets
     RUN_AUDIT["shallow_signal_bullets"] = shallow
@@ -3394,6 +3407,13 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         warning = (
             f"Daily depth: {shallow} bullet(s) missing 2+ of "
             "Why-it-matters/Evidence-strength/Source fields"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if signal_section_count and discussion_signals < 3:
+        warning = (
+            f"Community share: only {discussion_signals} discussion-sourced bullet(s) "
+            "(Reddit/HN/Bluesky/Lobsters/dev.to) in the day block; target >=3"
         )
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
@@ -6032,6 +6052,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "storylines_active": RUN_AUDIT.get("storylines_active", 0),
         "claim_audit_flags": RUN_AUDIT.get("claim_audit_flags", 0),
         "daily_signal_count": RUN_AUDIT.get("daily_signal_count", 0),
+        "discussion_signal_count": RUN_AUDIT.get("discussion_signal_count", 0),
         "storage_angle_bullets": RUN_AUDIT.get("storage_angle_bullets", 0),
         "shallow_signal_bullets": RUN_AUDIT.get("shallow_signal_bullets", 0),
         "screening_shards": RUN_AUDIT.get("screening_shards", 0),
@@ -6162,6 +6183,7 @@ def run_task(
     RUN_AUDIT["daily_signal_count"] = 0
     RUN_AUDIT["storage_angle_bullets"] = 0
     RUN_AUDIT["shallow_signal_bullets"] = 0
+    RUN_AUDIT["discussion_signal_count"] = 0
     # Preflight sharded screening runs before run_task and already recorded its
     # shard count; keep it when this task consumes that shared screening.
     if not shared_screened:
