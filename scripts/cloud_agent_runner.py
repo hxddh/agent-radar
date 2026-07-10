@@ -179,6 +179,37 @@ MAINSTREAM_VENDOR_MARKERS = (
     "jetbrains",
     "deepseek",
     "qwen",
+    # Second sweep of the ecosystem (v0.14.0). Substring matching means short
+    # names need anchored forms: bare "zed" hits "analyzed", "modal" hits
+    # "multimodal", "manus" hits "manuscript".
+    "openhands",
+    "all hands ai",
+    "browser-use",
+    "goose",
+    "roo code",
+    "continue.dev",
+    "zed-industries",
+    "zed.dev",
+    "zed editor",
+    "lovable",
+    "bolt.new",
+    "manus.im",
+    "manus ai",
+    "letta",
+    "mem0",
+    "langfuse",
+    "langsmith",
+    "braintrust",
+    "modal.com",
+    "modal labs",
+    "daytona",
+    "openrouter",
+    "mistral",
+    "agentforce",
+    "pydantic-ai",
+    "pydantic ai",
+    "mastra",
+    "smolagents",
 )
 USER_WORKFLOW_MARKERS = (
     "user",
@@ -298,6 +329,16 @@ VENDOR_FAMILIES = (
     ("replit", ("replit",)),
     ("cognition", ("devin", "cognition", "windsurf")),
     ("china", ("deepseek", "qwen", "tongyi", "trae", "glm", "kimi")),
+    ("openhands", ("openhands", "all hands ai")),
+    ("browseruse", ("browser-use",)),
+    ("zed", ("zed-industries", "zed.dev", "zed editor")),
+    ("appgen", ("lovable", "bolt.new")),
+    ("manus", ("manus.im", "manus ai", "genspark")),
+    ("memory", ("letta", "mem0", "zep memory")),
+    ("evalops", ("langfuse", "langsmith", "braintrust")),
+    ("sandbox-infra", ("modal.com", "modal labs", "daytona")),
+    ("openrouter", ("openrouter",)),
+    ("mistral", ("mistral",)),
 )
 # Families the radar promises to check daily; zero collected items for one of
 # these must surface as a named gap instead of silently vanishing.
@@ -353,6 +394,19 @@ DEFAULT_RELEASE_REPOS = [
     "Aider-AI/aider",
     "google-gemini/gemini-cli",
     "QwenLM/qwen-code",
+    # Second ecosystem sweep: established OSS agents, memory, eval/observability.
+    "All-Hands-AI/OpenHands",
+    "browser-use/browser-use",
+    "block/goose",
+    "continuedev/continue",
+    "RooCodeInc/Roo-Code",
+    "zed-industries/zed",
+    "letta-ai/letta",
+    "mem0ai/mem0",
+    "langfuse/langfuse",
+    "pydantic/pydantic-ai",
+    "mastra-ai/mastra",
+    "huggingface/smolagents",
 ]
 # A browser-compatible User-Agent. Several feed/CDN hosts (reddit RSS in
 # particular) return 403 to bare tool identifiers; a descriptive Mozilla UA is
@@ -375,6 +429,7 @@ DEFAULT_CHANGELOG_FEEDS = [
     # coverage; scored via the dedicated expert lane.
     ("simonwillison", "https://simonwillison.net/atom/everything/"),
     ("latent-space", "https://www.latent.space/feed"),
+    ("jetbrains-blog", "https://blog.jetbrains.com/feed/"),
     # Infra vendors from sources.md that previously had no collectors.
     ("supabase-blog", "https://supabase.com/rss.xml"),
     ("flyio-blog", "https://fly.io/blog/feed.xml"),
@@ -396,6 +451,12 @@ DEFAULT_CHANGELOG_PAGES = [
     ("mistral-news", "https://mistral.ai/news"),
     # Open-source discovery: what shipped and spiked in the last day.
     ("github-trending", "https://github.com/trending?since=daily"),
+    # Sandbox/runtime vendors sources.md promised; page collectors degrade
+    # gracefully if a path moves.
+    ("modal-blog", "https://modal.com/blog"),
+    ("daytona-blog", "https://www.daytona.io/dotfiles"),
+    ("openrouter-announcements", "https://openrouter.ai/announcements"),
+    ("meta-ai-blog", "https://ai.meta.com/blog/"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -420,6 +481,11 @@ DEFAULT_PYPI_PACKAGES = [
     "semantic-kernel",
     "autogen-agentchat",
     "litellm",
+    "pydantic-ai",
+    "mem0ai",
+    "langfuse",
+    "browser-use",
+    "smolagents",
 ]
 STRUCTURE_PRESERVED_FILES = {
     "research-log.md",
@@ -464,6 +530,8 @@ DEFAULT_BLUESKY_QUERIES = [
     "agent workspace",
     "Grok agent",
     "OpenCode",
+    "OpenHands",
+    "Manus agent",
 ]
 DEFAULT_DEVTO_TAGS = [
     "ai",
@@ -3921,6 +3989,11 @@ def source_lane(source: str) -> str:
         "mistral-news",
         "supabase-blog",
         "flyio-blog",
+        "modal-blog",
+        "daytona-blog",
+        "openrouter-announcements",
+        "meta-ai-blog",
+        "jetbrains-blog",
     }:
         return "official"
     return "feeds-pages"
@@ -4435,6 +4508,9 @@ def github_repo_exists(root: Path, repo: str) -> bool:
 
 
 def release_repos_from_context(root: Path, limit: int) -> list[str]:
+    # The default repo list must always fit: a CI limit pinned to an old,
+    # smaller cap would silently drop the ecosystem repos added in code.
+    limit = max(limit, len(DEFAULT_RELEASE_REPOS))
     # RELEASE_REPOS extends the defaults instead of replacing them: the repo
     # variable is set in CI, and replace semantics silently dropped every
     # ecosystem repo added in code.
@@ -4604,6 +4680,8 @@ def source_queries_for_task(task: str, root: Path | None = None) -> dict[str, li
         # Agent-ecosystem vendors that lack first-party feeds.
         common["hn"].extend(["Grok coding", "OpenCode agent", "E2B sandbox", "Amp coding agent"])
         common["reddit"].extend(["Grok agent", "OpenCode"])
+        common["hn"].extend(["OpenHands agent", "Browser Use agent", "Manus agent", "Lovable app builder", "Zed editor AI"])
+        common["reddit"].extend(["OpenHands", "Roo Code"])
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
         common["reddit"].extend(["agent security", "agent automation"])
@@ -4706,7 +4784,7 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     items: list[dict[str, str]] = []
     seen: set[str] = set()
     errors: list[str] = []
-    repo_limit = env_int("MAX_RELEASE_REPOS", 12)
+    repo_limit = env_int("MAX_RELEASE_REPOS", 32)
     release_limit = env_int("MAX_RELEASES_PER_REPO", 2)
 
     queries = source_queries_for_task(task, root)

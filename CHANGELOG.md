@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.14.0 - 2026-07-10
+
+Second ecosystem sweep: every established agent service and ecosystem layer named in the coverage audit is now collected, recognized, or explicitly query-covered.
+
+### Added
+- **Release tracking** (12 repos): OpenHands, Browser Use, Goose (Block), Continue, Roo Code, Zed, Letta, mem0, Langfuse, Pydantic AI, Mastra, smolagents. `release_repos_from_context` now guarantees the default list always fits regardless of a stale CI `MAX_RELEASE_REPOS` (code default 12→32, workflow fallback 20→32).
+- **Feeds/pages**: Modal blog, Daytona blog, OpenRouter announcements, Meta AI blog, JetBrains blog (all official lane).
+- **PyPI tracking**: pydantic-ai, mem0ai, langfuse, browser-use, smolagents.
+- **Markers/families**: openhands, browser-use, goose, roo code, continue.dev, zed (anchored forms — bare "zed"/"modal"/"manus" would substring-match "analyzed"/"multimodal"/"manuscript"), lovable, bolt.new, manus, letta, mem0, langfuse/langsmith/braintrust, modal/daytona, openrouter, mistral, agentforce, pydantic-ai, mastra, smolagents; new vendor families openhands/browseruse/zed/appgen/manus/memory/evalops/sandbox-infra/openrouter/mistral count toward daily vendor breadth.
+- **Queries**: HN/Reddit/Bluesky for OpenHands, Browser Use, Manus, Lovable, Zed, Roo Code.
+- Prompts (`screening-schema`, `daily-update`) and `sources.md` name the full ecosystem; Manus/Genspark/Agentforce documented as query-covered until a first-party feed exists.
+- CLI version bumped to `0.14.0`.
+
 ## v0.13.0 - 2026-07-10
 
 Source-universe breadth: more of everything the radar reads, plus an expert-media lane.

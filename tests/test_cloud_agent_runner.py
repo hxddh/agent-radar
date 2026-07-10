@@ -2729,6 +2729,44 @@ class AuditLoopTest(unittest.TestCase):
             cloud_agent_runner.score_source_item(generic, {}),
         )
 
+    def test_second_ecosystem_sweep_in_defaults(self) -> None:
+        for repo in (
+            "All-Hands-AI/OpenHands",
+            "browser-use/browser-use",
+            "block/goose",
+            "continuedev/continue",
+            "RooCodeInc/Roo-Code",
+            "zed-industries/zed",
+            "letta-ai/letta",
+            "mem0ai/mem0",
+            "langfuse/langfuse",
+            "pydantic/pydantic-ai",
+        ):
+            self.assertIn(repo, cloud_agent_runner.DEFAULT_RELEASE_REPOS)
+        page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        for name in ("modal-blog", "daytona-blog", "openrouter-announcements", "meta-ai-blog"):
+            self.assertIn(name, page_names)
+        for pkg in ("pydantic-ai", "mem0ai", "langfuse", "browser-use", "smolagents"):
+            self.assertIn(pkg, cloud_agent_runner.DEFAULT_PYPI_PACKAGES)
+
+    def test_anchored_markers_avoid_substring_false_positives(self) -> None:
+        # "zed"/"modal"/"manus" as bare substrings would match ordinary words.
+        for text in ("we analyzed the results", "a multimodal benchmark", "the manuscript was updated"):
+            self.assertFalse(
+                any(m in text for m in cloud_agent_runner.MAINSTREAM_VENDOR_MARKERS), text
+            )
+        for text in ("zed-industries ships agentic editing", "modal.com sandbox update", "manus ai general agent"):
+            self.assertTrue(
+                any(m in text for m in cloud_agent_runner.MAINSTREAM_VENDOR_MARKERS), text
+            )
+
+    def test_release_repo_limit_always_fits_defaults(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_RELEASE_REPOS": "5", "GITHUB_API_MIN_INTERVAL": "0"}, clear=False):
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                with tempfile.TemporaryDirectory() as tmp:
+                    repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 5)
+        self.assertGreaterEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
+
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")
         with tempfile.TemporaryDirectory() as tmp:
