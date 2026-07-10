@@ -120,7 +120,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
 
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 50)
+            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 60)
             self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 120)
             self.assertEqual(cloud_agent_runner.public_source_budget("weekly"), 120)
             self.assertEqual(cloud_agent_runner.public_source_budget("monthly"), 160)
@@ -195,9 +195,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
         page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
         self.assertIn("cursor-changelog", page_names)
         self.assertIn("anthropic-news", page_names)
+        # A small limit is floored to the default list size so a stale CI cap
+        # cannot silently drop ecosystem repos; nothing beyond that is added.
         with mock.patch.dict(os.environ, {"MAX_RELEASE_REPOS": "3"}, clear=True):
-            repos = cloud_agent_runner.release_repos_from_context(REPO_ROOT, 3)
-        self.assertLessEqual(len(repos), 3)
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                with tempfile.TemporaryDirectory() as tmp:
+                    repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 3)
+        self.assertEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
 
     def test_openrouter_prompt_bans_paid_search_tools(self) -> None:
         rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
@@ -280,12 +284,12 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(len(day_two), 2)
         self.assertNotEqual(day_one, day_two)
 
-    def test_reddit_rss_default_batch_size_is_one(self) -> None:
-        subs = ["a", "b", "c"]
+    def test_reddit_rss_default_batch_size_is_three(self) -> None:
+        subs = ["a", "b", "c", "d", "e"]
         with mock.patch.object(cloud_agent_runner, "reddit_subreddits", return_value=subs):
             with mock.patch.dict(os.environ, {}, clear=True):
                 selected = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-02"))
-        self.assertEqual(len(selected), 1)
+        self.assertEqual(len(selected), 3)
 
     def test_pypi_enabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
@@ -769,9 +773,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
                     cloud_agent_runner.parse_date("2026-07-02"),
                     raw_collected_count=394,
                 )
-        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 50)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 60)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["collected_source_items"], 394)
-        self.assertIn("Budget 50/120", snapshot)
+        self.assertIn("Budget 60/120", snapshot)
 
     def test_compact_screening_for_prompt_is_smaller_than_raw_json(self) -> None:
         raw = json.dumps(
@@ -2666,6 +2670,106 @@ class AuditLoopTest(unittest.TestCase):
         self.assertFalse(
             any("Daily depth" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
         )
+
+    def test_ecosystem_vendors_count_as_mainstream(self) -> None:
+        for text in ("Grok 4.5 coding update", "Vercel AI SDK 6 released", "E2B sandbox templates", "OpenCode v1.2"):
+            self.assertTrue(
+                any(m in text.lower() for m in cloud_agent_runner.MAINSTREAM_VENDOR_MARKERS),
+                text,
+            )
+        families = cloud_agent_runner.vendor_families_in_text(
+            "Vercel shipped agents; Cloudflare Workers AI update; ampcode chronicle; OpenCode release; E2B fork"
+        )
+        for family in ("vercel", "cloudflare", "amp", "opencode", "e2b"):
+            self.assertIn(family, families)
+
+    def test_vendor_zero_coverage_names_dark_vendors(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        items = [
+            {"source": "openai-blog", "title": "OpenAI codex update", "url": "https://openai.com/x", "note": ""},
+            {"source": "github", "title": "Cursor 2.0 changelog", "url": "https://cursor.com/changelog", "note": ""},
+        ]
+        gaps = cloud_agent_runner.record_vendor_zero_coverage(items)
+        self.assertIn("xai", gaps)
+        self.assertIn("vercel", gaps)
+        self.assertNotIn("openai", gaps)
+        self.assertNotIn("cursor", gaps)
+        self.assertTrue(
+            any("Zero collected items" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_release_repos_env_extends_defaults(self) -> None:
+        with mock.patch.dict(os.environ, {"RELEASE_REPOS": "someorg/custom-agent"}, clear=False):
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    repos = cloud_agent_runner.release_repos_from_context(root, 30)
+        self.assertIn("sst/opencode", repos)
+        self.assertIn("e2b-dev/E2B", repos)
+        self.assertIn("someorg/custom-agent", repos)
+
+    def test_ecosystem_release_repos_in_defaults(self) -> None:
+        for repo in ("sst/opencode", "e2b-dev/E2B", "vercel/ai", "cloudflare/agents", "anthropics/claude-code"):
+            self.assertIn(repo, cloud_agent_runner.DEFAULT_RELEASE_REPOS)
+        names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        self.assertIn("xai-news", names)
+        self.assertIn("e2b-blog", names)
+
+    def test_breadth_sources_expanded(self) -> None:
+        feed_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_FEEDS]
+        for name in ("simonwillison", "latent-space", "supabase-blog", "flyio-blog", "producthunt"):
+            self.assertIn(name, feed_names)
+        page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        for name in ("mistral-news", "github-trending"):
+            self.assertIn(name, page_names)
+        self.assertGreaterEqual(len(cloud_agent_runner.DEFAULT_REDDIT_SUBREDDITS), 10)
+
+    def test_expert_lane_scores_high(self) -> None:
+        self.assertEqual(cloud_agent_runner.source_lane("simonwillison"), "expert")
+        expert = {"source": "simonwillison", "title": "Notes on coding agent evals", "url": "https://simonwillison.net/x", "note": ""}
+        generic = {"source": "some-feed", "title": "Notes on coding agent evals", "url": "https://example.com/x", "note": ""}
+        self.assertGreater(
+            cloud_agent_runner.score_source_item(expert, {}),
+            cloud_agent_runner.score_source_item(generic, {}),
+        )
+
+    def test_second_ecosystem_sweep_in_defaults(self) -> None:
+        for repo in (
+            "All-Hands-AI/OpenHands",
+            "browser-use/browser-use",
+            "block/goose",
+            "continuedev/continue",
+            "RooCodeInc/Roo-Code",
+            "zed-industries/zed",
+            "letta-ai/letta",
+            "mem0ai/mem0",
+            "langfuse/langfuse",
+            "pydantic/pydantic-ai",
+        ):
+            self.assertIn(repo, cloud_agent_runner.DEFAULT_RELEASE_REPOS)
+        page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        for name in ("modal-blog", "daytona-blog", "openrouter-announcements", "meta-ai-blog"):
+            self.assertIn(name, page_names)
+        for pkg in ("pydantic-ai", "mem0ai", "langfuse", "browser-use", "smolagents"):
+            self.assertIn(pkg, cloud_agent_runner.DEFAULT_PYPI_PACKAGES)
+
+    def test_anchored_markers_avoid_substring_false_positives(self) -> None:
+        # "zed"/"modal"/"manus" as bare substrings would match ordinary words.
+        for text in ("we analyzed the results", "a multimodal benchmark", "the manuscript was updated"):
+            self.assertFalse(
+                any(m in text for m in cloud_agent_runner.MAINSTREAM_VENDOR_MARKERS), text
+            )
+        for text in ("zed-industries ships agentic editing", "modal.com sandbox update", "manus ai general agent"):
+            self.assertTrue(
+                any(m in text for m in cloud_agent_runner.MAINSTREAM_VENDOR_MARKERS), text
+            )
+
+    def test_release_repo_limit_always_fits_defaults(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_RELEASE_REPOS": "5", "GITHUB_API_MIN_INTERVAL": "0"}, clear=False):
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                with tempfile.TemporaryDirectory() as tmp:
+                    repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 5)
+        self.assertGreaterEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
 
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")

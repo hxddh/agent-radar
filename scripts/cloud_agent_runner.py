@@ -56,10 +56,10 @@ DEFAULT_CONTEXT_FILE_CHARS = 20_000
 MAX_PUBLIC_SOURCE_ITEMS = 200
 DEFAULT_MAX_PROMPT_CHARS = 120_000
 DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
-DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
+DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 60
 DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
 DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
-DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 80
+DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 110
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 DEFAULT_MAX_RESPONSE_CHARS = 32_000
@@ -158,6 +158,58 @@ MAINSTREAM_VENDOR_MARKERS = (
     "llama",
     "replit",
     "devin",
+    # Agent-ecosystem vendors: their items were collected but scored/classified
+    # as no-name infra and crowded out (Grok/Vercel/Cloudflare/E2B/Amp/OpenCode
+    # never surfaced in dailies despite healthy collectors).
+    "grok",
+    "xai",
+    "x.ai",
+    "vercel",
+    "cloudflare",
+    "e2b",
+    "ampcode",
+    "amp code",
+    "opencode",
+    "warp",
+    "factory.ai",
+    "raycast",
+    "windsurf",
+    "aider",
+    "cline",
+    "jetbrains",
+    "deepseek",
+    "qwen",
+    # Second sweep of the ecosystem (v0.14.0). Substring matching means short
+    # names need anchored forms: bare "zed" hits "analyzed", "modal" hits
+    # "multimodal", "manus" hits "manuscript".
+    "openhands",
+    "all hands ai",
+    "browser-use",
+    "goose",
+    "roo code",
+    "continue.dev",
+    "zed-industries",
+    "zed.dev",
+    "zed editor",
+    "lovable",
+    "bolt.new",
+    "manus.im",
+    "manus ai",
+    "letta",
+    "mem0",
+    "langfuse",
+    "langsmith",
+    "braintrust",
+    "modal.com",
+    "modal labs",
+    "daytona",
+    "openrouter",
+    "mistral",
+    "agentforce",
+    "pydantic-ai",
+    "pydantic ai",
+    "mastra",
+    "smolagents",
 )
 USER_WORKFLOW_MARKERS = (
     "user",
@@ -268,7 +320,41 @@ VENDOR_FAMILIES = (
     ("amazon", ("aws", "amazon", "bedrock")),
     ("meta", ("meta", "llama")),
     ("cursor", ("cursor",)),
-    ("xai", ("xai", "grok")),
+    ("xai", ("xai", "grok", "x.ai")),
+    ("vercel", ("vercel",)),
+    ("cloudflare", ("cloudflare", "workers ai")),
+    ("e2b", ("e2b",)),
+    ("amp", ("ampcode", "amp code", "sourcegraph")),
+    ("opencode", ("opencode",)),
+    ("replit", ("replit",)),
+    ("cognition", ("devin", "cognition", "windsurf")),
+    ("china", ("deepseek", "qwen", "tongyi", "trae", "glm", "kimi")),
+    ("openhands", ("openhands", "all hands ai")),
+    ("browseruse", ("browser-use",)),
+    ("zed", ("zed-industries", "zed.dev", "zed editor")),
+    ("appgen", ("lovable", "bolt.new")),
+    ("manus", ("manus.im", "manus ai", "genspark")),
+    ("memory", ("letta", "mem0", "zep memory")),
+    ("evalops", ("langfuse", "langsmith", "braintrust")),
+    ("sandbox-infra", ("modal.com", "modal labs", "daytona")),
+    ("openrouter", ("openrouter",)),
+    ("mistral", ("mistral",)),
+)
+# Families the radar promises to check daily; zero collected items for one of
+# these must surface as a named gap instead of silently vanishing.
+PRIORITY_VENDOR_FAMILIES = (
+    "openai",
+    "anthropic",
+    "google",
+    "github",
+    "cursor",
+    "xai",
+    "vercel",
+    "cloudflare",
+    "e2b",
+    "amp",
+    "opencode",
+    "china",
 )
 BREADTH_THEME_MARKERS = {
     "security": ("security", "advisory", "advisories", "containment", "sandbox", "cve-", "vulnerabilit"),
@@ -297,6 +383,30 @@ DEFAULT_RELEASE_REPOS = [
     "modelcontextprotocol/python-sdk",
     "modelcontextprotocol/typescript-sdk",
     "elizaOS/eliza",
+    # Agent-ecosystem OSS: GitHub releases are the most reliable delta signal
+    # for these; changelog pages either don't exist or render client-side.
+    "anthropics/claude-code",
+    "sst/opencode",
+    "e2b-dev/E2B",
+    "vercel/ai",
+    "cloudflare/agents",
+    "cline/cline",
+    "Aider-AI/aider",
+    "google-gemini/gemini-cli",
+    "QwenLM/qwen-code",
+    # Second ecosystem sweep: established OSS agents, memory, eval/observability.
+    "All-Hands-AI/OpenHands",
+    "browser-use/browser-use",
+    "block/goose",
+    "continuedev/continue",
+    "RooCodeInc/Roo-Code",
+    "zed-industries/zed",
+    "letta-ai/letta",
+    "mem0ai/mem0",
+    "langfuse/langfuse",
+    "pydantic/pydantic-ai",
+    "mastra-ai/mastra",
+    "huggingface/smolagents",
 ]
 # A browser-compatible User-Agent. Several feed/CDN hosts (reddit RSS in
 # particular) return 403 to bare tool identifiers; a descriptive Mozilla UA is
@@ -315,6 +425,16 @@ DEFAULT_CHANGELOG_FEEDS = [
     # available); Simplified-Chinese media are not default collectors — cite
     # them sparingly and prefer the vendor's official/English page.
     ("hf-blog", "https://huggingface.co/blog/feed.xml"),
+    # Expert media: individual analysts with the fastest, densest agent
+    # coverage; scored via the dedicated expert lane.
+    ("simonwillison", "https://simonwillison.net/atom/everything/"),
+    ("latent-space", "https://www.latent.space/feed"),
+    ("jetbrains-blog", "https://blog.jetbrains.com/feed/"),
+    # Infra vendors from sources.md that previously had no collectors.
+    ("supabase-blog", "https://supabase.com/rss.xml"),
+    ("flyio-blog", "https://fly.io/blog/feed.xml"),
+    # Launch/adoption signal.
+    ("producthunt", "https://www.producthunt.com/feed"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -325,6 +445,18 @@ DEFAULT_CHANGELOG_PAGES = [
     # China-ecosystem coding-agent lane (bilingual radar; see sources.md).
     ("qwen-blog", "https://qwenlm.github.io/blog/"),
     ("deepseek-news", "https://api-docs.deepseek.com/news"),
+    # Agent-ecosystem vendors without feeds: xAI/Grok and E2B.
+    ("xai-news", "https://x.ai/news"),
+    ("e2b-blog", "https://e2b.dev/blog"),
+    ("mistral-news", "https://mistral.ai/news"),
+    # Open-source discovery: what shipped and spiked in the last day.
+    ("github-trending", "https://github.com/trending?since=daily"),
+    # Sandbox/runtime vendors sources.md promised; page collectors degrade
+    # gracefully if a path moves.
+    ("modal-blog", "https://modal.com/blog"),
+    ("daytona-blog", "https://www.daytona.io/dotfiles"),
+    ("openrouter-announcements", "https://openrouter.ai/announcements"),
+    ("meta-ai-blog", "https://ai.meta.com/blog/"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -332,6 +464,11 @@ DEFAULT_REDDIT_SUBREDDITS = [
     "mcp",
     "agentdevelopment",
     "ChatGPT",
+    "ChatGPTCoding",
+    "cursor",
+    "AI_Agents",
+    "GithubCopilot",
+    "OpenAI",
 ]
 PYPI_UPDATES_RSS = "https://pypi.org/rss/updates.xml"
 DEFAULT_PYPI_PACKAGES = [
@@ -344,6 +481,11 @@ DEFAULT_PYPI_PACKAGES = [
     "semantic-kernel",
     "autogen-agentchat",
     "litellm",
+    "pydantic-ai",
+    "mem0ai",
+    "langfuse",
+    "browser-use",
+    "smolagents",
 ]
 STRUCTURE_PRESERVED_FILES = {
     "research-log.md",
@@ -386,6 +528,10 @@ DEFAULT_BLUESKY_QUERIES = [
     "agent memory",
     "DeepSeek agent",
     "agent workspace",
+    "Grok agent",
+    "OpenCode",
+    "OpenHands",
+    "Manus agent",
 ]
 DEFAULT_DEVTO_TAGS = [
     "ai",
@@ -535,6 +681,7 @@ RUN_AUDIT: dict[str, Any] = {
 # runs (which reset RUN_AUDIT and read from cache) can still write source-health.
 SHARED_SOURCE_STATUS: list[dict[str, str]] = []
 SHARED_SOURCE_LANES: dict[str, dict[str, Any]] = {}
+SHARED_VENDOR_GAPS: list[str] = []
 
 
 TASK_CONFIG = {
@@ -3821,6 +3968,10 @@ def source_lane(source: str) -> str:
         return "package-marketplace"
     if source.startswith("arxiv"):
         return "papers"
+    if source in {"simonwillison", "latent-space"}:
+        return "expert"
+    if source == "github-trending":
+        return "github"
     if source in {
         "openai-blog",
         "github-changelog",
@@ -3833,6 +3984,16 @@ def source_lane(source: str) -> str:
         "cloudflare-blog",
         "qwen-blog",
         "deepseek-news",
+        "xai-news",
+        "e2b-blog",
+        "mistral-news",
+        "supabase-blog",
+        "flyio-blog",
+        "modal-blog",
+        "daytona-blog",
+        "openrouter-announcements",
+        "meta-ai-blog",
+        "jetbrains-blog",
     }:
         return "official"
     return "feeds-pages"
@@ -3902,6 +4063,9 @@ def score_source_item(
         "social": 13,
         "reddit": 13,
         "papers": 8,
+        # Individual analysts (Simon Willison, Latent Space): fast, dense,
+        # pre-filtered agent coverage.
+        "expert": 15,
     }.get(lane, 5)
     keyword_weights = {
         "agent": 5,
@@ -4344,7 +4508,14 @@ def github_repo_exists(root: Path, repo: str) -> bool:
 
 
 def release_repos_from_context(root: Path, limit: int) -> list[str]:
-    configured = split_env_list("RELEASE_REPOS", DEFAULT_RELEASE_REPOS)
+    # The default repo list must always fit: a CI limit pinned to an old,
+    # smaller cap would silently drop the ecosystem repos added in code.
+    limit = max(limit, len(DEFAULT_RELEASE_REPOS))
+    # RELEASE_REPOS extends the defaults instead of replacing them: the repo
+    # variable is set in CI, and replace semantics silently dropped every
+    # ecosystem repo added in code.
+    extra = split_env_list("RELEASE_REPOS", [])
+    configured = list(DEFAULT_RELEASE_REPOS) + [repo for repo in extra if repo not in DEFAULT_RELEASE_REPOS]
     repos: list[str] = []
     seen: set[str] = set()
     rejected = radar_collector_state.rejected_repos(root)
@@ -4506,6 +4677,11 @@ def source_queries_for_task(task: str, root: Path | None = None) -> dict[str, li
         # Benchmark/eval lane: leaderboards are adoption-grade evidence.
         common["hn"].extend(["SWE-bench", "agent benchmark"])
         common["github"].extend(["swe-bench evaluation"])
+        # Agent-ecosystem vendors that lack first-party feeds.
+        common["hn"].extend(["Grok coding", "OpenCode agent", "E2B sandbox", "Amp coding agent"])
+        common["reddit"].extend(["Grok agent", "OpenCode"])
+        common["hn"].extend(["OpenHands agent", "Browser Use agent", "Manus agent", "Lovable app builder", "Zed editor AI"])
+        common["reddit"].extend(["OpenHands", "Roo Code"])
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
         common["reddit"].extend(["agent security", "agent automation"])
@@ -4565,7 +4741,9 @@ def reddit_subreddits_for_day(day: dt.date) -> list[str]:
     subreddits = reddit_subreddits()
     if not subreddits:
         return []
-    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 1))
+    # Batch 1 meant each subreddit was polled once per len(list) days; user
+    # evidence went stale between visits.
+    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 3))
     start = day.toordinal() % len(subreddits)
     selected: list[str] = []
     for offset in range(batch_size):
@@ -4606,7 +4784,7 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     items: list[dict[str, str]] = []
     seen: set[str] = set()
     errors: list[str] = []
-    repo_limit = env_int("MAX_RELEASE_REPOS", 12)
+    repo_limit = env_int("MAX_RELEASE_REPOS", 32)
     release_limit = env_int("MAX_RELEASES_PER_REPO", 2)
 
     queries = source_queries_for_task(task, root)
@@ -4650,6 +4828,10 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     # arXiv moved its RSS feeds to rss.arxiv.org (2024); export.arxiv.org/rss
     # still responds but returns no parseable items, so the lane collected zero.
     collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://rss.arxiv.org/rss/cs.AI", per_feed))
+    # Software engineering + security tracks carry the agent-coding and
+    # agent-attack papers that cs.AI misses.
+    collectors.append(("arxiv:cs-se", "feed", "arxiv-cs-se=https://rss.arxiv.org/rss/cs.SE", per_feed))
+    collectors.append(("arxiv:cs-cr", "feed", "arxiv-cs-cr=https://rss.arxiv.org/rss/cs.CR", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
     for source_name, page_url in changelog_pages():
@@ -4792,7 +4974,38 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
         for item in local_items:
             add_source_item(items, seen, item["source"], item["title"], item["url"], item.get("note", ""))
 
+    record_vendor_zero_coverage(items)
     return items, lane_stats, errors
+
+
+def vendor_zero_coverage(items: list[dict[str, str]]) -> list[str]:
+    """Priority vendor families with zero collected items in this pass."""
+    covered: set[str] = set()
+    families = dict(VENDOR_FAMILIES)
+    for item in items:
+        text = f"{item.get('title', '')} {item.get('note', '')} {item.get('url', '')}".lower()
+        for family in PRIORITY_VENDOR_FAMILIES:
+            if family in covered:
+                continue
+            if any(marker in text for marker in families.get(family, ())):
+                covered.add(family)
+        if len(covered) == len(PRIORITY_VENDOR_FAMILIES):
+            break
+    return [family for family in PRIORITY_VENDOR_FAMILIES if family not in covered]
+
+
+def record_vendor_zero_coverage(items: list[dict[str, str]]) -> list[str]:
+    """A promised vendor with nothing collected must become a named gap, not a
+    silent absence (Grok went unreported for days without anyone noticing)."""
+    global SHARED_VENDOR_GAPS
+    gaps = vendor_zero_coverage(items)
+    SHARED_VENDOR_GAPS = list(gaps)
+    RUN_AUDIT["vendor_zero_coverage"] = len(gaps)
+    if gaps:
+        warning = f"Zero collected items for priority vendor(s): {', '.join(gaps)}"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return gaps
 
 
 def discussion_lane_floor_count(budget: int) -> int:
@@ -5301,6 +5514,13 @@ def build_prompt(
         storylines_note = storylines_prompt_note(root, day)
         if storylines_note:
             task_rules += "\n" + storylines_note + "\n"
+        if SHARED_VENDOR_GAPS:
+            task_rules += (
+                "\nPriority vendors with ZERO collected items this run: "
+                + ", ".join(SHARED_VENDOR_GAPS)
+                + ". Name them under the Coverage ledger `missed=` — do not present "
+                "the day as full coverage while promised vendors are dark.\n"
+            )
     elif task == "weekly":
         notes = [weekly_numbers_note(root, day), weekly_direction_notes(root, day)]
         combined = "\n\n".join(note for note in notes if note)
@@ -5799,6 +6019,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "storage_angle_bullets": RUN_AUDIT.get("storage_angle_bullets", 0),
         "shallow_signal_bullets": RUN_AUDIT.get("shallow_signal_bullets", 0),
         "screening_shards": RUN_AUDIT.get("screening_shards", 0),
+        "vendor_zero_coverage": RUN_AUDIT.get("vendor_zero_coverage", 0),
         "corroboration_queue_size": RUN_AUDIT.get("corroboration_queue_size", 0),
         "stale_watchlist_count": RUN_AUDIT.get("stale_watchlist_count", 0),
         "social_multi_platform_upgraded": RUN_AUDIT.get("social_multi_platform_upgraded", 0),
@@ -5929,6 +6150,7 @@ def run_task(
     # shard count; keep it when this task consumes that shared screening.
     if not shared_screened:
         RUN_AUDIT["screening_shards"] = 0
+    RUN_AUDIT["vendor_zero_coverage"] = len(SHARED_VENDOR_GAPS) if shared_collection is not None else 0
     RUN_AUDIT["corroboration_queue_size"] = 0
     RUN_AUDIT["stale_watchlist_count"] = 0
     RUN_AUDIT["open_questions_count"] = 0

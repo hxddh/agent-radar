@@ -9,7 +9,7 @@ Return only valid JSON:
 Rules:
 - Each candidate should include a stable `id` when possible (`scr-` + short hash); the runner backfills ids when missing.
 - Every candidate **must** include `signal_class`. Prefer this taxonomy:
-  - `mainstream_product`: OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta, or other major platform product/changelog deltas
+  - `mainstream_product`: OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, Meta, xAI/Grok, Vercel, Cloudflare, E2B, Amp (ampcode/Sourcegraph), OpenCode, Replit, Devin/Windsurf, Warp, DeepSeek, Qwen, OpenHands, Browser Use, Goose, Continue, Roo Code, Zed, Lovable, Bolt, Manus, Letta, mem0, Langfuse/LangSmith/Braintrust, Modal, Daytona, OpenRouter, Mistral, JetBrains, Salesforce Agentforce — any agent-ecosystem vendor/project with real traction. A release or changelog from these is mainstream_product, not infra_primitive.
   - `user_workflow`: concrete operator/user field reports, PR/review workflows, adoption friction (not README claims)
   - `infra_primitive`: sandbox, MCP, memory, eval, runtime, security tooling, storage primitives
   - `research`: papers / benchmarks with agent relevance

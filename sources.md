@@ -110,6 +110,30 @@ The storage thesis (radar.md) needs first-party storage-vendor and market inputs
 - Benchmark leaderboards: SWE-bench, Terminal-Bench, Aider leaderboard (query lane; cite the leaderboard page)
 - Funding rounds / earnings commentary on agent-infra and storage vendors (query lane; label Evidence strength)
 
+### Expert Media Lane
+
+Individual analysts with fast, dense, pre-filtered agent coverage; scored via the dedicated `expert` lane (highest discussion-tier weight):
+
+- Simon Willison's weblog (collector: `simonwillison`)
+- Latent Space (collector: `latent-space`)
+
+### Discovery & Adoption Collectors
+
+- GitHub Trending daily (collector: `github-trending`)
+- Product Hunt feed (collector: `producthunt`)
+- arXiv cs.AI + cs.SE + cs.CR (agent-coding and agent-attack papers)
+- Reddit: 10 subreddits, 3 polled per day (`REDDIT_RSS_BATCH_SIZE`)
+- GitHub releases for ecosystem OSS (Claude Code, OpenCode, E2B, vercel/ai, cloudflare/agents, Cline, Aider, Gemini CLI, Qwen Code, OpenHands, Browser Use, Goose, Continue, Roo Code, Zed, Letta, mem0, Langfuse, Pydantic AI, Mastra, smolagents)
+- PyPI version tracking: langchain, crewai, llama-index, semantic-kernel, autogen, litellm, pydantic-ai, mem0ai, langfuse, browser-use, smolagents
+
+### Agent Platform & Runtime Vendors
+
+- Modal blog (collector: `modal-blog`), Daytona blog (collector: `daytona-blog`)
+- OpenRouter announcements (collector: `openrouter-announcements`)
+- Meta AI blog (collector: `meta-ai-blog`), Mistral news (collector: `mistral-news`)
+- JetBrains blog (collector: `jetbrains-blog`)
+- Manus / Genspark / Salesforce Agentforce: no stable first-party feed yet — covered via query lanes and social/discussion until one exists; zero-coverage shows in the vendor ledger.
+
 Query pools for these lanes live in the runner defaults and can be extended without code changes via `automation/source-queries.json` (`{"hn": [...], "reddit": [...], "github": [...], "packages": [...]}`); thesis-scoring keyword weights via `automation/thesis-keywords.json`.
 
 ## Community Sources

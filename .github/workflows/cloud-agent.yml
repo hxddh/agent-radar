@@ -62,7 +62,7 @@ jobs:
       INCLUDE_RUNBOOK_CONTEXT: ${{ vars.INCLUDE_RUNBOOK_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
-      MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '20' }}
+      MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '32' }}
       MAX_RELEASES_PER_REPO: ${{ vars.MAX_RELEASES_PER_REPO || '3' }}
       MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '12' }}
       MAX_COLLECT_SECONDS: ${{ vars.MAX_COLLECT_SECONDS || '60' }}
@@ -81,7 +81,7 @@ jobs:
       COLLECT_LOBSTERS: ${{ vars.COLLECT_LOBSTERS || 'true' }}
       COLLECT_PYPI: ${{ vars.COLLECT_PYPI || 'true' }}
       PYPI_PACKAGES: ${{ vars.PYPI_PACKAGES || '' }}
-      REDDIT_RSS_BATCH_SIZE: ${{ vars.REDDIT_RSS_BATCH_SIZE || '1' }}
+      REDDIT_RSS_BATCH_SIZE: ${{ vars.REDDIT_RSS_BATCH_SIZE || '3' }}
       SOCIAL_FEEDS: ${{ vars.SOCIAL_FEEDS || '' }}
       REDDIT_SUBREDDITS: ${{ vars.REDDIT_SUBREDDITS || '' }}
       X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}

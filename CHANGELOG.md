@@ -1,5 +1,46 @@
 # Changelog
 
+## v0.14.0 - 2026-07-10
+
+Second ecosystem sweep: every established agent service and ecosystem layer named in the coverage audit is now collected, recognized, or explicitly query-covered.
+
+### Added
+- **Release tracking** (12 repos): OpenHands, Browser Use, Goose (Block), Continue, Roo Code, Zed, Letta, mem0, Langfuse, Pydantic AI, Mastra, smolagents. `release_repos_from_context` now guarantees the default list always fits regardless of a stale CI `MAX_RELEASE_REPOS` (code default 12→32, workflow fallback 20→32).
+- **Feeds/pages**: Modal blog, Daytona blog, OpenRouter announcements, Meta AI blog, JetBrains blog (all official lane).
+- **PyPI tracking**: pydantic-ai, mem0ai, langfuse, browser-use, smolagents.
+- **Markers/families**: openhands, browser-use, goose, roo code, continue.dev, zed (anchored forms — bare "zed"/"modal"/"manus" would substring-match "analyzed"/"multimodal"/"manuscript"), lovable, bolt.new, manus, letta, mem0, langfuse/langsmith/braintrust, modal/daytona, openrouter, mistral, agentforce, pydantic-ai, mastra, smolagents; new vendor families openhands/browseruse/zed/appgen/manus/memory/evalops/sandbox-infra/openrouter/mistral count toward daily vendor breadth.
+- **Queries**: HN/Reddit/Bluesky for OpenHands, Browser Use, Manus, Lovable, Zed, Roo Code.
+- Prompts (`screening-schema`, `daily-update`) and `sources.md` name the full ecosystem; Manus/Genspark/Agentforce documented as query-covered until a first-party feed exists.
+- CLI version bumped to `0.14.0`.
+
+## v0.13.0 - 2026-07-10
+
+Source-universe breadth: more of everything the radar reads, plus an expert-media lane.
+
+### Added
+- **Expert media lane** (`expert`, highest discussion-tier score weight 15): Simon Willison's weblog and Latent Space — fast, dense, pre-filtered agent coverage from individual analysts.
+- **Infra vendor feeds** that sources.md promised but never collected: Supabase (`supabase-blog`), Fly.io (`flyio-blog`), Mistral (`mistral-news` page).
+- **Discovery collectors**: GitHub Trending daily (`github-trending`, github lane) and Product Hunt feed (`producthunt`).
+- **arXiv breadth**: cs.SE and cs.CR feeds join cs.AI — agent-coding and agent-attack papers live there.
+- **Reddit breadth**: subreddit list 5→10 (adds ChatGPTCoding, cursor, AI_Agents, GithubCopilot, OpenAI) and default poll batch 1→3 per day (each subreddit now seen every ~3 days instead of every 10; workflow fallback updated too).
+- CLI version bumped to `0.13.0`.
+
+### Changed
+- Budgets widened to carry the new sources: daily public source items 50→60, screening window (`MAX_SCREEN_SOURCE_ITEMS`) 80→110.
+
+## v0.12.0 - 2026-07-10
+
+Ecosystem-vendor coverage: Grok/xAI, Pi, Amp, Cursor, OpenCode, E2B, Vercel, Cloudflare and peers were either uncollected or collected-then-discarded as no-name infra.
+
+### Fixed
+- **Collected-but-discarded**: Vercel/Cloudflare/Amp collectors were healthy, but their items carried no mainstream-vendor score boost and screening classified them as `infra_primitive`. `MAINSTREAM_VENDOR_MARKERS` and `VENDOR_FAMILIES` now cover the agent ecosystem (grok/xai, vercel, cloudflare, e2b, ampcode, opencode, warp, factory.ai, raycast, windsurf, aider, cline, replit, devin, deepseek, qwen); the screening schema and daily prompt name them explicitly as mainstream.
+- **`RELEASE_REPOS` replace→extend**: the CI repo variable silently replaced code defaults, so repos added in code never took effect. Env now extends the defaults.
+
+### Added
+- **New collectors**: `xai-news` (x.ai/news) and `e2b-blog` pages; GitHub release tracking for `anthropics/claude-code`, `sst/opencode`, `e2b-dev/E2B`, `vercel/ai`, `cloudflare/agents`, `cline/cline`, `Aider-AI/aider`, `google-gemini/gemini-cli`, `QwenLM/qwen-code`; HN/Reddit/Bluesky queries for Grok, OpenCode, E2B, Amp.
+- **Zero-coverage vendor ledger**: `PRIORITY_VENDOR_FAMILIES` (openai, anthropic, google, github, cursor, xai, vercel, cloudflare, e2b, amp, opencode, china) are checked after every collection; families with zero items are injected into the daily prompt (must appear under Coverage ledger `missed=`), recorded as a warning, and counted in telemetry (`vendor_zero_coverage`). A promised vendor going dark is now a named gap, not a silent absence.
+- CLI version bumped to `0.12.0`.
+
 ## v0.11.0 - 2026-07-10
 
 Depth & coverage release, driven by the 2026-07-10 daily review: 3 New Signals, one-line why-it-matters, 1 storage bullet, 4 vendor families.

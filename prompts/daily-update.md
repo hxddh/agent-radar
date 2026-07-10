@@ -20,7 +20,7 @@ Collect and summarize high-signal AI Agent updates from the last 24-48 hours.
 Use all available authorized sources. Do not artificially limit research to public webpages. Public sources, authorized logged-in sources, and user-provided private signals can all be useful. Because this repository is public, publish only public-safe summaries.
 
 Focus on (direction order matters):
-1. Mainstream product / platform deltas (OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, DeepSeek, Qwen/Tongyi, ByteDance Trae, etc.)
+1. Mainstream product / platform deltas — the whole agent ecosystem, not only the big labs: OpenAI, Anthropic, Google, Microsoft, GitHub, Cursor, Apple, AWS, xAI/Grok, Vercel, Cloudflare, E2B, Amp (ampcode), OpenCode, Replit, Devin/Windsurf, Warp, DeepSeek, Qwen/Tongyi, ByteDance Trae, OpenHands, Browser Use, Goose, Continue, Roo Code, Zed, Lovable/Bolt, Manus, Letta/mem0 (memory), Langfuse/LangSmith/Braintrust (eval/observability), Modal/Daytona (sandboxes), OpenRouter, Mistral, JetBrains. Ecosystem vendor/project releases and changelogs are mainstream signals.
 2. Real user experience and operator workflows
 3. Emerging agents worth tracking (max 2–3; rest stay in research-log)
 4. Reusable workflow / prompt / setup tricks
