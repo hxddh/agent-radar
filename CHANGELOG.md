@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.19.0 - 2026-07-10
+
+Funnel widening behind the v0.18 publishing surface, plus removal of stale CI variable overrides that were silently clamping collection.
+
+### Fixed
+- **Stale repo Actions variables were overriding the tuned workflow defaults**: the live env showed `MAX_COLLECT_SECONDS=60`, `MAX_SOURCE_WORKERS=12`, `MAX_RELEASE_REPOS=20` — the pre-v0.16 values — because `vars.*` took precedence over the raised fallbacks. These knobs are now hardcoded in the workflow (150 / 16 / 32); tuning lives in-repo.
+- `reddit_subreddits_for_day` no longer returns duplicates when the batch size exceeds the subreddit list length.
+
+### Changed
+- Screening per-pass candidate quota 16 → **24** (`prompts/screening-schema.md`); merged ceiling across 4 shards rises 64 → 96.
+- Screening pool `SCREEN_POOL_ITEMS` 400 → **560** — the four 130-item windows (520 capacity) were not being filled.
+- Reddit RSS coverage: `REDDIT_RSS_BATCH_SIZE` 4 → **10** (code default + workflow) — every default subreddit polled every day; the 60% daily blind spot conflicted with social-first sourcing.
+- Synthesis injection `SCREEN_PROMPT_CANDIDATES` 16 → **20** full candidates.
+- Must-cover mainstream cap `MAX_MUST_COVER_MAINSTREAM` 3 → **5**.
+- Radar Sweep pool injection `SCREEN_RADAR_SWEEP_LINES` 60 → **100** (96 merged − 20 injected can exceed the old cap).
+- CLI version bumped to `0.19.0`.
+
 ## v0.18.1 - 2026-07-10
 
 Hotfix for the first v0.18.0 live run (Issue #56): the daily task refused itself with "7 infra_primitive emerging bullets exceeds max 2" — the new `#### 7. Radar Sweep` one-liners (which legitimately list many `[infra_primitive]` items with github.com URLs) were being counted by the direction-quota gates as day-block emerging bullets.

@@ -284,12 +284,18 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(len(day_two), 2)
         self.assertNotEqual(day_one, day_two)
 
-    def test_reddit_rss_default_batch_size_is_four(self) -> None:
+    def test_reddit_rss_default_batch_covers_all_subreddits(self) -> None:
+        # v0.19: default batch (10) covers the full default subreddit list every
+        # day — daily rotation blind spots conflicted with social-first sourcing.
         subs = ["a", "b", "c", "d", "e", "f"]
         with mock.patch.object(cloud_agent_runner, "reddit_subreddits", return_value=subs):
             with mock.patch.dict(os.environ, {}, clear=True):
                 selected = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-02"))
-        self.assertEqual(len(selected), 4)
+        self.assertEqual(sorted(selected), subs)
+        self.assertGreaterEqual(
+            cloud_agent_runner.env_int("REDDIT_RSS_BATCH_SIZE", 10),
+            len(cloud_agent_runner.DEFAULT_REDDIT_SUBREDDITS),
+        )
 
     def test_pypi_enabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):

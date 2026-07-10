@@ -33,7 +33,7 @@ Rules:
 - Reject or mark `noise` for zero-star launches with only self-reported README evidence.
 - Repo-only evidence from throwaway-pattern GitHub owners (long concatenated-word usernames with trailing digits, ZIP-download-focused READMEs) is a malware-distribution smell: mark `noise` or `promotion_status: defer` with low confidence. The runner also defers these deterministically.
 - A candidate whose only evidence is one GitHub repo URL needs a second independent source (user report, adoption metric, vendor integration) before it can be promoted; note the missing corroboration in `next_check`.
-- Return at most **16 candidates** per screening pass.
+- Return at most **24 candidates** per screening pass.
 - Keep each `why_it_matters` under **120 characters**.
 - `gaps` must name missing direction classes when quotas are unmet, e.g. `Missing mainstream_product: Anthropic/OpenAI/Google/Microsoft/Cursor changelog`.
 - Prefer fresh 24–48h evidence; mark older monthly roundups clearly in `why_it_matters` (e.g. stale-roundup) when unavoidable.
