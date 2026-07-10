@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.10.2 - 2026-07-09
+
+Failure alerting: failed Cloud Agent runs open (or comment on) a labeled GitHub issue instead of dying silently in the Actions tab.
+
+### Added
+- `Alert on failure` workflow step (`if: failure()`): creates or comments on an open issue labeled `cloud-agent-failure` with the run link, trigger event, and the last 40 lines of runner output — gate refusals (SystemExit messages) are quoted directly. One open issue per failure streak; close it after fixing and the next failure reopens the thread.
+- Runner and Validate steps tee output to `run-output.log` (gitignored, excluded from the secret scan) so the alert can quote the failure tail.
+- Workflow `issues: write` permission.
+- CLI version bumped to `0.10.2`.
+
 ## v0.10.1 - 2026-07-09
 
 Citation-source policy: cover the China ecosystem via official vendor pages; cite Simplified-Chinese media sparingly.
