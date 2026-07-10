@@ -654,3 +654,54 @@ Ignore or deprioritize:
 - Agenticow npm package: https://www.npmjs.com/package/agenticow
 - Claude Code v2.1.206: https://github.com/anthropics/claude-code/releases/tag/v2.1.206
 - CNBC article on GPT-5.6 efficiency: https://www.cnbc.com/2026/07/09/open-ai-sam-altman-chatgpt-5-6-sol.html
+
+
+## Source-sweep 2026-07-10 (Radar Sweep pool additions)
+- [infra_primitive] Mcpbr: test MCP servers on SWE-bench and 25 evals — First systematic MCP evaluation tool; bridges protocol and benchmark | https://github.com/greynewell/mcpbr
+- [infra_primitive] Cordium: FOSS sandbox platform hiding infra secrets from agents — Addresses agent security and secret management in shared environments | https://github.com/octelium/cordium
+- [research] Agents' Last Exam: benchmark for professional workflows — New benchmark for real-world agent tasks; could set evaluation standard | https://agents-last-exam.org
+- [mainstream_product] OpenHands multiple releases (1.43.0-1.45.1) with agent profiles — Open-source agent platform shipping multiple versions with agent profiles | https://github.com/OpenHands/OpenHands/releases
+- [infra_primitive] World-model-mcp: memory layer for Claude Code (+10.2 SWE-bench) — Concrete memory implementation with benchmark improvement; practical agent memory | https://github.com/SaravananJaichandar/world-model-mcp
+- [user_workflow] Self-hosted AI setup with Mac Mini + Hermes + OpenCode — Concrete build and cost breakdown for DIY agent setup; social/discussion source (keep; label evidence) | https://bsky.app/profile/krzysu.bsky.social/post/3mqbwsid5cc2m
+- [infra_primitive] Fortress: stealth Chromium + MCP to avoid blocking — Addresses agent detection by websites; browser automation infra | https://tilion.dev
+- [mainstream_product] JetBrains Kotlin Benchmark for AI Coding Agents — First real-world Kotlin benchmark for coding agents; fills eval gap. | https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- [mainstream_product] Agentic Coding on Supabase with OpenCode — Supabase integrates OpenCode for agentic coding workflows. | https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] Google ADK Go 2.0: Multi-Agent Workflows — Graph-based workflow engine with human-in-the-loop for multi-agent apps. | https://developers.googleblog.com/announcing-adk-go-20/
+- [user_workflow] Building Agents that Don't Break Themselves — Practical guidance on agent reliability and self-preservation patterns. | https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [infra_primitive] Sprites Now Speak MCP — Fly.io Sprites adopt MCP; expands MCP ecosystem to edge compute. | https://fly.io/blog/unfortunately-mcp/
+- [research] PERFOPT-Bench: Evaluating Coding Agents on Performance Optimization — New benchmark for coding agent performance optimization tasks. | https://arxiv.org/abs/2607.07744
+- [mainstream_product] Anthropic Invites Public Hard Questions on AI — Public Q&A commitment; transparency signal for agent safety discourse. | https://www.anthropic.com/news/hard-questions
+- [infra_primitive] Daytona Sandboxes Available via Stripe Projects — Sandbox-as-a-service integrated with Stripe; lowers barrier for agent devs. | https://www.daytona.io/dotfiles/daytona-stripe-projects
+- [infra_primitive] Daytona Sandbox Firewall — New sandbox security feature; addresses agent isolation requirements. | https://www.daytona.io/dotfiles/sandbox-firewall
+- [infra_primitive] Modal Sandboxes Product Page — Modal enters sandbox space; expands agent compute options. | https://modal.com/products/sandboxes
+- [mainstream_product] Supabase Is Now an Official ChatGPT App — Supabase integration with ChatGPT; expands agent data access. | https://supabase.com/blog/supabase-is-now-an-official-chatgpt-app
+- [mainstream_product] Anthropic Claude Code v2.1.206 — Three releases in 48h — main client and CLI updates | https://github.com/anthropics/claude-code/releases/tag/v2.1.206
+- [mainstream_product] Google Gemini CLI v0.50.0 & v0.51.0-preview — Stable and preview releases in quick succession | https://github.com/google-gemini/gemini-cli/releases/tag/v0.50.0
+- [mainstream_product] Cline v4.0.7 + CLI v3.0.39 — Multiple releases across IDE extension and CLI | https://github.com/cline/cline/releases/tag/v4.0.7
+- [mainstream_product] OpenHands 1.11.0 — New release of the popular open-source coding agent | https://github.com/OpenHands/OpenHands/releases/tag/1.11.0
+- [mainstream_product] Vercel AI SDK v7.0.19 and v6.0.222 — Latest releases for the leading AI SDK for agents | https://github.com/vercel/ai/releases/tag/ai%407.0.19
+- [mainstream_product] Kilo coding agent (Kilo-Org/kilocode) — 25.9k stars, all-in-one agentic engineering platform gaining traction; repo-star ≠ product delta | https://github.com/Kilo-Org/kilocode
+- [mainstream_product] Activepieces MCP/AI Workflow Automation — ~400 MCP servers for AI agents; strong standalone product; repo-star ≠ product delta | https://github.com/activepieces/activepieces
+- [mainstream_product] Qwen Code CUA Driver v0.7.1 — Rust-based computer-use agent driver from Alibaba | https://github.com/QwenLM/qwen-code/releases/tag/cua-driver-rs-v0.7.1
+- [infra_primitive] Mitos microVM sandbox forking for AI agents — Millisecond VM forking from memory snapshots on K8s | https://github.com/mitos-run/mitos
+- [infra_primitive] Langfuse v3.211.0 — Agent observability platform shipping daily releases | https://github.com/langfuse/langfuse/releases/tag/v3.211.0
+- [infra_primitive] Pydantic AI v2.8.0 — Major framework release for building agentic systems | https://github.com/pydantic/pydantic-ai/releases/tag/v2.8.0
+- [infra_primitive] ADL CLI: A2A protocol scaffolding tool — Enterprise multi-agent orchestration via Agent-to-Agent protocol | https://github.com/inference-gateway/adl-cli
+- [mainstream_product] GitHub Copilot: improved filters/sorting for mobile sessions — Copilot session management UX improvement on mobile | https://github.blog/changelog/2026-07-10-github-mobile-improved-filters-and-sorting-for-copilot-sessions
+- [mainstream_product] GitHub Copilot appDirect: issue-to-merge agent | https://github.com/features/ai/github-app
+- [mainstream_product] Vercel agent-eval playground — Vercel ships browser-based experiment viewer for agent-eval runs. | https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [mainstream_product] Vercel detect-agent — Vercel releases detection library for AI agent environments. | https://www.npmjs.com/package/%40vercel/detect-agent
+- [infra_primitive] agenticow - Copy-on-write vector memory — Fast memory branching for multi-agent systems (0.5ms/162 bytes). | https://www.npmjs.com/package/agenticow
+- [infra_primitive] Drylake - agent workspace security scanner — Scans MCP servers, rules, secrets, prompt injection for agents. | https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] GrepRAG - agent memory for Claude Code — Agent memory/search tool for Claude Code, Codex, OpenCode. | https://www.npmjs.com/package/greprag
+- [infra_primitive] Bolthub - L402 payments SDK for MCP — First L402 payments SDK for MCP tools; pay-per-use. | https://pypi.org/project/bolthub/0.7.0/
+- [infra_primitive] Nextcloud MCP server — Enables AI assistant interaction with Nextcloud data. | https://pypi.org/project/nextcloud-mcp-server/0.132.0/
+- [infra_primitive] Atomr agents eval — Eval tooling with deterministic replay for agent debugging. | https://crates.io/crates/atomr-agents-eval
+- [infra_primitive] Gigacode sandbox agent CLI — Sandbox environment for agents with OpenCode integration. | https://crates.io/crates/gigacode
+- [infra_primitive] Agent persona for Claude — Persistent persona for Claude based on session history. | https://pypi.org/project/agent-persona/0.4.0/
+- [infra_primitive] Mycode SDK — Lightweight Python SDK for agent creation. | https://pypi.org/project/mycode-sdk/0.9.5/
+- [infra_primitive] PayBito MCP helper — Infuses PayBito API expertise into MCP platforms. | https://pypi.org/project/paybito-mcp/0.2.8/
+- [infra_primitive] Unofficial agent-browser Rust crate — Unofficial Rust port of agent-browser core. | https://crates.io/crates/agent-browser-core-unofficial
+- [infra_primitive] Nils macOS agent CLI — CLI for macOS agent management. | https://crates.io/crates/nils-macos-agent
+- [infra_primitive] Pitbridge - MCP bridge for NinjaTrader — Hard risk limits for agent trading via MCP. | https://pypi.org/project/pitbridge/0.2.2/
+- [infra_primitive] CCSwap - Claude Codex account manager — Multi-account management for Claude Code and Codex. | https://pypi.org/project/ccswap/0.20.0/
