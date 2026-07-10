@@ -13,10 +13,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: Anthropic published 'The Making of Claude Code' behind-the-scenes article detailing origins and design rationale. GhostApproval symlink attack disclosed — coding agents tricked by symlinks into approving malicious changes. User workflow reports include TDD prompt technique (write failing test first) and $165k pre-merge run cost anecdote.
-- Evidence strength: Strong (official blog); Medium (security and user reports).
-- Sources: https://www.anthropic.com/features/making-of-claude-code, https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22, https://bsky.app/profile/happy-homhom.bsky.social/post/3mq74kpxfox2y
-- Watch next: Whether GhostApproval gets CVE assignment; whether cost reports drive official cost-management features.
+- Recent changes: China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. Anthropic published containment engineering post (2026-07-09, covered). GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), and async long-running task pattern. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
+- Source: https://www.channelnewsasia.com/east-asia/china-anthropic-claude-code-ai-backdoor-security-alert-6240476
 ## Cursor
 
 Status:
@@ -281,13 +279,10 @@ Name:
 - Recent changes: Now at 11.9k stars; gaining traction as a production-grade multi-agent framework. Microsoft also released the Agent Governance Toolkit (4.7k stars) for policy enforcement and zero-trust sandboxing, complementing the framework.
 - replace_section anchor: `## Microsoft agent-framework`
 ## GitHub Copilot
-
 - Category: AI coding assistant / agent
-- Maturity: Mature product with millions of users; expanding agent capabilities.
-- Recent changes: June 2026 VS Code releases brought better inline suggestions, context awareness, and agent mode enhancements. GitHub Innersource security advisories now generally available, impacting enterprise agent security.
-- Source: https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases, https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available
-
-
+- Maturity: Mature product with millions of users; expanding agent capabilities and model choices.
+- Recent changes: GPT-5.6 Sol, Terra, and Luna models now available in GitHub Copilot (2026-07-09 changelog). Three new model tiers give operators model-routing choices within Copilot, aligning with cost-economics thesis. GitHub Innersource security advisories now generally available, impacting enterprise agent security.
+- Source: https://github.blog/changelog/2026-07-09-openais-gpt-5-6-sol-terra-and-luna-are-now-available-in-github-copilot
 ## Cline
 
 - Category: Coding agent

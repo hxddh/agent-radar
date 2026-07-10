@@ -505,3 +505,20 @@ Ignore or deprioritize:
 - GitLost: prompt-injection class every AI coding agent inherits: https://bsky.app/profile/rohitgupta2432.bsky.social/post/3mqbceumko52p
 - Agent sandboxing: Gemini Enterprise, AWS Lambda, k8s, Nvidia OpenShell, Modal, E2B: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
 - Why sandboxing your agent is not enough (CNCF blog): https://bsky.app/profile/jmsunico.bsky.social/post/3mqatughjjt2g
+
+
+## Additional sources from 2026-07-10 daily run
+
+- JADEPUFFER first agentic ransomware (Sysdig): https://bsky.app/profile/securityonline.bsky.social/post/3mqbilpofzb23
+- China warns of Claude Code backdoor: https://www.channelnewsasia.com/east-asia/china-anthropic-claude-code-ai-backdoor-security-alert-6240476
+- OpenAI GPT-5.6 in GitHub Copilot: https://github.blog/changelog/2026-07-09-openais-gpt-5-6-sol-terra-and-luna-are-now-available-in-github-copilot
+- Prove-it gate (verify.sh): https://dev.to/whynext/i-stopped-trusting-the-agents-done-prove-it-a-verifysh-gate-25ci
+- Claude Code async long-running tasks: https://bsky.app/profile/happy-homhom.bsky.social/post/3mqbicd7mol2b
+- Quarkus graph MCP efficiency: https://bsky.app/profile/myfear.com/post/3mqbiorgkio2e
+- Claude Code Fable disclaimer disappears (HN): https://news.ycombinator.com/item?id=48852172
+- Agent sandboxing landscape roundup: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
+- Mitos microVM sandbox: https://github.com/mitos-run/mitos
+- Forge Agent Gate: https://github.com/forgeorbital/forge-agent-gate
+- Agents' Last Exam benchmark: https://agents-last-exam.org
+- GitLost prompt-injection class: https://bsky.app/profile/rohitgupta2432.bsky.social/post/3mqbceumko52p
+- CNCF sandboxing not enough: https://bsky.app/profile/jmsunico.bsky.social/post/3mqatughjjt2g

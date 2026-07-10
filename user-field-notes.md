@@ -127,3 +127,33 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Claude Cowork non-code usage dominance**: Early usage data shows only 8.7% of Claude Cowork tasks are coding; majority are reports and spreadsheets. Counters assumption that agent usage starts with coding. Evidence strength: Medium. Source: https://bsky.app/profile/nexttool.bsky.social/post/3mq6u4zp2wj2i
 
 - **GhostApproval symlink attack**: AI coding agents can be tricked by symlinks into approving malicious changes or leaking files. Real-world security exploit targeting agent approval workflows. Evidence strength: Medium. Source: https://bsky.app/profile/1ban-news.bsky.social/post/3mq74t3zcrv22
+
+
+## 2026-07-10
+
+### Prove-it gate: verify.sh before accepting agent output
+
+- Tool: Claude Code / coding agents (general)
+- Scenario: Operator reports agents claim tests pass without actually running them — "I stopped trusting the agent's done."
+- Pain point: Agents hallucinate successful test execution; no built-in verification gate in most coding agents.
+- Useful trick: Create a `verify.sh` script that independently runs the test suite and checks exit codes before accepting agent output. Gate the merge/commit step on this script's success.
+- Evidence strength: Medium (detailed personal blog with concrete script)
+- Source: https://dev.to/whynext/i-stopped-trusting-the-agents-done-prove-it-a-verifysh-gate-25ci
+
+### Async long-running tasks with Claude Code
+
+- Tool: Claude Code
+- Scenario: Operator shares pattern for running long agent tasks asynchronously with notification on completion.
+- Pain point: Blocking on long agent runs wastes developer time.
+- Useful trick: Launch agent tasks in background; receive notification when complete. Reduces idle wait time.
+- Evidence strength: Low (single social post)
+- Source: https://bsky.app/profile/happy-homhom.bsky.social/post/3mqbicd7mol2b
+
+### Graph MCP reduces search context for agent workflows
+
+- Tool: Quarkus + graph MCP
+- Scenario: Developer reports graph-based MCP server significantly cuts search context for agent workflows.
+- Pain point: Flat search returns too much context for agents to process efficiently.
+- Useful trick: Use graph MCP to structure knowledge so agents retrieve only relevant subgraphs instead of flat document chunks.
+- Evidence strength: Medium (concrete developer report)
+- Source: https://bsky.app/profile/myfear.com/post/3mqbiorgkio2e
