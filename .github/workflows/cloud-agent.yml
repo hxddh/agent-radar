@@ -199,7 +199,11 @@ jobs:
         run: |
           if [ -f run-output.log ] && grep -qE 'Task (daily|weekly|monthly) (failed|errored):' run-output.log; then
             echo "A report task failed inside an otherwise-green run:"
-            grep -E 'Task (daily|weekly|monthly) (failed|errored):' run-output.log | tail -3
+            FAILED_LINES="$(grep -E 'Task (daily|weekly|monthly) (failed|errored):' run-output.log | tail -3)"
+            echo "$FAILED_LINES"
+            # Append to the log so the alert issue quotes the failure lines
+            # instead of whatever test output happens to be in the tail.
+            { echo "--- failed report tasks ---"; echo "$FAILED_LINES"; } >> run-output.log
             exit 1
           fi
 

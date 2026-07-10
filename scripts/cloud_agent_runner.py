@@ -62,7 +62,9 @@ DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
 DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 110
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
-DEFAULT_MAX_RESPONSE_CHARS = 32_000
+# v0.11 raised the day block to 14k chars but left this at 32k; the strong
+# synthesis model legitimately produces ~40k (bilingual block + research-log).
+DEFAULT_MAX_RESPONSE_CHARS = 48_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 14_000
