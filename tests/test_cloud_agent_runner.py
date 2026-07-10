@@ -195,9 +195,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
         page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
         self.assertIn("cursor-changelog", page_names)
         self.assertIn("anthropic-news", page_names)
+        # A small limit is floored to the default list size so a stale CI cap
+        # cannot silently drop ecosystem repos; nothing beyond that is added.
         with mock.patch.dict(os.environ, {"MAX_RELEASE_REPOS": "3"}, clear=True):
-            repos = cloud_agent_runner.release_repos_from_context(REPO_ROOT, 3)
-        self.assertLessEqual(len(repos), 3)
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                with tempfile.TemporaryDirectory() as tmp:
+                    repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 3)
+        self.assertEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
 
     def test_openrouter_prompt_bans_paid_search_tools(self) -> None:
         rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
