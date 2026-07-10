@@ -7,14 +7,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users, but external market-wide adoption still needs corroboration.
-- Recent changes: Codex CLI 0.144.0-alpha.4 released; fixes and feature improvements.
-- Evidence strength: Strong (official release)
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.144.0-alpha.4
+- Recent changes: OpenAI discontinued standalone ChatGPT Atlas browser agent; merged into unified desktop app combining Chat, Work, and Codex (2026-07-10). Codex gains more prominent position in OpenAI product surface. GPT-5.6 Sol, Terra, Luna models now available in GitHub Copilot (2026-07-09 changelog).
+- Source: https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. Anthropic published containment engineering post (2026-07-09, covered). GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), and async long-running task pattern. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
-- Source: https://www.channelnewsasia.com/east-asia/china-anthropic-claude-code-ai-backdoor-security-alert-6240476
+- Recent changes: Anthropic published 'The Making of Claude Code' blog (2026-07-10) detailing design decisions and productization path. China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. Anthropic published containment engineering post (2026-07-09, covered). GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), and async long-running task pattern. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
+- Source: https://www.anthropic.com/features/making-of-claude-code
 ## Cursor
 
 Status:

@@ -522,3 +522,21 @@ Ignore or deprioritize:
 - Agents' Last Exam benchmark: https://agents-last-exam.org
 - GitLost prompt-injection class: https://bsky.app/profile/rohitgupta2432.bsky.social/post/3mqbceumko52p
 - CNCF sandboxing not enough: https://bsky.app/profile/jmsunico.bsky.social/post/3mqatughjjt2g
+
+
+## Additional sources from 2026-07-10 daily run (screening shard)
+
+- Anthropic Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- OpenAI discontinues Atlas, merges into unified app: https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex
+- Hallusquatting threat intelligence: https://intel.threadlinqs.com/threat/TL-2026-1164
+- Self-hosted agents OpenClaw cron + isolated sessions: https://bsky.app/profile/lapincecc.bsky.social/post/3mqblcqrjna2o
+- Fantastical MCP server install guide: https://bsky.app/profile/s1mn.bsky.social/post/3mqborlycjkga
+- DS/ML agent workflow repo (lemma): https://github.com/tkpratardan/lemma
+- Microsoft Agent Framework: https://github.com/microsoft/agent-framework
+- MicroVM sandboxing tutorial: https://builders.cortex.io/blog/sandboxing-agents-part-1/
+- Agentic OS governance rules: https://github.com/KbWen/agentic-os
+
+
+## Source-sweep 2026-07-10 (additional social sources)
+
+- Anthropic publishes making-of Claude Code blog (social discussion): https://bsky.app/profile/inautilo.bsky.social/post/3mqbprsnfd42m

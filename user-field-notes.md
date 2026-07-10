@@ -157,3 +157,14 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Useful trick: Use graph MCP to structure knowledge so agents retrieve only relevant subgraphs instead of flat document chunks.
 - Evidence strength: Medium (concrete developer report)
 - Source: https://bsky.app/profile/myfear.com/post/3mqbiorgkio2e
+
+
+## 2026-07-10
+
+- **Self-hosted agent reliability**: Operator shares setup using OpenClaw with cron scheduling and isolated sessions per task to prevent state leakage. Concrete approach for operators who find cloud-hosted agent runs unreliable for long-running or scheduled tasks. Evidence: Medium (social post with concrete setup). Source: https://bsky.app/profile/lapincecc.bsky.social/post/3mqblcqrjna2o
+
+- **Fantastical MCP for calendar-aware agents**: Step-by-step guide for adding Fantastical MCP server to ChatGPT and Codex, giving agents read/write access to calendar events. Useful for scheduling-related agent tasks. Evidence: Medium (detailed social post). Source: https://bsky.app/profile/s1mn.bsky.social/post/3mqborlycjkga
+
+- **Reproducible DS/ML workflows with coding agents**: User shares GitHub repo (lemma) documenting structured workflow with agent-generated code, pinned environments, and reproducible experiment tracking. Addresses gap between agent code generation and DS/ML reproducibility requirements. Evidence: Medium (concrete repo with examples). Source: https://github.com/tkpratardan/lemma
+
+- **Hallusquatting risk in agent workflows**: Security researchers document attackers registering fake package names that AI agents hallucinate during coding tasks. Operators should add package-name verification to agent output gates and pin dependencies. Evidence: Strong (threat intelligence). Source: https://intel.threadlinqs.com/threat/TL-2026-1164
