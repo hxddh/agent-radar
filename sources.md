@@ -580,3 +580,31 @@ Ignore or deprioritize:
 - Agent sandboxing infra battleground: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
 - E2B Series A $21M: https://e2b.dev/blog/series-a
 - Google Gemini CLI v0.51.0 Preview: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+
+
+## Source-sweep 2026-07-10
+
+### Tier 1
+- OpenHands 1.11.0: https://github.com/All-Hands-AI/OpenHands/releases/tag/1.11.0
+- Aider v0.86.2: https://github.com/Aider-AI/aider/releases/tag/v0.86.2
+- pydantic-ai v2.8.0: https://github.com/pydantic/pydantic-ai/releases/tag/v2.8.0
+- Mistral Vibe for code: https://mistral.ai/products/vibe/code/
+- Supabase agentic coding with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- E2B Series A $21M: https://e2b.dev/blog/series-a
+- Google Gemini CLI v0.51.0 Preview: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+
+### Tier 2 / 3
+- OpenHands cloud-1.45.0 Agent Profiles: https://bsky.app/profile/selfhost.directory/post/3mqaf764wgh2v
+- Runtime validation still broken (HN): https://news.ycombinator.com/item?id=46963340
+- Coding agent tooling discussion (HN): https://news.ycombinator.com/item?id=47510127
+- Verification loop 4x'd DeepSeek intelligence: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- browser-use 0.13.3: https://github.com/browser-use/browser-use/releases/tag/0.13.3
+- nono sandbox: https://github.com/nolabs-ai/nono
+- Zedra mobile control plane (HN): https://news.ycombinator.com/item?id=48420833
+- Manus acquisition unwind: https://bsky.app/profile/financialtimes.com/post/3mqb6bw44kt2l
+- Multi-agent worktree workflow (Reddit): https://www.reddit.com/r/AI_Agents/comments/1ushzdp/running_more_than_one_coding_agent_at_once/
+- n8n cost-efficient DM reply agent: https://bsky.app/profile/automate-n8n.bsky.social/post/3mqbsyofjws2o
+- QA PR browser agent (Show HN): https://www.notesasm.com/
+- DeepSeek V3.2 agent on ARC-AGI-1: https://bsky.app/profile/karanluthra.bsky.social/post/3mqbqegjhm52n
+- A2A and MCP agent security: https://www.glukhov.org/llm-architecture/guardrails/a2a-mcp-agent-security/
+- Agent sandboxing infra battleground: https://bsky.app/profile/csanchez.org/post/3mqabjjygwe2n
