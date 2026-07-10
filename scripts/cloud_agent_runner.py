@@ -2207,6 +2207,19 @@ def compute_synthesis_recall_details(screen_text: str | None, result: dict[str, 
     for update in normalize_result_updates(result):
         hay_parts.append(str(update.get("content", "")))
     hay = "\n".join(hay_parts).lower()
+    # Sharded screening can double the high-confidence mainstream pool; measure
+    # mainstream recall over the top candidates a day block can realistically
+    # cover (2x the MUST-cover set), not the whole merged pool.
+    mainstream_pool = sorted(
+        (
+            cand
+            for cand in candidates
+            if infer_signal_class(cand) == "mainstream_product"
+            and str(cand.get("confidence", "")).lower() == "high"
+        ),
+        key=candidate_priority_key,
+    )[: MAX_MUST_COVER_MAINSTREAM * 2]
+    mainstream_ids = {id(cand) for cand in mainstream_pool}
     matched = 0
     weight_total = 0.0
     weight_matched = 0.0
@@ -2220,7 +2233,7 @@ def compute_synthesis_recall_details(screen_text: str | None, result: dict[str, 
         if hit:
             matched += 1
             weight_matched += weight
-        if signal_class == "mainstream_product" and str(cand.get("confidence", "")).lower() == "high":
+        if id(cand) in mainstream_ids:
             mainstream_total += 1
             if hit:
                 mainstream_matched += 1
