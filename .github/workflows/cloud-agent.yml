@@ -27,6 +27,7 @@ on:
 permissions:
   contents: write
   models: read
+  issues: write
 
 concurrency:
   group: cloud-agent-${{ github.ref }}
@@ -128,29 +129,33 @@ jobs:
           PAYLOAD_DATE: ${{ github.event.client_payload.date }}
           INPUT_DATE: ${{ github.event.inputs.date }}
         run: |
-          set -eu
+          set -euo pipefail
           TASK="${PAYLOAD_TASK:-${INPUT_TASK:-auto}}"
           DATE_INPUT="${PAYLOAD_DATE:-${INPUT_DATE:-}}"
+          # Tee output so the failure alert can quote the refusal/error tail.
           if [ -n "$DATE_INPUT" ]; then
-            python scripts/cloud_agent_runner.py --task "$TASK" --date "$DATE_INPUT"
+            python scripts/cloud_agent_runner.py --task "$TASK" --date "$DATE_INPUT" 2>&1 | tee -a run-output.log
           else
-            python scripts/cloud_agent_runner.py --task "$TASK"
+            python scripts/cloud_agent_runner.py --task "$TASK" 2>&1 | tee -a run-output.log
           fi
 
       - name: Validate
         run: |
-          TODAY="$(date -u +%F)"
-          DOW="$(date -u +%u)"
-          python scripts/agent_radar.py ensure --date "$TODAY"
-          python scripts/agent_radar.py bilingualize --date "$TODAY"
-          python scripts/agent_radar.py brief --date "$TODAY"
-          if [ "$DOW" = "7" ]; then
-            python scripts/agent_radar.py validate --date "$TODAY" --tier full --strict-bilingual --require-chinese
-          else
-            python scripts/agent_radar.py validate --date "$TODAY" --tier daily --strict-bilingual --require-chinese
-          fi
-          python -m unittest discover -s tests
-          python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py scripts/radar_corpus_audit.py
+          set -o pipefail
+          {
+            TODAY="$(date -u +%F)"
+            DOW="$(date -u +%u)"
+            python scripts/agent_radar.py ensure --date "$TODAY"
+            python scripts/agent_radar.py bilingualize --date "$TODAY"
+            python scripts/agent_radar.py brief --date "$TODAY"
+            if [ "$DOW" = "7" ]; then
+              python scripts/agent_radar.py validate --date "$TODAY" --tier full --strict-bilingual --require-chinese
+            else
+              python scripts/agent_radar.py validate --date "$TODAY" --tier daily --strict-bilingual --require-chinese
+            fi
+            python -m unittest discover -s tests
+            python -m py_compile scripts/agent_radar.py scripts/cloud_agent_runner.py scripts/radar_bilingual.py scripts/radar_collector_state.py scripts/radar_corpus_audit.py
+          } 2>&1 | tee -a run-output.log
 
       - name: Prune empty daily shell
         run: |
@@ -164,7 +169,7 @@ jobs:
           # source-cache.jsonl and collector-state.json hold machine-written external
           # titles/URLs/error details; scanning them risks false positives from external
           # content while they never contain repo secrets. Reports and code stay scanned.
-          if grep -RInE --exclude=validate.yml --exclude=cloud-agent.yml --exclude=source-cache.jsonl --exclude=collector-state.json --exclude-dir=.git --exclude-dir=__pycache__ '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
+          if grep -RInE --exclude=validate.yml --exclude=cloud-agent.yml --exclude=source-cache.jsonl --exclude=collector-state.json --exclude=run-output.log --exclude-dir=.git --exclude-dir=__pycache__ '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
             echo "Possible secret detected."
             exit 1
           fi
@@ -184,3 +189,57 @@ jobs:
           git commit -m "Cloud agent radar update $(date -u +%F)"
           git pull --rebase origin "${GITHUB_REF_NAME:-main}"
           git push
+
+      - name: Alert on failure
+        # Failure ledger + notification: open (or comment on) a labeled issue so
+        # failed runs — especially scheduled ones and gate refusals — surface as
+        # GitHub notifications instead of dying silently in the Actions tab.
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let tail = '(no captured runner log; open the run link for details)';
+            try {
+              const lines = fs.readFileSync('run-output.log', 'utf8').trim().split('\n');
+              tail = lines.slice(-40).join('\n');
+            } catch (e) {}
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const label = 'cloud-agent-failure';
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: label });
+            } catch (e) {
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: label,
+                color: 'd73a4a',
+                description: 'Automated alert: cloud agent workflow run failed',
+              });
+            }
+            const body = [
+              `Run: ${runUrl}`,
+              `Event: ${context.eventName}`,
+              `Failed at (UTC): ${new Date().toISOString()}`,
+              '',
+              'Last runner output:',
+              '```',
+              tail,
+              '```',
+              '',
+              '_Close this issue once the cause is fixed; the next failure reopens the thread._',
+            ].join('\n');
+            const open = await github.rest.issues.listForRepo({
+              ...context.repo, state: 'open', labels: label, per_page: 1,
+            });
+            if (open.data.length > 0) {
+              await github.rest.issues.createComment({
+                ...context.repo, issue_number: open.data[0].number, body,
+              });
+            } else {
+              await github.rest.issues.create({
+                ...context.repo,
+                title: 'Cloud Agent run failed',
+                labels: [label],
+                body,
+              });
+            }

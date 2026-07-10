@@ -5,3 +5,4 @@ __pycache__/
 docs/release-draft.md
 automation/collector-state.json.bak
 automation/collector-state.json.tmp
+run-output.log
