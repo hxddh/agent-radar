@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.17.0 - 2026-07-10
+
+Scale screening by shards, not window size: the binding constraint had shifted from numeric caps to cheap-model attention per call.
+
+### Changed
+- **Four-lane sharded screening** (was two): `discussion` (social/reddit/HN, still first so dedup keeps community framing), `official-vendor` (official/feeds/expert/papers), `github-oss` (github + releases), `packages` (registries). Each shard gets its own full 130-item window and 16-candidate quota — up to 64 merged candidates per run from focused passes, instead of degrading selection quality with one oversized prompt.
+- Screening pool (`SCREEN_POOL_ITEMS`) 240→400 — with four shards the windows can actually consume it.
+- Synthesis injection (`SCREEN_PROMPT_CANDIDATES`) 14→16; screening candidate `why_it_matters` budget 120→160 chars.
+- Cost note: up to 4 cheap screening calls per collection (was 2); `SCREENING_SHARDS=1` still restores the single-call path.
+- CLI version bumped to `0.17.0`.
+
+## v0.16.0 - 2026-07-10
+
+Threshold audit release: remove every remaining cap that silently constrained breadth and coverage.
+
+### Fixed
+- **The screening pool was the dominant hidden funnel**: the shared collection pool was trimmed to the max task budget (120), so screening only ever saw ~15% of a ~780-item collection — every earlier screening-window raise operated inside that 120-item pool. Screening now draws from its own lane-balanced pool (`SCREEN_POOL_ITEMS`, default 240); per-task snapshots still trim to their own budgets.
+- **Collection deadline**: `MAX_COLLECT_SECONDS` 60→150 and `MAX_SOURCE_WORKERS` 12→16 (workflow + code defaults) — the 60s wall with ~180 collectors and GitHub API throttling was truncating the expanded fleet.
+
+### Changed
+- Budgets: hard cap `MAX_PUBLIC_SOURCE_ITEMS` 200→300; daily 60→80; source-sweep/weekly 120→160; monthly 160→200.
+- Screening: per-shard window (`MAX_SCREEN_SOURCE_ITEMS`) 110→130; screen prompt budget 40k→56k chars; candidates per screening pass 12→16 (merged up to 32); synthesis injection (`SCREEN_PROMPT_CANDIDATES`) 12→14.
+- Reddit poll batch 3→4 of 10 subreddits per day.
+- CLI version bumped to `0.16.0`.
+## v0.15.0 - 2026-07-10
+
+Community-voice share: discussion content from Reddit/HN/Bluesky/Lobsters/dev.to gets a guaranteed slice of the published report, not only of collection and screening.
+
+### Added
+- **Day-block community quota**: ≥3 discussion-sourced bullets per day block, 3–5 field reports in the User Workflow section, and community-first stories get full New Signals ("a heated HN/Reddit thread IS a signal"). The runner counts published discussion bullets (`discussion_signal_count`), warns below 3, and feeds the weekly By-the-Numbers trend (`discussion_signals_published`).
+- **Discussion shard runs first** in sharded screening: merge dedup keeps the first occurrence per URL, so stories covered by both shards keep their community framing (official corroboration URLs still get attached).
+- **Bigger discussion reserve in the synthesis top-N**: discussion-backed `user_workflow` slots 2→3 (of 12 injected candidates).
+- CLI version bumped to `0.15.0`.
+
 ## v0.14.2 - 2026-07-10
 
 ### Fixed

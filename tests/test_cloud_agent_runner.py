@@ -120,10 +120,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
 
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 60)
-            self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 120)
-            self.assertEqual(cloud_agent_runner.public_source_budget("weekly"), 120)
-            self.assertEqual(cloud_agent_runner.public_source_budget("monthly"), 160)
+            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 80)
+            self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 160)
+            self.assertEqual(cloud_agent_runner.public_source_budget("weekly"), 160)
+            self.assertEqual(cloud_agent_runner.public_source_budget("monthly"), 200)
             self.assertGreaterEqual(cloud_agent_runner.MAX_PUBLIC_SOURCE_ITEMS, 200)
 
     def test_build_prompt_uses_screening_pass_instead_of_raw_sources(self) -> None:
@@ -284,12 +284,12 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(len(day_two), 2)
         self.assertNotEqual(day_one, day_two)
 
-    def test_reddit_rss_default_batch_size_is_three(self) -> None:
-        subs = ["a", "b", "c", "d", "e"]
+    def test_reddit_rss_default_batch_size_is_four(self) -> None:
+        subs = ["a", "b", "c", "d", "e", "f"]
         with mock.patch.object(cloud_agent_runner, "reddit_subreddits", return_value=subs):
             with mock.patch.dict(os.environ, {}, clear=True):
                 selected = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-02"))
-        self.assertEqual(len(selected), 3)
+        self.assertEqual(len(selected), 4)
 
     def test_pypi_enabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
@@ -720,7 +720,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertTrue(cloud_agent_runner.items_are_scored(scored))
         self.assertGreater(int(scored[0]["score"]), int(scored[1]["score"]))
 
-    def test_prepare_shared_source_collection_trims_to_max_task_budget(self) -> None:
+    def test_prepare_shared_source_collection_uses_screening_pool(self) -> None:
         raw = [
             {
                 "source": "github",
@@ -739,9 +739,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         cloud_agent_runner.parse_date("2026-07-02"),
                         ["daily", "source-sweep"],
                     )
-                    expected = cloud_agent_runner.public_source_budget("source-sweep")
         self.assertEqual(raw_count, 150)
-        self.assertEqual(len(pool), expected)
+        # The screening pool is decoupled from task budgets (SCREEN_POOL_ITEMS,
+        # default 240); with 150 raw items the whole collection flows through.
+        self.assertEqual(len(pool), 150)
 
     def test_warn_public_source_budget_override_prints_when_set(self) -> None:
         with mock.patch.dict(os.environ, {"MAX_PUBLIC_SOURCE_ITEMS": "80"}, clear=False):
@@ -773,9 +774,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
                     cloud_agent_runner.parse_date("2026-07-02"),
                     raw_collected_count=394,
                 )
-        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 60)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 80)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["collected_source_items"], 394)
-        self.assertIn("Budget 60/120", snapshot)
+        self.assertIn("Budget 80/120", snapshot)
 
     def test_compact_screening_for_prompt_is_smaller_than_raw_json(self) -> None:
         raw = json.dumps(
@@ -2311,10 +2312,13 @@ class AuditLoopTest(unittest.TestCase):
             {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1"},
             {"source": "hacker-news", "title": "thread", "url": "https://news.ycombinator.com/item?id=1"},
             {"source": "openai-blog", "title": "release", "url": "https://openai.com/x"},
+            {"source": "npm", "title": "package", "url": "https://www.npmjs.com/package/x"},
         ]
         shards = dict(cloud_agent_runner.screening_shard_items(items))
-        self.assertEqual(len(shards["official/repo"]), 2)
         self.assertEqual(len(shards["discussion"]), 2)
+        self.assertEqual(len(shards["official-vendor"]), 1)
+        self.assertEqual(len(shards["github-oss"]), 1)
+        self.assertEqual(len(shards["packages"]), 1)
 
     def test_merge_screening_payloads_dedupes_by_url(self) -> None:
         merged = cloud_agent_runner.merge_screening_payloads(
@@ -2770,6 +2774,92 @@ class AuditLoopTest(unittest.TestCase):
                 with tempfile.TemporaryDirectory() as tmp:
                     repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 5)
         self.assertGreaterEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
+
+    def test_discussion_shard_runs_first(self) -> None:
+        items = [
+            {"source": "github", "title": "repo", "url": "https://github.com/a/b"},
+            {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1"},
+        ]
+        shards = cloud_agent_runner.screening_shard_items(items)
+        self.assertEqual(shards[0][0], "discussion")
+
+    def test_diversify_reserves_three_discussion_user_slots(self) -> None:
+        candidates = []
+        for index in range(4):
+            candidates.append(
+                {
+                    "id": f"scr-m{index}",
+                    "title": f"OpenAI delta {index}",
+                    "confidence": "high",
+                    "relevance_score": 10,
+                    "signal_class": "mainstream_product",
+                    "evidence": [f"https://openai.com/news/{index}"],
+                }
+            )
+        for index in range(4):
+            candidates.append(
+                {
+                    "id": f"scr-d{index}",
+                    "title": f"Operator field report {index}",
+                    "confidence": "medium",
+                    "relevance_score": 6,
+                    "signal_class": "user_workflow",
+                    "evidence": [f"https://www.reddit.com/r/ClaudeAI/comments/{index}/"],
+                    "why_it_matters": f"Pain point {index} with concrete detail",
+                }
+            )
+        for index in range(6):
+            candidates.append(
+                {
+                    "id": f"scr-i{index}",
+                    "title": f"infra repo {index}",
+                    "confidence": "medium",
+                    "relevance_score": 7,
+                    "signal_class": "infra_primitive",
+                    "evidence": [f"https://github.com/x/i{index}"],
+                }
+            )
+        selected = cloud_agent_runner.diversify_screening_candidates(candidates, 12)
+        discussion_users = [
+            cand
+            for cand in selected
+            if cand.get("signal_class") == "user_workflow"
+            and cloud_agent_runner.is_social_only_evidence(cand)
+        ]
+        self.assertGreaterEqual(len(discussion_users), 3)
+
+    def test_discussion_signal_count_and_warning(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-11\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: vendor thing.\n"
+                        "  - Why it matters: x.\n"
+                        "  - Evidence strength: Strong.\n"
+                        "  - Source: https://openai.com/news/a\n\n"
+                        "#### 3. User Workflow & Field Notes\n\n"
+                        "- Tool: agent loop.\n"
+                        "  - Why it matters: y.\n"
+                        "  - Evidence strength: Medium.\n"
+                        "  - Source: https://www.reddit.com/r/ClaudeAI/comments/x/\n\n"
+                        "- Tool: eval trick.\n"
+                        "  - Why it matters: z.\n"
+                        "  - Evidence strength: Medium.\n"
+                        "  - Source: https://news.ycombinator.com/item?id=1\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.audit_daily_depth(result)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["discussion_signal_count"], 2)
+        self.assertTrue(
+            any("Community share" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
 
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")

@@ -170,6 +170,7 @@ The runner records direction coverage and weighted/mainstream recall in telemetr
 15. **Claim audit** — a cheap-model pass compares daily bullets against their cited snapshot titles/notes and labels clear overreach (`Claim audit: ...`). Applies to all source classes equally; labels only, fail-open. Env: `CLAIM_AUDIT`.
 16. **Direction assets must move** — the weekly prompt carries radar.md Open Questions (record movement under `### Open Questions Delta`), stale watchlist entries (refresh or deprioritize), and the corroboration queue (resolve verification labels by finding primary sources, upgrading, or dropping). Labels are work items, not decoration.
 17. **Simplified-Chinese citations are a last resort** — cover the China ecosystem via official vendor pages (English where available); Simplified-Chinese media hosts are deprioritized in source scoring. When such a source is the only evidence for a unique signal, label it `Source language: zh-CN` and follow up for an official/English replacement.
+18. **Community share** — at least 3 discussion-sourced bullets (Reddit/HN/Bluesky/Lobsters/dev.to cited) per day block, with 3–5 field reports in the User Workflow section; the runner counts them (`discussion_signal_count`, warned below 3, tracked in weekly By-the-Numbers). The screening pass runs the discussion shard first and reserves 3 discussion-backed user_workflow slots in the synthesis top-N.
 
 ## Evidence and safety
 

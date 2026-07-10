@@ -53,13 +53,18 @@ DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
 DEFAULT_CONTEXT_FILE_CHARS = 20_000
-MAX_PUBLIC_SOURCE_ITEMS = 200
+MAX_PUBLIC_SOURCE_ITEMS = 300
 DEFAULT_MAX_PROMPT_CHARS = 120_000
-DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
-DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 60
+DEFAULT_MAX_SCREEN_PROMPT_CHARS = 56_000
+DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 80
 DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
 DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
-DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 110
+DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 130
+# The shared pool feeds screening; trimming it to the max task budget (120)
+# meant screening only ever saw ~15% of a 780-item collection. Screening now
+# gets its own, larger lane-balanced pool; per-task snapshots still trim to
+# their own budgets.
+DEFAULT_SCREEN_POOL_ITEMS = 400
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
@@ -68,9 +73,9 @@ DEFAULT_MAX_RESPONSE_CHARS = 48_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 14_000
-DEFAULT_SCREEN_PROMPT_CANDIDATES = 12
+DEFAULT_SCREEN_PROMPT_CANDIDATES = 16
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
-DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
+DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 160
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
 # Social/discussion collectors map to these lanes via source_lane().
 DISCUSSION_BREADTH_LANES = frozenset({"social", "reddit"})
@@ -1729,8 +1734,9 @@ def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int)
 
     # Reserve slots so infra cannot crowd out direction classes in the top-N.
     take("mainstream_product", min(3, limit))
-    # Prefer discussion-backed user_workflow before generic blog user notes.
-    take("user_workflow", min(2, max(0, limit - len(selected))), discussion_only=True)
+    # Prefer discussion-backed user_workflow before generic blog user notes;
+    # community discussion share in the report starts with these slots.
+    take("user_workflow", min(3, max(0, limit - len(selected))), discussion_only=True)
     take("user_workflow", min(2, max(0, limit - len(selected))))
     take("research", min(1, max(0, limit - len(selected))))
     infra_budget = min(3, max(0, limit - len(selected)))
@@ -2068,26 +2074,31 @@ def validate_daily_append_size(rel_path: str, mode: str, content: str) -> None:
         )
 
 
-def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
-    """Split scored items into a discussion shard and an official/repo shard.
+# Shard order matters twice: merge dedup keeps the first occurrence per URL
+# (community framing wins for double-covered stories), and each shard gets its
+# own full screening window and candidate quota. Scaling breadth means MORE
+# shards, not bigger single-prompt windows — a cheap model picking 16 items
+# from 300 degrades; four focused 130-item passes do not.
+SCREENING_SHARD_LANES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("discussion", ("social", "reddit", "hacker-news")),
+    ("official-vendor", ("official", "feeds-pages", "expert", "papers")),
+    ("github-oss", ("github", "github-release")),
+    ("packages", ("package-marketplace",)),
+)
 
-    Screening each shard separately doubles the effective candidate pool and
-    guarantees social/discussion items get a full screening pass instead of
-    competing with the GitHub long tail for the same 12 candidate slots."""
-    discussion: list[dict[str, str]] = []
-    rest: list[dict[str, str]] = []
+
+def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
+    """Split scored items into per-lane-group shards for separate screening."""
+    lane_to_shard: dict[str, str] = {}
+    for shard_name, lanes in SCREENING_SHARD_LANES:
+        for lane in lanes:
+            lane_to_shard[lane] = shard_name
+    buckets: dict[str, list[dict[str, str]]] = {name: [] for name, _ in SCREENING_SHARD_LANES}
     for item in items:
         lane = source_lane(item.get("source", ""))
-        if lane in DISCUSSION_BREADTH_LANES or lane == "hacker-news":
-            discussion.append(item)
-        else:
-            rest.append(item)
-    shards: list[tuple[str, list[dict[str, str]]]] = []
-    if rest:
-        shards.append(("official/repo", rest))
-    if discussion:
-        shards.append(("discussion", discussion))
-    return shards
+        shard_name = lane_to_shard.get(lane, "official-vendor")
+        buckets[shard_name].append(item)
+    return [(name, buckets[name]) for name, _ in SCREENING_SHARD_LANES if buckets[name]]
 
 
 def candidate_dedupe_key(candidate: dict[str, Any]) -> str:
@@ -3055,6 +3066,7 @@ def weekly_numbers_note(root: Path | None, day: dt.date) -> str:
             "numeric_claims_flagged": sum(r.get("numeric_claims_flagged", 0) for r in records),
             "repo_reputation_demoted": sum(r.get("repo_reputation_demoted", 0) for r in records),
             "social_candidates_labeled": sum(r.get("social_discussion_labeled", 0) for r in records),
+            "discussion_signals_published": sum(r.get("discussion_signal_count", 0) for r in records),
         }
 
     cur = _agg(current)
@@ -3364,6 +3376,14 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         if section == "#### 5. Storage / Infra Angle":
             storage_bullets += 1
     storage_watch_triggers = english.lower().count("watch trigger")
+    # Community share: bullets citing a discussion platform anywhere in the block.
+    discussion_hosts = SOCIAL_EVIDENCE_HOSTS + ("dev.to",)
+    discussion_signals = sum(
+        1
+        for bullet in split_daily_signal_bullets(english)
+        if bullet.startswith("- ") and any(host in bullet.lower() for host in discussion_hosts)
+    )
+    RUN_AUDIT["discussion_signal_count"] = discussion_signals
     RUN_AUDIT["daily_signal_count"] = signal_section_count
     RUN_AUDIT["storage_angle_bullets"] = storage_bullets
     RUN_AUDIT["shallow_signal_bullets"] = shallow
@@ -3389,6 +3409,13 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         warning = (
             f"Daily depth: {shallow} bullet(s) missing 2+ of "
             "Why-it-matters/Evidence-strength/Source fields"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if signal_section_count and discussion_signals < 3:
+        warning = (
+            f"Community share: only {discussion_signals} discussion-sourced bullet(s) "
+            "(Reddit/HN/Bluesky/Lobsters/dev.to) in the day block; target >=3"
         )
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
@@ -4176,7 +4203,11 @@ def prepare_shared_source_collection(
     scored = score_source_items(raw_items, root)
     # Lane-balance the shared pool so discussion sources are not truncated away
     # before screening / per-task snapshots see them.
-    pool = select_scored_items_with_lane_balance(scored, max_public_source_budget_for_tasks(tasks))
+    pool_size = max(
+        max_public_source_budget_for_tasks(tasks),
+        env_int("SCREEN_POOL_ITEMS", DEFAULT_SCREEN_POOL_ITEMS),
+    )
+    pool = select_scored_items_with_lane_balance(scored, pool_size)
     update_source_cache(root, pool, day)
     return pool, lane_stats, errors, len(raw_items)
 
@@ -4603,9 +4634,9 @@ def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[
 def public_source_budget(task: str) -> int:
     defaults = {
         "daily": DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS,
-        "source-sweep": 120,
-        "weekly": 120,
-        "monthly": 160,
+        "source-sweep": 160,
+        "weekly": 160,
+        "monthly": 200,
     }
     return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
 
@@ -4745,7 +4776,7 @@ def reddit_subreddits_for_day(day: dt.date) -> list[str]:
         return []
     # Batch 1 meant each subreddit was polled once per len(list) days; user
     # evidence went stale between visits.
-    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 3))
+    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 4))
     start = day.toordinal() % len(subreddits)
     selected: list[str] = []
     for offset in range(batch_size):
@@ -4924,8 +4955,8 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
             # partial-read/connection-reset errors. Record and move on.
             return index, name, [], str(exc) or exc.__class__.__name__
 
-    worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 8))
-    collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 60))
+    worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 16))
+    collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 150))
     results: list[tuple[int, str, list[dict[str, str]], str | None]] = []
 
     reddit_entries: list[tuple[int, tuple[str, str, str, int]]] = []
@@ -6023,6 +6054,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "storylines_active": RUN_AUDIT.get("storylines_active", 0),
         "claim_audit_flags": RUN_AUDIT.get("claim_audit_flags", 0),
         "daily_signal_count": RUN_AUDIT.get("daily_signal_count", 0),
+        "discussion_signal_count": RUN_AUDIT.get("discussion_signal_count", 0),
         "storage_angle_bullets": RUN_AUDIT.get("storage_angle_bullets", 0),
         "shallow_signal_bullets": RUN_AUDIT.get("shallow_signal_bullets", 0),
         "screening_shards": RUN_AUDIT.get("screening_shards", 0),
@@ -6153,6 +6185,7 @@ def run_task(
     RUN_AUDIT["daily_signal_count"] = 0
     RUN_AUDIT["storage_angle_bullets"] = 0
     RUN_AUDIT["shallow_signal_bullets"] = 0
+    RUN_AUDIT["discussion_signal_count"] = 0
     # Preflight sharded screening runs before run_task and already recorded its
     # shard count; keep it when this task consumes that shared screening.
     if not shared_screened:
