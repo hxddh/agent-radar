@@ -2312,10 +2312,13 @@ class AuditLoopTest(unittest.TestCase):
             {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1"},
             {"source": "hacker-news", "title": "thread", "url": "https://news.ycombinator.com/item?id=1"},
             {"source": "openai-blog", "title": "release", "url": "https://openai.com/x"},
+            {"source": "npm", "title": "package", "url": "https://www.npmjs.com/package/x"},
         ]
         shards = dict(cloud_agent_runner.screening_shard_items(items))
-        self.assertEqual(len(shards["official/repo"]), 2)
         self.assertEqual(len(shards["discussion"]), 2)
+        self.assertEqual(len(shards["official-vendor"]), 1)
+        self.assertEqual(len(shards["github-oss"]), 1)
+        self.assertEqual(len(shards["packages"]), 1)
 
     def test_merge_screening_payloads_dedupes_by_url(self) -> None:
         merged = cloud_agent_runner.merge_screening_payloads(

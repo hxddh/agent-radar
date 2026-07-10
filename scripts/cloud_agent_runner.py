@@ -64,7 +64,7 @@ DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 130
 # meant screening only ever saw ~15% of a 780-item collection. Screening now
 # gets its own, larger lane-balanced pool; per-task snapshots still trim to
 # their own budgets.
-DEFAULT_SCREEN_POOL_ITEMS = 240
+DEFAULT_SCREEN_POOL_ITEMS = 400
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
@@ -73,9 +73,9 @@ DEFAULT_MAX_RESPONSE_CHARS = 48_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 14_000
-DEFAULT_SCREEN_PROMPT_CANDIDATES = 14
+DEFAULT_SCREEN_PROMPT_CANDIDATES = 16
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
-DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
+DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 160
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
 # Social/discussion collectors map to these lanes via source_lane().
 DISCUSSION_BREADTH_LANES = frozenset({"social", "reddit"})
@@ -2074,29 +2074,31 @@ def validate_daily_append_size(rel_path: str, mode: str, content: str) -> None:
         )
 
 
-def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
-    """Split scored items into a discussion shard and an official/repo shard.
+# Shard order matters twice: merge dedup keeps the first occurrence per URL
+# (community framing wins for double-covered stories), and each shard gets its
+# own full screening window and candidate quota. Scaling breadth means MORE
+# shards, not bigger single-prompt windows — a cheap model picking 16 items
+# from 300 degrades; four focused 130-item passes do not.
+SCREENING_SHARD_LANES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("discussion", ("social", "reddit", "hacker-news")),
+    ("official-vendor", ("official", "feeds-pages", "expert", "papers")),
+    ("github-oss", ("github", "github-release")),
+    ("packages", ("package-marketplace",)),
+)
 
-    Screening each shard separately doubles the effective candidate pool and
-    guarantees social/discussion items get a full screening pass instead of
-    competing with the GitHub long tail for the same 12 candidate slots."""
-    discussion: list[dict[str, str]] = []
-    rest: list[dict[str, str]] = []
+
+def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
+    """Split scored items into per-lane-group shards for separate screening."""
+    lane_to_shard: dict[str, str] = {}
+    for shard_name, lanes in SCREENING_SHARD_LANES:
+        for lane in lanes:
+            lane_to_shard[lane] = shard_name
+    buckets: dict[str, list[dict[str, str]]] = {name: [] for name, _ in SCREENING_SHARD_LANES}
     for item in items:
         lane = source_lane(item.get("source", ""))
-        if lane in DISCUSSION_BREADTH_LANES or lane == "hacker-news":
-            discussion.append(item)
-        else:
-            rest.append(item)
-    shards: list[tuple[str, list[dict[str, str]]]] = []
-    # Discussion first: merge dedup keeps the first occurrence per URL, so a
-    # story covered by both shards keeps its community framing (the official
-    # URL still gets attached by the social-corroboration pass).
-    if discussion:
-        shards.append(("discussion", discussion))
-    if rest:
-        shards.append(("official/repo", rest))
-    return shards
+        shard_name = lane_to_shard.get(lane, "official-vendor")
+        buckets[shard_name].append(item)
+    return [(name, buckets[name]) for name, _ in SCREENING_SHARD_LANES if buckets[name]]
 
 
 def candidate_dedupe_key(candidate: dict[str, Any]) -> str:

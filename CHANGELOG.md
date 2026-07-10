@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.17.0 - 2026-07-10
+
+Scale screening by shards, not window size: the binding constraint had shifted from numeric caps to cheap-model attention per call.
+
+### Changed
+- **Four-lane sharded screening** (was two): `discussion` (social/reddit/HN, still first so dedup keeps community framing), `official-vendor` (official/feeds/expert/papers), `github-oss` (github + releases), `packages` (registries). Each shard gets its own full 130-item window and 16-candidate quota — up to 64 merged candidates per run from focused passes, instead of degrading selection quality with one oversized prompt.
+- Screening pool (`SCREEN_POOL_ITEMS`) 240→400 — with four shards the windows can actually consume it.
+- Synthesis injection (`SCREEN_PROMPT_CANDIDATES`) 14→16; screening candidate `why_it_matters` budget 120→160 chars.
+- Cost note: up to 4 cheap screening calls per collection (was 2); `SCREENING_SHARDS=1` still restores the single-call path.
+- CLI version bumped to `0.17.0`.
+
 ## v0.16.0 - 2026-07-10
 
 Threshold audit release: remove every remaining cap that silently constrained breadth and coverage.
