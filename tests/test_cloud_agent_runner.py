@@ -1178,6 +1178,41 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["vendor_families_covered"], 2)
         self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["breadth_themes_covered"], 2)
 
+    def test_radar_sweep_lines_exempt_from_infra_cap(self) -> None:
+        # Regression for the v0.18.0 live failure: 7 infra_primitive Radar Sweep
+        # one-liners tripped `count_infra_primitive_bullets` and refused the day.
+        sweep = "\n".join(
+            f"- [infra_primitive] memory-daemon-{i} — MCP sandbox memory tool"
+            f" | https://github.com/example/repo{i}"
+            for i in range(7)
+        )
+        content = (
+            "## 2026-07-10\n\n### English\n\n"
+            "#### 1. Lead Analysis\n\nNarrative paragraph.\n\n"
+            "#### 2. New Signals\n\n"
+            "- Signal: OpenAI shipped a coding-agent preview.\n"
+            "  - Source: https://openai.com/index/agents\n\n"
+            "- Signal: Anthropic published a containment engineering post.\n"
+            "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
+            "#### 4. User Workflow & Field Notes\n\n"
+            "- Signal: Claude Code field report: /doctor and Cowork VM-mode.\n"
+            "  - Scenario: operator health checks before long runs.\n\n"
+            "#### 7. Radar Sweep\n\n"
+            f"{sweep}\n\n"
+            "#### 8. Assessment & Gaps\n\n"
+            "- Coverage ledger: checked=github; missed=none\n"
+        )
+        result = {
+            "updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]
+        }
+        cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["direction_infra_count"], 0)
+        # Sanity: without the strip, the same text would blow past the cap.
+        self.assertGreater(
+            cloud_agent_runner.count_infra_primitive_bullets(content),
+            cloud_agent_runner.MAX_DAILY_INFRA_PRIMITIVE_BULLETS,
+        )
+
     def test_zero_star_infra_repo_is_penalized(self) -> None:
         weak = {
             "source": "github",
