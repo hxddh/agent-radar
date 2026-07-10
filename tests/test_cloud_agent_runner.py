@@ -2667,6 +2667,50 @@ class AuditLoopTest(unittest.TestCase):
             any("Daily depth" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
         )
 
+    def test_ecosystem_vendors_count_as_mainstream(self) -> None:
+        for text in ("Grok 4.5 coding update", "Vercel AI SDK 6 released", "E2B sandbox templates", "OpenCode v1.2"):
+            self.assertTrue(
+                any(m in text.lower() for m in cloud_agent_runner.MAINSTREAM_VENDOR_MARKERS),
+                text,
+            )
+        families = cloud_agent_runner.vendor_families_in_text(
+            "Vercel shipped agents; Cloudflare Workers AI update; ampcode chronicle; OpenCode release; E2B fork"
+        )
+        for family in ("vercel", "cloudflare", "amp", "opencode", "e2b"):
+            self.assertIn(family, families)
+
+    def test_vendor_zero_coverage_names_dark_vendors(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        items = [
+            {"source": "openai-blog", "title": "OpenAI codex update", "url": "https://openai.com/x", "note": ""},
+            {"source": "github", "title": "Cursor 2.0 changelog", "url": "https://cursor.com/changelog", "note": ""},
+        ]
+        gaps = cloud_agent_runner.record_vendor_zero_coverage(items)
+        self.assertIn("xai", gaps)
+        self.assertIn("vercel", gaps)
+        self.assertNotIn("openai", gaps)
+        self.assertNotIn("cursor", gaps)
+        self.assertTrue(
+            any("Zero collected items" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_release_repos_env_extends_defaults(self) -> None:
+        with mock.patch.dict(os.environ, {"RELEASE_REPOS": "someorg/custom-agent"}, clear=False):
+            with mock.patch.object(cloud_agent_runner, "github_repo_exists", return_value=True):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    repos = cloud_agent_runner.release_repos_from_context(root, 30)
+        self.assertIn("sst/opencode", repos)
+        self.assertIn("e2b-dev/E2B", repos)
+        self.assertIn("someorg/custom-agent", repos)
+
+    def test_ecosystem_release_repos_in_defaults(self) -> None:
+        for repo in ("sst/opencode", "e2b-dev/E2B", "vercel/ai", "cloudflare/agents", "anthropics/claude-code"):
+            self.assertIn(repo, cloud_agent_runner.DEFAULT_RELEASE_REPOS)
+        names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        self.assertIn("xai-news", names)
+        self.assertIn("e2b-blog", names)
+
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")
         with tempfile.TemporaryDirectory() as tmp:

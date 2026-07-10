@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.12.0 - 2026-07-10
+
+Ecosystem-vendor coverage: Grok/xAI, Pi, Amp, Cursor, OpenCode, E2B, Vercel, Cloudflare and peers were either uncollected or collected-then-discarded as no-name infra.
+
+### Fixed
+- **Collected-but-discarded**: Vercel/Cloudflare/Amp collectors were healthy, but their items carried no mainstream-vendor score boost and screening classified them as `infra_primitive`. `MAINSTREAM_VENDOR_MARKERS` and `VENDOR_FAMILIES` now cover the agent ecosystem (grok/xai, vercel, cloudflare, e2b, ampcode, opencode, warp, factory.ai, raycast, windsurf, aider, cline, replit, devin, deepseek, qwen); the screening schema and daily prompt name them explicitly as mainstream.
+- **`RELEASE_REPOS` replace→extend**: the CI repo variable silently replaced code defaults, so repos added in code never took effect. Env now extends the defaults.
+
+### Added
+- **New collectors**: `xai-news` (x.ai/news) and `e2b-blog` pages; GitHub release tracking for `anthropics/claude-code`, `sst/opencode`, `e2b-dev/E2B`, `vercel/ai`, `cloudflare/agents`, `cline/cline`, `Aider-AI/aider`, `google-gemini/gemini-cli`, `QwenLM/qwen-code`; HN/Reddit/Bluesky queries for Grok, OpenCode, E2B, Amp.
+- **Zero-coverage vendor ledger**: `PRIORITY_VENDOR_FAMILIES` (openai, anthropic, google, github, cursor, xai, vercel, cloudflare, e2b, amp, opencode, china) are checked after every collection; families with zero items are injected into the daily prompt (must appear under Coverage ledger `missed=`), recorded as a warning, and counted in telemetry (`vendor_zero_coverage`). A promised vendor going dark is now a named gap, not a silent absence.
+- CLI version bumped to `0.12.0`.
+
 ## v0.11.0 - 2026-07-10
 
 Depth & coverage release, driven by the 2026-07-10 daily review: 3 New Signals, one-line why-it-matters, 1 storage bullet, 4 vendor families.

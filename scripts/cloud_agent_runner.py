@@ -158,6 +158,27 @@ MAINSTREAM_VENDOR_MARKERS = (
     "llama",
     "replit",
     "devin",
+    # Agent-ecosystem vendors: their items were collected but scored/classified
+    # as no-name infra and crowded out (Grok/Vercel/Cloudflare/E2B/Amp/OpenCode
+    # never surfaced in dailies despite healthy collectors).
+    "grok",
+    "xai",
+    "x.ai",
+    "vercel",
+    "cloudflare",
+    "e2b",
+    "ampcode",
+    "amp code",
+    "opencode",
+    "warp",
+    "factory.ai",
+    "raycast",
+    "windsurf",
+    "aider",
+    "cline",
+    "jetbrains",
+    "deepseek",
+    "qwen",
 )
 USER_WORKFLOW_MARKERS = (
     "user",
@@ -268,7 +289,31 @@ VENDOR_FAMILIES = (
     ("amazon", ("aws", "amazon", "bedrock")),
     ("meta", ("meta", "llama")),
     ("cursor", ("cursor",)),
-    ("xai", ("xai", "grok")),
+    ("xai", ("xai", "grok", "x.ai")),
+    ("vercel", ("vercel",)),
+    ("cloudflare", ("cloudflare", "workers ai")),
+    ("e2b", ("e2b",)),
+    ("amp", ("ampcode", "amp code", "sourcegraph")),
+    ("opencode", ("opencode",)),
+    ("replit", ("replit",)),
+    ("cognition", ("devin", "cognition", "windsurf")),
+    ("china", ("deepseek", "qwen", "tongyi", "trae", "glm", "kimi")),
+)
+# Families the radar promises to check daily; zero collected items for one of
+# these must surface as a named gap instead of silently vanishing.
+PRIORITY_VENDOR_FAMILIES = (
+    "openai",
+    "anthropic",
+    "google",
+    "github",
+    "cursor",
+    "xai",
+    "vercel",
+    "cloudflare",
+    "e2b",
+    "amp",
+    "opencode",
+    "china",
 )
 BREADTH_THEME_MARKERS = {
     "security": ("security", "advisory", "advisories", "containment", "sandbox", "cve-", "vulnerabilit"),
@@ -297,6 +342,17 @@ DEFAULT_RELEASE_REPOS = [
     "modelcontextprotocol/python-sdk",
     "modelcontextprotocol/typescript-sdk",
     "elizaOS/eliza",
+    # Agent-ecosystem OSS: GitHub releases are the most reliable delta signal
+    # for these; changelog pages either don't exist or render client-side.
+    "anthropics/claude-code",
+    "sst/opencode",
+    "e2b-dev/E2B",
+    "vercel/ai",
+    "cloudflare/agents",
+    "cline/cline",
+    "Aider-AI/aider",
+    "google-gemini/gemini-cli",
+    "QwenLM/qwen-code",
 ]
 # A browser-compatible User-Agent. Several feed/CDN hosts (reddit RSS in
 # particular) return 403 to bare tool identifiers; a descriptive Mozilla UA is
@@ -325,6 +381,9 @@ DEFAULT_CHANGELOG_PAGES = [
     # China-ecosystem coding-agent lane (bilingual radar; see sources.md).
     ("qwen-blog", "https://qwenlm.github.io/blog/"),
     ("deepseek-news", "https://api-docs.deepseek.com/news"),
+    # Agent-ecosystem vendors without feeds: xAI/Grok and E2B.
+    ("xai-news", "https://x.ai/news"),
+    ("e2b-blog", "https://e2b.dev/blog"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -386,6 +445,8 @@ DEFAULT_BLUESKY_QUERIES = [
     "agent memory",
     "DeepSeek agent",
     "agent workspace",
+    "Grok agent",
+    "OpenCode",
 ]
 DEFAULT_DEVTO_TAGS = [
     "ai",
@@ -535,6 +596,7 @@ RUN_AUDIT: dict[str, Any] = {
 # runs (which reset RUN_AUDIT and read from cache) can still write source-health.
 SHARED_SOURCE_STATUS: list[dict[str, str]] = []
 SHARED_SOURCE_LANES: dict[str, dict[str, Any]] = {}
+SHARED_VENDOR_GAPS: list[str] = []
 
 
 TASK_CONFIG = {
@@ -3833,6 +3895,8 @@ def source_lane(source: str) -> str:
         "cloudflare-blog",
         "qwen-blog",
         "deepseek-news",
+        "xai-news",
+        "e2b-blog",
     }:
         return "official"
     return "feeds-pages"
@@ -4344,7 +4408,11 @@ def github_repo_exists(root: Path, repo: str) -> bool:
 
 
 def release_repos_from_context(root: Path, limit: int) -> list[str]:
-    configured = split_env_list("RELEASE_REPOS", DEFAULT_RELEASE_REPOS)
+    # RELEASE_REPOS extends the defaults instead of replacing them: the repo
+    # variable is set in CI, and replace semantics silently dropped every
+    # ecosystem repo added in code.
+    extra = split_env_list("RELEASE_REPOS", [])
+    configured = list(DEFAULT_RELEASE_REPOS) + [repo for repo in extra if repo not in DEFAULT_RELEASE_REPOS]
     repos: list[str] = []
     seen: set[str] = set()
     rejected = radar_collector_state.rejected_repos(root)
@@ -4506,6 +4574,9 @@ def source_queries_for_task(task: str, root: Path | None = None) -> dict[str, li
         # Benchmark/eval lane: leaderboards are adoption-grade evidence.
         common["hn"].extend(["SWE-bench", "agent benchmark"])
         common["github"].extend(["swe-bench evaluation"])
+        # Agent-ecosystem vendors that lack first-party feeds.
+        common["hn"].extend(["Grok coding", "OpenCode agent", "E2B sandbox", "Amp coding agent"])
+        common["reddit"].extend(["Grok agent", "OpenCode"])
     if task in {"source-sweep", "monthly"}:
         common["hn"].extend(["AI agent evaluation", "browser agent", "agent deployment"])
         common["reddit"].extend(["agent security", "agent automation"])
@@ -4792,7 +4863,38 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
         for item in local_items:
             add_source_item(items, seen, item["source"], item["title"], item["url"], item.get("note", ""))
 
+    record_vendor_zero_coverage(items)
     return items, lane_stats, errors
+
+
+def vendor_zero_coverage(items: list[dict[str, str]]) -> list[str]:
+    """Priority vendor families with zero collected items in this pass."""
+    covered: set[str] = set()
+    families = dict(VENDOR_FAMILIES)
+    for item in items:
+        text = f"{item.get('title', '')} {item.get('note', '')} {item.get('url', '')}".lower()
+        for family in PRIORITY_VENDOR_FAMILIES:
+            if family in covered:
+                continue
+            if any(marker in text for marker in families.get(family, ())):
+                covered.add(family)
+        if len(covered) == len(PRIORITY_VENDOR_FAMILIES):
+            break
+    return [family for family in PRIORITY_VENDOR_FAMILIES if family not in covered]
+
+
+def record_vendor_zero_coverage(items: list[dict[str, str]]) -> list[str]:
+    """A promised vendor with nothing collected must become a named gap, not a
+    silent absence (Grok went unreported for days without anyone noticing)."""
+    global SHARED_VENDOR_GAPS
+    gaps = vendor_zero_coverage(items)
+    SHARED_VENDOR_GAPS = list(gaps)
+    RUN_AUDIT["vendor_zero_coverage"] = len(gaps)
+    if gaps:
+        warning = f"Zero collected items for priority vendor(s): {', '.join(gaps)}"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return gaps
 
 
 def discussion_lane_floor_count(budget: int) -> int:
@@ -5301,6 +5403,13 @@ def build_prompt(
         storylines_note = storylines_prompt_note(root, day)
         if storylines_note:
             task_rules += "\n" + storylines_note + "\n"
+        if SHARED_VENDOR_GAPS:
+            task_rules += (
+                "\nPriority vendors with ZERO collected items this run: "
+                + ", ".join(SHARED_VENDOR_GAPS)
+                + ". Name them under the Coverage ledger `missed=` — do not present "
+                "the day as full coverage while promised vendors are dark.\n"
+            )
     elif task == "weekly":
         notes = [weekly_numbers_note(root, day), weekly_direction_notes(root, day)]
         combined = "\n\n".join(note for note in notes if note)
@@ -5799,6 +5908,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "storage_angle_bullets": RUN_AUDIT.get("storage_angle_bullets", 0),
         "shallow_signal_bullets": RUN_AUDIT.get("shallow_signal_bullets", 0),
         "screening_shards": RUN_AUDIT.get("screening_shards", 0),
+        "vendor_zero_coverage": RUN_AUDIT.get("vendor_zero_coverage", 0),
         "corroboration_queue_size": RUN_AUDIT.get("corroboration_queue_size", 0),
         "stale_watchlist_count": RUN_AUDIT.get("stale_watchlist_count", 0),
         "social_multi_platform_upgraded": RUN_AUDIT.get("social_multi_platform_upgraded", 0),
@@ -5929,6 +6039,7 @@ def run_task(
     # shard count; keep it when this task consumes that shared screening.
     if not shared_screened:
         RUN_AUDIT["screening_shards"] = 0
+    RUN_AUDIT["vendor_zero_coverage"] = len(SHARED_VENDOR_GAPS) if shared_collection is not None else 0
     RUN_AUDIT["corroboration_queue_size"] = 0
     RUN_AUDIT["stale_watchlist_count"] = 0
     RUN_AUDIT["open_questions_count"] = 0
