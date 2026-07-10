@@ -30,19 +30,26 @@ Focus on (direction order matters):
 Canonical day-block sections (required; the runner rejects other English `####` section titles):
 
 ```
-#### 1. New Signals
-#### 2. Mainstream Agent Progress
-#### 3. User Workflow & Field Notes
-#### 4. Emerging Agents / Infra Primitives
-#### 5. Storage / Infra Angle
-#### 6. Assessment & Gaps
+#### 1. Lead Analysis
+#### 2. New Signals
+#### 3. Mainstream Agent Progress
+#### 4. User Workflow & Field Notes
+#### 5. Emerging Agents / Infra Primitives
+#### 6. Storage / Infra Angle
+#### 7. Radar Sweep
+#### 8. Assessment & Gaps
 ```
 
-Sections 1, 5, and 6 are mandatory; 2–4 may be omitted only when empty. Keep the same
-order. Mirror the section titles in the `### 中文` block.
+Sections 1, 2, 6, 7, and 8 are mandatory; 3–5 may be omitted only when empty. Keep the
+same order. Mirror the section titles in the `### 中文` block.
 
 Depth spec (the runner audits these and records warnings):
-- **New Signals: target 4–6 signals** covering distinct vendors/themes; do not stop at 3
+- **Lead Analysis: 2–4 paragraphs of cross-signal narrative** (target 400+ chars), not
+  bullets. Answer: what is today's dominant storyline, which of today's signals connect
+  to each other and to active storylines/theses (cite thesis numbers from radar.md when
+  relevant), and where does the evidence conflict. This is the day's editorial depth —
+  synthesize, do not summarize the bullet list.
+- **New Signals: target 6–8 signals** covering distinct vendors/themes; do not stop at 4
   when the screening list has more fresh candidates. Benchmark/eval and research
   candidates deserve a full signal bullet, not a passing mention.
 - Every signal bullet carries: What happened / Why it matters / Related agent /
@@ -60,8 +67,15 @@ Depth spec (the runner audits these and records warnings):
   a wave of operator experience or a heated HN/Reddit thread IS a signal, not
   garnish. Vendor changelogs tell you what shipped; discussion tells you what
   it is actually like — the radar needs both in every block.
-- Use the full injected screening list (up to 14 candidates); each uncovered
-  fresh candidate needs a Gaps mention or a research-log entry.
+- **Radar Sweep: one line per remaining fresh candidate** from the injected
+  "Radar Sweep pool" list — format `- [class] title — one-line why | URL`.
+  This section is the breadth surface: everything screening surfaced that did
+  not earn a full bullet still gets its one-liner here (target 8+ lines when
+  the pool has them; English-only is acceptable, the 中文 block may keep this
+  section as a short pointer). Do not silently drop pool items.
+- Use the full injected screening list (up to 16 top candidates plus the Radar
+  Sweep pool); each uncovered fresh candidate needs a Radar Sweep line, a Gaps
+  mention, or a research-log entry.
 
 Daily direction quota (required):
 - At least **1 mainstream_product** signal from a real product delta (changelog/blog/release), OR an explicit Gaps bullet naming which vendors were checked and missing. GitHub star counts alone do not count.
@@ -74,7 +88,7 @@ Daily direction quota (required):
 - Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.
 - When replacing an existing day block, keep prior Strong official URLs unless obsolete (or name them under Gaps).
 - Prefer 24–48h deltas. Monthly/quarterly roundups older than about a week should be labeled `Freshness: stale-roundup` or moved to `research-log.md` (the runner auto-labels if omitted).
-- **Coverage ledger (required)**: `#### 6. Assessment & Gaps` must contain a line `- Coverage ledger: checked=<lanes/vendors actually checked>; missed=<vendors not reachable>`. Gaps bullets only count as escape hatches when this ledger is present.
+- **Coverage ledger (required)**: `#### 8. Assessment & Gaps` must contain a line `- Coverage ledger: checked=<lanes/vendors actually checked>; missed=<vendors not reachable>`. Gaps bullets only count as escape hatches when this ledger is present.
 - **No re-reporting**: a URL already covered in a recent day block is not a New Signal. If you must revisit it, label the bullet `Freshness: follow-up` and state the delta (the runner auto-labels repeats within 14 days).
 - **CVE claims need a primary source**: cite NVD (`https://nvd.nist.gov/vuln/detail/CVE-...`) or GitHub Advisories, not only aggregator/news sites (the runner appends the canonical NVD link if omitted).
 - **Repo reputation**: a GitHub repo with only its own README as evidence and a throwaway-pattern owner cannot appear in the day block; it stays in research-log until a second independent source (user report, adoption metric, vendor integration) exists.

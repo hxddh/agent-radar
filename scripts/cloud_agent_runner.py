@@ -69,13 +69,14 @@ DEFAULT_SCREEN_POOL_ITEMS = 400
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
 # synthesis model legitimately produces ~40k (bilingual block + research-log).
-DEFAULT_MAX_RESPONSE_CHARS = 48_000
+DEFAULT_MAX_RESPONSE_CHARS = 64_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
-DEFAULT_MAX_DAILY_APPEND_CHARS = 14_000
+DEFAULT_MAX_DAILY_APPEND_CHARS = 22_000
 DEFAULT_SCREEN_PROMPT_CANDIDATES = 16
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 160
+DEFAULT_RADAR_SWEEP_PROMPT_LINES = 60
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
 # Social/discussion collectors map to these lanes via source_lane().
 DISCUSSION_BREADTH_LANES = frozenset({"social", "reddit"})
@@ -566,17 +567,24 @@ DAILY_REPEAT_URL_LOOKBACK_DAYS = 14
 SUSPICIOUS_GITHUB_OWNER_RE = re.compile(r"^[A-Za-z]{16,}\d{2,}$")
 REPO_RISK_WHY_SUFFIX = "; low-reputation repo: needs second source"
 DAILY_CANONICAL_SECTIONS = (
-    "#### 1. New Signals",
-    "#### 2. Mainstream Agent Progress",
-    "#### 3. User Workflow & Field Notes",
-    "#### 4. Emerging Agents / Infra Primitives",
-    "#### 5. Storage / Infra Angle",
-    "#### 6. Assessment & Gaps",
+    # Lead Analysis carries the depth (cross-signal narrative); Radar Sweep
+    # carries the breadth (one line for every remaining fresh candidate, so
+    # screened items surface for readers instead of dying in research-log).
+    "#### 1. Lead Analysis",
+    "#### 2. New Signals",
+    "#### 3. Mainstream Agent Progress",
+    "#### 4. User Workflow & Field Notes",
+    "#### 5. Emerging Agents / Infra Primitives",
+    "#### 6. Storage / Infra Angle",
+    "#### 7. Radar Sweep",
+    "#### 8. Assessment & Gaps",
 )
 DAILY_REQUIRED_SECTIONS = (
-    "#### 1. New Signals",
-    "#### 5. Storage / Infra Angle",
-    "#### 6. Assessment & Gaps",
+    "#### 1. Lead Analysis",
+    "#### 2. New Signals",
+    "#### 6. Storage / Infra Angle",
+    "#### 7. Radar Sweep",
+    "#### 8. Assessment & Gaps",
 )
 COVERAGE_LEDGER_RE = re.compile(r"coverage ledger|vendors checked", re.IGNORECASE)
 WEEKLY_SCORECARD_RE = re.compile(r"thesis scorecard", re.IGNORECASE)
@@ -1916,9 +1924,41 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             )
             if why:
                 lines.append(f"  why: {why}")
+        shown_keys: set[str] = set()
+        for cand in list(ranked) + list(must_cover):
+            if isinstance(cand, dict):
+                shown_keys.add(candidate_dedupe_key(cand))
+        sweep_limit = env_int("SCREEN_RADAR_SWEEP_LINES", DEFAULT_RADAR_SWEEP_PROMPT_LINES)
+        remaining = [
+            cand
+            for cand in candidates
+            if isinstance(cand, dict) and candidate_dedupe_key(cand) not in shown_keys
+        ][:sweep_limit]
+        if remaining:
+            lines.append(
+                f"Radar Sweep pool ({len(remaining)} additional fresh candidates beyond the top list). "
+                "Cover EACH with a one-line entry in `#### 7. Radar Sweep` "
+                "(format: `- [class] title — one-line why | URL`; English-only is fine there):"
+            )
+            for cand in remaining:
+                title = " ".join(str(cand.get("title", "?")).split())
+                signal_class = cand.get("signal_class", infer_signal_class(cand))
+                evidence = cand.get("evidence", [])
+                url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
+                # Keep sweep entries strictly one line: collapse whitespace and
+                # hard-slice instead of truncate_text (its marker spans lines).
+                why = " ".join(str(cand.get("why_it_matters", "")).split())[:100].strip()
+                sweep_line = f"- [{signal_class}] {title}"
+                if why:
+                    sweep_line += f" — {why}"
+                if url:
+                    sweep_line += f" | {url}"
+                lines.append(sweep_line)
         lines.append(
             "Synthesis priority: cover MUST mainstream first, then actionable user_workflow "
-            "(concrete operator detail), then at most 2 infra_primitive emerging bullets."
+            "(concrete operator detail), then at most 2 infra_primitive emerging bullets. "
+            "Every Radar Sweep pool item above gets its one-liner in `#### 7. Radar Sweep` — "
+            "that section is the breadth surface; do not silently drop pool items."
         )
         lines.append(
             "Freshness/quality: prefer 24-48h product deltas (changelog/blog/release). "
@@ -2346,6 +2386,7 @@ def candidate_mentioned_in_text(candidate: dict[str, Any], hay: str, *, strict: 
 def candidate_explained_in_gaps(candidate: dict[str, Any], hay: str) -> bool:
     """Allow Gaps bullets to satisfy must-cover when they name the dropped item."""
     gap_markers = (
+        "assessment & gaps",
         "#### 7. gaps",
         "### gaps",
         "gaps\n",
@@ -3338,8 +3379,8 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
     english = text.split("### 中文")[0]
     storage_bullets = 0
     section = ""
-    # Field-completeness applies to the signal sections (1-4); Storage Angle and
-    # Assessment bullets follow their own shapes.
+    # Field-completeness applies to the signal sections (2-5); Lead Analysis,
+    # Radar Sweep, Storage Angle, and Assessment follow their own shapes.
     section_bodies: dict[str, list[str]] = {}
     current_heading = ""
     for line in english.splitlines():
@@ -3351,7 +3392,7 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         if current_heading:
             section_bodies[current_heading].append(line)
     shallow = 0
-    for heading in DAILY_CANONICAL_SECTIONS[:4]:
+    for heading in DAILY_CANONICAL_SECTIONS[1:5]:
         body = "\n".join(section_bodies.get(heading, []))
         for bullet_text in split_daily_signal_bullets(body):
             if not bullet_text.startswith("- "):
@@ -3362,6 +3403,7 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
                 shallow += 1
     # Section-scoped counts need heading context; re-scan linearly.
     signal_section_count = 0
+    radar_sweep_count = 0
     for line in english.splitlines():
         stripped = line.strip()
         if stripped.startswith("#### "):
@@ -3371,10 +3413,15 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         # not inflate the section counts.
         if not line.startswith("- "):
             continue
-        if section == "#### 1. New Signals" and re.match(r"^- (Signal|\*\*)", line):
+        if section == "#### 2. New Signals" and re.match(r"^- (Signal|\*\*)", line):
             signal_section_count += 1
-        if section == "#### 5. Storage / Infra Angle":
+        if section == "#### 6. Storage / Infra Angle":
             storage_bullets += 1
+        if section == "#### 7. Radar Sweep":
+            radar_sweep_count += 1
+    lead_analysis_chars = len(
+        "\n".join(section_bodies.get("#### 1. Lead Analysis", [])).strip()
+    )
     storage_watch_triggers = english.lower().count("watch trigger")
     # Community share: bullets citing a discussion platform anywhere in the block.
     discussion_hosts = SOCIAL_EVIDENCE_HOSTS + ("dev.to",)
@@ -3387,10 +3434,26 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
     RUN_AUDIT["daily_signal_count"] = signal_section_count
     RUN_AUDIT["storage_angle_bullets"] = storage_bullets
     RUN_AUDIT["shallow_signal_bullets"] = shallow
-    if signal_section_count and signal_section_count < 4:
+    RUN_AUDIT["radar_sweep_count"] = radar_sweep_count
+    RUN_AUDIT["lead_analysis_chars"] = lead_analysis_chars
+    if signal_section_count and signal_section_count < 5:
         warning = (
-            f"Daily depth: only {signal_section_count} New Signals (target 4-6); "
+            f"Daily depth: only {signal_section_count} New Signals (target 6-8); "
             "cover more screened candidates or name the gap"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if lead_analysis_chars < 400:
+        warning = (
+            f"Daily depth: Lead Analysis is thin ({lead_analysis_chars} chars; "
+            "target a 2-4 paragraph cross-signal narrative)"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if radar_sweep_count < 8:
+        warning = (
+            f"Daily breadth: Radar Sweep has only {radar_sweep_count} one-liner(s); "
+            "every remaining fresh screening candidate should get a line"
         )
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
@@ -5545,7 +5608,7 @@ def build_prompt(
             "\nUse the canonical English day-block sections exactly: "
             + "; ".join(DAILY_CANONICAL_SECTIONS)
             + ".\nInclude a `- Coverage ledger: checked=...; missed=...` line under "
-            "`#### 6. Assessment & Gaps`. Collector lanes checked today: "
+            "`#### 8. Assessment & Gaps`. Collector lanes checked today: "
             + checked_note
             + ".\n"
         )
@@ -6057,6 +6120,8 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "discussion_signal_count": RUN_AUDIT.get("discussion_signal_count", 0),
         "storage_angle_bullets": RUN_AUDIT.get("storage_angle_bullets", 0),
         "shallow_signal_bullets": RUN_AUDIT.get("shallow_signal_bullets", 0),
+        "radar_sweep_count": RUN_AUDIT.get("radar_sweep_count", 0),
+        "lead_analysis_chars": RUN_AUDIT.get("lead_analysis_chars", 0),
         "screening_shards": RUN_AUDIT.get("screening_shards", 0),
         "vendor_zero_coverage": RUN_AUDIT.get("vendor_zero_coverage", 0),
         "corroboration_queue_size": RUN_AUDIT.get("corroboration_queue_size", 0),
@@ -6186,6 +6251,8 @@ def run_task(
     RUN_AUDIT["storage_angle_bullets"] = 0
     RUN_AUDIT["shallow_signal_bullets"] = 0
     RUN_AUDIT["discussion_signal_count"] = 0
+    RUN_AUDIT["radar_sweep_count"] = 0
+    RUN_AUDIT["lead_analysis_chars"] = 0
     # Preflight sharded screening runs before run_task and already recorded its
     # shard count; keep it when this task consumes that shared screening.
     if not shared_screened:

@@ -45,7 +45,7 @@ Append only the new day block and a compact research-log pass. Do not rewrite th
     {
       "path": "daily/2026-07.md",
       "mode": "append",
-      "content": "\n---\n\n## 2026-07-03\n\n### English\n\n#### 1. New Signals\n\n- Signal: Example product change.\n  - What happened: ...\n  - Why it matters: ...\n  - Source: https://example.com/changelog\n\n### 中文\n\n#### 1. New Signals\n\n- 信号：示例产品变化。\n  - 发生了什么：...\n  - 重要性：...\n"
+      "content": "\n---\n\n## 2026-07-03\n\n### English\n\n#### 1. Lead Analysis\n\nToday's dominant storyline is ... (2-4 paragraphs, cross-signal narrative)\n\n#### 2. New Signals\n\n- Signal: Example product change.\n  - What happened: ...\n  - Why it matters: ...\n  - Source: https://example.com/changelog\n\n### 中文\n\n#### 1. Lead Analysis\n\n今日主线是……\n\n#### 2. New Signals\n\n- 信号：示例产品变化。\n  - 发生了什么：...\n  - 重要性：...\n"
     },
     {
       "path": "research-log.md",
@@ -129,8 +129,8 @@ Do not `full`-rewrite an existing weekly file.
 - Keep URLs, repo names, product names, versions, and star counts once in English (or as language-neutral lines). Enumerated fields may pair inline, for example `- Evidence strength: 强（Strong）` in the Chinese section.
 - Never write the same URL twice for one item.
 - In daily day blocks, list at most **3 public URLs per signal bullet**; put additional URLs in `research-log.md`.
-- Keep each daily `append` day block under **14,000 characters**; the runner rejects larger appends.
-- Keep the full model JSON response under **48,000 characters**; prefer compact `append` / `replace_section` updates.
+- Keep each daily `append` day block under **22,000 characters**; the runner rejects larger appends.
+- Keep the full model JSON response under **64,000 characters**; prefer compact `append` / `replace_section` updates.
 - If a day block already exists (for example after `ensure`), use `replace_section` with anchor `## YYYY-MM-DD`. The runner also auto-upgrades duplicate `append` payloads to `replace_section`.
 - In daily files, separate each day's `## YYYY-MM-DD` section with a `---` line and preserve existing separators.
 - Keep source names, product names, URLs, model names, and code identifiers unchanged across both languages.
@@ -153,8 +153,8 @@ The runner records direction coverage and weighted/mainstream recall in telemetr
 
 ## Truthfulness gates (daily / weekly / monthly)
 
-1. **Canonical daily sections** — English day blocks must use exactly these `####` sections, in order (1, 5, 6 mandatory): `#### 1. New Signals`, `#### 2. Mainstream Agent Progress`, `#### 3. User Workflow & Field Notes`, `#### 4. Emerging Agents / Infra Primitives`, `#### 5. Storage / Infra Angle`, `#### 6. Assessment & Gaps`. The runner rejects other section titles.
-2. **Coverage ledger** — `#### 6. Assessment & Gaps` must contain `- Coverage ledger: checked=...; missed=...`. Gaps escape hatches (`Missing mainstream_product` / `Missing user_workflow`) only count when the ledger is present.
+1. **Canonical daily sections** — English day blocks must use exactly these `####` sections, in order (1, 2, 6, 7, 8 mandatory): `#### 1. Lead Analysis`, `#### 2. New Signals`, `#### 3. Mainstream Agent Progress`, `#### 4. User Workflow & Field Notes`, `#### 5. Emerging Agents / Infra Primitives`, `#### 6. Storage / Infra Angle`, `#### 7. Radar Sweep`, `#### 8. Assessment & Gaps`. The runner rejects other section titles.
+2. **Coverage ledger** — `#### 8. Assessment & Gaps` must contain `- Coverage ledger: checked=...; missed=...`. Gaps escape hatches (`Missing mainstream_product` / `Missing user_workflow`) only count when the ledger is present.
 3. **Citation liveness** — the runner HTTP-checks URLs that were not in the source snapshot/screening evidence and rejects updates citing dead links (404/410). Unverifiable links (network errors) get a warning; keep their Evidence strength conservative.
 4. **CVE primary source** — CVE mentions must cite NVD or GitHub Advisories; the runner appends the canonical NVD link when only aggregator sites are cited.
 5. **Cross-day freshness** — URLs already covered in a day block within the last 14 days get auto-labeled `Freshness: follow-up (previously covered YYYY-MM-DD)`. Do not present repeats as New Signals; state the delta.
