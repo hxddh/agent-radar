@@ -53,13 +53,18 @@ DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
 DEFAULT_CONTEXT_FILE_CHARS = 20_000
-MAX_PUBLIC_SOURCE_ITEMS = 200
+MAX_PUBLIC_SOURCE_ITEMS = 300
 DEFAULT_MAX_PROMPT_CHARS = 120_000
-DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
-DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 60
+DEFAULT_MAX_SCREEN_PROMPT_CHARS = 56_000
+DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 80
 DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
 DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
-DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 110
+DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 130
+# The shared pool feeds screening; trimming it to the max task budget (120)
+# meant screening only ever saw ~15% of a 780-item collection. Screening now
+# gets its own, larger lane-balanced pool; per-task snapshots still trim to
+# their own budgets.
+DEFAULT_SCREEN_POOL_ITEMS = 240
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
@@ -68,7 +73,7 @@ DEFAULT_MAX_RESPONSE_CHARS = 48_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 14_000
-DEFAULT_SCREEN_PROMPT_CANDIDATES = 12
+DEFAULT_SCREEN_PROMPT_CANDIDATES = 14
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
@@ -4176,7 +4181,11 @@ def prepare_shared_source_collection(
     scored = score_source_items(raw_items, root)
     # Lane-balance the shared pool so discussion sources are not truncated away
     # before screening / per-task snapshots see them.
-    pool = select_scored_items_with_lane_balance(scored, max_public_source_budget_for_tasks(tasks))
+    pool_size = max(
+        max_public_source_budget_for_tasks(tasks),
+        env_int("SCREEN_POOL_ITEMS", DEFAULT_SCREEN_POOL_ITEMS),
+    )
+    pool = select_scored_items_with_lane_balance(scored, pool_size)
     update_source_cache(root, pool, day)
     return pool, lane_stats, errors, len(raw_items)
 
@@ -4603,9 +4612,9 @@ def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[
 def public_source_budget(task: str) -> int:
     defaults = {
         "daily": DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS,
-        "source-sweep": 120,
-        "weekly": 120,
-        "monthly": 160,
+        "source-sweep": 160,
+        "weekly": 160,
+        "monthly": 200,
     }
     return min(MAX_PUBLIC_SOURCE_ITEMS, env_int("MAX_PUBLIC_SOURCE_ITEMS", defaults.get(task, 16)))
 
@@ -4745,7 +4754,7 @@ def reddit_subreddits_for_day(day: dt.date) -> list[str]:
         return []
     # Batch 1 meant each subreddit was polled once per len(list) days; user
     # evidence went stale between visits.
-    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 3))
+    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 4))
     start = day.toordinal() % len(subreddits)
     selected: list[str] = []
     for offset in range(batch_size):
@@ -4924,8 +4933,8 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
             # partial-read/connection-reset errors. Record and move on.
             return index, name, [], str(exc) or exc.__class__.__name__
 
-    worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 8))
-    collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 60))
+    worker_count = max(1, env_int("MAX_SOURCE_WORKERS", 16))
+    collect_seconds = max(10, env_int("MAX_COLLECT_SECONDS", 150))
     results: list[tuple[int, str, list[dict[str, str]], str | None]] = []
 
     reddit_entries: list[tuple[int, tuple[str, str, str, int]]] = []

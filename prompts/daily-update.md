@@ -53,7 +53,7 @@ Depth spec (the runner audits these and records warnings):
   context sizes) — specifics are what make a signal reusable next week.
 - **Storage / Infra Angle: at least 2 bullets**, each ending with
   `- Watch trigger: <observable event that would confirm or deny this implication>`.
-- Use the full injected screening list (up to 12 candidates); each uncovered
+- Use the full injected screening list (up to 14 candidates); each uncovered
   fresh candidate needs a Gaps mention or a research-log entry.
 
 Daily direction quota (required):

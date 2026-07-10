@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.16.0 - 2026-07-10
+
+Threshold audit release: remove every remaining cap that silently constrained breadth and coverage.
+
+### Fixed
+- **The screening pool was the dominant hidden funnel**: the shared collection pool was trimmed to the max task budget (120), so screening only ever saw ~15% of a ~780-item collection — every earlier screening-window raise operated inside that 120-item pool. Screening now draws from its own lane-balanced pool (`SCREEN_POOL_ITEMS`, default 240); per-task snapshots still trim to their own budgets.
+- **Collection deadline**: `MAX_COLLECT_SECONDS` 60→150 and `MAX_SOURCE_WORKERS` 12→16 (workflow + code defaults) — the 60s wall with ~180 collectors and GitHub API throttling was truncating the expanded fleet.
+
+### Changed
+- Budgets: hard cap `MAX_PUBLIC_SOURCE_ITEMS` 200→300; daily 60→80; source-sweep/weekly 120→160; monthly 160→200.
+- Screening: per-shard window (`MAX_SCREEN_SOURCE_ITEMS`) 110→130; screen prompt budget 40k→56k chars; candidates per screening pass 12→16 (merged up to 32); synthesis injection (`SCREEN_PROMPT_CANDIDATES`) 12→14.
+- Reddit poll batch 3→4 of 10 subreddits per day.
+- CLI version bumped to `0.16.0`.
+
 ## v0.14.2 - 2026-07-10
 
 ### Fixed
