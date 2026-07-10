@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.18.1 - 2026-07-10
+
+Hotfix for the first v0.18.0 live run (Issue #56): the daily task refused itself with "7 infra_primitive emerging bullets exceeds max 2" — the new `#### 7. Radar Sweep` one-liners (which legitimately list many `[infra_primitive]` items with github.com URLs) were being counted by the direction-quota gates as day-block emerging bullets.
+
+### Fixed
+- `strip_radar_sweep_sections()`: direction-quota gates (`validate_daily_direction_quota`, including the infra_primitive ≤2 cap, vendor-family/theme minimums, and mainstream/user checks) now evaluate the day block with Radar Sweep section bodies removed — the sweep is a listing surface, not signal bullets, so it neither violates the caps nor satisfies the minimums.
+- `discussion_signal_count` likewise excludes Radar Sweep lines, so sweep entries citing Reddit/HN URLs cannot inflate the community-voice audit.
+- Citation liveness, number checks, and freshness labeling still apply to the full text including the sweep.
+- Regression test: a day block with 7 infra sweep one-liners passes the quota gate (`direction_infra_count` = 0) while the raw counter would exceed the cap.
+
 ## v0.18.0 - 2026-07-10
 
 Publishing-surface restructure: the pipeline was already producing ~64 screened candidates per run, but the day block only surfaced ~10 bullets — breadth died between screening and publication, and no section carried cross-signal analysis. v0.18 makes the report as wide and as deep as the funnel behind it.

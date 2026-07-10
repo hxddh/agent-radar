@@ -2554,6 +2554,26 @@ def content_has_direction_gap(text: str, kind: str) -> bool:
     return False
 
 
+def strip_radar_sweep_sections(text: str) -> str:
+    """Drop `#### 7. Radar Sweep` section bodies before signal-bullet gates.
+
+    Radar Sweep is a one-liner listing surface, not signal bullets: its
+    `- [infra_primitive] ... | github.com/...` lines must not count against
+    the emerging-bullet cap or inflate direction/discussion quotas. Citation
+    liveness and number checks still run on the full text elsewhere."""
+    kept: list[str] = []
+    in_sweep = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#### "):
+            in_sweep = "radar sweep" in stripped.lower()
+        elif stripped.startswith("### ") or stripped.startswith("## "):
+            in_sweep = False
+        if not in_sweep:
+            kept.append(line)
+    return "\n".join(kept)
+
+
 def count_infra_primitive_bullets(text: str) -> int:
     count = 0
     for line in text.splitlines():
@@ -3423,11 +3443,12 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
         "\n".join(section_bodies.get("#### 1. Lead Analysis", [])).strip()
     )
     storage_watch_triggers = english.lower().count("watch trigger")
-    # Community share: bullets citing a discussion platform anywhere in the block.
+    # Community share: bullets citing a discussion platform anywhere in the
+    # block — excluding Radar Sweep one-liners, which are listings, not signals.
     discussion_hosts = SOCIAL_EVIDENCE_HOSTS + ("dev.to",)
     discussion_signals = sum(
         1
-        for bullet in split_daily_signal_bullets(english)
+        for bullet in split_daily_signal_bullets(strip_radar_sweep_sections(english))
         if bullet.startswith("- ") and any(host in bullet.lower() for host in discussion_hosts)
     )
     RUN_AUDIT["discussion_signal_count"] = discussion_signals
@@ -3647,7 +3668,9 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     bodies = daily_update_bodies(result)
     if not bodies:
         return
-    text = "\n".join(bodies)
+    # Direction quotas judge full signal bullets; Radar Sweep one-liners are a
+    # listing surface and neither satisfy nor violate these gates.
+    text = strip_radar_sweep_sections("\n".join(bodies))
     has_mainstream = content_has_mainstream_signal(text)
     has_user = content_has_user_workflow_signal(text)
     has_ledger = bool(COVERAGE_LEDGER_RE.search(text))
