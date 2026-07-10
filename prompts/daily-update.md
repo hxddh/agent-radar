@@ -41,6 +41,21 @@ Canonical day-block sections (required; the runner rejects other English `####` 
 Sections 1, 5, and 6 are mandatory; 2–4 may be omitted only when empty. Keep the same
 order. Mirror the section titles in the `### 中文` block.
 
+Depth spec (the runner audits these and records warnings):
+- **New Signals: target 4–6 signals** covering distinct vendors/themes; do not stop at 3
+  when the screening list has more fresh candidates. Benchmark/eval and research
+  candidates deserve a full signal bullet, not a passing mention.
+- Every signal bullet carries: What happened / Why it matters / Related agent /
+  Category / Source class / Evidence strength / Source, **plus one line**
+  `- So what: <concrete implication for an operator or infra investor — what to do or watch>`.
+  "Why it matters" states the mechanism; "So what" states the action.
+- Include the concrete numbers/versions from the source snapshot (counts, prices,
+  context sizes) — specifics are what make a signal reusable next week.
+- **Storage / Infra Angle: at least 2 bullets**, each ending with
+  `- Watch trigger: <observable event that would confirm or deny this implication>`.
+- Use the full injected screening list (up to 12 candidates); each uncovered
+  fresh candidate needs a Gaps mention or a research-log entry.
+
 Daily direction quota (required):
 - At least **1 mainstream_product** signal from a real product delta (changelog/blog/release), OR an explicit Gaps bullet naming which vendors were checked and missing. GitHub star counts alone do not count.
 - Cover at least **2 vendor families** (e.g. OpenAI + Anthropic, or GitHub + Google), OR Gaps naming the missing vendors.
