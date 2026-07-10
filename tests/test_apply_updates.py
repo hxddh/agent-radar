@@ -444,7 +444,7 @@ class ApplyUpdatesTest(unittest.TestCase):
                             {
                                 "path": "daily/2026-07.md",
                                 "mode": "append",
-                                "content": "\n\n## 2026-07-03\n\n" + ("x" * 12_000),
+                                "content": "\n\n## 2026-07-03\n\n" + ("x" * 16_000),
                             }
                         ]
                     },

@@ -63,9 +63,11 @@ DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 80
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 DEFAULT_MAX_RESPONSE_CHARS = 32_000
-DEFAULT_MAX_DAILY_APPEND_CHARS = 10_000
-DEFAULT_SCREEN_PROMPT_CANDIDATES = 8
-DEFAULT_SCREEN_GAPS_IN_PROMPT = 3
+# Sharded screening merges up to ~24 candidates; show synthesis a wider slice
+# and give the day block room to carry the extra signals bilingually.
+DEFAULT_MAX_DAILY_APPEND_CHARS = 14_000
+DEFAULT_SCREEN_PROMPT_CANDIDATES = 12
+DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 120
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
 # Social/discussion collectors map to these lanes via source_lane().
@@ -1577,7 +1579,7 @@ def diversify_screening_candidates(candidates: list[dict[str, Any]], limit: int)
             count -= 1
 
     # Reserve slots so infra cannot crowd out direction classes in the top-N.
-    take("mainstream_product", min(2, limit))
+    take("mainstream_product", min(3, limit))
     # Prefer discussion-backed user_workflow before generic blog user notes.
     take("user_workflow", min(2, max(0, limit - len(selected))), discussion_only=True)
     take("user_workflow", min(2, max(0, limit - len(selected))))
@@ -3164,6 +3166,85 @@ def validate_daily_section_structure(result: dict[str, Any]) -> None:
     RUN_AUDIT["daily_sections_canonical"] = True
 
 
+def audit_daily_depth(result: dict[str, Any]) -> None:
+    """Soft depth/coverage audit: count signals, flag shallow bullets, check
+    the Storage/Infra Angle carries watch triggers. Warnings + telemetry only —
+    thin news days must not turn into refusal loops."""
+    bodies = daily_update_bodies(result)
+    if not bodies:
+        return
+    text = "\n".join(bodies)
+    english = text.split("### 中文")[0]
+    storage_bullets = 0
+    section = ""
+    # Field-completeness applies to the signal sections (1-4); Storage Angle and
+    # Assessment bullets follow their own shapes.
+    section_bodies: dict[str, list[str]] = {}
+    current_heading = ""
+    for line in english.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#### "):
+            current_heading = stripped
+            section_bodies.setdefault(current_heading, [])
+            continue
+        if current_heading:
+            section_bodies[current_heading].append(line)
+    shallow = 0
+    for heading in DAILY_CANONICAL_SECTIONS[:4]:
+        body = "\n".join(section_bodies.get(heading, []))
+        for bullet_text in split_daily_signal_bullets(body):
+            if not bullet_text.startswith("- "):
+                continue
+            lower = bullet_text.lower()
+            required = ("why it matters", "evidence strength", "source")
+            if sum(1 for field in required if field in lower) < 2:
+                shallow += 1
+    # Section-scoped counts need heading context; re-scan linearly.
+    signal_section_count = 0
+    for line in english.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#### "):
+            section = stripped
+            continue
+        # Top-level bullets only: indented `  - Watch trigger:` sub-fields must
+        # not inflate the section counts.
+        if not line.startswith("- "):
+            continue
+        if section == "#### 1. New Signals" and re.match(r"^- (Signal|\*\*)", line):
+            signal_section_count += 1
+        if section == "#### 5. Storage / Infra Angle":
+            storage_bullets += 1
+    storage_watch_triggers = english.lower().count("watch trigger")
+    RUN_AUDIT["daily_signal_count"] = signal_section_count
+    RUN_AUDIT["storage_angle_bullets"] = storage_bullets
+    RUN_AUDIT["shallow_signal_bullets"] = shallow
+    if signal_section_count and signal_section_count < 4:
+        warning = (
+            f"Daily depth: only {signal_section_count} New Signals (target 4-6); "
+            "cover more screened candidates or name the gap"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if storage_bullets < 2:
+        warning = (
+            f"Daily depth: Storage / Infra Angle has {storage_bullets} bullet(s) "
+            "(target >=2, each with a Watch trigger)"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if storage_bullets and storage_watch_triggers == 0:
+        warning = "Daily depth: Storage / Infra Angle bullets missing `Watch trigger:` lines"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    if shallow:
+        warning = (
+            f"Daily depth: {shallow} bullet(s) missing 2+ of "
+            "Why-it-matters/Evidence-strength/Source fields"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+
+
 def weekly_update_bodies(result: dict[str, Any]) -> list[tuple[str, str]]:
     bodies: list[tuple[str, str]] = []
     for update in normalize_result_updates(result):
@@ -3518,6 +3599,7 @@ def validate_synthesis_result(
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text, root=root, day=day)
         validate_daily_section_structure(result)
+        audit_daily_depth(result)
         # Prefer auto-label over discarding an otherwise-valid bilingual day block.
         repair_daily_freshness_labels(result)
         validate_daily_freshness(result)
@@ -4989,6 +5071,17 @@ def openrouter_fallback_models(model: str) -> list[str]:
     return models
 
 
+def model_call_timeout(model: str) -> int:
+    """Cheap screen-tier calls get a short timeout; synthesis keeps the long one.
+
+    A hanging endpoint otherwise burns the full 900s per fallback attempt, which
+    stretched one auto run past 50 minutes."""
+    cheap = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
+    if model == cheap:
+        return env_int("SCREEN_MODEL_TIMEOUT", 300)
+    return env_int("MODEL_TIMEOUT", 900)
+
+
 def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
     payload = {
         "model": model,
@@ -5022,7 +5115,7 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
             method="POST",
         )
         try:
-            with urllib.request.urlopen(request, timeout=900) as response:
+            with urllib.request.urlopen(request, timeout=model_call_timeout(candidate_model)) as response:
                 raw = response.read().decode("utf-8")
         except urllib.error.HTTPError as exc:
             body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
@@ -5058,6 +5151,10 @@ def openrouter_models_for_task(task: str) -> list[str]:
         return [main]
     if task == "source-sweep":
         return [cheap, main]
+    if task == "daily":
+        # The daily is the product; its synthesis depth was capped by routing it
+        # to the research model while weekly/monthly got the synthesis model.
+        return [cheap, final]
     return [cheap, main]
 
 
@@ -5698,6 +5795,9 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "numeric_claims_flagged": RUN_AUDIT.get("numeric_claims_flagged", 0),
         "storylines_active": RUN_AUDIT.get("storylines_active", 0),
         "claim_audit_flags": RUN_AUDIT.get("claim_audit_flags", 0),
+        "daily_signal_count": RUN_AUDIT.get("daily_signal_count", 0),
+        "storage_angle_bullets": RUN_AUDIT.get("storage_angle_bullets", 0),
+        "shallow_signal_bullets": RUN_AUDIT.get("shallow_signal_bullets", 0),
         "screening_shards": RUN_AUDIT.get("screening_shards", 0),
         "corroboration_queue_size": RUN_AUDIT.get("corroboration_queue_size", 0),
         "stale_watchlist_count": RUN_AUDIT.get("stale_watchlist_count", 0),
@@ -5822,6 +5922,9 @@ def run_task(
     RUN_AUDIT["numeric_claims_flagged"] = 0
     RUN_AUDIT["storylines_active"] = 0
     RUN_AUDIT["claim_audit_flags"] = 0
+    RUN_AUDIT["daily_signal_count"] = 0
+    RUN_AUDIT["storage_angle_bullets"] = 0
+    RUN_AUDIT["shallow_signal_bullets"] = 0
     # Preflight sharded screening runs before run_task and already recorded its
     # shard count; keep it when this task consumes that shared screening.
     if not shared_screened:

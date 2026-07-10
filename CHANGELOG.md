@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.11.0 - 2026-07-10
+
+Depth & coverage release, driven by the 2026-07-10 daily review: 3 New Signals, one-line why-it-matters, 1 storage bullet, 4 vendor families.
+
+### Changed
+- **Daily synthesis uses the strong model**: daily was routed to the research model while weekly/monthly got `FINAL_SYNTHESIS_MODEL` — the daily is the product; it now uses `[cheap, final]` like weekly. Depth was model-capped, not prompt-capped.
+- **Wider synthesis window**: sharded screening merges up to ~24 candidates but only 8 were injected; `SCREEN_PROMPT_CANDIDATES` 8→12, `SCREEN_GAPS_IN_PROMPT` 3→4, mainstream reserve in the diversified top-N 2→3, daily append limit 10k→14k chars.
+- **Timeout tiering**: cheap screen-tier calls now time out at `SCREEN_MODEL_TIMEOUT` (default 300s) instead of the blanket 900s that stretched one run past 50 minutes; synthesis keeps `MODEL_TIMEOUT` (900s).
+
+### Added
+- **Depth spec in the daily prompt**: New Signals target 4–6 with distinct vendors/themes; every signal adds a `- So what:` action line; concrete numbers/versions from the snapshot required; Storage / Infra Angle needs ≥2 bullets each with a `- Watch trigger:` line; benchmark/research candidates get full bullets.
+- **Depth audit** (`audit_daily_depth`, warnings + telemetry only): `daily_signal_count`, `storage_angle_bullets`, `shallow_signal_bullets` (bullets missing 2+ of Why-it-matters/Evidence-strength/Source). Thin news days warn, never refuse.
+- CLI version bumped to `0.11.0`.
+
 ## v0.10.4 - 2026-07-10
 
 Resolve the must-cover vs freshness deadlock that refused the 2026-07-10 daily.

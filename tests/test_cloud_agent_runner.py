@@ -36,7 +36,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("daily"),
-                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
+                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
             )
             self.assertEqual(
                 cloud_agent_runner.openrouter_models_for_task("source-sweep"),
@@ -2594,6 +2594,78 @@ class AuditLoopTest(unittest.TestCase):
         # Without publication history the same candidate is still required.
         with self.assertRaises(SystemExit):
             cloud_agent_runner.validate_must_cover_mainstream(result, screen)
+
+    def test_model_call_timeout_tiered_by_model(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(
+                cloud_agent_runner.model_call_timeout("deepseek/deepseek-v4-flash"), 300
+            )
+            self.assertEqual(cloud_agent_runner.model_call_timeout("z-ai/glm-5.2"), 900)
+
+    def test_audit_daily_depth_flags_thin_day(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-10\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        "- Signal: only one thin signal.\n"
+                        "  - Source: https://example.com/a\n\n"
+                        "#### 5. Storage / Infra Angle\n\n"
+                        "- Signal: single storage bullet without trigger.\n\n"
+                        "#### 6. Assessment & Gaps\n\n"
+                        "- Coverage ledger: checked=github; missed=none\n\n"
+                        "### 中文\n\n#### 1. 新信号\n\n- 信号：略。\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.audit_daily_depth(result)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["daily_signal_count"], 1)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["storage_angle_bullets"], 1)
+        warnings = cloud_agent_runner.RUN_AUDIT["apply_warnings"]
+        self.assertTrue(any("New Signals (target 4-6)" in w for w in warnings))
+        self.assertTrue(any("Storage / Infra Angle has 1" in w for w in warnings))
+
+    def test_audit_daily_depth_quiet_on_deep_day(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        signals = "\n\n".join(
+            f"- Signal: item {index}.\n"
+            f"  - Why it matters: mechanism {index}.\n"
+            f"  - Evidence strength: Strong.\n"
+            f"  - So what: watch vendor {index} pricing.\n"
+            f"  - Source: https://example.com/{index}"
+            for index in range(4)
+        )
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-07-10\n\n### English\n\n"
+                        "#### 1. New Signals\n\n"
+                        f"{signals}\n\n"
+                        "#### 5. Storage / Infra Angle\n\n"
+                        "- Signal: snapshots standardizing.\n"
+                        "  - Watch trigger: a second vendor ships checkpoint APIs.\n"
+                        "- Signal: replay demand rising.\n"
+                        "  - Watch trigger: replay named in an enterprise changelog.\n\n"
+                        "#### 6. Assessment & Gaps\n\n"
+                        "- Coverage ledger: checked=github; missed=none\n"
+                    ),
+                }
+            ]
+        }
+        cloud_agent_runner.audit_daily_depth(result)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["daily_signal_count"], 4)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["storage_angle_bullets"], 2)
+        self.assertFalse(
+            any("Daily depth" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
 
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")
