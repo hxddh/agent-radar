@@ -455,7 +455,7 @@ DEFAULT_CHANGELOG_PAGES = [
     # gracefully if a path moves.
     ("modal-blog", "https://modal.com/blog"),
     ("daytona-blog", "https://www.daytona.io/dotfiles"),
-    ("openrouter-announcements", "https://openrouter.ai/announcements"),
+    ("openrouter-announcements", "https://openrouter.ai/announcements/"),
     ("meta-ai-blog", "https://ai.meta.com/blog/"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
@@ -5349,6 +5349,11 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
         if isinstance(parsed, dict) and parsed.get("error") and "choices" not in parsed:
             # A 200 error envelope (OpenRouter does return these).
             last_error = f"OpenRouter error envelope for {candidate_model}: {str(parsed.get('error'))[:300]}"
+            continue
+        if not response_output_text(parsed).strip():
+            # A 200 with empty content (provider hiccup): retry the fallback
+            # chain instead of failing later with "Model did not return valid JSON: ".
+            last_error = f"OpenRouter returned empty content for {candidate_model}"
             continue
         return parsed
     raise SystemExit(last_error or "OpenRouter API error.")

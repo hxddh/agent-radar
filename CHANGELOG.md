@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.14.1 - 2026-07-10
+
+Reliability fixes from the first v0.14.0 live run.
+
+### Fixed
+- **Empty model responses now retry the fallback chain**: the daily synthesis got a 200 with empty content from the provider and failed with "Model did not return valid JSON: "; empty content is now treated as transient like non-JSON bodies and error envelopes.
+- **Partial task failures now alert**: the runner exits 0 when any task succeeds (so partial results commit), which meant a failed daily alongside a successful source-sweep never triggered the failure issue. A post-commit workflow step greps the runner log for failed report tasks and fails the job — after the commit — so the alert fires.
+- `openrouter-announcements` page URL gains its trailing slash (HTTP 308 on first contact).
+- CLI version bumped to `0.14.1`.
+
 ## v0.14.0 - 2026-07-10
 
 Second ecosystem sweep: every established agent service and ecosystem layer named in the coverage audit is now collected, recognized, or explicitly query-covered.

@@ -192,6 +192,17 @@ jobs:
           git pull --rebase origin "${GITHUB_REF_NAME:-main}"
           git push
 
+      - name: Fail on partial task failure
+        # The runner exits 0 when at least one task succeeded so partial results
+        # get committed — but a failed daily (the product) must still alert.
+        # This runs AFTER commit, so surfacing the failure loses nothing.
+        run: |
+          if [ -f run-output.log ] && grep -qE 'Task (daily|weekly|monthly) (failed|errored):' run-output.log; then
+            echo "A report task failed inside an otherwise-green run:"
+            grep -E 'Task (daily|weekly|monthly) (failed|errored):' run-output.log | tail -3
+            exit 1
+          fi
+
       - name: Alert on failure
         # Failure ledger + notification: open (or comment on) a labeled issue so
         # failed runs — especially scheduled ones and gate refusals — surface as
