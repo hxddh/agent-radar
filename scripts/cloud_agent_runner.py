@@ -64,7 +64,7 @@ DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 130
 # meant screening only ever saw ~15% of a 780-item collection. Screening now
 # gets its own, larger lane-balanced pool; per-task snapshots still trim to
 # their own budgets.
-DEFAULT_SCREEN_POOL_ITEMS = 400
+DEFAULT_SCREEN_POOL_ITEMS = 560
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
@@ -73,10 +73,10 @@ DEFAULT_MAX_RESPONSE_CHARS = 64_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 22_000
-DEFAULT_SCREEN_PROMPT_CANDIDATES = 16
+DEFAULT_SCREEN_PROMPT_CANDIDATES = 20
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 160
-DEFAULT_RADAR_SWEEP_PROMPT_LINES = 60
+DEFAULT_RADAR_SWEEP_PROMPT_LINES = 100
 PRIORITY_BREADTH_LANES = frozenset({"official", "github", "github-release"})
 # Social/discussion collectors map to these lanes via source_lane().
 DISCUSSION_BREADTH_LANES = frozenset({"social", "reddit"})
@@ -97,7 +97,7 @@ SIGNAL_CLASS_RECALL_WEIGHTS = {
 }
 DEFAULT_MIN_WEIGHTED_SYNTHESIS_RECALL = 0.35
 DEFAULT_MIN_MAINSTREAM_RECALL = 0.5
-MAX_MUST_COVER_MAINSTREAM = 3
+MAX_MUST_COVER_MAINSTREAM = 5
 MAX_DAILY_INFRA_PRIMITIVE_BULLETS = 2
 STALE_ROUNDUP_RE = re.compile(
     r"\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+20\d{2}\s+releases?\b",
@@ -4861,8 +4861,9 @@ def reddit_subreddits_for_day(day: dt.date) -> list[str]:
     if not subreddits:
         return []
     # Batch 1 meant each subreddit was polled once per len(list) days; user
-    # evidence went stale between visits.
-    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 4))
+    # evidence went stale between visits. Default now covers the whole default
+    # list daily; cap at the list length so oversized batches don't duplicate.
+    batch_size = min(max(1, env_int("REDDIT_RSS_BATCH_SIZE", 10)), len(subreddits))
     start = day.toordinal() % len(subreddits)
     selected: list[str] = []
     for offset in range(batch_size):

@@ -73,7 +73,7 @@ Depth spec (the runner audits these and records warnings):
   not earn a full bullet still gets its one-liner here (target 8+ lines when
   the pool has them; English-only is acceptable, the 中文 block may keep this
   section as a short pointer). Do not silently drop pool items.
-- Use the full injected screening list (up to 16 top candidates plus the Radar
+- Use the full injected screening list (up to 20 top candidates plus the Radar
   Sweep pool); each uncovered fresh candidate needs a Radar Sweep line, a Gaps
   mention, or a research-log entry.
 

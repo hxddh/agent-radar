@@ -62,10 +62,12 @@ jobs:
       INCLUDE_RUNBOOK_CONTEXT: ${{ vars.INCLUDE_RUNBOOK_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
-      MAX_RELEASE_REPOS: ${{ vars.MAX_RELEASE_REPOS || '32' }}
+      # Tuned in-repo (repo Actions variables held stale lower values and
+      # silently clamped collection breadth; see docs/release-v0.19.0.md).
+      MAX_RELEASE_REPOS: '32'
       MAX_RELEASES_PER_REPO: ${{ vars.MAX_RELEASES_PER_REPO || '3' }}
-      MAX_SOURCE_WORKERS: ${{ vars.MAX_SOURCE_WORKERS || '16' }}
-      MAX_COLLECT_SECONDS: ${{ vars.MAX_COLLECT_SECONDS || '150' }}
+      MAX_SOURCE_WORKERS: '16'
+      MAX_COLLECT_SECONDS: '150'
       GITHUB_API_MIN_INTERVAL: ${{ vars.GITHUB_API_MIN_INTERVAL || '0.5' }}
       RELEASE_REPOS: ${{ vars.RELEASE_REPOS || '' }}
       # Vendor changelog feeds/pages are enabled by default here (no repo variable
@@ -81,7 +83,7 @@ jobs:
       COLLECT_LOBSTERS: ${{ vars.COLLECT_LOBSTERS || 'true' }}
       COLLECT_PYPI: ${{ vars.COLLECT_PYPI || 'true' }}
       PYPI_PACKAGES: ${{ vars.PYPI_PACKAGES || '' }}
-      REDDIT_RSS_BATCH_SIZE: ${{ vars.REDDIT_RSS_BATCH_SIZE || '4' }}
+      REDDIT_RSS_BATCH_SIZE: '10'
       SOCIAL_FEEDS: ${{ vars.SOCIAL_FEEDS || '' }}
       REDDIT_SUBREDDITS: ${{ vars.REDDIT_SUBREDDITS || '' }}
       X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
