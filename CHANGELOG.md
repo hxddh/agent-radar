@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.10.4 - 2026-07-10
+
+Resolve the must-cover vs freshness deadlock that refused the 2026-07-10 daily.
+
+### Fixed
+- Screening keeps resurfacing multi-day stories (they stay in the source snapshot), and the must-cover gate demanded today's daily re-cover them while the freshness rules correctly told synthesis not to re-report — the daily got refused either way ("high-confidence mainstream candidates were dropped (How Anthropic contains Claude...)"). MUST-cover candidates whose every evidence URL already appeared in a recent published day block are now skipped, in both the screening prompt injection and the validation gate (`must_cover_already_published` audit counter). Fresh stories are unaffected.
+- CLI version bumped to `0.10.4`.
+
 ## v0.10.3 - 2026-07-10
 
 Fixes from the first live 2026-07-10 auto run (caught by the new failure alert, issue #45).

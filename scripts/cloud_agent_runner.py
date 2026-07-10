@@ -1718,7 +1718,9 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
     candidates = data.get("candidates", [])
     if isinstance(candidates, list) and candidates:
         ranked = diversify_screening_candidates(candidates, max_candidates)
-        must_cover = high_confidence_mainstream_candidates(candidates)[:MAX_MUST_COVER_MAINSTREAM]
+        must_cover = filter_already_covered_must_cover(
+            high_confidence_mainstream_candidates(candidates), root, day
+        )[:MAX_MUST_COVER_MAINSTREAM]
         class_counts: dict[str, int] = {}
         for cand in candidates:
             if isinstance(cand, dict):
@@ -3412,11 +3414,49 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
             )
 
 
-def validate_must_cover_mainstream(result: dict[str, Any], screen_text: str | None) -> None:
+def candidate_already_published(candidate: dict[str, Any], url_dates: dict[str, str]) -> bool:
+    """True when every evidence URL already appeared in a recent day block."""
+    urls = candidate_evidence_urls(candidate)
+    if not urls:
+        return False
+    return all(url.rstrip("/") in url_dates for url in urls)
+
+
+def filter_already_covered_must_cover(
+    candidates: list[dict[str, Any]],
+    root: Path | None,
+    day: dt.date | None,
+) -> list[dict[str, Any]]:
+    """Drop MUST candidates whose story is already published in recent dailies.
+
+    Screening keeps resurfacing multi-day stories (they stay in the snapshot),
+    but the freshness rules correctly tell synthesis not to re-report them —
+    without this filter the must-cover gate and the freshness rules fight each
+    other and the daily gets refused either way."""
+    if root is None or day is None:
+        return candidates
+    url_dates = published_daily_url_dates(root, day)
+    if not url_dates:
+        return candidates
+    fresh = [cand for cand in candidates if not candidate_already_published(cand, url_dates)]
+    skipped = len(candidates) - len(fresh)
+    if skipped:
+        RUN_AUDIT["must_cover_already_published"] = skipped
+    return fresh
+
+
+def validate_must_cover_mainstream(
+    result: dict[str, Any],
+    screen_text: str | None,
+    root: Path | None = None,
+    day: dt.date | None = None,
+) -> None:
     if not screen_text:
         return
     data = enrich_screening_with_ids(parse_screening_json(screen_text))
-    must_cover = high_confidence_mainstream_candidates(data.get("candidates", []))[:MAX_MUST_COVER_MAINSTREAM]
+    must_cover = filter_already_covered_must_cover(
+        high_confidence_mainstream_candidates(data.get("candidates", [])), root, day
+    )[:MAX_MUST_COVER_MAINSTREAM]
     if not must_cover:
         return
     hay = "\n".join(daily_update_bodies(result) + [str(result.get("summary", ""))]).lower()
@@ -3476,7 +3516,7 @@ def validate_synthesis_result(
                 "Cover high-confidence mainstream candidates before emerging repos."
             )
         validate_daily_direction_quota(result)
-        validate_must_cover_mainstream(result, screen_text)
+        validate_must_cover_mainstream(result, screen_text, root=root, day=day)
         validate_daily_section_structure(result)
         # Prefer auto-label over discarding an otherwise-valid bilingual day block.
         repair_daily_freshness_labels(result)

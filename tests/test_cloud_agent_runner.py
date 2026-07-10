@@ -2555,6 +2555,46 @@ class AuditLoopTest(unittest.TestCase):
         fake_key = "sk-" + "AbCdEfGhIjKlMnOpQrStUvWx"
         self.assertIsNotNone(pattern.search(f"api_key = {fake_key}"))
 
+    def test_must_cover_skips_already_published_story(self) -> None:
+        day = cloud_agent_runner.parse_date("2026-07-10")
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "id": "scr-contain",
+                        "title": "How Anthropic contains Claude across products",
+                        "confidence": "high",
+                        "relevance_score": 9,
+                        "signal_class": "mainstream_product",
+                        "evidence": ["https://www.anthropic.com/engineering/how-we-contain-claude"],
+                    }
+                ]
+            }
+        )
+        result = {
+            "summary": "daily",
+            "updates": [
+                {
+                    "path": "daily/2026-07.md",
+                    "mode": "append",
+                    "content": "- Signal: something fresh today.\n  - Source: https://example.com/new\n",
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily").mkdir(parents=True)
+            (root / "daily" / "2026-07.md").write_text(
+                "## 2026-07-09\n\n- Signal: Anthropic containment post.\n"
+                "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n",
+                encoding="utf-8",
+            )
+            # Story already published on 07-09: no longer a MUST for 07-10.
+            cloud_agent_runner.validate_must_cover_mainstream(result, screen, root=root, day=day)
+        # Without publication history the same candidate is still required.
+        with self.assertRaises(SystemExit):
+            cloud_agent_runner.validate_must_cover_mainstream(result, screen)
+
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")
         with tempfile.TemporaryDirectory() as tmp:
