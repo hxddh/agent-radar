@@ -110,6 +110,21 @@ The storage thesis (radar.md) needs first-party storage-vendor and market inputs
 - Benchmark leaderboards: SWE-bench, Terminal-Bench, Aider leaderboard (query lane; cite the leaderboard page)
 - Funding rounds / earnings commentary on agent-infra and storage vendors (query lane; label Evidence strength)
 
+### Expert Media Lane
+
+Individual analysts with fast, dense, pre-filtered agent coverage; scored via the dedicated `expert` lane (highest discussion-tier weight):
+
+- Simon Willison's weblog (collector: `simonwillison`)
+- Latent Space (collector: `latent-space`)
+
+### Discovery & Adoption Collectors
+
+- GitHub Trending daily (collector: `github-trending`)
+- Product Hunt feed (collector: `producthunt`)
+- arXiv cs.AI + cs.SE + cs.CR (agent-coding and agent-attack papers)
+- Reddit: 10 subreddits, 3 polled per day (`REDDIT_RSS_BATCH_SIZE`)
+- GitHub releases for ecosystem OSS (Claude Code, OpenCode, E2B, vercel/ai, cloudflare/agents, Cline, Aider, Gemini CLI, Qwen Code)
+
 Query pools for these lanes live in the runner defaults and can be extended without code changes via `automation/source-queries.json` (`{"hn": [...], "reddit": [...], "github": [...], "packages": [...]}`); thesis-scoring keyword weights via `automation/thesis-keywords.json`.
 
 ## Community Sources

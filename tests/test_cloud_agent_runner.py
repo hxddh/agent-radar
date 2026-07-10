@@ -120,7 +120,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
 
     def test_public_source_budget_is_more_aggressive(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 50)
+            self.assertEqual(cloud_agent_runner.public_source_budget("daily"), 60)
             self.assertEqual(cloud_agent_runner.public_source_budget("source-sweep"), 120)
             self.assertEqual(cloud_agent_runner.public_source_budget("weekly"), 120)
             self.assertEqual(cloud_agent_runner.public_source_budget("monthly"), 160)
@@ -280,12 +280,12 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertEqual(len(day_two), 2)
         self.assertNotEqual(day_one, day_two)
 
-    def test_reddit_rss_default_batch_size_is_one(self) -> None:
-        subs = ["a", "b", "c"]
+    def test_reddit_rss_default_batch_size_is_three(self) -> None:
+        subs = ["a", "b", "c", "d", "e"]
         with mock.patch.object(cloud_agent_runner, "reddit_subreddits", return_value=subs):
             with mock.patch.dict(os.environ, {}, clear=True):
                 selected = cloud_agent_runner.reddit_subreddits_for_day(cloud_agent_runner.parse_date("2026-07-02"))
-        self.assertEqual(len(selected), 1)
+        self.assertEqual(len(selected), 3)
 
     def test_pypi_enabled_by_default(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
@@ -769,9 +769,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
                     cloud_agent_runner.parse_date("2026-07-02"),
                     raw_collected_count=394,
                 )
-        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 50)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["public_source_items"], 60)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["collected_source_items"], 394)
-        self.assertIn("Budget 50/120", snapshot)
+        self.assertIn("Budget 60/120", snapshot)
 
     def test_compact_screening_for_prompt_is_smaller_than_raw_json(self) -> None:
         raw = json.dumps(
@@ -2710,6 +2710,24 @@ class AuditLoopTest(unittest.TestCase):
         names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
         self.assertIn("xai-news", names)
         self.assertIn("e2b-blog", names)
+
+    def test_breadth_sources_expanded(self) -> None:
+        feed_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_FEEDS]
+        for name in ("simonwillison", "latent-space", "supabase-blog", "flyio-blog", "producthunt"):
+            self.assertIn(name, feed_names)
+        page_names = [name for name, _ in cloud_agent_runner.DEFAULT_CHANGELOG_PAGES]
+        for name in ("mistral-news", "github-trending"):
+            self.assertIn(name, page_names)
+        self.assertGreaterEqual(len(cloud_agent_runner.DEFAULT_REDDIT_SUBREDDITS), 10)
+
+    def test_expert_lane_scores_high(self) -> None:
+        self.assertEqual(cloud_agent_runner.source_lane("simonwillison"), "expert")
+        expert = {"source": "simonwillison", "title": "Notes on coding agent evals", "url": "https://simonwillison.net/x", "note": ""}
+        generic = {"source": "some-feed", "title": "Notes on coding agent evals", "url": "https://example.com/x", "note": ""}
+        self.assertGreater(
+            cloud_agent_runner.score_source_item(expert, {}),
+            cloud_agent_runner.score_source_item(generic, {}),
+        )
 
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")

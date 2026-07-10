@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.13.0 - 2026-07-10
+
+Source-universe breadth: more of everything the radar reads, plus an expert-media lane.
+
+### Added
+- **Expert media lane** (`expert`, highest discussion-tier score weight 15): Simon Willison's weblog and Latent Space — fast, dense, pre-filtered agent coverage from individual analysts.
+- **Infra vendor feeds** that sources.md promised but never collected: Supabase (`supabase-blog`), Fly.io (`flyio-blog`), Mistral (`mistral-news` page).
+- **Discovery collectors**: GitHub Trending daily (`github-trending`, github lane) and Product Hunt feed (`producthunt`).
+- **arXiv breadth**: cs.SE and cs.CR feeds join cs.AI — agent-coding and agent-attack papers live there.
+- **Reddit breadth**: subreddit list 5→10 (adds ChatGPTCoding, cursor, AI_Agents, GithubCopilot, OpenAI) and default poll batch 1→3 per day (each subreddit now seen every ~3 days instead of every 10; workflow fallback updated too).
+- CLI version bumped to `0.13.0`.
+
+### Changed
+- Budgets widened to carry the new sources: daily public source items 50→60, screening window (`MAX_SCREEN_SOURCE_ITEMS`) 80→110.
+
 ## v0.12.0 - 2026-07-10
 
 Ecosystem-vendor coverage: Grok/xAI, Pi, Amp, Cursor, OpenCode, E2B, Vercel, Cloudflare and peers were either uncollected or collected-then-discarded as no-name infra.

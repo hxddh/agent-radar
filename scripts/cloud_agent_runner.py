@@ -56,10 +56,10 @@ DEFAULT_CONTEXT_FILE_CHARS = 20_000
 MAX_PUBLIC_SOURCE_ITEMS = 200
 DEFAULT_MAX_PROMPT_CHARS = 120_000
 DEFAULT_MAX_SCREEN_PROMPT_CHARS = 40_000
-DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 50
+DEFAULT_DAILY_PUBLIC_SOURCE_ITEMS = 60
 DEFAULT_WATCHLIST_CONTEXT_CHARS = 6_000
 DEFAULT_SOURCES_CONTEXT_CHARS = 6_000
-DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 80
+DEFAULT_MAX_SCREEN_SOURCE_ITEMS = 110
 # Bilingual daily JSON with must-cover mainstream often lands ~18–25k; 16k was
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 DEFAULT_MAX_RESPONSE_CHARS = 32_000
@@ -371,6 +371,15 @@ DEFAULT_CHANGELOG_FEEDS = [
     # available); Simplified-Chinese media are not default collectors — cite
     # them sparingly and prefer the vendor's official/English page.
     ("hf-blog", "https://huggingface.co/blog/feed.xml"),
+    # Expert media: individual analysts with the fastest, densest agent
+    # coverage; scored via the dedicated expert lane.
+    ("simonwillison", "https://simonwillison.net/atom/everything/"),
+    ("latent-space", "https://www.latent.space/feed"),
+    # Infra vendors from sources.md that previously had no collectors.
+    ("supabase-blog", "https://supabase.com/rss.xml"),
+    ("flyio-blog", "https://fly.io/blog/feed.xml"),
+    # Launch/adoption signal.
+    ("producthunt", "https://www.producthunt.com/feed"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -384,6 +393,9 @@ DEFAULT_CHANGELOG_PAGES = [
     # Agent-ecosystem vendors without feeds: xAI/Grok and E2B.
     ("xai-news", "https://x.ai/news"),
     ("e2b-blog", "https://e2b.dev/blog"),
+    ("mistral-news", "https://mistral.ai/news"),
+    # Open-source discovery: what shipped and spiked in the last day.
+    ("github-trending", "https://github.com/trending?since=daily"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
     "LocalLLaMA",
@@ -391,6 +403,11 @@ DEFAULT_REDDIT_SUBREDDITS = [
     "mcp",
     "agentdevelopment",
     "ChatGPT",
+    "ChatGPTCoding",
+    "cursor",
+    "AI_Agents",
+    "GithubCopilot",
+    "OpenAI",
 ]
 PYPI_UPDATES_RSS = "https://pypi.org/rss/updates.xml"
 DEFAULT_PYPI_PACKAGES = [
@@ -3883,6 +3900,10 @@ def source_lane(source: str) -> str:
         return "package-marketplace"
     if source.startswith("arxiv"):
         return "papers"
+    if source in {"simonwillison", "latent-space"}:
+        return "expert"
+    if source == "github-trending":
+        return "github"
     if source in {
         "openai-blog",
         "github-changelog",
@@ -3897,6 +3918,9 @@ def source_lane(source: str) -> str:
         "deepseek-news",
         "xai-news",
         "e2b-blog",
+        "mistral-news",
+        "supabase-blog",
+        "flyio-blog",
     }:
         return "official"
     return "feeds-pages"
@@ -3966,6 +3990,9 @@ def score_source_item(
         "social": 13,
         "reddit": 13,
         "papers": 8,
+        # Individual analysts (Simon Willison, Latent Space): fast, dense,
+        # pre-filtered agent coverage.
+        "expert": 15,
     }.get(lane, 5)
     keyword_weights = {
         "agent": 5,
@@ -4636,7 +4663,9 @@ def reddit_subreddits_for_day(day: dt.date) -> list[str]:
     subreddits = reddit_subreddits()
     if not subreddits:
         return []
-    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 1))
+    # Batch 1 meant each subreddit was polled once per len(list) days; user
+    # evidence went stale between visits.
+    batch_size = max(1, env_int("REDDIT_RSS_BATCH_SIZE", 3))
     start = day.toordinal() % len(subreddits)
     selected: list[str] = []
     for offset in range(batch_size):
@@ -4721,6 +4750,10 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     # arXiv moved its RSS feeds to rss.arxiv.org (2024); export.arxiv.org/rss
     # still responds but returns no parseable items, so the lane collected zero.
     collectors.append(("arxiv:cs-ai", "feed", "arxiv-cs-ai=https://rss.arxiv.org/rss/cs.AI", per_feed))
+    # Software engineering + security tracks carry the agent-coding and
+    # agent-attack papers that cs.AI misses.
+    collectors.append(("arxiv:cs-se", "feed", "arxiv-cs-se=https://rss.arxiv.org/rss/cs.SE", per_feed))
+    collectors.append(("arxiv:cs-cr", "feed", "arxiv-cs-cr=https://rss.arxiv.org/rss/cs.CR", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
     for source_name, page_url in changelog_pages():
