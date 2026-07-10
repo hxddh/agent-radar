@@ -705,3 +705,56 @@ Ignore or deprioritize:
 - [infra_primitive] Nils macOS agent CLI — CLI for macOS agent management. | https://crates.io/crates/nils-macos-agent
 - [infra_primitive] Pitbridge - MCP bridge for NinjaTrader — Hard risk limits for agent trading via MCP. | https://pypi.org/project/pitbridge/0.2.2/
 - [infra_primitive] CCSwap - Claude Codex account manager — Multi-account management for Claude Code and Codex. | https://pypi.org/project/ccswap/0.20.0/
+
+
+### Additional sources from 2026-07-10 sweep
+
+- [infra_primitive] Desktop automation CLI for agents – agent-desktop: https://github.com/lahfir/agent-desktop
+- [infra_primitive] MCP Gateway – Turn existing APIs and databases into MCP servers: https://swaggertomcp.com
+- [infra_primitive] HelixDB – Graph database on object storage: https://github.com/HelixDB/helix-db/tree/main
+- [infra_primitive] FableCut – browser video editor AI agents can drive: https://github.com/ronak-create/FableCut
+- [mainstream_product] Gemini API adds Managed Agents with background MCP tasks: https://twitter.com/GoogleAIStudio/status/2074533418004591077 (social source)
+- [mainstream_product] New ChatGPT desktop unifies Chat, Work, and Codex: https://help.openai.com/en/articles/20001276-moving-to-the-new-chatgpt-desktop-app
+- [infra_primitive] Policy enforcement tool for Claude Code, Cursor, and Codex (Kastra): https://kastra.ai/
+- [mainstream_product] Mistral launches Vibe coding agent and Studio platform: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Cursor adds Automations and Marketplace: https://cursor.com/automate
+- [mainstream_product] Google announces ADK Go 2.0 for multi-agent apps: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Supabase partners with OpenCode for agentic coding: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] E2B raises $21M Series A for agent sandboxes: https://e2b.dev/blog/series-a
+- [infra_primitive] Fly.io blog on building reliable agents and MCP integration: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [infra_primitive] DeepSeek updates API rate limits and isolation docs: https://api-docs.deepseek.com/quick_start/rate_limit
+- [research] AgentLens: Production-assessed trajectory reviews for coding agent evaluation: https://arxiv.org/abs/2607.06624
+- [research] PERFOPT-Bench benchmarks coding agents on software performance optimization: https://arxiv.org/abs/2607.07744
+- [mainstream_product] Vercel AI Gateway adds Muse Spark 1.1, GPT 5.6, Grok 4.5: https://vercel.com/changelog/muse-spark-1-1-is-now-available-on-ai-gateway
+- [mainstream_product] Supabase becomes official ChatGPT app, raises Series F: https://supabase.com/blog/supabase-series-f
+- [mainstream_product] Google Gemini CLI v0.50.0 stable release: https://github.com/google-gemini/gemini-cli/releases/tag/v0.50.0
+- [mainstream_product] Cline v4.0.7 and CLI v3.0.39 released: https://github.com/cline/cline/releases/tag/v4.0.7
+- [mainstream_product] OpenHands 1.11.0 and cloud 1.45.1 released: https://github.com/OpenHands/OpenHands/releases/tag/1.11.0
+- [mainstream_product] Vercel AI SDK v7.0.19 and v6.0.222 released: https://github.com/vercel/ai/releases/tag/ai%407.0.19
+- [mainstream_product] E2B Surf: computer-use AI agent with virtual desktop: https://github.com/e2b-dev/surf
+- [mainstream_product] KiloCode: open-source coding agent with 26K stars: https://github.com/Kilo-Org/kilocode
+- [infra_primitive] SafeDep PMG protects agents from malicious packages: https://github.com/safedep/pmg
+- [infra_primitive] AgentGuards plugin marketplace for LLM security: https://github.com/alelaguard/agentguards-plugins
+- [mainstream_product] PydanticAI v2.8.0 released: https://github.com/pydantic/pydantic-ai/releases/tag/v2.8.0
+- [mainstream_product] Cloudflare Agents v0.17.3 and think/ai-chat updates: https://github.com/cloudflare/agents/releases/tag/agents%400.17.3
+- [mainstream_product] Zed editor v1.10.2 stable release: https://github.com/zed-industries/zed/releases/tag/v1.10.2
+- [mainstream_product] Mastra core v1.50.0 released: https://github.com/mastra-ai/mastra/releases/tag/%40mastra/core%401.50.0
+- [mainstream_product] Alibaba Cloud Model Studio CLI for agent frameworks: https://github.com/modelstudioai/cli
+- [infra_primitive] Nebius SWE-bench eval pipeline with Airflow/MLflow: https://github.com/gerasiova/nebius-swe-bench-eval-pipeline
+- [infra_primitive] Codomyrmex: AI-native modular coding workspace: https://github.com/docxology/codomyrmex
+- [infra_primitive] VeriMem: verified memory for AI agents: https://github.com/aureliocpr-ctrl/verimem
+- [infra_primitive] Pi Cowork: open-source Claude Cowork clone: https://github.com/ricardopera/pi-cowork
+- [infra_primitive] graph-mcp: MCP for Microsoft Graph: https://pypi.org/project/graph-mcp/0.5.1/
+- [infra_primitive] AxmeAI: persistent memory and guardrails for multiple IDEs: https://open-vsx.org/extension/AxmeAI/axme-code
+- [infra_primitive] Cyborgy: extend coding-agent CLIs with MCP: https://pypi.org/project/cyborgy/0.1.32/
+- [infra_primitive] haiku.rag: opinionated agentic RAG: https://pypi.org/project/haiku-rag/0.65.1/
+- [infra_primitive] langstage: web stage for LangGraph agents: https://pypi.org/project/langstage/0.13.13/
+- [infra_primitive] eggpool: aggregate multiple LLM providers: https://pypi.org/project/eggpool/0.6.3/
+- [infra_primitive] agentapprove: AI agent observability from iPhone/Apple Watch: https://www.npmjs.com/package/agentapprove
+- [infra_primitive] FPF Thinking Map: bounded LLM traversal: https://pypi.org/project/fpf-thinking-map/1.4.14/
+- [infra_primitive] chimera-agent: self-evolving AI agent with LLM-Fusion: https://pypi.org/project/chimera-agent/0.16.2/
+- [infra_primitive] AI Intervention Agent VS Code extension: https://open-vsx.org/extension/xiadengma/ai-intervention-agent
+- [infra_primitive] Agile Agent AI: Jira/Confluence/GitLab in VS Code: https://open-vsx.org/extension/andreslaley/agile-agent-ai
+- [infra_primitive] DevCoreAI autonomous coding agent: https://open-vsx.org/extension/devcoreai-coding-agent/devcoreai-coding-agent
+- [infra_primitive] Google ADK tools VS Code extension: https://open-vsx.org/extension/lenixbyte/adk-tools
+- [infra_primitive] workmux: orchestrate git worktrees and tmux: https://crates.io/crates/workmux
