@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import tempfile
 import time
 import unittest
@@ -2507,6 +2508,49 @@ class AuditLoopTest(unittest.TestCase):
                                     preflight_screen_calls=2,
                                 )
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["screening_shards"], 2)
+
+    def test_mainstream_recall_denominator_capped_after_sharding(self) -> None:
+        candidates = []
+        for index in range(9):
+            candidates.append(
+                {
+                    "id": f"scr-m{index}",
+                    "title": f"OpenAI mainstream delta number{index}",
+                    "confidence": "high",
+                    "relevance_score": 10 - index,
+                    "signal_class": "mainstream_product",
+                    "evidence": [f"https://openai.com/news/delta-{index}"],
+                }
+            )
+        screen = json.dumps({"candidates": candidates})
+        # Cover the top 4 by priority: recall over a capped pool of 6 => 0.667,
+        # not 4/9 = 0.444 over the whole merged shard pool.
+        covered = "\n".join(
+            f"- Signal: OpenAI mainstream delta number{index}.\n"
+            f"  - Source: https://openai.com/news/delta-{index}"
+            for index in range(4)
+        )
+        result = {
+            "summary": "daily",
+            "updates": [
+                {"path": "daily/2026-07.md", "mode": "append", "content": covered}
+            ],
+        }
+        details = cloud_agent_runner.compute_synthesis_recall_details(screen, result)
+        self.assertGreaterEqual(details["mainstream_recall"], 0.5)
+
+    def test_secret_scan_pattern_has_sk_boundary(self) -> None:
+        workflow = (REPO_ROOT / ".github" / "workflows" / "cloud-agent.yml").read_text(encoding="utf-8")
+        match = re.search(r"grep -RInE [^']*'(\(.*ANTHROPIC_API_KEY\\s\*=\))'", workflow)
+        assert match is not None
+        pattern = re.compile(match.group(1))
+        self.assertIsNone(
+            pattern.search(
+                "https://github.blog/changelog/2026-07-09-ask-copilot-for-a-repository-overview"
+            )
+        )
+        self.assertIsNone(pattern.search("- **Ask HN thread** (scr-ask-hn-hate-coding-agents): note"))
+        self.assertIsNotNone(pattern.search("api_key = sk-AbCdEfGhIjKlMnOpQrStUvWx"))
 
     def test_weekly_direction_notes_combines_assets(self) -> None:
         day = cloud_agent_runner.parse_date("2026-07-10")

@@ -169,7 +169,9 @@ jobs:
           # source-cache.jsonl and collector-state.json hold machine-written external
           # titles/URLs/error details; scanning them risks false positives from external
           # content while they never contain repo secrets. Reports and code stay scanned.
-          if grep -RInE --exclude=validate.yml --exclude=cloud-agent.yml --exclude=source-cache.jsonl --exclude=collector-state.json --exclude=run-output.log --exclude-dir=.git --exclude-dir=__pycache__ '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
+          # `sk-` needs a left boundary: slugs like "ask-copilot-..." or ids like
+          # "scr-ask-hn-..." contain "sk-<20 chars>" and false-positived the scan.
+          if grep -RInE --exclude=validate.yml --exclude=cloud-agent.yml --exclude=source-cache.jsonl --exclude=collector-state.json --exclude=run-output.log --exclude-dir=.git --exclude-dir=__pycache__ '((^|[^A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY|AKIA[0-9A-Z]{16}|OPENAI_API_KEY\s*=|ANTHROPIC_API_KEY\s*=)' .; then
             echo "Possible secret detected."
             exit 1
           fi

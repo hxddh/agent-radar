@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.10.3 - 2026-07-10
+
+Fixes from the first live 2026-07-10 auto run (caught by the new failure alert, issue #45).
+
+### Fixed
+- Secret scan false positive: slugs like `ask-copilot-for-a-repository-overview` and ids like `scr-ask-hn-...` matched `sk-[A-Za-z0-9_-]{20,}` mid-word and failed the run; the `sk-` pattern now requires a left boundary (both workflows). `run-output.log` also excluded in validate.yml.
+- Mainstream recall over-strictness after sharded screening: the merged shard pool can double the high-confidence mainstream candidates, making `MIN_MAINSTREAM_RECALL=0.5` unreachably strict (0.444 refusal on 2026-07-10). The recall denominator is now capped at the top `2 × MAX_MUST_COVER_MAINSTREAM` (6) candidates by priority — what a day block can realistically cover — while the top-3 MUST-cover hard gate is unchanged.
+- CLI version bumped to `0.10.3`.
+
 ## v0.10.2 - 2026-07-09
 
 Failure alerting: failed Cloud Agent runs open (or comment on) a labeled GitHub issue instead of dying silently in the Actions tab.
