@@ -168,3 +168,13 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Reproducible DS/ML workflows with coding agents**: User shares GitHub repo (lemma) documenting structured workflow with agent-generated code, pinned environments, and reproducible experiment tracking. Addresses gap between agent code generation and DS/ML reproducibility requirements. Evidence: Medium (concrete repo with examples). Source: https://github.com/tkpratardan/lemma
 
 - **Hallusquatting risk in agent workflows**: Security researchers document attackers registering fake package names that AI agents hallucinate during coding tasks. Operators should add package-name verification to agent output gates and pin dependencies. Evidence: Strong (threat intelligence). Source: https://intel.threadlinqs.com/threat/TL-2026-1164
+
+## 2026-07-11
+
+- **Project memory bleed in ChatGPT**: Public Reddit discussion reports expanded memory context blending unrelated project needs, with users suggesting disabling memory and relying on audited context files. Useful operator takeaway: treat model-managed memory as untrusted shared state unless the product exposes project-scoped review and forget controls. Evidence: Medium (single public discussion thread). Source: https://www.reddit.com/r/OpenAI/comments/1ut3ehi/the_expanded_memory_context_for_56_has_completely/
+
+- **Line-by-line agentic coding review**: Ask HN discussion describes a user running Claude Code and Codex independently while only loosely scanning output, then asking for a more granular review workflow. Useful operator takeaway: keep agent tasks small enough for human diff review and require claims/tests/risks per chunk. Evidence: Medium (small public discussion). Source: https://news.ycombinator.com/item?id=48754327
+
+- **Eval-driven agentic coding workflow**: Dan Luu's public field notes argue that agent reliability depends on workflow architecture, evals, and task fit; agents can be useful when unreliability is handled with ordinary engineering techniques. Useful operator takeaway: build task-specific verification and retry loops instead of assuming one universal coding-agent workflow. Evidence: Medium (detailed public personal workflow). Source: https://danluu.com/ai-coding/
+
+- **Multi-agent terminal supervision with cmux**: cmux targets local supervision of coding agents with notification rings, sidebar metadata, browser panes, SSH workspaces, and Claude Code Teams support. Useful operator takeaway: compare terminal supervisors and desktop agent clients by attention routing, transcript retention, browser state, and remote workspace support. Evidence: Medium (public repo and GitHub engagement; usage telemetry unavailable). Source: https://github.com/manaflow-ai/cmux

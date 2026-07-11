@@ -6,8 +6,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -17,8 +17,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -28,8 +28,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -39,8 +39,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -50,8 +50,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -61,8 +61,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -72,8 +72,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -83,19 +83,19 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
     "bluesky:Manus agent": {
-      "degraded_runs": 5,
+      "degraded_runs": 0,
       "error": 6,
-      "last_detail": "HTTP Error 403: Forbidden",
-      "last_status": "error",
-      "next_retry_after": "2026-07-10T13:49:42+00:00",
-      "ok": 1,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 2,
+      "ok_streak": 1,
       "permanent_streak": 0,
       "status": "degraded"
     },
@@ -105,8 +105,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 5,
+      "ok": 7,
+      "ok_streak": 6,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -116,8 +116,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 6,
-      "ok_streak": 6,
+      "ok": 7,
+      "ok_streak": 7,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -138,8 +138,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -155,15 +155,15 @@
       "status": "degraded"
     },
     "bluesky:agent workspace": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: Forbidden",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 13,
-      "ok_streak": 13,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "bluesky:browser agent": {
       "degraded_runs": 6,
@@ -182,8 +182,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -193,8 +193,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -215,8 +215,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -248,8 +248,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -270,8 +270,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -281,8 +281,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -292,21 +292,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
     "devto:devops": {
-      "degraded_runs": 0,
-      "error": 7,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 8,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 31,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "devto:machinelearning": {
       "degraded_runs": 0,
@@ -314,8 +314,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 36,
-      "ok_streak": 12,
+      "ok": 37,
+      "ok_streak": 13,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -325,8 +325,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 36,
-      "ok_streak": 21,
+      "ok": 37,
+      "ok_streak": 22,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -358,8 +358,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -369,8 +369,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -380,8 +380,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -391,8 +391,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -413,8 +413,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -424,8 +424,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -435,8 +435,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -457,8 +457,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 12,
+      "ok": 13,
+      "ok_streak": 13,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -479,8 +479,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -501,8 +501,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -523,8 +523,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -534,8 +534,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -545,8 +545,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -556,8 +556,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -567,8 +567,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -589,8 +589,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -600,8 +600,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 26,
+      "ok": 38,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -611,8 +611,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -622,8 +622,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -633,21 +633,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
     "github:agent artifact storage": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 13,
-      "ok_streak": 13,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "github:agent deployment workflow": {
       "degraded_runs": 0,
@@ -666,8 +666,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 36,
-      "ok_streak": 26,
+      "ok": 37,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -677,8 +677,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 26,
+      "ok": 38,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -705,15 +705,15 @@
       "status": "ok"
     },
     "github:agent workspace snapshot": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 13,
-      "ok_streak": 13,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "github:browser agent automation": {
       "degraded_runs": 0,
@@ -732,8 +732,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 26,
+      "ok": 38,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -743,8 +743,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 36,
-      "ok_streak": 26,
+      "ok": 37,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -754,21 +754,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 30,
-      "ok_streak": 25,
+      "ok": 31,
+      "ok_streak": 26,
       "permanent_streak": 0,
       "status": "ok"
     },
     "github:swe-bench evaluation": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 12,
-      "ok_streak": 12,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "hn:AI agent": {
       "degraded_runs": 0,
@@ -776,8 +776,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -798,8 +798,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -809,8 +809,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -820,8 +820,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -831,8 +831,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -842,8 +842,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -853,8 +853,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -864,8 +864,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -875,8 +875,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -886,8 +886,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -897,8 +897,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -908,8 +908,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -919,8 +919,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -930,8 +930,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -941,8 +941,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -952,8 +952,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -963,12 +963,23 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
     "hn:Qwen coding agent": {
+      "degraded_runs": 0,
+      "error": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 14,
+      "ok_streak": 14,
+      "permanent_streak": 0,
+      "status": "ok"
+    },
+    "hn:SWE-bench": {
       "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
@@ -979,25 +990,14 @@
       "permanent_streak": 0,
       "status": "ok"
     },
-    "hn:SWE-bench": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 12,
-      "permanent_streak": 0,
-      "status": "ok"
-    },
     "hn:Zed editor AI": {
       "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1007,8 +1007,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 12,
+      "ok": 13,
+      "ok_streak": 13,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1046,15 +1046,15 @@
       "status": "ok"
     },
     "hn:agent workflow": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "<urlopen error timed out>",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 22,
-      "ok_streak": 22,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "hn:agent workspace snapshot": {
       "degraded_runs": 0,
@@ -1062,8 +1062,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1084,8 +1084,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1095,8 +1095,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1106,8 +1106,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1117,8 +1117,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1139,8 +1139,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 30,
-      "ok_streak": 25,
+      "ok": 31,
+      "ok_streak": 26,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1172,8 +1172,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1194,8 +1194,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1205,8 +1205,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1216,8 +1216,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1238,8 +1238,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1271,8 +1271,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1293,8 +1293,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1304,8 +1304,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1326,8 +1326,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1337,8 +1337,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1359,8 +1359,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1370,8 +1370,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1381,8 +1381,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1392,8 +1392,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 12,
-      "ok_streak": 12,
+      "ok": 13,
+      "ok_streak": 13,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1414,8 +1414,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1436,8 +1436,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1447,8 +1447,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 22,
-      "ok_streak": 22,
+      "ok": 23,
+      "ok_streak": 23,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1458,8 +1458,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1469,8 +1469,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1480,8 +1480,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1497,13 +1497,13 @@
       "status": "degraded"
     },
     "page:openrouter-announcements": {
-      "degraded_runs": 6,
+      "degraded_runs": 0,
       "error": 6,
-      "last_detail": "HTTP Error 308: Permanent Redirect",
-      "last_status": "error",
-      "next_retry_after": "2026-07-10T13:21:03+00:00",
-      "ok": 0,
-      "ok_streak": 0,
+      "last_detail": "",
+      "last_status": "ok",
+      "next_retry_after": "",
+      "ok": 1,
+      "ok_streak": 1,
       "permanent_streak": 0,
       "status": "degraded"
     },
@@ -1513,8 +1513,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 13,
-      "ok_streak": 13,
+      "ok": 14,
+      "ok_streak": 14,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1557,8 +1557,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1568,8 +1568,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1579,21 +1579,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
     "pypi-package:crewai": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "<urlopen error timed out>",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 38,
-      "ok_streak": 30,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "pypi-package:langchain": {
       "degraded_runs": 0,
@@ -1601,8 +1601,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1612,8 +1612,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1623,8 +1623,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1634,8 +1634,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1645,8 +1645,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1656,8 +1656,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1678,8 +1678,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 31,
-      "ok_streak": 26,
+      "ok": 32,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1711,8 +1711,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1733,8 +1733,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1744,116 +1744,116 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
     "reddit-rss:AI_Agents": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
-      "permanent_streak": 0,
-      "status": "ok"
-    },
-    "reddit-rss:ChatGPT": {
       "degraded_runs": 1,
-      "error": 2,
+      "error": 1,
       "last_detail": "HTTP Error 429: Too Many Requests",
       "last_status": "error",
-      "next_retry_after": "2026-07-10T13:19:42+00:00",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 7,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
+    "reddit-rss:ChatGPT": {
+      "degraded_runs": 2,
+      "error": 3,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:39:21+00:00",
       "ok": 4,
       "ok_streak": 0,
       "permanent_streak": 0,
       "status": "degraded"
     },
     "reddit-rss:ChatGPTCoding": {
-      "degraded_runs": 1,
-      "error": 1,
+      "degraded_runs": 2,
+      "error": 2,
       "last_detail": "HTTP Error 429: Too Many Requests",
       "last_status": "error",
-      "next_retry_after": "2026-07-10T13:19:42+00:00",
+      "next_retry_after": "2026-07-11T00:39:21+00:00",
       "ok": 0,
       "ok_streak": 0,
       "permanent_streak": 0,
       "status": "degraded"
     },
     "reddit-rss:ClaudeAI": {
-      "degraded_runs": 1,
-      "error": 2,
+      "degraded_runs": 2,
+      "error": 3,
       "last_detail": "HTTP Error 429: Too Many Requests",
       "last_status": "error",
-      "next_retry_after": "2026-07-10T13:19:42+00:00",
+      "next_retry_after": "2026-07-11T00:39:21+00:00",
       "ok": 14,
       "ok_streak": 0,
       "permanent_streak": 0,
       "status": "degraded"
     },
     "reddit-rss:GithubCopilot": {
-      "degraded_runs": 6,
-      "error": 6,
-      "last_detail": "HTTP Error 429: Too Many Requests",
+      "degraded_runs": 7,
+      "error": 7,
+      "last_detail": "<urlopen error timed out>",
       "last_status": "error",
-      "next_retry_after": "2026-07-10T13:21:03+00:00",
+      "next_retry_after": "2026-07-12T00:35:21+00:00",
       "ok": 0,
       "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "degraded"
+      "status": "disabled"
     },
     "reddit-rss:LocalLLaMA": {
-      "degraded_runs": 4,
-      "error": 5,
+      "degraded_runs": 5,
+      "error": 6,
       "last_detail": "HTTP Error 429: Too Many Requests",
       "last_status": "error",
-      "next_retry_after": "2026-07-10T13:33:42+00:00",
+      "next_retry_after": "2026-07-11T01:07:21+00:00",
       "ok": 6,
       "ok_streak": 0,
       "permanent_streak": 0,
       "status": "degraded"
     },
     "reddit-rss:OpenAI": {
-      "degraded_runs": 6,
-      "error": 6,
-      "last_detail": "HTTP Error 429: Too Many Requests",
-      "last_status": "error",
-      "next_retry_after": "2026-07-10T13:21:03+00:00",
-      "ok": 0,
-      "ok_streak": 0,
-      "permanent_streak": 0,
-      "status": "degraded"
-    },
-    "reddit-rss:agentdevelopment": {
-      "degraded_runs": 1,
-      "error": 2,
-      "last_detail": "HTTP Error 429: Too Many Requests",
-      "last_status": "error",
-      "next_retry_after": "2026-07-10T13:19:42+00:00",
-      "ok": 3,
-      "ok_streak": 0,
-      "permanent_streak": 0,
-      "status": "degraded"
-    },
-    "reddit-rss:cursor": {
       "degraded_runs": 0,
-      "error": 0,
+      "error": 6,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
       "ok": 1,
       "ok_streak": 1,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
-    "reddit-rss:mcp": {
+    "reddit-rss:agentdevelopment": {
+      "degraded_runs": 2,
+      "error": 3,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:39:21+00:00",
+      "ok": 3,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
+    "reddit-rss:cursor": {
       "degraded_runs": 1,
       "error": 1,
       "last_detail": "HTTP Error 429: Too Many Requests",
       "last_status": "error",
-      "next_retry_after": "2026-07-10T13:19:42+00:00",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 1,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
+    "reddit-rss:mcp": {
+      "degraded_runs": 2,
+      "error": 2,
+      "last_detail": "HTTP Error 429: Too Many Requests",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:39:21+00:00",
       "ok": 4,
       "ok_streak": 0,
       "permanent_streak": 0,
@@ -1876,21 +1876,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
     "release:All-Hands-AI/OpenHands": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:GCWing/BitFun": {
       "degraded_runs": 0,
@@ -1902,27 +1902,38 @@
       "ok_streak": 1,
       "status": "ok"
     },
-    "release:QwenLM/qwen-code": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+    "release:IRsoctierDT/ai-agentic-mcpscan": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
+    },
+    "release:QwenLM/qwen-code": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 7,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "release:RooCodeInc/Roo-Code": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:Scormave/gramps-web-mcp": {
       "degraded_runs": 0,
@@ -1939,6 +1950,17 @@
       "last_detail": "",
       "last_status": "ok",
       "ok": 1
+    },
+    "release:TencentCloud/CubeSandbox": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "release:Wide-Moat/ocu-sandbox": {
       "degraded_runs": 0,
@@ -1977,8 +1999,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -1993,15 +2015,15 @@
       "status": "degraded"
     },
     "release:block/goose": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:bobmatnyc/trusty-tools": {
       "degraded_runs": 0,
@@ -2015,15 +2037,15 @@
       "status": "ok"
     },
     "release:browser-use/browser-use": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:chriswu727/argus": {
       "degraded_runs": 0,
@@ -2035,6 +2057,17 @@
       "ok_streak": 19,
       "permanent_streak": 0,
       "status": "ok"
+    },
+    "release:cleatdev/cleat": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "release:clidey/deptrust": {
       "degraded_runs": 0,
@@ -2053,8 +2086,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2091,15 +2124,15 @@
       "status": "ok"
     },
     "release:continuedev/continue": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:ctxrs/ctx": {
       "degraded_runs": 1,
@@ -2128,8 +2161,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2139,8 +2172,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 36,
-      "ok_streak": 26,
+      "ok": 37,
+      "ok_streak": 27,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2161,27 +2194,38 @@
       "last_status": "ok",
       "ok": 1
     },
+    "release:future-agi/future-agi": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
     "release:google-gemini/gemini-cli": {
       "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
     "release:huggingface/smolagents": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:iris-eval/mcp-server": {
       "degraded_runs": 1,
@@ -2203,6 +2247,17 @@
       "ok_streak": 3,
       "status": "ok"
     },
+    "release:junter1989k-ai/mexico-payments-mcp": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
     "release:kinqsradiollc/BrainRouter": {
       "degraded_runs": 0,
       "error": 0,
@@ -2215,26 +2270,26 @@
       "status": "ok"
     },
     "release:langfuse/langfuse": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:letta-ai/letta": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:macro-inc/macro": {
       "degraded_runs": 0,
@@ -2248,26 +2303,26 @@
       "status": "ok"
     },
     "release:mastra-ai/mastra": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:mem0ai/mem0": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:metorial/metorial": {
       "error": 0,
@@ -2276,14 +2331,15 @@
       "ok": 1
     },
     "release:mitos-run/mitos": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 3,
-      "ok_streak": 3,
-      "status": "ok"
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "release:modelcontextprotocol/python-sdk": {
       "degraded_runs": 0,
@@ -2291,8 +2347,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2302,8 +2358,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2313,8 +2369,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2363,21 +2419,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
     "release:pydantic/pydantic-ai": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "release:rexleimo/harness-cli": {
       "degraded_runs": 0,
@@ -2420,14 +2476,25 @@
       "ok_streak": 1,
       "status": "ok"
     },
+    "release:sipyourdrink-ltd/bernstein": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
     "release:sst/opencode": {
       "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2458,21 +2525,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
     "release:zed-industries/zed": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "social-feed:lobsters": {
       "error": 0,
@@ -2497,21 +2564,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
     "tag:All-Hands-AI/OpenHands": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:GCWing/BitFun": {
       "degraded_runs": 0,
@@ -2523,27 +2590,38 @@
       "ok_streak": 1,
       "status": "ok"
     },
-    "tag:QwenLM/qwen-code": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+    "tag:IRsoctierDT/ai-agentic-mcpscan": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
+    },
+    "tag:QwenLM/qwen-code": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 7,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "tag:RooCodeInc/Roo-Code": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:Scormave/gramps-web-mcp": {
       "degraded_runs": 0,
@@ -2560,6 +2638,17 @@
       "last_detail": "",
       "last_status": "ok",
       "ok": 1
+    },
+    "tag:TencentCloud/CubeSandbox": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "tag:Wide-Moat/ocu-sandbox": {
       "degraded_runs": 0,
@@ -2598,8 +2687,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2614,15 +2703,15 @@
       "status": "degraded"
     },
     "tag:block/goose": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:bobmatnyc/trusty-tools": {
       "degraded_runs": 0,
@@ -2636,15 +2725,15 @@
       "status": "ok"
     },
     "tag:browser-use/browser-use": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:chriswu727/argus": {
       "degraded_runs": 0,
@@ -2656,6 +2745,17 @@
       "ok_streak": 19,
       "permanent_streak": 0,
       "status": "ok"
+    },
+    "tag:cleatdev/cleat": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "tag:clidey/deptrust": {
       "degraded_runs": 0,
@@ -2674,8 +2774,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2712,15 +2812,15 @@
       "status": "ok"
     },
     "tag:continuedev/continue": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:ctxrs/ctx": {
       "degraded_runs": 1,
@@ -2749,8 +2849,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2760,8 +2860,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2782,27 +2882,38 @@
       "last_status": "ok",
       "ok": 1
     },
-    "tag:google-gemini/gemini-cli": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+    "tag:future-agi/future-agi": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
+    },
+    "tag:google-gemini/gemini-cli": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 7,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
     },
     "tag:huggingface/smolagents": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:iris-eval/mcp-server": {
       "degraded_runs": 1,
@@ -2824,6 +2935,17 @@
       "ok_streak": 3,
       "status": "ok"
     },
+    "tag:junter1989k-ai/mexico-payments-mcp": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
     "tag:kinqsradiollc/BrainRouter": {
       "degraded_runs": 0,
       "error": 0,
@@ -2836,26 +2958,26 @@
       "status": "ok"
     },
     "tag:langfuse/langfuse": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:letta-ai/letta": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:macro-inc/macro": {
       "degraded_runs": 0,
@@ -2869,26 +2991,26 @@
       "status": "ok"
     },
     "tag:mastra-ai/mastra": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:mem0ai/mem0": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:metorial/metorial": {
       "error": 0,
@@ -2897,13 +3019,14 @@
       "ok": 1
     },
     "tag:mitos-run/mitos": {
-      "degraded_runs": 1,
-      "error": 1,
+      "degraded_runs": 2,
+      "error": 2,
       "last_detail": "HTTP Error 403: rate limit exceeded",
       "last_status": "error",
-      "next_retry_after": "2026-07-06T05:33:04+00:00",
+      "next_retry_after": "2026-07-11T00:39:21+00:00",
       "ok": 2,
       "ok_streak": 0,
+      "permanent_streak": 0,
       "status": "degraded"
     },
     "tag:modelcontextprotocol/python-sdk": {
@@ -2912,8 +3035,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2923,8 +3046,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2934,8 +3057,8 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 38,
-      "ok_streak": 30,
+      "ok": 39,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -2984,21 +3107,21 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 37,
-      "ok_streak": 30,
+      "ok": 38,
+      "ok_streak": 31,
       "permanent_streak": 0,
       "status": "ok"
     },
     "tag:pydantic/pydantic-ai": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     },
     "tag:rexleimo/harness-cli": {
       "degraded_runs": 0,
@@ -3041,14 +3164,25 @@
       "ok_streak": 1,
       "status": "ok"
     },
+    "tag:sipyourdrink-ltd/bernstein": {
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
+      "ok": 0,
+      "ok_streak": 0,
+      "permanent_streak": 0,
+      "status": "degraded"
+    },
     "tag:sst/opencode": {
       "degraded_runs": 0,
       "error": 0,
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
@@ -3079,24 +3213,25 @@
       "last_detail": "",
       "last_status": "ok",
       "next_retry_after": "",
-      "ok": 7,
-      "ok_streak": 7,
+      "ok": 8,
+      "ok_streak": 8,
       "permanent_streak": 0,
       "status": "ok"
     },
     "tag:zed-industries/zed": {
-      "degraded_runs": 0,
-      "error": 0,
-      "last_detail": "",
-      "last_status": "ok",
-      "next_retry_after": "",
+      "degraded_runs": 1,
+      "error": 1,
+      "last_detail": "HTTP Error 403: rate limit exceeded",
+      "last_status": "error",
+      "next_retry_after": "2026-07-11T00:37:21+00:00",
       "ok": 7,
-      "ok_streak": 7,
+      "ok_streak": 0,
       "permanent_streak": 0,
-      "status": "ok"
+      "status": "degraded"
     }
   },
   "disabled": [
+    "reddit-rss:GithubCopilot",
     "release:KrisPowers/atlas-mcp",
     "release:shreyasks094/Zeus",
     "tag:KrisPowers/atlas-mcp",
