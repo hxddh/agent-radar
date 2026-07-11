@@ -7,12 +7,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users, but external market-wide adoption still needs corroboration.
-- Recent changes: OpenAI discontinued standalone ChatGPT Atlas browser agent; merged into unified desktop app combining Chat, Work, and Codex (2026-07-10). Codex gains more prominent position in OpenAI product surface. GPT-5.6 Sol, Terra, Luna models now available in GitHub Copilot (2026-07-09 changelog).
-- Source: https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex
+- Recent changes: Codex CLI v0.144.1 on npm and v0.145.0-alpha.4 on GitHub (2026-07-11). GPT-5.6 ships with "all-day agent" capability after federal hold (2026-07-11). OpenAI discontinued standalone ChatGPT Atlas browser agent; merged into unified desktop app (2026-07-10). GPT-5.6 Sol, Terra, Luna models available in GitHub Copilot (2026-07-09).
+- Source: https://www.npmjs.com/package/%40openai/codex
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: v2.1.206 released (2026-07-10). Anthropic published 'The Making of Claude Code' blog (2026-07-10) and 'hard questions' invitation with Fable 5 jailbreak scoring framework (2026-07-10). Anthropic published containment engineering post (2026-07-09, covered). China issued a security alert claiming a backdoor in Claude Code (2026-07-10); pending official Anthropic response. GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, $165k pre-merge run cost anecdote, prove-it gate pattern (verify.sh), async long-running task pattern, and /checkup command for CLAUDE.md hygiene. HN users report 'Fable July 12th disclaimer' disappeared from Claude Code UI.
+- Recent changes: v2.1.207 released (2026-07-11), continuing rapid patch cadence. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). User reports: 5hr quota consumed entirely leaving no chat quota (Bluesky, 2026-07-11). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, prove-it gate pattern, async long-running task pattern.
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.207
 ## Cursor
 
 Status:
@@ -279,8 +280,8 @@ Name:
 ## GitHub Copilot
 - Category: AI coding assistant / agent
 - Maturity: Mature product with millions of users; expanding agent capabilities and model choices.
-- Recent changes: GPT-5.6 Sol, Terra, and Luna models now available in GitHub Copilot (2026-07-09 changelog). Three new model tiers give operators model-routing choices within Copilot, aligning with cost-economics thesis. GitHub Innersource security advisories now generally available, impacting enterprise agent security.
-- Source: https://github.blog/changelog/2026-07-09-openais-gpt-5-6-sol-terra-and-luna-are-now-available-in-github-copilot
+- Recent changes: Copilot CLI v1.0.70 on npm (2026-07-11). GPT-5.6 Sol, Terra, and Luna models available in GitHub Copilot (2026-07-09). GitHub Innersource security advisories now GA. PR dashboard GA includes agent-created PRs in author search (2026-07-09). CodeQL 2.26.0 adds AI prompt-injection detection (2026-07-10).
+- Source: https://www.npmjs.com/package/%40github/copilot
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.

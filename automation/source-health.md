@@ -4,17 +4,17 @@ Last checked: 2026-07-11
 
 | Source | Status | Detail |
 | --- | --- | --- |
-| page:xai-news | ok |  |
-| page:e2b-blog | ok |  |
-| page:mistral-news | ok |  |
-| page:github-trending | ok |  |
-| page:modal-blog | ok |  |
-| page:daytona-blog | ok |  |
-| page:openrouter-announcements | ok |  |
 | page:meta-ai-blog | ok |  |
+| page:devin-releases | ok |  |
+| page:replit-updates | ok |  |
+| page:warp-changelog | ok |  |
+| page:cloudflare-changelog | ok |  |
+| page:factory-news | ok |  |
+| page:amp-chronicle | ok |  |
+| page:raycast-changelog | ok |  |
 | pypi-package:mcp | ok |  |
 | pypi-package:langchain | ok |  |
-| pypi-package:crewai | error | <urlopen error timed out> |
+| pypi-package:crewai | ok |  |
 | pypi-package:openai | ok |  |
 | pypi-package:anthropic | ok |  |
 | pypi-package:llama-index | ok |  |
@@ -38,49 +38,49 @@ Last checked: 2026-07-11
 | tag:e2b-dev/E2B | ok |  |
 | release:vercel/ai | ok |  |
 | tag:vercel/ai | ok |  |
+| release:cloudflare/agents | ok |  |
+| tag:cloudflare/agents | ok |  |
 | release:cline/cline | ok |  |
 | tag:cline/cline | ok |  |
 | release:Aider-AI/aider | ok |  |
 | tag:Aider-AI/aider | ok |  |
 | release:google-gemini/gemini-cli | ok |  |
-| tag:google-gemini/gemini-cli | error | HTTP Error 403: rate limit exceeded |
-| release:QwenLM/qwen-code | error | HTTP Error 403: rate limit exceeded |
-| tag:QwenLM/qwen-code | error | HTTP Error 403: rate limit exceeded |
-| release:All-Hands-AI/OpenHands | error | HTTP Error 403: rate limit exceeded |
-| tag:All-Hands-AI/OpenHands | error | HTTP Error 403: rate limit exceeded |
-| release:browser-use/browser-use | error | HTTP Error 403: rate limit exceeded |
-| tag:browser-use/browser-use | error | HTTP Error 403: rate limit exceeded |
-| release:block/goose | error | HTTP Error 403: rate limit exceeded |
-| tag:block/goose | error | HTTP Error 403: rate limit exceeded |
-| release:continuedev/continue | error | HTTP Error 403: rate limit exceeded |
-| tag:continuedev/continue | error | HTTP Error 403: rate limit exceeded |
-| release:RooCodeInc/Roo-Code | error | HTTP Error 403: rate limit exceeded |
-| tag:RooCodeInc/Roo-Code | error | HTTP Error 403: rate limit exceeded |
-| release:zed-industries/zed | error | HTTP Error 403: rate limit exceeded |
-| tag:zed-industries/zed | error | HTTP Error 403: rate limit exceeded |
-| release:letta-ai/letta | error | HTTP Error 403: rate limit exceeded |
-| tag:letta-ai/letta | error | HTTP Error 403: rate limit exceeded |
-| release:mem0ai/mem0 | error | HTTP Error 403: rate limit exceeded |
-| tag:mem0ai/mem0 | error | HTTP Error 403: rate limit exceeded |
-| release:langfuse/langfuse | error | HTTP Error 403: rate limit exceeded |
-| tag:langfuse/langfuse | error | HTTP Error 403: rate limit exceeded |
-| release:pydantic/pydantic-ai | error | HTTP Error 403: rate limit exceeded |
-| tag:pydantic/pydantic-ai | error | HTTP Error 403: rate limit exceeded |
-| release:mastra-ai/mastra | error | HTTP Error 403: rate limit exceeded |
-| tag:mastra-ai/mastra | error | HTTP Error 403: rate limit exceeded |
-| release:huggingface/smolagents | error | HTTP Error 403: rate limit exceeded |
-| tag:huggingface/smolagents | error | HTTP Error 403: rate limit exceeded |
-| release:TencentCloud/CubeSandbox | error | HTTP Error 403: rate limit exceeded |
-| tag:TencentCloud/CubeSandbox | error | HTTP Error 403: rate limit exceeded |
-| release:mitos-run/mitos | error | HTTP Error 403: rate limit exceeded |
-| tag:mitos-run/mitos | error | HTTP Error 403: rate limit exceeded |
-| release:cleatdev/cleat | error | HTTP Error 403: rate limit exceeded |
-| tag:cleatdev/cleat | error | HTTP Error 403: rate limit exceeded |
-| release:sipyourdrink-ltd/bernstein | error | HTTP Error 403: rate limit exceeded |
-| tag:sipyourdrink-ltd/bernstein | error | HTTP Error 403: rate limit exceeded |
-| release:future-agi/future-agi | error | HTTP Error 403: rate limit exceeded |
-| tag:future-agi/future-agi | error | HTTP Error 403: rate limit exceeded |
-| release:IRsoctierDT/ai-agentic-mcpscan | error | HTTP Error 403: rate limit exceeded |
-| tag:IRsoctierDT/ai-agentic-mcpscan | error | HTTP Error 403: rate limit exceeded |
-| release:junter1989k-ai/mexico-payments-mcp | error | HTTP Error 403: rate limit exceeded |
-| tag:junter1989k-ai/mexico-payments-mcp | error | HTTP Error 403: rate limit exceeded |
+| tag:google-gemini/gemini-cli | ok |  |
+| release:QwenLM/qwen-code | ok |  |
+| tag:QwenLM/qwen-code | ok |  |
+| release:All-Hands-AI/OpenHands | ok |  |
+| tag:All-Hands-AI/OpenHands | ok |  |
+| release:browser-use/browser-use | ok |  |
+| tag:browser-use/browser-use | ok |  |
+| release:block/goose | ok |  |
+| tag:block/goose | ok |  |
+| release:continuedev/continue | ok |  |
+| tag:continuedev/continue | ok |  |
+| release:RooCodeInc/Roo-Code | ok |  |
+| tag:RooCodeInc/Roo-Code | ok |  |
+| release:zed-industries/zed | ok |  |
+| tag:zed-industries/zed | ok |  |
+| release:letta-ai/letta | ok |  |
+| tag:letta-ai/letta | ok |  |
+| release:mem0ai/mem0 | ok |  |
+| tag:mem0ai/mem0 | ok |  |
+| release:langfuse/langfuse | ok |  |
+| tag:langfuse/langfuse | ok |  |
+| release:pydantic/pydantic-ai | ok |  |
+| tag:pydantic/pydantic-ai | ok |  |
+| release:mastra-ai/mastra | ok |  |
+| tag:mastra-ai/mastra | ok |  |
+| release:huggingface/smolagents | ok |  |
+| tag:huggingface/smolagents | ok |  |
+| release:omnigent-ai/omnigent | ok |  |
+| tag:omnigent-ai/omnigent | ok |  |
+| release:ncz-os/mnemos | ok |  |
+| tag:ncz-os/mnemos | ok |  |
+| release:AdelElo13/neuromcp | ok |  |
+| tag:AdelElo13/neuromcp | ok |  |
+| release:danilkryachko/dukememory | ok |  |
+| tag:danilkryachko/dukememory | ok |  |
+| release:ronie-aduana/mcp-ai-memory | ok |  |
+| tag:ronie-aduana/mcp-ai-memory | ok |  |
+| release:bobmatnyc/trusty-tools | ok |  |
+| tag:bobmatnyc/trusty-tools | ok |  |
