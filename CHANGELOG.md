@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.19.3 - 2026-07-12
+
+Third and final hotfix on Issue #59 — same class as the weekly fix, now on the daily: the verification run's daily task legitimately produced 75,349 chars (22k day block + ~76 Radar Sweep lines + research-log/sources updates, bilingual) and was refused by the 64k cap. The run also proved v0.19.2 works: the push succeeded through the union-merge/retry path and every other task's output was committed.
+
+### Fixed
+- `MAX_RESPONSE_CHARS` default 64k → **96k** for all tasks (matching weekly/monthly). Published content stays bounded by the 22k day-block append cap and the template/direction gates; the response cap only guards against runaway JSON. `runner-rules.md` updated.
+
 ## v0.19.2 - 2026-07-12
 
 Second hotfix on Issue #59: the v0.19.1 verification run succeeded through every report task, then **lost its entire 11-file commit at the push step** — a concurrent push to main during the 33-minute run made `git pull --rebase` conflict in `research-log.md` / `storage-angle.md` and the job died.

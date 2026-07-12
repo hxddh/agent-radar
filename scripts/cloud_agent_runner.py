@@ -70,7 +70,7 @@ DEFAULT_SCREEN_POOL_ITEMS = 560
 # rejecting otherwise-valid synthesis (seen on 2026-07-09 verification).
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
 # synthesis model legitimately produces ~40k (bilingual block + research-log).
-DEFAULT_MAX_RESPONSE_CHARS = 64_000
+DEFAULT_MAX_RESPONSE_CHARS = 96_000
 # Weekly/monthly synthesis cap; see max_response_chars().
 DEFAULT_MAX_SYNTHESIS_RESPONSE_CHARS = 96_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
@@ -2094,9 +2094,10 @@ def should_skip_source_sweep(root: Path, screen_text: str | None) -> tuple[bool,
 
 
 def max_response_chars(task: str = "") -> int:
-    # Weekly/monthly aggregate a whole period of v0.19-width day blocks
-    # (scorecard + numbers table + bilingual sections); their legitimate JSON
-    # runs past the daily cap (69.9k seen on 2026-07-12, Issue #59).
+    # One generous cap for every task (96k): under the v0.19 funnel the daily
+    # legitimately produced 75.3k (weekly 69.9k the same day — Issue #59).
+    # Published content is bounded by the day-block append cap and template
+    # gates; this cap only guards against runaway JSON.
     if task in {"weekly", "monthly"}:
         return env_int("MAX_SYNTHESIS_RESPONSE_CHARS", DEFAULT_MAX_SYNTHESIS_RESPONSE_CHARS)
     return env_int("MAX_RESPONSE_CHARS", DEFAULT_MAX_RESPONSE_CHARS)
