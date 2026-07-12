@@ -2371,15 +2371,16 @@ class TransportResilienceTest(unittest.TestCase):
                     parsed = cloud_agent_runner.call_openrouter_model("prompt", "model-a")
         self.assertIn("choices", parsed)
 
-    def test_max_response_chars_task_aware(self) -> None:
+    def test_max_response_chars_generous_for_all_tasks(self) -> None:
+        # Issue #59 round 3: the daily legitimately produced 75.3k chars under
+        # the v0.19 funnel; every task now gets the 96k cap by default.
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(cloud_agent_runner.max_response_chars("daily"), 64_000)
+            self.assertEqual(cloud_agent_runner.max_response_chars("daily"), 96_000)
             self.assertEqual(cloud_agent_runner.max_response_chars("weekly"), 96_000)
             self.assertEqual(cloud_agent_runner.max_response_chars("monthly"), 96_000)
-        big = "x" * 70_000
-        cloud_agent_runner.validate_response_size(big, "weekly")
+        cloud_agent_runner.validate_response_size("x" * 80_000, "daily")
         with self.assertRaises(SystemExit):
-            cloud_agent_runner.validate_response_size(big, "daily")
+            cloud_agent_runner.validate_response_size("x" * 100_000, "daily")
 
 
 class AuditLoopTest(unittest.TestCase):
