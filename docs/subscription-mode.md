@@ -43,6 +43,16 @@ Behavior:
 
 If you only have a ChatGPT/Codex subscription, you can still use the project, but it is not fully unattended from GitHub Actions.
 
+> **WARNING — never run this mode on a schedule alongside an Actions mode.**
+> A scheduled subscription-mode agent (e.g. ChatGPT Scheduled Tasks) pushing
+> directly to `main` duplicates every report the Actions pipeline already
+> produces, overwrites its richer output (the Actions pipeline carries the
+> current template/gates; an external agent does not), and races the 30–50
+> minute Actions runs (a mid-run push once cost a full run's output —
+> Issue #59). Pick ONE unattended mode. If you keep a subscription-mode agent
+> as a manual backup, instruct it to push to a branch and open a PR — never
+> directly to `main`.
+
 What works:
 
 - Use Codex Cloud or ChatGPT interactively against the repository.
