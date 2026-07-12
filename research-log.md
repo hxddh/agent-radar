@@ -2240,3 +2240,13 @@ Promoted candidates:
 - **scr-atlas-detect**: atlas-detect (crates.io). Promoted to radar.md as security primitive. Reason: Early security primitive covering MITRE ATLAS techniques; reinforces thesis 9. promotion_status: promoted.
 
 Deferred candidates: All other candidates in the inbox have defer_count incremented by 1. No candidates reached defer_count >= 3 or exceeded stale_after_days.
+
+## Weekly synthesis pass (2026-07-12, 2026-W28)
+
+- Replaced the rolling draft in `weekly/2026-W28.md` with a durable block-bilingual weekly synthesis for 2026-07-06 through 2026-07-12. Reason: prior draft carried W27 context and had inconsistent evidence labels around unverified evaluation claims.
+- Sources reviewed: W28 daily entries in `daily/2026-07.md`, `research-log.md`, `radar.md`, `agent-watchlist.md`, `user-field-notes.md`, `playbook.md`, `storage-angle.md`, `sources.md`, runner weekly metrics, and direction notes from `scripts/cloud_agent_runner.py`.
+- Judgment: no thesis wording change. Thesis 9 (containment/security), thesis 10 (cost economics), and thesis 4 (uneven UX) gained confidence; thesis 6 remained steady; MCP convergence gained evidence but still has fragmentation risk.
+- Promoted workflow pattern: independent verification gate added to `playbook.md`, based on prove-it gate, agent deception measurement, and verification-loop signals.
+- Storage update: added verification artifacts and command-level audit logs to `storage-angle.md`.
+- Watchlist maintenance: refreshed dated review markers for stale-but-still-active mainstream sections: Cursor, Devin, Replit Agent, Warp, Amp, Factory, Raycast AI, and Vercel Sandbox-related workflow.
+- Corroboration handling: GPT-5.6 efficiency, DeepSeek verification-loop numerical gains, agenticow 83x, Meta 1M context, Claude Cowork 8.7% coding share, and $165k / 5.9B-token anecdote remain caution-labeled until primary or reproducible evidence is available.

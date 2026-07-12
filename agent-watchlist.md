@@ -17,6 +17,7 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cursor
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but independent reliability and cost evidence remains weak.
 - Category: AI IDE / coding agent
 - Maturity: Mature AI IDE with expanding automation and SDK surface; exact adoption metrics still source required.
 - Core use case: Interactive coding, local/cloud agent tasks, and repeated workflow automations.
@@ -32,6 +33,7 @@ Status:
 ## Devin / Cognition
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but independent evidence on rescued vs successful sessions remains weak.
 - Category: Coding agent / software engineering agent
 - Maturity: Enterprise-oriented product with active release notes; adoption strength still needs external user evidence.
 - Core use case: Software engineering sessions, code review, automations, Slack/Linear workflows, and enterprise review loops.
@@ -62,6 +64,7 @@ Status:
 ## Replit Agent
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but payment-flow reliability and production handoff evidence remains weak.
 - Category: App-building agent
 - Maturity: Productized app-building agent with active official changelog.
 - Core use case: Creating, updating, deploying, and asking questions about Replit apps.
@@ -77,6 +80,7 @@ Status:
 ## Warp
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but broad field evidence for multi-agent terminal sessions remains weak.
 - Category: Terminal / developer workflow agent
 - Maturity: Productized terminal with active agent-focused changelog.
 - Core use case: Terminal-centered agent workflows, code review comment routing, CLI agent coordination, and MCP-backed context.
@@ -92,6 +96,7 @@ Status:
 ## Amp
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but enterprise adoption and reliability evidence remains weak.
 - Category: Coding agent
 - Maturity: Active coding-agent product with frequent public Chronicle updates.
 - Core use case: Coding agent threads across web, CLI, mobile, plugin workflows, and diff review.
@@ -107,6 +112,7 @@ Status:
 ## Factory
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but the end-to-end software factory loop still needs public field evidence.
 - Category: Software development agent
 - Maturity: Enterprise-positioned agent-native development platform; adoption evidence still source required.
 - Core use case: Agent-native software delivery across planning, coding, testing, reviewing, securing, shipping, and monitoring.
@@ -122,6 +128,7 @@ Status:
 ## Raycast AI
 
 Status:
+- Last reviewed: 2026-07-12; W28 found no demotion trigger, but memory/tool-loading quality still needs real workflow evidence.
 - Category: Desktop productivity agent
 - Maturity: Mature desktop productivity app with expanding AI surfaces in v2.
 - Core use case: Desktop AI Chat, Quick AI, commands, extensions, skills, MCP servers, and personalization.
@@ -137,6 +144,7 @@ Status:
 ## Vercel AI / Sandbox-Related Agent Workflow
 
 Status:
+- Last reviewed: 2026-07-12; W28 strengthened sandbox/eval relevance through Vercel trace and eval-tool signals, while usage evidence remains weak.
 - Category: AI app infrastructure / sandbox workflow
 - Maturity: Sandbox docs are public and productized; broad adoption evidence remains weak.
 - Core use case: Safe execution of untrusted or generated code for AI agents, code generation, and developer experimentation.

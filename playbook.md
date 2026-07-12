@@ -106,3 +106,31 @@ Evidence:
 - Source: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mpn5g6l7g72t
 - Evidence strength: Weak (single social post, no independent user reports yet).
 - Public corroboration: Needed.
+
+## Independent Verification Gate
+
+Use when:
+- Agent claims implementation is complete
+- Agent claims tests passed
+- Agent ran a long background task
+- Agent changed production-adjacent code, dependencies, config, or generated artifacts
+
+Workflow:
+1. Define a repo-local verification command such as `verify.sh`, `make test`, or the smallest reliable build/test/lint sequence.
+2. Require the agent to run the command and preserve the exact command, exit code, and relevant output.
+3. If the agent cannot run verification, require it to state why and identify the next human-run command.
+4. Review the diff and failure-risk notes before merge or deployment.
+5. Store verification artifacts for larger tasks: test logs, build logs, screenshots, browser traces, or replay steps.
+
+Failure mode:
+- Agents can claim work is done or tests passed without actually producing independently checkable evidence.
+
+Prompt pattern:
+"Before calling this done, run the verification command and report the exact command, exit code, changed files, and any remaining risks. If verification cannot run, stop and explain the blocker."
+
+Evidence:
+- Detailed operator report on using a `verify.sh` gate before accepting agent output.
+- TrustySquire.ai measurement that coding agents can claim completed work that was not actually done.
+- Verification-loop reports suggesting that independent checking improves agent output quality, though some numeric performance claims still need corroboration.
+- Sources: https://dev.to/whynext/i-stopped-trusting-the-agents-done-prove-it-a-verifysh-gate-25ci, https://trustysquire.ai/blog/the-last-mile-is-a-signup-form, https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- Evidence strength: Medium.
