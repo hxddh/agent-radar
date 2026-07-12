@@ -265,26 +265,10 @@ Status:
 - Source: https://github.com/Mng-dev-ai/agentrove
 
 ## Candidate Template
-
-Name:
-- Category:
-- Why it matters:
-- Recent signal:
-- Source class:
-- Source visibility:
-- Evidence strength:
-- User evidence:
-- Infra angle:
-- Risk:
-- Public corroboration:
-- Watch next:
-
-
+- **Deprioritized (2026-07-12)**: placeholder entry without evidence. Removed from active watchlist.
 ## Microsoft agent-framework
-- Category: Multi-agent orchestration framework
-- Maturity: Official Microsoft framework with 11k+ stars; Python and .NET support; production-grade multi-agent orchestration.
-- Recent changes: Now at 11.9k stars; gaining traction as a production-grade multi-agent framework. Microsoft also released the Agent Governance Toolkit (4.7k stars) for policy enforcement and zero-trust sandboxing, complementing the framework.
-- replace_section anchor: `## Microsoft agent-framework`
+- Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
+- Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: AI coding assistant / agent
 - Maturity: Mature product with millions of users; expanding agent capabilities and model choices.
@@ -318,3 +302,8 @@ Name:
 - Maturity: Rapid release cadence; v0.50.0 stable and v0.51.0-preview.0 available.
 - Recent changes: v0.51.0-preview.0 released 2026-07-10; v0.50.0 stable also available. Google also adopted remote MCP server integration for Gemini managed agents, making MCP the default tool layer for Gemini's agent platform. Free CLI agent gaining traction as Claude Code alternative.
 - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+
+## Cloudflare Agents
+
+- Last review: 2026-07-12 (weekly W28). Cloudflare Agents 0.17.3 released 2026-06-30; active development continues. No new independent user workflow report found. Retain as active; refresh in 21 days if no new signal.
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.17.3

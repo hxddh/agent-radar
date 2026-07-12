@@ -17,10 +17,10 @@ Last updated: 2026-07-09
 
 ## Changed Thesis
 ### 2026-07-12
-
 - Added signal: Vercel Agent Eval Playground (npm package) enters agent evaluation space, signaling platform-vendor interest in eval infrastructure. Evidence: official Vercel npm package. Confidence: Medium.
 - Added signal: MITRE ATLAS detection tool (atlas-detect crate) emerges as an early security primitive for AI agent attack detection, reinforcing thesis 9 (agent containment/security as first-class infrastructure). Evidence: crates.io package, 90+ attack techniques covered. Confidence: Low-Medium.
-
+- Added signal: Grok 4.5 pricing undercuts Anthropic and OpenAI on coding agent pricing, impacting thesis 10 (agent cost economics). Evidence: DevOps.com article. Confidence: Medium (pricing not yet independently verified). Source: https://devops.com/spacexais-grok-4-5-undercuts-anthropic-and-openai-on-coding-agent-pricing/
+- Added signal: JetBrains Kotlin Benchmark for AI Coding Agents fills Kotlin-specific evaluation gap, reinforcing thesis 3 (evaluation as core infrastructure). Evidence: official JetBrains blog. Confidence: Medium (benchmark adoption unknown). Source: https://blog.jetbrains.com/kotlin/2026/07/jetbrains-kotlin-benchmark-for-ai-coding-agents/
 ### 2026-07-09
 
 - Merged: former theses 7 (agent memory time-travel), 8 (knowledge bases via MCP), and 9 (MCP ecosystem expansion) into a single thesis 7 (memory + KB + MCP as one converging integration layer). The three tracked the same signal cluster and were scored separately without independent evidence.

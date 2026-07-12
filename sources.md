@@ -937,3 +937,100 @@ Ignore or deprioritize:
 - [infra_primitive] agent-browser: https://crates.io/crates/agent-browser
 - [infra_primitive] agenshield: https://www.npmjs.com/package/agenshield
 - [infra_primitive] @openguardrails/moltguard: https://www.npmjs.com/package/%40openguardrails/moltguard
+
+
+- [mainstream_product] Codex subagent message encryption: https://github.com/openai/codex/issues/28058
+- [mainstream_product] Mistral Vibe AI agent: https://mistral.ai/products/vibe/
+- [mainstream_product] Vercel AI SDK 7.0.22: https://github.com/vercel/ai/releases/tag/ai%407.0.22
+- [mainstream_product] Anthropic Python SDK v0.116.0: https://pypi.org/project/anthropic/
+- [mainstream_product] SpaceXAI Grok 4.5 launch: https://www.reuters.com/business/media-telecom/spacexai-launches-grok-45-model-coding-agentic-tasks-2026-07-08/
+- [mainstream_product] Anthropic containment engineering: https://www.anthropic.com/engineering/how-we-contain-claude
+- [mainstream_product] CodeQL 2.26.0 AI prompt injection detection: https://github.blog/changelog/2026-07-10-codeql-2-26-0-adds-kotlin-2-4-0-support-and-ai-prompt-injection-detection
+- [user_workflow] Terry Tao coding agents blog: https://terrytao.wordpress.com/2026/07/11/old-and-new-apps-via-modern-coding-agents/
+- [user_workflow] ServiceNow virtual agent escalation increase: https://bsky.app/profile/misspepperai.bsky.social/post/3mqgt2wmjs62g
+- [user_workflow] Claude Code bug repro workflow: https://bsky.app/profile/happy-homhom.bsky.social/post/3mqgt5xp4uf26
+- [user_workflow] Rules for AI sub-agents team: https://dev.to/nova-agent/running-a-team-of-ai-sub-agents-what-breaks-and-the-rules-i-built-around-it-3eco
+- [user_workflow] AgentApprove mobile observability: https://www.npmjs.com/package/agentapprove
+- [research] Anthropic hidden reasoning space: https://www.technologyreview.com/2026/07/09/1140293/anthropic-found-a-hidden-space-where-claude-puzzles-over-concepts/
+- [infra_primitive] Mindwalk agent session replay: https://github.com/cosmtrek/mindwalk
+- [infra_primitive] Abralo multi-agent window manager: https://abralo.com
+- [infra_primitive] PanGuard AI Agent Security Platform: https://github.com/panguard-ai/panguard-ai
+- [mainstream_product] Browser-use v0.13.4: https://github.com/browser-use/browser-use/releases/tag/0.13.4
+- [mainstream_product] Cline v4.0.8: https://github.com/cline/cline/releases/tag/v4.0.8
+- [mainstream_product] Claude Code v2.1.207: https://github.com/anthropics/claude-code/releases/tag/v2.1.207
+- [mainstream_product] OpenAI Codex CLI v0.144.1: https://www.npmjs.com/package/@openai/codex
+- [mainstream_product] GitHub Copilot CLI v1.0.70: https://www.npmjs.com/package/@github/copilot
+- [mainstream_product] JetBrains Kotlin Benchmark: https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- [mainstream_product] Anthropic making-of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- [mainstream_product] Microsoft Copilot adoption under 4.5%: https://www.windowslatest.com/2026/07/07/microsoft-365-copilot-adoption-is-under-4-5-after-3-years-only-1-use-it-weekly-yet-prices-went-up/
+- [infra_primitive] Confessor Claude Code access audit: https://github.com/ninjahawk/Confessor
+- [infra_primitive] Persistent memory for Claude Code: https://mentedb.com
+- [research] DeepSeek V4 token share on OpenRouter: https://openrouter.ai/blog/insights/deepseek-v4-adoption/
+- [mainstream_product] Tencent in talks to buy Manus at $2B: https://bsky.app/profile/genticnews.bsky.social/post/3mqeymrcasq27
+- [research] Verification loop 4x DeepSeek: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- [infra_primitive] Stealth browser beats Cloudflare bot detection: https://tilion.dev/blog/cloudflare-blocks-agents
+- [research] GateGuard neural gates: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mqgc3gq2iu22
+- [infra_primitive] Claude Code live memory: https://github.com/shofer-dev/claude-code-live-memory
+- [mainstream_product] OpenAI Codex limit reset for GPT-5.6: https://twitter.com/thsottiaux/status/2075452680760443190
+- [infra_primitive] Praana context-curating agent: https://github.com/amitkumardubey/praana
+- [infra_primitive] Trollbridge agent internet sandbox: https://trollbridge.dev/
+- [mainstream_product] Microsoft Copilot OS leak: https://www.windowscentral.com/microsoft/windows-11/microsoft-copilot-os-revealed-in-leaked-video
+- [infra_primitive] OpenBenchmarks SaaS API for agents: https://openbenchmarks.com
+- [infra_primitive] Aether agent devboxes: https://www.runaether.dev/
+- [mainstream_product] Mistral Vibe code: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Supabase agentic coding with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] Daytona $24M Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [mainstream_product] Google ADK Go 2.0: https://developers.googleblog.com/announcing-adk-go-20/
+- [infra_primitive] Fly.io building agents that don't break themselves: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [mainstream_product] E2B $21M Series A: https://e2b.dev/blog/series-a
+- [mainstream_product] Modal sandboxes: https://modal.com/products/sandboxes
+- [infra_primitive] Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- [mainstream_product] Daytona Stripe Projects: https://www.daytona.io/dotfiles/daytona-stripe-projects
+- [mainstream_product] Vercel deploying Lovable apps: https://vercel.com/changelog/you-can-now-deploy-lovable-apps-to-vercel
+- [mainstream_product] Google agent quality flywheel: https://developers.googleblog.com/driving-the-agent-quality-flywheel-from-your-coding-agent/
+- [infra_primitive] Ampcode remote agent start: https://ampcode.com/news/agents-anywhere
+- [mainstream_product] AWS EMR Spark troubleshooting agent: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-emr-eks-spark-troubleshooting/
+- [mainstream_product] DeepSeek API rate limit docs: https://api-docs.deepseek.com/quick_start/rate_limit
+- [mainstream_product] Mistral Studio: https://mistral.ai/products/studio/
+- [mainstream_product] Mistral Forge: https://mistral.ai/products/forge/
+- [mainstream_product] Supabase official ChatGPT app: https://supabase.com/blog/supabase-is-now-an-official-chatgpt-app
+- [infra_primitive] Fly.io Sprites speak MCP: https://fly.io/blog/unfortunately-mcp/
+- [mainstream_product] Anthropic hard questions: https://www.anthropic.com/news/hard-questions
+- [mainstream_product] Google Gemma 4 12B local agentic: https://developers.googleblog.com/bringing-gemma-4-12b-to-your-laptop-unlocking-local-agentic-workflows-with-google-ai-edge/
+- [mainstream_product] Qwen Code v0.19.9: https://github.com/QwenLM/qwen-code/releases/tag/v0.19.9
+- [mainstream_product] OpenHands Cloud 1.46.0: https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.46.0
+- [mainstream_product] Gemini CLI v0.50.0: https://github.com/google-gemini/gemini-cli/releases/tag/v0.50.0
+- [infra_primitive] Mitos Millisecond MicroVM Sandbox: https://github.com/mitos-run/mitos
+- [infra_primitive] Trusty-Review v0.9.0: https://github.com/bobmatnyc/trusty-tools/releases/tag/trusty-review-v0.9.0
+- [infra_primitive] Patient-Zero supply-chain scanner: https://github.com/0xSteph/patient-zero
+- [infra_primitive] Capability Host Protocol (CHP): https://github.com/capabilityhostprotocol/chp-core
+- [infra_primitive] Clawmetry Agent Observability: https://github.com/vivekchand/clawmetry
+- [infra_primitive] SkillBench Codex Skills Eval: https://github.com/helloJamest/SkillBench
+- [mainstream_product] Langfuse v3.212.0: https://github.com/langfuse/langfuse/releases/tag/v3.212.0
+- [mainstream_product] Pydantic-AI v2.9.0: https://github.com/pydantic/pydantic-ai/releases/tag/v2.9.0
+- [mainstream_product] Goose v1.41.0: https://github.com/aaif-goose/goose/releases/tag/v1.41.0
+- [mainstream_product] OpenCode v1.17.18: https://github.com/anomalyco/opencode/releases/tag/v1.17.18
+- [mainstream_product] E2B SDK 2.32.0: https://github.com/e2b-dev/E2B/releases/tag/e2b%402.32.0
+- [mainstream_product] Cloudflare Agents 0.17.3: https://github.com/cloudflare/agents/releases/tag/agents%400.17.3
+- [infra_primitive] MoAI ADK: https://github.com/modu-ai/moai-adk
+- [infra_primitive] SemNav Semantic Graph MCP: https://github.com/Yasu-umi/semnav
+- [infra_primitive] IronClaw Self-Hosted Agents: https://github.com/IronSecCo/ironclaw
+- [infra_primitive] Superbased Observer (multi-adapter cost tracking): https://open-vsx.org/extension/superbased/superbased-observer
+- [infra_primitive] agent-cli-detector: https://www.npmjs.com/package/agent-cli-detector
+- [infra_primitive] Agenticow (copy-on-write vector memory): https://www.npmjs.com/package/agenticow
+- [infra_primitive] Axme Code (memory & guardrails): https://open-vsx.org/extension/AxmeAI/axme-code
+- [infra_primitive] detect-coding-agent (Rust): https://crates.io/crates/detect-coding-agent
+- [infra_primitive] Vercel agent-eval-playground: https://www.npmjs.com/package/@vercel/agent-eval-playground
+- [mainstream_product] Vercel detect-agent: https://www.npmjs.com/package/@vercel/detect-agent
+- [mainstream_product] LlamaIndex v0.14.23: https://pypi.org/project/llama-index/
+- [mainstream_product] OpenAI Python SDK v2.45.0: https://pypi.org/project/openai/
+- [infra_primitive] rust-mcp-sdk: https://crates.io/crates/rust-mcp-sdk
+- [infra_primitive] Agentic Coding Protocol: https://crates.io/crates/agentic-coding-protocol
+- [infra_primitive] GrepRAG: https://www.npmjs.com/package/greprag
+- [infra_primitive] Mnemoverse: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+- [infra_primitive] Neurotrace: https://open-vsx.org/extension/BlackIronTechnologies/neurotrace
+- [infra_primitive] atomr-agents-sandbox-harness: https://crates.io/crates/atomr-agents-sandbox-harness
+- [infra_primitive] Drylake: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] agent-shield: https://www.npmjs.com/package/@elliotllliu/agent-shield
+- [infra_primitive] YAMTAM Runtime: https://crates.io/crates/yamtam-rt
+- [infra_primitive] Prismo token waste analysis: https://open-vsx.org/extension/getprismo/prismo
