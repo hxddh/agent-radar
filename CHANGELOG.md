@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.19.2 - 2026-07-12
+
+Second hotfix on Issue #59: the v0.19.1 verification run succeeded through every report task, then **lost its entire 11-file commit at the push step** — a concurrent push to main during the 33-minute run made `git pull --rebase` conflict in `research-log.md` / `storage-angle.md` and the job died.
+
+### Fixed
+- **`.gitattributes` with `merge=union`** for append-heavy content files (research-log, storage-angle, user-field-notes, playbook, sources, watchlist, daily/weekly/monthly reports, run logs): overlapping appends from a concurrent push now keep both sides instead of conflicting. Verified to apply during rebase. Screening JSON deliberately excluded (line union breaks JSON; write-once files).
+- **Push retry loop** in the workflow commit step: up to 3 rebase+push attempts with backoff and `git rebase --abort` between attempts, instead of one attempt that discards the whole run on failure.
+
 ## v0.19.1 - 2026-07-12
 
 Hotfix for the 2026-07-12 scheduled run (Issue #59): two independent failures.
