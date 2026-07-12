@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.19.1 - 2026-07-12
+
+Hotfix for the 2026-07-12 scheduled run (Issue #59): two independent failures.
+
+### Fixed
+- **`http.client.IncompleteRead` crashed the daily task**: a model response body cut mid-read is a transient transport failure, but only `URLError`/`HTTPError` were caught. The OpenRouter call loop, the citation liveness checker, and `github_repo_exists` now also catch `http.client.HTTPException` / `TimeoutError` / `OSError` and retry/degrade instead of crashing.
+- **Weekly synthesis rejected at 69.9k chars**: `MAX_RESPONSE_CHARS` (64k) was sized for the daily; weekly/monthly aggregate a whole period of v0.19-width day blocks. The cap is now task-aware: daily keeps 64k, weekly/monthly get `MAX_SYNTHESIS_RESPONSE_CHARS` (default **96k**). `runner-rules.md` updated.
+- Two regression tests: IncompleteRead falls through the fallback chain; the response cap is task-aware (246+2 tests pass).
+
 ## v0.19.0 - 2026-07-10
 
 Funnel widening behind the v0.18 publishing surface, plus removal of stale CI variable overrides that were silently clamping collection.

@@ -2346,6 +2346,42 @@ class SignalDepthTest(unittest.TestCase):
         self.assertGreater(score, 20)  # official lane weight intact, no media penalty
 
 
+class TransportResilienceTest(unittest.TestCase):
+    def test_openrouter_call_retries_incomplete_read(self) -> None:
+        # Issue #59: a response body cut mid-read (http.client.IncompleteRead)
+        # crashed the daily task instead of falling through the retry chain.
+        import http.client as http_client
+        import io
+
+        good = mock.MagicMock()
+        good.__enter__.return_value.read.return_value = json.dumps(
+            {"choices": [{"message": {"content": "{\"summary\": \"ok\"}"}}]}
+        ).encode("utf-8")
+        with mock.patch.dict(
+            os.environ,
+            {"OPENROUTER_API_KEY": "x", "OPENROUTER_FALLBACK_MODELS": "model-b"},
+            clear=False,
+        ):
+            with mock.patch.object(
+                urllib.request,
+                "urlopen",
+                side_effect=[http_client.IncompleteRead(b"y" * 10), good],
+            ):
+                with mock.patch.object(cloud_agent_runner.time, "sleep"):
+                    parsed = cloud_agent_runner.call_openrouter_model("prompt", "model-a")
+        self.assertIn("choices", parsed)
+
+    def test_max_response_chars_task_aware(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(cloud_agent_runner.max_response_chars("daily"), 64_000)
+            self.assertEqual(cloud_agent_runner.max_response_chars("weekly"), 96_000)
+            self.assertEqual(cloud_agent_runner.max_response_chars("monthly"), 96_000)
+        big = "x" * 70_000
+        cloud_agent_runner.validate_response_size(big, "weekly")
+        with self.assertRaises(SystemExit):
+            cloud_agent_runner.validate_response_size(big, "daily")
+
+
 class AuditLoopTest(unittest.TestCase):
     """v0.10.0: sharded screening, claim audit, direction-asset injection."""
 
