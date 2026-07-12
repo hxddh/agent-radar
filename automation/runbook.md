@@ -44,6 +44,13 @@ grep -RInE --exclude=validate.yml --exclude-dir=.git --exclude-dir=__pycache__ '
 
 If the scan finds a likely real secret, stop before committing.
 
+## External agents
+
+Only ONE unattended pipeline may push reports directly to `main` (the GitHub
+Actions cloud agent). Any other agent following these runbooks (hosted chat
+session, local CLI, scheduled subscription task) must push to a branch and
+open a PR instead. See `docs/subscription-mode.md`.
+
 ## Commit Style
 
 - Daily: `Update daily agent radar YYYY-MM-DD`
