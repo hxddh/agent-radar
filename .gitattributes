@@ -1,0 +1,19 @@
+# Append-heavy content files: when a cloud-agent run races a concurrent push,
+# resolve overlapping appends by keeping BOTH sides instead of failing the
+# run's final rebase and losing 30-50 minutes of output (Issue #59, second
+# failure). Union merge is line-based and applies during rebase as well.
+research-log.md merge=union
+storage-angle.md merge=union
+user-field-notes.md merge=union
+playbook.md merge=union
+sources.md merge=union
+agent-watchlist.md merge=union
+daily/*.md merge=union
+weekly/*.md merge=union
+monthly/*.md merge=union
+automation/runs/*.md merge=union
+automation/source-health.md merge=union
+automation/source-lanes.md merge=union
+# NOTE: automation/screening/*.json is deliberately NOT union-merged — line
+# union on JSON yields invalid JSON; those files are write-once per day and
+# effectively never conflict.
