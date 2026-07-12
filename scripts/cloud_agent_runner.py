@@ -13,6 +13,7 @@ import concurrent.futures
 import datetime as dt
 import hashlib
 import html
+import http.client
 import importlib.util
 import json
 import os
@@ -70,6 +71,8 @@ DEFAULT_SCREEN_POOL_ITEMS = 560
 # v0.11 raised the day block to 14k chars but left this at 32k; the strong
 # synthesis model legitimately produces ~40k (bilingual block + research-log).
 DEFAULT_MAX_RESPONSE_CHARS = 64_000
+# Weekly/monthly synthesis cap; see max_response_chars().
+DEFAULT_MAX_SYNTHESIS_RESPONSE_CHARS = 96_000
 # Sharded screening merges up to ~24 candidates; show synthesis a wider slice
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 22_000
@@ -2090,12 +2093,17 @@ def should_skip_source_sweep(root: Path, screen_text: str | None) -> tuple[bool,
     return False, ""
 
 
-def max_response_chars() -> int:
+def max_response_chars(task: str = "") -> int:
+    # Weekly/monthly aggregate a whole period of v0.19-width day blocks
+    # (scorecard + numbers table + bilingual sections); their legitimate JSON
+    # runs past the daily cap (69.9k seen on 2026-07-12, Issue #59).
+    if task in {"weekly", "monthly"}:
+        return env_int("MAX_SYNTHESIS_RESPONSE_CHARS", DEFAULT_MAX_SYNTHESIS_RESPONSE_CHARS)
     return env_int("MAX_RESPONSE_CHARS", DEFAULT_MAX_RESPONSE_CHARS)
 
 
-def validate_response_size(output_text: str) -> None:
-    limit = max_response_chars()
+def validate_response_size(output_text: str, task: str = "") -> None:
+    limit = max_response_chars(task)
     if len(output_text) > limit:
         raise SystemExit(
             f"Model response exceeds MAX_RESPONSE_CHARS ({limit}): got {len(output_text)} chars. "
@@ -2765,7 +2773,7 @@ def url_reachability(url: str, timeout: int = 8) -> tuple[str, str]:
             if method == "HEAD" and exc.code in {405, 501}:
                 continue
             return "unknown", f"HTTP {exc.code}"
-        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+        except (urllib.error.URLError, http.client.HTTPException, TimeoutError, ValueError, OSError):
             return "unknown", "network error"
     return "unknown", "network error"
 
@@ -4622,7 +4630,7 @@ def github_repo_exists(root: Path, repo: str) -> bool:
             radar_collector_state.record_repo_rejection(root, repo, f"HTTP Error {exc.code}: Not Found")
             return False
         return False
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+    except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError, json.JSONDecodeError):
         return False
 
 
@@ -5456,8 +5464,10 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
             if exc.code not in retryable_status:
                 break
             continue
-        except urllib.error.URLError as exc:
-            last_error = f"OpenRouter transport error for {candidate_model}: {exc}"
+        except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exc:
+            # Includes http.client.IncompleteRead: a response cut mid-body is a
+            # transient transport failure, not a task-level crash (Issue #59).
+            last_error = f"OpenRouter transport error for {candidate_model}: {exc!r}"
             continue
         try:
             parsed = json.loads(raw)
@@ -6370,7 +6380,7 @@ def run_task(
         shared_screened=screen_text,
     )
     output_text = response_output_text(data)
-    validate_response_size(output_text)
+    validate_response_size(output_text, task)
     RUN_AUDIT["output_chars"] = len(output_text)
     try:
         result = json.loads(output_text)
