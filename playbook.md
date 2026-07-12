@@ -134,3 +134,10 @@ Evidence:
 - Verification-loop reports suggesting that independent checking improves agent output quality, though some numeric performance claims still need corroboration.
 - Sources: https://dev.to/whynext/i-stopped-trusting-the-agents-done-prove-it-a-verifysh-gate-25ci, https://trustysquire.ai/blog/the-last-mile-is-a-signup-form, https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
 - Evidence strength: Medium.
+
+
+### Two-agent feedback loop for self-correcting code (Claude Code)
+- Trick: Create a Claude Code custom skill that spawns two agents: one to implement a task, another to run the test suite and report failures. The loop iterates until all tests pass.
+- When useful: For self-contained tasks with well-defined tests; avoids manual fix-test cycles.
+- Evidence: Single user report on Bluesky (https://bsky.app/profile/jamiebykovbrett.bsky.social/post/3mqgw7dkuhr2d); requires generalization.
+- Should promote to playbook? kept as candidate until more evidence.

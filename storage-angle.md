@@ -195,3 +195,8 @@ AI Agent workloads create demand for:
 - **Verification artifacts become acceptance evidence**: Prove-it gate, TrustySquire deception measurement, and verification-loop reports all point to a storage need beyond chat transcripts: retained command lines, exit codes, test logs, build logs, screenshots, browser traces, and replay steps that can prove or disprove an agent's completion claim. Evidence strength: Medium; some numeric verification-loop claims remain `needs-corroboration`. Sources: https://dev.to/whynext/i-stopped-trusting-the-agents-done-prove-it-a-verifysh-gate-25ci, https://trustysquire.ai/blog/the-last-mile-is-a-signup-form, https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
 
 - **Command-level audit logs are a security boundary**: Public reports of coding agents executing risky install commands in auto mode imply that shell transcripts alone are not enough; agent platforms need stored approval/rejection metadata, command risk classification, package provenance, and post-incident search over agent actions. Evidence strength: Medium (single public report plus broader supply-chain signals). Sources: https://bsky.app/profile/hadley.nz/post/3mqcyzbsgkc2d and https://intel.threadlinqs.com/threat/TL-2026-1164
+
+
+### 2026-07-12
+- Anthropic containment post emphasizes sandbox boundaries and blast-radius isolation, implying need for per-agent storage segmentation and ephemeral snapshots. Source: https://www.anthropic.com/engineering/how-we-contain-claude
+- Rise of sandbox-based agent execution (Daytona, Modal, Mitos) points to fast-cloning file systems and rapid checkpointing; storage primitives with minimal clone latency (e.g., copy-on-write) become critical.
