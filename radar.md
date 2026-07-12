@@ -16,6 +16,10 @@ Last updated: 2026-07-09
 10. Agent cost economics (model pricing pressure, token budgets, quota windows) increasingly shape agent adoption and tool choice; operators route work across tools by remaining quota rather than committing to one.
 
 ## Changed Thesis
+### 2026-07-12
+
+- Added signal: Vercel Agent Eval Playground (npm package) enters agent evaluation space, signaling platform-vendor interest in eval infrastructure. Evidence: official Vercel npm package. Confidence: Medium.
+- Added signal: MITRE ATLAS detection tool (atlas-detect crate) emerges as an early security primitive for AI agent attack detection, reinforcing thesis 9 (agent containment/security as first-class infrastructure). Evidence: crates.io package, 90+ attack techniques covered. Confidence: Low-Medium.
 
 ### 2026-07-09
 
@@ -36,7 +40,6 @@ Last updated: 2026-07-09
 - Initial setup.
 - Added thesis points 6-8 based on Omnigent, Vestige, and Obsidian Turbocharged signals.
 - Added thesis point 9 based on proliferation of memory, web access, observability, and security MCP servers in the 2026-07-02 snapshot.
-
 ## Open Questions
 
 - Will agent usage remain IDE-centric, or shift toward cloud task runners?

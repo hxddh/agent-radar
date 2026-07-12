@@ -45,7 +45,6 @@ AI Agent workloads create demand for:
   - Source: https://github.com/rivet-dev/agentos
 
 ### Agent Memory
-
 - 2026-07-02: Raycast v2 introduces Profile and Memory as editable personalization surfaces for Raycast AI.
   - Source class: Official public source.
   - Evidence strength: Strong.
@@ -73,6 +72,10 @@ AI Agent workloads create demand for:
   - Evidence strength: Weak (all repos have 0-1 stars, but high technical relevance).
   - Source status: inference, needs-corroboration
 
+- 2026-07-12: agenticow (npm package) claims copy-on-write vector branching for agent memory, 83x faster than alternatives. Early memory primitive with performance claim; needs independent benchmarks.
+  - Source class: Official public source (npm).
+  - Evidence strength: Medium (npm package, performance claim unverified; Number check: 83x claim needs verification).
+  - Source: https://www.npmjs.com/package/agenticow
 ### Artifact and Report Storage
 
 - 2026-07-02: Cloudflare temporary accounts create a 60-minute live deployment and claim flow for agent-created Workers. This is a useful pattern for temporary artifacts that can later become persistent resources.

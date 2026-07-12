@@ -1,0 +1,1627 @@
+{
+  "summary": "xAI Grok 4.5 launch dominates with multi-platform coverage; Microsoft Copilot OS leaks and DeepSeek V4 adoption are key mainstream signals. Security themes strong: Codex subagent encryption, Anthropic covert tracking, local agent auditors. User workflow signals around Claude Code alternatives, Codex rate limits, and multi-agent orchestration. | Anthropic details Claude Code's origin and containment strategies; JetBrains launches Kotlin AI coding benchmark; Mistral unveils Vibe coding agent; Daytona raises $24M for agent sandboxes; Google ADK Go 2.0 for multi-agent apps; OpenAI releases GPT-5.6 family (Sol, Terra, Luna). | Recent agent ecosystem releases: Claude Code, Cline, OpenHands, Browser-use, Vercel AI SDK, OpenAI Codex alpha, etc. Infra: mitos sandbox, open-agent-hub. No user workflow reports. Gaps: social/discussion, user field reports. | Packages shard shows strong mainstream product releases (OpenAI Codex CLI, GitHub Copilot CLI, HashiCorp Terraform MCP server) and a wave of infra primitives in eval, security, memory, and observability. No user workflow field reports in this shard.",
+  "candidates": [
+    {
+      "id": "scr-grok45launch",
+      "title": "xAI launches Grok 4.5 for coding and agentic tasks",
+      "why_it_matters": "New frontier coding model with cost efficiency claims but hallucination rate doubled to 54%; Grok Build terminal agent also launched",
+      "evidence": [
+        "https://www.reuters.com/business/media-telecom/spacexai-launches-grok-45-model-coding-agentic-tasks-2026-07-08/",
+        "https://abz.global/technology/xai-just-launched-grok-build-ai-coding-agents-are-moving-into-the-terminal",
+        "https://bsky.app/profile/cristianuibar.bsky.social/post/3mqdsta3u5626",
+        "https://bsky.app/profile/ebibibibibibi.bsky.social/post/3mqdyn7ybpx2m"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 4,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-mscopilotos",
+      "title": "Microsoft Copilot OS / Project Aion leaked",
+      "why_it_matters": "Leaked video shows Windows OS built entirely around Copilot and agentic AI; potential platform shift for agent deployment",
+      "evidence": [
+        "https://www.windowscentral.com/microsoft/windows-11/project-aion-copilot-os-faq",
+        "https://www.windowscentral.com/microsoft/windows-11/microsoft-copilot-os-revealed-in-leaked-video-lightweight-windows-os-exploration-features-new-desktop-ui-built-entirely-around-copilot-and-agentic-ai"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-deepseekv4share",
+      "title": "DeepSeek V4 earning agentic token share on OpenRouter",
+      "why_it_matters": "DeepSeek V4 gaining real adoption for agentic workloads; cost-competitive frontier model gaining traction",
+      "evidence": [
+        "https://openrouter.ai/blog/insights/deepseek-v4-adoption/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anthropictrack",
+      "title": "Anthropic's covert Claude tracking code discovered",
+      "why_it_matters": "Hidden surveillance code in Claude contradicts anti-surveillance stance; trust implications for agent deployments",
+      "evidence": [
+        "https://www.theregister.com/ai-and-ml/2026/07/01/anthropic-is-removing-its-covert-code-for-catching-chinese-competitors/5265366"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openhandsrel",
+      "title": "OpenHands cloud releases 1.46.0 and 1.45.1",
+      "why_it_matters": "Enriched archive manifes\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/handle.invalid/post/3mqcxdqauzy2h",
+        "https://bsky.app/profile/handle.invalid/post/3mqapaztvul25"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-ms365price",
+      "title": "Microsoft 365 pricing up to 42% increase due to AI",
+      "why_it_matters": "Copilot AI tax on businesses; 52 points on HN signals operator concern about agent-driven cost increases",
+      "evidence": [
+        "https://www.windowslatest.com/2026/07/05/microsoft-365-just-got-a-price-hike-over-continuous-innovation-but-copilot-is-the-ai-tax-on-businesses/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-codexencrypt",
+      "title": "Codex now encrypts messages passed to subagents",
+      "why_it_matters": "OpenAI adds inter-agent message encryption; security primitive for multi-agent orchestration",
+      "evidence": [
+        "https://github.com/openai/codex/issues/28058"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-awsmcpauth",
+      "title": "AWS MCP Server adds OAuth 2.1 for agent connections",
+      "why_it_matters": "Agents can now use stand\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/ai-bs-bot.bsky.social/post/3mqg6regj2j27"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-agentauth",
+      "title": "Better Auth builds Agent Auth protocol for scoped agent identity",
+      "why_it_matters": "Protocol giving AI agent\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/thenewstack.io/post/3mqgc3wk5oi2r"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-localauditor",
+      "title": "Local-only auditor for AI coding agents logs all file/secret/network access",
+      "why_it_matters": "Audits every file opened, secret pulled into context, and sensitive-read-then-network-call; security visibility for local agent runs",
+      "evidence": [
+        "https://bsky.app/profile/bestofhn.bsky.social/post/3mqg5yrqfa42f",
+        "https://github.com/ninjahawk/Confessor"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-bitemporal",
+      "title": "Bitemporal provenance in agent memory: what did we believe, when, why",
+      "why_it_matters": "Temporal debugging for a\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=48875749"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-microvm",
+      "title": "How microVMs work for sandboxing agents",
+      "why_it_matters": "Building microVMs in browser to explain agent sandboxing; 17 points on HN shows infra interest",
+      "evidence": [
+        "https://builders.cortex.io/blog/sandboxing-agents-part-1/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-claudealt",
+      "title": "Operator tests 4 open-source Claude Code alternatives on real projects",
+      "why_it_matters": "Aider, OpenHands, Cline,\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/kunalganglani.bsky.social/post/3mqfualoc5s22",
+        "https://bsky.app/profile/kunalganglani.bsky.social/post/3mqcxdrpihi2j"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-codexratelimit",
+      "title": "Codex task consumed 70% of 5-hour limit in 20 minutes",
+      "why_it_matters": "Operator reports extreme\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/OpenAI/comments/1uu2gc5/one_codex_task_used_over_70_of_my_5hour_limit_in/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-abralo",
+      "title": "Abralo: run several Claude Code agents in one window",
+      "why_it_matters": "37 points on HN; operators need multi-agent orchestration without multiple terminals; real adoption signal",
+      "evidence": [
+        "https://abralo.com/",
+        "https://news.ycombinator.com/item?id=48867021"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-verifyloop",
+      "title": "Verification loop 4x'd DeepSeek intelligence matching Opus at 1/7 cost",
+      "why_it_matters": "Self-verification loop dramatically improves coding agent output; 39 points and 28 comments on HN shows strong interest",
+      "evidence": [
+        "https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-seniorswe",
+      "title": "Senior SWE-Bench: open-source benchmark for senior-level agent assessment",
+      "why_it_matters": "186 points and 120 comments on HN; evaluates agents as senior engineers; major eval contribution",
+      "evidence": [
+        "https://senior-swe-bench.snorkel.ai/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-deepseekcyber",
+      "title": "DeepSeek job ads reveal AI agent with cybersecurity capabilities",
+      "why_it_matters": "DeepSeek targeting cyber\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/hapsis.bsky.social/post/3mqf37k5hik2h"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-testerarmy",
+      "title": "TesterArmy (YC P26): agents that test web and mobile apps",
+      "why_it_matters": "132 points and 69 comments on HN; YC-backed autonomous testing agents gaining real traction",
+      "evidence": [
+        "https://tester.army"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agentmemory",
+      "title": "Persistent memory for Claude Code surviving context compaction",
+      "why_it_matters": "Solves context loss during compaction; operator pain point for long-running agent sessions",
+      "evidence": [
+        "https://mentedb.com"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-gatekeeper",
+      "title": "GateGuard neural gates cut agent file-system violations from 55.9% to 0.7%",
+      "why_it_matters": "DeepSeek logprobs used f\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/foursignalsdev.bsky.social/post/3mqgc3gq2iu22"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-aether",
+      "title": "Aether: run Claude Code, Codex, or OpenCode in watchable devboxes",
+      "why_it_matters": "Sandboxed devbox orchestration for multiple agent runtimes; addresses visibility gap in agent execution",
+      "evidence": [
+        "https://www.runaether.dev/"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-codingagentburnout",
+      "title": "Ask HN: I hate coding agents. Is this skill issue?",
+      "why_it_matters": "18 points and 18 comment\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=48844345"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-wikitokens",
+      "title": "One Wikipedia page costs your AI agent 68,000 tokens",
+      "why_it_matters": "14 points on HN; highlig\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=48867021"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-anth-001",
+      "title": "Anthropic: The Making of Claude Code",
+      "why_it_matters": "Inside story of Claude Code from internal CLI to product, detailing design decisions and early user feedback.",
+      "evidence": [
+        "https://www.anthropic.com/features/making-of-claude-code"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anth-002",
+      "title": "Anthropic: How we contain Claude across products",
+      "why_it_matters": "Engineering containment strategies for agent blast radius across claude.ai and Claude Code.",
+      "evidence": [
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-jet-001",
+      "title": "JetBrains Kotlin Benchmark for AI Coding Agents",
+      "why_it_matters": "New benchmark evaluating AI coding agents on real-world Kotlin tasks, directly relevant to agent evaluation.",
+      "evidence": [
+        "https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mist-001",
+      "title": "Mistral Vibe: coding agents in terminal, IDE, and background",
+      "why_it_matters": "Mistral launches Vibe coding agent with terminal/IDE/background modes, expanding agent product lineup.",
+      "evidence": [
+        "https://mistral.ai/products/vibe/code/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-dayt-001",
+      "title": "Daytona Raises $24M Series A for Agent Sandboxes",
+      "why_it_matters": "Funding signals infra demand for agent compute environments; sandbox firewall and Stripe integration launched.",
+      "evidence": [
+        "https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer",
+        "https://www.daytona.io/dotfiles/daytona-stripe-projects",
+        "https://www.daytona.io/dotfiles/sandbox-firewall"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-google-001",
+      "title": "Google ADK Go 2.0: multi-agent apps with graph-based workflow",
+      "why_it_matters": "New graph-based workflow engine and human-in-the-loop for building reliable multi-agent applications.",
+      "evidence": [
+        "https://developers.googleblog.com/announcing-adk-go-20/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-001",
+      "title": "OpenAI GPT-5.6 family: Sol, Terra, Luna",
+      "why_it_matters": "New model family with tiered capabilities; Sol, Terra, Luna models now available via Vercel AI Gateway.",
+      "evidence": [
+        "https://openai.com/index/gpt-5-6",
+        "https://simonwillison.net/2026/Jul/9/gpt-5-6/#atom-everything",
+        "https://vercel.com/changelog/gpt-5-6-now-available-on-ai-gateway"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-supabase-001",
+      "title": "Supabase: Agentic Coding with OpenCode",
+      "why_it_matters": "Supabase integrates OpenCode for agentic coding workflows on their platform, bridging database and agent tooling.",
+      "evidence": [
+        "https://supabase.com/blog/agentic-coding-on-supabase-with-opencode"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-e2b-001",
+      "title": "E2B raises $21M Series A for agent sandboxes",
+      "why_it_matters": "E2B funding validates demand for secure agent execution environments; competes with Daytona and Modal.",
+      "evidence": [
+        "https://e2b.dev/blog/series-a"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-modal-001",
+      "title": "Modal Sandboxes product page",
+      "why_it_matters": "Modal formalizes sandbox product for agent execution, competing with Daytona and E2B.",
+      "evidence": [
+        "https://modal.com/products/sandboxes"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-001",
+      "title": "Vercel: Deploy Lovable apps, AI Gateway adds Seedream 5.0 Pro and Muse Spark 1.1",
+      "why_it_matters": "Vercel expands AI Gateway model support and enables Lovable app deployment, bridging no-code to production.",
+      "evidence": [
+        "https://vercel.com/changelog/you-can-now-deploy-lovable-apps-to-vercel",
+        "https://vercel.com/changelog/seedream-5-0-pro-is-now-available-on-ai-gateway",
+        "https://vercel.com/changelog/muse-spark-1-1-is-now-available-on-ai-gateway"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-flyio-001",
+      "title": "Fly.io: Building Agents that Don't Break Themselves",
+      "why_it_matters": "Practical guide on agent reliability and self-preservation patterns from Fly.io engineering.",
+      "evidence": [
+        "https://fly.io/blog/building-agents-that-dont-break-themselves/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-flyio-002",
+      "title": "Fly.io: Sprites Now Speak MCP",
+      "why_it_matters": "Humorous but practical take on MCP integration for game-like agent interactions.",
+      "evidence": [
+        "https://fly.io/blog/unfortunately-mcp/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-aws-001",
+      "title": "Amazon EMR on EKS: Spark troubleshooting agent",
+      "why_it_matters": "AWS adds agent-based troubleshooting for Spark on EKS, showing agent integration in data infra.",
+      "evidence": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-emr-eks-spark-troubleshooting/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-supabase-002",
+      "title": "Supabase: Protecting projects from npm supply chain attacks",
+      "why_it_matters": "Security guidance for agentic coding workflows using Supabase, relevant to agent supply chain risk.",
+      "evidence": [
+        "https://supabase.com/blog/protecting-your-supabase-projects-from-npm-supply-chain-attacks"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anthropic-002",
+      "title": "Anthropic: Redeploying Fable 5 with industry jailbreak scoring framework",
+      "why_it_matters": "Industry-wide jailbreak severity scoring framework with Amazon, Microsoft, Google; agent safety standard.",
+      "evidence": [
+        "https://www.anthropic.com/news/redeploying-fable-5"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anthropic-003",
+      "title": "Anthropic: Inviting hard questions from the public",
+      "why_it_matters": "Public Q&A commitment on AI safety, building trust and transparency for agent systems.",
+      "evidence": [
+        "https://www.anthropic.com/news/hard-questions"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-002",
+      "title": "OpenAI: GPT-5.6 preferred model for Microsoft 365 Copilot",
+      "why_it_matters": "GPT-5.6 becomes default model for Microsoft 365 Copilot, indicating enterprise agent adoption.",
+      "evidence": [
+        "https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-003",
+      "title": "OpenAI: ChatGPT for your most ambitious work",
+      "why_it_matters": "OpenAI positions ChatGPT for complex, long-horizon tasks, aligning with agent use cases.",
+      "evidence": [
+        "https://openai.com/index/chatgpt-for-your-most-ambitious-work"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-004",
+      "title": "OpenAI: Government and national security partnerships",
+      "why_it_matters": "OpenAI formalizes government agent partnerships, signaling defense/security agent demand.",
+      "evidence": [
+        "https://openai.com/index/government-national-security-partnerships"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-005",
+      "title": "OpenAI: Bio bug bounty program",
+      "why_it_matters": "Biological safety bug bounty for AI agents, addressing dual-use risks in agent systems.",
+      "evidence": [
+        "https://openai.com/index/bio-bug-bounty"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-deepseek-001",
+      "title": "DeepSeek: Rate limit and isolation updates",
+      "why_it_matters": "API rate limit and isolation changes affect agent developers relying on DeepSeek for inference.",
+      "evidence": [
+        "https://api-docs.deepseek.com/quick_start/rate_limit"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mistral-002",
+      "title": "Mistral Studio: Build, test, and run AI agents and apps",
+      "why_it_matters": "Mistral launches Studio platform for agent development and testing, expanding agent tooling.",
+      "evidence": [
+        "https://mistral.ai/products/studio/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mistral-003",
+      "title": "Mistral Vibe: AI agent for long-horizon work",
+      "why_it_matters": "Mistral positions Vibe for long-horizon autonomous tasks, competing with Claude Code and Devin.",
+      "evidence": [
+        "https://mistral.ai/products/vibe/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mistral-004",
+      "title": "Mistral Forge: Train, align, and evaluate custom AI models",
+      "why_it_matters": "Forge platform for custom model training and evaluation, relevant for agent fine-tuning.",
+      "evidence": [
+        "https://mistral.ai/products/forge/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-daytona-002",
+      "title": "Daytona Sandbox Firewall",
+      "why_it_matters": "New firewall feature for agent sandboxes, addressing network isolation security requirement.",
+      "evidence": [
+        "https://www.daytona.io/dotfiles/sandbox-firewall"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-daytona-003",
+      "title": "Daytona sandboxes available through Stripe Projects",
+      "why_it_matters": "Integration with Stripe Projects enables payment-linked agent sandbox provisioning.",
+      "evidence": [
+        "https://www.daytona.io/dotfiles/daytona-stripe-projects"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-002",
+      "title": "Vercel: Traces now support Tree and Waterfall views",
+      "why_it_matters": "Improved observability for agent traces with tree/waterfall visualization, aiding debugging.",
+      "evidence": [
+        "https://vercel.com/changelog/traces-now-support-tree-and-waterfall-views"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-claude-code-2.1.207",
+      "title": "Anthropic Claude Code v2.1.207",
+      "why_it_matters": "Latest Claude Code release with bugfixes and improvements.",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.207"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cline-4.0.8",
+      "title": "Cline v4.0.8",
+      "why_it_matters": "Popular AI coding assistant gets stability update.",
+      "evidence": [
+        "https://github.com/cline/cline/releases/tag/v4.0.8"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-browser-use-0.13.4",
+      "title": "Browser-use 0.13.4",
+      "why_it_matters": "Leading browser agent framework gets incremental update.",
+      "evidence": [
+        "https://github.com/browser-use/browser-use/releases/tag/0.13.4"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openhands-cloud-1.46.0",
+      "title": "OpenHands cloud-1.46.0",
+      "why_it_matters": "Open-source coding agent platform cloud release.",
+      "evidence": [
+        "https://github.com/All-Hands-AI/OpenHands/releases/tag/cloud-1.46.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-vercel-ai-7.0.22",
+      "title": "Vercel AI SDK ai@7.0.22",
+      "why_it_matters": "Vercel's AI SDK for building agentic apps updated.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.22"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openai-codex-0.145.0-alpha.4",
+      "title": "OpenAI Codex 0.145.0-alpha.4",
+      "why_it_matters": "Alpha release of OpenAI's coding agent platform.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.4"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-gemini-cli-0.51.0-preview.0",
+      "title": "Google Gemini CLI v0.51.0-preview.0",
+      "why_it_matters": "Google's Gemini CLI for agentic workflows gets preview update.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-mitos-microvm-sandbox",
+      "title": "mitos-run/mitos: microVM sandbox forking",
+      "why_it_matters": "Millisecond microVM sandbox for AI agents on Kubernetes.",
+      "evidence": [
+        "https://github.com/mitos-run/mitos"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-pydantic-ai-2.9.0",
+      "title": "Pydantic AI v2.9.0",
+      "why_it_matters": "Popular Python agent framework gets new release.",
+      "evidence": [
+        "https://github.com/pydantic/pydantic-ai/releases/tag/v2.9.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-langfuse-3.212.0",
+      "title": "Langfuse v3.212.0",
+      "why_it_matters": "Agent observability/LLM monitoring platform updated.",
+      "evidence": [
+        "https://github.com/langfuse/langfuse/releases/tag/v3.212.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-qwen-code-0.19.9",
+      "title": "Qwen Code v0.19.9",
+      "why_it_matters": "Alibaba's open-source coding agent gets stable release.",
+      "evidence": [
+        "https://github.com/QwenLM/qwen-code/releases/tag/v0.19.9"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cloudflare-agents-0.17.3",
+      "title": "Cloudflare agents 0.17.3",
+      "why_it_matters": "Edge agent framework from Cloudflare updated.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.17.3"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-github-pr-dashboard-ga",
+      "title": "GitHub new PR dashboard GA",
+      "why_it_matters": "GitHub product update affecting agent workflow visibility.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-09-new-pull-requests-dashboard-is-now-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-e2b-cli-2.13.1",
+      "title": "E2B CLI 2.13.1",
+      "why_it_matters": "E2B sandbox infrastructure for AI agents updated.",
+      "evidence": [
+        "https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.13.1"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-trusty-review-0.9.0",
+      "title": "trusty-review v0.9.0",
+      "why_it_matters": "AI code review tool gets new release.",
+      "evidence": [
+        "https://github.com/bobmatnyc/trusty-tools/releases/tag/trusty-review-v0.9.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-open-agent-hub-927",
+      "title": "open-agent-hub: CLI for managing AI coding assistant capabilities",
+      "why_it_matters": "Lightweight tool to activate capabilities across Claude Code, Cursor, etc.",
+      "evidence": [
+        "https://github.com/guanyang/open-agent-hub"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-aoi-perception-layer",
+      "title": "AOI: model-agnostic perception layer for computer-use agents",
+      "why_it_matters": "Adaptive video+audio perception with zero retraining, plus benchmark.",
+      "evidence": [
+        "https://github.com/19PINE-AI/aoi"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "none",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-visual-skills-computer-use",
+      "title": "VisualSkills: multimodal skills for computer-use agents",
+      "why_it_matters": "Research paper on multimodal skills for computer-use agents.",
+      "evidence": [
+        "https://github.com/XMHZZ2018/VisualSkills"
+      ],
+      "confidence": "low",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "none",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-innovatorbench-eval",
+      "title": "InnovatorBench: fine-grained evaluation for AI research agents",
+      "why_it_matters": "New evaluation framework for research agents.",
+      "evidence": [
+        "https://github.com/lyumanshanye/innovatorbench-eval"
+      ],
+      "confidence": "low",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "eval",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-codeql-ai-prompt-injection",
+      "title": "CodeQL 2.26.0: AI prompt injection detection",
+      "why_it_matters": "New security analysis for AI prompt injection in codebases.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-10-codeql-2-26-0-adds-kotlin-2-4-0-support-and-ai-prompt-injection-detection"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-smolagents-1.26.0",
+      "title": "HuggingFace smolagents v1.26.0",
+      "why_it_matters": "Lightweight agent framework from HuggingFace updated.",
+      "evidence": [
+        "https://github.com/huggingface/smolagents/releases/tag/v1.26.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-mem0-pi-agent-plugin",
+      "title": "Mem0 Pi Agent Plugin v0.1.3",
+      "why_it_matters": "Memory layer for AI agents on Raspberry Pi.",
+      "evidence": [
+        "https://github.com/mem0ai/mem0/releases/tag/pi-agent-v0.1.3"
+      ],
+      "confidence": "medium",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-wmux-terminal-agent",
+      "title": "wmux: Windows tmux alternative for AI agents",
+      "why_it_matters": "Enables terminal splitting for Claude Code, Codex on Windows without WSL.",
+      "evidence": [
+        "https://github.com/openwong2kim/wmux"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openai-codex",
+      "title": "@openai/codex CLI release",
+      "why_it_matters": "Official OpenAI Codex CLI for local coding agents.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40openai/codex"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-github-copilot",
+      "title": "@github/copilot CLI release",
+      "why_it_matters": "GitHub Copilot CLI brings coding agent to terminal.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40github/copilot"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-hashicorp-terraform-mcp",
+      "title": "hashicorp/terraform-mcp-server",
+      "why_it_matters": "Official HashiCorp MCP server for Terraform.",
+      "evidence": [
+        "https://hub.docker.com/r/library/hashicorp/terraform-mcp-server"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-detect-agent",
+      "title": "@vercel/detect-agent",
+      "why_it_matters": "Vercel library to detect AI agent runtime context.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40vercel/detect-agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-agent-eval-playground",
+      "title": "@vercel/agent-eval-playground",
+      "why_it_matters": "Vercel web playground for agent evaluation results.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40vercel/agent-eval-playground"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-amazon-ecs-agent",
+      "title": "amazon/amazon-ecs-agent",
+      "why_it_matters": "Amazon ECS Agent for container orchestration.",
+      "evidence": [
+        "https://hub.docker.com/r/library/amazon/amazon-ecs-agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-datadog-agent",
+      "title": "library/datadog/agent",
+      "why_it_matters": "Datadog Agent container for infrastructure monitoring.",
+      "evidence": [
+        "https://hub.docker.com/r/library/datadog/agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-amazon-cloudwatch-agent",
+      "title": "amazon/cloudwatch-agent",
+      "why_it_matters": "Amazon CloudWatch Agent for metrics and logs.",
+      "evidence": [
+        "https://hub.docker.com/r/library/amazon/cloudwatch-agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-hashicorp-tfc-agent",
+      "title": "hashicorp/tfc-agent",
+      "why_it_matters": "Terraform Cloud Agent for remote operations.",
+      "evidence": [
+        "https://hub.docker.com/r/library/hashicorp/tfc-agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agenticow",
+      "title": "agenticow",
+      "why_it_matters": "Copy-on-write vector branching for agent memory, 83x faster.",
+      "evidence": [
+        "https://www.npmjs.com/package/agenticow"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-atlas-detect",
+      "title": "atlas-detect",
+      "why_it_matters": "MITRE ATLAS detection for 90+ AI attack techniques.",
+      "evidence": [
+        "https://crates.io/crates/atlas-detect"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-superbased-observer",
+      "title": "superbased-observer",
+      "why_it_matters": "Multi-adapter AI coding agent cost tracking (26 adapters).",
+      "evidence": [
+        "https://open-vsx.org/extension/superbased/superbased-observer"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-rust-mcp-sdk",
+      "title": "rust-mcp-sdk",
+      "why_it_matters": "High-download Rust SDK for building MCP servers/clients.",
+      "evidence": [
+        "https://crates.io/crates/rust-mcp-sdk"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agentic-coding-protocol",
+      "title": "agentic-coding-protocol",
+      "why_it_matters": "Standard protocol for editor-agent communication.",
+      "evidence": [
+        "https://crates.io/crates/agentic-coding-protocol"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agentlens-dashboard",
+      "title": "agentlens.agentlens-dashboard",
+      "why_it_matters": "OTEL-based observability dashboard for agent sessions.",
+      "evidence": [
+        "https://open-vsx.org/extension/agentlens/agentlens-dashboard"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-axmeai-axme-code",
+      "title": "AxmeAI.axme-code",
+      "why_it_matters": "Persistent memory and guardrails across multiple coding agents.",
+      "evidence": [
+        "https://open-vsx.org/extension/AxmeAI/axme-code"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-atomr-agents",
+      "title": "atomr-agents ecosystem",
+      "why_it_matters": "MicroVM sandbox, observability, and security for agent runtime.",
+      "evidence": [
+        "https://crates.io/crates/atomr-agents-sandbox-harness",
+        "https://crates.io/crates/atomr-agents-observability",
+        "https://crates.io/crates/atomr-agents-security"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 3,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-reaatech-eval-harness",
+      "title": "reaatech agent eval harness",
+      "why_it_matters": "Eval suite runner and CI regression gates for agents.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40reaatech/agent-eval-harness-suite",
+        "https://www.npmjs.com/package/%40reaatech/agent-eval-harness-gate"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-eval-doctor",
+      "title": "eval-doctor",
+      "why_it_matters": "Eval coverage auditor for RAG and agent systems.",
+      "evidence": [
+        "https://pypi.org/project/eval-doctor/0.1.1/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-tonyclaw-agent-inspector",
+      "title": "@tonyclaw/agent-inspector",
+      "why_it_matters": "Agent observability and knowledge capture layer.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40tonyclaw/agent-inspector"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cloudllm",
+      "title": "cloudllm",
+      "why_it_matters": "Rust toolkit for building agents with multi-protocol and durable memory.",
+      "evidence": [
+        "https://crates.io/crates/cloudllm"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agent-browser",
+      "title": "agent-browser",
+      "why_it_matters": "Fast browser automation CLI for AI agents.",
+      "evidence": [
+        "https://crates.io/crates/agent-browser"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agenshield",
+      "title": "agenshield",
+      "why_it_matters": "AI Agent Security Platform.",
+      "evidence": [
+        "https://www.npmjs.com/package/agenshield"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openguardrails-moltguard",
+      "title": "@openguardrails/moltguard",
+      "why_it_matters": "AI agent security plugin with prompt injection detection.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40openguardrails/moltguard"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Google Gemini / Cursor / Anthropic changelog or release in this shard",
+    "Missing user_workflow: enterprise-scale agent deployment field reports",
+    "Missing infra_primitive: dedicated eval platform release (non-benchmark)",
+    "Missing user_workflow: no operator field reports from Bluesky/Reddit/HN/X in this shard (official-vendor sources only).",
+    "Missing mainstream_product: no changelog from GitHub Copilot, Cursor, Apple, Meta, xAI/Grok, or Microsoft in this shard.",
+    "Missing user_workflow: concrete operator field reports or adoption friction stories",
+    "Missing social/discussion: Bluesky/Reddit/HN/X posts about agent workflows",
+    "Missing source class: social media evidence",
+    "Missing user_workflow: no operator field reports in this packages-only shard",
+    "Missing research: no papers or benchmarks in this shard"
+  ]
+}

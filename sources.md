@@ -834,3 +834,106 @@ Ignore or deprioritize:
 - [user_workflow] OpenCode desktop Electron bugs frustrate user: https://bsky.app/profile/asa.engineer/post/3mqbxnj4m3c2f
 - [user_workflow] GhostApproval symlink attack tricks agents into writing outside workspace: https://bsky.app/profile/ralphdev.bsky.social/post/3mqbymztjxq22
 - [user_workflow] Memory Sidecar v3.5.1 operational hardening: https://bsky.app/profile/swagger82.bsky.social/post/3mqc3yxfyud2x
+
+
+## 2026-07-12 Source-sweep additions
+
+- [mainstream_product] Anthropic's covert Claude tracking code discovered: https://www.theregister.com/ai-and-ml/2026/07/01/anthropic-is-removing-its-covert-code-for-catching-chinese-competitors/5265366
+- [mainstream_product] xAI launches Grok 4.5 for coding and agentic tasks: https://www.reuters.com/business/media-telecom/spacexai-launches-grok-45-model-coding-agentic-tasks-2026-07-08/
+- [mainstream_product] OpenAI GPT-5.6 family: Sol, Terra, Luna: https://openai.com/index/gpt-5-6
+- [mainstream_product] DeepSeek V4 earning agentic token share on OpenRouter: https://openrouter.ai/blog/insights/deepseek-v4-adoption/
+- [mainstream_product] hashicorp/terraform-mcp-server: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
+- [mainstream_product] Anthropic: How we contain Claude across products: https://www.anthropic.com/engineering/how-we-contain-claude
+- [mainstream_product] Anthropic: Redeploying Fable 5 with industry jailbreak scoring framework: https://www.anthropic.com/news/redeploying-fable-5
+- [user_workflow] Operator tests 4 open-source Claude Code alternatives on real projects: https://bsky.app/profile/kunalganglani.bsky.social/post/3mqfualoc5s22
+- [user_workflow] Codex task consumed 70% of 5-hour limit in 20 minutes: https://www.reddit.com/r/OpenAI/comments/1uu2gc5/one_codex_task_used_over_70_of_my_5hour_limit_in/
+- [user_workflow] Abralo: run several Claude Code agents in one window: https://abralo.com/
+- [user_workflow] Fly.io: Building Agents that Don't Break Themselves: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [user_workflow] Ask HN: I hate coding agents. Is this skill issue?: https://news.ycombinator.com/item?id=48844345
+- [research] Senior SWE-Bench: open-source benchmark for senior-level agent assessment: https://senior-swe-bench.snorkel.ai/
+- [infra_primitive] Daytona Raises $24M Series A for Agent Sandboxes: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [infra_primitive] E2B raises $21M Series A for agent sandboxes: https://e2b.dev/blog/series-a
+- [infra_primitive] rust-mcp-sdk: https://crates.io/crates/rust-mcp-sdk
+- [mainstream_product] @vercel/detect-agent: https://www.npmjs.com/package/%40vercel/detect-agent
+- [mainstream_product] CodeQL 2.26.0: AI prompt injection detection: https://github.blog/changelog/2026-07-10-codeql-2-26-0-adds-kotlin-2-4-0-support-and-ai-prompt-injection-detection
+- [mainstream_product] Anthropic: The Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- [mainstream_product] @openai/codex CLI release: https://www.npmjs.com/package/%40openai/codex
+- [mainstream_product] @github/copilot CLI release: https://www.npmjs.com/package/%40github/copilot
+- [mainstream_product] Microsoft Copilot OS / Project Aion leaked: https://www.windowscentral.com/microsoft/windows-11/project-aion-copilot-os-faq
+- [mainstream_product] OpenHands cloud releases 1.46.0 and 1.45.1: https://github.com/All-Hands-AI/OpenHands/releases/tag/cloud-1.46.0
+- [mainstream_product] Microsoft 365 pricing up to 42% increase due to AI: https://www.windowslatest.com/2026/07/05/microsoft-365-just-got-a-price-hike-over-continuous-innovation-but-copilot-is-the-ai-tax-on-businesses/
+- [infra_primitive] Codex now encrypts messages passed to subagents: https://github.com/openai/codex/issues/28058
+- [infra_primitive] AWS MCP Server adds OAuth 2.1 for agent connections: https://aws.amazon.com/about-aws/whats-new/2026/07/aws-mcp-server-oauth-21/
+- [infra_primitive] Better Auth builds Agent Auth protocol for scoped agent identity: https://bsky.app/profile/thenewstack.io/post/3mqgc3wk5oi2r
+- [infra_primitive] Local-only auditor for AI coding agents logs all file/secret/network access: https://bsky.app/profile/bestofhn.bsky.social/post/3mqg5yrqfa42f
+- [infra_primitive] Bitemporal provenance in agent memory: https://news.ycombinator.com/item?id=48875749
+- [infra_primitive] How microVMs work for sandboxing agents: https://builders.cortex.io/blog/sandboxing-agents-part-1/
+- [research] Verification loop 4x'd DeepSeek intelligence matching Opus at 1/7 cost: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- [mainstream_product] DeepSeek job ads reveal AI agent with cybersecurity capabilities: https://bsky.app/profile/hapsis.bsky.social/post/3mqf37k5hik2h
+- [mainstream_product] TesterArmy (YC P26): agents that test web and mobile apps: https://tester.army
+- [infra_primitive] Persistent memory for Claude Code surviving context compaction: https://mentedb.com
+- [infra_primitive] GateGuard neural gates cut agent file-system violations from 55.9% to 0.7%: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mqgc3gq2iu22
+- [infra_primitive] Aether: run Claude Code, Codex, or OpenCode in watchable devboxes: https://www.runaether.dev/
+- [user_workflow] One Wikipedia page costs your AI agent 68,000 tokens: https://news.ycombinator.com/item?id=48867021
+- [mainstream_product] JetBrains Kotlin Benchmark for AI Coding Agents: https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- [mainstream_product] Mistral Vibe: coding agents in terminal, IDE, and background: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Google ADK Go 2.0: multi-agent apps with graph-based workflow: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Supabase: Agentic Coding with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [infra_primitive] Modal Sandboxes product page: https://modal.com/products/sandboxes
+- [mainstream_product] Vercel: Deploy Lovable apps, AI Gateway adds Seedream 5.0 Pro and Muse Spark 1.1: https://vercel.com/changelog/you-can-now-deploy-lovable-apps-to-vercel
+- [user_workflow] Fly.io: Sprites Now Speak MCP: https://fly.io/blog/unfortunately-mcp/
+- [mainstream_product] Amazon EMR on EKS: Spark troubleshooting agent: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-emr-eks-spark-troubleshooting/
+- [mainstream_product] Supabase: Protecting projects from npm supply chain attacks: https://supabase.com/blog/protecting-your-supabase-projects-from-npm-supply-chain-attacks
+- [mainstream_product] Anthropic: Inviting hard questions from the public: https://www.anthropic.com/news/hard-questions
+- [mainstream_product] OpenAI: GPT-5.6 preferred model for Microsoft 365 Copilot: https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot
+- [mainstream_product] OpenAI: ChatGPT for your most ambitious work: https://openai.com/index/chatgpt-for-your-most-ambitious-work
+- [mainstream_product] OpenAI: Government and national security partnerships: https://openai.com/index/government-national-security-partnerships
+- [mainstream_product] OpenAI: Bio bug bounty program: https://openai.com/index/bio-bug-bounty
+- [mainstream_product] DeepSeek: Rate limit and isolation updates: https://api-docs.deepseek.com/quick_start/rate_limit
+- [mainstream_product] Mistral Studio: Build, test, and run AI agents and apps: https://mistral.ai/products/studio/
+- [mainstream_product] Mistral Vibe: AI agent for long-horizon work: https://mistral.ai/products/vibe/
+- [mainstream_product] Mistral Forge: Train, align, and evaluate custom AI models: https://mistral.ai/products/forge/
+- [infra_primitive] Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- [infra_primitive] Daytona sandboxes available through Stripe Projects: https://www.daytona.io/dotfiles/daytona-stripe-projects
+- [mainstream_product] Vercel: Traces now support Tree and Waterfall views: https://vercel.com/changelog/traces-now-support-tree-and-waterfall-views
+- [mainstream_product] Anthropic Claude Code v2.1.207: https://github.com/anthropics/claude-code/releases/tag/v2.1.207
+- [mainstream_product] Cline v4.0.8: https://github.com/cline/cline/releases/tag/v4.0.8
+- [mainstream_product] Browser-use 0.13.4: https://github.com/browser-use/browser-use/releases/tag/0.13.4
+- [mainstream_product] OpenHands cloud-1.46.0: https://github.com/All-Hands-AI/OpenHands/releases/tag/cloud-1.46.0
+- [mainstream_product] Vercel AI SDK ai@7.0.22: https://github.com/vercel/ai/releases/tag/ai%407.0.22
+- [mainstream_product] OpenAI Codex 0.145.0-alpha.4: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.4
+- [mainstream_product] Google Gemini CLI v0.51.0-preview.0: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
+- [infra_primitive] mitos-run/mitos: microVM sandbox forking: https://github.com/mitos-run/mitos
+- [mainstream_product] Pydantic AI v2.9.0: https://github.com/pydantic/pydantic-ai/releases/tag/v2.9.0
+- [mainstream_product] Langfuse v3.212.0: https://github.com/langfuse/langfuse/releases/tag/v3.212.0
+- [mainstream_product] Qwen Code v0.19.9: https://github.com/QwenLM/qwen-code/releases/tag/v0.19.9
+- [mainstream_product] Cloudflare agents 0.17.3: https://github.com/cloudflare/agents/releases/tag/agents%400.17.3
+- [mainstream_product] GitHub new PR dashboard GA: https://github.blog/changelog/2026-07-09-new-pull-requests-dashboard-is-now-generally-available
+- [mainstream_product] E2B CLI 2.13.1: https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.13.1
+- [mainstream_product] trusty-review v0.9.0: https://github.com/bobmatnyc/trusty-tools/releases/tag/trusty-review-v0.9.0
+- [infra_primitive] open-agent-hub: CLI for managing AI coding assistant capabilities: https://github.com/guanyang/open-agent-hub
+- [research] AOI: model-agnostic perception layer for computer-use agents: https://github.com/19PINE-AI/aoi
+- [research] VisualSkills: multimodal skills for computer-use agents: https://github.com/XMHZZ2018/VisualSkills
+- [research] InnovatorBench: fine-grained evaluation for AI research agents: https://github.com/lyumanshanye/innovatorbench-eval
+- [mainstream_product] HuggingFace smolagents v1.26.0: https://github.com/huggingface/smolagents/releases/tag/v1.26.0
+- [infra_primitive] Mem0 Pi Agent Plugin v0.1.3: https://github.com/mem0ai/mem0/releases/tag/pi-agent-v0.1.3
+- [infra_primitive] wmux: Windows tmux alternative for AI agents: https://github.com/openwong2kim/wmux
+- [mainstream_product] @vercel/agent-eval-playground: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [mainstream_product] amazon/amazon-ecs-agent: https://hub.docker.com/r/library/amazon/amazon-ecs-agent
+- [mainstream_product] library/datadog/agent: https://hub.docker.com/r/library/datadog/agent
+- [mainstream_product] amazon/cloudwatch-agent: https://hub.docker.com/r/library/amazon/cloudwatch-agent
+- [mainstream_product] hashicorp/tfc-agent: https://hub.docker.com/r/library/hashicorp/tfc-agent
+- [infra_primitive] agenticow: https://www.npmjs.com/package/agenticow
+- [infra_primitive] atlas-detect: https://crates.io/crates/atlas-detect
+- [infra_primitive] superbased-observer: https://open-vsx.org/extension/superbased/superbased-observer
+- [infra_primitive] agentic-coding-protocol: https://crates.io/crates/agentic-coding-protocol
+- [infra_primitive] agentlens.agentlens-dashboard: https://open-vsx.org/extension/agentlens/agentlens-dashboard
+- [infra_primitive] AxmeAI.axme-code: https://open-vsx.org/extension/AxmeAI/axme-code
+- [infra_primitive] atomr-agents ecosystem: https://crates.io/crates/atomr-agents-sandbox-harness
+- [infra_primitive] reaatech agent eval harness: https://www.npmjs.com/package/%40reaatech/agent-eval-harness-suite
+- [infra_primitive] eval-doctor: https://pypi.org/project/eval-doctor/0.1.1/
+- [infra_primitive] @tonyclaw/agent-inspector: https://www.npmjs.com/package/%40tonyclaw/agent-inspector
+- [infra_primitive] cloudllm: https://crates.io/crates/cloudllm
+- [infra_primitive] agent-browser: https://crates.io/crates/agent-browser
+- [infra_primitive] agenshield: https://www.npmjs.com/package/agenshield
+- [infra_primitive] @openguardrails/moltguard: https://www.npmjs.com/package/%40openguardrails/moltguard
