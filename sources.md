@@ -1034,3 +1034,66 @@ Ignore or deprioritize:
 - [infra_primitive] agent-shield: https://www.npmjs.com/package/@elliotllliu/agent-shield
 - [infra_primitive] YAMTAM Runtime: https://crates.io/crates/yamtam-rt
 - [infra_primitive] Prismo token waste analysis: https://open-vsx.org/extension/getprismo/prismo
+
+- [mainstream_product] Manus acquisition news: https://bsky.app/profile/serena666.bsky.social/post/3mqhnrhskys2s
+- [mainstream_product] Claude Code vs OpenCode token overhead: https://systima.ai/blog/claude-code-vs-opencode-token-overhead
+- [mainstream_product] Google I/O 2026 developer keynote: https://developers.googleblog.com/all-the-news-from-the-google-io-2026-developer-keynote/
+
+
+### New sources from 2026-07-13 screening pass
+
+- [mainstream_product] SpaceXAI Grok 4.5 launch: https://www.reuters.com/business/media-telecom/spacexai-launches-grok-45-model-coding-agentic-tasks-2026-07-08/
+- [mainstream_product] GPT-5.6 preferred model for Microsoft 365 Copilot: https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot
+- [mainstream_product] Daytona raises $24M Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [infra_primitive] Modal Sandboxes: https://modal.com/products/sandboxes
+- [mainstream_product] E2B raises $21M Series A: https://e2b.dev/blog/series-a
+- [mainstream_product] Supabase official ChatGPT app: https://supabase.com/blog/supabase-is-now-an-official-chatgpt-app
+- [mainstream_product] Gemma 4 12B local agentic: https://developers.googleblog.com/bringing-gemma-4-12b-to-your-laptop-unlocking-local-agentic-workflows-with-google-ai-edge/
+- [infra_primitive] Fly.io Sprites MCP: https://fly.io/blog/unfortunately-mcp/
+- [infra_primitive] Cloudflare Workers Cache: https://blog.cloudflare.com/workers-cache/
+- [infra_primitive] AWS S3 zero-downtime versioning: https://aws.amazon.com/blogs/storage/zero-downtime-amazon-s3-versioning-architectural-patterns-for-mission-critical-workloads/
+- [mainstream_product] Seedream 5.0 Pro on Vercel AI Gateway: https://vercel.com/changelog/seedream-5-0-pro-is-now-available-on-ai-gateway
+- [mainstream_product] Anthropic hard questions: https://www.anthropic.com/news/hard-questions
+- [mainstream_product] dotInsights July 2026: https://blog.jetbrains.com/dotnet/2026/07/10/dotinsights-july-2026/
+- [infra_primitive] h5i sandboxed worktrees: https://github.com/h5i-dev/h5i
+- [infra_primitive] ccmux tmux tracker: https://github.com/epilande/ccmux
+- [infra_primitive] wmux Windows tmux: https://github.com/openwong2kim/wmux
+- [infra_primitive] Armorer local control plane: https://github.com/ArmorerLabs/Armorer
+- [infra_primitive] Token-efficient agent harness: https://github.com/Igzela/token-efficient-agent-harness-lab
+- [mainstream_product] OpenAI Codex 0.145.0-alpha.4: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.4
+- [mainstream_product] Cline v4.0.8: https://github.com/cline/cline/releases/tag/v4.0.8
+- [mainstream_product] OpenCode v1.17.18: https://github.com/anomalyco/opencode/releases/tag/v1.17.18
+- [mainstream_product] OpenHands cloud 1.46.0: https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.46.0
+- [mainstream_product] Vercel AI SDK Groq provider: https://github.com/vercel/ai/releases/tag/%40ai-sdk/groq%404.0.8
+- [mainstream_product] Zed v1.11.3-pre: https://github.com/zed-industries/zed/releases/tag/v1.11.3-pre
+- [infra_primitive] BitFun agent runtime: https://github.com/GCWing/BitFun
+- [infra_primitive] Mitos microVM sandbox: https://github.com/mitos-run/mitos
+- [infra_primitive] OrchestKit Claude Code patterns: https://github.com/yonatangross/orchestkit
+- [mainstream_product] E2B CLI v2.13.1: https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.13.1
+- [infra_primitive] UiPath coder_eval: https://github.com/UiPath/coder_eval
+- [infra_primitive] Token Bank local LLM proxy: https://github.com/wink-run/local-llm-proxy
+- [mainstream_product] Block Goose v1.41.0: https://github.com/aaif-goose/goose/releases/tag/v1.41.0
+- [mainstream_product] browser-use 0.13.4: https://github.com/browser-use/browser-use/releases/tag/0.13.4
+- [infra_primitive] Caracal SDK rc4: https://pypi.org/project/caracalai-sdk/0.2.0rc4/
+- [infra_primitive] superbased-observer: https://open-vsx.org/extension/superbased/superbased-observer
+- [infra_primitive] RagOps 2.3.0: https://pypi.org/project/ragops/2.3.0/
+- [infra_primitive] agenticow: https://www.npmjs.com/package/agenticow
+- [infra_primitive] AxmeAI.axme-code: https://open-vsx.org/extension/AxmeAI/axme-code
+- [infra_primitive] drylake: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] greprag 5.64.1: https://www.npmjs.com/package/greprag
+- [infra_primitive] agent-cli-detector: https://www.npmjs.com/package/agent-cli-detector
+- [infra_primitive] detect-coding-agent: https://crates.io/crates/detect-coding-agent
+- [infra_primitive] agentapprove: https://www.npmjs.com/package/agentapprove
+- [infra_primitive] agent-in-the-loop: https://pypi.org/project/agent-in-the-loop/0.2.2/
+- [infra_primitive] hf-inference-acp 0.9.7: https://pypi.org/project/hf-inference-acp/0.9.7/
+- [infra_primitive] fast-agent-mcp 0.9.7: https://pypi.org/project/fast-agent-mcp/0.9.7/
+- [infra_primitive] center-kb 0.9.1: https://pypi.org/project/center-kb/0.9.1/
+- [infra_primitive] meetmind 0.1.3: https://pypi.org/project/meetmind/0.1.3/
+- [infra_primitive] agentic-eval: https://crates.io/crates/agentic-eval
+- [infra_primitive] eval-containers: https://crates.io/crates/eval-containers
+- [infra_primitive] swink-agent-eval: https://crates.io/crates/swink-agent-eval
+- [infra_primitive] atomr-agents-eval: https://crates.io/crates/atomr-agents-eval
+- [infra_primitive] agentlens-dashboard: https://open-vsx.org/extension/agentlens/agentlens-dashboard
+- [infra_primitive] @vercel/detect-agent 1.2.3: https://www.npmjs.com/package/%40vercel/detect-agent
+- [infra_primitive] @vercel/agent-eval-playground 0.1.3: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [user_workflow] CLAUDE.md hooks enforcement: https://dev.to/rulestack/your-claudemd-says-always-run-tests-hooks-are-how-you-actually-mean-it-1o9f

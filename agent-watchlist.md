@@ -307,3 +307,12 @@ Status:
 
 - Last review: 2026-07-12 (weekly W28). Cloudflare Agents 0.17.3 released 2026-06-30; active development continues. No new independent user workflow report found. Retain as active; refresh in 21 days if no new signal.
 - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.17.3
+
+
+## Manus
+
+- Category: AI agent platform
+- Maturity: High-profile startup; acquisition turmoil signals strategic importance.
+- Recent changes: Meta's $2B acquisition unwound after Beijing blocked foreign ownership; Tencent steps in as domestic investor (2026-07-13).
+- Evidence strength: Medium (single Bluesky report, needs official confirmation)
+- Source: https://bsky.app/profile/serena666.bsky.social/post/3mqhnrhskys2s
