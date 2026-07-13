@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.19.4 - 2026-07-13
+
+Hotfix for the first Monday scheduled run of ISO week W29 (Issue #64): the workflow's ensure step pre-creates the new week's report file from the template BEFORE the model runs, so the first weekly write of the period hit "Refusing full-file update for weekly/2026-W29.md" — the anti-clobber gate treated the empty template shell as existing content, deadlocking every period boundary (weekly on Mondays, monthly on the 1st).
+
+### Fixed
+- `report_is_template_shell()`: a report file containing only ensure-created scaffolding (headings, boilerplate, empty `- Field:` placeholder lines, no URLs) now counts as empty for the full-rewrite gates on daily/weekly/monthly files. Files with any real content remain protected. Regression test covers both directions.
+
 ## v0.19.3 - 2026-07-12
 
 Third and final hotfix on Issue #59 — same class as the weekly fix, now on the daily: the verification run's daily task legitimately produced 75,349 chars (22k day block + ~76 Radar Sweep lines + research-log/sources updates, bilingual) and was refused by the 64k cap. The run also proved v0.19.2 works: the push succeeded through the union-merge/retry path and every other task's output was committed.

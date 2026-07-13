@@ -429,6 +429,38 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertIn("### 中文", text)
             self.assertIn("one", text)
 
+    def test_full_weekly_allowed_over_template_shell(self) -> None:
+        # Issue #64: ensure pre-creates the new week's file from the template
+        # before the model runs; the first real weekly write must not be
+        # refused as a "full rewrite of existing content".
+        shell = (
+            "# Agent Radar Weekly - 2026-W29\n\n"
+            "> Format: read the full `## English` section first.\n\n"
+            "## English\n\n### 1. Executive Summary\n\n"
+            "- This week's biggest change:\n- Biggest uncertainty:\n\n"
+            "---\n\n## 中文\n\n### 1. Executive Summary\n\n- 本周最大变化：\n"
+        )
+        real = "## English\n\n### 1. Executive Summary\n\n- This week's biggest change: MCP everywhere. https://example.com\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "weekly" / "2026-W29.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(shell, encoding="utf-8")
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["weekly/2026-W29.md"],
+                {"updates": [{"path": "weekly/2026-W29.md", "mode": "full", "content": real}]},
+            )
+            self.assertEqual(changed, 1)
+            self.assertIn("MCP everywhere", target.read_text(encoding="utf-8"))
+            with self.assertRaises(SystemExit) as ctx:
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["weekly/2026-W29.md"],
+                    {"updates": [{"path": "weekly/2026-W29.md", "mode": "full", "content": "# overwrite\n"}]},
+                )
+            self.assertIn("replace_section", str(ctx.exception))
+
     def test_rejects_oversized_daily_append(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

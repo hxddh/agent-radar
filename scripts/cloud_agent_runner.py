@@ -3358,6 +3358,30 @@ def weekly_direction_notes(root: Path | None, day: dt.date) -> str:
     return "\n\n".join(sections)
 
 
+def report_is_template_shell(text: str) -> bool:
+    """True when a report file holds only ensure-created template scaffolding.
+
+    On period boundaries (new ISO week / new month) the workflow's ensure step
+    pre-creates the report file from the template BEFORE the model runs, so
+    "file exists" must not mean "content present" — that deadlocks the first
+    write of the period (Issue #64). A real report always carries URLs and
+    filled bullets; the template has only headings, boilerplate, and empty
+    `- Field:` placeholder lines."""
+    stripped = text.strip()
+    if not stripped:
+        return True
+    if "http://" in stripped or "https://" in stripped:
+        return False
+    for line in stripped.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or line.startswith(">") or line == "---":
+            continue
+        if line.startswith("- ") and (line.endswith(":") or line.endswith("：")):
+            continue
+        return False
+    return True
+
+
 def daily_english_section_headings(text: str) -> list[str]:
     """`#### ` headings inside the `### English` block of a day block."""
     headings: list[str] = []
@@ -5963,11 +5987,14 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
                 raise SystemExit(
                     LEGACY_FILES_REJECT_MESSAGE.format(path=rel_path, hint="replace_section")
                 )
-        if mode == "full" and is_daily_month_path(rel_path) and old.strip():
+        # An ensure-created template shell counts as empty: the first real
+        # write of a new week/month may replace it wholesale (Issue #64).
+        old_has_report_content = bool(old.strip()) and not report_is_template_shell(old)
+        if mode == "full" and is_daily_month_path(rel_path) and old_has_report_content:
             raise SystemExit(DAILY_APPEND_ONLY_MESSAGE.format(path=rel_path))
-        if mode == "full" and is_weekly_path(rel_path) and old.strip():
+        if mode == "full" and is_weekly_path(rel_path) and old_has_report_content:
             raise SystemExit(WEEKLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
-        if mode == "full" and is_monthly_path(rel_path) and old.strip():
+        if mode == "full" and is_monthly_path(rel_path) and old_has_report_content:
             raise SystemExit(MONTHLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
         is_report_file = rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/"))
         merged = merge_update_content(
