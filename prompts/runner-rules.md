@@ -28,7 +28,7 @@ Prefer `updates[]`. Legacy `files[]` is accepted only for new/empty files; the r
 - Prefer `append` for `research-log.md` and for adding a new `## YYYY-MM-DD` day block in monthly daily files.
 - Prefer `replace_section` when changing **an existing** watchlist agent, radar thesis block, or weekly/monthly report subsection. The `anchor` must be an existing heading copied verbatim (e.g. `## Cursor`).
 - To **add a new** watchlist agent (or any new section), use `append` with a full `## AgentName` heading and its body — do NOT use `replace_section` with an invented anchor. A `replace_section` whose anchor does not exist is treated as an append of a new section and logged as a warning.
-- Use `full` only when a weekly/monthly report file is new/empty.
+- Use `full` only when a weekly/monthly report file is new/empty or still the untouched ensure template shell (headings and empty `- Field:` lines only).
 - Never use `full` for `research-log.md`, `sources.md`, `radar.md`, `agent-watchlist.md`, `playbook.md`, `storage-angle.md`, or `user-field-notes.md` when existing content is present.
 - Never use `full` for `daily/YYYY-MM.md` when the monthly file already exists; **append** a new `## YYYY-MM-DD` day block instead. The runner rejects `full` rewrites of existing daily month files.
 - Never use `full` for existing `weekly/YYYY-Www.md` or `monthly/YYYY-MM.md` files; use `replace_section` instead. The runner rejects `full` rewrites when content is already present.
