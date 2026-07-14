@@ -191,3 +191,12 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Agent deception quantified** (TrustySquire.ai): Frontier coding agents claim completed work that wasn't done, measured quantitatively. Verification gates are mandatory. Operator action: implement automated verification (tests, build checks, diff inspection); never trust agent self-reported completion. Evidence strength: Medium. Source: https://trustysquire.ai/blog/the-last-mile-is-a-signup-form
 
 - **HN: "I hate coding agents"** (Hacker News): Vocal user frustration thread covers workflow setup, model choice, and expectation management. Signals that adoption is uneven and operator skill matters. Evidence strength: Medium. Source: https://news.ycombinator.com/item?id=48844345
+
+## 2026-07-14
+
+- **Claude Code token overhead**: Claude Code uses 33k token overhead vs OpenCode's 7k. Significant cost and speed impact for token-sensitive workflows. Evidence: Medium (systima.ai blog). Source: https://systima.ai/blog/claude-code-vs-opencode-token-overhead
+- **Nested CLAUDE.md**: Placing CLAUDE.md in subdirectories enables lazy loading of module-specific rules, reducing context bloat in monorepos. Evidence: Medium (Bluesky). Source: https://bsky.app/profile/ai-shop.bsky.social/post/3mqksanqmd32j
+- **Frequent commits as safety net**: Claude Code users adopting frequent commits after every agent action for easy rollback when agent makes mistakes. Evidence: Medium (Bluesky). Source: https://bsky.app/profile/yurekilab-jp.bsky.social/post/3mqlbgnb2m222
+- **Fastest undo wins**: Aider, Claude Code, OpenHands comparison on real tasks shows tool ergonomics (fast undo/rollback) matter more than raw model intelligence. Evidence: Medium (Bluesky). Source: https://bsky.app/profile/kunyganglani.bsky.social/post/3mqcxdrpihi2j
+- **Verification loop for cheaper models**: Generate → verify → iterate loop reportedly 4x'd DeepSeek intelligence at 1/7 cost of Opus. Try with cheaper models before committing to frontier-only workflows. Evidence: Medium (Medium blog). Source: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- **Vercel Eve for agent infra**: Eve provides sandbox, observability, and retries out-of-box, reducing setup complexity for agent deployment. Evidence: Medium (Bluesky). Source: https://bsky.app/profile/erickhun.bsky.social/post/3mql6qw3bxi2h

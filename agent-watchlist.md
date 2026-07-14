@@ -7,13 +7,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users, but external market-wide adoption still needs corroboration.
-- Recent changes: Codex CLI v0.144.1 on npm and v0.145.0-alpha.4 on GitHub (2026-07-11). GPT-5.6 ships with "all-day agent" capability after federal hold (2026-07-11). OpenAI discontinued standalone ChatGPT Atlas browser agent; merged into unified desktop app (2026-07-10). GPT-5.6 Sol, Terra, Luna models available in GitHub Copilot (2026-07-09).
-- Source: https://www.npmjs.com/package/%40openai/codex
+- Recent changes: Codex CLI v0.144.3 (stable) and v0.145.0-alpha.9 (alpha) released (2026-07-14). OpenAI Agent Sandbox Cloud launched — first-party sandbox for agent testing (2026-07-14). GPT-5.6 Sol, Terra, Luna models available on Amazon Bedrock (2026-07-14). GPT-5.6 ships with "all-day agent" capability after federal hold (2026-07-11). OpenAI discontinued standalone ChatGPT Atlas browser agent; merged into unified desktop app (2026-07-10). GPT-5.6 Sol, Terra, Luna models available in GitHub Copilot (2026-07-09).
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.9, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-sol-terra/, https://bsky.app/profile/hn100.bsky.social/post/3mqkse5mqq524
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: v2.1.207 released (2026-07-11), continuing rapid patch cadence. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). User reports: 5hr quota consumed entirely leaving no chat quota (Bluesky, 2026-07-11). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed. User workflow reports include TDD prompt technique, prove-it gate pattern, async long-running task pattern.
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.207
+- Recent changes: v2.1.208 released (2026-07-14) with sandbox and reliability fixes, continuing rapid patch cadence. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed.
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.208, https://www.anthropic.com/news/claude-science-ai-workbench, https://systima.ai/blog/claude-code-vs-opencode-token-overhead
 ## Cursor
 
 Status:
@@ -291,12 +291,8 @@ Status:
 ## Mistral Vibe
 - Category: Coding agent (terminal, IDE, background)
 - Maturity: New product launch from Mistral; early adoption stage.
-- Recent changes: Launched 2026-07-10 with terminal, IDE, and background execution modes. Open-weight model approach may differentiate on cost and self-hosted deployment flexibility.
-- Evidence strength: Strong (official product page)
-- Source: https://mistral.ai/products/vibe/code/
-- Watch next: User adoption reports, enterprise integration evidence, and comparison with Claude Code / Gemini CLI.
-- replace_section anchor: `## Mistral Vibe`
-
+- Recent changes: Launched 2026-07-10 with terminal, IDE, and background execution modes. Mistral Studio also launched for building and testing AI agents (2026-07-14). Open-weight model approach may differentiate on cost and self-hosted deployment flexibility.
+- Source: https://mistral.ai/products/vibe/code/, https://mistral.ai/products/studio/
 ## Gemini CLI
 - Category: CLI coding agent
 - Maturity: Rapid release cadence; v0.50.0 stable and v0.51.0-preview.0 available.
@@ -310,9 +306,7 @@ Status:
 
 
 ## Manus
-
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
-- Recent changes: Meta's $2B acquisition unwound after Beijing blocked foreign ownership; Tencent steps in as domestic investor (2026-07-13).
-- Evidence strength: Medium (single Bluesky report, needs official confirmation)
-- Source: https://bsky.app/profile/serena666.bsky.social/post/3mqhnrhskys2s
+- Recent changes: Meta's $2B acquisition unwound after Beijing blocked foreign ownership; Tencent steps in as domestic investor (2026-07-13). Freshness: follow-up.
+- Source: https://thenextweb.com/news/tencent-in-talks-to-become-manus-larges

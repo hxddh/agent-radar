@@ -1097,3 +1097,59 @@ Ignore or deprioritize:
 - [infra_primitive] @vercel/detect-agent 1.2.3: https://www.npmjs.com/package/%40vercel/detect-agent
 - [infra_primitive] @vercel/agent-eval-playground 0.1.3: https://www.npmjs.com/package/%40vercel/agent-eval-playground
 - [user_workflow] CLAUDE.md hooks enforcement: https://dev.to/rulestack/your-claudemd-says-always-run-tests-hooks-are-how-you-actually-mean-it-1o9f
+
+- [mainstream_product] OpenAI Agent Sandbox Cloud: https://bsky.app/profile/hn100.bsky.social/post/3mqkse5mqq524
+- [mainstream_product] Anthropic Claude Science: https://www.anthropic.com/news/claude-science-ai-workbench
+- [mainstream_product] GPT-5.6 on Amazon Bedrock: https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-sol-terra/
+- [mainstream_product] Codex v0.145.0-alpha.9: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.9
+- [mainstream_product] Claude Code v2.1.208: https://github.com/anthropics/claude-code/releases/tag/v2.1.208
+- [infra_primitive] Ghostcommit prompt injection: https://www.bleepingcomputer.com/news/security/ghostcommit-hid-prompt-injection-in-png-because-ai-code-reviewers-skip-images/
+- [user_workflow] Claude Code vs OpenCode token overhead: https://systima.ai/blog/claude-code-vs-opencode-token-overhead
+- [user_workflow] SWE-bench-Live cost gap: https://github.com/tamnd/tomo-labs/blob/main/docs/content/experiments/2026/07/13/14-55-dynaconf-doors-closed-lessons-for-tomo.md
+- [user_workflow] Verification loop for DeepSeek: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- [mainstream_product] Mistral Vibe: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Mistral Studio: https://mistral.ai/products/studio/
+- [mainstream_product] Cloudflare Agents releases: https://github.com/cloudflare/agents/releases/tag/agents%400.17.4
+- [mainstream_product] Goose v1.42.0: https://github.com/aaif-goose/goose/releases/tag/v1.42.0
+- [mainstream_product] Gemini CLI nightly v0.52.0: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260714.gfa975395b
+- [mainstream_product] Qwen Code nightly: https://github.com/QwenLM/qwen-code/releases/tag/v0.19.9-nightly.20260714.9dd8389eb
+- [mainstream_product] Cline CLI v3.0.40: https://github.com/cline/cline/releases/tag/cli-v3.0.40
+- [mainstream_product] SST OpenCode v1.17.20: https://github.com/anomalyco/opencode/releases/tag/v1.17.20
+- [mainstream_product] Google ADK Go 2.0: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Supabase + OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] Daytona $24M Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [mainstream_product] E2B $21M Series A: https://e2b.dev/blog/series-a
+- [infra_primitive] Modal Sandboxes: https://modal.com/products/sandboxes
+- [infra_primitive] Kassette: https://github.com/lostinpatterns/kassette
+- [infra_primitive] ContextVault: https://www.contextvault.dev/
+- [infra_primitive] GateGuard: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mqgc3gq2iu22
+- [infra_primitive] Mindwalk: https://github.com/cosmtrek/mindwalk
+- [infra_primitive] Hiver: https://hiver.sh
+- [infra_primitive] Sanbox: https://sanbox.cloud
+- [infra_primitive] sanctuary-framework: https://github.com/eriknewton/sanctuary-framework
+- [mainstream_product] Juggler: https://github.com/juggler-ai/juggler
+- [mainstream_product] Appaca: https://www.appaca.ai/
+- [mainstream_product] DeepSeek V4 adoption: https://openrouter.ai/blog/insights/deepseek-v4-adoption/
+- [mainstream_product] xAI Grok Build: https://abz.global/technology/xai-just-launched-grok-build-ai-coding-agents-are-moving-into-the-terminal
+- [mainstream_product] Tencent/Manus deal: https://thenextweb.com/news/tencent-in-talks-to-become-manus-larges
+- [research] ARCANA: https://arxiv.org/abs/2607.09059
+- [research] SCATE: https://arxiv.org/abs/2607.08983
+- [research] GATS: https://arxiv.org/abs/2607.08894
+- [research] JetBrains Kotlin Benchmark: https://blog.jetbrains.com/kotlin/2026/07/introducing-the-kotlin-benchmark-evaluate-ai-coding-agents-on-real-world-kotlin-tasks/
+- [mainstream_product] Google Gemma 4 12B: https://developers.googleblog.com/bringing-gemma-4-12b-to-your-laptop-unlocking-local-agentic-workflows-with-google-ai-edge/
+- [mainstream_product] Vercel Agent Runs: https://vercel.com/changelog/agent-runs-now-show-subagent-activity-on-eve-projects
+- [mainstream_product] Vercel Chat SDK X adapter: https://vercel.com/changelog/chat-sdk-adds-x-adapter-support
+- [mainstream_product] Pydantic AI v2.9.1: https://github.com/pydantic/pydantic-ai/releases/tag/v2.9.1
+- [mainstream_product] Mem0 CLI v0.2.10: https://github.com/mem0ai/mem0/releases/tag/cli-v0.2.10
+- [mainstream_product] GitHub Code Quality preview: https://github.blog/changelog/2026-07-13-github-code-quality-license-estimate-in-public-preview
+- [infra_primitive] AtomR Sandbox Harness: https://crates.io/crates/atomr-agents-sandbox-harness
+- [infra_primitive] AgenShield: https://www.npmjs.com/package/agenshield
+- [infra_primitive] @agent-action-firewall/sdk: https://www.npmjs.com/package/@agent-action-firewall/sdk
+- [infra_primitive] Mnemoverse: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+- [infra_primitive] AgoraHub: https://pypi.org/project/agorahub/0.10.4/
+- [infra_primitive] ClawAgents: https://pypi.org/project/clawagents/6.12.12/
+- [infra_primitive] grp-mcp: https://pypi.org/project/grp-mcp/0.52.7/
+- [mainstream_product] Streamlit MCP Server: https://pypi.org/project/streamlit-mcp/0.4.0/
+- [mainstream_product] Alibaba Model Studio CLI: https://github.com/modelstudioai/cli
+- [mainstream_product] DeepSeek rate limit docs: https://api-docs.deepseek.com/quick_start/rate_limit
+- [infra_primitive] Fly.io agent reliability: https://fly.io/blog/building-agents-that-dont-break-themselves/
