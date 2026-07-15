@@ -200,3 +200,14 @@ AI Agent workloads create demand for:
 ### 2026-07-12
 - Anthropic containment post emphasizes sandbox boundaries and blast-radius isolation, implying need for per-agent storage segmentation and ephemeral snapshots. Source: https://www.anthropic.com/engineering/how-we-contain-claude
 - Rise of sandbox-based agent execution (Daytona, Modal, Mitos) points to fast-cloning file systems and rapid checkpointing; storage primitives with minimal clone latency (e.g., copy-on-write) become critical.
+
+## 2026-07-15
+
+- **Kassette: durable agent workflows backed by object storage**: New tool uses S3-compatible object storage for persistent workflow state, enabling agent recovery and replay after failures. Relevant to thesis 5 (object storage for agent workspace/snapshots). Evidence: Weak (early repo, HN discussion). Source: https://news.ycombinator.com/item?id=48904789
+
+- **Vercel Blob consistent reads on private storage**: Vercel Blob now supports consistent reads for private storage, important for agent state management where concurrent read/write occurs. Evidence: Strong (official changelog). Source: https://vercel.com/changelog/vercel-blob-now-supports-consistent-reads-on-private-storage
+
+
+## Sandbox Security (2026-07-15)
+
+- **Daytona Sandbox Firewall**: Network-level firewall for agent sandboxes, allowing users to define egress and ingress rules for sandbox environments. Directly relevant to thesis that sandbox security will become a first-class feature for agent execution environments. Evidence strength: Medium (official Daytona blog). Source: https://www.daytona.io/dotfiles/sandbox-firewall

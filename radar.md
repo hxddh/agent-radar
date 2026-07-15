@@ -41,6 +41,10 @@ Last updated: 2026-07-09
 - Initial setup.
 - Added thesis points 6-8 based on Omnigent, Vestige, and Obsidian Turbocharged signals.
 - Added thesis point 9 based on proliferation of memory, web access, observability, and security MCP servers in the 2026-07-02 snapshot.
+
+### 2026-07-15
+
+- Added signal: AWS GuardDuty AI Protection is now available as first-party threat detection for AI workloads, signaling that major cloud providers are building AI-specific security services. Directly reinforces thesis 9 (agent containment/security as first-class infrastructure). Evidence strength: Strong (official AWS announcement). Source: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-guardduty-ai-protection-aws/
 ## Open Questions
 
 - Will agent usage remain IDE-centric, or shift toward cloud task runners?

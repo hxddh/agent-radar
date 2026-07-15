@@ -1153,3 +1153,68 @@ Ignore or deprioritize:
 - [mainstream_product] Alibaba Model Studio CLI: https://github.com/modelstudioai/cli
 - [mainstream_product] DeepSeek rate limit docs: https://api-docs.deepseek.com/quick_start/rate_limit
 - [infra_primitive] Fly.io agent reliability: https://fly.io/blog/building-agents-that-dont-break-themselves/
+
+- [mainstream_product] Codex prompt encryption: https://news.ycombinator.com/item?id=48918757
+- [mainstream_product] Grok Build repo upload: https://bsky.app/profile/hacker.at.thenote.app/post/3mqnnbleb2k2a
+- [mainstream_product] Cursor 0day RCE: https://mindgard.ai/blog/cursor-0day-when-full-disclosure-becomes-the-only-protection-left
+- [mainstream_product] GitHub Copilot security reviews: https://github.blog/changelog/2026-07-14-security-reviews-now-available-in-the-github-copilot-app
+- [mainstream_product] GitHub code scanning AI detections: https://github.blog/changelog/2026-07-14-code-scanning-shows-ai-security-detections-on-pull-requests
+- [user_workflow] Amazon Kiro prod deletion: https://bsky.app/profile/sisqoz.bsky.social/post/3mqnptefol222
+- [user_workflow] Claude Code token overhead: https://news.ycombinator.com/item?id=48918294
+- [user_workflow] Aider vs Claude Code vs OpenHands: https://bsky.app/profile/kunalganglani.bsky.social/post/3mqcxdrpihi2j
+- [user_workflow] Codex 10x usage: https://www.latent.space/p/ainews-codex-usage-up-10x-in-6-months
+- [infra_primitive] Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- [infra_primitive] AWS GuardDuty AI Protection: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-guardduty-ai-protection-aws/
+- [infra_primitive] DeepSeek rate limit docs: https://api-docs.deepseek.com/quick_start/rate_limit
+- [infra_primitive] Kassette: https://news.ycombinator.com/item?id=48904789
+- [infra_primitive] Vercel Blob consistent reads: https://vercel.com/changelog/vercel-blob-now-supports-consistent-reads-on-private-storage
+- [infra_primitive] Fly.io agent reliability: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [mainstream_product] AWS Lambda coding agents: https://aws.amazon.com/about-aws/whats-new/2026/07/aws-lambda-prompt-coding-agents/
+- [mainstream_product] Vercel Plugin VS Code: https://vercel.com/changelog/vercel-plugin-now-available-in-vs-code-and-github-copilot-cli
+- [mainstream_product] Google ADK Go 2.0: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] E2B Series A: https://e2b.dev/blog/series-a
+- [mainstream_product] JetBrains ReSharper 2026.2: https://blog.jetbrains.com/dotnet/2026/07/13/rs-vsc-2026-2/
+- [mainstream_product] OpenAI agentic investment: https://openai.com/index/managing-ai-investments-in-agentic-era
+- [mainstream_product] GPT-5 in Microsoft 365 Copilot: https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot
+- [mainstream_product] AWS Flink Agent Skills: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-managed-service-flink-agent-skills/
+- [mainstream_product] Supabase + OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] AgentMail Vercel Marketplace: https://vercel.com/changelog/agentmail-vercel-marketplace
+- [infra_primitive] Modal Sandboxes: https://modal.com/products/sandboxes
+- [research] MCP implementations dataset: https://arxiv.org/abs/2607.10123
+- [research] Post-merge agentic code: https://arxiv.org/abs/2607.09902
+- [mainstream_product] Gemini CLI nightly: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260715.gfa975395b
+- [mainstream_product] Qwen Code v0.19.9: https://github.com/QwenLM/qwen-code/releases/tag/v0.19.9-preview.0
+- [mainstream_product] Vercel AI SDK: https://github.com/vercel/ai/releases/tag/ai%407.0.28
+- [mainstream_product] OpenCode v1.18.1: https://github.com/anomalyco/opencode/releases/tag/v1.18.1
+- [infra_primitive] Headroom: https://github.com/headroomlabs-ai/headroom
+- [infra_primitive] UiPath coder_eval: https://github.com/UiPath/coder_eval
+- [mainstream_product] CrewAI 1.15.2: https://pypi.org/project/crewai/
+- [mainstream_product] AutoGen AgentChat 0.7.5: https://pypi.org/project/autogen-agentchat/
+- [infra_primitive] Agent usage manager: https://pypi.org/project/agent-usage-manager/0.2.2/
+- [infra_primitive] Superbased Observer: https://open-vsx.org/extension/superbased/superbased-observer
+- [infra_primitive] Agenticow: https://www.npmjs.com/package/agenticow
+- [infra_primitive] GrepRAG: https://www.npmjs.com/package/greprag
+- [infra_primitive] Drylake: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] Agent Shield: https://www.npmjs.com/package/%40elliotllliu/agent-shield
+- [infra_primitive] Sentinel AI: https://www.npmjs.com/package/%40phosphor-dom/sentinel-ai
+- [infra_primitive] Agent-eval-harness CLI: https://www.npmjs.com/package/%40reaatech/agent-eval-harness-cli
+- [infra_primitive] Atomr agents eval: https://crates.io/crates/atomr-agents-eval
+- [infra_primitive] Agentic eval: https://crates.io/crates/agentic-eval
+- [infra_primitive] Agent-bridle-core: https://crates.io/crates/agent-bridle-core
+- [infra_primitive] Detect-coding-agent: https://crates.io/crates/detect-coding-agent
+- [infra_primitive] Agent-inspector: https://www.npmjs.com/package/%40tonyclaw/agent-inspector
+- [infra_primitive] Agentapprove: https://www.npmjs.com/package/agentapprove
+- [infra_primitive] Cyborgy MCP: https://pypi.org/project/cyborgy/0.1.43/
+- [infra_primitive] Memlineage: https://dev.to/magopredator/memlineage-v010-defensa-de-dos-capas-contra-memory-poisoning-en-agentes-llm-5gpa
+- [infra_primitive] Nv workspace orchestrator: https://news.ycombinator.com/item?id=48905012
+- [infra_primitive] Docker NanoClaw MicroVM: https://bsky.app/profile/ramikrispin.bsky.social/post/3mqnqlre6uc2t
+- [mainstream_product] HeyGen Hyperframes: https://github.com/heygen-com/hyperframes
+- [mainstream_product] Zed editor v1.11.3-pre: https://github.com/zed-industries/zed/releases/tag/v1.11.3-pre
+- [mainstream_product] Vercel agent-eval-playground: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [mainstream_product] Vercel detect-agent: https://www.npmjs.com/package/%40vercel/detect-agent
+
+
+- [mainstream_product] GitHub Copilot security reviews: https://github.blog/changelog/2026-07-14-security-reviews-now-available-in-the-github-copilot-app
+- [mainstream_product] Code scanning AI security detections: https://github.blog/changelog/2026-07-14-code-scanning-shows-ai-security-detections-on-pull-requests
+- [mainstream_product] Mistral Vibe coding agent: https://mistral.ai/products/vibe/code/
+- [user_workflow] Aider vs Claude Code vs OpenHands comparison: https://bsky.app/profile/kunalganglani.bsky.social/post/3mqcxdrpihi2j

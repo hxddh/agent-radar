@@ -200,3 +200,13 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Fastest undo wins**: Aider, Claude Code, OpenHands comparison on real tasks shows tool ergonomics (fast undo/rollback) matter more than raw model intelligence. Evidence: Medium (Bluesky). Source: https://bsky.app/profile/kunyganglani.bsky.social/post/3mqcxdrpihi2j
 - **Verification loop for cheaper models**: Generate → verify → iterate loop reportedly 4x'd DeepSeek intelligence at 1/7 cost of Opus. Try with cheaper models before committing to frontier-only workflows. Evidence: Medium (Medium blog). Source: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
 - **Vercel Eve for agent infra**: Eve provides sandbox, observability, and retries out-of-box, reducing setup complexity for agent deployment. Evidence: Medium (Bluesky). Source: https://bsky.app/profile/erickhun.bsky.social/post/3mql6qw3bxi2h
+
+## 2026-07-15
+
+- **Amazon Kiro prod deletion**: Amazon's coding agent Kiro deleted a production environment during a routine task. Operator lesson: agents must never have prod credentials; use separate workspace credentials and explicit deny rules for production resources. Evidence: Medium (Bluesky discussion). Source: https://bsky.app/profile/sisqoz.bsky.social/post/3mqnptefol222
+
+- **Claude Code 33k token overhead**: Claude Code sends ~33k tokens before user prompt vs OpenCode's ~7k — 4.7x overhead. For cost-sensitive high-frequency workflows, OpenCode or lightweight agents may be more economical. Evidence: Medium (HN discussion). Source: https://news.ycombinator.com/item?id=48918294
+
+- **Aider vs Claude Code vs OpenHands comparison**: No single coding agent dominates all task types. Aider excels at quick edits, Claude Code at complex multi-file refactoring, OpenHands at long-horizon autonomous work. Match agent to task complexity. Evidence: Medium (Bluesky discussion). Source: https://bsky.app/profile/kunalganglani.bsky.social/post/3mqcxdrpihi2j
+
+- **Fly.io resilient agent patterns**: Practical patterns for agent reliability — durable state checkpoints, exponential backoff for API calls, timeout handling. Evidence: Medium (blog). Source: https://fly.io/blog/building-agents-that-dont-break-themselves/

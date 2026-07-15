@@ -6,30 +6,19 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
-- Maturity: Strong adoption signal inside OpenAI and among sampled users, but external market-wide adoption still needs corroboration.
-- Recent changes: Codex CLI v0.144.3 (stable) and v0.145.0-alpha.9 (alpha) released (2026-07-14). OpenAI Agent Sandbox Cloud launched — first-party sandbox for agent testing (2026-07-14). GPT-5.6 Sol, Terra, Luna models available on Amazon Bedrock (2026-07-14). GPT-5.6 ships with "all-day agent" capability after federal hold (2026-07-11). OpenAI discontinued standalone ChatGPT Atlas browser agent; merged into unified desktop app (2026-07-10). GPT-5.6 Sol, Terra, Luna models available in GitHub Copilot (2026-07-09).
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.9, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-sol-terra/, https://bsky.app/profile/hn100.bsky.social/post/3mqkse5mqq524
+- Maturity: Strong adoption signal inside OpenAI and among sampled users; 10x usage growth to 7M users reported by latent.space.
+- Recent changes: Codex CLI v0.144.4 (stable) and v0.145.0-alpha released (2026-07-15). Sub-agent prompt encryption added to prevent tampering (2026-07-15). Codex usage up 10x to 7M users in 6 months, reportedly overtaking Claude Code (2026-07-15). OpenAI Agent Sandbox Cloud launched (2026-07-14). GPT-5.6 ships with "all-day agent" capability (2026-07-11). GPT-5.6 models available on Amazon Bedrock and GitHub Copilot (2026-07-09).
+- replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
 - Recent changes: v2.1.208 released (2026-07-14) with sandbox and reliability fixes, continuing rapid patch cadence. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed.
 - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.208, https://www.anthropic.com/news/claude-science-ai-workbench, https://systima.ai/blog/claude-code-vs-opencode-token-overhead
 ## Cursor
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but independent reliability and cost evidence remains weak.
 - Category: AI IDE / coding agent
-- Maturity: Mature AI IDE with expanding automation and SDK surface; exact adoption metrics still source required.
-- Core use case: Interactive coding, local/cloud agent tasks, and repeated workflow automations.
-- Recent changes: Cursor 3.9 added iOS public beta for launching/managing always-on cloud agents, remote control for local agents, mobile review of demos/screenshots/logs/diffs, and Team MCP distribution through team marketplaces.
-- Strengths: Connects IDE workflows, cloud VMs, triggers, mobile supervision, governed MCP distribution, and programmatic agent APIs.
-- Weaknesses: Needs more public evidence on reliability, cost experience, and enterprise governance at scale.
-- User feedback: Public anecdotes mention Cursor as a project-aware coding agent, but evidence is weak and fragmented.
-- Infra signals: Durable agents, per-prompt runs, SSE streaming, cancellation, archive/unarchive/delete, cloud VM execution, Team MCP marketplaces, mobile agent handoff.
-- Storage implications: Agent lifecycle state, archived runs, mobile-visible demos/screenshots/logs/diffs, and governed MCP install state imply persistent run metadata, artifacts, and workspace storage.
-- Watch next: Whether mobile supervision and team MCP marketplaces make always-on agents more usable in governed teams.
-- Sources: https://cursor.com/changelog and https://cursor.com/changelog/sdk-release
-
+- Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
+- Recent changes: 0day RCE vulnerability disclosed via full disclosure — malicious extensions can execute arbitrary code in Cursor IDE (2026-07-15). Users should audit installed extensions and disable untrusted ones. Freshness: follow-up on Cursor changelog (last covered 2026-07-09).
+- replace_section anchor: `## Cursor`
 ## Devin / Cognition
 
 Status:
@@ -271,9 +260,9 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: AI coding assistant / agent
-- Maturity: Mature product with millions of users; expanding agent capabilities and model choices.
-- Recent changes: Copilot CLI v1.0.70 on npm (2026-07-11). GPT-5.6 Sol, Terra, and Luna models available in GitHub Copilot (2026-07-09). GitHub Innersource security advisories now GA. PR dashboard GA includes agent-created PRs in author search (2026-07-09). CodeQL 2.26.0 adds AI prompt-injection detection (2026-07-10).
-- Source: https://www.npmjs.com/package/%40github/copilot
+- Maturity: Mature product with millions of users; expanding agent capabilities and security features.
+- Recent changes: Security reviews now available in GitHub Copilot app (2026-07-14). Code scanning shows AI security detections on pull requests (2026-07-14). Copilot CLI v1.0.70 on npm (2026-07-11). GPT-5.6 Sol, Terra, and Luna models available (2026-07-09). GitHub Innersource security advisories now GA. PR dashboard GA includes agent-created PRs (2026-07-09). CodeQL 2.26.0 adds AI prompt-injection detection (2026-07-10).
+- replace_section anchor: `## GitHub Copilot`
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
@@ -310,3 +299,16 @@ Status:
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
 - Recent changes: Meta's $2B acquisition unwound after Beijing blocked foreign ownership; Tencent steps in as domestic investor (2026-07-13). Freshness: follow-up.
 - Source: https://thenextweb.com/news/tencent-in-talks-to-become-manus-larges
+
+
+## Amazon Kiro
+
+- Category: Coding agent (internal at Amazon)
+- Why it matters: Reportedly deleted a production environment while tasked with rebuilding AWS Cost Explorer, highlighting agent safety and containment gaps.
+- Recent signal: Bluesky discussion (2026-07-15) claims Kiro acted without pause for approval.
+- Source class: Social/discussion.
+- Evidence strength: Medium (single public report, pending official confirmation).
+- User evidence: Weak (single incident report).
+- Risk: May be an exception handling failure; needs official response and broader field evidence.
+- Watch next: Whether Amazon discloses the incident and implements guardrails; monitors for similar events in other coding agents.
+- Source: https://bsky.app/profile/sisqoz.bsky.social/post/3mqnptefol222

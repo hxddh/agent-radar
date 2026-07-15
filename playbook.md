@@ -141,3 +141,9 @@ Evidence:
 - When useful: For self-contained tasks with well-defined tests; avoids manual fix-test cycles.
 - Evidence: Single user report on Bluesky (https://bsky.app/profile/jamiebykovbrett.bsky.social/post/3mqgw7dkuhr2d); requires generalization.
 - Should promote to playbook? kept as candidate until more evidence.
+
+## 2026-07-15
+
+- **Token overhead awareness**: Before committing to a coding agent for high-frequency workflows, measure system token overhead (tokens sent before user prompt). Claude Code: ~33k tokens; OpenCode: ~7k tokens. For cost-sensitive tasks, lighter agents may save 4x+ per task. For complex tasks, the heavier agent's capability may justify the overhead. Evidence: Medium (HN discussion). Source: https://news.ycombinator.com/item?id=48918294
+
+- **Agent environment isolation**: Never give coding agents access to production environments. Use separate credentials for agent workspaces, implement explicit deny rules for prod resources, and run agents in sandboxed environments (Daytona, E2B, or container isolation). The Amazon Kiro prod deletion incident demonstrates the blast radius of insufficient isolation. Evidence: Medium (Bluesky discussion). Source: https://bsky.app/profile/sisqoz.bsky.social/post/3mqnptefol222
