@@ -7,13 +7,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users; 10x usage growth to 7M users reported by latent.space.
-- Recent changes: Codex CLI v0.144.4 (stable) and v0.145.0-alpha released (2026-07-15). Sub-agent prompt encryption added to prevent tampering (2026-07-15). Codex usage up 10x to 7M users in 6 months, reportedly overtaking Claude Code (2026-07-15). OpenAI Agent Sandbox Cloud launched (2026-07-14). GPT-5.6 ships with "all-day agent" capability (2026-07-11). GPT-5.6 models available on Amazon Bedrock and GitHub Copilot (2026-07-09).
+- Recent changes: Codex CLI v0.144.5 stable released (2026-07-16). Codex Micro hardware macropad launched at $230 with dedicated agent keys and status indicators (2026-07-16). Sub-agent prompt encryption added to prevent tampering (2026-07-15, 422 HN points). Codex usage up 10x to 7M users in 6 months, reportedly overtaking Claude Code (2026-07-15). OpenAI Agent Sandbox Cloud launched (2026-07-14). GPT-5.6 ships with "all-day agent" capability (2026-07-11). GPT-5.6 models available on Amazon Bedrock and GitHub Copilot (2026-07-09).
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: v2.1.208 released (2026-07-14) with sandbox and reliability fixes, continuing rapid patch cadence. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed.
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.208, https://www.anthropic.com/news/claude-science-ai-workbench, https://systima.ai/blog/claude-code-vs-opencode-token-overhead
+- Recent changes: v2.1.211 released (2026-07-16). v2.1.208 released (2026-07-14) with sandbox and reliability fixes. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). Anthropic launched Claude for Teachers vertical product (2026-07-16). Claude web fetch exfiltration attack demonstrated by Simon Willison (2026-07-15). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed.
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.

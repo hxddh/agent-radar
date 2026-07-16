@@ -210,3 +210,15 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Aider vs Claude Code vs OpenHands comparison**: No single coding agent dominates all task types. Aider excels at quick edits, Claude Code at complex multi-file refactoring, OpenHands at long-horizon autonomous work. Match agent to task complexity. Evidence: Medium (Bluesky discussion). Source: https://bsky.app/profile/kunalganglani.bsky.social/post/3mqcxdrpihi2j
 
 - **Fly.io resilient agent patterns**: Practical patterns for agent reliability — durable state checkpoints, exponential backoff for API calls, timeout handling. Evidence: Medium (blog). Source: https://fly.io/blog/building-agents-that-dont-break-themselves/
+
+## 2026-07-16
+
+- **Claude Code vs Codex vs OpenCode comparison** (Bluesky): Full-stack engineer compared three CLI coding agents. OpenCode praised for low token overhead (~7k vs Claude Code ~33k). Claude Code noted for depth of analysis. Codex noted for speed. No single agent dominates all scenarios; switching costs remain high. Evidence: Medium. Source: https://bsky.app/profile/hacker.at.thenote.app/post/3mqq2brvc322a
+
+- **Cursor agent run times** (Reddit): Users report unpredictable agent run times. Some runs complete in minutes, others take 30+ minutes with idle behavior. Affects productivity and planning. Multiple users in thread confirm variability. Evidence: Medium. Source: https://www.reddit.com/r/cursor/comments/1uxqsan/how_long_do_cursors_agent_runs_actually_take_you/
+
+- **Grok 4.5 unexpected API costs in Cursor** (Reddit): Selecting Grok 4.5 in Cursor silently routed through paid API instead of first-party model. User incurred unexpected billing. Operators should verify model routing to control costs. Evidence: Medium. Source: https://www.reddit.com/r/cursor/comments/1uxqtsx/grok_45_triggered_api_usage_instead_of_first/
+
+- **Agent memory: tiered vs flat** (Bluesky): Developer tested tiered vs flat memory across 50 workflows. Tiered saves tokens but flat feels more reliable. Trade-off between cost efficiency and reliability. Evidence: Medium. Source: https://bsky.app/profile/build2launch-ai.bsky.social/post/3mqpgapopqz2e
+
+- **Claude web fetch exfiltration** (Simon Willison blog): Prompt injection via Claude's web fetch feature can exfiltrate conversation content to external URLs. Reproducible attack. Operators should audit prompt injection surfaces and consider blocking outbound requests to untrusted domains. Evidence: Strong. Source: https://simonwillison.net/2026/Jul/15/claude-web-fetch-exfiltration/

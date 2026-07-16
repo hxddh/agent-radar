@@ -211,3 +211,13 @@ AI Agent workloads create demand for:
 ## Sandbox Security (2026-07-15)
 
 - **Daytona Sandbox Firewall**: Network-level firewall for agent sandboxes, allowing users to define egress and ingress rules for sandbox environments. Directly relevant to thesis that sandbox security will become a first-class feature for agent execution environments. Evidence strength: Medium (official Daytona blog). Source: https://www.daytona.io/dotfiles/sandbox-firewall
+
+## 2026-07-16
+
+- **E2B raises $21M Series A** (scr-e2b-series-a): Agent sandbox infrastructure validated by venture funding. Storage implication: E2B's ephemeral compute model implies need for durable artifact storage — workspace snapshots, execution logs, and replayable state. Watch for persistent workspace or snapshot storage features. Evidence: Strong (official blog). Source: https://e2b.dev/blog/series-a
+
+- **Daytona Sandbox Firewall** (scr-daytona-firewall): Network-level firewall for agent sandboxes. Storage implication: Network egress control complements sandbox isolation; storage access patterns can be restricted at firewall level. Watch for integration with persistent workspace storage policies. Evidence: Medium (official blog). Source: https://www.daytona.io/dotfiles/sandbox-firewall
+
+- **Modal Sandboxes** (scr-modal-sandboxes): Ephemeral sandbox for untrusted agent code. Storage implication: Storage lifecycle tied to sandbox session; watch for persistent volume support. Evidence: Medium (official product page). Source: https://modal.com/products/sandboxes
+
+- **MCP Python SDK v2.0.0b2 and TypeScript SDK v2.0.0-beta.4** released: Next-gen MCP SDKs enter beta. Storage implication: MCP server ecosystem maturing; storage-related MCP servers (filesystem, knowledge base) may need migration. Watch for breaking changes in storage access patterns. Evidence: Strong (official releases). Sources: https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.0.0b2, https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/server%402.0.0-beta.4

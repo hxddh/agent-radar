@@ -1218,3 +1218,47 @@ Ignore or deprioritize:
 - [mainstream_product] Code scanning AI security detections: https://github.blog/changelog/2026-07-14-code-scanning-shows-ai-security-detections-on-pull-requests
 - [mainstream_product] Mistral Vibe coding agent: https://mistral.ai/products/vibe/code/
 - [user_workflow] Aider vs Claude Code vs OpenHands comparison: https://bsky.app/profile/kunalganglani.bsky.social/post/3mqcxdrpihi2j
+
+- [mainstream_product] Cloudflare Precursor: https://blog.cloudflare.com/introducing-precursor/
+- [mainstream_product] OpenAI Codex Micro: https://bsky.app/profile/thenewstack.io/post/3mqq5banqnx2c
+- [mainstream_product] xAI Grok Build open-sourced: https://bsky.app/profile/breachprotocol.bsky.social/post/3mqqa5pf4gg2a
+- [mainstream_product] Claude Code v2.1.211: https://github.com/anthropics/claude-code/releases/tag/v2.1.211
+- [mainstream_product] OpenAI Codex 0.144.5: https://github.com/openai/codex/releases/tag/rust-v0.144.5
+- [user_workflow] Claude web fetch exfiltration: https://simonwillison.net/2026/Jul/15/claude-web-fetch-exfiltration/
+- [mainstream_product] GPT-5.6 in M365 Copilot: https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot/
+- [mainstream_product] Google ADK Go 2.0: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Anthropic Claude for Teachers: https://www.anthropic.com/news/claude-for-teachers
+- [infra_primitive] MCP notes server malware: https://bsky.app/profile/pkgradar.bsky.social/post/3mqq45gqlqk2f
+- [mainstream_product] OpenAI AgentKit: https://www.reddit.com/r/AgentDevelopment/comments/1o3wv1a/introducing_agentkit_openai/
+- [infra_primitive] E2B Series A: https://e2b.dev/blog/series-a
+- [infra_primitive] Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- [infra_primitive] Modal Sandboxes: https://modal.com/products/sandboxes
+- [infra_primitive] superbased-observer: https://open-vsx.org/extension/superbased/superbased-observer
+- [infra_primitive] agenticow: https://www.npmjs.com/package/agenticow
+- [user_workflow] Claude Code vs Codex vs OpenCode: https://bsky.app/profile/hacker.at.thenote.app/post/3mqq2brvc322a
+- [user_workflow] Cursor agent run times: https://www.reddit.com/r/cursor/comments/1uxqsan/how_long_do_cursors_agent_runs_actually_take_you/
+- [user_workflow] Grok 4.5 API usage in Cursor: https://www.reddit.com/r/cursor/comments/1uxqtsx/grok_45_triggered_api_usage_instead_of_first/
+- [user_workflow] Agent memory debate: https://bsky.app/profile/build2launch-ai.bsky.social/post/3mqpgapopqz2e
+- [mainstream_product] Gemini CLI nightly: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260716.g3ff5ba20f
+- [mainstream_product] Qwen Code nightly: https://github.com/QwenLM/qwen-code/releases/tag/v0.19.10-nightly.20260716.506ce0a1a
+- [mainstream_product] Cline SDK v0.0.62: https://github.com/cline/cline/releases/tag/sdk/sdk/v0.0.62
+- [mainstream_product] Block Goose v1.43.0: https://github.com/aaif-goose/goose/releases/tag/v1.43.0
+- [mainstream_product] Langfuse v3.214.0: https://github.com/langfuse/langfuse/releases/tag/v3.214.0
+- [mainstream_product] PydanticAI v2.11.0: https://github.com/pydantic/pydantic-ai/releases/tag/v2.11.0
+- [mainstream_product] Mastra Core v1.51.0: https://github.com/mastra-ai/mastra/releases/tag/%40mastra/core%401.51.0
+- [mainstream_product] Zed v1.12.0-pre: https://github.com/zed-industries/zed/releases/tag/v1.12.0-pre
+- [mainstream_product] OpenHands Cloud v1.46.2: https://github.com/All-Hands-AI/OpenHands/releases/tag/cloud-1.46.2
+- [mainstream_product] Vercel AI SDK 7.0.29: https://github.com/vercel/ai/releases/tag/ai%407.0.29
+- [infra_primitive] MCP Python SDK v2.0.0b2: https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.0.0b2
+- [infra_primitive] MCP TypeScript SDK v2.0.0-beta.4: https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/server%402.0.0-beta.4
+- [infra_primitive] trycua/cua: https://github.com/trycua/cua
+- [infra_primitive] CubeSandbox: https://github.com/TencentCloud/CubeSandbox
+- [infra_primitive] Chidori: https://github.com/ThousandBirdsInc/chidori
+- [infra_primitive] AgentSight: https://github.com/eunomia-bpf/agentsight
+- [infra_primitive] greprag: https://www.npmjs.com/package/greprag
+- [infra_primitive] jobd: https://pypi.org/project/jobd/0.5.30/
+- [infra_primitive] aicage: https://pypi.org/project/aicage/1.4.4/
+- [infra_primitive] pyveil: https://pypi.org/project/pyveil/0.2.4/
+- [research] Cross-Cutting Security Analysis: https://arxiv.org/abs/2607.12089
+- [research] Predicting Acceptance in Agent PRs: https://arxiv.org/abs/2607.12057
+- [research] Fault Injection in OpenAPI: https://arxiv.org/abs/2607.12101
