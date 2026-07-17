@@ -1262,3 +1262,60 @@ Ignore or deprioritize:
 - [research] Cross-Cutting Security Analysis: https://arxiv.org/abs/2607.12089
 - [research] Predicting Acceptance in Agent PRs: https://arxiv.org/abs/2607.12057
 - [research] Fault Injection in OpenAPI: https://arxiv.org/abs/2607.12101
+
+
+### Added 2026-07-17
+- [mainstream_product] Claude can now use 1Password credentials: https://www.theverge.com/tech/966442/1password-anthropic-claude-browser-integration
+- [mainstream_product] Cursor vulnerability easier to trigger: https://bsky.app/profile/wdormann.infosec.exchange.ap.brid.gy/post/3mqshob4cc272
+- [mainstream_product] Anthropic makes indirect prompt injection a standard feature in Slack: https://bsky.app/profile/jukkan.bsky.social/post/3mqrirmv6a22a
+- [mainstream_product] Microsoft Agent Framework episodic procedural memory: https://www.cloudpulsebriefs.com/briefs/563561/?utm_source=bluesky
+- [mainstream_product] CircleCI CLI adds MCP support: https://bsky.app/profile/circleci.com/post/3mqsdzqfyz326
+- [mainstream_product] VS Code agent host runs multiple AI agents: https://bsky.app/profile/hacker.at.thenote.app/post/3mqsmgz4nns2a
+- [user_workflow] Vibe coding in bed via Claude remote control: https://bsky.app/profile/georgesl.bsky.social/post/3mqrpnbbphs2s
+- [user_workflow] Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- [research] Wandr benchmark for research agents: https://research.perplexity.ai/articles/wandr-benchmark-evaluating-research-agents-that-must-search-wide-and-deep
+- [infra_primitive] Juggler: open-source GUI coding agent: https://github.com/juggler-ai/juggler
+- [infra_primitive] Traceforce: security monitoring for AI apps: https://news.ycombinator.com/item?id=48937020
+- [infra_primitive] grantry 0.10.1: local credential broker for humans and AI agents, AWS-first: https://pypi.org/project/grantry/0.10.1/
+- [mainstream_product] Codex encrypts sub-agent prompts: https://github.com/openai/codex/issues/28058
+- [mainstream_product] Letta cloud sandboxes become persistent with GitHub integration: https://bsky.app/profile/letta.com/post/3mqrryvmpdv24
+- [mainstream_product] Manus ownership: Tencent leads buyback from Meta: https://bsky.app/profile/aiweekly.bsky.social/post/3mqjqgqq6hs2c
+- [mainstream_product] Microsoft Copilot OS leaked: https://www.windowscentral.com/microsoft/windows-11/microsoft-copilot-os-revealed-in-leaked-video-lightweight-windows-os-exploration-features-new-desktop-ui-built-entirely-around-copilot-and-agentic-ai
+- [mainstream_product] Coasty: API for computer-use agents: https://coasty.ai/docs
+- [mainstream_product] Agnost AI: extract user feedback from agent conversations: https://agnost.ai
+- [mainstream_product] Tura AI: agent runtime reduces LLM turns by 80%: https://github.com/Tura-AI/tura
+- [user_workflow] Claude Code criticized as ceiling for vibe-coded software: https://danangell.com/blog/posts/claude-code/
+- [user_workflow] User shares token burnout story and cost optimization: https://dev.to/phalkmin/i-burned-through-thousands-of-ai-tokens-then-a-friend-did-it-for-free-31m8
+- [mainstream_product] DataGrip 2026.2: AI Agent Skills and MCP Tools: https://blog.jetbrains.com/datagrip/2026/07/16/datagrip-2026-2-ai-agent-skills-mcp-tools-and-cli-commands-for-data-source-management-bundled-jdbc-drivers-and-improved-session-control/
+- [mainstream_product] Gemini Enterprise Agent Platform with Parallel Web Search: https://developers.googleblog.com/expanding-choice-in-gemini-enterprise-agent-platform-introducing-grounding-with-parallel-web-search/
+- [mainstream_product] Agentic Coding on Supabase with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] NVIDIA Nemotron 3 Embed wins RTEB: https://huggingface.co/blog/nvidia/nemotron-3-embed-wins-rteb
+- [mainstream_product] Kimi K3 on Vercel AI Gateway: https://vercel.com/changelog/kimi-k3-is-now-available-on-ai-gateway
+- [mainstream_product] Microsoft Agent Framework for Go: https://github.com/microsoft/agent-framework-go
+- [mainstream_product] Ruflo: Agent Meta-Harness (64k stars): https://github.com/ruvnet/ruflo
+- [mainstream_product] UiPath Coder Eval – framework for evaluating AI coding agents: https://github.com/UiPath/coder_eval
+- [infra_primitive] mitos-run: microVM sandbox forking for AI agents: https://github.com/mitos-run/mitos
+- [infra_primitive] Agent Eval Gate: cross-framework regression gate: https://github.com/keith-leung/agent-eval-gate
+- [infra_primitive] Fluidbox: Agent control plane with governed sandboxes: https://github.com/hrishikeshdkakkad/fluidbox
+- [infra_primitive] AgentStack: local control plane with trust-gate and firewall: https://github.com/Tarekkharsa/agentstack
+- [infra_primitive] agent-observability-trace 0.1.2: deterministic record/replay for LangGraph and OpenAI Agents SDK: https://pypi.org/project/agent-observability-trace/0.1.2/
+- [infra_primitive] spectron-google-adk 0.3.0: SurrealDB memory as tools for Google ADK agents: https://pypi.org/project/spectron-google-adk/0.3.0/
+- [infra_primitive] mcp-mesh 3.2.1: Python SDK for distributed AI agents with auto-discovery: https://pypi.org/project/mcp-mesh/3.2.1/
+- [infra_primitive] memento-mcp 1.2.1: temporal graph memory and proactive goal alignment for agents: https://pypi.org/project/memento-mcp/1.2.1/
+- [infra_primitive] drylake: scan MCP servers, agent rules, and secrets before agents run: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] detect-coding-agent: detect if app is invoked by AI coding agents: https://crates.io/crates/detect-coding-agent
+- [infra_primitive] @vercel/agent-eval-playground 0.1.3: web playground for agent eval results: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [infra_primitive] agentapprove 0.1.33: agent observability and control from iPhone/Apple Watch: https://www.npmjs.com/package/agentapprove
+- [infra_primitive] mnemoverse-vscode: persistent memory for GitHub Copilot Chat Agent Mode: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+- [infra_primitive] mcp/grafana: MCP server for Grafana: https://hub.docker.com/r/library/mcp/grafana
+- [infra_primitive] atomr-agents-eval: eval suites with regression detection and event-stream replay: https://crates.io/crates/atomr-agents-eval
+- [infra_primitive] atomr-agents-sandbox-harness: microVM sandbox orchestrator with bin-packing scheduler: https://crates.io/crates/atomr-agents-sandbox-harness
+- [infra_primitive] @phosphor-dom/sentinel-ai 0.4.0: multi-agent security engineering framework: https://www.npmjs.com/package/%40phosphor-dom/sentinel-ai
+- [infra_primitive] @vercel/detect-agent 1.2.3: detect if code runs in AI agent environment: https://www.npmjs.com/package/%40vercel/detect-agent
+- [infra_primitive] agentic-eval: evaluate programs for agentic AI use across four axes: https://crates.io/crates/agentic-eval
+- [infra_primitive] @tonyclaw/agent-inspector 3.0.47: agent observability and knowledge capture layer: https://www.npmjs.com/package/%40tonyclaw/agent-inspector
+- [infra_primitive] agent-browser: fast browser automation CLI for AI agents: https://crates.io/crates/agent-browser
+- [infra_primitive] cloudllm: Rust toolkit for building agents with multi-protocol tool support: https://crates.io/crates/cloudllm
+- [infra_primitive] hashicorp/terraform-mcp-server: automatic build of Terraform MCP Server: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
+- [infra_primitive] adamast 0.1.0: adaptive failure-mode taxonomy runtime for coding agents: https://pypi.org/project/adamast/0.1.0/
+- [infra_primitive] spec2openapi 0.2.2: convert legacy API specs to FastMCP-ready OpenAPI: https://pypi.org/project/spec2openapi/0.2.2/
