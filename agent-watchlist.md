@@ -12,8 +12,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: v2.1.211 released (2026-07-16). v2.1.208 released (2026-07-14) with sandbox and reliability fixes. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). Anthropic launched Claude for Teachers vertical product (2026-07-16). Claude web fetch exfiltration attack demonstrated by Simon Willison (2026-07-15). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming backdoor (2026-07-10); pending official response. GhostApproval symlink attack disclosed.
-- replace_section anchor: `## Claude Code`
+- Recent changes: v2.1.214 released (2026-07-18) with critical permission-check bypass fixes. v2.1.211 released (2026-07-16). v2.1.208 released (2026-07-14) with sandbox and reliability fixes. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). Anthropic launched Claude for Teachers vertical product (2026-07-16). Claude web fetch exfiltration attack demonstrated by Simon Willison (2026-07-15). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming bac
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.214
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -261,8 +261,8 @@ Status:
 ## GitHub Copilot
 - Category: AI coding assistant / agent
 - Maturity: Mature product with millions of users; expanding agent capabilities and security features.
-- Recent changes: Security reviews now available in GitHub Copilot app (2026-07-14). Code scanning shows AI security detections on pull requests (2026-07-14). Copilot CLI v1.0.70 on npm (2026-07-11). GPT-5.6 Sol, Terra, and Luna models available (2026-07-09). GitHub Innersource security advisories now GA. PR dashboard GA includes agent-created PRs (2026-07-09). CodeQL 2.26.0 adds AI prompt-injection detection (2026-07-10).
-- replace_section anchor: `## GitHub Copilot`
+- Recent changes: Repository-level usage metrics GA (2026-07-17). Copilot CLI v1.0.71 released (2026-07-18). Code review customization improvements (2026-07-17). Mobile PR comment fix with Copilot Cloud Agent (2026-07-17). Security reviews now available in GitHub Copilot app (2026-07-14). Code scanning shows AI security detections on pull requests (2026-07-14). Copilot CLI v1.0.70 on npm (2026-07-11). GPT-5.6 Sol, Terra, and Luna models available (2026-07-09). GitHub Innersource security advisories now GA. PR dashboard GA includes agent-created PRs (2026-07-09). CodeQL 2.26.0 adds AI prompt-injection detection (2026-07-10).
+- Source: https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.

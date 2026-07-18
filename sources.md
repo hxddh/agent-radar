@@ -1342,3 +1342,13 @@ Ignore or deprioritize:
 - [user_workflow] CLAUDE.md as thin router survives compaction: https://bsky.app/profile/ultrathink-art.bsky.social/post/3mqvdcrhvex2l
 - [research] arXiv: Structured Feedback Improves Repair: https://arxiv.org/abs/2607.14167
 - [mainstream_product] Google Gemini CLI v0.52.0-nightly: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260718.gacae7124b
+
+- [mainstream_product] GitHub Copilot repo-level usage metrics GA: https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available
+- [mainstream_product] Claude Code 2.1.214 permission-check bypass fix: https://bsky.app/profile/claudecodechanges.bsky.social/post/3mqvfpn5xkf2l
+- [mainstream_product] Anthropic containment engineering: https://www.anthropic.com/engineering/how-we-contain-claude
+- [mainstream_product] OpenAI encrypts Codex agent instructions: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
+- [infra_primitive] @vercel/detect-agent 1.2.3: https://www.npmjs.com/package/%40vercel/detect-agent
+- [mainstream_product] Vercel Chat SDK Slack agent support: https://vercel.com/changelog/chat-sdk-adds-native-slack-agent-support
+- [mainstream_product] Vercel agent-eval-playground 0.1.3: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [infra_primitive] Official Notion MCP Server 2.4.1: https://www.npmjs.com/package/%40notionhq/notion-mcp-server
+- [infra_primitive] HashiCorp Terraform MCP Server: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
