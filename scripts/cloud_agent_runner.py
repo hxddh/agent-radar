@@ -3758,10 +3758,21 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
             f"{detail}"
         )
     if infra_count > MAX_DAILY_INFRA_PRIMITIVE_BULLETS:
-        raise SystemExit(
-            f"Refusing daily update: {infra_count} infra_primitive emerging bullets exceeds "
-            f"max {MAX_DAILY_INFRA_PRIMITIVE_BULLETS}; move extras to research-log.md."
+        # The cap exists to stop infra-only days. When a real mainstream signal
+        # is present the day is not degenerate — refusing then just voids a good
+        # daily over surplus breadth (Issue #66, 2026-07-18). Warn instead.
+        if not has_mainstream:
+            raise SystemExit(
+                f"Refusing daily update: {infra_count} infra_primitive emerging bullets exceeds "
+                f"max {MAX_DAILY_INFRA_PRIMITIVE_BULLETS} with no real mainstream_product signal; "
+                "move extras to research-log.md."
+            )
+        warning = (
+            f"Daily direction: {infra_count} infra_primitive emerging bullets exceed the "
+            f"target max {MAX_DAILY_INFRA_PRIMITIVE_BULLETS}; prefer moving extras to research-log.md"
         )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
     if len(vendors) < 2 and not mainstream_gap:
         raise SystemExit(
             "Refusing daily update: need signals from at least 2 vendor families "

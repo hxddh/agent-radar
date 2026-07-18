@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.19.5 - 2026-07-18
+
+Hotfix for the 2026-07-18 scheduled run (Issue #66): the daily was voided by the hard infra_primitive ≤2 cap — the model wrote 5 emerging-repo bullets in an otherwise rich day block, and the refusal threw away the whole daily (second loss to this gate class).
+
+### Fixed
+- The infra_primitive cap now hard-refuses only the degenerate case it was built for — an infra-flood day with **no real mainstream signal**. When mainstream coverage is present, exceeding the cap records an `apply_warnings` entry instead of voiding the update. Vendor-family/theme minimums, user_workflow quota, must-cover, and depth audits still guard direction.
+- Note: the 2026-07-15 monthly bilingual refusal in the same alert thread needed no code change — the gate correctly rejected an English-heavy payload and the monthly recovered on later runs; current monthly passes the ratio (en=33/zh=31, floor 20).
+
 ## v0.19.4 - 2026-07-13
 
 Hotfix for the first Monday scheduled run of ISO week W29 (Issue #64): the workflow's ensure step pre-creates the new week's report file from the template BEFORE the model runs, so the first weekly write of the period hit "Refusing full-file update for weekly/2026-W29.md" — the anti-clobber gate treated the empty template shell as existing content, deadlocking every period boundary (weekly on Mondays, monthly on the 1st).
