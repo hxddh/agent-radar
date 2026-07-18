@@ -1184,6 +1184,56 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["vendor_families_covered"], 2)
         self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["breadth_themes_covered"], 2)
 
+    def test_infra_cap_warns_when_mainstream_present(self) -> None:
+        # Issue #66 (2026-07-18): 5 infra bullets voided an otherwise rich day.
+        # With a real mainstream signal the cap must warn, not refuse.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        infra = "\n\n".join(
+            f"- Signal: mcp-memory-tool-{i} adds sandbox memory hooks.\n"
+            f"  - Source: https://github.com/example/mcp-memory-{i}"
+            for i in range(3)
+        )
+        content = (
+            "## 2026-07-18\n\n### English\n\n"
+            "#### 2. New Signals\n\n"
+            "- Signal: OpenAI shipped a coding-agent preview.\n"
+            "  - Source: https://openai.com/index/agents\n\n"
+            "- Signal: Anthropic published a containment engineering post.\n"
+            "  - Source: https://www.anthropic.com/engineering/how-we-contain-claude\n\n"
+            "#### 4. User Workflow & Field Notes\n\n"
+            "- Signal: operator field report: /doctor health checks.\n"
+            "  - Scenario: pre-run health checks before long agent sessions.\n\n"
+            "#### 5. Emerging Agents / Infra Primitives\n\n"
+            f"{infra}\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertGreater(cloud_agent_runner.RUN_AUDIT["direction_infra_count"], 2)
+        self.assertTrue(
+            any("infra_primitive" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_infra_cap_still_refuses_without_mainstream(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        infra = "\n\n".join(
+            f"- Signal: mcp-memory-tool-{i} adds sandbox memory hooks.\n"
+            f"  - Source: https://github.com/example/mcp-memory-{i}"
+            for i in range(3)
+        )
+        content = (
+            "## 2026-07-18\n\n### English\n\n"
+            "#### 5. Emerging Agents / Infra Primitives\n\n"
+            f"{infra}\n\n"
+            "#### 8. Assessment & Gaps\n\n"
+            "- Coverage ledger: checked=github; missed=vendor pages\n"
+            "- Missing mainstream_product: OpenAI/Anthropic pages unreachable\n"
+            "- Missing user_workflow: no actionable operator reports\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertIn("infra_primitive", str(ctx.exception))
+
     def test_radar_sweep_lines_exempt_from_infra_cap(self) -> None:
         # Regression for the v0.18.0 live failure: 7 infra_primitive Radar Sweep
         # one-liners tripped `count_infra_primitive_bullets` and refused the day.
