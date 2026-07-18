@@ -1319,3 +1319,26 @@ Ignore or deprioritize:
 - [infra_primitive] hashicorp/terraform-mcp-server: automatic build of Terraform MCP Server: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
 - [infra_primitive] adamast 0.1.0: adaptive failure-mode taxonomy runtime for coding agents: https://pypi.org/project/adamast/0.1.0/
 - [infra_primitive] spec2openapi 0.2.2: convert legacy API specs to FastMCP-ready OpenAPI: https://pypi.org/project/spec2openapi/0.2.2/
+
+
+- [mainstream_product] OpenAI encrypts Codex agent instructions, blocking local audit: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
+- [mainstream_product] 1Password Claude browser integration: https://www.theverge.com/tech/966442/1password-anthropic-claude-browser-integration
+- [user_workflow] HN reverse engineering agent memory tools: https://news.ycombinator.com/item?id=48919162
+- [user_workflow] Claude Code multi-editor workflow: https://bsky.app/profile/acedatacloud.bsky.social/post/3mqvckwvfa42m
+- [user_workflow] DeepSeek V4-Flash SPFx PRs (scaffolding checklist): https://bsky.app/profile/foursignalsdev.bsky.social/post/3mqvbjnyh7s2x
+- [mainstream_product] GitHub Mobile PR Comments with Copilot Cloud Agent: https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent
+- [mainstream_product] Copilot Code Review Customization Improvements: https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements
+- [research] arXiv: Stop Means Stop – enforcement gap in agent frameworks: https://arxiv.org/abs/2607.14166
+- [infra_primitive] CVE-2026-54052: n8n-MCP server vulnerability: https://www.cyberhub.blog/cves/CVE-2026-54052
+- [mainstream_product] OpenAI Codex CLI v0.144.5: https://www.npmjs.com/package/%40openai/codex
+- [mainstream_product] GitHub Copilot CLI v1.0.71: https://www.npmjs.com/package/%40github/copilot
+- [mainstream_product] Mistral Vibe for code: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Anthropic breaks July 19th promise, Claude Code refuses slow-down instruction: https://github.com/anthropics/claude-code/issues/78610
+- [mainstream_product] Juggler: open-source GUI coding agent: https://github.com/juggler-ai/juggler
+- [research] Verification loop boosts DeepSeek coding intelligence: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- [infra_primitive] Sandboxd: self-hosted agent sandbox: https://github.com/tastyeffectco/sandboxd
+- [user_workflow] Multi-model agent orchestration via OpenRouter: https://bsky.app/profile/renice.bsky.social/post/3mqu65hsunk2o
+- [user_workflow] Claude Code memory file technique: https://bsky.app/profile/yurekilab-jp.bsky.social/post/3mqvdcxdnt62n
+- [user_workflow] CLAUDE.md as thin router survives compaction: https://bsky.app/profile/ultrathink-art.bsky.social/post/3mqvdcrhvex2l
+- [research] arXiv: Structured Feedback Improves Repair: https://arxiv.org/abs/2607.14167
+- [mainstream_product] Google Gemini CLI v0.52.0-nightly: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260718.gacae7124b
