@@ -221,3 +221,16 @@ AI Agent workloads create demand for:
 - **Modal Sandboxes** (scr-modal-sandboxes): Ephemeral sandbox for untrusted agent code. Storage implication: Storage lifecycle tied to sandbox session; watch for persistent volume support. Evidence: Medium (official product page). Source: https://modal.com/products/sandboxes
 
 - **MCP Python SDK v2.0.0b2 and TypeScript SDK v2.0.0-beta.4** released: Next-gen MCP SDKs enter beta. Storage implication: MCP server ecosystem maturing; storage-related MCP servers (filesystem, knowledge base) may need migration. Watch for breaking changes in storage access patterns. Evidence: Strong (official releases). Sources: https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.0.0b2, https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/%40modelcontextprotocol/server%402.0.0-beta.4
+
+## 2026-07-19
+
+- **Daytona Sandbox Firewall**: Fine-grained network controls for agent sandboxes. Storage implication: Firewall rules can restrict agent access to object storage endpoints, preventing unauthorized data exfiltration. Watch trigger: Daytona publishes S3/GCS integration guides. Source: https://www.daytona.io/dotfiles/sandbox-firewall
+- **Kassette**: Durable agent workflows backed by object storage. Storage implication: Object storage as persistence layer for agent task state enables crash recovery, replay, and audit. Watch trigger: Benchmarks comparing object-storage vs database-backed durability. Source: https://github.com/lostinpatterns/kassette
+
+## 2026-W29
+
+- Kassette: Durable agent workflows backed by object storage. Pattern: use object storage (S3/GCS/R2) for reliable agent task persistence. Watch trigger: publish benchmarks. Source: https://github.com/lostinpatterns/kassette
+- Vercel sandbox data download free: Removes egress charges for agent sandbox usage; lowers cost barrier for state persistence. Source: https://vercel.com/changelog/data-downloaded-by-vercel-sandbox-is-now-free
+- Wolbarg: Argues SQLite sufficient for local agent memory — challenges vector-DB assumptions. Pattern: local-first SQLite for agent state. Source: https://wolbarg.com/blog/why-sqlite-is-enough-for-local-ai-agent-memory
+- Daytona Sandbox Firewall: Network controls can restrict agent access to storage endpoints. Watch trigger: S3/GCS integration guide. Source: https://www.daytona.io/dotfiles/sandbox-firewall
+- strata-mem 1.6.2: Shared memory for agent fleets — distributed state layer. Source: https://pypi.org/project/strata-mem/1.6.2/

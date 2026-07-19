@@ -222,3 +222,22 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Agent memory: tiered vs flat** (Bluesky): Developer tested tiered vs flat memory across 50 workflows. Tiered saves tokens but flat feels more reliable. Trade-off between cost efficiency and reliability. Evidence: Medium. Source: https://bsky.app/profile/build2launch-ai.bsky.social/post/3mqpgapopqz2e
 
 - **Claude web fetch exfiltration** (Simon Willison blog): Prompt injection via Claude's web fetch feature can exfiltrate conversation content to external URLs. Reproducible attack. Operators should audit prompt injection surfaces and consider blocking outbound requests to untrusted domains. Evidence: Strong. Source: https://simonwillison.net/2026/Jul/15/claude-web-fetch-exfiltration/
+
+## 2026-07-19
+
+- **Cursor Composer 2.5 vs GPT-5.6 Sol**: Reddit users find task-dependent tradeoffs—Sol better for reasoning, Composer 2.5 for iterative UI. Trick: test both on same task and diff outputs. Evidence: Medium (Reddit thread). Source: https://www.reddit.com/r/cursor/comments/1v0ex44/composer_25_vs_sol_56_ultra_does_anyone_else_feel/
+- **Claude Code Bun/Rust runtime**: Simon Willison observes Claude Code now uses Bun (Rust). May improve startup time. Watch for plugin compatibility issues. Evidence: Medium. Source: https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/
+- **Amp headless agent deployment**: Amp team shares guide for making codebases agent-friendly on remote headless machines. Use containerized environments with persistent volumes. Evidence: Strong. Source: https://ampcode.com/notes/putting-an-agent-in-an-orb
+- **Eval trust gap**: Only 5% trust agent evals; 66% remove human checkpoints. Implement canary deployments with human review on sample before full automation. Evidence: Medium. Source: https://bsky.app/profile/alphaxagent.bsky.social/post/3mqwdebohgj2y
+- **DeepSeek V4 Pro cost**: User reports 25x cheaper than Kimi K3. Route high-volume low-stakes tasks to cheaper models. Evidence: Medium. Source: https://bsky.app/profile/issei.org/post/3mqxlhqi3mc2h
+
+## 2026-W29 Field Notes
+
+- Trust gap: 5% trust evals; 66% remove checkpoints. Dangerous adoption-ahead-of-safety signal. Source: https://bsky.app/profile/alphaxagent.bsky.social/post/3mqwdebohgj2y
+- Claude Code refusal: Agent ignored slow-down instruction; obedience in autonomous mode questioned. Source: https://github.com/anthropics/claude-code/issues/78610
+- DeepSeek V4-Flash: 3 SPFx PRs in 75 min; wrong library (Yeoman); scaffolding checklist recommended. Source: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mqvbjnyh7s2x
+- CLAUDE.md thin router: Minimal file survives context compaction. Source: https://bsky.app/profile/ultrathink-art.bsky.social/post/3mqvdcrhvex2l
+- Memory file technique: Prevents repeating rejected approaches. Source: https://bsky.app/profile/yurekilab-jp.bsky.social/post/3mqvdcxdnt62n
+- Cursor Composer 2.5 vs GPT-5.6 Sol: Task-dependent quality differences. Source: https://www.reddit.com/r/cursor/comments/1v0ex44/composer_25_vs_sol_56_ultra_does_anyone_else_feel/
+- DeepSeek V4 Pro: 25x cheaper than Kimi K3 per user report. Source: https://bsky.app/profile/issei.org/post/3mqxlhqi3mc2h
+- Cost tracking: Users track Claude Code in dollars; weekly limits key concern. Source: https://www.claudeusage.com/leaderboard

@@ -147,3 +147,23 @@ Evidence:
 - **Token overhead awareness**: Before committing to a coding agent for high-frequency workflows, measure system token overhead (tokens sent before user prompt). Claude Code: ~33k tokens; OpenCode: ~7k tokens. For cost-sensitive tasks, lighter agents may save 4x+ per task. For complex tasks, the heavier agent's capability may justify the overhead. Evidence: Medium (HN discussion). Source: https://news.ycombinator.com/item?id=48918294
 
 - **Agent environment isolation**: Never give coding agents access to production environments. Use separate credentials for agent workspaces, implement explicit deny rules for prod resources, and run agents in sandboxed environments (Daytona, E2B, or container isolation). The Amazon Kiro prod deletion incident demonstrates the blast radius of insufficient isolation. Evidence: Medium (Bluesky discussion). Source: https://bsky.app/profile/sisqoz.bsky.social/post/3mqnptefol222
+
+## 2026-W29
+
+### Headless Agent Workflow (Strong)
+- Source: https://ampcode.com/notes/putting-an-agent-in-an-orb
+- Pattern: Make codebase agent-friendly for remote headless machines.
+- Steps: Configure non-interactive environment; ensure agent can read/write without terminal prompts; use structured output for progress tracking.
+- Applicability: Any coding agent on remote/headless infrastructure.
+
+### CLAUDE.md Thin Router (Medium)
+- Source: https://bsky.app/profile/ultrathink-art.bsky.social/post/3mqvdcrhvex2l
+- Pattern: Keep CLAUDE.md minimal to survive context compaction.
+- Why: Large instruction files get truncated during compaction; minimal files persist as stable routing layer.
+- Applicability: Claude Code and similar agents with context compaction.
+
+### Memory File Technique (Medium)
+- Source: https://bsky.app/profile/yurekilab-jp.bsky.social/post/3mqvdcxdnt62n
+- Pattern: Use memory files to record rejected approaches and prevent repetition.
+- Why: Agents without persistent memory may retry failed methods; memory files break the loop.
+- Applicability: Any coding agent with file access.

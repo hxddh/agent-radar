@@ -43,10 +43,20 @@ Last updated: 2026-07-09
 - Added thesis point 9 based on proliferation of memory, web access, observability, and security MCP servers in the 2026-07-02 snapshot.
 
 ### 2026-07-15
+### 2026-07-19
+- Added signal: Anthropic Fable 5 jailbreak scoring framework proposed with Amazon, Microsoft, Google — potential industry-wide safety standard. Reinforces thesis 9. Evidence: Strong (official blog). Source: https://www.anthropic.com/news/redeploying-fable-5
+- Added signal: Cloudflare Precursor introduces network-layer agent detection. Reinforces thesis 9. Evidence: Strong (official blog). Source: https://blog.cloudflare.com/introducing-precursor/
+- Added signal: OpenAI encrypts Codex agent instructions, blocking audit trail. Tension with thesis 9 — security measure vs transparency regression. Evidence: Strong (The Register). Source: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
+- Added signal: DeepSeek V4 Pro reported 25x cheaper than Kimi K3. Reinforces thesis 10. Evidence: Medium (social). Source: https://bsky.app/profile/issei.org/post/3mqxlhqi3mc2h
+- Added signal: 5% trust agent evals; 66% remove human checkpoint. Reinforces thesis 3 (eval gap) and thesis 9 (governance). Evidence: Medium (social). Source: https://bsky.app/profile/alphaxagent.bsky.social/post/3mqwdebohgj2y
+- Added signal: Google ADK Go 2.0 with graph-based multi-agent workflows. Reinforces thesis 1. Evidence: Strong (official blog). Source: https://developers.googleblog.com/announcing-adk-go-20/
+- Added signal: Drylake (VS Code extension) provides proactive workspace risk scanning for AI agents, detecting security issues before agent execution. Reinforces thesis 9 (agent containment/security). Evidence: Medium (VS Code extension). Source: https://open-vsx.org/extension/xupracorp/drylake
+- Added signal: agentic-eval (crates.io) is a comprehensive eval suite for token efficiency, safety, and other axes, targeting agent evaluation. Reinforces thesis 3 (evaluation as core infrastructure). Evidence: Medium (crates.io package). Source: https://crates.io/crates/agentic-eval
+- Added signal: mcp-ai-router (PyPI) routes MCP clients to multiple LLMs via browser sessions, enabling multi-model agent workflows. Reinforces thesis 7 (MCP ecosystem convergence). Evidence: Medium (PyPI release). Source: https://pypi.org/project/mcp-ai-router/0.1.6/
+### 2026-07-15
 
 - Added signal: AWS GuardDuty AI Protection is now available as first-party threat detection for AI workloads, signaling that major cloud providers are building AI-specific security services. Directly reinforces thesis 9 (agent containment/security as first-class infrastructure). Evidence strength: Strong (official AWS announcement). Source: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-guardduty-ai-protection-aws/
 ## Open Questions
-
 - Will agent usage remain IDE-centric, or shift toward cloud task runners?
 - Will MCP become the default tool integration layer?
 - Will long-running agents be priced by seat, token, task, or compute time?
@@ -57,3 +67,4 @@ Last updated: 2026-07-09
 - Will MCP server proliferation lead to standardization (convergence) or fragmentation (divergence)?
 - Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate?
 - Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos?
+- Will the agent trust gap (low eval trust + high autonomous deployment) lead to a major incident that forces regulatory action?

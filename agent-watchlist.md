@@ -7,13 +7,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users; 10x usage growth to 7M users reported by latent.space.
-- Recent changes: Codex CLI v0.144.5 stable released (2026-07-16). Codex Micro hardware macropad launched at $230 with dedicated agent keys and status indicators (2026-07-16). Sub-agent prompt encryption added to prevent tampering (2026-07-15, 422 HN points). Codex usage up 10x to 7M users in 6 months, reportedly overtaking Claude Code (2026-07-15). OpenAI Agent Sandbox Cloud launched (2026-07-14). GPT-5.6 ships with "all-day agent" capability (2026-07-11). GPT-5.6 models available on Amazon Bedrock and GitHub Copilot (2026-07-09).
+- Recent changes: Codex CLI v0.144.6 stable and v0.145.0-alpha released (2026-07-19). Codex CLI v0.144.5 stable released (2026-07-16). Codex Micro hardware macropad launched at $230 (2026-07-16). Sub-agent prompt encryption added to prevent tampering (2026-07-15, 422 HN points). Codex usage up 10x to 7M users in 6 months (2026-07-15). OpenAI Agent Sandbox Cloud launched (2026-07-14). GPT-5.6 ships with "all-day agent" capability (2026-07-11). GPT-5.6 models available on Amazon Bedrock and GitHub Copilot (2026-07-09). GPT-5.6 Sol solves 30-year math proof; METR flags severe evasion behaviors (2026-07-19).
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: v2.1.214 released (2026-07-18) with critical permission-check bypass fixes. v2.1.211 released (2026-07-16). v2.1.208 released (2026-07-14) with sandbox and reliability fixes. Anthropic published containment engineering post (2026-07-09, covered) and Fable 5 jailbreak scoring framework (2026-07-10). Anthropic launched Claude Science AI workbench for scientific research (2026-07-14). Anthropic launched Claude for Teachers vertical product (2026-07-16). Claude web fetch exfiltration attack demonstrated by Simon Willison (2026-07-15). User reports: 33k token overhead vs OpenCode 7k (systima.ai, 2026-07-14); nested CLAUDE.md lazy loading (Bluesky, 2026-07-14); frequent commits as safety net (Bluesky, 2026-07-14). China security alert claiming bac
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.214
+- Recent changes: v2.1.215 released (2026-07-19). Simon Willison observes Claude Code now runs on Bun (Rust), potentially improving startup and resource usage (2026-07-19). v2.1.214 released (2026-07-18) with critical permission-check bypass fixes. v2.1.211 released (2026-07-16). v2.1.208 released (2026-07-14) with sandbox and reliability fixes. Anthropic published containment engineering post (2026-07-09). Fable 5 jailbreak scoring framework proposed (2026-07-10). Claude Science AI workbench launched (2026-07-14). Claude for Teachers launched (2026-07-16). Claude web fetch exfiltration attack demonstrated (2026-07-15). User reports: 33k token overhead vs OpenCode 7k (2026-07-14); nested CLAUDE.md lazy loading (2026-07-14).
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -289,11 +289,11 @@ Status:
 - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
 
 ## Cloudflare Agents
-
-- Last review: 2026-07-12 (weekly W28). Cloudflare Agents 0.17.3 released 2026-06-30; active development continues. No new independent user workflow report found. Retain as active; refresh in 21 days if no new signal.
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.17.3
-
-
+- Category: Edge agent platform / agent detection
+- Maturity: Active development with SDK releases and new detection capabilities.
+- Recent changes: Cloudflare Precursor agent detection launched (2026-07-16) — continuous client-side signals to detect agent activity at network layer. Agents SDK releases: agents@0.17.4, voice@0.3.4, think@0.13.0 (2026-07-19) — edge agent framework with voice and reasoning modules.
+- Source: https://blog.cloudflare.com/introducing-precursor/
+- replace_section anchor: `## Cloudflare Agents`
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
@@ -312,3 +312,11 @@ Status:
 - Risk: May be an exception handling failure; needs official response and broader field evidence.
 - Watch next: Whether Amazon discloses the incident and implements guardrails; monitors for similar events in other coding agents.
 - Source: https://bsky.app/profile/sisqoz.bsky.social/post/3mqnptefol222
+
+
+## Qwen Code
+- Category: Coding agent (open-weight)
+- Maturity: Active open-source coding agent from QwenLM; v0.19.12 stable release.
+- Recent changes: v0.19.12 stable released (2026-07-19). Open-weight model approach enables self-hosted deployments. Competes with Claude Code, Codex, and Gemini CLI in the terminal agent space.
+- Watch next: Whether Qwen Code gains enterprise adoption for cost-sensitive and on-premise deployments; benchmark comparisons against Claude Code and Codex.
+- replace_section anchor: `## Qwen Code`

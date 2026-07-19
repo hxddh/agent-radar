@@ -1352,3 +1352,75 @@ Ignore or deprioritize:
 - [mainstream_product] Vercel agent-eval-playground 0.1.3: https://www.npmjs.com/package/%40vercel/agent-eval-playground
 - [infra_primitive] Official Notion MCP Server 2.4.1: https://www.npmjs.com/package/%40notionhq/notion-mcp-server
 - [infra_primitive] HashiCorp Terraform MCP Server: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
+
+
+- [mainstream_product] OpenAI encrypts Codex agent instructions: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
+- [research] Prompt injection attacks thwarting AI hacking agents: https://arstechnica.com/security/2026/07/now-defenders-are-embracing-the-prompt-injection-too/
+- [infra_primitive] E2B SDK 2.35.0: https://github.com/e2b-dev/E2B/releases/tag/e2b%402.35.0
+- [infra_primitive] Browser Use 0.13.6: https://github.com/browser-use/browser-use/releases/tag/0.13.6
+- [infra_primitive] Langfuse v3.221.1: https://github.com/langfuse/langfuse/releases/tag/v3.221.1
+- [mainstream_product] xAI Grok Build launch (abz.global): https://abz.global/technology/xai-just-launched-grok-build-ai-coding-agents-are-moving-into-the-terminal
+- [mainstream_product] Anthropic Fable 5 jailbreak scoring: https://www.anthropic.com/news/redeploying-fable-5
+- [mainstream_product] 1Password Claude integration: https://www.theverge.com/tech/966442/1password-anthropic-claude-browser-integration
+- [mainstream_product] Google Gemini Enterprise Workspace upgrades: https://bsky.app/profile/index.www.testingcatalog.com.ap.brid.gy/post/3mqxiai6vizq2
+- [user_workflow] Claude Code usage leaderboard: https://www.claudeusage.com/leaderboard
+- [mainstream_product] SpaceXAI Grok 4.5 launch (Reuters): https://www.reuters.com/business/media-telecom/spacexai-launches-grok-45-model-coding-agentic-tasks-2026-07-08/
+- [mainstream_product] Anthropic Fable 5 removal: https://github.com/anthropics/claude-code/issues/78610
+- [infra_primitive] OpenCode 187K stars (social): https://bsky.app/profile/github-trending-js.bsky.social/post/3mqxpjzbqcl2s
+- [infra_primitive] Sandboxd: https://github.com/tastyeffectco/sandboxd
+- [infra_primitive] Sideshow: https://github.com/modem-dev/sideshow
+- [infra_primitive] Wolbarg: https://wolbarg.com/blog/why-sqlite-is-enough-for-local-ai-agent-memory
+- [research] SolarBench: https://solarbench.maingen.ai/
+- [infra_primitive] Agnost AI: https://agnost.ai
+- [infra_primitive] Traceforce: https://news.ycombinator.com/item?id=48937020
+- [mainstream_product] Manus Similarweb collaboration: https://ir.similarweb.com/news-events/press-releases/detail/139/manus-collaborates-with-similarweb-to-give-ai-agents-digital-marketing-insight
+- [infra_primitive] Sprites Now Speak MCP: https://fly.io/blog/unfortunately-mcp/
+- [mainstream_product] Mistral Vibe Code: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Vercel Chat SDK Slack support: https://vercel.com/changelog/chat-sdk-adds-native-slack-agent-support
+- [mainstream_product] Daytona $24M Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [infra_primitive] Building Agents that Don't Break Themselves: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [research] Google Modular Prompt Transpilation: https://developers.googleblog.com/building-scalable-ai-agents-with-modular-prompt-transpilation/
+- [mainstream_product] Claude Code Quality Postmortem: https://www.anthropic.com/engineering/april-23-postmortem
+- [mainstream_product] DeepSeek Rate Limit & Isolation: https://api-docs.deepseek.com/quick_start/rate_limit
+- [mainstream_product] Agentic Coding on Supabase with OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [mainstream_product] Vercel Sandbox data download free: https://vercel.com/changelog/data-downloaded-by-vercel-sandbox-is-now-free
+- [mainstream_product] Daytona Sandboxes via Stripe: https://www.daytona.io/dotfiles/daytona-stripe-projects
+- [mainstream_product] Inkling Model on Modal: https://modal.com/blog/inkling-by-thinking-machines-labs-now-available-on-modal
+- [mainstream_product] Amp Subscriptions: https://ampcode.com/news/subscriptions
+- [mainstream_product] Gemini Enterprise Agent Grounding: https://developers.googleblog.com/expanding-choice-in-gemini-enterprise-agent-platform-introducing-grounding-with-parallel-web-search/
+- [mainstream_product] GitHub Copilot repo-level usage metrics: https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available
+- [mainstream_product] GitHub Mobile Copilot PR comments: https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent
+- [infra_primitive] AgentShield: https://github.com/oliverhayes2004/agentshield-windows-macos-linux
+- [infra_primitive] mitos-run/mitos: https://github.com/mitos-run/mitos
+- [infra_primitive] trycua/cua: https://github.com/trycua/cua
+- [infra_primitive] CowAgent: https://github.com/zhayujie/CowAgent
+- [infra_primitive] Director: https://github.com/colinsurprenant/director
+- [infra_primitive] VibeLens: https://github.com/CHATS-lab/VibeLens
+- [infra_primitive] Clinch: https://github.com/elliot-ylambda/clinch-terminal
+- [infra_primitive] open-agent-hub: https://github.com/guanyang/open-agent-hub
+- [mainstream_product] Gemini CLI nightly: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260719.gacae7124b
+- [mainstream_product] Vercel AI SDK releases: https://github.com/vercel/ai/releases/tag/ai%407.0.31
+- [infra_primitive] Pydantic AI v2.13.0: https://github.com/pydantic/pydantic-ai/releases/tag/v2.13.0
+- [mainstream_product] Cloudflare Agents SDK releases: https://github.com/cloudflare/agents/releases/tag/agents%400.17.4
+- [mainstream_product] OpenHands cloud 1.46.2: https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.46.2
+- [infra_primitive] Vercel agent-eval-playground 0.1.3: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [infra_primitive] shell-cli 0.8.7: https://pypi.org/project/shell-cli/0.8.7/
+- [infra_primitive] agenticow 0.2.4: https://www.npmjs.com/package/agenticow
+- [infra_primitive] Drylake: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] strata-mem 1.6.2: https://pypi.org/project/strata-mem/1.6.2/
+- [infra_primitive] greprag 5.74.4: https://www.npmjs.com/package/greprag
+- [infra_primitive] agent-browser: https://crates.io/crates/agent-browser
+- [infra_primitive] hol-guard 2.0.1122: https://pypi.org/project/hol-guard/2.0.1122/
+- [infra_primitive] Inspect AI VS Code extension: https://open-vsx.org/extension/ukaisi/inspect-ai
+- [infra_primitive] Claude Todos: https://open-vsx.org/extension/CarlosJunior1992/claude-todos
+- [infra_primitive] mcp-ai-router 0.1.6: https://pypi.org/project/mcp-ai-router/0.1.6/
+- [infra_primitive] agentic-eval: https://crates.io/crates/agentic-eval
+- [infra_primitive] proxy-aiops 0.2.0: https://pypi.org/project/proxy-aiops/0.2.0/
+- [infra_primitive] agentapprove: https://www.npmjs.com/package/agentapprove
+- [infra_primitive] @reaatech/agent-eval-harness-judge: https://www.npmjs.com/package/%40reaatech/agent-eval-harness-judge
+- [infra_primitive] wavexis 2.13.0: https://pypi.org/project/wavexis/2.13.0/
+- [infra_primitive] lmnr-cli: https://www.npmjs.com/package/lmnr-cli
+- [infra_primitive] Jira MCP server: https://open-vsx.org/extension/SutharLabs/jira-mcp
+- [infra_primitive] TruthSeek: https://open-vsx.org/extension/UnifyDynamics/truthseek
+- [research] clawagents 6.20.22: https://pypi.org/project/clawagents/6.20.22/
+- [infra_primitive] detect-coding-agent: https://crates.io/crates/detect-coding-agent
