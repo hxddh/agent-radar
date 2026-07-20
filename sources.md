@@ -1424,3 +1424,94 @@ Ignore or deprioritize:
 - [infra_primitive] TruthSeek: https://open-vsx.org/extension/UnifyDynamics/truthseek
 - [research] clawagents 6.20.22: https://pypi.org/project/clawagents/6.20.22/
 - [infra_primitive] detect-coding-agent: https://crates.io/crates/detect-coding-agent
+
+
+## 2026-07-20 Source-sweep additions
+
+- [mainstream_product] xAI Grok Build SSH exfiltration: https://bsky.app/profile/maybeworthbuilding.bsky.social/post/3mqyxcq4tpy2n
+- [mainstream_product] OpenAI Codex context reduction: https://github.com/openai/codex/pull/33972/files
+- [mainstream_product] OpenAI Codex 0.145.0-alpha.24: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.24
+- [mainstream_product] Anthropic Claude Code 50% limit increase: https://twitter.com/ClaudeDevs/status/2078511173759324328
+- [mainstream_product] Qwen Code v0.20.0: https://github.com/QwenLM/qwen-code/releases/tag/v0.20.0
+- [mainstream_product] How we contain Claude: https://www.anthropic.com/engineering/how-we-contain-claude
+- [mainstream_product] OpenAI encrypts Codex instructions: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
+- [user_workflow] Context compaction agent memory loss: https://bsky.app/profile/ultrathink-art.bsky.social/post/3mr2c4svgip2v
+- [user_workflow] Ask HN: agent access needs: https://news.ycombinator.com/item?id=48965883
+- [user_workflow] Agent hypnotized by session history: https://bsky.app/profile/kevmoo.com/post/3mr2d7dj5ph2w
+- [user_workflow] Verification loop DeepSeek: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- [user_workflow] Building Agents that Don't Break: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- [research] Microsoft study Claude Code Copilot CLI: https://arxiv.org/abs/2607.01418
+- [infra_primitive] Cloudflare Precursor: https://blog.cloudflare.com/introducing-precursor/
+- [infra_primitive] Daytona Sandbox Firewall: https://www.daytona.io/dotfiles/sandbox-firewall
+- [mainstream_product] DeepSeek Rate Limit: https://api-docs.deepseek.com/quick_start/rate_limit
+- [mainstream_product] Vercel Detect Agent: https://www.npmjs.com/package/%40vercel/detect-agent
+- [mainstream_product] Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- [mainstream_product] OpenAI Codex CLI: https://www.npmjs.com/package/%40openai/codex
+- [mainstream_product] Vibe for code: https://mistral.ai/products/vibe/code/
+- [mainstream_product] ADK Go 2.0: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Claude Code v2.1.215: https://github.com/anthropics/claude-code/releases/tag/v2.1.215
+- [mainstream_product] Anthropic code migrations: https://claude.com/blog/ai-code-migration
+- [infra_primitive] Codex macOS runaway: https://github.com/openai/codex/issues/25719
+- [research] Claude biases: https://twitter.com/owainevans_uk/status/2078149976807592112
+- [mainstream_product] Claude Managed Agents: https://ddsboston.com/blogs/vibe-code-academy/ai-news-for-vibe-coders-daily-2026-07-15
+- [research] GPT-5.6 Sol evasion: https://dev.to/sivarampg/gpt-56-sol-yields-30-year-math-proof-as-metr-flags-severe-evasion-behaviors-2i12
+- [infra_primitive] kassette: https://github.com/lostinpatterns/kassette
+- [infra_primitive] Wolbarg SQLite memory: https://wolbarg.com/blog/why-sqlite-is-enough-for-local-ai-agent-memory
+- [infra_primitive] Sandboxd: https://github.com/tastyeffectco/sandboxd
+- [infra_primitive] Shikigami: https://shikigami.dev/
+- [infra_primitive] clawmark: https://github.com/emiliolugo/clawmark
+- [mainstream_product] Microsoft Copilot OS: https://www.windowscentral.com/microsoft/windows-11/microsoft-copilot-os-revealed-in-leaked-video-lightweight-windows-os-exploration-features-new-desktop-ui-built-entirely-around-copilot-and-agentic-ai
+- [research] Wandr Benchmark: https://research.perplexity.ai/articles/wandr-benchmark-evaluating-research-agents-that-must-search-wide-and-deep
+- [infra_primitive] mcpbr: https://github.com/greynewell/mcpbr
+- [infra_primitive] A2A spending gate: https://dev.to/ali_abdalla/i-built-a-spending-gate-for-ai-agents-then-i-proved-it-doesnt-hold-under-load-2ca8
+- [user_workflow] Claude Is Painful HN: https://news.ycombinator.com/item?id=48964237
+- [user_workflow] Claude Code Bun Rust: https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/
+- [infra_primitive] Daytona Series A: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- [mainstream_product] Mistral Studio: https://mistral.ai/products/studio/
+- [mainstream_product] Vercel Chat SDK Slack agent support: https://vercel.com/changelog/chat-sdk-adds-native-slack-agent-support
+- [mainstream_product] Supabase OpenCode: https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- [infra_primitive] E2B Series A: https://e2b.dev/blog/series-a
+- [infra_primitive] Modal Sandboxes: https://modal.com/products/sandboxes
+- [mainstream_product] Amp Subscriptions: https://ampcode.com/news/subscriptions
+- [mainstream_product] Amp Agent in Orb: https://ampcode.com/notes/putting-an-agent-in-an-orb
+- [mainstream_product] Vercel Plugin Kimi Code CLI: https://vercel.com/changelog/vercel-plugin-now-available-in-kimi-code-cli
+- [infra_primitive] Vercel Sandbox free data download: https://vercel.com/changelog/data-downloaded-by-vercel-sandbox-is-now-free
+- [user_workflow] Claude Fable 5 permanent: https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/
+- [research] Neural Intent Crypto: https://arxiv.org/abs/2607.15596
+- [research] Agent-Reactive Bugs: https://arxiv.org/abs/2607.15684
+- [research] Transferable CoT Artifacts: https://arxiv.org/abs/2607.15286
+- [research] Cura 1T Healthcare: https://arxiv.org/abs/2607.15314
+- [mainstream_product] Gemini CLI nightly: https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260720.gacae7124b
+- [mainstream_product] GitHub Copilot metrics: https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available
+- [mainstream_product] Cline CLI v3.0.46: https://github.com/cline/cline/releases/tag/cli-v3.0.46
+- [mainstream_product] Browser Use 0.13.6: https://github.com/browser-use/browser-use/releases/tag/0.13.6
+- [infra_primitive] E2B 2.35.0: https://github.com/e2b-dev/E2B/releases/tag/e2b%402.35.0
+- [infra_primitive] trycua/cua: https://github.com/trycua/cua
+- [infra_primitive] camofox-browser: https://github.com/jo-inc/camofox-browser
+- [infra_primitive] mitos-run/mitos: https://github.com/mitos-run/mitos
+- [infra_primitive] kody memory: https://github.com/kentcdodds/kody
+- [infra_primitive] Mem0 CLI v0.2.10: https://github.com/mem0ai/mem0/releases/tag/cli-v0.2.10
+- [mainstream_product] PostHog: https://github.com/PostHog/posthog
+- [mainstream_product] Microsoft Agent Framework Go: https://github.com/microsoft/agent-framework-go
+- [mainstream_product] GitHub Copilot CLI 1.0.71: https://www.npmjs.com/package/%40github/copilot
+- [infra_primitive] Vercel Agent Eval Playground 0.1.3: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+- [mainstream_product] Terraform MCP Server: https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
+- [infra_primitive] Agenticow 0.2.4: https://www.npmjs.com/package/agenticow
+- [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent
+- [infra_primitive] atomr-agents-eval: https://crates.io/crates/atomr-agents-eval
+- [infra_primitive] GrepRAG 5.74.4: https://www.npmjs.com/package/greprag
+- [infra_primitive] agent-browser crates.io: https://crates.io/crates/agent-browser
+- [infra_primitive] cloudllm: https://crates.io/crates/cloudllm
+- [infra_primitive] Hanary MCP Server: https://pypi.org/project/hanary-mcp/0.22.32/
+- [infra_primitive] Huimei: https://pypi.org/project/huimei/0.6.27/
+- [infra_primitive] isA Agent SDK: https://pypi.org/project/isa-agent-sdk/0.3.62/
+- [infra_primitive] ai-auth-switch: https://pypi.org/project/ai-auth-switch/0.2.0/
+- [infra_primitive] Clawsomeflow: https://pypi.org/project/clawsomeflow/0.2.0b5/
+- [infra_primitive] Freeact CLI: https://pypi.org/project/freeact-cli/0.4.0/
+- [infra_primitive] SmooAI Smooth Operator Server: https://pypi.org/project/smooai-smooth-operator-server/1.32.1/
+- [infra_primitive] cPanel Mail MCP Server: https://pypi.org/project/cpanel-mail-mcp/0.3.0/
+- [infra_primitive] DryLake: https://open-vsx.org/extension/xupracorp/drylake
+- [infra_primitive] CodeGraph IR: https://pypi.org/project/codegraph-ir/0.6.2/
+- [infra_primitive] TuxGenie: https://pypi.org/project/tuxgenie/5.91.0/
+- [infra_primitive] AxmeAI.axme-code: https://open-vsx.org/extension/AxmeAI/axme-code
+- [infra_primitive] gigacode: https://crates.io/crates/gigacode

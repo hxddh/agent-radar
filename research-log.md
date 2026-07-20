@@ -2754,3 +2754,111 @@ The following candidates have reached defer_count 3 and should be moved to an ar
 - agent-eval-lite (scr-eval01)
 - ionalpha/flynn (scr-sand2)
 - Vault-Agent-Memory (scr-mem02)
+
+
+## 2026-07-20 Daily pass
+
+- Screened 24 candidates and 65+ radar sweep pool items.
+- No new research-log candidates added; all pool items were already in the candidate inbox or covered in the daily block.
+
+
+## 2026-07-20 Source-sweep
+
+New candidates from screening pass (2026-07-20). All added to candidate inbox with promotion_status=candidate.
+
+### Top Candidates (20)
+
+- **xAI Grok Build CLI SSH key exfiltration** (scr-grokssh): xAI Grok Build CLI exfiltrated home dir and SSH keys to xAI cloud. Why it matters: severe security incident for mainstream agent product. Evidence strength: Medium (social media report). Relevance score: 10. Defer reason: needs confirmation and xAI response. Follow-up needed: verify with official xAI statement. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://bsky.app/profile/maybeworthbuilding.bsky.social/post/3mqyxcq4tpy2n
+- **OpenAI Codex context reduction** (scr-codexctx): OpenAI Codex context reduced from 372k to 272k input tokens within 400k window. Why it matters: major product change impacting agent memory and user experience. Evidence strength: Strong (GitHub pull request). Relevance score: 10. Defer reason: monitor user impact. Follow-up needed: track user reports of mid-task forgetting. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/openai/codex/pull/33972/files
+- **OpenAI Codex 0.145.0-alpha.24 release** (scr-abc124): Latest alpha of official coding agent. Why it matters: active development of major agent. Evidence strength: Strong (GitHub release). Relevance score: 9. Defer reason: incremental release. Follow-up needed: review changelog for significant changes. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.24
+- **Anthropic Claude Code 50% weekly limit increase** (scr-claude50): Anthropic extends Claude Code 50% weekly limit increase through Aug 19. Why it matters: platform scaling response. Evidence strength: Medium (social media). Relevance score: 8. Defer reason: temporary measure. Follow-up needed: confirm official announcement. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://twitter.com/ClaudeDevs/status/2078511173759324328
+- **Qwen Code v0.20.0 release** (scr-abc125): Latest release of Qwen's coding agent. Why it matters: competitive mainstream product. Evidence strength: Strong (GitHub release). Relevance score: 8. Defer reason: incremental update. Follow-up needed: review release notes. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/QwenLM/qwen-code/releases/tag/v0.20.0
+- **How we contain Claude across products** (scr-how-we-contain-claude): Engineering containment strategies for agent blast radius across claude.ai and Claude Code. Why it matters: security design for mainstream agent. Evidence strength: Strong (official engineering blog). Relevance score: 9. Defer reason: high-value security signal. Follow-up needed: analyze containment techniques. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.anthropic.com/engineering/how-we-contain-claude
+- **OpenAI encrypts Codex agent instructions** (scr-codexenc): OpenAI encrypts Codex agent instructions, blocking local audit trails. Why it matters: security/privacy shift for agent operators. Evidence strength: Medium (news report). Relevance score: 9. Defer reason: awaits OpenAI response. Follow-up needed: check for official statement. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
+- **Silent context compaction causes agent memory loss** (scr-ctxloss): Operator reports silent context compaction causes mid-task forgetting. Why it matters: user workflow degradation. Evidence strength: Medium (social media). Relevance score: 8. Defer reason: single user report. Follow-up needed: corroborate with other users. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://bsky.app/profile/ultrathink-art.bsky.social/post/3mr2c4svgip2v
+- **Ask HN: Are you building agents?** (scr-askbuild): HN discussion on agent access needs. Why it matters: user workflow requirements collection. Evidence strength: Low (discussion thread). Relevance score: 6. Defer reason: low signal-to-noise. Follow-up needed: extract common patterns. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://news.ycombinator.com/item?id=48965883
+- **Agent gets 'hypnotized' reviewing session history** (scr-agenthyp): Agent loops instead of summarizing after reviewing session history. Why it matters: emergent agent failure mode. Evidence strength: Medium (social media). Relevance score: 7. Defer reason: anecdotal. Follow-up needed: more reports. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://bsky.app/profile/kevmoo.com/post/3mr2d7dj5ph2w
+- **Verification loop 4x'd DeepSeek intelligence** (scr-deepver): Verification loop increased DeepSeek coding intelligence, matching Opus at 1/7 cost. Why it matters: user workflow enhancement. Evidence strength: Medium (blog). Relevance score: 8. Defer reason: specific workflow. Follow-up needed: reproduce results. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://ironbee.medium.com/what-a-verification-loop-adds-to-a-coding-agent-a-first-look-5049017e636e
+- **Building Agents that Don't Break Themselves** (scr-building-agents-dont-break): Practical advice on robust agents, error handling, state management. Why it matters: user workflow reliability. Evidence strength: Medium (engineering blog). Relevance score: 7. Defer reason: general advice. Follow-up needed: apply patterns to radar. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://fly.io/blog/building-agents-that-dont-break-themselves/
+- **Microsoft study of Claude Code and Copilot CLI rollout** (scr-msstudy): arXiv study of early 2026 rollout across Microsoft engineering teams. Why it matters: enterprise adoption evidence. Evidence strength: Strong (arXiv paper). Relevance score: 8. Defer reason: academic study. Follow-up needed: incorporate findings into radar. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://arxiv.org/abs/2607.01418
+- **Cloudflare Precursor: detecting agentic behavior** (scr-precursor-agentic-detection): Cloudflare introduces continuous client-side signals to detect agentic behavior. Why it matters: security/privacy primitive for agents. Evidence strength: Strong (official blog). Relevance score: 8. Defer reason: early product. Follow-up needed: test detection accuracy. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://blog.cloudflare.com/introducing-precursor/
+- **Daytona Sandbox Firewall** (scr-daytona-sandbox-firewall): Daytona introduces sandbox firewall for agent isolation. Why it matters: security for agent sandboxes. Evidence strength: Strong (official feature). Relevance score: 7. Defer reason: vendor-specific. Follow-up needed: evaluate effectiveness. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.daytona.io/dotfiles/sandbox-firewall
+- **DeepSeek Rate Limit & Isolation** (scr-deepseek-rate-limit): DeepSeek API adds rate limits and isolation for agent workloads. Why it matters: cost control/security for agents. Evidence strength: Strong (official API docs). Relevance score: 7. Defer reason: operational change. Follow-up needed: monitor agent workload impact. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://api-docs.deepseek.com/quick_start/rate_limit
+- **Vercel Detect Agent 1.2.3** (scr-vercel-detect): npm package to detect if code is running in an AI agent environment. Why it matters: agent detection primitive. Evidence strength: Medium (npm release). Relevance score: 7. Defer reason: utility package. Follow-up needed: test with popular agents. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.npmjs.com/package/%40vercel/detect-agent
+- **The Making of Claude Code** (scr-making-claude-code): Inside story from internal CLI to Anthropic's coding agent. Why it matters: development insights for mainstream agent. Evidence strength: Strong (official feature). Relevance score: 9. Defer reason: historical overview. Follow-up needed: extract design decisions. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.anthropic.com/features/making-of-claude-code
+- **OpenAI Codex CLI 0.144.6** (scr-openai-codex): Official OpenAI coding agent CLI, runs locally on terminal. Why it matters: mainstream agent package. Evidence strength: Medium (npm release). Relevance score: 8. Defer reason: incremental release. Follow-up needed: check changelog. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.npmjs.com/package/%40openai/codex
+- **Vibe for code (Mistral)** (scr-vibe-for-code): Mistral launches coding agents in terminal, IDE, and background. Why it matters: new mainstream product entry. Evidence strength: Strong (official product page). Relevance score: 8. Defer reason: new competitor. Follow-up needed: monitor adoption. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://mistral.ai/products/vibe/code/
+- **ADK Go 2.0** (scr-adk-go-20): Google releases multi-agent framework with graph-based workflow engine and human-in-the-loop. Why it matters: enterprise multi-agent orchestration. Evidence strength: Strong (official blog). Relevance score: 8. Defer reason: framework release. Follow-up needed: evaluate agent integration. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://developers.googleblog.com/announcing-adk-go-20/
+- **Anthropic Claude Code v2.1.215 release** (scr-abc123): Latest stable release of leading coding agent, active development. Why it matters: mainstream agent iteration. Evidence strength: Strong (GitHub release). Relevance score: 7. Defer reason: stable release update. Follow-up needed: review release notes. candidate_seen_at: 2026-07-20, last_checked_at: 2026-07-20, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.215
+
+### Radar Sweep Pool (65 candidates)
+
+The following additional candidates were surfaced in the radar sweep pool. They are recorded here for completeness and will be evaluated individually in daily passes. See screening artifact (automation/screening/2026-07-20.json) for full details.
+
+- **Anthropic large-scale code migrations with Claude Code** (scr-claude-code-migration): https://claude.com/blog/ai-code-migration
+- **Codex macOS app triggers syspolicyd/trustd runaway** (scr-codex-macos-runaway): https://github.com/openai/codex/issues/25719
+- **Claude shows subtle biases toward Anthropic in controlled tests** (scr-claude-biases): https://twitter.com/owainevans_uk/status/2078149976807592112
+- **Claude Managed Agents per-session overrides and lifecycle webhooks** (scr-claude-managed-agents): https://ddsboston.com/blogs/vibe-code-academy/ai-news-for-vibe-coders-daily-2026-07-15
+- **GPT-5.6 Sol yields 30-year math proof; METR flags severe evasion behaviors** (scr-gpt56-evasion): https://dev.to/sivarampg/gpt-56-sol-yields-30-year-math-proof-as-metr-flags-severe-evasion-behaviors-2i12
+- **kassette: durable agent workflows backed by object storage** (scr-kassette): https://github.com/lostinpatterns/kassette
+- **Wolbarg: local-first shared memory for AI agents using SQLite** (scr-wolbarg-sqlite-memory): https://wolbarg.com/blog/why-sqlite-is-enough-for-local-ai-agent-memory
+- **Sandboxd: self-hosted Lovable with agents, sandboxes, preview URLs** (scr-sandboxd): https://github.com/tastyeffectco/sandboxd
+- **Shikigami: run AI coding agents in parallel in Git worktrees** (scr-shikigami): https://shikigami.dev/
+- **clawmark: benchmark AGENTS.md files on SWE tasks** (scr-clawmark): https://github.com/emiliolugo/clawmark
+- **Microsoft Copilot OS revealed in leaked video** (scr-copilot-os): https://www.windowscentral.com/microsoft/windows-11/microsoft-copilot-os-revealed-in-leaked-video-lightweight-windows-os-exploration-features-new-desktop-ui-built-entirely-around-copilot-and-agentic-ai
+- **Wandr Benchmark: evaluating research agents on wide-and-deep search** (scr-wandr-benchmark): https://research.perplexity.ai/articles/wandr-benchmark-evaluating-research-agents-that-must-search-wide-and-deep
+- **mcpbr: test MCP servers on SWE-bench and 25 evals** (scr-mcpbr): https://github.com/greynewell/mcpbr
+- **A2A spending gate for AI agents fails under load** (scr-a2a-spending-gate): https://dev.to/ali_abdalla/i-built-a-spending-gate-for-ai-agents-then-i-proved-it-doesnt-hold-under-load-2ca8
+- **Claude Is Painful — HN discussion** (scr-claude-painful): https://news.ycombinator.com/item?id=48964237
+- **Claude Code uses Bun written in Rust now** (scr-claude-bun-rust): https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/
+- **Daytona Raises $24M Series A** (scr-daytona-seriesa): https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+- **Mistral Studio** (scr-mistral-studio): https://mistral.ai/products/studio/
+- **Chat SDK adds native Slack agent support** (scr-vercel-slack-agent): https://vercel.com/changelog/chat-sdk-adds-native-slack-agent-support
+- **Agentic Coding on Supabase with OpenCode** (scr-supabase-opencode): https://supabase.com/blog/agentic-coding-on-supabase-with-opencode
+- **E2B $21M Series A** (scr-e2b-seriesa): https://e2b.dev/blog/series-a
+- **Modal Sandboxes** (scr-modal-sandboxes): https://modal.com/products/sandboxes
+- **Amp Subscriptions** (scr-amp-subscriptions): https://ampcode.com/news/subscriptions
+- **Putting an Agent in an Orb** (scr-amp-orb): https://ampcode.com/notes/putting-an-agent-in-an-orb
+- **Vercel Plugin now available in Kimi Code CLI** (scr-vercel-kimi-plugin): https://vercel.com/changelog/vercel-plugin-now-available-in-kimi-code-cli
+- **Data downloaded by Vercel Sandbox is now free** (scr-vercel-sandbox-free): https://vercel.com/changelog/data-downloaded-by-vercel-sandbox-is-now-free
+- **Claude make Fable 5 permanent** (scr-claude-fable5): https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/
+- **From Neural Intent to Cryptographic Authorization** (scr-neural-intent-crypto): https://arxiv.org/abs/2607.15596
+- **Understanding Agent-Reactive Bugs** (scr-agent-reactive-bugs): https://arxiv.org/abs/2607.15684
+- **Hidden in Thought: Transferable CoT Artifacts** (scr-cot-artifacts): https://arxiv.org/abs/2607.15286
+- **Cura 1T: Specialized Model for Agentic Healthcare** (scr-cura-healthcare): https://arxiv.org/abs/2607.15314
+- **Google Gemini CLI nightly release** (scr-gemini-cli-nightly): https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260720.gacae7124b
+- **GitHub Copilot workflow improvements** (scr-copilot-metrics): https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available
+- **Cline CLI v3.0.46 release** (scr-cline-cli): https://github.com/cline/cline/releases/tag/cli-v3.0.46
+- **Browser Use 0.13.6 release** (scr-browser-use): https://github.com/browser-use/browser-use/releases/tag/0.13.6
+- **E2B 2.35.0 release** (scr-e2b): https://github.com/e2b-dev/E2B/releases/tag/e2b%402.35.0
+- **trycua/cua: Scale computer-use platform** (scr-trycua-cua): https://github.com/trycua/cua
+- **camofox-browser: Stealth headless browser for agents** (scr-camofox-browser): https://github.com/jo-inc/camofox-browser
+- **mitos-run/mitos: Millisecond microVM sandbox forking** (scr-mitos-run): https://github.com/mitos-run/mitos
+- **kentcdodds/kody: Portable assistant memory** (scr-kody): https://github.com/kentcdodds/kody
+- **Mem0 Python CLI v0.2.10 release** (scr-mem0-cli): https://github.com/mem0ai/mem0/releases/tag/cli-v0.2.10
+- **PostHog: AI observability platform** (scr-posthog): https://github.com/PostHog/posthog
+- **Microsoft Agent Framework for Go** (scr-msft-agent-go): https://github.com/microsoft/agent-framework-go
+- **GitHub Copilot CLI 1.0.71** (scr-copilot-cli): https://www.npmjs.com/package/%40github/copilot
+- **Vercel Agent Eval Playground 0.1.3** (scr-vercel-eval-playground): already in research-log; updated evidence.
+- **Terraform MCP Server (official Docker)** (scr-terraform-mcp): https://hub.docker.com/r/library/hashicorp/terraform-mcp-server
+- **Agenticow 0.2.4 – Git for Agent Memory** (scr-agenticow): already in research-log.
+- **detect-coding-agent (crates.io)** (scr-detect-coding-agent-crate): https://crates.io/crates/detect-coding-agent
+- **atomr-agents-eval (crates.io)** (scr-atomr-agents-eval): https://crates.io/crates/atomr-agents-eval
+- **GrepRAG 5.74.4 – Agent Memory** (scr-greprag): already in research-log.
+- **agent-browser (crates.io)** (scr-agent-browser-crate): https://crates.io/crates/agent-browser
+- **cloudllm (crates.io)** (scr-cloudllm): https://crates.io/crates/cloudllm
+- **Hanary MCP Server 0.22.32** (scr-hanary-mcp): https://pypi.org/project/hanary-mcp/0.22.32/
+- **Huimei 0.6.27 – Social Media Automation MCP** (scr-huimei): https://pypi.org/project/huimei/0.6.27/
+- **isA Agent SDK 0.3.62** (scr-isa-agent-sdk): https://pypi.org/project/isa-agent-sdk/0.3.62/
+- **ai-auth-switch 0.2.0** (scr-ai-auth-switch): https://pypi.org/project/ai-auth-switch/0.2.0/
+- **Clawsomeflow 0.2.0b5** (scr-clawsomeflow): https://pypi.org/project/clawsomeflow/0.2.0b5/
+- **Freeact CLI 0.4.0** (scr-freeact-cli): https://pypi.org/project/freeact-cli/0.4.0/
+- **SmooAI Smooth Operator Server 1.32.1** (scr-smooai-smooth-operator): https://pypi.org/project/smooai-smooth-operator-server/1.32.1/
+- **cPanel Mail MCP Server 0.3.0** (scr-cpanel-mail-mcp): https://pypi.org/project/cpanel-mail-mcp/0.3.0/
+- **DryLake (open-vsx)** (scr-drylake): already in research-log.
+- **CodeGraph IR 0.6.2** (scr-codegraph-ir): https://pypi.org/project/codegraph-ir/0.6.2/
+- **TuxGenie 5.91.0** (scr-tuxgenie): https://pypi.org/project/tuxgenie/5.91.0/
+- **AxmeAI.axme-code (open-vsx)** (scr-axmeai-axme-code): https://open-vsx.org/extension/AxmeAI/axme-code
+- **gigacode (crates.io)** (scr-gigacode): https://crates.io/crates/gigacode
+
+All candidates above are added to the inbox for further evaluation during daily passes. Evidence strength and relevance scores are preliminary; follow-up actions listed where applicable.
