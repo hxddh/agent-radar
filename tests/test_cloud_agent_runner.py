@@ -470,12 +470,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
         main_payload = {
             "choices": [{"message": {"content": '{"summary":"done","updates":[]}'}}]
         }
-        with mock.patch.object(
-            cloud_agent_runner,
-            "call_ai_gateway_model",
-            side_effect=[screen_payload, main_payload],
-        ) as model_mock:
-            data = cloud_agent_runner.call_ai_gateway("daily", prompt, "Public source snapshot:\n- item")
+        with mock.patch.dict(os.environ, {"MAX_AI_GATEWAY_CALLS_PER_TASK": "2"}, clear=False):
+            with mock.patch.object(
+                cloud_agent_runner,
+                "call_ai_gateway_model",
+                side_effect=[screen_payload, main_payload],
+            ) as model_mock:
+                data = cloud_agent_runner.call_ai_gateway("daily", prompt, "Public source snapshot:\n- item")
         self.assertEqual(cloud_agent_runner.response_output_text(data), '{"summary":"done","updates":[]}')
         main_prompt = model_mock.call_args_list[1].args[0]
         self.assertIn("Screening pass", main_prompt)
