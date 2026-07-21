@@ -5468,7 +5468,6 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             {"role": "user", "content": prompt},
         ],
         "temperature": 0.2,
-        "response_format": {"type": "json_object"},
     }
     last_error = ""
     # 400/404/409 are client errors: replaying the same payload against a

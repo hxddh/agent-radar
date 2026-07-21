@@ -2413,6 +2413,8 @@ class TransportResilienceTest(unittest.TestCase):
         self.assertEqual(request.full_url, "https://ai-gateway.vercel.sh/v1/chat/completions")
         self.assertEqual(request.get_header("Authorization"), "Bearer vercel-key")
         self.assertIsNone(request.get_header("Http-referer"))
+        payload = json.loads(request.data.decode("utf-8"))
+        self.assertNotIn("response_format", payload)
 
     def test_ai_gateway_call_retries_incomplete_read(self) -> None:
         # Issue #59: a response body cut mid-read (http.client.IncompleteRead)
