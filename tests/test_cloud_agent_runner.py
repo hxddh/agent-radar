@@ -2469,6 +2469,28 @@ class TransportResilienceTest(unittest.TestCase):
         self.assertEqual(json.loads(cloud_agent_runner.response_output_text(parsed))["summary"], "ok")
         self.assertIn("model-a->model-b", cloud_agent_runner.RUN_AUDIT["fallbacks"])
 
+    def test_ai_gateway_accepts_fenced_json_without_fallback(self) -> None:
+        response = mock.MagicMock()
+        response.__enter__.return_value.read.return_value = json.dumps(
+            {
+                "choices": [
+                    {
+                        "message": {"content": '```json\n{"summary": "ok"}\n```'},
+                        "finish_reason": "stop",
+                    }
+                ]
+            }
+        ).encode("utf-8")
+        with mock.patch.dict(
+            os.environ,
+            {"AI_GATEWAY_API_KEY": "x", "AI_GATEWAY_FALLBACK_MODELS": "model-b"},
+            clear=False,
+        ):
+            with mock.patch.object(urllib.request, "urlopen", return_value=response) as urlopen_mock:
+                parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
+        self.assertEqual(json.loads(cloud_agent_runner.response_output_text(parsed))["summary"], "ok")
+        urlopen_mock.assert_called_once()
+
     def test_max_response_chars_generous_for_all_tasks(self) -> None:
         # Issue #59 round 3: the daily legitimately produced 75.3k chars under
         # the v0.19 funnel; every task now gets the 96k cap by default.

@@ -1296,11 +1296,16 @@ def screening_schema_text(root: Path | None = None) -> str:
     )
 
 
-def parse_screening_json(text: str) -> dict[str, Any]:
+def normalize_model_json_text(text: str) -> str:
     cleaned = text.strip()
     if cleaned.startswith("```"):
-        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.IGNORECASE)
         cleaned = re.sub(r"\s*```$", "", cleaned)
+    return cleaned.strip()
+
+
+def parse_screening_json(text: str) -> dict[str, Any]:
+    cleaned = normalize_model_json_text(text)
     try:
         data = json.loads(cleaned)
     except json.JSONDecodeError:
@@ -5523,7 +5528,7 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
         if isinstance(parsed, dict) and parsed.get("error") and "choices" not in parsed:
             last_error = f"Vercel AI Gateway error envelope for {candidate_model}: {str(parsed.get('error'))[:300]}"
             continue
-        content = response_output_text(parsed).strip()
+        content = normalize_model_json_text(response_output_text(parsed))
         if not content:
             # A 200 with empty content (provider hiccup): retry the fallback
             # chain instead of failing later with "Model did not return valid JSON: ".
@@ -5544,6 +5549,15 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
                 f" (finish_reason={finish_reason or 'unknown'}): {content[:300]}"
             )
             continue
+        # Models sometimes wrap an otherwise valid JSON object in a Markdown
+        # fence despite the system instruction. Normalize it once here so all
+        # downstream strict parsers receive the same valid JSON text without
+        # spending another fallback call.
+        choices = parsed.get("choices") if isinstance(parsed, dict) else None
+        if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+            message = choices[0].get("message")
+            if isinstance(message, dict):
+                message["content"] = content
         return parsed
     raise SystemExit(last_error or "Vercel AI Gateway API error.")
 
