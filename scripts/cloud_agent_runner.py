@@ -48,9 +48,11 @@ GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions"
 AI_GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
-DEFAULT_CHEAP_SCREEN_MODEL = "deepseek/deepseek-v4-flash"
-DEFAULT_MAIN_RESEARCH_MODEL = "deepseek/deepseek-v4-pro"
+DEFAULT_CHEAP_SCREEN_MODEL = "openai/gpt-5-nano"
+DEFAULT_MAIN_RESEARCH_MODEL = "openai/gpt-oss-120b"
 DEFAULT_FINAL_SYNTHESIS_MODEL = DEFAULT_MAIN_RESEARCH_MODEL
+DEFAULT_AI_GATEWAY_FALLBACK_MODEL = "google/gemini-2.5-flash-lite"
+DEFAULT_AI_GATEWAY_MAX_OUTPUT_TOKENS = 32_768
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
 DEFAULT_CONTEXT_FILE_CHARS = 20_000
@@ -5438,7 +5440,9 @@ def ai_gateway_headers() -> dict[str, str]:
 
 
 def ai_gateway_fallback_models(model: str) -> list[str]:
-    fallback = split_env_list("AI_GATEWAY_FALLBACK_MODELS", [DEFAULT_MAIN_RESEARCH_MODEL])
+    fallback = split_env_list(
+        "AI_GATEWAY_FALLBACK_MODELS", [DEFAULT_AI_GATEWAY_FALLBACK_MODEL]
+    )
     models = [model]
     for item in fallback:
         if item not in models:
@@ -5468,6 +5472,13 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             {"role": "user", "content": prompt},
         ],
         "temperature": 0.2,
+        # The chat-completions default can be too small for the bilingual daily
+        # JSON. This is a ceiling, not a reservation: providers bill only the
+        # generated tokens. At the default fallback price it caps output spend
+        # for one attempt at roughly $0.02.
+        "max_tokens": env_int(
+            "AI_GATEWAY_MAX_OUTPUT_TOKENS", DEFAULT_AI_GATEWAY_MAX_OUTPUT_TOKENS
+        ),
     }
     last_error = ""
     # 400/404/409 are client errors: replaying the same payload against a
@@ -5512,10 +5523,26 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
         if isinstance(parsed, dict) and parsed.get("error") and "choices" not in parsed:
             last_error = f"Vercel AI Gateway error envelope for {candidate_model}: {str(parsed.get('error'))[:300]}"
             continue
-        if not response_output_text(parsed).strip():
+        content = response_output_text(parsed).strip()
+        if not content:
             # A 200 with empty content (provider hiccup): retry the fallback
             # chain instead of failing later with "Model did not return valid JSON: ".
             last_error = f"Vercel AI Gateway returned empty content for {candidate_model}"
+            continue
+        try:
+            json.loads(content)
+        except json.JSONDecodeError:
+            # Some providers return HTTP 200 with content cut at their default
+            # output limit. Treat malformed model output like a transient model
+            # failure so one low-cost, cross-provider fallback can recover it.
+            finish_reason = ""
+            choices = parsed.get("choices") if isinstance(parsed, dict) else None
+            if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+                finish_reason = str(choices[0].get("finish_reason", ""))
+            last_error = (
+                f"Vercel AI Gateway returned invalid JSON content for {candidate_model}"
+                f" (finish_reason={finish_reason or 'unknown'}): {content[:300]}"
+            )
             continue
         return parsed
     raise SystemExit(last_error or "Vercel AI Gateway API error.")

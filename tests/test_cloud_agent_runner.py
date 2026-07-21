@@ -32,27 +32,27 @@ state_spec.loader.exec_module(radar_collector_state)
 
 
 class CloudAgentRunnerTest(unittest.TestCase):
-    def test_ai_gateway_default_model_route_uses_only_flash_and_pro(self) -> None:
+    def test_ai_gateway_default_model_route_uses_nano_and_gpt_oss(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_models_for_task("daily"),
-                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
+                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
             )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_models_for_task("source-sweep"),
-                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
+                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
             )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_models_for_task("weekly"),
-                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
+                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
             )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_models_for_task("monthly"),
-                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
+                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
             )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_models_for_task("promote-candidates"),
-                ["deepseek/deepseek-v4-pro"],
+                ["openai/gpt-oss-120b"],
             )
 
     def test_auto_tasks_include_candidate_promotion_on_sunday(self) -> None:
@@ -2419,6 +2419,7 @@ class TransportResilienceTest(unittest.TestCase):
         self.assertIsNone(request.get_header("Http-referer"))
         payload = json.loads(request.data.decode("utf-8"))
         self.assertNotIn("response_format", payload)
+        self.assertEqual(payload["max_tokens"], 32_768)
 
     def test_ai_gateway_call_retries_incomplete_read(self) -> None:
         # Issue #59: a response body cut mid-read (http.client.IncompleteRead)
@@ -2443,6 +2444,30 @@ class TransportResilienceTest(unittest.TestCase):
                 with mock.patch.object(cloud_agent_runner.time, "sleep"):
                     parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
         self.assertIn("choices", parsed)
+
+    def test_ai_gateway_call_falls_back_on_invalid_json_content(self) -> None:
+        truncated = mock.MagicMock()
+        truncated.__enter__.return_value.read.return_value = json.dumps(
+            {
+                "choices": [
+                    {"message": {"content": '{"summary": "cut'}, "finish_reason": "length"}
+                ]
+            }
+        ).encode("utf-8")
+        good = mock.MagicMock()
+        good.__enter__.return_value.read.return_value = json.dumps(
+            {"choices": [{"message": {"content": '{"summary": "ok"}'}}]}
+        ).encode("utf-8")
+        with mock.patch.dict(
+            os.environ,
+            {"AI_GATEWAY_API_KEY": "x", "AI_GATEWAY_FALLBACK_MODELS": "model-b"},
+            clear=False,
+        ):
+            with mock.patch.object(urllib.request, "urlopen", side_effect=[truncated, good]):
+                with mock.patch.object(cloud_agent_runner.time, "sleep"):
+                    parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
+        self.assertEqual(json.loads(cloud_agent_runner.response_output_text(parsed))["summary"], "ok")
+        self.assertIn("model-a->model-b", cloud_agent_runner.RUN_AUDIT["fallbacks"])
 
     def test_max_response_chars_generous_for_all_tasks(self) -> None:
         # Issue #59 round 3: the daily legitimately produced 75.3k chars under
@@ -2762,9 +2787,9 @@ class AuditLoopTest(unittest.TestCase):
     def test_model_call_timeout_tiered_by_model(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
-                cloud_agent_runner.model_call_timeout("deepseek/deepseek-v4-flash"), 300
+                cloud_agent_runner.model_call_timeout("openai/gpt-5-nano"), 300
             )
-            self.assertEqual(cloud_agent_runner.model_call_timeout("deepseek/deepseek-v4-pro"), 900)
+            self.assertEqual(cloud_agent_runner.model_call_timeout("openai/gpt-oss-120b"), 900)
 
     def test_audit_daily_depth_flags_thin_day(self) -> None:
         cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []

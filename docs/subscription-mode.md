@@ -75,7 +75,7 @@ Use API-backed mode only if you later want OpenAI Responses API-specific feature
 
 ## Low-Cost Vercel AI Gateway 24/7 Mode
 
-This is the recommended paid API mode when cost control matters more than perfect paid search coverage.
+This is the recommended API mode when cost control matters more than perfect paid search coverage. The default route is eligible for the Vercel AI Gateway free tier, subject to its current credit and rate limits.
 
 Requirements:
 
@@ -86,14 +86,15 @@ Requirements:
 Recommended variables:
 
 ```text
-CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
-MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
-FINAL_SYNTHESIS_MODEL=deepseek/deepseek-v4-pro
+CHEAP_SCREEN_MODEL=openai/gpt-5-nano
+MAIN_RESEARCH_MODEL=openai/gpt-oss-120b
+FINAL_SYNTHESIS_MODEL=openai/gpt-oss-120b
 MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
-AI_GATEWAY_FALLBACK_MODELS=deepseek/deepseek-v4-pro
+AI_GATEWAY_FALLBACK_MODELS=google/gemini-2.5-flash-lite
+AI_GATEWAY_MAX_OUTPUT_TOKENS=32768
 MAX_RELEASE_REPOS=12
 MAX_RELEASES_PER_REPO=2
 ```
@@ -105,5 +106,6 @@ Behavior:
 - Public source collection uses Hacker News Algolia, GitHub REST API, GitHub releases/tags, and public RSS/changelog feeds.
 - Source-sweep runs keep broad candidate coverage in `research-log.md` and `sources.md`.
 - Promote-candidates runs automatically promote at most 3 high-quality candidates.
-- Daily runs use DeepSeek V4 Flash for screening and DeepSeek V4 Pro for final updates.
-- Weekly/monthly runs use DeepSeek V4 Flash for screening, then DeepSeek V4 Pro for final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
+- Daily runs use GPT-5 Nano for screening and GPT-OSS 120B for final updates.
+- Weekly/monthly runs use GPT-5 Nano for screening, then GPT-OSS 120B for final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
+- Gemini 2.5 Flash Lite is tried only for transient HTTP/transport failures or invalid/truncated JSON, keeping fallback output at the same low price tier as the primary route.

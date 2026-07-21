@@ -38,9 +38,9 @@ and repository variables:
 
 ```text
 AGENT_RADAR_MODEL_PROVIDER=vercel-ai-gateway
-CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
-MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
-FINAL_SYNTHESIS_MODEL=deepseek/deepseek-v4-pro
+CHEAP_SCREEN_MODEL=openai/gpt-5-nano
+MAIN_RESEARCH_MODEL=openai/gpt-oss-120b
+FINAL_SYNTHESIS_MODEL=openai/gpt-oss-120b
 MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 COLLECT_REDDIT=false
@@ -53,7 +53,8 @@ REDDIT_SUBREDDITS=LocalLLaMA,MachineLearning,ClaudeAI,GithubCopilot,Cursor,ChatG
 MAX_AI_GATEWAY_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
-AI_GATEWAY_FALLBACK_MODELS=deepseek/deepseek-v4-pro
+AI_GATEWAY_FALLBACK_MODELS=google/gemini-2.5-flash-lite
+AI_GATEWAY_MAX_OUTPUT_TOKENS=32768
 MAX_RELEASE_REPOS=20
 MAX_RELEASES_PER_REPO=3
 MAX_SOURCE_WORKERS=12
@@ -76,10 +77,12 @@ This mode uses Vercel AI Gateway only for model inference. It does not call paid
 
 Model routing stays bounded but discovery-oriented:
 
-- `daily`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes the final file updates.
-- `source-sweep`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes only `research-log.md` and `sources.md`.
-- `promote-candidates`: DeepSeek V4 Pro automatically promotes at most 3 high-quality candidates from `research-log.md`.
-- `weekly` and `monthly`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro performs final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
+- `daily`: GPT-5 Nano screens public signals, then GPT-OSS 120B writes the final file updates.
+- `source-sweep`: GPT-5 Nano screens public signals, then GPT-OSS 120B writes only `research-log.md` and `sources.md`.
+- `promote-candidates`: GPT-OSS 120B automatically promotes at most 3 high-quality candidates from `research-log.md`.
+- `weekly` and `monthly`: GPT-5 Nano screens public signals, then GPT-OSS 120B performs final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
+
+Gemini 2.5 Flash Lite is not part of the normal route. It is tried once only after a 408/429/5xx response, a transport timeout, an empty response, or malformed/truncated JSON. The 32,768-token ceiling is an output cap rather than prepaid usage; tokens are billed only when generated.
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_AI_GATEWAY_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
@@ -224,7 +227,7 @@ In automatic mode (`task=auto`):
 | Wednesday (`weekday==2`) | `promote-candidates` |
 | Last day of month | `monthly` |
 
-`weekly` and `monthly` use `FINAL_SYNTHESIS_MODEL` (default `deepseek/deepseek-v4-pro`). To verify in production before the calendar fires:
+`weekly` and `monthly` use `FINAL_SYNTHESIS_MODEL` (default `openai/gpt-oss-120b`). To verify in production before the calendar fires:
 
 ```bash
 python scripts/agent_radar.py trigger cloud-agent --task weekly --date 2026-07-06
