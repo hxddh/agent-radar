@@ -255,6 +255,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
             data = cloud_agent_runner.call_ai_gateway("daily", "prompt", "sources")
         text = cloud_agent_runner.response_output_text(data)
         self.assertIn("Vercel AI Gateway call budget is zero", text)
+        result = json.loads(text)
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(cloud_agent_runner.apply_updates(Path(tmp), [], result, task="daily"), 0)
 
     def test_pypi_updates_collector_parses_rss(self) -> None:
         rss = """<?xml version="1.0"?>

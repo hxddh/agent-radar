@@ -5948,6 +5948,8 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
     allowed_set = set(allowed)
     updates = normalize_result_updates(result)
     if not updates:
+        if RUN_AUDIT.get("budget_status") == "dry-run-budget-zero":
+            return 0
         raise SystemExit("Model output missing updates list.")
 
     count = 0

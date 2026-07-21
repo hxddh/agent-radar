@@ -7,6 +7,7 @@
 - Consolidated paid routing to two models: DeepSeek V4 Flash for screening and audits, and DeepSeek V4 Pro for research and final synthesis. GLM 5.2 is no longer part of the active model route or fallback chain.
 - Renamed the active call-budget, fallback, run-log, and telemetry fields from OpenRouter-specific names to AI Gateway names.
 - AI Gateway requests rely on the existing JSON-only prompt and strict parser instead of `response_format=json_object`, which DeepSeek V4 rejects through the Gateway.
+- A zero AI Gateway call budget now completes as a real dry run instead of failing the empty-update guard.
 
 ## v0.19.5 - 2026-07-18
 
