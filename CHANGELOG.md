@@ -8,6 +8,7 @@
 - Renamed the active call-budget, fallback, run-log, and telemetry fields from OpenRouter-specific names to AI Gateway names.
 - AI Gateway requests rely on the existing JSON-only prompt and strict parser instead of `response_format=json_object`, which DeepSeek V4 rejects through the Gateway.
 - Added an explicit 32,768-token output ceiling and low-cost fallback recovery for HTTP 200 responses whose model content is truncated or otherwise invalid JSON.
+- Normalize pure Markdown JSON fences before strict parsing so a valid fenced response does not spend a fallback call.
 - A zero AI Gateway call budget now completes as a real dry run instead of failing the empty-update guard.
 
 ## v0.19.5 - 2026-07-18
