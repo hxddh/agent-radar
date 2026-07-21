@@ -1,0 +1,164 @@
+{
+  "summary": "Daily synthesis: mainstream deltas, social workflow signals, and infra primitives across vendor families.",
+  "candidates": [
+    {
+      "id": "scr-claude-code",
+      "title": "Claude Code: Making-of",
+      "why_it_matters": "Official story of Claude Code's evolution",
+      "evidence": [
+        "https://www.anthropic.com/features/making-of-claude-code"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-gemini-cli",
+      "title": "Gemini CLI Release",
+      "why_it_matters": "Official Gemini CLI nightly release",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260721.gacae7124b"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openai-codex",
+      "title": "OpenAI Codex 0.145.0-alpha.29",
+      "why_it_matters": "Codex prerelease alpha release",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.29"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-waylou",
+      "title": "Waylou: multi-provider CLI coding agent",
+      "why_it_matters": "Show HN discussion about CLI coding agents; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/helis-d/waylou"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ],
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-astryx-bluesky",
+      "title": "Astryx: human-AI collaboration design system",
+      "why_it_matters": "Open-source design system for agent-human workflows; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/aipulse-synestesia.bsky.social/post/3mr6agx6ojt2e"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-eventloom",
+      "title": "Eventloom: durable agent memory (Zaxy)",
+      "why_it_matters": "Hash-chained memory log for multi-agent reasoning",
+      "evidence": [
+        "https://github.com/syndicalt/zaxy"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-headroom",
+      "title": "Headroom: MCP output compression",
+      "why_it_matters": "Cuts tokens; improves MCP efficiency",
+      "evidence": [
+        "https://github.com/headroomlabs-ai/headroom"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openlegion",
+      "title": "Openlegion: secure autonomous AI agent framework",
+      "why_it_matters": "Orchestrate secure AI agents",
+      "evidence": [
+        "https://github.com/openlegion-ai/openlegion"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-github-code-quality",
+      "title": "GitHub Code Quality GA",
+      "why_it_matters": "Code Quality feature now generally available",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-20-github-code-quality-is-now-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": []
+}

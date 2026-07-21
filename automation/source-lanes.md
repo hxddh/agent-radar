@@ -1,6 +1,6 @@
 # Source Lanes
 
-Last checked: 2026-07-21
+Last checked: 2026-07-22
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
@@ -15,10 +15,10 @@ Last checked: 2026-07-21
 | lobsters | 1 | 0 | 6 |
 | npm | 5 | 0 | 25 |
 | open-vsx | 5 | 0 | 25 |
-| page | 21 | 1 | 120 |
+| page | 21 | 0 | 120 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 5 | 0 | 25 |
-| reddit-rss | 1 | 8 | 4 |
+| reddit-rss | 1 | 5 | 4 |
 | release | 32 | 0 | 92 |
 | tag | 32 | 0 | 93 |
 
