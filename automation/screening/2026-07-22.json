@@ -1,12 +1,12 @@
 {
-  "summary": "Daily synthesis: mainstream deltas, social workflow signals, and infra primitives across vendor families.",
+  "summary": "Top signals this week: 3 mainstream_product deltas, 2 social-driven user workflows, and 3 infra-primitive signals.",
   "candidates": [
     {
-      "id": "scr-claude-code",
-      "title": "Claude Code: Making-of",
-      "why_it_matters": "Official story of Claude Code's evolution",
+      "id": "scr-meta-genesis-202607",
+      "title": "Meta Genesis Mission Projects",
+      "why_it_matters": "Meta's Genesis projects highlight multi-agent workflows in production.",
       "evidence": [
-        "https://www.anthropic.com/features/making-of-claude-code"
+        "https://ai.meta.com/blog/genesis-mission-lawrence-berkeley-national-laboratory-segment-anything-dino/"
       ],
       "confidence": "high",
       "relevance_score": 9,
@@ -17,11 +17,11 @@
       "next_check": "follow-up"
     },
     {
-      "id": "scr-gemini-cli",
-      "title": "Gemini CLI Release",
-      "why_it_matters": "Official Gemini CLI nightly release",
+      "id": "scr-anthropic-claude-code",
+      "title": "Claude Code feature: The Making of Claude Code",
+      "why_it_matters": "Inside look at Claude Code’s development and capabilities.",
       "evidence": [
-        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.52.0-nightly.20260721.gacae7124b"
+        "https://www.anthropic.com/features/making-of-claude-code"
       ],
       "confidence": "high",
       "relevance_score": 8,
@@ -29,58 +29,51 @@
       "signal_class": "mainstream_product",
       "infra_angle": "none",
       "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
+      "next_check": "follow-up"
     },
     {
-      "id": "scr-openai-codex",
-      "title": "OpenAI Codex 0.145.0-alpha.29",
-      "why_it_matters": "Codex prerelease alpha release",
+      "id": "scr-gemini-36-copilot",
+      "title": "Gemini 3.6 Flash in Copilot",
+      "why_it_matters": "Gemini 3.6 Flash released for Copilot workflows.",
       "evidence": [
-        "https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.29"
+        "https://github.blog/changelog/2026-07-21-gemini-3-6-flash-is-now-available-in-github-copilot",
+        "https://bsky.app/profile/britainsnews.bsky.social/post/3mr6bvuhm7r2j",
+        "https://console.cloud.google.com/agent-platform/publishers/google/model-garden/gemini-3.6-flash"
       ],
-      "confidence": "medium",
-      "relevance_score": 7,
+      "confidence": "high",
+      "relevance_score": 9,
       "source_diversity": 1,
       "signal_class": "mainstream_product",
       "infra_angle": "none",
       "promotion_status": "candidate",
       "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-waylou",
-      "title": "Waylou: multi-provider CLI coding agent",
-      "why_it_matters": "Show HN discussion about CLI coding agents; reclassified repo→infra",
-      "evidence": [
-        "https://github.com/helis-d/waylou"
-      ],
-      "confidence": "low",
-      "relevance_score": 4,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "none",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ],
       "source_visibility": "Public",
       "evidence_basis": "mixed_discussion"
     },
     {
-      "id": "scr-astryx-bluesky",
-      "title": "Astryx: human-AI collaboration design system",
-      "why_it_matters": "Open-source design system for agent-human workflows; social/discussion source (keep; label evidence)",
+      "id": "scr-shikigami-hn",
+      "title": "Shikigami: Run AI coding agents in parallel in a Git worktree",
+      "why_it_matters": "Demonstrates parallel agent orchestration via Git worktrees.",
       "evidence": [
-        "https://bsky.app/profile/aipulse-synestesia.bsky.social/post/3mr6agx6ojt2e"
+        "https://shikigami.dev/"
       ],
-      "confidence": "low",
-      "relevance_score": 5,
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-superset-bluesky",
+      "title": "Superset orchestrates CLI coding agents in parallel",
+      "why_it_matters": "Shows parallel agent orchestration in CLI workflows.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/hasamba72.bsky.social/post/3mr53tnjfqq2d"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
       "source_diversity": 1,
       "signal_class": "user_workflow",
       "infra_angle": "none",
@@ -88,38 +81,20 @@
       "next_check": "follow-up",
       "source_visibility": "Public",
       "evidence_basis": "social_discussion",
-      "evidence_strength": "Weak"
+      "evidence_strength": "Medium"
     },
     {
-      "id": "scr-eventloom",
-      "title": "Eventloom: durable agent memory (Zaxy)",
-      "why_it_matters": "Hash-chained memory log for multi-agent reasoning",
+      "id": "scr-mitos-sandbox",
+      "title": "Mitos: MicroVM sandbox for AI agents on Kubernetes",
+      "why_it_matters": "Secure, restartable sandbox for agent fleets.",
       "evidence": [
-        "https://github.com/syndicalt/zaxy"
+        "https://github.com/mitos-run/mitos"
       ],
       "confidence": "medium",
-      "relevance_score": 6,
-      "source_diversity": 1,
-      "signal_class": "infra_primitive",
-      "infra_angle": "memory",
-      "promotion_status": "candidate",
-      "next_check": "follow-up",
-      "risk_flags": [
-        "single-repo-source"
-      ]
-    },
-    {
-      "id": "scr-headroom",
-      "title": "Headroom: MCP output compression",
-      "why_it_matters": "Cuts tokens; improves MCP efficiency",
-      "evidence": [
-        "https://github.com/headroomlabs-ai/headroom"
-      ],
-      "confidence": "high",
       "relevance_score": 7,
       "source_diversity": 1,
       "signal_class": "infra_primitive",
-      "infra_angle": "storage",
+      "infra_angle": "sandbox",
       "promotion_status": "candidate",
       "next_check": "follow-up",
       "risk_flags": [
@@ -127,37 +102,40 @@
       ]
     },
     {
-      "id": "scr-openlegion",
-      "title": "Openlegion: secure autonomous AI agent framework",
-      "why_it_matters": "Orchestrate secure AI agents",
+      "id": "scr-clickhouse-interpreter",
+      "title": "ClickHouse/code-interpreter: Sandboxed code execution",
+      "why_it_matters": "Sandboxed code execution API for AI agents.",
       "evidence": [
-        "https://github.com/openlegion-ai/openlegion"
+        "https://github.com/ClickHouse/code-interpreter"
       ],
       "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-kiln-mcp",
+      "title": "Kiln: open MCP server for AI agents",
+      "why_it_matters": "Open MCP server enabling agent design and execution flows.",
+      "evidence": [
+        "https://github.com/codeofaxel/Kiln"
+      ],
+      "confidence": "low",
       "relevance_score": 6,
       "source_diversity": 1,
       "signal_class": "infra_primitive",
-      "infra_angle": "security",
+      "infra_angle": "deployment",
       "promotion_status": "candidate",
       "next_check": "follow-up",
       "risk_flags": [
         "single-repo-source"
       ]
-    },
-    {
-      "id": "scr-github-code-quality",
-      "title": "GitHub Code Quality GA",
-      "why_it_matters": "Code Quality feature now generally available",
-      "evidence": [
-        "https://github.blog/changelog/2026-07-20-github-code-quality-is-now-generally-available"
-      ],
-      "confidence": "high",
-      "relevance_score": 8,
-      "source_diversity": 1,
-      "signal_class": "mainstream_product",
-      "infra_angle": "eval",
-      "promotion_status": "candidate",
-      "next_check": "follow-up"
     }
   ],
   "gaps": []
