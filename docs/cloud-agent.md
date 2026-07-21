@@ -53,7 +53,8 @@ REDDIT_SUBREDDITS=LocalLLaMA,MachineLearning,ClaudeAI,GithubCopilot,Cursor,ChatG
 MAX_AI_GATEWAY_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
-AI_GATEWAY_FALLBACK_MODELS=google/gemini-2.5-flash-lite
+AI_GATEWAY_FALLBACK_MODELS=openai/gpt-5-nano
+AI_GATEWAY_SCREEN_FALLBACK_MODELS=google/gemini-2.5-flash-lite
 AI_GATEWAY_MAX_OUTPUT_TOKENS=32768
 MAX_RELEASE_REPOS=20
 MAX_RELEASES_PER_REPO=3
@@ -82,7 +83,7 @@ Model routing stays bounded but discovery-oriented:
 - `promote-candidates`: GPT-OSS 120B automatically promotes at most 3 high-quality candidates from `research-log.md`.
 - `weekly` and `monthly`: GPT-5 Nano screens public signals, then GPT-OSS 120B performs final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
 
-Gemini 2.5 Flash Lite is not part of the normal route. It is tried once only after a 408/429/5xx response, a transport timeout, an empty response, or malformed/truncated JSON. The 32,768-token ceiling is an output cap rather than prepaid usage; tokens are billed only when generated.
+Fallback is tiered by workload and is not part of the normal route. A failed Nano screening call tries Gemini 2.5 Flash Lite; a failed GPT-OSS synthesis call tries Nano, which is more reliable for the long bilingual schema. Fallback is limited to a 408/429/5xx response, transport timeout, empty response, or malformed/truncated JSON. The 32,768-token ceiling is an output cap rather than prepaid usage; tokens are billed only when generated.
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_AI_GATEWAY_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 

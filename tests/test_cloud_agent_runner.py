@@ -55,6 +55,17 @@ class CloudAgentRunnerTest(unittest.TestCase):
                 ["openai/gpt-oss-120b"],
             )
 
+    def test_ai_gateway_default_fallbacks_are_tiered_by_workload(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(
+                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-nano"),
+                ["openai/gpt-5-nano", "google/gemini-2.5-flash-lite"],
+            )
+            self.assertEqual(
+                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-oss-120b"),
+                ["openai/gpt-oss-120b", "openai/gpt-5-nano"],
+            )
+
     def test_auto_tasks_include_candidate_promotion_on_sunday(self) -> None:
         tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-05"))
         self.assertIn("daily", tasks)

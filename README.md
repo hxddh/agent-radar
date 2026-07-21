@@ -90,7 +90,7 @@ Daily notes are append-oriented. Use them to record high-signal items without fo
 
 For fully Cloud Agent-driven operation, use `automation/daily.md`.
 
-For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`. The recommended cost-controlled mode uses Vercel AI Gateway directly with GPT-5 Nano for screening, GPT-OSS 120B for research and final synthesis, Gemini 2.5 Flash Lite only as a transient-failure fallback, and free public sources only; see `docs/cloud-agent.md`.
+For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`. The recommended cost-controlled mode uses Vercel AI Gateway directly with GPT-5 Nano for screening, GPT-OSS 120B for research and final synthesis, Nano again as the synthesis fallback, Gemini 2.5 Flash Lite only as the screening fallback, and free public sources only; see `docs/cloud-agent.md`.
 
 Cloud mode uses source lanes, source-cache novelty tracking, scoring, source health, lane health, and structured telemetry. Daily, weekly, and monthly reports use nested bilingual pairs: each substantive item is a label bullet with `中文：` first and `English:` second as sub-bullets; short metadata fields stay on one line as `中文值（English value）`; URLs and product names are written once. At least 60% of substantive English lines must have a real Chinese counterpart.
 

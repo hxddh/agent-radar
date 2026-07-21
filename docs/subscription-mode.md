@@ -93,7 +93,8 @@ MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
-AI_GATEWAY_FALLBACK_MODELS=google/gemini-2.5-flash-lite
+AI_GATEWAY_FALLBACK_MODELS=openai/gpt-5-nano
+AI_GATEWAY_SCREEN_FALLBACK_MODELS=google/gemini-2.5-flash-lite
 AI_GATEWAY_MAX_OUTPUT_TOKENS=32768
 MAX_RELEASE_REPOS=12
 MAX_RELEASES_PER_REPO=2
@@ -108,4 +109,4 @@ Behavior:
 - Promote-candidates runs automatically promote at most 3 high-quality candidates.
 - Daily runs use GPT-5 Nano for screening and GPT-OSS 120B for final updates.
 - Weekly/monthly runs use GPT-5 Nano for screening, then GPT-OSS 120B for final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
-- Gemini 2.5 Flash Lite is tried only for transient HTTP/transport failures or invalid/truncated JSON, keeping fallback output at the same low price tier as the primary route.
+- Fallback remains workload-aware and low-cost: Flash Lite backs up Nano screening, while Nano backs up GPT-OSS long-form synthesis after transient HTTP/transport failures or invalid/truncated JSON.
