@@ -1515,3 +1515,70 @@ Ignore or deprioritize:
 - [infra_primitive] TuxGenie: https://pypi.org/project/tuxgenie/5.91.0/
 - [infra_primitive] AxmeAI.axme-code: https://open-vsx.org/extension/AxmeAI/axme-code
 - [infra_primitive] gigacode: https://crates.io/crates/gigacode
+
+
+## 2026-07-21 additions
+
+- [mainstream_product] Mistral Vibe for code agents: https://mistral.ai/products/vibe/code/
+- [mainstream_product] Cline v4.0.10 release: https://github.com/cline/cline/releases/tag/v4.0.10
+- [mainstream_product] Claude Code v2.1.216 release: https://github.com/anthropics/claude-code/releases/tag/v2.1.216
+- [mainstream_product] Grok Build open-sourced after SSH key leak: https://bsky.app/profile/ctsmithiii.bsky.social/post/3mr3camnaw223
+- [mainstream_product] Hugging Face breached by autonomous AI agent: https://www.bleepingcomputer.com/news/security/hugging-face-breach-autonomous-ai-agent-system-internal-datasets-credentials/
+- [mainstream_product] Anthropic: How we contain Claude across products: https://www.anthropic.com/engineering/how-we-contain-claude
+- [mainstream_product] Cloudflare Precursor detects agentic behavior: https://blog.cloudflare.com/introducing-precursor/
+- [mainstream_product] @vercel/detect-agent v1.2.3: https://www.npmjs.com/package/%40vercel/detect-agent
+- [user_workflow] Claude Code MCP token cost overhead: https://bsky.app/profile/enakat-it.bsky.social/post/3mr4swslyit2c
+- [user_workflow] Ask HN: Workflow around AI over-reliance: https://news.ycombinator.com/item?id=48979474
+- [user_workflow] Claude Code job queue rewrite workflow: https://bsky.app/profile/mvij.org/post/3mr4vy2jh3h2w
+- [user_workflow] Simon Willison: Reverse-engineering is cheap now: https://simonwillison.net/2026/Jul/20/cheap-reverse-engineering/#atom-everything
+- [research] DeepSWE benchmark for evaluating AI coding agents: https://www.i-programmer.info/professional-programmer/103-i-programmer/18759-why-software-engineering-will-never-die-revisited-in-the-age-of-spec-driven-development.html
+- [infra_primitive] Langfuse v3.222.0 release: https://github.com/langfuse/langfuse/releases/tag/v3.222.0
+- [mainstream_product] @openai/codex v0.144.6: https://www.npmjs.com/package/%40openai/codex
+- [mainstream_product] Google ADK Go 2.0 for multi-agent apps: https://developers.googleblog.com/announcing-adk-go-20/
+- [mainstream_product] Inside story: Making of Claude Code (Anthropic): https://www.anthropic.com/features/making-of-claude-code
+- [mainstream_product] @github/copilot v1.0.73: https://www.npmjs.com/package/%40github/copilot
+- [mainstream_product] OpenAI reduces Codex Model Context Size: https://github.com/openai/codex/pull/33972/files
+- [user_workflow] CrewAI Bedrock deployment silent failures: https://dev.to/sarvar_04/4-silent-failures-2-undocumented-apis-and-a-container-that-crashed-because-of-a-missing-user-1b9n
+- [infra_primitive] Replit's Snapshot Engine for safe AI agent execution: https://replit.com/blog/inside-replits-snapshot-engine
+- [infra_primitive] Haystack 3.0 with hooks, skills, introspection: https://haystack.deepset.ai/release-notes/3.0.0
+- [mainstream_product] Google Gemini shifting to autonomous 24/7 agent: https://bsky.app/profile/xplaination.bsky.social/post/3mr3miwxgb32h
+- [mainstream_product] OpenAI introduces AgentKit: https://www.reddit.com/r/AgentDevelopment/comments/1o3wv1a/introducing_agentkit_openai/
+- [research] Study of early 2026 Claude Code and Copilot CLI rollout: https://arxiv.org/abs/2607.01418
+- [mainstream_product] Claude Code screen reader mode: https://twitter.com/i/status/2079315549163778366
+- [mainstream_product] Claude Plays Robotics: https://www.anthropic.com/research/claude-plays-robotics
+- [user_workflow] n8n workflows nested like matryoshka dolls: https://bsky.app/profile/automate-n8n.bsky.social/post/3mr4vjyxpaf2q
+- [research] Agent Arena benchmark for AI devtool onboarding: https://2027.dev/arena/sandboxes
+- [mainstream_product] JetBrains rtk skill cuts agent tokens 60-90%: https://blog.jetbrains.com/ai/2026/07/rtk-claude-code-token-savings/
+- [mainstream_product] Amazon Connect agentic voice: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-connect-agentic-voice/
+- [mainstream_product] Vercel Workflows: configure where run state lives: https://vercel.com/changelog/configure-where-run-state-lives-in-vercel-workflows
+- [mainstream_product] Cursor Automations and Marketplace launch: https://cursor.com/automate
+- [mainstream_product] AWS Data Exports now include Bedrock product metadata: https://aws.amazon.com/about-aws/whats-new/2026/07/aws-data-exports-amazon-bedrock-product-metadata/
+- [infra_primitive] Searchable field-level encryption on Supabase with CipherStash: https://supabase.com/blog/searchable-field-level-encryption-with-cipherstash
+- [infra_primitive] Litestream writable VFS for agent storage: https://fly.io/blog/litestream-writable-vfs/
+- [mainstream_product] Cloudflare Internal DNS generally available: https://blog.cloudflare.com/internal-dns/
+- [user_workflow] Simon Willison: Who’s Afraid of Chinese Models?: https://simonwillison.net/2026/Jul/20/afraid-of-chinese-models/#atom-everything
+- [mainstream_product] OpenAI Codex alpha releases: https://github.com/openai/codex/releases/tag/rust-v0.145.0-alpha.28
+- [mainstream_product] GitHub Code Quality GA launch: https://github.blog/changelog/2026-07-20-github-code-quality-is-now-generally-available
+- [mainstream_product] Vercel AI SDK releases (v7.0.32, v6.0.231, v5.0.217): https://github.com/vercel/ai/releases/tag/ai%407.0.32
+- [mainstream_product] OpenCode v1.18.4 release: https://github.com/anomalyco/opencode/releases/tag/v1.18.4
+- [mainstream_product] Dify 149k stars: https://github.com/langgenius/dify
+- [mainstream_product] Langflow 152k stars: https://github.com/langflow-ai/langflow
+- [mainstream_product] Qwen Code v0.20.0 stable release: https://github.com/QwenLM/qwen-code/releases/tag/v0.20.0
+- [mainstream_product] Pydantic AI v2.14.0 release: https://github.com/pydantic/pydantic-ai/releases/tag/v2.14.0
+- [infra_primitive] Codeburn: open-source AI coding cost tracker: https://github.com/getagentseal/codeburn
+- [infra_primitive] Vibatchium: stealth browser automation for agents: https://github.com/trueoriginlabs/vibatchium
+- [infra_primitive] Omnigent v0.6.0 meta-harness release: https://github.com/omnigent-ai/omnigent
+- [infra_primitive] OpenLoomi: open-source AI coworker with work memory: https://github.com/melandlabs/openloomi
+- [infra_primitive] Vieval: evaluation framework built on Vitest: https://github.com/vieval-dev/vieval
+- [mainstream_product] lenixbyte.adk-tools (Google ADK): https://open-vsx.org/extension/lenixbyte/adk-tools
+- [user_workflow] andreslaley.agile-agent-ai: https://open-vsx.org/extension/andreslaley/agile-agent-ai
+- [infra_primitive] styxx 7.26.0: https://pypi.org/project/styxx/7.26.0/
+- [infra_primitive] mysql-mcp-pro 2.0.2: https://pypi.org/project/mysql-mcp-pro/2.0.2/
+- [user_workflow] mnemoverse.mnemoverse-vscode: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+- [infra_primitive] entroly 1.0.65: https://pypi.org/project/entroly/1.0.65/
+- [infra_primitive] puppetmaster-ai 1.20.7: https://pypi.org/project/puppetmaster-ai/1.20.7/
+- [infra_primitive] minimal-harness 0.7.0a4: https://pypi.org/project/minimal-harness/0.7.0a4/
+- [infra_primitive] hypermind 1.9.7: https://pypi.org/project/hypermind/1.9.7/
+- [infra_primitive] regent-cli 0.7.0: https://pypi.org/project/regent-cli/0.7.0/
+- [mainstream_product] @tencent-ai/agent-server v0.0.23-beta: https://www.npmjs.com/package/%40tencent-ai/agent-server
+- [infra_primitive] veradata-agentkit-provider 1.0.0: https://pypi.org/project/veradata-agentkit-provider/1.0.0/
