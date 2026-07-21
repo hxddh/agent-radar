@@ -5445,9 +5445,16 @@ def ai_gateway_headers() -> dict[str, str]:
 
 
 def ai_gateway_fallback_models(model: str) -> list[str]:
-    fallback = split_env_list(
-        "AI_GATEWAY_FALLBACK_MODELS", [DEFAULT_AI_GATEWAY_FALLBACK_MODEL]
-    )
+    cheap = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
+    if model == cheap:
+        fallback = split_env_list(
+            "AI_GATEWAY_SCREEN_FALLBACK_MODELS", [DEFAULT_AI_GATEWAY_FALLBACK_MODEL]
+        )
+    else:
+        # Reuse Nano for synthesis recovery: it is cheaper than Mini, retains a
+        # long output window, and avoids asking Flash Lite to write the long
+        # bilingual reports that it failed the production quality gate on.
+        fallback = split_env_list("AI_GATEWAY_FALLBACK_MODELS", [DEFAULT_CHEAP_SCREEN_MODEL])
     models = [model]
     for item in fallback:
         if item not in models:
@@ -5495,6 +5502,8 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
         audit_model(candidate_model)
         if candidate_model != model:
             RUN_AUDIT["fallbacks"].append(f"{model}->{candidate_model}")
+            reason = last_error.split(":", 1)[0] if last_error else "transient failure"
+            print(f"AI Gateway fallback {model}->{candidate_model}: {reason}")
         if attempt > 0:
             # Brief backoff before retrying a transient failure.
             time.sleep(min(8, 2 ** attempt))

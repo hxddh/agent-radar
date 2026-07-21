@@ -61,7 +61,8 @@ jobs:
       INCLUDE_MAINTENANCE_CONTEXT: ${{ vars.INCLUDE_MAINTENANCE_CONTEXT || 'false' }}
       INCLUDE_RUNBOOK_CONTEXT: ${{ vars.INCLUDE_RUNBOOK_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
-      AI_GATEWAY_FALLBACK_MODELS: ${{ vars.AI_GATEWAY_FALLBACK_MODELS || 'google/gemini-2.5-flash-lite' }}
+      AI_GATEWAY_FALLBACK_MODELS: ${{ vars.AI_GATEWAY_FALLBACK_MODELS || 'openai/gpt-5-nano' }}
+      AI_GATEWAY_SCREEN_FALLBACK_MODELS: ${{ vars.AI_GATEWAY_SCREEN_FALLBACK_MODELS || 'google/gemini-2.5-flash-lite' }}
       AI_GATEWAY_MAX_OUTPUT_TOKENS: ${{ vars.AI_GATEWAY_MAX_OUTPUT_TOKENS || '32768' }}
       # Tuned in-repo (repo Actions variables held stale lower values and
       # silently clamped collection breadth; see docs/release-v0.19.0.md).
