@@ -6,7 +6,7 @@ The `automation/` task cards are instructions. True 24/7 operation is provided b
 
 1. GitHub Actions wakes up on a schedule.
 2. The hosted runner checks out the repository.
-3. `scripts/cloud_agent_runner.py` calls GitHub Models with the GitHub Actions `GITHUB_TOKEN` by default. It can optionally call OpenRouter or the OpenAI Responses API when an API key is configured.
+3. `scripts/cloud_agent_runner.py` calls GitHub Models with the GitHub Actions `GITHUB_TOKEN` by default. It can optionally call the OpenAI-compatible Vercel AI Gateway endpoint directly, or the OpenAI Responses API when an API key is configured.
 4. The runner collects source lanes, scores source items, applies source-cache novelty penalties, and trims the source snapshot.
 5. The cloud agent returns source-backed full-file updates for allowed Markdown files.
 6. The runner writes audit metadata to `automation/runs/YYYY-MM.md`, source health to `automation/source-health.md`, source lane health to `automation/source-lanes.md`, source memory to `automation/source-cache.jsonl`, and structured telemetry to `automation/telemetry/YYYY-MM.jsonl`.
@@ -26,21 +26,21 @@ GITHUB_MODEL=openai/gpt-4o
 
 GitHub-hosted runners provide `GITHUB_TOKEN` automatically, and GitHub Models supports `models: read` workflow permission. No OpenAI API key is required for this default mode.
 
-## Recommended: Low-Cost OpenRouter Mode
+## Recommended: Low-Cost Vercel AI Gateway Mode
 
 For the full cloud-agent setup without paid search services, set a repository secret:
 
 ```text
-OPENROUTER_API_KEY
+AI_GATEWAY_API_KEY
 ```
 
 and repository variables:
 
 ```text
-AGENT_RADAR_MODEL_PROVIDER=openrouter
+AGENT_RADAR_MODEL_PROVIDER=vercel-ai-gateway
 CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
 MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
-FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
+FINAL_SYNTHESIS_MODEL=deepseek/deepseek-v4-pro
 MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 COLLECT_REDDIT=false
@@ -50,10 +50,10 @@ COLLECT_DEVTO=true
 COLLECT_LOBSTERS=true
 SOCIAL_FEEDS=
 REDDIT_SUBREDDITS=LocalLLaMA,MachineLearning,ClaudeAI,GithubCopilot,Cursor,ChatGPTCoding,mcp,agentdevelopment
-MAX_OPENROUTER_CALLS_PER_TASK=
+MAX_AI_GATEWAY_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
-OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
+AI_GATEWAY_FALLBACK_MODELS=deepseek/deepseek-v4-pro
 MAX_RELEASE_REPOS=20
 MAX_RELEASES_PER_REPO=3
 MAX_SOURCE_WORKERS=12
@@ -63,7 +63,7 @@ CHANGELOG_FEEDS=
 CHANGELOG_PAGES=
 ```
 
-This mode does not call OpenRouter web search, Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
+This mode uses Vercel AI Gateway only for model inference. It does not call paid web-search services such as Grok search, Perplexity, Search1API, SocialCrawl, or Tavily. The runner collects only free public signals from:
 
 - Hacker News Algolia API
 - Reddit subreddit RSS (`COLLECT_REDDIT_RSS=true` by default; legacy search JSON behind `COLLECT_REDDIT=true`)
@@ -79,9 +79,9 @@ Model routing stays bounded but discovery-oriented:
 - `daily`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes the final file updates.
 - `source-sweep`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro writes only `research-log.md` and `sources.md`.
 - `promote-candidates`: DeepSeek V4 Pro automatically promotes at most 3 high-quality candidates from `research-log.md`.
-- `weekly` and `monthly`: DeepSeek V4 Flash screens public signals, then GLM 5.2 performs final synthesis (default `MAX_OPENROUTER_CALLS_PER_TASK=2`).
+- `weekly` and `monthly`: DeepSeek V4 Flash screens public signals, then DeepSeek V4 Pro performs final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
 
-This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_OPENROUTER_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
+This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_AI_GATEWAY_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
 ## Expanding Official Source Coverage
 
@@ -121,7 +121,7 @@ Context efficiency (v0.5.2+):
 - Weekly/monthly slim profile (v0.5.8+): context skips `playbook.md`, `storage-angle.md`, and `user-field-notes.md` (weekly) or `playbook.md` and `storage-angle.md` (monthly); files remain writable.
 - `build_prompt()` applies a global `MAX_PROMPT_CHARS` budget: source/screening block first, then repository context.
 - `SHARED_SCREENING=true` (default): `auto` mode reuses one screening JSON across tasks in the same run.
-- `auto` mode with OpenRouter also reuses one scored source pool across tasks (`prepare_shared_source_collection`) and one preflight Flash screening pass (`preflight_shared_screening`).
+- `auto` mode with Vercel AI Gateway also reuses one scored source pool across tasks (`prepare_shared_source_collection`) and one preflight Flash screening pass (`preflight_shared_screening`).
 - v0.5.12+: full screening JSON is written to `automation/screening/YYYY-MM-DD.json`; main prompts inject a compact top-N summary. `MAX_RESPONSE_CHARS` and `MAX_DAILY_APPEND_CHARS` cap model output size. Stale source-sweeps skip when screening has no new candidates (`SKIP_SOURCE_SWEEP_WHEN_STALE=true`).
 - `SOURCES_CONTEXT_CHARS=6000` caps `sources.md` in daily/source-sweep context (intro + recent example tail).
 - `MAX_CONTEXT_FILE_CHARS=20000` caps auxiliary context files (output targets use `MAX_FILE_CHARS`).
@@ -137,7 +137,7 @@ Every run records:
 
 - task name
 - provider and models used
-- OpenRouter call count
+- Vercel AI Gateway call count
 - public source item count
 - changed file count
 - budget status
@@ -152,7 +152,7 @@ See `docs/architecture.md` for the full architecture.
 
 ## Automated Social Sources (No Manual Link Entry)
 
-OpenRouter mode now collects social/community signals automatically. Two-stage routing sends the raw public snapshot only to the screening model; the synthesis model receives the screening JSON plus trimmed repository context. In `auto` mode, one collector snapshot is shared across all tasks in the run.
+Vercel AI Gateway mode collects social/community signals automatically. Two-stage routing sends the raw public snapshot only to the screening model; the synthesis model receives the screening JSON plus trimmed repository context. In `auto` mode, one collector snapshot is shared across all tasks in the run.
 
 - **Reddit subreddit RSS** (`COLLECT_REDDIT_RSS=true` by default): watches configured subreddits such as `LocalLLaMA`, `GithubCopilot`, `ClaudeAI`.
 - **Bluesky search** (`COLLECT_BLUESKY=true` by default): uses `api.bsky.app` public search.
@@ -224,7 +224,7 @@ In automatic mode (`task=auto`):
 | Wednesday (`weekday==2`) | `promote-candidates` |
 | Last day of month | `monthly` |
 
-`weekly` and `monthly` use `FINAL_SYNTHESIS_MODEL` (default `z-ai/glm-5.2`). To verify in production before the calendar fires:
+`weekly` and `monthly` use `FINAL_SYNTHESIS_MODEL` (default `deepseek/deepseek-v4-pro`). To verify in production before the calendar fires:
 
 ```bash
 python scripts/agent_radar.py trigger cloud-agent --task weekly --date 2026-07-06

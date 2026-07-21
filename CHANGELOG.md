@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Replaced the OpenRouter inference path with the OpenAI-compatible Vercel AI Gateway endpoint and `AI_GATEWAY_API_KEY`.
+- Consolidated paid routing to two models: DeepSeek V4 Flash for screening and audits, and DeepSeek V4 Pro for research and final synthesis. GLM 5.2 is no longer part of the active model route or fallback chain.
+- Renamed the active call-budget, fallback, run-log, and telemetry fields from OpenRouter-specific names to AI Gateway names.
+
 ## v0.19.5 - 2026-07-18
 
 Hotfix for the 2026-07-18 scheduled run (Issue #66): the daily was voided by the hard infra_primitive ≤2 cap — the model wrote 5 emerging-repo bullets in an otherwise rich day block, and the refusal threw away the whole daily (second loss to this gate class).

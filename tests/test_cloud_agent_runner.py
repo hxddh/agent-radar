@@ -32,26 +32,26 @@ state_spec.loader.exec_module(radar_collector_state)
 
 
 class CloudAgentRunnerTest(unittest.TestCase):
-    def test_openrouter_default_model_route_is_small(self) -> None:
+    def test_ai_gateway_default_model_route_uses_only_flash_and_pro(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
-                cloud_agent_runner.openrouter_models_for_task("daily"),
-                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
-            )
-            self.assertEqual(
-                cloud_agent_runner.openrouter_models_for_task("source-sweep"),
+                cloud_agent_runner.ai_gateway_models_for_task("daily"),
                 ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
             )
             self.assertEqual(
-                cloud_agent_runner.openrouter_models_for_task("weekly"),
-                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
+                cloud_agent_runner.ai_gateway_models_for_task("source-sweep"),
+                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
             )
             self.assertEqual(
-                cloud_agent_runner.openrouter_models_for_task("monthly"),
-                ["deepseek/deepseek-v4-flash", "z-ai/glm-5.2"],
+                cloud_agent_runner.ai_gateway_models_for_task("weekly"),
+                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
             )
             self.assertEqual(
-                cloud_agent_runner.openrouter_models_for_task("promote-candidates"),
+                cloud_agent_runner.ai_gateway_models_for_task("monthly"),
+                ["deepseek/deepseek-v4-flash", "deepseek/deepseek-v4-pro"],
+            )
+            self.assertEqual(
+                cloud_agent_runner.ai_gateway_models_for_task("promote-candidates"),
                 ["deepseek/deepseek-v4-pro"],
             )
 
@@ -203,7 +203,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
                     repos = cloud_agent_runner.release_repos_from_context(Path(tmp), 3)
         self.assertEqual(len(repos), len(cloud_agent_runner.DEFAULT_RELEASE_REPOS))
 
-    def test_openrouter_prompt_bans_paid_search_tools(self) -> None:
+    def test_ai_gateway_prompt_bans_paid_search_tools(self) -> None:
         rules = (REPO_ROOT / "prompts" / "runner-rules.md").read_text(encoding="utf-8")
         self.assertIn("do not use paid search tools", rules)
 
@@ -250,11 +250,11 @@ class CloudAgentRunnerTest(unittest.TestCase):
         self.assertIn("Apply the **Promote-candidates task gate**", prompt)
         self.assertIn("Promote at most 3 candidates per run.", rules)
 
-    def test_zero_openrouter_budget_dry_runs(self) -> None:
-        with mock.patch.dict(os.environ, {"MAX_OPENROUTER_CALLS_PER_TASK": "0"}, clear=True):
-            data = cloud_agent_runner.call_openrouter("daily", "prompt", "sources")
+    def test_zero_ai_gateway_budget_dry_runs(self) -> None:
+        with mock.patch.dict(os.environ, {"MAX_AI_GATEWAY_CALLS_PER_TASK": "0"}, clear=True):
+            data = cloud_agent_runner.call_ai_gateway("daily", "prompt", "sources")
         text = cloud_agent_runner.response_output_text(data)
-        self.assertIn("OpenRouter call budget is zero", text)
+        self.assertIn("Vercel AI Gateway call budget is zero", text)
 
     def test_pypi_updates_collector_parses_rss(self) -> None:
         rss = """<?xml version="1.0"?>
@@ -336,9 +336,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
     def test_run_log_and_source_health_are_written_by_runner(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            cloud_agent_runner.RUN_AUDIT["provider"] = "openrouter"
+            cloud_agent_runner.RUN_AUDIT["provider"] = "vercel-ai-gateway"
             cloud_agent_runner.RUN_AUDIT["models"] = ["deepseek/deepseek-v4-pro"]
-            cloud_agent_runner.RUN_AUDIT["openrouter_calls"] = 1
+            cloud_agent_runner.RUN_AUDIT["ai_gateway_calls"] = 1
             cloud_agent_runner.RUN_AUDIT["public_source_items"] = 3
             cloud_agent_runner.RUN_AUDIT["collected_source_items"] = 5
             cloud_agent_runner.RUN_AUDIT["source_errors"] = ["feed:test: 404"]
@@ -352,7 +352,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             cloud_agent_runner.update_source_health(root, day)
             cloud_agent_runner.update_source_lanes(root, day)
 
-            self.assertIn("OpenRouter calls attempted: 1", (root / "automation" / "runs" / "2026-07.md").read_text())
+            self.assertIn("Vercel AI Gateway calls attempted: 1", (root / "automation" / "runs" / "2026-07.md").read_text())
             self.assertIn("Collected source items before trim: 5", (root / "automation" / "runs" / "2026-07.md").read_text())
             self.assertIn("\"source_error_count\": 1", (root / "automation" / "telemetry" / "2026-07.jsonl").read_text())
             self.assertIn("feed:test", (root / "automation" / "source-health.md").read_text())
@@ -447,13 +447,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
             (root / "weekly").mkdir(parents=True)
             (root / "weekly" / "2026-W27.md").write_text("weekly-full-content\n", encoding="utf-8")
             day = cloud_agent_runner.parse_date("2026-07-02")
-            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "daily", day)
             self.assertIn("today-content", context)
             self.assertNotIn("old-day", context)
             self.assertNotIn("weekly-full-content", context)
 
-    def test_call_openrouter_applies_screening_to_prompt(self) -> None:
+    def test_call_ai_gateway_applies_screening_to_prompt(self) -> None:
         prompt = cloud_agent_runner.build_prompt(
             "daily",
             cloud_agent_runner.parse_date("2026-07-02"),
@@ -469,10 +469,10 @@ class CloudAgentRunnerTest(unittest.TestCase):
         }
         with mock.patch.object(
             cloud_agent_runner,
-            "call_openrouter_model",
+            "call_ai_gateway_model",
             side_effect=[screen_payload, main_payload],
         ) as model_mock:
-            data = cloud_agent_runner.call_openrouter("daily", prompt, "Public source snapshot:\n- item")
+            data = cloud_agent_runner.call_ai_gateway("daily", prompt, "Public source snapshot:\n- item")
         self.assertEqual(cloud_agent_runner.response_output_text(data), '{"summary":"done","updates":[]}')
         main_prompt = model_mock.call_args_list[1].args[0]
         self.assertIn("Screening pass", main_prompt)
@@ -529,7 +529,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             (root / "daily").mkdir(parents=True)
             (root / "daily" / "2026-07.md").write_text("## 2026-07-02\n\ntoday\n", encoding="utf-8")
             day = cloud_agent_runner.parse_date("2026-07-02")
-            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "daily", day)
             self.assertNotIn("maintenance-full-content", context)
 
@@ -548,7 +548,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             (root / "daily").mkdir(parents=True)
             (root / "daily" / "2026-07.md").write_text("## 2026-07-02\n\ntoday\n", encoding="utf-8")
             day = cloud_agent_runner.parse_date("2026-07-02")
-            env = {"AGENT_RADAR_MODEL_PROVIDER": "openrouter", "INCLUDE_MAINTENANCE_CONTEXT": "true"}
+            env = {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway", "INCLUDE_MAINTENANCE_CONTEXT": "true"}
             with mock.patch.dict(os.environ, env, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "daily", day)
             self.assertIn("maintenance-full-content", context)
@@ -565,9 +565,9 @@ class CloudAgentRunnerTest(unittest.TestCase):
     def test_append_telemetry_records_prompt_budget_ratio(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            cloud_agent_runner.RUN_AUDIT["provider"] = "openrouter"
+            cloud_agent_runner.RUN_AUDIT["provider"] = "vercel-ai-gateway"
             cloud_agent_runner.RUN_AUDIT["models"] = ["deepseek/deepseek-v4-pro"]
-            cloud_agent_runner.RUN_AUDIT["openrouter_calls"] = 2
+            cloud_agent_runner.RUN_AUDIT["ai_gateway_calls"] = 2
             cloud_agent_runner.record_prompt_budget(100_000)
             cloud_agent_runner.RUN_AUDIT["context_chars"] = 90_000
             cloud_agent_runner.RUN_AUDIT["output_chars"] = 5_000
@@ -588,7 +588,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             (root / "storage-angle.md").write_text("storage-full-content\n", encoding="utf-8")
             (root / "user-field-notes.md").write_text("field-notes-full-content\n", encoding="utf-8")
             day = cloud_agent_runner.parse_date("2026-07-02")
-            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "daily", day)
             self.assertNotIn("playbook-full-content", context)
             self.assertNotIn("storage-full-content", context)
@@ -600,7 +600,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             self._seed_minimal_daily_context(root)
             (root / "automation" / "runbook.md").write_text("runbook-full-content\n", encoding="utf-8")
             day = cloud_agent_runner.parse_date("2026-07-02")
-            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "daily", day)
             self.assertNotIn("runbook-full-content", context)
 
@@ -636,7 +636,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
                 "# Daily\n\n## 2026-07-02\n\nweek-block\n\n## 2026-07-10\n\nlater-week\n",
                 encoding="utf-8",
             )
-            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "weekly", day)
             self.assertIn("week-block", context)
             self.assertNotIn("later-week", context)
@@ -711,7 +711,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
             (root / "playbook.md").write_text("playbook-full-content\n", encoding="utf-8")
             (root / "storage-angle.md").write_text("storage-full-content\n", encoding="utf-8")
             (root / "user-field-notes.md").write_text("field-notes-full-content\n", encoding="utf-8")
-            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}, clear=False):
+            with mock.patch.dict(os.environ, {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}, clear=False):
                 _, context = cloud_agent_runner.build_context(root, "weekly", day)
             self.assertNotIn("playbook-full-content", context)
             self.assertNotIn("storage-full-content", context)
@@ -884,7 +884,7 @@ class CloudAgentRunnerTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             day = cloud_agent_runner.parse_date("2026-07-02")
-            with mock.patch.object(cloud_agent_runner, "call_openrouter_model", return_value=payload):
+            with mock.patch.object(cloud_agent_runner, "call_ai_gateway_model", return_value=payload):
                 screen_text, calls = cloud_agent_runner.preflight_shared_screening(collection, root, day)
             artifact = root / "automation" / "screening" / "2026-07-02.json"
             self.assertEqual(calls, 1)
@@ -2397,7 +2397,24 @@ class SignalDepthTest(unittest.TestCase):
 
 
 class TransportResilienceTest(unittest.TestCase):
-    def test_openrouter_call_retries_incomplete_read(self) -> None:
+    def test_ai_gateway_request_uses_vercel_endpoint_and_api_key(self) -> None:
+        response = mock.MagicMock()
+        response.__enter__.return_value.read.return_value = json.dumps(
+            {"choices": [{"message": {"content": "{\"summary\": \"ok\"}"}}]}
+        ).encode("utf-8")
+        with mock.patch.dict(
+            os.environ,
+            {"AI_GATEWAY_API_KEY": "vercel-key", "AI_GATEWAY_FALLBACK_MODELS": ""},
+            clear=False,
+        ):
+            with mock.patch.object(urllib.request, "urlopen", return_value=response) as urlopen_mock:
+                cloud_agent_runner.call_ai_gateway_model("prompt", "deepseek/deepseek-v4-flash")
+        request = urlopen_mock.call_args.args[0]
+        self.assertEqual(request.full_url, "https://ai-gateway.vercel.sh/v1/chat/completions")
+        self.assertEqual(request.get_header("Authorization"), "Bearer vercel-key")
+        self.assertIsNone(request.get_header("Http-referer"))
+
+    def test_ai_gateway_call_retries_incomplete_read(self) -> None:
         # Issue #59: a response body cut mid-read (http.client.IncompleteRead)
         # crashed the daily task instead of falling through the retry chain.
         import http.client as http_client
@@ -2409,7 +2426,7 @@ class TransportResilienceTest(unittest.TestCase):
         ).encode("utf-8")
         with mock.patch.dict(
             os.environ,
-            {"OPENROUTER_API_KEY": "x", "OPENROUTER_FALLBACK_MODELS": "model-b"},
+            {"AI_GATEWAY_API_KEY": "x", "AI_GATEWAY_FALLBACK_MODELS": "model-b"},
             clear=False,
         ):
             with mock.patch.object(
@@ -2418,7 +2435,7 @@ class TransportResilienceTest(unittest.TestCase):
                 side_effect=[http_client.IncompleteRead(b"y" * 10), good],
             ):
                 with mock.patch.object(cloud_agent_runner.time, "sleep"):
-                    parsed = cloud_agent_runner.call_openrouter_model("prompt", "model-a")
+                    parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
         self.assertIn("choices", parsed)
 
     def test_max_response_chars_generous_for_all_tasks(self) -> None:
@@ -2495,7 +2512,7 @@ class AuditLoopTest(unittest.TestCase):
             (root / "prompts").mkdir(parents=True)
             (root / "prompts" / "screening-schema.md").write_text("# schema\n", encoding="utf-8")
             with mock.patch.object(
-                cloud_agent_runner, "call_openrouter_model", side_effect=payloads
+                cloud_agent_runner, "call_ai_gateway_model", side_effect=payloads
             ) as model_mock:
                 screen_text, calls = cloud_agent_runner.preflight_shared_screening(
                     ([dict(item) for item in items], {}, [], 2),
@@ -2544,10 +2561,10 @@ class AuditLoopTest(unittest.TestCase):
                     }
                 ]
             }
-            env = {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}
+            env = {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}
             with mock.patch.dict(os.environ, env, clear=False):
                 with mock.patch.object(
-                    cloud_agent_runner, "call_openrouter_model", return_value=audit_payload
+                    cloud_agent_runner, "call_ai_gateway_model", return_value=audit_payload
                 ):
                     labeled = cloud_agent_runner.run_claim_audit(root, "daily", result)
         self.assertEqual(labeled, 1)
@@ -2570,11 +2587,11 @@ class AuditLoopTest(unittest.TestCase):
                     }
                 ]
             }
-            env = {"AGENT_RADAR_MODEL_PROVIDER": "openrouter"}
+            env = {"AGENT_RADAR_MODEL_PROVIDER": "vercel-ai-gateway"}
             with mock.patch.dict(os.environ, env, clear=False):
                 with mock.patch.object(
                     cloud_agent_runner,
-                    "call_openrouter_model",
+                    "call_ai_gateway_model",
                     side_effect=RuntimeError("model down"),
                 ):
                     labeled = cloud_agent_runner.run_claim_audit(root, "daily", result)
@@ -2741,7 +2758,7 @@ class AuditLoopTest(unittest.TestCase):
             self.assertEqual(
                 cloud_agent_runner.model_call_timeout("deepseek/deepseek-v4-flash"), 300
             )
-            self.assertEqual(cloud_agent_runner.model_call_timeout("z-ai/glm-5.2"), 900)
+            self.assertEqual(cloud_agent_runner.model_call_timeout("deepseek/deepseek-v4-pro"), 900)
 
     def test_audit_daily_depth_flags_thin_day(self) -> None:
         cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []

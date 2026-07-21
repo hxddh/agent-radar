@@ -2,8 +2,8 @@
 """GitHub Actions cloud runner for Agent Radar.
 
 This script intentionally uses only the Python standard library.
-It can call GitHub Models with the GitHub Actions GITHUB_TOKEN, OpenRouter
-with public-source collection, or the OpenAI Responses API when configured.
+It can call GitHub Models with the GitHub Actions GITHUB_TOKEN, Vercel AI
+Gateway with public-source collection, or the OpenAI Responses API when configured.
 """
 
 from __future__ import annotations
@@ -45,12 +45,12 @@ radar_collector_state = _load_local_module("radar_collector_state")
 
 OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions"
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+AI_GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
 DEFAULT_CHEAP_SCREEN_MODEL = "deepseek/deepseek-v4-flash"
 DEFAULT_MAIN_RESEARCH_MODEL = "deepseek/deepseek-v4-pro"
-DEFAULT_FINAL_SYNTHESIS_MODEL = "z-ai/glm-5.2"
+DEFAULT_FINAL_SYNTHESIS_MODEL = DEFAULT_MAIN_RESEARCH_MODEL
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
 DEFAULT_CONTEXT_FILE_CHARS = 20_000
@@ -647,7 +647,7 @@ DEFAULT_THESIS_KEYWORD_WEIGHTS = {
 RUN_AUDIT: dict[str, Any] = {
     "provider": "",
     "models": [],
-    "openrouter_calls": 0,
+    "ai_gateway_calls": 0,
     "fallbacks": [],
     "public_source_items": 0,
     "source_errors": [],
@@ -1070,9 +1070,9 @@ def prompt_budget_ratio(prompt_chars: int) -> float:
     return round(prompt_chars / max_prompt, 3)
 
 
-def max_openrouter_calls_for_task(task: str) -> int:
+def max_ai_gateway_calls_for_task(task: str) -> int:
     defaults = {"weekly": 2, "monthly": 2, "promote-candidates": 1}
-    return env_int("MAX_OPENROUTER_CALLS_PER_TASK", defaults.get(task, 2))
+    return env_int("MAX_AI_GATEWAY_CALLS_PER_TASK", defaults.get(task, 2))
 
 
 def source_block_char_budget(max_prompt: int | None = None) -> int:
@@ -2202,7 +2202,7 @@ def preflight_shared_screening(
     shards = screening_shard_items(items) if shard_count > 1 else []
     if len(shards) < 2:
         compact = format_scored_items_for_screening(items, cap)
-        data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
+        data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model)
         screen_text = response_output_text(data)
         write_screening_artifact(root, day, screen_text)
         RUN_AUDIT["screening_shards"] = 1
@@ -2212,7 +2212,7 @@ def preflight_shared_screening(
     for shard_name, shard_items in shards:
         compact = format_scored_items_for_screening(shard_items, cap)
         compact = f"Screening shard: {shard_name} sources only.\n{compact}"
-        data = call_openrouter_model(build_screen_prompt("auto", compact, root), screen_model)
+        data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model)
         calls += 1
         payload = parse_screening_json(response_output_text(data))
         if payload:
@@ -3196,7 +3196,7 @@ def run_claim_audit(root: Path | None, task: str, result: dict[str, Any]) -> int
     equally; labels only, never rejects; fail-open on any error."""
     if task != "daily" or root is None:
         return 0
-    if not env_bool("CLAIM_AUDIT", True) or model_provider() != "openrouter":
+    if not env_bool("CLAIM_AUDIT", True) or model_provider() != "vercel-ai-gateway":
         return 0
     cache = load_source_cache(root)
     entries = claim_audit_bullets(result, cache)
@@ -3204,8 +3204,8 @@ def run_claim_audit(root: Path | None, task: str, result: dict[str, Any]) -> int
         return 0
     try:
         screen_model = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
-        data = call_openrouter_model(build_claim_audit_prompt(entries), screen_model)
-        RUN_AUDIT["openrouter_calls"] = int(RUN_AUDIT.get("openrouter_calls", 0)) + 1
+        data = call_ai_gateway_model(build_claim_audit_prompt(entries), screen_model)
+        RUN_AUDIT["ai_gateway_calls"] = int(RUN_AUDIT.get("ai_gateway_calls", 0)) + 1
         payload = parse_screening_json(response_output_text(data))
     except Exception as exc:  # Fail-open: an audit outage must not block the daily.
         warning = f"Claim audit skipped ({str(exc)[:120]})"
@@ -3964,10 +3964,10 @@ def read_context_file(root: Path, rel_path: str, task: str, day: dt.date, limit:
 
 
 def task_uses_screening(task: str) -> bool:
-    max_calls = max_openrouter_calls_for_task(task)
+    max_calls = max_ai_gateway_calls_for_task(task)
     if max_calls <= 0:
         return False
-    models = openrouter_models_for_task(task)
+    models = ai_gateway_models_for_task(task)
     active = models[-max_calls:] if len(models) > max_calls else models
     return len(active) > 1
 
@@ -4381,8 +4381,8 @@ def update_source_cache(root: Path | None, items: list[dict[str, str]], day: dt.
 def audit_model(model: str) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"].append(model)
-    if model_provider() == "openrouter":
-        RUN_AUDIT["openrouter_calls"] += 1
+    if model_provider() == "vercel-ai-gateway":
+        RUN_AUDIT["ai_gateway_calls"] += 1
 
 
 def audit_source_status(name: str, status: str, detail: str = "") -> None:
@@ -5427,20 +5427,18 @@ def call_github_models(prompt: str) -> dict[str, Any]:
         raise SystemExit(f"GitHub Models API error {exc.code}: {body}") from exc
 
 
-def openrouter_headers() -> dict[str, str]:
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+def ai_gateway_headers() -> dict[str, str]:
+    api_key = os.environ.get("AI_GATEWAY_API_KEY")
     if not api_key:
-        raise SystemExit("OPENROUTER_API_KEY is not set. Add it as a GitHub Actions secret.")
+        raise SystemExit("AI_GATEWAY_API_KEY is not set. Add it as a GitHub Actions secret.")
     return {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
-        "HTTP-Referer": os.environ.get("OPENROUTER_SITE_URL", "https://github.com/hxddh/agent-radar"),
-        "X-Title": os.environ.get("OPENROUTER_APP_TITLE", "Agent Radar Cloud"),
     }
 
 
-def openrouter_fallback_models(model: str) -> list[str]:
-    fallback = split_env_list("OPENROUTER_FALLBACK_MODELS", [DEFAULT_MAIN_RESEARCH_MODEL, DEFAULT_FINAL_SYNTHESIS_MODEL])
+def ai_gateway_fallback_models(model: str) -> list[str]:
+    fallback = split_env_list("AI_GATEWAY_FALLBACK_MODELS", [DEFAULT_MAIN_RESEARCH_MODEL])
     models = [model]
     for item in fallback:
         if item not in models:
@@ -5459,7 +5457,7 @@ def model_call_timeout(model: str) -> int:
     return env_int("MODEL_TIMEOUT", 900)
 
 
-def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
+def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
     payload = {
         "model": model,
         "messages": [
@@ -5476,7 +5474,7 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
     # 400/404/409 are client errors: replaying the same payload against a
     # fallback model will not help, so only retry genuinely transient statuses.
     retryable_status = {408, 429, 500, 502, 503, 504}
-    models = openrouter_fallback_models(model)
+    models = ai_gateway_fallback_models(model)
     for attempt, candidate_model in enumerate(models):
         payload["model"] = candidate_model
         audit_model(candidate_model)
@@ -5486,9 +5484,9 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
             # Brief backoff before retrying a transient failure.
             time.sleep(min(8, 2 ** attempt))
         request = urllib.request.Request(
-            OPENROUTER_URL,
+            AI_GATEWAY_URL,
             data=json.dumps(payload).encode("utf-8"),
-            headers=openrouter_headers(),
+            headers=ai_gateway_headers(),
             method="POST",
         )
         try:
@@ -5496,36 +5494,35 @@ def call_openrouter_model(prompt: str, model: str) -> dict[str, Any]:
                 raw = response.read().decode("utf-8")
         except urllib.error.HTTPError as exc:
             body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
-            last_error = f"OpenRouter API error for {candidate_model} ({exc.code}): {body}"
+            last_error = f"Vercel AI Gateway API error for {candidate_model} ({exc.code}): {body}"
             if exc.code not in retryable_status:
                 break
             continue
         except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exc:
             # Includes http.client.IncompleteRead: a response cut mid-body is a
             # transient transport failure, not a task-level crash (Issue #59).
-            last_error = f"OpenRouter transport error for {candidate_model}: {exc!r}"
+            last_error = f"Vercel AI Gateway transport error for {candidate_model}: {exc!r}"
             continue
         try:
             parsed = json.loads(raw)
         except json.JSONDecodeError:
             # A 200 with a non-JSON body: treat as a transient failure and try
             # the next model rather than crashing with a raw traceback.
-            last_error = f"OpenRouter returned a non-JSON 200 body for {candidate_model}: {raw[:300]}"
+            last_error = f"Vercel AI Gateway returned a non-JSON 200 body for {candidate_model}: {raw[:300]}"
             continue
         if isinstance(parsed, dict) and parsed.get("error") and "choices" not in parsed:
-            # A 200 error envelope (OpenRouter does return these).
-            last_error = f"OpenRouter error envelope for {candidate_model}: {str(parsed.get('error'))[:300]}"
+            last_error = f"Vercel AI Gateway error envelope for {candidate_model}: {str(parsed.get('error'))[:300]}"
             continue
         if not response_output_text(parsed).strip():
             # A 200 with empty content (provider hiccup): retry the fallback
             # chain instead of failing later with "Model did not return valid JSON: ".
-            last_error = f"OpenRouter returned empty content for {candidate_model}"
+            last_error = f"Vercel AI Gateway returned empty content for {candidate_model}"
             continue
         return parsed
-    raise SystemExit(last_error or "OpenRouter API error.")
+    raise SystemExit(last_error or "Vercel AI Gateway API error.")
 
 
-def openrouter_models_for_task(task: str) -> list[str]:
+def ai_gateway_models_for_task(task: str) -> list[str]:
     cheap = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
     main = os.environ.get("MAIN_RESEARCH_MODEL", DEFAULT_MAIN_RESEARCH_MODEL)
     final = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
@@ -5559,9 +5556,9 @@ Use the scored source items below. Deduplicate, rank, and compress the signals.
     return header + trimmed_sources
 
 
-def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, Any]:
-    models = openrouter_models_for_task(task)
-    max_calls = max_openrouter_calls_for_task(task)
+def call_ai_gateway(task: str, prompt: str, public_sources: str) -> dict[str, Any]:
+    models = ai_gateway_models_for_task(task)
+    max_calls = max_ai_gateway_calls_for_task(task)
     if max_calls <= 0:
         if os.environ.get("DRY_RUN_ON_BUDGET_EXCEEDED", "true").lower() in {"1", "true", "yes"}:
             RUN_AUDIT["budget_status"] = "dry-run-budget-zero"
@@ -5571,7 +5568,7 @@ def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, An
                         "message": {
                             "content": json.dumps(
                                 {
-                                    "summary": "OpenRouter call budget is zero; recorded no paid model update.",
+                                    "summary": "Vercel AI Gateway call budget is zero; recorded no paid model update.",
                                     "sources": ["budget-limit"],
                                     "updates": [],
                                 }
@@ -5580,17 +5577,17 @@ def call_openrouter(task: str, prompt: str, public_sources: str) -> dict[str, An
                     }
                 ]
             }
-        raise SystemExit("MAX_OPENROUTER_CALLS_PER_TASK is zero.")
+        raise SystemExit("MAX_AI_GATEWAY_CALLS_PER_TASK is zero.")
     if len(models) > max_calls:
         models = models[-max_calls:]
     if len(models) == 1:
-        return call_openrouter_model(prompt, models[0])
+        return call_ai_gateway_model(prompt, models[0])
 
     screen_text = response_output_text(
-        call_openrouter_model(build_screen_prompt(task, public_sources), models[0])
+        call_ai_gateway_model(build_screen_prompt(task, public_sources), models[0])
     )
     prompt = apply_screened_summary_to_prompt(prompt, screen_text)
-    return call_openrouter_model(prompt, models[-1])
+    return call_ai_gateway_model(prompt, models[-1])
 
 
 def invoke_model(
@@ -5604,18 +5601,18 @@ def invoke_model(
     shared_screened: str | None = None,
 ) -> dict[str, Any]:
     provider = model_provider()
-    if provider == "openrouter":
-        models = openrouter_models_for_task(task)
-        max_calls = max_openrouter_calls_for_task(task)
+    if provider == "vercel-ai-gateway":
+        models = ai_gateway_models_for_task(task)
+        max_calls = max_ai_gateway_calls_for_task(task)
         if max_calls <= 0:
-            return call_openrouter(task, "", public_sources)
+            return call_ai_gateway(task, "", public_sources)
         active_models = models[-max_calls:] if len(models) > max_calls else models
         if len(active_models) > 1:
             if shared_screened:
                 screen_text = shared_screened
             else:
                 screen_text = response_output_text(
-                    call_openrouter_model(build_screen_prompt(task, public_sources), active_models[0])
+                    call_ai_gateway_model(build_screen_prompt(task, public_sources), active_models[0])
                 )
                 # Persist the screening artifact in single-task mode too, so the
                 # prompt's reference to automation/screening/<date>.json is real
@@ -5628,7 +5625,7 @@ def invoke_model(
         else:
             prompt = build_prompt(task, day, allowed, context, root=root, public_sources=public_sources)
         record_prompt_budget(len(prompt))
-        return call_openrouter_model(prompt, active_models[-1])
+        return call_ai_gateway_model(prompt, active_models[-1])
     if provider == "openai":
         prompt = build_prompt(task, day, allowed, context, root=root, public_sources=public_sources)
         record_prompt_budget(len(prompt))
@@ -5642,8 +5639,8 @@ def call_model(prompt: str, task: str, public_sources: str) -> dict[str, Any]:
     provider = model_provider()
     if provider == "openai":
         return call_openai(prompt)
-    if provider == "openrouter":
-        return call_openrouter(task, prompt, public_sources)
+    if provider == "vercel-ai-gateway":
+        return call_ai_gateway(task, prompt, public_sources)
     if provider in {"github", "github-models"}:
         return call_github_models(prompt)
     raise SystemExit(f"Unsupported AGENT_RADAR_MODEL_PROVIDER: {provider}")
@@ -6074,7 +6071,7 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         "",
         f"- Provider: {RUN_AUDIT.get('provider') or model_provider()}",
         f"- Models used: {models}",
-        f"- OpenRouter calls attempted: {RUN_AUDIT['openrouter_calls']}",
+        f"- Vercel AI Gateway calls attempted: {RUN_AUDIT['ai_gateway_calls']}",
         f"- Public source items: {RUN_AUDIT['public_source_items']}",
         f"- Collected source items before trim: {RUN_AUDIT['collected_source_items']}",
         f"- Files changed: {changed}",
@@ -6135,7 +6132,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "task": task,
         "provider": RUN_AUDIT.get("provider") or model_provider(),
         "models": list(dict.fromkeys(str(model) for model in RUN_AUDIT["models"])),
-        "openrouter_calls": RUN_AUDIT["openrouter_calls"],
+        "ai_gateway_calls": RUN_AUDIT["ai_gateway_calls"],
         "public_source_items": RUN_AUDIT["public_source_items"],
         "collected_source_items": RUN_AUDIT["collected_source_items"],
         "changed_files": changed,
@@ -6271,7 +6268,7 @@ def run_task(
 ) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
-    RUN_AUDIT["openrouter_calls"] = preflight_screen_calls
+    RUN_AUDIT["ai_gateway_calls"] = preflight_screen_calls
     RUN_AUDIT["fallbacks"] = []
     RUN_AUDIT["public_source_items"] = 0
     RUN_AUDIT["source_errors"] = []
@@ -6352,7 +6349,7 @@ def run_task(
         run_cli(root, config["ensure"], day)
     allowed, context = build_context(root, task, day)
     public_sources = ""
-    if model_provider() == "openrouter":
+    if model_provider() == "vercel-ai-gateway":
         if shared_collection is not None:
             items, lane_stats, errors, raw_count = unpack_shared_collection(shared_collection)
             public_sources = collect_public_sources_from_cache(
@@ -6372,18 +6369,18 @@ def run_task(
         if shared_screened:
             screen_text = shared_screened
             RUN_AUDIT["shared_screening"] = True
-        elif model_provider() == "openrouter" and public_sources:
+        elif model_provider() == "vercel-ai-gateway" and public_sources:
             # Single-task mode: run the screening pass up front so the sweep-skip
             # and synthesis-recall gates apply (and the artifact is written), then
             # reuse the result for the synthesis call instead of screening twice.
             screen_text = response_output_text(
-                call_openrouter_model(
+                call_ai_gateway_model(
                     build_screen_prompt(task, public_sources, root),
-                    openrouter_models_for_task(task)[0],
+                    ai_gateway_models_for_task(task)[0],
                 )
             )
             write_screening_artifact(root, day, screen_text)
-            RUN_AUDIT["openrouter_calls"] = int(RUN_AUDIT.get("openrouter_calls", 0)) + 1
+            RUN_AUDIT["ai_gateway_calls"] = int(RUN_AUDIT.get("ai_gateway_calls", 0)) + 1
             # Single-task mode screens once over the formatted snapshot (raw
             # items are not retained here, so lane sharding does not apply).
             RUN_AUDIT["screening_shards"] = 1
@@ -6449,7 +6446,7 @@ def run_task(
 def run_collect_only(root: Path, task: str, day: dt.date) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
-    RUN_AUDIT["openrouter_calls"] = 0
+    RUN_AUDIT["ai_gateway_calls"] = 0
     RUN_AUDIT["fallbacks"] = []
     RUN_AUDIT["public_source_items"] = 0
     RUN_AUDIT["source_errors"] = []
@@ -6496,7 +6493,7 @@ def main(argv: list[str] | None = None) -> int:
     warn_public_source_budget_override()
 
     shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int] | None = None
-    if len(tasks) > 1 and model_provider() == "openrouter":
+    if len(tasks) > 1 and model_provider() == "vercel-ai-gateway":
         if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
             shared_collection = prepare_shared_source_collection(root, day, tasks)
 

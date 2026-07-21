@@ -179,7 +179,7 @@ The runner records direction coverage and weighted/mainstream recall in telemetr
 - Do not publish private URLs, private messages, screenshots, customer names, personal identifiers, or confidential details.
 - Do not invent factual claims. Use source links, source classes, or source status labels.
 - Preserve existing useful content. Append or synthesize rather than deleting history.
-- For OpenRouter mode, do not use paid search tools. Use the screening pass or public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
+- For Vercel AI Gateway mode, do not use paid search tools. Use the screening pass or public source snapshot, repository source lists, official URLs already in the repo, and conservative follow-up gaps.
 - If the provider cannot browse the live web, record the limitation in `research-log.md`.
 - If no useful update is found, update `research-log.md` under the single `## Candidate inbox` section.
 - Do not append `### Pass:` sections; the runner rejects them.
