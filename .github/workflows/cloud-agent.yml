@@ -42,13 +42,13 @@ jobs:
       GITHUB_MODEL: ${{ vars.GITHUB_MODEL || 'openai/gpt-4o' }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.5' }}
-      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
       CHEAP_SCREEN_MODEL: ${{ vars.CHEAP_SCREEN_MODEL || 'deepseek/deepseek-v4-flash' }}
       MAIN_RESEARCH_MODEL: ${{ vars.MAIN_RESEARCH_MODEL || 'deepseek/deepseek-v4-pro' }}
-      FINAL_SYNTHESIS_MODEL: ${{ vars.FINAL_SYNTHESIS_MODEL || 'z-ai/glm-5.2' }}
+      FINAL_SYNTHESIS_MODEL: ${{ vars.FINAL_SYNTHESIS_MODEL || 'deepseek/deepseek-v4-pro' }}
       MAX_PUBLIC_SOURCE_ITEMS: ${{ vars.MAX_PUBLIC_SOURCE_ITEMS || '' }}
       PUBLIC_SOURCE_COLLECTION: ${{ vars.PUBLIC_SOURCE_COLLECTION || 'true' }}
-      MAX_OPENROUTER_CALLS_PER_TASK: ${{ vars.MAX_OPENROUTER_CALLS_PER_TASK || '' }}
+      MAX_AI_GATEWAY_CALLS_PER_TASK: ${{ vars.MAX_AI_GATEWAY_CALLS_PER_TASK || '' }}
       MAX_PROMPT_CHARS: ${{ vars.MAX_PROMPT_CHARS || '' }}
       MAX_CONTEXT_FILE_CHARS: ${{ vars.MAX_CONTEXT_FILE_CHARS || '' }}
       MAX_SCREEN_PROMPT_CHARS: ${{ vars.MAX_SCREEN_PROMPT_CHARS || '' }}
@@ -61,7 +61,7 @@ jobs:
       INCLUDE_MAINTENANCE_CONTEXT: ${{ vars.INCLUDE_MAINTENANCE_CONTEXT || 'false' }}
       INCLUDE_RUNBOOK_CONTEXT: ${{ vars.INCLUDE_RUNBOOK_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
-      OPENROUTER_FALLBACK_MODELS: ${{ vars.OPENROUTER_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro,z-ai/glm-5.2' }}
+      AI_GATEWAY_FALLBACK_MODELS: ${{ vars.AI_GATEWAY_FALLBACK_MODELS || 'deepseek/deepseek-v4-pro' }}
       # Tuned in-repo (repo Actions variables held stale lower values and
       # silently clamped collection breadth; see docs/release-v0.19.0.md).
       MAX_RELEASE_REPOS: '32'
@@ -108,7 +108,7 @@ jobs:
           echo "Main research model: $MAIN_RESEARCH_MODEL"
           echo "Final synthesis model: $FINAL_SYNTHESIS_MODEL"
           echo "Max public source items: $MAX_PUBLIC_SOURCE_ITEMS"
-          echo "Max OpenRouter calls per task: $MAX_OPENROUTER_CALLS_PER_TASK"
+          echo "Max Vercel AI Gateway calls per task: $MAX_AI_GATEWAY_CALLS_PER_TASK"
           echo "Max context file chars: $MAX_CONTEXT_FILE_CHARS"
           echo "Max screen prompt chars: $MAX_SCREEN_PROMPT_CHARS"
           echo "Research log context chars: $RESEARCH_LOG_CONTEXT_CHARS"

@@ -16,7 +16,7 @@ Lightweight Markdown-first AI Agent trend radar. Use for scheduled research upda
 ## Prerequisites
 
 - Repository checkout with `radar.md` and `agent-watchlist.md`
-- For cloud runs: `OPENROUTER_API_KEY` or GitHub Models (`GITHUB_TOKEN` on Actions)
+- For cloud runs: `AI_GATEWAY_API_KEY` or GitHub Models (`GITHUB_TOKEN` on Actions)
 
 ## Commands
 

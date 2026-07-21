@@ -73,37 +73,37 @@ Use GitHub Models mode for true unattended 24/7 operation without an OpenAI API 
 
 Use API-backed mode only if you later want OpenAI Responses API-specific features such as built-in web search.
 
-## Low-Cost OpenRouter 24/7 Mode
+## Low-Cost Vercel AI Gateway 24/7 Mode
 
 This is the recommended paid API mode when cost control matters more than perfect paid search coverage.
 
 Requirements:
 
 - GitHub Actions enabled
-- Repository secret named `OPENROUTER_API_KEY`
-- Repository variable `AGENT_RADAR_MODEL_PROVIDER=openrouter`
+- Repository secret named `AI_GATEWAY_API_KEY`
+- Repository variable `AGENT_RADAR_MODEL_PROVIDER=vercel-ai-gateway`
 
 Recommended variables:
 
 ```text
 CHEAP_SCREEN_MODEL=deepseek/deepseek-v4-flash
 MAIN_RESEARCH_MODEL=deepseek/deepseek-v4-pro
-FINAL_SYNTHESIS_MODEL=z-ai/glm-5.2
+FINAL_SYNTHESIS_MODEL=deepseek/deepseek-v4-pro
 MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
-OPENROUTER_FALLBACK_MODELS=deepseek/deepseek-v4-pro,z-ai/glm-5.2
+AI_GATEWAY_FALLBACK_MODELS=deepseek/deepseek-v4-pro
 MAX_RELEASE_REPOS=12
 MAX_RELEASES_PER_REPO=2
 ```
 
 Behavior:
 
-- No OpenRouter web search calls.
+- Vercel AI Gateway is used only for model inference; no paid web-search API is called.
 - No Grok search, Perplexity, Search1API, SocialCrawl, or Tavily.
 - Public source collection uses Hacker News Algolia, GitHub REST API, GitHub releases/tags, and public RSS/changelog feeds.
 - Source-sweep runs keep broad candidate coverage in `research-log.md` and `sources.md`.
 - Promote-candidates runs automatically promote at most 3 high-quality candidates.
 - Daily runs use DeepSeek V4 Flash for screening and DeepSeek V4 Pro for final updates.
-- Weekly/monthly runs use DeepSeek V4 Flash for screening, then GLM 5.2 for final synthesis (default `MAX_OPENROUTER_CALLS_PER_TASK=2`).
+- Weekly/monthly runs use DeepSeek V4 Flash for screening, then DeepSeek V4 Pro for final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).

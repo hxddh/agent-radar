@@ -90,7 +90,7 @@ Daily notes are append-oriented. Use them to record high-signal items without fo
 
 For fully Cloud Agent-driven operation, use `automation/daily.md`.
 
-For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`. The recommended low-cost paid mode uses OpenRouter with DeepSeek V4 Flash, DeepSeek V4 Pro, GLM 5.2, and free public sources only; see `docs/cloud-agent.md`.
+For true 24/7 cloud execution, `.github/workflows/cloud-agent.yml` uses GitHub Models by default with the built-in GitHub Actions `GITHUB_TOKEN`. The recommended low-cost paid mode uses Vercel AI Gateway directly with DeepSeek V4 Flash for screening, DeepSeek V4 Pro for research and final synthesis, and free public sources only; see `docs/cloud-agent.md`.
 
 Cloud mode uses source lanes, source-cache novelty tracking, scoring, source health, lane health, and structured telemetry. Daily, weekly, and monthly reports use nested bilingual pairs: each substantive item is a label bullet with `中文：` first and `English:` second as sub-bullets; short metadata fields stay on one line as `中文值（English value）`; URLs and product names are written once. At least 60% of substantive English lines must have a real Chinese counterpart.
 
