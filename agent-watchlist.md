@@ -320,3 +320,25 @@ Status:
 - Recent changes: v0.19.12 stable released (2026-07-19). Open-weight model approach enables self-hosted deployments. Competes with Claude Code, Codex, and Gemini CLI in the terminal agent space.
 - Watch next: Whether Qwen Code gains enterprise adoption for cost-sensitive and on-premise deployments; benchmark comparisons against Claude Code and Codex.
 - replace_section anchor: `## Qwen Code`
+
+
+## agent-browser
+
+- Category: Browser automation / tool calling
+- Why it matters: Provides a fast, lightweight CLI for agents to control browsers, enabling web navigation and data extraction without heavyweight Selenium stacks.
+- Evidence strength: Medium (crates.io release, 38 930 stars on GitHub, updated 2026‑07‑22).
+- Source: https://github.com/vercel-labs/agent-browser
+
+## mcp-ai-router
+
+- Category: MCP routing / multi‑LLM orchestration
+- Why it matters: Allows agents to route MCP client calls to multiple LLM back‑ends via browser sessions, facilitating multi‑model workflows and richer tool‑calling.
+- Evidence strength: Medium (PyPI release, 2026‑07‑19).
+- Source: https://pypi.org/project/mcp-ai-router/0.1.6/
+
+## agenticow
+
+- Category: Agent memory primitive (copy‑on‑write vector branching)
+- Why it matters: Introduces efficient memory management for agents, enabling fast state snapshots and branching, potentially improving performance of large agent fleets.
+- Evidence strength: Medium (npm release, 2026‑07‑19).
+- Source: https://www.npmjs.com/package/agenticow

@@ -234,3 +234,13 @@ AI Agent workloads create demand for:
 - Wolbarg: Argues SQLite sufficient for local agent memory — challenges vector-DB assumptions. Pattern: local-first SQLite for agent state. Source: https://wolbarg.com/blog/why-sqlite-is-enough-for-local-ai-agent-memory
 - Daytona Sandbox Firewall: Network controls can restrict agent access to storage endpoints. Watch trigger: S3/GCS integration guide. Source: https://www.daytona.io/dotfiles/sandbox-firewall
 - strata-mem 1.6.2: Shared memory for agent fleets — distributed state layer. Source: https://pypi.org/project/strata-mem/1.6.2/
+
+
+### Agent Memory
+- 2026-07-19: **agenticow** npm package introduces copy‑on‑write vector branching for agent memory, promising up to 83× faster performance. Evidence strength: Medium. Source: https://www.npmjs.com/package/agenticow
+
+### Browser Automation
+- 2026-07-22: **agent-browser** crates.io release provides a fast browser‑automation CLI for AI agents, enabling lightweight web interaction and data extraction. Evidence strength: Medium. Source: https://github.com/vercel-labs/agent-browser
+
+### MCP Routing
+- 2026-07-19: **mcp-ai-router** PyPI release enables routing MCP client calls to multiple LLMs via browser sessions, supporting multi‑model agent workflows. Evidence strength: Medium. Source: https://pypi.org/project/mcp-ai-router/0.1.6/
