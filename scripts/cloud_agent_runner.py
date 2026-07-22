@@ -46,6 +46,8 @@ radar_collector_state = _load_local_module("radar_collector_state")
 OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions"
 AI_GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
+# Free-tier pools rate-limit per minute; pace calls instead of bursting.
+_AI_GATEWAY_LAST_CALL = 0.0
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
 DEFAULT_CHEAP_SCREEN_MODEL = "openai/gpt-5-nano"
@@ -702,6 +704,9 @@ RUN_AUDIT: dict[str, Any] = {
 SHARED_SOURCE_STATUS: list[dict[str, str]] = []
 SHARED_SOURCE_LANES: dict[str, dict[str, Any]] = {}
 SHARED_VENDOR_GAPS: list[str] = []
+# One-liner strings for `#### 7. Radar Sweep`, built deterministically from the
+# screening pool so the synthesis model does not have to echo ~70 lines.
+SHARED_SWEEP_LINES: list[str] = []
 
 
 TASK_CONFIG = {
@@ -1944,31 +1949,32 @@ def compact_screening_for_prompt(screen_text: str, root: Path | None = None, day
             for cand in candidates
             if isinstance(cand, dict) and candidate_dedupe_key(cand) not in shown_keys
         ][:sweep_limit]
+        SHARED_SWEEP_LINES.clear()
+        for cand in remaining:
+            title = " ".join(str(cand.get("title", "?")).split())
+            signal_class = cand.get("signal_class", infer_signal_class(cand))
+            evidence = cand.get("evidence", [])
+            url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
+            # Keep sweep entries strictly one line: collapse whitespace and
+            # hard-slice instead of truncate_text (its marker spans lines).
+            why = " ".join(str(cand.get("why_it_matters", "")).split())[:100].strip()
+            sweep_line = f"- [{signal_class}] {title}"
+            if why:
+                sweep_line += f" — {why}"
+            if url:
+                sweep_line += f" | {url}"
+            SHARED_SWEEP_LINES.append(sweep_line)
         if remaining:
             lines.append(
-                f"Radar Sweep pool ({len(remaining)} additional fresh candidates beyond the top list). "
-                "Cover EACH with a one-line entry in `#### 7. Radar Sweep` "
-                "(format: `- [class] title — one-line why | URL`; English-only is fine there):"
+                f"Radar Sweep: the runner auto-generates `#### 7. Radar Sweep` from the "
+                f"remaining {len(remaining)} screening candidates AFTER your response — "
+                "do NOT write section 7 content yourself (an empty section or a one-line "
+                "placeholder is fine); spend your output budget on sections 1-6 and 8."
             )
-            for cand in remaining:
-                title = " ".join(str(cand.get("title", "?")).split())
-                signal_class = cand.get("signal_class", infer_signal_class(cand))
-                evidence = cand.get("evidence", [])
-                url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
-                # Keep sweep entries strictly one line: collapse whitespace and
-                # hard-slice instead of truncate_text (its marker spans lines).
-                why = " ".join(str(cand.get("why_it_matters", "")).split())[:100].strip()
-                sweep_line = f"- [{signal_class}] {title}"
-                if why:
-                    sweep_line += f" — {why}"
-                if url:
-                    sweep_line += f" | {url}"
-                lines.append(sweep_line)
         lines.append(
-            "Synthesis priority: cover MUST mainstream first, then actionable user_workflow "
-            "(concrete operator detail), then at most 2 infra_primitive emerging bullets. "
-            "Every Radar Sweep pool item above gets its one-liner in `#### 7. Radar Sweep` — "
-            "that section is the breadth surface; do not silently drop pool items."
+            "Synthesis priority: cover EVERY MUST mainstream candidate first — the update "
+            "is rejected when fewer than half are covered — then actionable user_workflow "
+            "(concrete operator detail), then at most 2 infra_primitive emerging bullets."
         )
         lines.append(
             "Freshness/quality: prefer 24-48h product deltas (changelog/blog/release). "
@@ -3428,6 +3434,80 @@ def validate_daily_section_structure(result: dict[str, Any]) -> None:
     RUN_AUDIT["daily_sections_canonical"] = True
 
 
+_SWEEP_SECTION_RE = re.compile(r"(?ms)^#### 7\. Radar Sweep\s*\n.*?(?=^#### 8\.)")
+
+
+def _sweep_replace_english(block: str) -> str:
+    lines = [
+        line
+        for line in SHARED_SWEEP_LINES
+        if not (" | " in line and line.rsplit(" | ", 1)[1].strip() in block)
+    ]
+    section = "#### 7. Radar Sweep\n\n" + "\n".join(lines) + "\n\n"
+    if _SWEEP_SECTION_RE.search(block):
+        return _SWEEP_SECTION_RE.sub(lambda _m: section, block, count=1)
+    return re.sub(r"(?m)^(#### 8\.)", lambda m: section + m.group(1), block, count=1)
+
+
+def _sweep_replace_chinese(block: str) -> str:
+    section = "#### 7. Radar Sweep\n\n（见英文部分；由采集器自动生成。）\n\n"
+    if _SWEEP_SECTION_RE.search(block):
+        return _SWEEP_SECTION_RE.sub(lambda _m: section, block, count=1)
+    if re.search(r"(?m)^#### 8\.", block):
+        return re.sub(r"(?m)^(#### 8\.)", lambda m: section + m.group(1), block, count=1)
+    return block
+
+
+def inject_deterministic_radar_sweep(result: dict[str, Any]) -> int:
+    """Build `#### 7. Radar Sweep` in daily day blocks from the screening pool.
+
+    Weak/free-tier synthesis models spent most of their output budget echoing
+    ~70 sweep one-liners (and often truncated or dropped them). The runner now
+    owns section 7: it replaces whatever the model wrote there (or inserts the
+    section before `#### 8.`) with the deterministic pool lines, skipping
+    candidates whose URL the model already covered in its own sections."""
+    if not SHARED_SWEEP_LINES:
+        return 0
+    injected = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for update in raw_updates:
+        if not isinstance(update, dict):
+            continue
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if not is_daily_month_path(rel_path):
+            continue
+        # english_block/chinese_block payloads: inject into each part directly.
+        if isinstance(update.get("english_block"), str):
+            block = str(update["english_block"])
+            if "#### 8." not in block:
+                continue
+            update["english_block"] = _sweep_replace_english(block)
+            zh = update.get("chinese_block")
+            if isinstance(zh, str):
+                update["chinese_block"] = _sweep_replace_chinese(zh)
+            injected += 1
+            continue
+        content = str(update.get("content", ""))
+        if "### English" not in content or "#### 8." not in content:
+            continue
+        english_end = content.find("### 中文")
+        english = content[:english_end] if english_end != -1 else content
+        if english_end != -1:
+            update["content"] = _sweep_replace_english(english) + _sweep_replace_chinese(
+                content[english_end:]
+            )
+        else:
+            update["content"] = _sweep_replace_english(content)
+        injected += 1
+    if injected:
+        RUN_AUDIT["apply_warnings"].append(
+            f"Radar Sweep auto-generated from screening pool ({len(SHARED_SWEEP_LINES)} line(s) available)"
+        )
+    return injected
+
+
 def audit_daily_depth(result: dict[str, Any]) -> None:
     """Soft depth/coverage audit: count signals, flag shallow bullets, check
     the Storage/Infra Angle carries watch triggers. Warnings + telemetry only —
@@ -3909,6 +3989,7 @@ def validate_synthesis_result(
                 f"MIN_MAINSTREAM_RECALL ({min_mainstream}). "
                 "Cover high-confidence mainstream candidates before emerging repos."
             )
+        inject_deterministic_radar_sweep(result)
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text, root=root, day=day)
         validate_daily_section_structure(result)
@@ -5492,12 +5573,21 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             "AI_GATEWAY_MAX_OUTPUT_TOKENS", DEFAULT_AI_GATEWAY_MAX_OUTPUT_TOKENS
         ),
     }
+    global _AI_GATEWAY_LAST_CALL
     last_error = ""
     # 400/404/409 are client errors: replaying the same payload against a
     # fallback model will not help, so only retry genuinely transient statuses.
     retryable_status = {408, 429, 500, 502, 503, 504}
     models = ai_gateway_fallback_models(model)
-    for attempt, candidate_model in enumerate(models):
+    # Free-tier 429s are per-minute quotas that refill: walk the (cross-pool)
+    # chain several rounds with real backoff instead of giving up after one
+    # pass (Issue #76: primary and fallback shared one exhausted free pool).
+    rounds = max(1, env_int("AI_GATEWAY_429_ROUNDS", 3))
+    base_sleep = max(1, env_int("AI_GATEWAY_429_BASE_SLEEP", 30))
+    call_interval = max(0, env_int("AI_GATEWAY_CALL_INTERVAL", 10))
+    retry_after_hint = 0
+    attempts = [(r, m) for r in range(rounds) for m in models]
+    for attempt, (round_index, candidate_model) in enumerate(attempts):
         payload["model"] = candidate_model
         audit_model(candidate_model)
         if candidate_model != model:
@@ -5505,8 +5595,18 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             reason = last_error.split(":", 1)[0] if last_error else "transient failure"
             print(f"AI Gateway fallback {model}->{candidate_model}: {reason}")
         if attempt > 0:
-            # Brief backoff before retrying a transient failure.
-            time.sleep(min(8, 2 ** attempt))
+            if "429" in last_error:
+                wait = max(retry_after_hint, base_sleep * (round_index + 1))
+                time.sleep(min(180, wait))
+            else:
+                # Brief backoff before retrying a transient failure.
+                time.sleep(min(8, 2 ** min(attempt, 3)))
+        # Global pacing: keep a minimum gap between gateway calls so bursts
+        # (4 screening shards + synthesis + audits) do not self-inflict 429s.
+        since_last = time.monotonic() - _AI_GATEWAY_LAST_CALL
+        if call_interval and 0 <= since_last < call_interval:
+            time.sleep(call_interval - since_last)
+        _AI_GATEWAY_LAST_CALL = time.monotonic()
         request = urllib.request.Request(
             AI_GATEWAY_URL,
             data=json.dumps(payload).encode("utf-8"),
@@ -5519,6 +5619,10 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
         except urllib.error.HTTPError as exc:
             body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
             last_error = f"Vercel AI Gateway API error for {candidate_model} ({exc.code}): {body}"
+            try:
+                retry_after_hint = int(str(exc.headers.get("Retry-After", "0")).strip() or 0)
+            except (TypeError, ValueError):
+                retry_after_hint = 0
             if exc.code not in retryable_status:
                 break
             continue
