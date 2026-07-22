@@ -852,10 +852,14 @@ def run_cli(root: Path, command: str, day: dt.date) -> None:
 
 
 def auto_tasks(day: dt.date) -> list[str]:
-    tasks = ["daily", "source-sweep"]
+    tasks = ["daily"]
+    # Free-quota budget (2026-07-22): auxiliary tasks produce slow-moving
+    # assets (research-log candidates, source discovery, promotions) and no
+    # longer run daily. The daily report keeps its daily cadence.
+    if day.weekday() in {0, 3}:  # Mon/Thu
+        tasks.append("source-sweep")
     if day.weekday() == 6:
         tasks.append("weekly")
-    if day.weekday() in {2, 6}:
         tasks.append("promote-candidates")
     # Mid-month refresh keeps the monthly from staying a day-1 seed until month end.
     if day.day == 15 or (day + dt.timedelta(days=1)).month != day.month:
@@ -2149,6 +2153,14 @@ SCREENING_SHARD_LANES: tuple[tuple[str, tuple[str, ...]], ...] = (
 )
 
 
+# Pairwise merges applied when SCREENING_SHARD_GROUPS=2 (free-tier quota mode):
+# discussion keeps first position so merge dedup preserves community framing.
+SCREENING_SHARD_MERGE_2: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("discussion-official", ("discussion", "official-vendor")),
+    ("oss-packages", ("github-oss", "packages")),
+)
+
+
 def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
     """Split scored items into per-lane-group shards for separate screening."""
     lane_to_shard: dict[str, str] = {}
@@ -2160,7 +2172,18 @@ def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[d
         lane = source_lane(item.get("source", ""))
         shard_name = lane_to_shard.get(lane, "official-vendor")
         buckets[shard_name].append(item)
-    return [(name, buckets[name]) for name, _ in SCREENING_SHARD_LANES if buckets[name]]
+    shards = [(name, buckets[name]) for name, _ in SCREENING_SHARD_LANES if buckets[name]]
+    if env_int("SCREENING_SHARD_GROUPS", 4) <= 2:
+        merged: list[tuple[str, list[dict[str, str]]]] = []
+        by_name = dict(shards)
+        for group_name, members in SCREENING_SHARD_MERGE_2:
+            combined: list[dict[str, str]] = []
+            for member in members:
+                combined.extend(by_name.get(member, []))
+            if combined:
+                merged.append((group_name, combined))
+        return merged
+    return shards
 
 
 def candidate_dedupe_key(candidate: dict[str, Any]) -> str:

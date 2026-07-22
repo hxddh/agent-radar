@@ -69,16 +69,13 @@ class CloudAgentRunnerTest(unittest.TestCase):
     def test_auto_tasks_include_candidate_promotion_on_sunday(self) -> None:
         tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-05"))
         self.assertIn("daily", tasks)
-        self.assertIn("source-sweep", tasks)
         self.assertIn("weekly", tasks)
         self.assertIn("promote-candidates", tasks)
 
-    def test_auto_tasks_promote_twice_a_week(self) -> None:
+    def test_auto_tasks_weekday_is_daily_only(self) -> None:
+        # v0.20.1 free-quota schedule: a plain Wednesday runs only the daily.
         tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-01"))
-        self.assertIn("daily", tasks)
-        self.assertIn("source-sweep", tasks)
-        self.assertIn("promote-candidates", tasks)
-        self.assertNotIn("weekly", tasks)
+        self.assertEqual(tasks, ["daily"])
 
     def test_daily_can_update_source_registry(self) -> None:
         self.assertIn("sources.md", cloud_agent_runner.TASK_CONFIG["daily"]["allowed"])
@@ -2503,6 +2500,39 @@ class TransportResilienceTest(unittest.TestCase):
                 parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
         self.assertEqual(json.loads(cloud_agent_runner.response_output_text(parsed))["summary"], "ok")
         urlopen_mock.assert_called_once()
+
+    def test_auto_tasks_free_quota_schedule(self) -> None:
+        # v0.20.1: daily every day; source-sweep Mon/Thu; promote Sun; weekly Sun.
+        mon = cloud_agent_runner.parse_date("2026-07-20")
+        thu = cloud_agent_runner.parse_date("2026-07-23")
+        sun = cloud_agent_runner.parse_date("2026-07-26")
+        tue = cloud_agent_runner.parse_date("2026-07-21")
+        self.assertIn("source-sweep", cloud_agent_runner.auto_tasks(mon))
+        self.assertIn("source-sweep", cloud_agent_runner.auto_tasks(thu))
+        self.assertNotIn("source-sweep", cloud_agent_runner.auto_tasks(tue))
+        sun_tasks = cloud_agent_runner.auto_tasks(sun)
+        self.assertIn("weekly", sun_tasks)
+        self.assertIn("promote-candidates", sun_tasks)
+        for d in (mon, tue, thu, sun):
+            self.assertIn("daily", cloud_agent_runner.auto_tasks(d))
+        mid = cloud_agent_runner.parse_date("2026-07-15")
+        self.assertIn("monthly", cloud_agent_runner.auto_tasks(mid))
+
+    def test_screening_shard_groups_merge_to_two(self) -> None:
+        items = [
+            {"source": "reddit-rss:LocalLLaMA", "title": "a", "url": "u1", "note": ""},
+            {"source": "openai-blog", "title": "b", "url": "u2", "note": ""},
+            {"source": "github", "title": "c", "url": "u3", "note": ""},
+            {"source": "npm", "title": "d", "url": "u4", "note": ""},
+        ]
+        with mock.patch.dict(os.environ, {"SCREENING_SHARD_GROUPS": "2"}, clear=False):
+            shards = cloud_agent_runner.screening_shard_items(items)
+        names = [name for name, _ in shards]
+        self.assertEqual(names, ["discussion-official", "oss-packages"])
+        self.assertEqual(sum(len(x) for _, x in shards), 4)
+        with mock.patch.dict(os.environ, {"SCREENING_SHARD_GROUPS": "4"}, clear=False):
+            shards4 = cloud_agent_runner.screening_shard_items(items)
+        self.assertGreaterEqual(len(shards4), 3)
 
     def test_ai_gateway_429_walks_rounds_with_backoff(self) -> None:
         # Issue #76: one pass over a same-pool chain died on free-tier 429s.
