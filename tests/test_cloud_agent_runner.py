@@ -821,12 +821,14 @@ class CloudAgentRunnerTest(unittest.TestCase):
             raw,
             day=cloud_agent_runner.parse_date("2026-07-02"),
         )
-        # The compact form now carries a Radar Sweep pool for breadth, so it is
-        # only required to be smaller than the raw JSON, not half its size.
+        # v0.20: the sweep pool is stashed for deterministic generation instead
+        # of being echoed through the prompt, so compact shrinks again.
         self.assertLess(len(compact), len(raw))
         self.assertIn("direction-diversified", compact)
         self.assertIn("Signal-class coverage", compact)
-        self.assertIn("Radar Sweep pool (17", compact)
+        self.assertIn("auto-generates `#### 7. Radar Sweep`", compact)
+        self.assertNotIn("- [infra_primitive] Candidate 4", compact)
+        self.assertEqual(len(cloud_agent_runner.SHARED_SWEEP_LINES), 17)
         self.assertIn("no mainstream_product candidates", compact)
         self.assertIn("automation/screening/2026-07-02.json", compact)
 
@@ -2501,6 +2503,71 @@ class TransportResilienceTest(unittest.TestCase):
                 parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
         self.assertEqual(json.loads(cloud_agent_runner.response_output_text(parsed))["summary"], "ok")
         urlopen_mock.assert_called_once()
+
+    def test_ai_gateway_429_walks_rounds_with_backoff(self) -> None:
+        # Issue #76: one pass over a same-pool chain died on free-tier 429s.
+        # The loop must walk the chain for several rounds with real backoff.
+        import io
+        sleeps: list[float] = []
+        good = mock.MagicMock()
+        good.__enter__.return_value.read.return_value = json.dumps(
+            {"choices": [{"message": {"content": "{\"summary\": \"ok\"}"}}]}
+        ).encode("utf-8")
+        err = urllib.error.HTTPError(
+            "https://ai-gateway.vercel.sh", 429, "rate limited",
+            {"Retry-After": "45"}, io.BytesIO(b"rate limited"),
+        )
+        with mock.patch.dict(
+            os.environ,
+            {
+                "AI_GATEWAY_API_KEY": "x",
+                "AI_GATEWAY_FALLBACK_MODELS": "model-b",
+                "AI_GATEWAY_429_ROUNDS": "2",
+                "AI_GATEWAY_CALL_INTERVAL": "0",
+            },
+            clear=False,
+        ):
+            with mock.patch.object(
+                urllib.request, "urlopen",
+                side_effect=[err, urllib.error.HTTPError(
+                    "u", 429, "rl", {"Retry-After": "45"}, io.BytesIO(b"x")), good],
+            ):
+                with mock.patch.object(cloud_agent_runner.time, "sleep", side_effect=sleeps.append):
+                    parsed = cloud_agent_runner.call_ai_gateway_model("prompt", "model-a")
+        self.assertIn("choices", parsed)
+        # Third attempt = round 2 of the chain; 429 backoff honors Retry-After (45s).
+        self.assertTrue(any(t >= 45 for t in sleeps), sleeps)
+
+    def test_inject_deterministic_radar_sweep(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        cloud_agent_runner.SHARED_SWEEP_LINES.clear()
+        cloud_agent_runner.SHARED_SWEEP_LINES.extend([
+            "- [infra_primitive] tool-a — why a | https://github.com/x/a",
+            "- [mainstream_product] tool-b — why b | https://vendor.example/b",
+        ])
+        content = (
+            "## 2026-07-22\n\n### English\n\n"
+            "#### 1. Lead Analysis\n\nNarrative.\n\n"
+            "#### 2. New Signals\n\n"
+            "- Signal: covered tool-b delta.\n"
+            "  - Source: https://vendor.example/b\n\n"
+            "#### 7. Radar Sweep\n\n(placeholder)\n\n"
+            "#### 8. Assessment & Gaps\n\n- Coverage ledger: checked=x; missed=none\n\n"
+            "### 中文\n\n#### 1. Lead Analysis\n\n主线。\n\n"
+            "#### 8. Assessment & Gaps\n\n- 台账。\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        injected = cloud_agent_runner.inject_deterministic_radar_sweep(result)
+        self.assertEqual(injected, 1)
+        merged = result["updates"][0]["content"]
+        self.assertIn("- [infra_primitive] tool-a — why a | https://github.com/x/a", merged)
+        # URL already covered by the model's own signal must not repeat in sweep.
+        english = merged.split("### 中文")[0]
+        sweep = english.split("#### 7. Radar Sweep", 1)[1]
+        self.assertNotIn("tool-b", sweep)
+        self.assertNotIn("(placeholder)", english)
+        self.assertIn("（见英文部分；由采集器自动生成。）", merged)
+        cloud_agent_runner.SHARED_SWEEP_LINES.clear()
 
     def test_max_response_chars_generous_for_all_tasks(self) -> None:
         # Issue #59 round 3: the daily legitimately produced 75.3k chars under
