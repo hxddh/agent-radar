@@ -2625,7 +2625,9 @@ class AuditLoopTest(unittest.TestCase):
             {"source": "openai-blog", "title": "release", "url": "https://openai.com/x"},
             {"source": "npm", "title": "package", "url": "https://www.npmjs.com/package/x"},
         ]
-        shards = dict(cloud_agent_runner.screening_shard_items(items))
+        # Pin the group count: CI sets SCREENING_SHARD_GROUPS=2 globally.
+        with mock.patch.dict(os.environ, {"SCREENING_SHARD_GROUPS": "4"}, clear=False):
+            shards = dict(cloud_agent_runner.screening_shard_items(items))
         self.assertEqual(len(shards["discussion"]), 2)
         self.assertEqual(len(shards["official-vendor"]), 1)
         self.assertEqual(len(shards["github-oss"]), 1)
@@ -3119,8 +3121,14 @@ class AuditLoopTest(unittest.TestCase):
             {"source": "github", "title": "repo", "url": "https://github.com/a/b"},
             {"source": "bluesky", "title": "post", "url": "https://bsky.app/p/1"},
         ]
-        shards = cloud_agent_runner.screening_shard_items(items)
+        # Discussion leads in both group modes so merge dedup keeps community
+        # framing; pin each mode explicitly (CI sets SCREENING_SHARD_GROUPS=2).
+        with mock.patch.dict(os.environ, {"SCREENING_SHARD_GROUPS": "4"}, clear=False):
+            shards = cloud_agent_runner.screening_shard_items(items)
         self.assertEqual(shards[0][0], "discussion")
+        with mock.patch.dict(os.environ, {"SCREENING_SHARD_GROUPS": "2"}, clear=False):
+            merged = cloud_agent_runner.screening_shard_items(items)
+        self.assertTrue(merged[0][0].startswith("discussion"))
 
     def test_diversify_reserves_three_discussion_user_slots(self) -> None:
         candidates = []
