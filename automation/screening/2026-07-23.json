@@ -1,0 +1,277 @@
+{
+  "summary": "Synthesis of mainstream, workflow, and infra signals on AI agents from official posts and social discussions. | Top signals from oss-packages: MCP tooling, vendor agent infra, Gemini/Microsoft/VerceL releases, Qwen, and user-workflow automation aids.",
+  "candidates": [
+    {
+      "id": "scr-jetbrains-rider-2026-2",
+      "title": "Rider 2026.2: IDE Intelligence for AI Agents",
+      "why_it_matters": "JetBrains adds AI-agent tooling into the IDE for faster agent workflows.",
+      "evidence": [
+        "https://blog.jetbrains.com/dotnet/2026/07/22/rider-2026-2-release/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-jetbrains-resharper-2026-2",
+      "title": "ReSharper 2026.2: AI Agent Freedom in VS",
+      "why_it_matters": "Brings AI-agent tooling to VS Code workflows within JetBrains ecosystem.",
+      "evidence": [
+        "https://blog.jetbrains.com/dotnet/2026/07/22/resharper-2026-2-release/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cloudflare-precursor",
+      "title": "Precursor: detecting agentic behavior with client-side signals",
+      "why_it_matters": "Client-side signals can help detect agentic behavior in runtimes.",
+      "evidence": [
+        "https://blog.cloudflare.com/introducing-precursor/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-deepseek-rate-limit",
+      "title": "Rate Limit & Isolation",
+      "why_it_matters": "Docs on rate limiting and isolation for agent runtimes.",
+      "evidence": [
+        "https://api-docs.deepseek.com/quick_start/rate_limit"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-daytona-sandboxes",
+      "title": "Daytona sandbox features and Stripe Projects",
+      "why_it_matters": "Sandboxed environments for agents with Stripe Projects integration.",
+      "evidence": [
+        "https://www.daytona.io/dotfiles/daytona-stripe-projects",
+        "https://www.daytona.io/dotfiles/sandbox-firewall"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-bluesky-buda-multiagent",
+      "title": "Buda AI launches cloud-native multi-agent workspace",
+      "why_it_matters": "Shows adoption of multi-agent workspaces in teams.",
+      "evidence": [
+        "https://www.prnewswire.com/news-releases/buda-ai-launches-cloud-native-multi-agent-workspace-to-transform-how-teams-work-with-artificial-intelligence-302831",
+        "https://bsky.app/profile/pocodekuyayky.bsky.social/post/3mrasxgg7ki2e"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-hn-agentnest",
+      "title": "AgentNest: self-hosted sandboxes for AI agents",
+      "why_it_matters": "Self-hosted sandboxes for agents enable local experimentation and governance.; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/mihirahuja1/agentnestOSS"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-anthropic-claude-code",
+      "title": "The Making of Claude Code",
+      "why_it_matters": "Anthropic’s Claude Code: release and containment insights.",
+      "evidence": [
+        "https://www.anthropic.com/features/making-of-claude-code",
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mcp-toolbox",
+      "title": "MCP Toolbox for Databases",
+      "why_it_matters": "Open MCP server for database orchestration; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/googleapis/mcp-toolbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cloudflare-agents",
+      "title": "Cloudflare Agents",
+      "why_it_matters": "Agent tooling release suite (agents, worker-bundler, voice)",
+      "evidence": [
+        "https://github.com/cloudflare/agents",
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.18.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/worker-bundler%400.2.2",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/voice%400.3.5"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-microsoft-agent-framework",
+      "title": "Microsoft Agent Framework",
+      "why_it_matters": "Framework for building AI agents and multi-agent workflows; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/microsoft/agent-framework"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-ai",
+      "title": "Vercel AI",
+      "why_it_matters": "Release lines show product updates for agent orchestration tooling",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.35",
+        "https://github.com/vercel/ai/releases/tag/ai%406.0.234",
+        "https://github.com/vercel/ai/releases/tag/ai%405.0.219"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-gemini-cli-053",
+      "title": "Gemini CLI v0.53.0-preview.0",
+      "why_it_matters": "Official Gemini CLI delta",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.53.0-preview.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-qwen-code-020",
+      "title": "Qwen Code v0.20.0",
+      "why_it_matters": "Official Qwen code runner release",
+      "evidence": [
+        "https://github.com/QwenLM/qwen-code/releases/tag/v0.20.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-autorag",
+      "title": "AutoRAG – Auto find anything on your computer",
+      "why_it_matters": "Agent-assisted local workflow automation; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/Marker-Inc-Korea/AutoRAG"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-flowproof",
+      "title": "Flowproof",
+      "why_it_matters": "Open-source automation for AI-agent workflows; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/automators-com/flowproof"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mem0-python-sdk",
+      "title": "Mem0 Python SDK",
+      "why_it_matters": "Memory-enabled agent runtime SDK release",
+      "evidence": [
+        "https://github.com/mem0ai/mem0/releases/tag/v2.0.13"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": [
+    "Missing corroborating social/discussion signals for early awareness (Bluesky/Reddit/HN/X).",
+    "Need additional user_workflow signals in top signals for quota resilience."
+  ]
+}
