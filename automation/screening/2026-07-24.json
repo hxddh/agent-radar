@@ -1,0 +1,137 @@
+{
+  "summary": "Top mainstream product updates and practitioner workflow signals; deduplicated and ranked.",
+  "candidates": [
+    {
+      "id": "scr-7d1a9f",
+      "title": "Copilot cloud agent for Linear GA",
+      "why_it_matters": "GA for Copilot cloud agent for Linear; major platform delta",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-23-copilot-cloud-agent-for-linear-is-now-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3a4f2b",
+      "title": "Cloudflare Agents releases",
+      "why_it_matters": "Major releases across Cloudflare MCP agent stack",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.19.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/think%400.15.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/shell%400.4.3"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-8c9e1a",
+      "title": "AWS Bedrock AgentCore unified observability",
+      "why_it_matters": "Unified traces/logs for agents via Bedrock",
+      "evidence": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-bedrock-agentcore-unified-observability-single-log-group/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-9f2a8b",
+      "title": "Google Gemini CLI v0.53.0-preview.0",
+      "why_it_matters": "Fresh Gemini CLI preview for developers",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.53.0-preview.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-2a9f01",
+      "title": "Hanesu: experimental workflow layer for AI coding agents",
+      "why_it_matters": "Workflow layer to orchestrate AI coding agents; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/jezmn/hanesu"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-4b1c2d",
+      "title": "Bohay: Mission control for AI coding agents",
+      "why_it_matters": "HN-style overview of mission control for agents",
+      "evidence": [
+        "https://bohay.dev/"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5e7a3c",
+      "title": "Teaching Claude Code to Direct: Stateful video-editing skill",
+      "why_it_matters": "Field guide to multi-turn stateful edits and tool calls",
+      "evidence": [
+        "https://dev.to/gde/teaching-claude-code-to-direct-a-stateful-video-editing-skill-built-on-geminis-interactions-api-2h7l"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-6a9c4e",
+      "title": "Memorix: cross-agent memory layer for MCP",
+      "why_it_matters": "Memory layer for coding agents; MCP compatible",
+      "evidence": [
+        "https://github.com/AVIDS2/memorix"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": []
+}
