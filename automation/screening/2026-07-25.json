@@ -1,0 +1,127 @@
+{
+  "summary": "Daily synthesis: main product updates (Codex alpha, Claude Opus 5, Vercel harness, Gemini CLI), social-backed security signals (rogue workspace/hacker issues), and infra primitives (Dagu MCP, Cloudflare agents).",
+  "candidates": [
+    {
+      "id": "scr-codex-alpha-1",
+      "title": "OpenAI Codex alpha releases",
+      "why_it_matters": "Codex SDKs evolve; alpha releases indicate ongoing developer tooling improvements.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.146.0-alpha.10",
+        "https://github.com/openai/codex/releases/tag/rust-v0.146.0-alpha.9",
+        "https://github.com/openai/codex/releases/tag/rust-v0.146.0-alpha.8"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-opus5-copilot",
+      "title": "Claude Opus 5 launch in Copilot",
+      "why_it_matters": "Opus 5 marks a major coding agent upgrade within a popular ecosystem.",
+      "evidence": [
+        "https://www.anthropic.com/features/making-of-claude-code",
+        "https://github.blog/changelog/2026-07-24-claude-opus-5-is-now-available-in-github-copilot"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-ai-harness",
+      "title": "Vercel AI workflow-harness release",
+      "why_it_matters": "Official release enabling AI-driven workflow orchestration in Vercel ecosystem.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow-harness%401.0.43",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/sandbox-vercel%401.0.43",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/sandbox-just-bash%401.0.43"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-rogue-workspace-phish",
+      "title": "Rogue workspace agent phishing flaw (OpenAI)",
+      "why_it_matters": "Phishing could deploy rogue workspace agents; a key operator risk and mitigation signal.",
+      "evidence": [
+        "https://bsky.app/profile/hendryadrian.bsky.social/post/3mrg6653zll2n",
+        "https://www.theguardian.com/technology/2026/jul/24/openai-rogue-hacker"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-dagu-local-first",
+      "title": "Dagucloud/dagu: Local-first MCP engine",
+      "why_it_matters": "Infra primitive for ops automation with built-in MCP server; potential integration path for agents.",
+      "evidence": [
+        "https://github.com/dagucloud/dagu"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cloudflare-agents",
+      "title": "Cloudflare agents: runtime tooling updates",
+      "why_it_matters": "Infra primitives for agent tooling: multiple agent components updated in tandem.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.19.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/think%400.15.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/shell%400.4.3"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 3,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-google-gemini-cli",
+      "title": "Google Gemini CLI v0.53.0-preview.0",
+      "why_it_matters": "Preview release of Gemini CLI enabling developer workflows.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.53.0-preview.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": []
+}
