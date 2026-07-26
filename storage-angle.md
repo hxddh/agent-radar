@@ -244,3 +244,13 @@ AI Agent workloads create demand for:
 
 ### MCP Routing
 - 2026-07-19: **mcp-ai-router** PyPI release enables routing MCP client calls to multiple LLMs via browser sessions, supporting multi‑model agent workflows. Evidence strength: Medium. Source: https://pypi.org/project/mcp-ai-router/0.1.6/
+
+- Headroom token‑compression library (v0.7.0) reduces LLM token payloads by up to 40 %, directly lowering storage and cost for multi‑step agent workflows.
+- Source: https://github.com/headroomlabs-ai/headroom (Strong)
+
+
+### Promoted-candidates signals (2026-07-26)
+
+- Safety Alignment for Long‑Horizon Models (scr-openai-safety-horizon): Safety governance signals; informs per-task audit trails and containment. Source: https://openai.com/index/safety-alignment-long-horizon-models
+- Gemini 3.6 Flash Release (scr-gemini-3-6): Efficiency update for multi-agent tasks; may affect storage persistence due to longer-run tasks. Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
+- Claude Code Conductor 2.51.1 (scr-claude-code-conductor): Orchestration improvements for code agents; storage implications for task state and memories. Source: https://pypi.org/project/claude-code-conductor/2.51.1/

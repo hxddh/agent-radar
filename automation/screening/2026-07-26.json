@@ -1,0 +1,258 @@
+{
+  "summary": "Top discussion signals on AI agents and MCP workflows from social/official sources. | OSS agent runtime, memory, sandbox, and vendor signals with mixed mainstream and workflow signals.",
+  "candidates": [
+    {
+      "id": "scr-aws-blueprint",
+      "title": "Evaluating AI Agents: Production Blueprint",
+      "why_it_matters": "Production blueprint for agents with Strands/AgentCore",
+      "evidence": [
+        "https://aws.amazon.com/blogs/machine-learning/evaluating-ai-agents-a-production-blueprint-with-strands-and-agentcore/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anthropic-opus5",
+      "title": "Claude Opus 5 launch",
+      "why_it_matters": "Anthropic's coding-focused Opus 5 release",
+      "evidence": [
+        "https://www.anthropic.com/news/claude-opus-5"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-health-chatgpt",
+      "title": "OpenAI health in ChatGPT",
+      "why_it_matters": "OpenAI discusses health aspects in ChatGPT ecosystem",
+      "evidence": [
+        "https://openai.com/index/health-in-chatgpt"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-piweb-bluesky",
+      "title": "Pi Web: local coding agent UI",
+      "why_it_matters": "Local UI to manage coding agent sessions; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/github-trending-js.bsky.social/post/3mrjg5knkhs27"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-hwatu",
+      "title": "Hwatu verification browser for coding agents",
+      "why_it_matters": "Explores verification for coding agents; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/hongnoul/hwatu"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-axtary",
+      "title": "Axtary: Content Authorization for AI Agents",
+      "why_it_matters": "Content authorization control for AI agents",
+      "evidence": [
+        "https://axtary.com"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mistral-vibe",
+      "title": "Mistral Vibe for coding agents",
+      "why_it_matters": "Vibe product to support coding agents",
+      "evidence": [
+        "https://mistral.ai/products/vibe/code/",
+        "https://mistral.ai/products/vibe/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-daytona-sandbox",
+      "title": "Daytona sandboxes and firewall",
+      "why_it_matters": "Sandbox and firewall capabilities for agents",
+      "evidence": [
+        "https://www.daytona.io/dotfiles/daytona-stripe-projects",
+        "https://www.daytona.io/dotfiles/sandbox-firewall"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-gnm-cli-0-54-nightly",
+      "title": "Google Gemini CLI 0.54 nightly",
+      "why_it_matters": "Official Gemini CLI nightly release signals active vendor development",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.54.0-nightly.20260726.g3818efbbf"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openhands-cloud-1-47-1",
+      "title": "OpenHands cloud release cloud-1.47.1",
+      "why_it_matters": "OpenHands cloud 1.47.1 release signals product maturation",
+      "evidence": [
+        "https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.47.1",
+        "https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.47.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-memorix-mem",
+      "title": "AVIDS2 memorix MCP memory layer",
+      "why_it_matters": "Open-source memory layer for coding agents via MCP",
+      "evidence": [
+        "https://github.com/AVIDS2/memorix"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-ai-dev-container",
+      "title": "grahambrooks ai-dev-container",
+      "why_it_matters": "Isolated sandboxes for AI coding agents",
+      "evidence": [
+        "https://github.com/grahambrooks/ai-dev-container"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-langfuse-rc-4",
+      "title": "Langfuse v4.0.0-rc.x releases",
+      "why_it_matters": "RC pre-release signaling evolving agent tooling; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/langfuse/langfuse/releases/tag/v4.0.0-rc.2",
+        "https://github.com/langfuse/langfuse/releases/tag/v4.0.0-rc.1",
+        "https://github.com/langfuse/langfuse/releases/tag/v4.0.0-rc.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-assembled143",
+      "title": "AssembledHQ 143 - Open source platform for teams to run AI coding agents",
+      "why_it_matters": "Team-grade agent orchestration in sandboxed env; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/assembledhq/143"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-sst-opencode-5",
+      "title": "OpenCode opencode releases",
+      "why_it_matters": "Open-source agent framework updates",
+      "evidence": [
+        "https://github.com/anomalyco/opencode/releases/tag/v1.18.5",
+        "https://github.com/anomalyco/opencode/releases/tag/v1.18.4"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: OpenAI/Microsoft/Cursor changelog or official updates",
+    "Missing social/discussion coverage for some mainstream product signals (verify cross-posts)"
+  ]
+}

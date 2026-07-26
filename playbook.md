@@ -167,3 +167,9 @@ Evidence:
 - Pattern: Use memory files to record rejected approaches and prevent repetition.
 - Why: Agents without persistent memory may retry failed methods; memory files break the loop.
 - Applicability: Any coding agent with file access.
+
+### Astryx Design System Trick
+
+- Prompt prefix `// style: <css‑framework>` steers generated UI components to match the team's design system.
+- Evidenced in Bluesky post showing a 30‑minute wireframe‑to‑code workflow.
+- Source: https://bsky.app/profile/aipulse-synestesia.bsky.social/post/3mr6agx6ojt2e (Medium)

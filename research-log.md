@@ -2964,3 +2964,13 @@ All candidates above are added to the inbox for further evaluation during daily 
 
 - **Memorix** (scr-6a9c4e): Cross‑agent memory primitive now covered in daily signal; evidence strength: Medium; relevance score: 8. Promotion status: candidate (remains in inbox).
 - **Hanesu** (scr-2a9f01): Experimental workflow layer now covered; evidence strength: Medium; relevance score: 6. Promotion status: candidate.
+
+
+- **memoriz** (scr-memorix-mem): Emerging memory layer for agents; evidence strength: Medium; relevance: 8; candidate_seen_at: 2026-07-26; last_checked_at: 2026-07-26; promotion_status: candidate; source: https://github.com/AVIDS2/memorix
+
+
+## 2026-07-26 Promote-candidates pass
+
+- Safety Alignment for Long‑Horizon Models (scr-openai-safety-horizon): promotion_status: promoted; reason: strong cross-domain containment signal; evidence_strength: Strong; candidate_seen_at: 2026-07-22; last_checked_at: 2026-07-22; defer_count: 0; stale_after_days: 30; Source: https://openai.com/index/safety-alignment-long-horizon-models
+- Gemini 3.6 Flash Release (scr-gemini-3-6): promotion_status: promoted; reason: high impact runtime update for multi-agent work; evidence_strength: Strong; candidate_seen_at: 2026-07-22; last_checked_at: 2026-07-22; defer_count: 0; stale_after_days: 30; Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
+- Claude Code Conductor 2.51.1 (scr-claude-code-conductor): promotion_status: promoted; reason: orchestration improvements; evidence_strength: Strong; candidate_seen_at: 2026-07-22; last_checked_at: 2026-07-22; defer_count: 0; stale_after_days: 30; Source: https://pypi.org/project/claude-code-conductor/2.51.1/

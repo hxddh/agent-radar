@@ -290,10 +290,8 @@ Status:
 
 ## Cloudflare Agents
 - Category: Edge agent platform / agent detection
-- Maturity: Active development with SDK releases and new detection capabilities.
-- Recent changes: Cloudflare Precursor agent detection launched (2026-07-16) — continuous client-side signals to detect agent activity at network layer. Agents SDK releases: agents@0.17.4, voice@0.3.4, think@0.13.0 (2026-07-19) — edge agent framework with voice and reasoning modules.
-- Source: https://blog.cloudflare.com/introducing-precursor/
-- replace_section anchor: `## Cloudflare Agents`
+- Recent changes: SDK releases (agents@0.17.4, voice@0.3.4, think@0.13.0) on 2026‑07‑19; Precursor network‑layer detection launched 2026‑07‑16.
+- Source: https://blog.cloudflare.com/introducing-precursor/ (Strong)
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
@@ -342,3 +340,30 @@ Status:
 - Why it matters: Introduces efficient memory management for agents, enabling fast state snapshots and branching, potentially improving performance of large agent fleets.
 - Evidence strength: Medium (npm release, 2026‑07‑19).
 - Source: https://www.npmjs.com/package/agenticow
+
+
+## Safety Alignment for Long‑Horizon Models
+
+- Category: Safety governance signal for AI agents
+- Maturity: Public safety posture, not a product
+- Evidence strength: Strong
+- Why it matters: Aligns with containment and long-horizon governance for agent workflows
+- Source: https://openai.com/index/safety-alignment-long-horizon-models
+
+
+## Gemini 3.6 Flash Release
+
+- Category: Multimodal agent runtime update
+- Maturity: Public beta release
+- Evidence strength: Strong
+- Why it matters: Improved runtime efficiency for multi-agent tasks; influences competition
+- Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
+
+
+## Claude Code Conductor 2.51.1
+
+- Category: Orchestration for Claude Code
+- Maturity: Public release
+- Evidence strength: Strong
+- Why it matters: Updated Claude Code conductor improves orchestration and integration with agent workflows
+- Source: https://pypi.org/project/claude-code-conductor/2.51.1/

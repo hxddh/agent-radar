@@ -68,3 +68,25 @@ Last updated: 2026-07-09
 - Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate?
 - Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos?
 - Will the agent trust gap (low eval trust + high autonomous deployment) lead to a major incident that forces regulatory action?
+
+## Thesis Scorecard
+
+| # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter‑evidence |
+|---|----------------|--------------|------------------------|----------------------------|
+| 1 | Task‑based execution | ↑ | Gemini CLI remote MCP integration | – |
+| 2 | Coding agents adoption | ↑ | GitHub Code Quality GA, Qwen Code v0.20.0 | – |
+| 3 | Evaluation core | → | Code Quality static analysis | – |
+| 4 | Uneven user experience | → | Astryx design system workflow | – |
+| 5 | Object storage importance | → | Headroom token‑compression reduces storage needs | – |
+| 6 | Meta‑harnesses emergence | → | No new meta‑harness releases | – |
+| 7 | Memory + MCP convergence | ↑ | Remote MCP support in Gemini CLI, Openlegion sandbox | – |
+| 8 | Platform‑vendor MCP entry | → | Continued vendor releases (Google, GitHub) | – |
+| 9 | Containment / security | ↑ | Openlegion sandbox, Code Quality policies | Potential compression‑induced errors |
+|10 | Cost economics | ↑ | Headroom token‑compression, remote MCP cost model shift | – |
+
+
+### 2026-07-26 Promotions
+
+- Safety Alignment for Long‑Horizon Models (openai-safety-horizon): promoted as a governance signal; Source: https://openai.com/index/safety-alignment-long-horizon-models
+- Gemini 3.6 Flash Release: promoted; Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
+- Claude Code Conductor 2.51.1: promoted; Source: https://pypi.org/project/claude-code-conductor/2.51.1/
