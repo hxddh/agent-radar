@@ -461,6 +461,49 @@ class ApplyUpdatesTest(unittest.TestCase):
                 )
             self.assertIn("replace_section", str(ctx.exception))
 
+    def test_suffixed_existing_heading_coerces_to_replace(self) -> None:
+        # Issue #80: `validate` counts `## 2026-07-27 (draft)` as a day heading
+        # but the runner's strict matchers did not, so the model's append landed
+        # beside it and the duplicate failed the whole run afterwards.
+        existing = (
+            "# Daily\n\n## 2026-07-27 (draft)\n\n### English\n\n"
+            "#### 2. New Signals\n\n- Signal:\n"
+        )
+        fresh = (
+            "\n---\n\n## 2026-07-27\n\n### English\n\n#### 2. New Signals\n\n"
+            "- Signal: real delta. https://example.com/x\n\n### 中文\n\n#### 2. 新信号\n\n- 信号：真实内容。\n"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(existing, encoding="utf-8")
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["daily/2026-07.md"],
+                {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": fresh}]},
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+        self.assertEqual(text.count("## 2026-07-27"), 1)
+        self.assertNotIn("(draft)", text)
+        self.assertIn("real delta", text)
+
+    def test_drop_shell_duplicate_day_blocks(self) -> None:
+        content = (
+            "# Daily\n\n## 2026-07-27\n\n### English\n\n#### 2. New Signals\n\n- Signal:\n\n"
+            "---\n\n## 2026-07-27\n\n### English\n\n#### 2. New Signals\n\n"
+            "- Signal: real one. https://example.com/a\n"
+        )
+        healed_text, healed = cloud_agent_runner.drop_shell_duplicate_day_blocks(content)
+        self.assertEqual(healed, ["2026-07-27"])
+        self.assertEqual(healed_text.count("## 2026-07-27"), 1)
+        self.assertIn("real one", healed_text)
+        # Two substantive blocks are a real conflict: leave them for the caller.
+        both = content.replace("- Signal:\n", "- Signal: other. https://example.com/b\n")
+        _unchanged, none_healed = cloud_agent_runner.drop_shell_duplicate_day_blocks(both)
+        self.assertEqual(none_healed, [])
+
     def test_rejects_oversized_daily_append(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
