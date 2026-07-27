@@ -534,6 +534,11 @@ DUPLICATE_DAILY_DATE_MESSAGE = (
     "on that day block instead of appending another block."
 )
 STRICT_DAILY_DATE_HEADING = re.compile(r"^## (\d{4}-\d{2}-\d{2})$", re.MULTILINE)
+# Mirrors radar_corpus_audit.DAILY_DATE_HEADING: `validate` counts a suffixed or
+# CR-terminated `## YYYY-MM-DD ...` line as a day heading, so every runner-side
+# guard must see it too, or a duplicate slips past the runner and fails the job
+# afterwards (Issue #80).
+ANY_DAILY_DATE_HEADING = re.compile(r"^## (\d{4}-\d{2}-\d{2})(?:\b.*)?$", re.MULTILINE)
 INVALID_DAILY_DATE_HEADING = re.compile(r"^## \d{4}-\d{2}-\d{2}.+$", re.MULTILINE)
 DEFAULT_BLUESKY_QUERIES = [
     "AI agent",
@@ -2292,16 +2297,92 @@ def strip_daily_day_block_wrapper(content: str, date_label: str) -> str:
     return text
 
 
+def drop_shell_duplicate_day_blocks(content: str) -> tuple[str, list[str]]:
+    """Remove empty duplicate day blocks, keeping the one with real content.
+
+    `ensure` pre-creates a day-block shell; when the model appends its own block
+    for the same date the file ends up with two headings, which `validate`
+    rejects outright — voiding a whole run's output over a stub. Drop the stub
+    (no URLs, no bullets) and keep the written block; genuine duplicates with
+    content on both sides still fail the caller's check."""
+    matches = list(ANY_DAILY_DATE_HEADING.finditer(content))
+    if len(matches) < 2:
+        return content, []
+    blocks: list[tuple[str, int, int]] = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+        blocks.append((match.group(1), match.start(), end))
+    by_date: dict[str, list[tuple[int, int]]] = {}
+    for label, start, end in blocks:
+        by_date.setdefault(label, []).append((start, end))
+    drop_spans: list[tuple[int, int]] = []
+    healed: list[str] = []
+    for label, spans in by_date.items():
+        if len(spans) < 2:
+            continue
+        substantive = [
+            span for span in spans if daily_block_has_substance(content[span[0] : span[1]])
+        ]
+        if len(substantive) != 1:
+            continue  # nothing to choose between: let the caller refuse
+        keep = substantive[0]
+        for span in spans:
+            if span != keep:
+                drop_spans.append(span)
+        healed.append(label)
+    if not drop_spans:
+        return content, []
+    kept = []
+    cursor = 0
+    for start, end in sorted(drop_spans):
+        kept.append(content[cursor:start])
+        cursor = end
+    kept.append(content[cursor:])
+    cleaned = re.sub(r"\n{3,}", "\n\n", "".join(kept))
+    return cleaned, sorted(healed)
+
+
+def daily_block_has_substance(block: str) -> bool:
+    """True when a day block carries real reporting, not just template scaffolding."""
+    if "http://" in block or "https://" in block:
+        return True
+    for line in block.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or line == "---":
+            continue
+        if line.startswith("- ") and (line.endswith(":") or line.endswith("：")):
+            continue
+        if line.startswith("- ") or line.startswith("**"):
+            return True
+        if len(line) > 40:
+            return True
+    return False
+
+
+def canonicalize_daily_headings(text: str) -> str:
+    """Rewrite any `## YYYY-MM-DD<suffix>` day heading to the canonical form.
+
+    Trailing text, trailing whitespace, and stray CRs make a heading invisible to
+    the runner's strict matchers while `validate` still counts it, which is how a
+    duplicate 2026-07-27 block reached disk and failed the whole run (Issue #80).
+    Canonicalizing both sides keeps anchors, dedup, and validation in agreement."""
+    if not text:
+        return text
+    return ANY_DAILY_DATE_HEADING.sub(lambda m: f"## {m.group(1)}", text)
+
+
 def coerce_daily_duplicate_append(update: dict[str, Any], old: str, rel_path: str) -> dict[str, Any]:
     """When ensure already created ## YYYY-MM-DD, upgrade append to replace_section."""
     if not is_daily_month_path(rel_path) or update.get("mode") != "append":
         return update
-    content = str(update.get("content", ""))
-    dates = sorted(set(STRICT_DAILY_DATE_HEADING.findall(content)))
+    content = canonicalize_daily_headings(str(update.get("content", "")))
+    dates = sorted(set(ANY_DAILY_DATE_HEADING.findall(content)))
     if len(dates) != 1:
         return update
     date_label = dates[0]
-    if not re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
+    if not ANY_DAILY_DATE_HEADING.search(canonicalize_daily_headings(old)) or not re.search(
+        rf"^## {re.escape(date_label)}$", canonicalize_daily_headings(old), re.MULTILINE
+    ):
         return update
     coerced = dict(update)
     coerced["mode"] = "replace_section"
@@ -2333,8 +2414,9 @@ def validate_daily_update_content(rel_path: str, old: str, mode: str, content: s
             if INVALID_DAILY_DATE_HEADING.search(content):
                 raise SystemExit(INVALID_DAILY_HEADING_MESSAGE.format(path=rel_path))
             if mode == "append":
-                for date_label in STRICT_DAILY_DATE_HEADING.findall(content):
-                    if re.search(rf"^## {re.escape(date_label)}$", old, re.MULTILINE):
+                canonical_old = canonicalize_daily_headings(old)
+                for date_label in ANY_DAILY_DATE_HEADING.findall(content):
+                    if re.search(rf"^## {re.escape(date_label)}$", canonical_old, re.MULTILINE):
                         raise SystemExit(DUPLICATE_DAILY_DATE_MESSAGE.format(path=rel_path, date=date_label))
     if rel_path == "research-log.md" and mode == "append":
         validate_research_log_append(old, content)
@@ -6150,6 +6232,11 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
         path = root / rel_path
         path.parent.mkdir(parents=True, exist_ok=True)
         old = read_text_full(path)
+        if is_daily_month_path(rel_path):
+            # Bring existing day headings to canonical form before any matching:
+            # a suffixed/CR heading otherwise hides from the runner and only
+            # surfaces as a `validate` duplicate failure (Issue #80).
+            old = canonicalize_daily_headings(old)
         update = coerce_daily_duplicate_append(update, old, rel_path)
         update = normalize_daily_day_replace(update, rel_path)
         mode = update["mode"]
@@ -6192,7 +6279,16 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
             allow_append_fallback=not is_report_file,
         )
         if is_daily_month_path(rel_path):
-            day_labels = STRICT_DAILY_DATE_HEADING.findall(merged)
+            merged = canonicalize_daily_headings(merged)
+            merged, healed = drop_shell_duplicate_day_blocks(merged)
+            for label in healed:
+                warning = (
+                    f"{rel_path}: dropped an empty duplicate ## {label} block "
+                    "(ensure shell superseded by the written day block)"
+                )
+                if warning not in RUN_AUDIT["apply_warnings"]:
+                    RUN_AUDIT["apply_warnings"].append(warning)
+            day_labels = ANY_DAILY_DATE_HEADING.findall(merged)
             dupes = sorted({label for label in day_labels if day_labels.count(label) > 1})
             if dupes:
                 raise SystemExit(
