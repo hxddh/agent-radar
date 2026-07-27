@@ -1,0 +1,250 @@
+{
+  "summary": "Top social signals on agent orchestration, security, and benchmarks from Bluesky/HN/Reddit. 6 candidates prioritized. | Top signals: Gemini CLI release, Copilot Linear GA, GitHub MCP/automation news; strong infra/ sandbox signals from MCP tools and runtimes.",
+  "candidates": [
+    {
+      "id": "scr-8f2d1c",
+      "title": "Awesome harness engineering",
+      "why_it_matters": "Comprehensive open harne\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/te9-dev.bsky.social/post/3mrlznooqd52o"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-7a5e9b",
+      "title": "Cursor: high-performance AI as orchestrator",
+      "why_it_matters": "Shows planning-first orchestration for multi-agent tasks.",
+      "evidence": [
+        "https://bsky.app/profile/maimuwork.bsky.social/post/3mrlxbtnbuq2e",
+        "https://the-decoder.com/cursors-agent-swarm-suggests-cheaper-models-can-handle-most-coding-when-frontier-models-plan-the-work/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9d3f7a",
+      "title": "Azure DevOps MCP prompt-injection flaw",
+      "why_it_matters": "Security risk: MCP prompt-injection can leak access.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/technoholic.bsky.social/post/3mrljxxrxsv2r"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-4a6b8e",
+      "title": "Claude Code containment and prompt governance",
+      "why_it_matters": "Containment approaches to limit bot blast radius in coding agents.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/argosvix.com/post/3mrlq66jics2w"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Strong (multiple independent user reports)",
+      "corroboration": "multi-platform"
+    },
+    {
+      "id": "scr-2c9d4f",
+      "title": "Forkbench: Mac control room for CLI agents",
+      "why_it_matters": "Shows a native workflow for managing multiple CLI agents.",
+      "evidence": [
+        "https://forkbench.com"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5e1a3d",
+      "title": "AWS-bench: AI agents benchmark",
+      "why_it_matters": "AWS benchmark for evaluating AI-agent stacks.",
+      "evidence": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/07/aws-bench/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3818efbbf",
+      "title": "Google Gemini CLI v0.54.0-nightly",
+      "why_it_matters": "Official Gemini CLI update signaling ongoing agent tooling progress.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.54.0-nightly.20260727.g3818efbbf"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-copilot-linear-ga",
+      "title": "Copilot cloud agent for Linear GA",
+      "why_it_matters": "GA of Copilot cloud agent signals production-grade orchestration.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-23-copilot-cloud-agent-for-linear-is-now-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agent-automation-issues",
+      "title": "Agent automation controls in GitHub Issues in public preview",
+      "why_it_matters": "Official preview signaling new agent-workflow integration with issues.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-23-agent-automation-controls-in-github-issues-in-public-preview"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mcp-spec",
+      "title": "GitHub MCP Server supports the next MCP specification",
+      "why_it_matters": "Indicates tooling for cross-cluster agent control and governance.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-23-github-mcp-server-supports-the-next-mcp-specification"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mitos",
+      "title": "Mitos microVM sandbox for AI agents",
+      "why_it_matters": "Low-latency sandbox enabling isolation for agents.",
+      "evidence": [
+        "https://github.com/mitos-run/mitos"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-dagu",
+      "title": "Dagu local-first workflow engine with MCP server",
+      "why_it_matters": "Open-source engine with MCP integration for ops and automation.",
+      "evidence": [
+        "https://github.com/dagucloud/dagu"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-mem0-py",
+      "title": "Mem0 Python SDK (v2.0.14)",
+      "why_it_matters": "Memory-centric SDKs as building blocks for agent memory.",
+      "evidence": [
+        "https://github.com/mem0ai/mem0/releases/tag/v2.0.14"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-ocm-mcp",
+      "title": "OCM MCP Server for Kubernetes",
+      "why_it_matters": "MCP server for multi-cluster agent orchestration.",
+      "evidence": [
+        "https://github.com/sandeepbazar/ocm-mcp-server"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Anthropic/OpenAI/Google/Microsoft/Cursor changelog",
+    "Missing social/discussion: additional Bluesky/Reddit coverage across vendors",
+    "Need more infra_primitive examples (MCP, sandbox) in top signals",
+    "Missing user_workflow signals: Bluesky/Reddit/HN/X field reports",
+    "Missing social/discussion corroboration for user_workflow signals"
+  ]
+}
