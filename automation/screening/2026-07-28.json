@@ -1,0 +1,141 @@
+{
+  "summary": "Daily screening: top MCP/infra signals from mainstream products, user workflows, and tooling, with social signals included.",
+  "candidates": [
+    {
+      "id": "scr-cloudflare-agents-mcp",
+      "title": "Cloudflare MCP SDK adds MCP support",
+      "why_it_matters": "MCP tooling standardizes cross-agent orchestration.",
+      "evidence": [
+        "https://developers.cloudflare.com/changelog/post/2026-07-27-agents-sdk-v0.20.0-mcp-sdk-v2/",
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.20.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-aws-security-hub-mcp",
+      "title": "AWS Security Hub MCP App integrates MCP findings",
+      "why_it_matters": "Brings exposure findings into agent-assisted workflows.",
+      "evidence": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/07/aws-security-hub-mcp-app/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-anthropic-claude-opus5",
+      "title": "Claude Opus 5 announced for long-running agents",
+      "why_it_matters": "Opus 5 enables long-running, productive agent workflows.",
+      "evidence": [
+        "https://www.anthropic.com/news/claude-opus-5"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-copilot-workspace",
+      "title": "GitHub Copilot app workspace supports multi-agent sessions",
+      "why_it_matters": "Switch between agent tasks without losing context.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/sipirtu.bsky.social/post/3mrnjpsjzpj23"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-memorix",
+      "title": "Memorix: cross-agent memory layer via MCP",
+      "why_it_matters": "Shared memory enables persistent context across agents.",
+      "evidence": [
+        "https://github.com/AVIDS2/memorix"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-e2b-cli",
+      "title": "E2B CLI 2.16.0 adds MCP-ready tooling",
+      "why_it_matters": "CLI tooling to orchestrate agents.",
+      "evidence": [
+        "https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.16.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-codemode",
+      "title": "Cloudflare codemode 0.5.1 release",
+      "why_it_matters": "Tooling for agent development in Cloudflare ecosystem.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.20.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/codemode%400.5.1"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-memory-pruner",
+      "title": "Memory Context Priority Pruner",
+      "why_it_matters": "Helps keep memory window focused in agent work.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/vinkius-mcp-ai.bsky.social/post/3mrmxywmbnp2u"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    }
+  ],
+  "gaps": [],
+  "summary_extra": ""
+}
