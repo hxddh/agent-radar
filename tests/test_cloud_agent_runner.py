@@ -2568,6 +2568,82 @@ class TransportResilienceTest(unittest.TestCase):
         # Third attempt = round 2 of the chain; 429 backoff honors Retry-After (45s).
         self.assertTrue(any(t >= 45 for t in sleeps), sleeps)
 
+    def test_inject_missing_mainstream_signals_repairs_dropped_must_cover(self) -> None:
+        # Issue #80 (07-29/07-30): free-tier models dropped MUST mainstream
+        # candidates and the recall/must-cover gates voided the whole daily.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        screen = json.dumps(
+            {
+                "summary": "s",
+                "candidates": [
+                    {
+                        "title": "Google Gemini CLI Release v0.54",
+                        "why_it_matters": "Agentic CLI ships a stable milestone.",
+                        "evidence": ["https://github.com/google-gemini/gemini-cli/releases/tag/v0.54"],
+                        "signal_class": "mainstream_product",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "promotion_status": "promote",
+                    }
+                ],
+                "gaps": [],
+            }
+        )
+        content = (
+            "## 2026-07-30\n\n### English\n\n"
+            "#### 1. Lead Analysis\n\nNarrative.\n\n"
+            "#### 3. Mainstream Agent Progress\n\n- Agent: Something else.\n\n"
+            "#### 8. Assessment & Gaps\n\n- Coverage ledger: checked=x; missed=none\n\n"
+            "### 中文\n\n#### 1. Lead Analysis\n\n主线。\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        injected = cloud_agent_runner.inject_missing_mainstream_signals(result, screen)
+        self.assertEqual(injected, 1)
+        merged = result["updates"][0]["content"]
+        english = merged.split("### 中文")[0]
+        self.assertIn("Google Gemini CLI Release v0.54", english)
+        self.assertIn("auto-added by the runner", english)
+        self.assertIn("- Agent: Something else.", english)  # model content preserved
+        self.assertNotIn("Gemini CLI Release v0.54", merged.split("### 中文")[1])
+        self.assertTrue(
+            any("Auto-added" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+        # Re-running is a no-op once the candidate is covered.
+        self.assertEqual(cloud_agent_runner.inject_missing_mainstream_signals(result, screen), 0)
+
+    def test_inject_missing_mainstream_creates_section_when_absent(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        screen = json.dumps(
+            {
+                "summary": "s",
+                "candidates": [
+                    {
+                        "title": "Cloudflare Agents suite releases",
+                        "why_it_matters": "Framework ships new versions.",
+                        "evidence": ["https://github.com/cloudflare/agents/releases/tag/x"],
+                        "signal_class": "mainstream_product",
+                        "confidence": "high",
+                        "relevance_score": 5,
+                        "promotion_status": "promote",
+                    }
+                ],
+                "gaps": [],
+            }
+        )
+        content = (
+            "## 2026-07-30\n\n### English\n\n"
+            "#### 2. New Signals\n\n- Signal: unrelated. https://example.com/a\n\n"
+            "#### 8. Assessment & Gaps\n\n- Coverage ledger: checked=x; missed=none\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        self.assertEqual(cloud_agent_runner.inject_missing_mainstream_signals(result, screen), 1)
+        merged = result["updates"][0]["content"]
+        self.assertIn("#### 3. Mainstream Agent Progress", merged)
+        self.assertLess(
+            merged.index("#### 3. Mainstream Agent Progress"),
+            merged.index("#### 8. Assessment & Gaps"),
+        )
+
     def test_inject_deterministic_radar_sweep(self) -> None:
         cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
         cloud_agent_runner.SHARED_SWEEP_LINES.clear()
