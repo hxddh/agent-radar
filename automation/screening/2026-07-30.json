@@ -1,0 +1,256 @@
+{
+  "summary": "Screened top signals from official vendor blogs and social discussions; prioritized mainstream_product and user_workflow signals with focused infra_primitive items. | Top signals from OSS MCP/agent ecosystems; prioritized mainstream product updates, with a few infrastructure primitives, and gaps noted for social signals.",
+  "candidates": [
+    {
+      "id": "scr-anthropic-opus5",
+      "title": "Claude Opus 5",
+      "why_it_matters": "Opus 5 boosts long-running agents and coding.",
+      "evidence": [
+        "https://www.anthropic.com/news/claude-opus-5"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-gpt56-frontier",
+      "title": "GPT-5/6 frontier efficiency",
+      "why_it_matters": "GPT-5/6 frontier boosts agent efficiency and capability.",
+      "evidence": [
+        "https://openai.com/index/gpt-5-6-frontier-intelligence-efficiency"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openai-chatgpt-academic",
+      "title": "ChatGPT for academic researchers",
+      "why_it_matters": "Guides researchers on effective ChatGPT use in academia.",
+      "evidence": [
+        "https://openai.com/index/chatgpt-for-academic-researchers"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cloudflare-postquantum",
+      "title": "Post-quantum authentication to origins",
+      "why_it_matters": "Security upgrade for origin authentication against quantum threats.",
+      "evidence": [
+        "https://blog.cloudflare.com/post-quantum-authentication-to-origins/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-github-copilot",
+      "title": "Copilot code review: MCP now generally available",
+      "why_it_matters": "MCP expansion enables more robust agent orchestration in workflows.",
+      "evidence": [
+        "https://github.blog/changelog/2026-07-29-copilot-code-review-agent-skills-and-mcp-now-generally-available/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-mindflock-showhn",
+      "title": "MindFlock – Parallel AI coding agents",
+      "why_it_matters": "Demonstrates multi-agent coding workflows and collaboration.; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/MindFlock/MindFlock"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-mcp-server-clickhouse",
+      "title": "We built an MCP server for your SRE agent",
+      "why_it_matters": "Infra primitive MCP server improves agent reliability and scaling.",
+      "evidence": [
+        "https://clickhouse.com/blog/benchmarking-the-clickstack-mcp-server-with-hdx-evals"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cloudflare-privacy-proxy",
+      "title": "Open-sourcing privacy proxy CLI",
+      "why_it_matters": "Open-source tooling for privacy in agent workflows.",
+      "evidence": [
+        "https://blog.cloudflare.com/open-sourcing-our-privacy-proxy-cli/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-google-gemini-cli-0.54.0",
+      "title": "Gemini CLI Release 0.54.0-preview.0",
+      "why_it_matters": "Official tooling delta for Google Gemini developers",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.54.0-preview.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cloudflare-agents-0.20.1",
+      "title": "Cloudflare Agents 0.20.1 release",
+      "why_it_matters": "Updates across MCP runtime/Think/AI-Chat for agents",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.20.1",
+        "https://github.com/cloudflare/think@0.15.1",
+        "https://github.com/cloudflare/ai-chat@0.10.1"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-openhands-1.7.0",
+      "title": "OpenHands v1.7.0 release",
+      "why_it_matters": "Advances in OpenHands agent ecosystem tooling",
+      "evidence": [
+        "https://github.com/OpenHands/OpenHands/releases/tag/v1.7.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-anthropics-claude-code-2.1.220",
+      "title": "Claude Code v2.1.220 release",
+      "why_it_matters": "Official agent coding assistant release",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.220"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-qwen-code-0.21.1",
+      "title": "Qwen Code v0.21.1 release",
+      "why_it_matters": "Official Qwen code release for agent coding",
+      "evidence": [
+        "https://github.com/QwenLM/qwen-code/releases/tag/v0.21.1"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-mem0-mem0-sdkv2.0.14",
+      "title": "Mem0 Python SDK v2.0.14",
+      "why_it_matters": "Memory layer for cross-agent memory management",
+      "evidence": [
+        "https://github.com/mem0ai/mem0/releases/tag/v2.0.14"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openbrowser-mcp-0xdead4f",
+      "title": "openbrowser-mcp browser automation MCP server",
+      "why_it_matters": "Browser automation MCP server for coding agents",
+      "evidence": [
+        "https://github.com/0xdead4f/openbrowser-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing user_workflow signals: no Bluesky/Reddit/HN/X-style operator reports available in shard."
+  ]
+}
