@@ -4057,6 +4057,119 @@ def validate_must_cover_mainstream(
         )
 
 
+def inject_missing_mainstream_signals(
+    result: dict[str, Any],
+    screen_text: str | None,
+    root: Path | None = None,
+    day: dt.date | None = None,
+) -> int:
+    """Add screened mainstream deltas the model dropped into the day block.
+
+    Free-tier synthesis models regularly omit high-confidence mainstream
+    candidates, and the recall / must-cover gates then voided the entire run —
+    two dailies were lost outright (Issue #80, 2026-07-29/30). The runner
+    already holds each candidate's title, why, and URL from screening, so it
+    repairs the omission deterministically (as it does for Radar Sweep) instead
+    of discarding a finished report. Pre-repair recall stays in telemetry as the
+    honest measure of what the model itself produced."""
+    if not screen_text:
+        return 0
+    data = enrich_screening_with_ids(parse_screening_json(screen_text))
+    must_cover = filter_already_covered_must_cover(
+        high_confidence_mainstream_candidates(data.get("candidates", [])), root, day
+    )[:MAX_MUST_COVER_MAINSTREAM]
+    if not must_cover:
+        return 0
+    hay = "\n".join(daily_update_bodies(result) + [str(result.get("summary", ""))]).lower()
+    missing = [
+        cand
+        for cand in must_cover
+        if not (
+            candidate_mentioned_in_text(cand, hay, strict=True)
+            or candidate_explained_in_gaps(cand, hay)
+        )
+    ]
+    if not missing:
+        return 0
+    bullets: list[str] = []
+    for cand in missing:
+        title = " ".join(str(cand.get("title", "?")).split())
+        why = " ".join(str(cand.get("why_it_matters", "")).split())[:200].strip()
+        evidence = cand.get("evidence", [])
+        url = str(evidence[0]) if isinstance(evidence, list) and evidence else ""
+        lines = [f"- Signal: {title}"]
+        if why:
+            lines.append(f"  - Why it matters: {why}")
+        lines.append("  - Category: Mainstream product")
+        lines.append("  - Source class: Screening candidate (auto-added by the runner)")
+        lines.append("  - Evidence strength: Medium (auto-added; not narrated by the model)")
+        if url:
+            lines.append(f"  - Source: {url}")
+        bullets.append("\n".join(lines))
+    if not bullets:
+        return 0
+    section_body = "\n\n".join(bullets)
+    injected = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for update in raw_updates:
+        if not isinstance(update, dict):
+            continue
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if not is_daily_month_path(rel_path):
+            continue
+        if isinstance(update.get("english_block"), str):
+            update["english_block"] = _append_mainstream_bullets(
+                str(update["english_block"]), section_body
+            )
+            injected += 1
+            continue
+        content = str(update.get("content", ""))
+        if not content.strip():
+            continue
+        english_end = content.find("### 中文")
+        if english_end != -1:
+            update["content"] = (
+                _append_mainstream_bullets(content[:english_end], section_body)
+                + content[english_end:]
+            )
+        else:
+            update["content"] = _append_mainstream_bullets(content, section_body)
+        injected += 1
+    if injected:
+        RUN_AUDIT["mainstream_auto_added"] = len(bullets)
+        RUN_AUDIT["apply_warnings"].append(
+            f"Auto-added {len(bullets)} screened mainstream delta(s) the model dropped "
+            f"({'; '.join(' '.join(str(c.get('title', '?')).split()) for c in missing[:2])})"
+        )
+    return injected
+
+
+def _append_mainstream_bullets(block: str, section_body: str) -> str:
+    """Put auto-added bullets at the end of `#### 3. Mainstream Agent Progress`."""
+    heading = "#### 3. Mainstream Agent Progress"
+    if heading in block:
+        pattern = re.compile(
+            r"(?ms)^#### 3\. Mainstream Agent Progress\s*\n(.*?)(?=^#### |\Z)"
+        )
+        match = pattern.search(block)
+        if match:
+            body = match.group(1).rstrip()
+            replacement = f"{heading}\n\n{body}\n\n{section_body}\n\n" if body else f"{heading}\n\n{section_body}\n\n"
+            return block[: match.start()] + replacement + block[match.end() :]
+    # No mainstream section: insert one before the first later canonical section.
+    for later in ("#### 4.", "#### 5.", "#### 6.", "#### 7.", "#### 8."):
+        if re.search(rf"(?m)^{re.escape(later)}", block):
+            return re.sub(
+                rf"(?m)^({re.escape(later)})",
+                lambda m: f"{heading}\n\n{section_body}\n\n{m.group(1)}",
+                block,
+                count=1,
+            )
+    return block.rstrip() + f"\n\n{heading}\n\n{section_body}\n"
+
+
 def validate_synthesis_result(
     task: str,
     result: dict[str, Any],
@@ -4067,6 +4180,14 @@ def validate_synthesis_result(
     if task not in {"daily", "weekly", "monthly"}:
         return
     details = compute_synthesis_recall_details(screen_text, result)
+    # Record what the MODEL itself covered before any deterministic repair, so
+    # free-tier quality stays observable even though the gates act on the
+    # repaired payload (Issue #80).
+    RUN_AUDIT["model_weighted_recall"] = details["weighted_recall"]
+    RUN_AUDIT["model_mainstream_recall"] = details["mainstream_recall"]
+    if task == "daily":
+        if inject_missing_mainstream_signals(result, screen_text, root=root, day=day):
+            details = compute_synthesis_recall_details(screen_text, result)
     recall = details["recall"]
     weighted = details["weighted_recall"]
     mainstream = details["mainstream_recall"]
@@ -6437,6 +6558,9 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "direction_infra_count": RUN_AUDIT.get("direction_infra_count", 0),
         "direction_gaps_present": RUN_AUDIT.get("direction_gaps_present", False),
         "weighted_synthesis_recall": RUN_AUDIT.get("weighted_synthesis_recall", 0.0),
+        "model_weighted_recall": RUN_AUDIT.get("model_weighted_recall", 0.0),
+        "model_mainstream_recall": RUN_AUDIT.get("model_mainstream_recall", 0.0),
+        "mainstream_auto_added": RUN_AUDIT.get("mainstream_auto_added", 0),
         "mainstream_recall": RUN_AUDIT.get("mainstream_recall", 0.0),
         "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
         "must_cover_missing": RUN_AUDIT.get("must_cover_missing", 0),
@@ -6573,6 +6697,9 @@ def run_task(
     RUN_AUDIT["direction_gaps_present"] = False
     RUN_AUDIT["weighted_synthesis_recall"] = 0.0
     RUN_AUDIT["mainstream_recall"] = 0.0
+    RUN_AUDIT["model_weighted_recall"] = 0.0
+    RUN_AUDIT["model_mainstream_recall"] = 0.0
+    RUN_AUDIT["mainstream_auto_added"] = 0
     RUN_AUDIT["stale_roundup_count"] = 0
     RUN_AUDIT["must_cover_mainstream"] = 0
     RUN_AUDIT["must_cover_missing"] = 0

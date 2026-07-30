@@ -83,7 +83,7 @@ Daily direction quota (required):
 - **Social/discussion sources are first-class** (Bluesky/Reddit/HN/X/Lobsters). Keep high-signal discussion and field reports; label Evidence strength. If screening had discussion candidates **or** actionable `user_workflow`, cover at least one or Gaps (`Missing social/discussion` / `Missing user_workflow`).
 - At most **2 infra_primitive** emerging-repo bullets in the day block; additional infra candidates go to `research-log.md` only. (The runner hard-rejects only when the block also lacks a real mainstream signal; otherwise it records a warning — still keep to 2.)
 - Do not fill the day with GitHub long-tail memory/MCP/sandbox repos when mainstream or user signals are missing.
-- Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos.
+- Cover every screening item marked **MUST** (high-confidence mainstream) before adding emerging repos. If you drop one, the runner auto-adds it to `#### 3. Mainstream Agent Progress` as a bare labeled bullet — your own narration is always better, so cover them yourself.
 - When replacing an existing day block, keep prior Strong official URLs unless obsolete (or name them under Gaps).
 - Prefer 24–48h deltas. Monthly/quarterly roundups older than about a week should be labeled `Freshness: stale-roundup` or moved to `research-log.md` (the runner auto-labels if omitted).
 - **Coverage ledger (required)**: `#### 8. Assessment & Gaps` must contain a line `- Coverage ledger: checked=<lanes/vendors actually checked>; missed=<vendors not reachable>`. Gaps bullets only count as escape hatches when this ledger is present.
