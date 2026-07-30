@@ -2963,11 +2963,100 @@ def verify_emitted_citations(root: Path | None, result: dict[str, Any], screen_t
         if warning not in RUN_AUDIT["apply_warnings"]:
             RUN_AUDIT["apply_warnings"].append(warning)
     if unreachable:
+        dead_urls = [entry.split(" (", 1)[0] for entry in unreachable]
+        removed = strip_dead_citations(result, dead_urls)
         sample = "; ".join(unreachable[:3])
+        if removed:
+            # One hallucinated link used to void a finished report. Nothing
+            # unverifiable is published: the URL — and any bullet that had no
+            # other source — is removed and the removal is recorded (Issue #80).
+            warning = (
+                f"Removed {removed} unreachable citation(s)/bullet(s) from the update "
+                f"({sample}); the rest of the report was kept"
+            )
+            if warning not in RUN_AUDIT["apply_warnings"]:
+                RUN_AUDIT["apply_warnings"].append(warning)
+            RUN_AUDIT["citation_urls_removed"] = removed
+            return
         raise SystemExit(
             f"Refusing update: model-emitted citation URL(s) do not resolve ({sample}). "
             "Remove or replace hallucinated citations with URLs from the source snapshot."
         )
+
+
+def strip_dead_citations(result: dict[str, Any], dead_urls: list[str]) -> int:
+    """Drop unreachable citations from report bodies; return how many edits landed.
+
+    A bullet whose only source is dead is unverifiable, so the bullet goes too.
+    Everything else in the report survives — refusing the whole update over one
+    hallucinated link was costing a full day's output (Issue #80)."""
+    if not dead_urls:
+        return 0
+    dead = {url.strip().rstrip(".,;") for url in dead_urls if url.strip()}
+    if not dead:
+        return 0
+    removed = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for update in raw_updates:
+        if not isinstance(update, dict):
+            continue
+        for field in ("content", "english_block", "chinese_block"):
+            body = update.get(field)
+            if not isinstance(body, str) or not body:
+                continue
+            cleaned, count = _strip_dead_citations_from_body(body, dead)
+            if count:
+                update[field] = cleaned
+                removed += count
+    return removed
+
+
+def _strip_dead_citations_from_body(body: str, dead: set[str]) -> tuple[str, int]:
+    """Remove dead-URL lines, and any top-level bullet left with no source."""
+    removed = 0
+    lines = body.splitlines()
+    kept: list[str] = []
+    for line in lines:
+        if any(url in line for url in dead):
+            removed += 1
+            continue
+        kept.append(line)
+    if not removed:
+        return body, 0
+    # Second pass: a bullet group that lost its only URL keeps no citation, so
+    # drop the whole group rather than publish an unsourced claim.
+    result_lines: list[str] = []
+    group: list[str] = []
+
+    def flush(group_lines: list[str]) -> None:
+        nonlocal removed
+        if not group_lines:
+            return
+        head = group_lines[0].strip()
+        is_signal = head.startswith("- Signal:") or head.startswith("- **") or head.startswith("- Agent:")
+        has_url = any("http://" in ln or "https://" in ln for ln in group_lines)
+        if is_signal and not has_url:
+            removed += 1
+            return
+        result_lines.extend(group_lines)
+
+    for line in kept:
+        if re.match(r"^- (Signal|Agent|Tool|Candidate|\*\*)", line):
+            flush(group)
+            group = [line]
+        elif group and (line.startswith("  ") or not line.strip()):
+            group.append(line)
+        else:
+            flush(group)
+            group = []
+            result_lines.append(line)
+    flush(group)
+    cleaned = re.sub(r"\n{3,}", "\n\n", "\n".join(result_lines))
+    if not cleaned.endswith("\n"):
+        cleaned += "\n"
+    return cleaned, removed
 
 
 def daily_day_blocks(content: str) -> list[tuple[str, str]]:
@@ -6364,6 +6453,19 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
         content = update["content"]
         anchor = update.get("anchor")
         within = update.get("within")
+        if rel_path == "research-log.md" and mode == "append":
+            # A duplicated `## Candidate inbox` heading is a formatting slip, not
+            # a reason to drop a whole sweep's candidates (Issue #80).
+            if CANDIDATE_INBOX_HEADING.search(content) and CANDIDATE_INBOX_HEADING.search(old):
+                content = CANDIDATE_INBOX_HEADING.sub("", content).lstrip("\n")
+                content = re.sub(r"\n{3,}", "\n\n", content)
+                update["content"] = content
+                warning = (
+                    "research-log.md: dropped a duplicate `## Candidate inbox` heading "
+                    "from the append; bullets kept under the existing inbox"
+                )
+                if warning not in RUN_AUDIT["apply_warnings"]:
+                    RUN_AUDIT["apply_warnings"].append(warning)
         validate_daily_update_content(rel_path, old, mode, content)
         validate_daily_append_size(rel_path, mode, content)
         if is_daily_month_path(rel_path) and mode in {"append", "replace_section"}:
@@ -6580,6 +6682,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "citation_urls_checked": RUN_AUDIT.get("citation_urls_checked", 0),
         "citation_urls_unreachable": RUN_AUDIT.get("citation_urls_unreachable", 0),
         "citation_urls_unverified": RUN_AUDIT.get("citation_urls_unverified", 0),
+        "citation_urls_removed": RUN_AUDIT.get("citation_urls_removed", 0),
         "repeat_url_labeled": RUN_AUDIT.get("repeat_url_labeled", 0),
         "numeric_claims_flagged": RUN_AUDIT.get("numeric_claims_flagged", 0),
         "storylines_active": RUN_AUDIT.get("storylines_active", 0),
@@ -6738,6 +6841,7 @@ def run_task(
     RUN_AUDIT["citation_urls_checked"] = 0
     RUN_AUDIT["citation_urls_unreachable"] = 0
     RUN_AUDIT["citation_urls_unverified"] = 0
+    RUN_AUDIT["citation_urls_removed"] = 0
     RUN_AUDIT["repeat_url_labeled"] = 0
     RUN_AUDIT["coverage_ledger_present"] = False
     RUN_AUDIT["daily_sections_canonical"] = False
