@@ -1918,23 +1918,64 @@ class ContentTruthfulnessTest(unittest.TestCase):
         self.assertEqual(cloud_agent_runner.repair_cve_primary_sources(result), 0)
         self.assertEqual(result["updates"][0]["content"], content)
 
-    def test_verify_emitted_citations_rejects_dead_url(self) -> None:
+    def test_verify_emitted_citations_strips_dead_url(self) -> None:
+        # v0.21.1 (Issue #80): a dead citation is removed with its now-unsourced
+        # bullet instead of voiding the whole finished report. Nothing
+        # unverifiable is published, and the surviving content is kept.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
         result = {
             "updates": [
                 {
                     "path": "daily/2026-07.md",
                     "mode": "append",
-                    "content": "- Signal: x.\n  - Source: https://example.com/gone\n",
+                    "content": (
+                        "- Signal: dead one.\n  - Source: https://example.com/gone\n\n"
+                        "- Signal: good one.\n  - Source: https://example.com/live\n"
+                    ),
+                }
+            ]
+        }
+        def reach(url: str) -> tuple[str, str]:
+            return ("missing", "HTTP 404") if "gone" in url else ("ok", "")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with mock.patch.object(cloud_agent_runner, "url_reachability", side_effect=reach):
+                cloud_agent_runner.verify_emitted_citations(root, result, None)
+        content = result["updates"][0]["content"]
+        self.assertNotIn("example.com/gone", content)
+        self.assertNotIn("dead one", content)
+        self.assertIn("good one", content)
+        self.assertIn("example.com/live", content)
+        self.assertTrue(
+            any("Removed" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_verify_emitted_citations_still_refuses_when_nothing_removable(self) -> None:
+        # Dead URL outside any bullet (e.g. in prose): nothing safe to strip, so
+        # the truthfulness gate still refuses rather than publish it.
+        result = {
+            "updates": [
+                {
+                    "path": "weekly/2026-W31.md",
+                    "mode": "replace_section",
+                    "anchor": "### 1. Executive Summary",
+                    "content": "",
                 }
             ]
         }
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             with mock.patch.object(
-                cloud_agent_runner, "url_reachability", return_value=("missing", "HTTP 404")
+                cloud_agent_runner, "extract_all_urls", return_value={"https://example.com/gone"}
             ):
-                with self.assertRaises(SystemExit) as ctx:
-                    cloud_agent_runner.verify_emitted_citations(root, result, None)
+                with mock.patch.object(
+                    cloud_agent_runner, "report_update_bodies", return_value=["prose only"]
+                ):
+                    with mock.patch.object(
+                        cloud_agent_runner, "url_reachability", return_value=("missing", "HTTP 404")
+                    ):
+                        with self.assertRaises(SystemExit) as ctx:
+                            cloud_agent_runner.verify_emitted_citations(root, result, None)
         self.assertIn("do not resolve", str(ctx.exception))
 
     def test_verify_emitted_citations_warns_on_unknown(self) -> None:

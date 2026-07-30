@@ -504,6 +504,39 @@ class ApplyUpdatesTest(unittest.TestCase):
         _unchanged, none_healed = cloud_agent_runner.drop_shell_duplicate_day_blocks(both)
         self.assertEqual(none_healed, [])
 
+    def test_duplicate_candidate_inbox_heading_is_stripped(self) -> None:
+        # Issue #80: source-sweep lost a whole run of candidates because the
+        # model re-emitted the `## Candidate inbox` heading.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "research-log.md"
+            target.write_text(
+                "# Research Log\n\n## Candidate inbox\n\n- **Old** (scr-1): existing.\n",
+                encoding="utf-8",
+            )
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["research-log.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "research-log.md",
+                            "mode": "append",
+                            "content": "\n## Candidate inbox\n\n- **New** (scr-2): fresh candidate.\n  - Source: https://example.com/n\n",
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+        self.assertEqual(text.count("## Candidate inbox"), 1)
+        self.assertIn("**New** (scr-2)", text)
+        self.assertIn("**Old** (scr-1)", text)
+        self.assertTrue(
+            any("Candidate inbox" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
     def test_rejects_oversized_daily_append(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
