@@ -1582,3 +1582,15 @@ Ignore or deprioritize:
 - [infra_primitive] regent-cli 0.7.0: https://pypi.org/project/regent-cli/0.7.0/
 - [mainstream_product] @tencent-ai/agent-server v0.0.23-beta: https://www.npmjs.com/package/%40tencent-ai/agent-server
 - [infra_primitive] veradata-agentkit-provider 1.0.0: https://pypi.org/project/veradata-agentkit-provider/1.0.0/
+
+## Recent additions (2026‑07‑30)
+- **Tier 1: Official Public Sources**
+  - Qodana 2026.2 release: https://blog.jetbrains.com/qodana/2026/07/qodana-2026-2-more-security-better-coverage-less-configuration/
+  - GitHub Copilot MCP GA announcement: https://github.blog/changelog/2026-07-29-copilot-code-review-agent-skills-and-mcp-now-generally-available/
+  - OpenAI ARC settings blog: https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores
+  - Gemini CLI 0.54.0‑preview.0 release: https://github.com/google-gemini/gemini-cli/releases/tag/v0.54.0-preview.0
+  - Vercel AI SDK v7.0.42 release: https://github.com/vercel/ai/releases/tag/ai%407.0.42
+- **Tier 2: Public Developer Evidence**
+  - MCP Brain Router repo: https://github.com/mohan-n-swamy/mcp-brain-router
+- **Tier 3: Public User Experience**
+  - Bluesky discussion on OpenRouter model mix: https://bsky.app/profile/azureweekly.info/post/5njoo7qbym4ct
