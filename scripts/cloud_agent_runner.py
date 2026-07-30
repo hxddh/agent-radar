@@ -3978,6 +3978,112 @@ def warn_dropped_official_urls(old: str, new: str, rel_path: str) -> None:
         RUN_AUDIT["apply_warnings"].append(warning)
 
 
+def ensure_daily_accountability_lines(
+    result: dict[str, Any],
+    screen_text: str | None,
+    root: Path | None = None,
+) -> int:
+    """Write the Coverage ledger and honest direction-gap lines the runner owns.
+
+    Free-tier models reliably omit these formatting contracts — the ledger line
+    and the `Missing <class>: ...` escape hatches — and the direction gate then
+    voided the finished report (Issue #80, 2026-07-30). Every fact needed is
+    already in the runner's hands (which lanes answered, which priority vendors
+    were dark, what screening actually produced), so the runner states it
+    itself instead of demanding the model restate it. Facts only: when the
+    runner has no evidence a class was absent, it writes nothing."""
+    bodies = daily_update_bodies(result)
+    if not bodies:
+        return 0
+    text = strip_radar_sweep_sections("\n".join(bodies))
+    additions: list[str] = []
+    if not COVERAGE_LEDGER_RE.search(text):
+        checked = sorted(
+            {
+                str(entry.get("name", "")).split(":", 1)[0]
+                for entry in RUN_AUDIT.get("source_status", [])
+                if isinstance(entry, dict) and entry.get("status") == "ok" and entry.get("name")
+            }
+        )
+        missed = sorted(SHARED_VENDOR_GAPS)
+        checked_text = ", ".join(checked[:24]) if checked else "unknown (collector snapshot unavailable)"
+        missed_text = ", ".join(missed[:12]) if missed else "none recorded"
+        additions.append(
+            f"- Coverage ledger: checked={checked_text}; missed={missed_text} "
+            "(auto-added by the runner from collector telemetry)"
+        )
+    if not content_has_user_workflow_signal(text) and not content_has_direction_gap(text, "user"):
+        actionable = int(RUN_AUDIT.get("screening_actionable_user", 0) or 0)
+        detail = (
+            f"screening surfaced {actionable} actionable user_workflow candidate(s) "
+            "but the synthesis covered none"
+            if actionable
+            else "screening surfaced no actionable user_workflow candidates today"
+        )
+        additions.append(
+            f"- Missing user_workflow: {detail} (auto-added by the runner)"
+        )
+    if not content_has_mainstream_signal(text) and not content_has_direction_gap(text, "mainstream"):
+        additions.append(
+            "- Missing mainstream_product: no vendor product delta reached the day block "
+            "(auto-added by the runner; see the Radar Sweep for screened candidates)"
+        )
+    if not additions:
+        return 0
+    body = "\n".join(additions)
+    injected = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for update in raw_updates:
+        if not isinstance(update, dict):
+            continue
+        rel_path = str(update.get("path", "")).replace("\\", "/")
+        if not is_daily_month_path(rel_path):
+            continue
+        if isinstance(update.get("english_block"), str):
+            update["english_block"] = _append_assessment_lines(
+                str(update["english_block"]), body
+            )
+            injected += 1
+            continue
+        content = str(update.get("content", ""))
+        if not content.strip():
+            continue
+        english_end = content.find("### 中文")
+        if english_end != -1:
+            update["content"] = (
+                _append_assessment_lines(content[:english_end], body) + content[english_end:]
+            )
+        else:
+            update["content"] = _append_assessment_lines(content, body)
+        injected += 1
+    if injected:
+        RUN_AUDIT["accountability_lines_added"] = len(additions)
+        warning = (
+            f"Auto-added {len(additions)} accountability line(s) the model omitted "
+            "(Coverage ledger / Missing-class Gaps)"
+        )
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return injected
+
+
+def _append_assessment_lines(block: str, body: str) -> str:
+    """Append lines to `#### 8. Assessment & Gaps`, creating it when absent."""
+    pattern = re.compile(r"(?ms)^#### 8\. Assessment & Gaps\s*\n(.*?)(?=^#### |\Z)")
+    match = pattern.search(block)
+    if match:
+        existing = match.group(1).rstrip()
+        replacement = (
+            f"#### 8. Assessment & Gaps\n\n{existing}\n{body}\n\n"
+            if existing
+            else f"#### 8. Assessment & Gaps\n\n{body}\n\n"
+        )
+        return block[: match.start()] + replacement + block[match.end() :]
+    return block.rstrip() + f"\n\n#### 8. Assessment & Gaps\n\n{body}\n"
+
+
 def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     bodies = daily_update_bodies(result)
     if not bodies:
@@ -4305,6 +4411,7 @@ def validate_synthesis_result(
                 "Cover high-confidence mainstream candidates before emerging repos."
             )
         inject_deterministic_radar_sweep(result)
+        ensure_daily_accountability_lines(result, screen_text, root=root)
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text, root=root, day=day)
         validate_daily_section_structure(result)
@@ -6663,6 +6770,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "model_weighted_recall": RUN_AUDIT.get("model_weighted_recall", 0.0),
         "model_mainstream_recall": RUN_AUDIT.get("model_mainstream_recall", 0.0),
         "mainstream_auto_added": RUN_AUDIT.get("mainstream_auto_added", 0),
+        "accountability_lines_added": RUN_AUDIT.get("accountability_lines_added", 0),
         "mainstream_recall": RUN_AUDIT.get("mainstream_recall", 0.0),
         "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
         "must_cover_missing": RUN_AUDIT.get("must_cover_missing", 0),
@@ -6803,6 +6911,7 @@ def run_task(
     RUN_AUDIT["model_weighted_recall"] = 0.0
     RUN_AUDIT["model_mainstream_recall"] = 0.0
     RUN_AUDIT["mainstream_auto_added"] = 0
+    RUN_AUDIT["accountability_lines_added"] = 0
     RUN_AUDIT["stale_roundup_count"] = 0
     RUN_AUDIT["must_cover_mainstream"] = 0
     RUN_AUDIT["must_cover_missing"] = 0

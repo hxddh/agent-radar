@@ -2609,6 +2609,55 @@ class TransportResilienceTest(unittest.TestCase):
         # Third attempt = round 2 of the chain; 429 backoff honors Retry-After (45s).
         self.assertTrue(any(t >= 45 for t in sleeps), sleeps)
 
+    def test_ensure_daily_accountability_lines_writes_ledger_and_gaps(self) -> None:
+        # Issue #80 (2026-07-30): the model omitted the Coverage ledger and the
+        # `Missing user_workflow` escape hatch, and the direction gate voided the
+        # finished daily. The runner owns those facts, so it states them.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        cloud_agent_runner.RUN_AUDIT["source_status"] = [
+            {"name": "github:search", "status": "ok", "detail": ""},
+            {"name": "hn:algolia", "status": "ok", "detail": ""},
+            {"name": "bluesky:x", "status": "error", "detail": "403"},
+        ]
+        cloud_agent_runner.RUN_AUDIT["screening_actionable_user"] = 2
+        cloud_agent_runner.SHARED_VENDOR_GAPS[:] = ["xai", "vercel"]
+        content = (
+            "## 2026-07-30\n\n### English\n\n"
+            "#### 1. Lead Analysis\n\nNarrative.\n\n"
+            "#### 2. New Signals\n\n- Signal: OpenAI shipped something.\n"
+            "  - Source: https://openai.com/index/x\n\n"
+            "#### 8. Assessment & Gaps\n\n- Watchlist unchanged.\n\n"
+            "### 中文\n\n#### 1. Lead Analysis\n\n主线。\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        added = cloud_agent_runner.ensure_daily_accountability_lines(result, None)
+        self.assertEqual(added, 1)
+        english = result["updates"][0]["content"].split("### 中文")[0]
+        self.assertIn("- Coverage ledger: checked=", english)
+        self.assertIn("github", english)
+        self.assertIn("missed=vercel, xai", english)  # sorted for determinism
+        self.assertIn("Missing user_workflow: screening surfaced 2 actionable", english)
+        self.assertIn("- Watchlist unchanged.", english)  # model content kept
+        # The gate that used to refuse now passes on the repaired payload.
+        cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["coverage_ledger_present"])
+        cloud_agent_runner.SHARED_VENDOR_GAPS.clear()
+        cloud_agent_runner.RUN_AUDIT["source_status"] = []
+
+    def test_ensure_daily_accountability_lines_is_noop_when_present(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        content = (
+            "## 2026-07-30\n\n### English\n\n"
+            "#### 2. New Signals\n\n- Signal: vendor delta. https://openai.com/x\n\n"
+            "#### 4. User Workflow & Field Notes\n\n"
+            "- Tool: operator trick.\n  - Scenario: concrete pain point and command.\n"
+            "  - Source: https://news.ycombinator.com/item?id=1\n\n"
+            "#### 8. Assessment & Gaps\n\n- Coverage ledger: checked=github; missed=none\n"
+        )
+        result = {"updates": [{"path": "daily/2026-07.md", "mode": "append", "content": content}]}
+        self.assertEqual(cloud_agent_runner.ensure_daily_accountability_lines(result, None), 0)
+        self.assertEqual(result["updates"][0]["content"], content)
+
     def test_inject_missing_mainstream_signals_repairs_dropped_must_cover(self) -> None:
         # Issue #80 (07-29/07-30): free-tier models dropped MUST mainstream
         # candidates and the recall/must-cover gates voided the whole daily.
