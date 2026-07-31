@@ -6471,37 +6471,69 @@ def recover_section_target(
     ``None`` means the section is genuinely new.
     """
     if within and not section_anchor_exists(old, within, None):
-        recovered_within = _match_existing_heading(old, within, None)
-        within = recovered_within
+        # The `within` block itself is missing (retitled or invented): recover it
+        # when exactly one block matches, otherwise search the whole file.
+        within = _match_existing_heading(old, within, None)
     if section_anchor_exists(old, anchor, within):
         return anchor, within
+    # A `within` that does exist always confines the search. Escaping it would
+    # let a `## 中文` update retarget onto the mirrored `## English` section.
     recovered = _match_existing_heading(old, anchor, within)
     if recovered:
         return recovered, within
-    if within is not None:
-        recovered = _match_existing_heading(old, anchor, None)
-        if recovered:
-            return recovered, None
     return None
 
 
-def append_section_block(old: str, heading: str, body: str) -> str:
-    """Append a new `heading` + `body` section, keeping bilingual blocks intact.
+def _top_block_bounds(lines: list[str], heading_key: str) -> tuple[int, int] | None:
+    """Bounds of the `## <heading_key>` block, exclusive of its own heading."""
+    for index, line in enumerate(lines):
+        if heading_level(line) == 2 and heading_match_key(line) == heading_key:
+            end = len(lines)
+            for follow in range(index + 1, len(lines)):
+                if heading_level(lines[follow]) == 2:
+                    end = follow
+                    break
+            return index + 1, end
+    return None
 
-    Weekly/monthly reports mirror every section under `## English` and `## 中文`;
-    a brand-new subsection belongs at the end of the English block, not after the
-    Chinese one.
+
+def append_section_block(old: str, heading: str, body: str, within: str | None = None) -> str:
+    """Append a new `heading` + `body` section into the right bilingual block.
+
+    Weekly/monthly reports mirror every section under `## English` and `## 中文`,
+    and a run adds a new section twice — once per language. The update's `within`
+    decides which block it belongs to; without one, a subsection defaults to the
+    end of the English block so it never lands after the Chinese one.
     """
     lines = old.splitlines()
-    insert_at = len(lines)
+    bounds = None
     if (heading_level(heading) or 2) > 2:
-        for index, line in enumerate(lines):
-            if heading_level(line) == 2 and heading_match_key(line) == "english":
-                for follow in range(index + 1, len(lines)):
-                    if heading_level(lines[follow]) == 2:
-                        insert_at = follow
-                        break
+        if within:
+            bounds = _top_block_bounds(lines, heading_match_key(within))
+        if bounds is None:
+            bounds = _top_block_bounds(lines, "english")
+    # Idempotent within its own block: re-running the same month must rewrite the
+    # section it already wrote, not stack a second copy of it.
+    block_start, block_end = bounds if bounds else (0, len(lines))
+    existing = next(
+        (
+            index
+            for index in range(block_start, block_end)
+            if heading_level(lines[index]) and lines[index].strip() == heading.strip()
+        ),
+        None,
+    )
+    if existing is not None:
+        level = heading_level(lines[existing]) or 2
+        drop_end = block_end
+        for follow in range(existing + 1, block_end):
+            found = heading_level(lines[follow])
+            if found and found <= level:
+                drop_end = follow
                 break
+        lines = lines[:existing] + lines[drop_end:]
+        block_end -= drop_end - existing
+    insert_at = block_end if bounds else len(lines)
     while insert_at > 0 and not lines[insert_at - 1].strip():
         insert_at -= 1
     block = [heading]
@@ -6550,7 +6582,7 @@ def merge_update_content(
                     f"replace_section anchor not found ({anchor!r}); appended a new section instead"
                 )
                 heading = clean_section_heading(anchor, keep_level=True)
-                return append_section_block(old, heading, content)
+                return append_section_block(old, heading, content, within=within)
         return replace_section_content(old, anchor, content, within=within)
     if mode in {"full", "replace"}:
         return content if content.endswith("\n") else content + "\n"

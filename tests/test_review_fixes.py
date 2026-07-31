@@ -333,6 +333,45 @@ class DailyLimitsAndPruneTest(unittest.TestCase):
         self.assertIn("- 甲", out)
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
 
+    def test_new_section_is_appended_into_the_within_block(self) -> None:
+        # The 2026-07-31 monthly emitted `### Weekly Coverage` twice, once per
+        # language. Ignoring `within` stacked both copies in the English block.
+        old = "# M\n\n## English\n\n### 1. Sum\n\n- a\n\n## 中文\n\n### 1. 摘\n\n- 甲\n"
+        first = cloud_agent_runner.merge_update_content(
+            old,
+            "replace_section",
+            "- W30 EN\n",
+            anchor="### Weekly Coverage",
+            within="## English",
+            allow_append_fallback=True,
+        )
+        out = cloud_agent_runner.merge_update_content(
+            first,
+            "replace_section",
+            "- W30 中文\n",
+            anchor="### Weekly Coverage",
+            within="## 中文",
+            allow_append_fallback=True,
+        )
+        self.assertEqual(out.count("### Weekly Coverage"), 2)
+        self.assertLess(out.index("- W30 EN"), out.index("## 中文"))
+        self.assertGreater(out.index("- W30 中文"), out.index("## 中文"))
+
+    def test_within_block_confines_anchor_recovery(self) -> None:
+        # A `## 中文` update must never be retargeted onto the mirrored English
+        # section — that silently overwrites one language with the other.
+        old = "# M\n\n## English\n\n### Weekly Coverage\n\n- EN body\n\n## 中文\n\n### 1. 摘\n\n- 甲\n"
+        out = cloud_agent_runner.merge_update_content(
+            old,
+            "replace_section",
+            "- 中文 body\n",
+            anchor="### Weekly Coverage",
+            within="## 中文",
+            allow_append_fallback=True,
+        )
+        self.assertIn("- EN body", out)
+        self.assertGreater(out.index("- 中文 body"), out.index("## 中文"))
+
     def test_renumbered_anchor_is_recovered_not_appended(self) -> None:
         # A retitled/renumbered anchor is a naming slip: retarget it onto the one
         # heading that matches, instead of appending a duplicate section.

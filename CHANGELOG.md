@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.21.4 - 2026-07-31
+
+Follow-up to v0.21.3, from its first production run: the monthly emitted `### Weekly Coverage` twice — once per language — and both copies landed in the `## English` block, because the append fallback ignored the update's `within`.
+
+### Fixed
+- `append_section_block()` honors `within`: a new section is appended at the end of the block the update names, so the Chinese copy lands under `## 中文`. Without a `within`, a subsection still defaults to the end of the English block. Re-appending the same heading rewrites the copy already in that block instead of stacking a second one.
+- `recover_section_target()` no longer escapes a `within` block that exists. The whole-file fallback could retarget a `## 中文` update onto the mirrored `## English` section, silently overwriting one language with the other; only a `within` the file does not have is dropped.
+- `monthly/2026-07.md`: moved the duplicated Chinese `### Weekly Coverage` section out of the English block.
+
+
 ## v0.21.3 - 2026-07-31
 
 Hotfix for the 2026-07-31 scheduled run (Issue #80): `Task monthly failed: Refusing to replace section: anchor not found: '### Weekly Coverage'`. The fifth run-voiding gate of the same family — the model named a section the month file does not have, and report files were excluded from the append fallback, so the whole monthly task was discarded. `prompts/runner-rules.md` had been promising the append behaviour to the model all along; it was only ever true for non-report files.
