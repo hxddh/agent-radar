@@ -451,3 +451,30 @@ class DailyLimitsAndPruneTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GatewayTokenUsageTest(unittest.TestCase):
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["token_usage"] = {}
+
+    def test_usage_accumulates_per_model(self) -> None:
+        cloud_agent_runner.record_gateway_usage(
+            "openai/gpt-5-nano", {"usage": {"prompt_tokens": 1200, "completion_tokens": 300}}
+        )
+        cloud_agent_runner.record_gateway_usage(
+            "openai/gpt-5-nano", {"usage": {"prompt_tokens": 800, "completion_tokens": 100}}
+        )
+        cloud_agent_runner.record_gateway_usage(
+            "openai/gpt-oss-120b", {"usage": {"input_tokens": 5000, "output_tokens": 2000}}
+        )
+        usage = cloud_agent_runner.RUN_AUDIT["token_usage"]
+        self.assertEqual(usage["openai/gpt-5-nano"], {"calls": 2, "input_tokens": 2000, "output_tokens": 400})
+        self.assertEqual(usage["openai/gpt-oss-120b"]["input_tokens"], 5000)
+        self.assertEqual(cloud_agent_runner.total_gateway_tokens(), (7000, 2400))
+
+    def test_missing_or_empty_usage_is_not_guessed(self) -> None:
+        cloud_agent_runner.record_gateway_usage("m", {"choices": []})
+        cloud_agent_runner.record_gateway_usage("m", {"usage": {}})
+        cloud_agent_runner.record_gateway_usage("m", {"usage": {"prompt_tokens": 0}})
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["token_usage"], {})
+        self.assertEqual(cloud_agent_runner.total_gateway_tokens(), (0, 0))

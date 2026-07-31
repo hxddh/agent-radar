@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.22.0 - 2026-07-31
+
+The runner budgeted AI Gateway **calls**, never tokens, so a paid route had no way to show where a monthly spend went. Required before moving any stage off the free tier.
+
+### Added
+- `record_gateway_usage()` accumulates the `usage` block every Gateway response reports, per model (calls / input tokens / output tokens). Missing or zero usage is recorded as nothing rather than estimated.
+- `token_usage`, `input_tokens`, and `output_tokens` are written to `automation/telemetry/YYYY-MM.jsonl`; the run log gains a per-model token line. Monthly spend is now `sum(input_tokens) x rate + sum(output_tokens) x rate` from real data.
+
+
 ## v0.21.4 - 2026-07-31
 
 Follow-up to v0.21.3, from its first production run: the monthly emitted `### Weekly Coverage` twice — once per language — and both copies landed in the `## English` block, because the append fallback ignored the update's `within`.

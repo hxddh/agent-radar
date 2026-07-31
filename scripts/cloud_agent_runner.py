@@ -664,6 +664,7 @@ RUN_AUDIT: dict[str, Any] = {
     "source_lanes": {},
     "collected_source_items": 0,
     "budget_status": "normal",
+    "token_usage": {},
     "started_at": 0.0,
     "prompt_chars": 0,
     "output_chars": 0,
@@ -5976,6 +5977,44 @@ def model_call_timeout(model: str) -> int:
     return env_int("MODEL_TIMEOUT", 900)
 
 
+def record_gateway_usage(model: str, parsed: dict[str, Any]) -> None:
+    """Accumulate the token usage the Gateway reports, per model.
+
+    The runner budgets calls, not tokens, so a paid route had no way to show
+    where the monthly spend went. Providers report `usage` on the OpenAI-shaped
+    response; anything missing is counted as zero rather than guessed.
+    """
+    usage = parsed.get("usage") if isinstance(parsed, dict) else None
+    if not isinstance(usage, dict):
+        return
+
+    def field(*names: str) -> int:
+        for name in names:
+            value = usage.get(name)
+            if isinstance(value, (int, float)):
+                return int(value)
+        return 0
+
+    prompt_tokens = field("prompt_tokens", "input_tokens")
+    completion_tokens = field("completion_tokens", "output_tokens")
+    if not prompt_tokens and not completion_tokens:
+        return
+    by_model = RUN_AUDIT.setdefault("token_usage", {})
+    entry = by_model.setdefault(str(model), {"calls": 0, "input_tokens": 0, "output_tokens": 0})
+    entry["calls"] += 1
+    entry["input_tokens"] += prompt_tokens
+    entry["output_tokens"] += completion_tokens
+
+
+def total_gateway_tokens() -> tuple[int, int]:
+    """(input, output) tokens across every model used in this run."""
+    by_model = RUN_AUDIT.get("token_usage") or {}
+    return (
+        sum(int(entry.get("input_tokens", 0)) for entry in by_model.values()),
+        sum(int(entry.get("output_tokens", 0)) for entry in by_model.values()),
+    )
+
+
 def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
     payload = {
         "model": model,
@@ -6093,6 +6132,7 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             message = choices[0].get("message")
             if isinstance(message, dict):
                 message["content"] = content
+        record_gateway_usage(candidate_model, parsed)
         return parsed
     raise SystemExit(last_error or "Vercel AI Gateway API error.")
 
@@ -6833,6 +6873,8 @@ def append_run_log(root: Path, task: str, day: dt.date, changed: int, summary: s
         f"- Collected source items before trim: {RUN_AUDIT['collected_source_items']}",
         f"- Files changed: {changed}",
         f"- Budget status: {RUN_AUDIT['budget_status']}",
+        f"- Tokens (input/output): {total_gateway_tokens()[0]} / {total_gateway_tokens()[1]}",
+        f"- Tokens by model: {json.dumps(RUN_AUDIT.get('token_usage', {}), sort_keys=True)}",
         f"- Fallbacks: {fallbacks}",
         f"- Summary: {summary or 'none'}",
         f"- Source count reported by model: {len(sources)}",
@@ -6896,6 +6938,9 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "source_error_count": len(RUN_AUDIT["source_errors"]),
         "source_lanes": RUN_AUDIT.get("source_lanes", {}),
         "budget_status": RUN_AUDIT["budget_status"],
+        "token_usage": RUN_AUDIT.get("token_usage", {}),
+        "input_tokens": total_gateway_tokens()[0],
+        "output_tokens": total_gateway_tokens()[1],
         "duration_seconds": round(time.time() - float(RUN_AUDIT.get("started_at", time.time())), 2),
         "summary": summary,
         "model_source_count": len(sources),
@@ -7038,6 +7083,7 @@ def run_task(
     RUN_AUDIT["source_lanes"] = {}
     RUN_AUDIT["collected_source_items"] = 0
     RUN_AUDIT["budget_status"] = "normal"
+    RUN_AUDIT["token_usage"] = {}
     RUN_AUDIT["started_at"] = time.time()
     RUN_AUDIT["prompt_chars"] = 0
     RUN_AUDIT["output_chars"] = 0
