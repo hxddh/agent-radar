@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.22.1 - 2026-07-31
+
+Spends the monthly model budget where telemetry says the quality is actually lost.
+
+### Changed
+- `SCREENING_SHARD_GROUPS` is hardcoded to `4` (four separate lanes). The v0.20.1 merge to `2` saved free-tier quota at the cost of roughly half the candidate pool, and the pool is what caps breadth. Cost is calls, not dollars. Hardcoded rather than `vars.*`-driven for the same reason as the collection knobs in v0.19.0: a stale repo variable silently undid the last such change.
+- `CHEAP_SCREEN_MODEL` default moves to `openai/gpt-5-mini`. Screening is where the pool collapsed (95 -> 16) and is the cheapest stage to pay for — input-heavy, output-tiny. Synthesis stays on the free `openai/gpt-oss-120b`, whose `model_mainstream_recall` is now 1.00. The screening fallback chain is unchanged and still free, so a billing or quota problem degrades quality instead of failing the run.
+- `docs/cloud-agent.md` records the route and why only screening is paid.
+
+
 ## v0.22.0 - 2026-07-31
 
 The runner budgeted AI Gateway **calls**, never tokens, so a paid route had no way to show where a monthly spend went. Required before moving any stage off the free tier.
