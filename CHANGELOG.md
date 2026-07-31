@@ -1,5 +1,61 @@
 # Changelog
 
+## v0.21.3 - 2026-07-31
+
+Hotfix for the 2026-07-31 scheduled run (Issue #80): `Task monthly failed: Refusing to replace section: anchor not found: '### Weekly Coverage'`. The fifth run-voiding gate of the same family — the model named a section the month file does not have, and report files were excluded from the append fallback, so the whole monthly task was discarded. `prompts/runner-rules.md` had been promising the append behaviour to the model all along; it was only ever true for non-report files.
+
+### Fixed
+- `replace_section` with a missing anchor is now repaired rather than refused. `recover_section_target()` first retargets the update onto the one existing heading whose title matches (numbering, case, markup, and heading level ignored) — this covers the common `### 2. Watchlist Changes` → `### Watchlist changes` slip and a `within` block the file does not have. Only when nothing matches does the append fallback run.
+- The append fallback now applies to weekly/monthly reports, preserves the anchor's own heading level (`### Weekly Coverage` stays a subsection), and inserts at the end of the `## English` block so a new English section no longer lands after the `## 中文` one.
+- `daily/YYYY-MM.md` stays strict: only a `## YYYY-MM-DD` day-block anchor may be appended (equivalent to `append`, and still covered by the duplicate-day gate), and fuzzy anchor recovery requires a `within` day block, because every day block repeats the same `#### N.` titles.
+- `prompts/runner-rules.md` now describes the real behaviour, including the daily exception.
+
+## v0.21.2 - 2026-07-30
+
+Fourth gate of the same class voided the daily (Issue #80): `missing user_workflow signal and no Gaps bullet named Missing user_workflow`. Free-tier models reliably omit these formatting contracts, and the runner already holds every fact they assert.
+
+### Fixed
+- `ensure_daily_accountability_lines()` writes the `- Coverage ledger:` line (from `source_status` + `SHARED_VENDOR_GAPS`, deterministic and sorted) and the `Missing user_workflow` / `Missing mainstream_product` gap lines into `#### 8. Assessment & Gaps` when the model omitted them — facts only, model content and the Chinese block untouched.
+
+## v0.21.1 - 2026-07-30
+
+### Fixed
+- A dead citation URL now has the offending link stripped (`strip_dead_citations()`) instead of voiding the update; only a bullet left without any source raises.
+- A duplicated `## Candidate inbox` heading in a `research-log.md` append is dropped and the bullets kept under the existing inbox.
+
+## v0.21.0 - 2026-07-30
+
+Two consecutive dailies (07-29, 07-30) were lost to `model_weighted_recall = 0.000` — the free-tier model dropped every MUST mainstream candidate.
+
+### Fixed
+- `inject_missing_mainstream_signals()` appends dropped MUST candidates to `#### 3. Mainstream Agent Progress` as bare labeled bullets and recomputes recall **before** the recall gates run, so the gates judge the repaired block.
+
+## v0.20.3 - 2026-07-29
+
+### Fixed
+- The runner's day-heading regex was stricter than `radar_corpus_audit`'s, so a heading with a suffix passed the audit and then duplicated on merge (Issue #80). `ANY_DAILY_DATE_HEADING` now mirrors the audit pattern, `canonicalize_daily_headings()` normalizes suffixes, and `drop_shell_duplicate_day_blocks()` removes an ensure-created shell superseded by the real day block.
+
+## v0.20.2 - 2026-07-28
+
+### Fixed
+- Two older screening-shard tests assumed the default shard count and broke under CI's `SCREENING_SHARD_GROUPS=2`; the value is now pinned explicitly in every shard test.
+
+## v0.20.1 - 2026-07-28
+
+Free-quota budget work: halve auxiliary call volume without dropping the daily cadence.
+
+### Changed
+- `auto_tasks()`: source-sweep runs Mon/Thu instead of daily, weekly and promote-candidates run Sunday only, monthly runs on the 15th and the last day of the month. The daily still runs every day.
+- `SCREENING_SHARD_GROUPS` merges screening shards (workflow sets `2`), halving screening calls per run.
+
+## v0.20.0 - 2026-07-27
+
+Free-tier operating mode, after inference moved to the Vercel AI Gateway free models and the pipeline began failing on 429s and thin output. Per the standing constraint, the fix adapts the pipeline to weak free-tier output rather than restoring paid models.
+
+### Added
+- `inject_deterministic_radar_sweep()` generates `#### 7. Radar Sweep` from the full screening pool after the model responds, so breadth no longer depends on model output budget. `prompts/daily-update.md` tells the model to leave section 7 empty.
+- `call_ai_gateway_model()` retries HTTP 429 across `AI_GATEWAY_429_ROUNDS` rounds honoring `Retry-After`, and paces all Gateway calls with a global `AI_GATEWAY_CALL_INTERVAL` floor.
+
 ## Unreleased
 
 ### Changed
