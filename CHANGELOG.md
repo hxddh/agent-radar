@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.22.2 - 2026-07-31
+
+The v0.22.1 verification run showed the shard change working (pool 22 -> 36, signals 6 -> 7) but exposed two problems with the rest of it.
+
+### Fixed
+- **Shared screening's tokens were being discarded.** Screening runs in the preflight, before `run_task()`'s per-task reset. That reset carried the call count over via `preflight_screen_calls` but reset `token_usage` to `{}` — throwing away the usage of the exact stage that is moving to a paid model. Only 2 of 10 calls in the last run recorded any tokens. The preflight snapshot is now passed through and merged (`merge_token_usage()`).
+- **A stale repo Actions variable kept screening on Nano.** `CHEAP_SCREEN_MODEL` was `vars.*`-driven, and a repository variable overrode the v0.22.1 default — the run's `models` list shows `openai/gpt-5-nano`, never Mini, so the paid upgrade never took effect. This is the same failure mode that cost v0.19.0 its collection breadth. The three primary models are now pinned in `.github/workflows/cloud-agent.yml`; the route is a budget decision and the repo must state what actually runs. Fallback chains stay `vars.*`-driven (they are free models either way).
+
+
 ## v0.22.1 - 2026-07-31
 
 Spends the monthly model budget where telemetry says the quality is actually lost.

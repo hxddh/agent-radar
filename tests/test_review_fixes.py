@@ -478,3 +478,38 @@ class GatewayTokenUsageTest(unittest.TestCase):
         cloud_agent_runner.record_gateway_usage("m", {"usage": {"prompt_tokens": 0}})
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["token_usage"], {})
         self.assertEqual(cloud_agent_runner.total_gateway_tokens(), (0, 0))
+
+    def test_merge_token_usage_sums_counters(self) -> None:
+        dst: dict[str, dict[str, int]] = {}
+        cloud_agent_runner.merge_token_usage(
+            dst, {"m": {"calls": 1, "input_tokens": 10, "output_tokens": 2}}
+        )
+        cloud_agent_runner.merge_token_usage(
+            dst, {"m": {"calls": 2, "input_tokens": 5, "output_tokens": 1}, "n": {"calls": 1}}
+        )
+        self.assertEqual(dst["m"], {"calls": 3, "input_tokens": 15, "output_tokens": 3})
+        self.assertEqual(dst["n"]["calls"], 1)
+        cloud_agent_runner.merge_token_usage(dst, None)
+        cloud_agent_runner.merge_token_usage(dst, {"bad": "not-a-dict"})
+        self.assertNotIn("bad", dst)
+
+    def test_preflight_screening_tokens_survive_the_task_reset(self) -> None:
+        # Shared screening runs before run_task's reset. Its calls were carried
+        # over via preflight_screen_calls but its tokens were being discarded —
+        # exactly the stage most likely to be on a paid model.
+        cloud_agent_runner.RUN_AUDIT["token_usage"] = {}
+        cloud_agent_runner.record_gateway_usage(
+            "openai/gpt-5-mini", {"usage": {"prompt_tokens": 40000, "completion_tokens": 900}}
+        )
+        preflight = cloud_agent_runner.merge_token_usage(
+            {}, cloud_agent_runner.RUN_AUDIT["token_usage"]
+        )
+        # what run_task's reset now does
+        cloud_agent_runner.RUN_AUDIT["token_usage"] = cloud_agent_runner.merge_token_usage(
+            {}, preflight
+        )
+        cloud_agent_runner.record_gateway_usage(
+            "openai/gpt-oss-120b", {"usage": {"prompt_tokens": 26000, "completion_tokens": 6000}}
+        )
+        self.assertEqual(cloud_agent_runner.total_gateway_tokens(), (66000, 6900))
+        self.assertIn("openai/gpt-5-mini", cloud_agent_runner.RUN_AUDIT["token_usage"])
