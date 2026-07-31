@@ -6006,6 +6006,21 @@ def record_gateway_usage(model: str, parsed: dict[str, Any]) -> None:
     entry["output_tokens"] += completion_tokens
 
 
+def merge_token_usage(
+    dst: dict[str, dict[str, int]], src: dict[str, Any] | None
+) -> dict[str, dict[str, int]]:
+    """Fold one per-model usage map into another, summing every counter."""
+    for model, entry in (src or {}).items():
+        if not isinstance(entry, dict):
+            continue
+        target = dst.setdefault(str(model), {"calls": 0, "input_tokens": 0, "output_tokens": 0})
+        for field in ("calls", "input_tokens", "output_tokens"):
+            value = entry.get(field)
+            if isinstance(value, (int, float)):
+                target[field] = target.get(field, 0) + int(value)
+    return dst
+
+
 def total_gateway_tokens() -> tuple[int, int]:
     """(input, output) tokens across every model used in this run."""
     by_model = RUN_AUDIT.get("token_usage") or {}
@@ -7072,6 +7087,7 @@ def run_task(
     *,
     shared_screened: str | None = None,
     preflight_screen_calls: int = 0,
+    preflight_token_usage: dict[str, Any] | None = None,
 ) -> None:
     RUN_AUDIT["provider"] = model_provider()
     RUN_AUDIT["models"] = []
@@ -7083,7 +7099,10 @@ def run_task(
     RUN_AUDIT["source_lanes"] = {}
     RUN_AUDIT["collected_source_items"] = 0
     RUN_AUDIT["budget_status"] = "normal"
-    RUN_AUDIT["token_usage"] = {}
+    # Shared screening runs in the preflight, before this reset. Its calls are
+    # already carried over via preflight_screen_calls; its tokens must be too —
+    # screening is the stage most likely to be on a paid model.
+    RUN_AUDIT["token_usage"] = merge_token_usage({}, preflight_token_usage)
     RUN_AUDIT["started_at"] = time.time()
     RUN_AUDIT["prompt_chars"] = 0
     RUN_AUDIT["output_chars"] = 0
@@ -7312,12 +7331,14 @@ def main(argv: list[str] | None = None) -> int:
 
     shared_screened: str | None = None
     preflight_screen_calls = 0
+    preflight_token_usage: dict[str, dict[str, int]] = {}
     if (
         shared_collection is not None
         and shared_screening_enabled()
         and any(task_uses_screening(task) for task in tasks)
     ):
         shared_screened, preflight_screen_calls = preflight_shared_screening(shared_collection, root, day)
+        preflight_token_usage = merge_token_usage({}, RUN_AUDIT.get("token_usage"))
 
     failures: list[str] = []
     succeeded = 0
@@ -7330,6 +7351,7 @@ def main(argv: list[str] | None = None) -> int:
                 shared_collection=shared_collection,
                 shared_screened=shared_screened if task_uses_screening(task) else None,
                 preflight_screen_calls=preflight_screen_calls if index == 0 and shared_screened else 0,
+                preflight_token_usage=preflight_token_usage if index == 0 and shared_screened else None,
             )
             succeeded += 1
         except SystemExit as exc:
