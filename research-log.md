@@ -3014,3 +3014,6 @@ All candidates above are added to the inbox for further evaluation during daily 
 
 
 - **Cloudflare Privacy Proxy CLI** (scr-cloudflare-privacy-proxy): Open‑source CLI for privacy‑preserving proxying, relevant to agent security stacks. Evidence strength: Strong; source: https://blog.cloudflare.com/open-sourcing-our-privacy-proxy-cli/ (added to research log for tracking adoption).
+
+- **NMEMORY** (scr-1a2b3c4d): memory module for coding agents offering persistent vector‑based state. Evidence strength: Medium; relevance score: 7. Defer reason: Needs production validation. Follow‑up needed: Benchmark against existing agent memory solutions. candidate_seen_at: 2026-07-31, last_checked_at: 2026-07-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/menot-you/n-memory
+- **ResiliReplay** (scr-52d1f9a3): chaos‑testing harness for MCP servers to inject failures and verify agent pipeline resilience. Evidence strength: Medium; relevance score: 7. Defer reason: Requires safe test environment. Follow‑up needed: Run against internal MCP clusters. candidate_seen_at: 2026-07-31, last_checked_at: 2026-07-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/aliengineering-byte/resilireplay

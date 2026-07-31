@@ -1,0 +1,288 @@
+{
+  "summary": "Top discussion signals from Bluesky/HN/Reddit/Dev.to on agent workflows, security, and MCP tooling. | Synthesis of OSS agent tooling signals focusing on mainstream product updates, operator workflows, and runtime/sandbox primitives.",
+  "candidates": [
+    {
+      "id": "scr-8dca1f2b",
+      "title": "Claude sandbox escape discussed on Bluesky",
+      "why_it_matters": "Security risk: sandbox escapes reveal containment gaps in Claude deployments.",
+      "evidence": [
+        "https://papoo.work/doc/692ec18cccae113e",
+        "https://bsky.app/profile/papoo7.bsky.social/post/3mrvzxyzdp52o"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4a9b7c1e",
+      "title": "Grok/Claude multi-agent dev workflow promo",
+      "why_it_matters": "Promotes multi-agent dev workflow with Claude, Grok, and Kimi; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/trendai.bsky.social/post/3mrvd33rkdi2w"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-52d1f9a3",
+      "title": "ResiliReplay: Chaos testing for MCP servers",
+      "why_it_matters": "Chaos testing signals focus on MCP-based AI agent reliability",
+      "evidence": [
+        "https://github.com/aliengineering-byte/resilireplay"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9f0b2e4a",
+      "title": "Conductor launches multiplayer cloud workspaces for AI agents",
+      "why_it_matters": "New orchestration tool enabling parallel agent runs",
+      "evidence": [
+        "https://runtimewire.com/article/conductor-launches-multiplayer-cloud-workspaces-coding-agents"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3b7e6c9a",
+      "title": "Sam Altman on X: major price cuts for Copilot",
+      "why_it_matters": "Pricing signals and market shifts for major AI coding assistants; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/GithubCopilot/comments/1vbfuig/sam_altman_on_x_major_price_cuts_today_80_drop/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "market",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-7a2d3c5b",
+      "title": "Grok Build: CLI research in progress",
+      "why_it_matters": "CLI-based deep research workflow for cross-model agent orchestration; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/anotherbug.com/post/3mrvdc6suyf2o"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "NMEMORY: memory for coding agents",
+      "why_it_matters": "Memory module discussion for agent know-how",
+      "evidence": [
+        "https://github.com/menot-you/n-memory"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ],
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-6d7e8f9a",
+      "title": "Audit, Observability & Lineage for Enterprise AI Agents",
+      "why_it_matters": "OTel tracing and audit logs for multi-agent workloads",
+      "evidence": [
+        "https://dev.to/jitu028/audit-observability-lineage-for-enterprise-ai-agents-106m"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "observability",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-vercel-ai-1",
+      "title": "Vercel AI SDK workflow releases",
+      "why_it_matters": "Changelog notes for AI workflow tooling.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow@1.0.44",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow-harness%401.0.50"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-google-gemini-cli-054",
+      "title": "Google Gemini CLI releases",
+      "why_it_matters": "Official Gemini CLI updates and nightly builds.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.54.0-preview.0",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.55.0-nightly.20260730.gdc859e8e4"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cloudflare-agents-0-20-1",
+      "title": "Cloudflare Agents/Think/AI-Chat/Hono releases",
+      "why_it_matters": "Sandboxed/runtime tooling and policy components for MCP-based agents.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.20.1",
+        "https://github.com/cloudflare/think/releases/tag/%40cloudflare/think%400.15.1",
+        "https://github.com/cloudflare/agents/releases/tag/hono-agents%403.0.11"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-microsoft-agent-governance-toolkit",
+      "title": "Microsoft Agent Governance Toolkit",
+      "why_it_matters": "Policy enforcement and zero-trust identity for autonomous agents.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/microsoft/agent-governance-toolkit"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openai-codex-rust-releases-147",
+      "title": "OpenAI Codex Rust releases",
+      "why_it_matters": "OpenAI Codex updates including alpha releases.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.147.0-alpha.2",
+        "https://github.com/openai/codex/releases/tag/rust-v0.146.0",
+        "https://github.com/openai/codex/releases/tag/rust-v0.147.0-alpha.1"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-cline-cline-091",
+      "title": "Cline: Autonomous coding agent SDK/CLI",
+      "why_it_matters": "Declarative multi-agent CLI workflows for autonomous coding harnesses.; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/cline/cline",
+        "https://github.com/cline/cline/releases/tag/v4.1.0",
+        "https://github.com/cline/cline/releases/tag/sdk/sdk/v0.0.67",
+        "https://github.com/cline/cline/releases/tag/cli-v3.0.48"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-agent-lane-112",
+      "title": "agent-lane: Declarative multi-agent CLI workflow orchestration",
+      "why_it_matters": "YAML-driven coordination of autonomous coding harnesses.; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/billy12151/agent-lane"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-opencode-v1-18-10",
+      "title": "OpenCode v1.18.10 release",
+      "why_it_matters": "OSS agent-coding runtime tooling update.",
+      "evidence": [
+        "https://github.com/anomalyco/opencode/releases/tag/v1.18.10"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: expected coverage from additional vendor platforms (e.g., OpenAI, Google, Microsoft) beyond the current set.",
+    "Missing social/discussion signals: Bluesky/Reddit/HN/X posts to strengthen user_workflow signals."
+  ]
+}
