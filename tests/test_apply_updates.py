@@ -122,6 +122,67 @@ class ApplyUpdatesTest(unittest.TestCase):
             self.assertNotIn("- old thesis", text)
             self.assertIn("### 16. Watch Next Week", text)
 
+    def test_monthly_replace_section_with_new_anchor_is_appended(self) -> None:
+        # Issue #80: `Refusing to replace section: anchor not found:
+        # '### Weekly Coverage'` killed the whole monthly task.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "monthly" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Monthly\n\n## English\n\n### 1. Executive Summary\n\n- summary point\n\n"
+                "## 中文\n\n### 1. 摘要\n\n- 摘要要点\n",
+                encoding="utf-8",
+            )
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["monthly/2026-07.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "monthly/2026-07.md",
+                            "mode": "replace_section",
+                            "anchor": "### Weekly Coverage",
+                            "content": "- 2026-W30: https://example.com/w30\n",
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertIn("### Weekly Coverage", text)
+            self.assertIn("https://example.com/w30", text)
+            self.assertIn("- summary point", text)
+            self.assertLess(text.index("### Weekly Coverage"), text.index("## 中文"))
+
+    def test_daily_replace_section_with_unknown_subsection_still_refused(self) -> None:
+        # Day blocks repeat the same `#### N.` titles, so appending an orphan
+        # subsection at the end of the month file would corrupt an older day.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "daily" / "2026-07.md"
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                "# Daily\n\n## 2026-07-01\n\n### English\n\n#### 2. New Signals\n\n"
+                "- Signal: old\n\n### 中文\n\n#### 2. 新信号\n\n- 信号：旧\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["daily/2026-07.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "daily/2026-07.md",
+                                "mode": "replace_section",
+                                "anchor": "#### 9. Invented Section",
+                                "content": "- Signal: new\n",
+                            }
+                        ]
+                    },
+                )
+
     def test_allows_append_style_update(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

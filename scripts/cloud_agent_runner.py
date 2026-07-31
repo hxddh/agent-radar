@@ -6402,17 +6402,115 @@ def section_anchor_exists(old: str, anchor: str, within: str | None = None) -> b
     return any(lines[index].strip() == anchor_line for index in range(start_search, search_end))
 
 
-def clean_section_heading(anchor: str) -> str:
-    """Normalize a possibly-malformed anchor into a clean `## Title` heading.
+def clean_section_heading(anchor: str, keep_level: bool = False) -> str:
+    """Normalize a possibly-malformed anchor into a clean heading.
 
     Models sometimes pass an anchor like ``## - **ruvnet/ruflo**`` (heading prefix
-    glued onto a markdown bullet) when they mean to add a new section.
+    glued onto a markdown bullet) when they mean to add a new section. With
+    ``keep_level`` the anchor's own heading depth is preserved, so a missing
+    ``### Weekly Coverage`` is appended as a subsection rather than promoted to a
+    top-level one.
     """
     text = anchor.strip()
+    level_match = re.match(r"^(#+)\s*", text)
+    level = len(level_match.group(1)) if (keep_level and level_match) else 2
     text = re.sub(r"^#+\s*", "", text)
     text = re.sub(r"^[-*]\s+", "", text)
     text = text.replace("**", "").strip()
-    return f"## {text}".rstrip()
+    return f"{'#' * max(2, min(level, 6))} {text}".rstrip()
+
+
+def heading_match_key(text: str) -> str:
+    """Comparison key for headings: level, numbering, case, and markup dropped."""
+    text = re.sub(r"^#+\s*", "", text.strip())
+    text = re.sub(r"^\d+(?:\.\d+)*[.)]?\s*", "", text)
+    text = text.replace("*", "").replace("`", "").replace("_", "")
+    return re.sub(r"[^0-9a-z一-鿿]+", "", text.lower())
+
+
+def _match_existing_heading(old: str, anchor: str, within: str | None) -> str | None:
+    """Find the one existing heading equivalent to ``anchor`` (numbering aside)."""
+    want = heading_match_key(anchor)
+    if not want:
+        return None
+    lines = old.splitlines()
+    start_search = 0
+    search_end = len(lines)
+    if within:
+        within_line = normalize_section_anchor(within).strip()
+        within_level = heading_level(within_line)
+        for index, line in enumerate(lines):
+            if line.strip() == within_line:
+                start_search = index + 1
+                for follow in range(index + 1, len(lines)):
+                    level = heading_level(lines[follow])
+                    if level and level <= within_level:
+                        search_end = follow
+                        break
+                break
+        else:
+            return None
+    found = {
+        lines[index].strip()
+        for index in range(start_search, search_end)
+        if heading_level(lines[index]) and heading_match_key(lines[index]) == want
+    }
+    if len(found) == 1:
+        return found.pop()
+    return None
+
+
+def recover_section_target(
+    old: str, anchor: str, within: str | None
+) -> tuple[str, str | None] | None:
+    """Repair a `replace_section` target that does not literally exist.
+
+    Free-tier models routinely retitle a section (`### 2. Watchlist Changes` ->
+    `### Watchlist Changes`) or name a `within` block the file does not have.
+    Both are recoverable when exactly one existing heading matches; returning
+    ``None`` means the section is genuinely new.
+    """
+    if within and not section_anchor_exists(old, within, None):
+        recovered_within = _match_existing_heading(old, within, None)
+        within = recovered_within
+    if section_anchor_exists(old, anchor, within):
+        return anchor, within
+    recovered = _match_existing_heading(old, anchor, within)
+    if recovered:
+        return recovered, within
+    if within is not None:
+        recovered = _match_existing_heading(old, anchor, None)
+        if recovered:
+            return recovered, None
+    return None
+
+
+def append_section_block(old: str, heading: str, body: str) -> str:
+    """Append a new `heading` + `body` section, keeping bilingual blocks intact.
+
+    Weekly/monthly reports mirror every section under `## English` and `## 中文`;
+    a brand-new subsection belongs at the end of the English block, not after the
+    Chinese one.
+    """
+    lines = old.splitlines()
+    insert_at = len(lines)
+    if (heading_level(heading) or 2) > 2:
+        for index, line in enumerate(lines):
+            if heading_level(line) == 2 and heading_match_key(line) == "english":
+                for follow in range(index + 1, len(lines)):
+                    if heading_level(lines[follow]) == 2:
+                        insert_at = follow
+                        break
+                break
+    while insert_at > 0 and not lines[insert_at - 1].strip():
+        insert_at -= 1
+    block = [heading]
+    if body.strip():
+        block += ["", *body.strip("\n").splitlines()]
+    tail = lines[insert_at:]
+    spacer = [""] if tail and tail[0].strip() else []
+    merged = lines[:insert_at] + ["", *block, *spacer] + tail
+    return "\n".join(merged).rstrip("\n") + "\n"
 
 
 def merge_update_content(
@@ -6422,6 +6520,7 @@ def merge_update_content(
     anchor: str | None = None,
     within: str | None = None,
     allow_append_fallback: bool = False,
+    recover_anchor: bool = True,
 ) -> str:
     mode = (mode or "full").strip().lower()
     if mode == "append":
@@ -6433,18 +6532,25 @@ def merge_update_content(
     if mode == "replace_section":
         if not anchor:
             raise SystemExit("replace_section update requires anchor")
-        if allow_append_fallback and old.strip() and not section_anchor_exists(old, anchor, within):
-            # The model used replace_section with an anchor that doesn't exist —
-            # almost always it meant to ADD a new section (e.g. promote a new
-            # candidate). Append a clean new section instead of discarding the
-            # whole task; the malformed/absent anchor is recorded as a warning.
-            RUN_AUDIT["apply_warnings"].append(
-                f"replace_section anchor not found ({anchor!r}); appended a new section instead"
-            )
-            heading = clean_section_heading(anchor)
-            body = content.strip()
-            block = heading + ("\n\n" + body if body else "")
-            return old.rstrip() + "\n\n" + block.rstrip() + "\n"
+        if old.strip() and not section_anchor_exists(old, anchor, within):
+            # A retitled or renumbered anchor is a naming slip, not a reason to
+            # drop the task: when exactly one existing heading matches, retarget
+            # the update onto it.
+            recovered = recover_section_target(old, anchor, within) if recover_anchor else None
+            if recovered and recovered != (anchor, within):
+                anchor, within = recovered
+                RUN_AUDIT["apply_warnings"].append(
+                    f"replace_section anchor {anchor!r} recovered from a mismatched target"
+                )
+            elif allow_append_fallback:
+                # The anchor names a genuinely new section — almost always the
+                # model meant to ADD it (a promoted candidate, a coverage table).
+                # Append it instead of discarding the whole task.
+                RUN_AUDIT["apply_warnings"].append(
+                    f"replace_section anchor not found ({anchor!r}); appended a new section instead"
+                )
+                heading = clean_section_heading(anchor, keep_level=True)
+                return append_section_block(old, heading, content)
         return replace_section_content(old, anchor, content, within=within)
     if mode in {"full", "replace"}:
         return content if content.endswith("\n") else content + "\n"
@@ -6599,14 +6705,29 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
             raise SystemExit(WEEKLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
         if mode == "full" and is_monthly_path(rel_path) and old_has_report_content:
             raise SystemExit(MONTHLY_REPLACE_SECTION_MESSAGE.format(path=rel_path))
-        is_report_file = rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/"))
+        # Daily month files are append-only day blocks: the only anchor that may
+        # be appended is a new `## YYYY-MM-DD` heading (which is what `append`
+        # would have done anyway, and the duplicate-day gate below still runs).
+        # Weekly/monthly reports may gain a genuinely new section — losing the
+        # whole task over one invented heading costs far more than the heading.
+        if is_daily_month_path(rel_path):
+            allow_append_fallback = bool(
+                anchor and ANY_DAILY_DATE_HEADING.match(normalize_section_anchor(str(anchor)))
+            )
+            # Every day block repeats the same `#### N.` titles, so a fuzzy match
+            # without a `within` day block would silently rewrite an old day.
+            recover_anchor = bool(within)
+        else:
+            allow_append_fallback = True
+            recover_anchor = True
         merged = merge_update_content(
             old,
             mode,
             content,
             str(anchor) if anchor else None,
             str(within) if within else None,
-            allow_append_fallback=not is_report_file,
+            allow_append_fallback=allow_append_fallback,
+            recover_anchor=recover_anchor,
         )
         if is_daily_month_path(rel_path):
             merged = canonicalize_daily_headings(merged)

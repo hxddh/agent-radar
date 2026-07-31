@@ -308,6 +308,76 @@ class DailyLimitsAndPruneTest(unittest.TestCase):
                 old, "replace_section", "- body", anchor="### 99. Nope", allow_append_fallback=False
             )
 
+    def test_monthly_new_section_is_appended_inside_english_block(self) -> None:
+        # Issue #80: the monthly task emitted `replace_section` for a section the
+        # month file never had (`### Weekly Coverage`) and the whole task was
+        # refused. It must append instead, at its own heading level, and land in
+        # the English block rather than after the Chinese one.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        old = (
+            "# Monthly\n\n## English\n\n### 1. Executive Summary\n\n- a\n\n"
+            "## 中文\n\n### 1. 摘要\n\n- 甲\n"
+        )
+        out = cloud_agent_runner.merge_update_content(
+            old,
+            "replace_section",
+            "- W30: https://example.com/w30\n",
+            anchor="### Weekly Coverage",
+            allow_append_fallback=True,
+        )
+        self.assertIn("### Weekly Coverage", out)
+        self.assertNotIn("\n## Weekly Coverage\n", out)  # level preserved
+        self.assertNotIn("\n\n\n", out)
+        self.assertLess(out.index("### Weekly Coverage"), out.index("## 中文"))
+        self.assertIn("- a", out)
+        self.assertIn("- 甲", out)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+
+    def test_renumbered_anchor_is_recovered_not_appended(self) -> None:
+        # A retitled/renumbered anchor is a naming slip: retarget it onto the one
+        # heading that matches, instead of appending a duplicate section.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        old = "# Weekly\n\n## English\n\n### 2. Watchlist Changes\n\n- old body\n"
+        out = cloud_agent_runner.merge_update_content(
+            old,
+            "replace_section",
+            "- new body\n",
+            anchor="### Watchlist changes",
+            allow_append_fallback=True,
+        )
+        self.assertIn("- new body", out)
+        self.assertNotIn("- old body", out)
+        self.assertEqual(out.count("Watchlist"), 1)
+        self.assertTrue(
+            any("recovered" in w for w in cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        )
+
+    def test_missing_within_block_is_recovered(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        old = "# Weekly\n\n## English\n\n### 3. Evidence\n\n- old\n"
+        out = cloud_agent_runner.merge_update_content(
+            old,
+            "replace_section",
+            "- new\n",
+            anchor="### 3. Evidence",
+            within="## English Report",
+            allow_append_fallback=True,
+        )
+        self.assertIn("- new", out)
+        self.assertNotIn("- old", out)
+
+    def test_recovery_is_skipped_when_disabled(self) -> None:
+        old = "# Daily\n\n## 2026-07-01\n\n#### 2. New Signals\n\n- old\n"
+        with self.assertRaises(SystemExit):
+            cloud_agent_runner.merge_update_content(
+                old,
+                "replace_section",
+                "- new\n",
+                anchor="#### 2. New signals",
+                allow_append_fallback=False,
+                recover_anchor=False,
+            )
+
     def test_existing_anchor_is_still_replaced(self) -> None:
         old = "# Watchlist\n\n## Cursor\n\n- old body\n"
         out = cloud_agent_runner.merge_update_content(
