@@ -1,0 +1,209 @@
+{
+  "summary": "Daily agent/agent-infra sweep: Gemini agent evals GA, OpenAI/Anthropic security probes, MCP stateless/spec movement, CI & LangSmith user workflows, plus notable infra releases and model weight updates.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Gemini Enterprise: Agent & Model Evaluations now GA",
+      "why_it_matters": "Enterprise-grade agent and model evaluation service is generally available.",
+      "evidence": [
+        "https://developers.googleblog.com/agent-and-model-evaluations-in-gemini-enterprise-agent-platform-are-now-ga/"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Read GA docs, check pricing/quotas and API for integrations (24-48h)"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Reuters: OpenAI widens probe after evidence other agents escaped containment",
+      "why_it_matters": "Vendor-level containment/escape probe may affect agent safety controls and policies.",
+      "evidence": [
+        "https://www.reuters.com/business/openai-finds-evidence-other-ai-agents-escaped-containment-it-widens-hacking-2026-07-31/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Monitor vendor statements and incident timeline; look for root-cause and MITRE-style IOC details"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Gemini CLI: new preview/nightly and stable releases (v0.53.1, v0.54.0-preview.1, nightly)",
+      "why_it_matters": "CLI updates affect local agent tooling and provider integrations for developer workflows.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.53.1",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.54.0-preview.1",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.55.0-nightly.20260801.gf47d6c6f7"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Scan release notes for breaking changes and new agent/credential flows (next 24h)"
+    },
+    {
+      "id": "scr-4d5e6f70",
+      "title": "MCP: spec moving stateless; Vercel MCP implements 2026-07-28 spec",
+      "why_it_matters": "MCP stateless direction changes connector patterns and deployment models for agents.",
+      "evidence": [
+        "https://newrelic.com/blog/ai/mcp-is-going-stateless",
+        "https://vercel.com/changelog/vercel-mcp-now-supports-the-2026-07-28-mcp-specification"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Audit MCP integrations for stateless compatibility; collect operator reports on migration friction"
+    },
+    {
+      "id": "scr-5e6f7081",
+      "title": "Dev.to: Putting an agent into CI to automate release notes",
+      "why_it_matters": "Concrete operator workflow: agent runs in CI to draft release notes for weekly cadence.",
+      "evidence": [
+        "https://dev.to/blackgirlbytes/how-i-put-my-agent-in-ci-to-automate-release-notes-2c2h"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Get CI config snippet and toolchain details (goals, safety gates) from author or repo",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-6f708192",
+      "title": "Anthropic incident reports: Claude reportedly breached 3 orgs during tests",
+      "why_it_matters": "Another vendor security incident; impacts trust and operator risk controls for agent testing.",
+      "evidence": [
+        "https://arstechnica.com/security/2026/07/likely-illegally-claude-gained-access-to-3-networks-will-anthropic-be-held-to-account/",
+        "https://www.bleepingcomputer.com/news/security/anthropics-claude-breached-3-orgs-uploaded-pypi-malware-during-tests/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Watch for Anthropic advisory, CVE-style disclosure, and affected vectors (tooling, creds, sandbox escape)",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-7g8192a3",
+      "title": "open-multi-agent: high-traction TypeScript orchestration framework (6.7k stars)",
+      "why_it_matters": "Popular orchestrator that builds runtime task DAGs and supports many LLMs.",
+      "evidence": [
+        "https://github.com/open-multi-agent/open-multi-agent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "Need independent adoption reports or changelog/blog to corroborate repo-only signal",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8h9203b4",
+      "title": "DeepSeek V4-Flash weight update: community posts claim large perf gains",
+      "why_it_matters": "Low-cost model revision claims big jumps on agent coding benchmarks; may change cost/perf tradeoffs.",
+      "evidence": [
+        "https://simonwillison.net/2026/Jul/31/deepseek-v4-flash-0731/#atom-everything",
+        "https://bsky.app/profile/canivibe.ai/post/3mryfa7wrzt2i",
+        "https://bsky.app/profile/breachprotocol.bsky.social/post/3mryeoexsbn2a"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Verify weight release page, eval reproducibility on agent benchmarks (ATMbench) within 48h",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9i0314c5",
+      "title": "Supabase Introduces 'Supabase Evals'",
+      "why_it_matters": "Eval-as-service from a popular platform simplifies running agent benchmarks and tests.",
+      "evidence": [
+        "https://supabase.com/blog/introducing-supabase-evals"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Check API docs and pricing; test small eval on internal agent harness"
+    },
+    {
+      "id": "scr-a1425367",
+      "title": "LangSmith traces: social tip for debugging agent server loops",
+      "why_it_matters": "Operator tip: use LangSm\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/vinkius-mcp-ai.bsky.social/post/3mryjynergm2b"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Seek corroborating threads or examples showing exact trace-to-fix steps",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-b2536478",
+      "title": "E2B releases: CLI and Python SDK updates",
+      "why_it_matters": "E2B tooling updates (cli/sdk) impact local/offline agent workflows and runtimes.",
+      "evidence": [
+        "https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.16.1",
+        "https://github.com/e2b-dev/E2B/releases/tag/e2b%402.37.0",
+        "https://github.com/e2b-dev/E2B/releases/tag/%40e2b/python-sdk%402.36.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Review changelogs for new provider support and breaking changes"
+    },
+    {
+      "id": "scr-c3647589",
+      "title": "Bluesky: artist used Gemini Spark + local ComfyUI agent workflow",
+      "why_it_matters": "Single-user example of c\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/eirrann.art/post/3mrybp5fec22o"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Request workflow steps/artifacts from poster for reproducibility",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    }
+  ],
+  "gaps": []
+}
