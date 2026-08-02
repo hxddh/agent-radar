@@ -3017,3 +3017,9 @@ All candidates above are added to the inbox for further evaluation during daily 
 
 - **NMEMORY** (scr-1a2b3c4d): memory module for coding agents offering persistent vector‑based state. Evidence strength: Medium; relevance score: 7. Defer reason: Needs production validation. Follow‑up needed: Benchmark against existing agent memory solutions. candidate_seen_at: 2026-07-31, last_checked_at: 2026-07-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/menot-you/n-memory
 - **ResiliReplay** (scr-52d1f9a3): chaos‑testing harness for MCP servers to inject failures and verify agent pipeline resilience. Evidence strength: Medium; relevance score: 7. Defer reason: Requires safe test environment. Follow‑up needed: Run against internal MCP clusters. candidate_seen_at: 2026-07-31, last_checked_at: 2026-07-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/aliengineering-byte/resilireplay
+
+## Promotion updates
+
+- **Vercel AI v7.0.42** (scr-vercel-ai): promotion_status: promoted – added to storage‑angle as a workflow‑primitive signal.
+- **OpenHands cloud 1.46.2** (scr-openhands): promotion_status: promoted – added to agent‑watchlist as an emerging coding‑agent platform.
+- **agenticow** (scr-agenticow): promotion_status: promoted – added to storage‑angle as a memory‑primitive signal.

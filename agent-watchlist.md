@@ -367,3 +367,12 @@ Status:
 - Evidence strength: Strong
 - Why it matters: Updated Claude Code conductor improves orchestration and integration with agent workflows
 - Source: https://pypi.org/project/claude-code-conductor/2.51.1/
+
+## OpenHands Cloud
+
+- Category: Coding agent platform / cloud service
+- Maturity: Strong adoption signal; official GitHub release with UI and API.
+- Recent changes: Version 1.46.2 released (2026-07-19) adding multi‑agent orchestration, tool‑calling extensions, and enterprise billing integration.
+- Why it matters: Provides a hosted, scalable environment for coding agents, lowering deployment friction and enabling large‑scale agent workloads.
+- Evidence strength: Strong (GitHub release).
+- Source: https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.46.2

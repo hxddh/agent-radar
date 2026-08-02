@@ -254,3 +254,11 @@ AI Agent workloads create demand for:
 - Safety Alignment for Long‑Horizon Models (scr-openai-safety-horizon): Safety governance signals; informs per-task audit trails and containment. Source: https://openai.com/index/safety-alignment-long-horizon-models
 - Gemini 3.6 Flash Release (scr-gemini-3-6): Efficiency update for multi-agent tasks; may affect storage persistence due to longer-run tasks. Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
 - Claude Code Conductor 2.51.1 (scr-claude-code-conductor): Orchestration improvements for code agents; storage implications for task state and memories. Source: https://pypi.org/project/claude-code-conductor/2.51.1/
+
+### Workflow Primitives
+
+- 2026-07-30: Vercel AI SDK 0.7.0.42 adds richer agent‑workflow primitives (task queues, state‑persistence hooks, and multi‑tool orchestration APIs). Evidence strength: Strong. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.42
+
+### Agent Memory
+
+- 2026-07-12: agenticow npm package introduces copy‑on‑write vector branching for agent memory, claiming up to 83× faster performance. Evidence strength: Medium (performance claim needs verification). Source: https://www.npmjs.com/package/agenticow
