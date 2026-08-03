@@ -49,13 +49,15 @@ jobs:
       # exactly the failure mode that cost v0.19.0 its collection breadth.
       # Change the route in this file so the repo always states what runs.
       #
-      # Screening is the bottleneck (pool fell 95 -> 16 on the free route) and
-      # the cheapest stage to pay for: input-heavy, output-tiny, and output
-      # tokens are what cost money. Synthesis stays free — gpt-oss-120b's
-      # mainstream recall is already 1.00.
+      # Measured from 3 days of real token telemetry against a $4/month budget:
+      # the whole route on gpt-5-mini is ~$1.91/month (48%). gpt-5 anywhere
+      # overruns (105-129%), so Mini everywhere beats Nano+free with headroom.
+      # Synthesis moved off the free model after gpt-oss-120b lost the 2026-08-02
+      # weekly to "report lacks substantive 中文 content" — a recurring free-tier
+      # failure that costs a whole report.
       CHEAP_SCREEN_MODEL: 'openai/gpt-5-mini'
-      MAIN_RESEARCH_MODEL: 'openai/gpt-oss-120b'
-      FINAL_SYNTHESIS_MODEL: 'openai/gpt-oss-120b'
+      MAIN_RESEARCH_MODEL: 'openai/gpt-5-mini'
+      FINAL_SYNTHESIS_MODEL: 'openai/gpt-5-mini'
       MAX_PUBLIC_SOURCE_ITEMS: ${{ vars.MAX_PUBLIC_SOURCE_ITEMS || '' }}
       PUBLIC_SOURCE_COLLECTION: ${{ vars.PUBLIC_SOURCE_COLLECTION || 'true' }}
       MAX_AI_GATEWAY_CALLS_PER_TASK: ${{ vars.MAX_AI_GATEWAY_CALLS_PER_TASK || '' }}

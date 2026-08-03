@@ -39,8 +39,8 @@ and repository variables:
 ```text
 AGENT_RADAR_MODEL_PROVIDER=vercel-ai-gateway
 CHEAP_SCREEN_MODEL=openai/gpt-5-mini
-MAIN_RESEARCH_MODEL=openai/gpt-oss-120b
-FINAL_SYNTHESIS_MODEL=openai/gpt-oss-120b
+MAIN_RESEARCH_MODEL=openai/gpt-5-mini
+FINAL_SYNTHESIS_MODEL=openai/gpt-5-mini
 MAX_PUBLIC_SOURCE_ITEMS=
 PUBLIC_SOURCE_COLLECTION=true
 COLLECT_REDDIT=false
@@ -78,20 +78,24 @@ This mode uses Vercel AI Gateway only for model inference. It does not call paid
 
 Model routing stays bounded but discovery-oriented:
 
-- `daily`: GPT-5 Mini screens public signals, then GPT-OSS 120B writes the final file updates.
-- `source-sweep`: GPT-5 Mini screens public signals, then GPT-OSS 120B writes only `research-log.md` and `sources.md`.
-- `promote-candidates`: GPT-OSS 120B automatically promotes at most 3 high-quality candidates from `research-log.md`.
-- `weekly` and `monthly`: GPT-5 Mini screens public signals, then GPT-OSS 120B performs final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
+- `daily`: GPT-5 Mini screens public signals, then GPT-5 Mini writes the final file updates.
+- `source-sweep`: GPT-5 Mini screens public signals, then GPT-5 Mini writes only `research-log.md` and `sources.md`.
+- `promote-candidates`: GPT-5 Mini automatically promotes at most 3 high-quality candidates from `research-log.md`.
+- `weekly` and `monthly`: GPT-5 Mini screens public signals, then GPT-5 Mini performs final synthesis (default `MAX_AI_GATEWAY_CALLS_PER_TASK=2`).
 
-### Why only screening is paid
+### Why the route is paid, and why only Mini
 
-Telemetry located the quality bottleneck precisely. Collection is unchanged between the paid and free routes (~790 items/day across 17 lanes, ~87k prompt chars), and synthesis is healthy on the free GPT-OSS 120B (`model_mainstream_recall` 0.71 -> 1.00). What collapsed was the **candidate pool**: 95 on the paid route down to 16, and synthesis can only write about what screening surfaced.
+Telemetry located the quality bottleneck precisely. Collection is unchanged between the paid and free routes (~790 items/day across 17 lanes, ~87k prompt chars), and synthesis was healthy on the free GPT-OSS 120B (`model_mainstream_recall` 0.71 -> 1.00). What collapsed was the **candidate pool**: 95 on the paid route down to 16, and synthesis can only write about what screening surfaced.
 
-Screening is also the cheapest stage to pay for — it reads a lot and writes almost nothing, and output tokens are what cost money. So screening runs on a paid model while synthesis stays free, and `SCREENING_SHARD_GROUPS=4` keeps the four lanes separate: merging them into two saved free quota at the cost of roughly half the pool.
+`SCREENING_SHARD_GROUPS=4` keeps the four lanes separate: merging them into two saved free quota at the cost of roughly half the pool.
+
+Three days of real token telemetry, priced against the $4/month budget: the whole route on GPT-5 Mini is about **$1.91/month (48%)**. GPT-5 overruns it anywhere it is placed (105-129%), so Mini everywhere is the best available route, with headroom for usage spikes. Note that screening is not as cheap as "it reads a lot and writes almost nothing" suggests — its candidate JSON is substantial, and roughly 80% of the screening bill is output tokens.
+
+Synthesis moved off the free GPT-OSS 120B after it lost the 2026-08-02 weekly to `report lacks substantive 中文 content with CJK text` — a recurring free-tier failure that costs a whole report.
 
 Per-model token usage is recorded in `automation/telemetry/YYYY-MM.jsonl` (`token_usage`, `input_tokens`, `output_tokens`) and in the run log, so actual spend is measurable rather than estimated.
 
-Fallback is tiered by workload and is not part of the normal route. A failed Mini screening call falls back to the free Gemini 2.5 Flash Lite, so a billing or quota problem degrades quality instead of failing the run; a failed GPT-OSS synthesis call tries Nano, which is more reliable for the long bilingual schema. Fallback is limited to a 408/429/5xx response, transport timeout, empty response, or malformed/truncated JSON. The 32,768-token ceiling is an output cap rather than prepaid usage; tokens are billed only when generated.
+Fallback is tiered by workload and is not part of the normal route, and every fallback target is a free model: a failed Mini call drops to Gemini 2.5 Flash Lite (screening) or Flash Lite then GPT-5 Nano (synthesis). A billing or quota problem therefore degrades quality instead of failing the run. Fallback is limited to a 408/429/5xx response, transport timeout, empty response, or malformed/truncated JSON. The 32,768-token ceiling is an output cap rather than prepaid usage; tokens are billed only when generated.
 
 This keeps paid search calls at zero. Model usage is bounded by the fixed task route, `MAX_PUBLIC_SOURCE_ITEMS`, `MAX_AI_GATEWAY_CALLS_PER_TASK`, and `MAX_PROMPT_CHARS`.
 
