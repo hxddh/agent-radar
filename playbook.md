@@ -173,3 +173,15 @@ Evidence:
 - Prompt prefix `// style: <css‑framework>` steers generated UI components to match the team's design system.
 - Evidenced in Bluesky post showing a 30‑minute wireframe‑to‑code workflow.
 - Source: https://bsky.app/profile/aipulse-synestesia.bsky.social/post/3mr6agx6ojt2e (Medium)
+
+
+## Hardening eval sandboxes (2026-08-03)
+
+- Goal: Reduce blast radius when eval or CI‑style agents run generated code or long‑running tasks.
+- Steps:
+  1. Add a watchdog that kills any run exceeding wall time or CPU/memory budget.
+  2. Deny egress by default; provide an audited relay service for any web/tool access.
+  3. Use prompt/envelope encryption for secrets in prompts where supported (see OpenAI Codex npm v0.145.0‑alpha).
+  4. Capture full execution traces and signed checkpoints for post‑mortem.
+- Evidence: Anthropic containment blog; OpenAI Codex npm release. Sources: https://www.anthropic.com/engineering/how-we-contain-claude, https://www.npmjs.com/package/%40openai/codex
+- Applicable when running evals, local CI agents, or developer previews.

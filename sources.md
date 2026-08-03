@@ -1594,3 +1594,12 @@ Ignore or deprioritize:
   - MCP Brain Router repo: https://github.com/mohan-n-swamy/mcp-brain-router
 - **Tier 3: Public User Experience**
   - Bluesky discussion on OpenRouter model mix: https://bsky.app/profile/azureweekly.info/post/5njoo7qbym4ct
+
+
+## Recent additions (2026-08-03)
+- [mainstream_product] Anthropic — Introducing Claude Opus 5: https://www.anthropic.com/news/claude-opus-5
+- [mainstream_product] Claude Code incident reporting (Ars Technica): likely-illegally-Claude gained access to networks — https://arstechnica.com/security/2026/07/likely-illegally-claude-gained-access-to-3-networks-will-anthropic-be-held-to-account/
+- [user_workflow] DeepSeek tied to autonomous cyberattacks (HelpNetSecurity report): https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/
+- [infra_primitive] Mitos – millisecond microVM sandbox for agents (GitHub): https://github.com/mitos-run/mitos
+- [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent
+- [mainstream_product / social] DeepSeek V4-Flash-0731 release (social claim): https://bsky.app/profile/thenewstack.io/post/3ms6nv7azer2w

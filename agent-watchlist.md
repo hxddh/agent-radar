@@ -290,8 +290,10 @@ Status:
 
 ## Cloudflare Agents
 - Category: Edge agent platform / agent detection
-- Recent changes: SDK releases (agents@0.17.4, voice@0.3.4, think@0.13.0) on 2026‑07‑19; Precursor network‑layer detection launched 2026‑07‑16.
-- Source: https://blog.cloudflare.com/introducing-precursor/ (Strong)
+- Recent changes: Cloudflare published the "Computer" product framing and continues to ship agent SDKs (agents@0.17.4, voice@0.3.4, think@0.13.0). Blog post "Cloudflare Computer" outlines agent‑focused runtime and network/egress controls (2026‑07/08). Precursor network detection and MoQ relay docs remain relevant for containment strategies.
+- Why it matters: Cloudflare's edge + network posture can provide built‑in egress filtering and relay isolation useful for production agent deployments.
+- Evidence strength: Strong (official blog + SDK releases)
+- Source: https://blog.cloudflare.com/cloudflare-computer/; https://github.com/cloudflare/agents/releases
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
@@ -314,12 +316,11 @@ Status:
 
 ## Qwen Code
 - Category: Coding agent (open-weight)
-- Maturity: Active open-source coding agent from QwenLM; v0.19.12 stable release.
-- Recent changes: v0.19.12 stable released (2026-07-19). Open-weight model approach enables self-hosted deployments. Competes with Claude Code, Codex, and Gemini CLI in the terminal agent space.
-- Watch next: Whether Qwen Code gains enterprise adoption for cost-sensitive and on-premise deployments; benchmark comparisons against Claude Code and Codex.
-- replace_section anchor: `## Qwen Code`
-
-
+- Maturity: Active open‑source coding agent from QwenLM; ongoing releases maintain compatibility with developer toolchains.
+- Recent changes: v0.21.4 released (2026-08-02) with code tooling updates that operators should validate against CI/test suites.
+- Why it matters: Keeps an open‑weight coding agent option viable for self‑host and low‑latency workflows; competes with Claude/Codex/Gemini CLI.
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/QwenLM/qwen-code/releases/tag/v0.21.4
 ## agent-browser
 
 - Category: Browser automation / tool calling

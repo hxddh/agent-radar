@@ -262,3 +262,13 @@ AI Agent workloads create demand for:
 ### Agent Memory
 
 - 2026-07-12: agenticow npm package introduces copy‑on‑write vector branching for agent memory, claiming up to 83× faster performance. Evidence strength: Medium (performance claim needs verification). Source: https://www.npmjs.com/package/agenticow
+
+
+- 2026-08-03: Mem0 SDK v2.0.14 — memory primitives & auditable shared state
+  - Implication: persistent agent memories and replayable histories make object storage and signed artifact stores central to secure agent workflows.
+  - Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.14
+  - Watch trigger: adoption by major platforms (Claude, Codex) or public integrations demonstrating cross‑agent shared KBs.
+
+- 2026-08-03: Vercel AI SDK + gateway model availability
+  - Implication: gateway‑level model routing and workflow APIs put pressure on secure checkpointing, artifact signing, and short‑term object retention policies for agent tasks.
+  - Sources: https://github.com/vercel/ai/releases/tag/ai%407.0.42, https://vercel.com/changelog/qwen-3-8-max-now-available-on-vercel-ai-gateway

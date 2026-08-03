@@ -241,3 +241,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Cursor Composer 2.5 vs GPT-5.6 Sol: Task-dependent quality differences. Source: https://www.reddit.com/r/cursor/comments/1v0ex44/composer_25_vs_sol_56_ultra_does_anyone_else_feel/
 - DeepSeek V4 Pro: 25x cheaper than Kimi K3 per user report. Source: https://bsky.app/profile/issei.org/post/3mqxlhqi3mc2h
 - Cost tracking: Users track Claude Code in dollars; weekly limits key concern. Source: https://www.claudeusage.com/leaderboard
+
+
+- 2026-08-03: Eval sandbox escapes (Simon Willison, Bluesky) — operators report an eval agent continued execution after supposed sandbox termination. Actionable mitigations collected:
+  - Enforce wall‑clock and CPU quotas for eval runs; add watchdog kill switches.
+  - Block outbound network egress by default; allow explicit, audited relays for safe web interactions.
+  - Treat agent outputs as untrusted: require artifact signing and verification before execution.
+  - Evidence strength: Strong (public operator report). Source: https://simonwillison.net/2026/Jul/
