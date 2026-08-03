@@ -7,6 +7,7 @@ dead safety check) so it cannot regress.
 from __future__ import annotations
 
 import datetime as dt
+import json
 import importlib.util
 import os
 import tempfile
@@ -513,3 +514,116 @@ class GatewayTokenUsageTest(unittest.TestCase):
         )
         self.assertEqual(cloud_agent_runner.total_gateway_tokens(), (66000, 6900))
         self.assertIn("openai/gpt-5-mini", cloud_agent_runner.RUN_AUDIT["token_usage"])
+
+
+class DirectionGateHolesTest(unittest.TestCase):
+    """The direction quotas enforce 方向合理性; all three were inert."""
+
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["social_discussion_labeled"] = 0
+
+    def test_prose_words_no_longer_satisfy_the_discussion_gate(self) -> None:
+        # "operator" is in every block (the prompt asks each bullet for
+        # "So what: ... for an operator"), and "discussion" is in most Lead
+        # Analysis paragraphs. Both used to pass this gate on their own.
+        prose = (
+            "#### 1. Lead Analysis\n\nToday's discussion among operators centred on "
+            "agent security; the thread of vendor responses is the storyline.\n\n"
+            "#### 2. New Signals\n\n- Signal: OpenAI shipped X.\n"
+            "  - Source: https://openai.com/index/x\n"
+        )
+        self.assertFalse(cloud_agent_runner.content_has_social_discussion_signal(prose))
+
+    def test_cited_discussion_bullet_satisfies_the_gate(self) -> None:
+        cited = (
+            "#### 2. New Signals\n\n- Signal: HN debates agent sandboxes.\n"
+            "  - Source: https://news.ycombinator.com/item?id=1\n"
+        )
+        self.assertTrue(cloud_agent_runner.content_has_social_discussion_signal(cited))
+
+    def test_missing_x_none_is_not_a_declared_gap(self) -> None:
+        # `- Missing social/discussion: none` means nothing was missing. Read as
+        # a declared gap it both opened the escape hatch and forced
+        # has_discussion to False — two bugs that masked each other.
+        text = "#### 8. Assessment & Gaps\n\n- Missing social/discussion: none\n"
+        self.assertFalse(cloud_agent_runner.content_has_direction_gap(text, "discussion"))
+        real = "#### 8. Assessment & Gaps\n\n- Missing social/discussion: lanes were empty.\n"
+        self.assertTrue(cloud_agent_runner.content_has_direction_gap(real, "discussion"))
+
+    def test_bare_word_gap_no_longer_opens_the_escape_hatch(self) -> None:
+        # Section 8 is titled "Assessment & Gaps", so `"gap" in text` was true
+        # for every block: the mainstream and user hatches were always open.
+        text = "#### 8. Assessment & Gaps\n\n- Mainstream vendors looked quiet today.\n"
+        self.assertFalse(cloud_agent_runner.content_has_direction_gap(text, "mainstream"))
+        self.assertFalse(cloud_agent_runner.content_has_direction_gap(text, "user"))
+        named = "#### 8. Assessment & Gaps\n\n- Missing mainstream_product: nothing shipped.\n"
+        self.assertTrue(cloud_agent_runner.content_has_direction_gap(named, "mainstream"))
+
+
+class DiscussionInjectionTest(unittest.TestCase):
+    def test_dropped_discussion_candidates_are_auto_added(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["discussion_auto_added"] = 0
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "title": "Operators report Claude Code /doctor saves long runs",
+                        "why_it_matters": "Field workaround for stalled sessions.",
+                        "signal_class": "user_workflow",
+                        "relevance_score": 8,
+                        "evidence": ["https://www.reddit.com/r/ClaudeAI/comments/abc/x"],
+                    }
+                ]
+            }
+        )
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-08.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-08-03\n\n### English\n\n#### 2. New Signals\n\n"
+                        "- Signal: OpenAI shipped X.\n  - Source: https://openai.com/index/x\n\n"
+                        "### 中文\n\n#### 2. 新信号\n\n- 信号：OpenAI 发布 X。\n"
+                    ),
+                }
+            ]
+        }
+        injected = cloud_agent_runner.inject_missing_discussion_signals(result, screen)
+        self.assertEqual(injected, 1)
+        content = result["updates"][0]["content"]
+        self.assertIn("#### 4. User Workflow & Field Notes", content)
+        self.assertIn("reddit.com/r/ClaudeAI", content)
+        self.assertIn("auto-added by the runner", content)
+        # English block only — the Chinese block is left to the model.
+        self.assertLess(content.index("reddit.com"), content.index("### 中文"))
+        # And the repaired block now satisfies the gate it would have failed.
+        english = content[: content.index("### 中文")]
+        self.assertTrue(cloud_agent_runner.content_has_social_discussion_signal(english))
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["discussion_auto_added"], 1)
+
+    def test_already_covered_candidates_are_not_duplicated(self) -> None:
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "title": "Operators report Claude Code /doctor saves long runs",
+                        "evidence": ["https://www.reddit.com/r/ClaudeAI/comments/abc/x"],
+                    }
+                ]
+            }
+        )
+        result = {
+            "updates": [
+                {
+                    "path": "daily/2026-08.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-08-03\n\n### English\n\n#### 4. User Workflow & Field Notes\n\n"
+                        "- Signal: Operators report Claude Code /doctor saves long runs\n"
+                        "  - Source: https://www.reddit.com/r/ClaudeAI/comments/abc/x\n"
+                    ),
+                }
+            ]
+        }
+        self.assertEqual(cloud_agent_runner.inject_missing_discussion_signals(result, screen), 0)

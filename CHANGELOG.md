@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.23.0 - 2026-08-03
+
+Three days of paid-screening data. The pool recovered (16 -> 44) but the 2026-08-03 daily published with `discussion_signal_count = 0` and 6 vendor families, and no gate fired. Investigating why found that all three daily direction quotas — the checks that enforce direction and the first-class status of social/discussion sources — had been effectively inert.
+
+### Fixed
+- **The social/discussion gate matched vocabulary, not coverage.** `DISCUSSION_SOURCE_MARKERS` mixes URL hosts with prose words including `"operator"`, `"discussion"`, and `"thread"`. The daily prompt asks every signal bullet for `- So what: <... for an operator ...>`, so `"operator"` appears in every block: the gate could not fail. It now requires a signal bullet citing an actual discussion host, the same test `discussion_signal_count` already used (both now share `bullet_cites_discussion_host()` so they cannot drift apart again).
+- **`Missing <class>: none` counted as a declared gap.** The line means *nothing was missing*; read as a gap declaration it opened the escape hatch and simultaneously forced `has_discussion` to False. The two bugs masked each other. `GAP_DECLARED_NONE_RE` is anchored to end-of-line so a real gap that merely starts with the word ("`Missing mainstream_product: nothing shipped today.`") still counts.
+- **`"gap" in text and "mainstream" in text` opened the mainstream and user hatches permanently** — section 8 is titled "Assessment & Gaps", so `"gap"` is in every block. A gap must now be an explicit `Missing <class>: <reason>` line (`declared_gap_lines()`).
+
+### Added
+- `inject_missing_discussion_signals()` adds up to 3 dropped discussion/field candidates to `#### 4. User Workflow & Field Notes`, mirroring `inject_missing_mainstream_signals()`. Without it the repaired gate would have *refused* the 2026-08-03 daily (screening had 10 discussion candidates, the block covered none) — repairing beats voiding a finished report. Pre-repair `discussion_signal_count` stays in telemetry as the honest measure; `discussion_auto_added` records the repair.
+
+### Changed
+- The whole model route moves to `openai/gpt-5-mini`. Measured from real token telemetry against the $4/month budget: **≈$1.91/month (48%)**; GPT-5 overruns it anywhere it is placed (105–129%). Synthesis left the free GPT-OSS 120B after it lost the 2026-08-02 weekly to `report lacks substantive 中文 content`. Every fallback target remains a free model, so a billing problem degrades quality instead of failing the run.
+- Correction to the v0.22.1 note: screening is *not* output-tiny. Roughly 80% of its bill is output tokens.
+
+
 ## v0.22.2 - 2026-07-31
 
 The v0.22.1 verification run showed the shard change working (pool 22 -> 36, signals 6 -> 7) but exposed two problems with the rest of it.

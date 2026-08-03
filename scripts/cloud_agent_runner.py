@@ -1546,11 +1546,29 @@ def enrich_social_candidates(data: dict[str, Any], root: Path | None) -> dict[st
     return data
 
 
+def bullet_cites_discussion_host(bullet: str) -> bool:
+    """True when a bullet cites an actual discussion platform URL."""
+    low = bullet.lower()
+    return any(host in low for host in SOCIAL_EVIDENCE_HOSTS + ("dev.to",))
+
+
 def content_has_social_discussion_signal(text: str) -> bool:
-    lower = text.lower()
-    if "missing social" in lower or "missing discussion" in lower:
+    """True when a *signal bullet* cites a discussion platform.
+
+    This gate enforces the first-class status of social/discussion sources, so
+    it must match published coverage, not vocabulary. Matching the loose
+    `DISCUSSION_SOURCE_MARKERS` prose words made it unfalsifiable: the daily
+    prompt asks every signal bullet for `- So what: <... for an operator ...>`,
+    so "operator" appears in every block, and "discussion" appears in most Lead
+    Analysis paragraphs. The 2026-08-03 daily passed this gate with
+    `discussion_signal_count = 0` on the strength of one narrative sentence.
+    """
+    if content_has_direction_gap(text, "discussion"):
         return False
-    return any(marker in lower for marker in DISCUSSION_SOURCE_MARKERS)
+    return any(
+        bullet.startswith("- ") and bullet_cites_discussion_host(bullet)
+        for bullet in split_daily_signal_bullets(text)
+    )
 
 
 def reclassify_repo_as_user_workflow(candidate: dict[str, Any]) -> bool:
@@ -2669,16 +2687,49 @@ def content_has_user_workflow_signal(text: str) -> bool:
     return any(marker in lower for marker in ACTIONABLE_USER_WORKFLOW_MARKERS)
 
 
+# `- Missing social/discussion: none` is the model stating that nothing was
+# missing — the opposite of a declared gap. Counting it as an escape hatch let a
+# day block skip the very direction the gate exists to enforce.
+# Anchored to end-of-line on purpose: the "none" value must be the WHOLE value.
+# `Missing mainstream_product: nothing shipped today.` is a real declared gap
+# that merely starts with "nothing".
+GAP_DECLARED_NONE_RE = re.compile(
+    r"missing\s+[^\n:]{0,60}:\s*(?:none|n/?a|no\s+gaps?|nothing(?:\s+missing)?|无|没有)"
+    r"\s*[.。!！]?\s*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def declared_gap_lines(text: str, *needles: str) -> list[str]:
+    """`Missing <class>` lines that actually declare a gap.
+
+    A gap must be an explicit `Missing <class>: <reason>` line. The previous
+    `"gap" in text and "mainstream" in text` form was unfalsifiable — section 8
+    is titled "Assessment & Gaps", so "gap" is present in every block, which
+    held the escape hatch permanently open and made the direction quotas inert.
+    """
+    lines = []
+    for line in text.splitlines():
+        low = line.lower()
+        if not any(needle in low for needle in needles):
+            continue
+        if GAP_DECLARED_NONE_RE.search(line):
+            continue
+        lines.append(line.strip())
+    return lines
+
+
 def content_has_direction_gap(text: str, kind: str) -> bool:
-    lower = text.lower()
     if kind == "mainstream":
-        return "missing mainstream_product" in lower or (
-            "gap" in lower and "mainstream" in lower
-        )
+        return bool(declared_gap_lines(text, "missing mainstream_product", "missing mainstream"))
     if kind == "user":
-        return "missing user_workflow" in lower or (
-            "gap" in lower and ("user_workflow" in lower or "user evidence" in lower or "user field" in lower)
+        return bool(
+            declared_gap_lines(
+                text, "missing user_workflow", "missing user evidence", "missing user field"
+            )
         )
+    if kind == "discussion":
+        return bool(declared_gap_lines(text, "missing social", "missing discussion"))
     return False
 
 
@@ -3760,11 +3811,10 @@ def audit_daily_depth(result: dict[str, Any]) -> None:
     storage_watch_triggers = english.lower().count("watch trigger")
     # Community share: bullets citing a discussion platform anywhere in the
     # block — excluding Radar Sweep one-liners, which are listings, not signals.
-    discussion_hosts = SOCIAL_EVIDENCE_HOSTS + ("dev.to",)
     discussion_signals = sum(
         1
         for bullet in split_daily_signal_bullets(strip_radar_sweep_sections(english))
-        if bullet.startswith("- ") and any(host in bullet.lower() for host in discussion_hosts)
+        if bullet.startswith("- ") and bullet_cites_discussion_host(bullet)
     )
     RUN_AUDIT["discussion_signal_count"] = discussion_signals
     RUN_AUDIT["daily_signal_count"] = signal_section_count
@@ -4112,12 +4162,7 @@ def validate_daily_direction_quota(result: dict[str, Any]) -> None:
     vendors = vendor_families_in_text(text)
     themes = breadth_themes_in_text(text)
     has_discussion = content_has_social_discussion_signal(text)
-    discussion_gap = (
-        "missing social" in text.lower()
-        or "missing discussion" in text.lower()
-        or ("gap" in text.lower() and "discussion" in text.lower())
-        or ("gap" in text.lower() and "social" in text.lower())
-    )
+    discussion_gap = content_has_direction_gap(text, "discussion")
     RUN_AUDIT["direction_mainstream"] = has_mainstream
     RUN_AUDIT["direction_user_workflow"] = has_user
     RUN_AUDIT["direction_infra_count"] = infra_count
@@ -4342,20 +4387,125 @@ def inject_missing_mainstream_signals(
     return injected
 
 
+MAX_AUTO_DISCUSSION_BULLETS = 3
+
+
+def inject_missing_discussion_signals(
+    result: dict[str, Any],
+    screen_text: str | None,
+    root: Path | None = None,
+    day: dt.date | None = None,
+) -> int:
+    """Add screened discussion/field candidates the model dropped.
+
+    Social/discussion sources are first-class radar inputs, but free-tier
+    synthesis drops them first: the 2026-08-03 daily published with
+    `social_discussion_labeled=10` and `discussion_signal_count=0`. Refusing
+    would void a finished report, so the runner repairs the omission the same
+    way it repairs dropped mainstream deltas. Pre-repair
+    `discussion_signal_count` stays in telemetry as the honest measure of what
+    the model itself wrote.
+    """
+    if not screen_text:
+        return 0
+    data = enrich_screening_with_ids(parse_screening_json(screen_text))
+    candidates = [
+        cand
+        for cand in data.get("candidates", [])
+        if isinstance(cand, dict)
+        and (is_social_only_evidence(cand) or candidate_has_discussion_evidence(cand))
+    ]
+    if not candidates:
+        return 0
+    hay = "\n".join(daily_update_bodies(result) + [str(result.get("summary", ""))]).lower()
+    missing = [
+        cand
+        for cand in candidates
+        if not candidate_mentioned_in_text(cand, hay, strict=True)
+    ][:MAX_AUTO_DISCUSSION_BULLETS]
+    if not missing:
+        return 0
+    bullets: list[str] = []
+    for cand in missing:
+        title = " ".join(str(cand.get("title", "?")).split())
+        why = " ".join(str(cand.get("why_it_matters", "")).split())[:200].strip()
+        evidence = cand.get("evidence", [])
+        url = ""
+        for item in evidence if isinstance(evidence, list) else []:
+            if bullet_cites_discussion_host(str(item)):
+                url = str(item)
+                break
+        if not url and isinstance(evidence, list) and evidence:
+            url = str(evidence[0])
+        if not url:
+            continue
+        lines = [f"- Signal: {title}"]
+        if why:
+            lines.append(f"  - Why it matters: {why}")
+        lines.append("  - Category: User workflow / field report")
+        lines.append("  - Source class: Discussion (auto-added by the runner)")
+        lines.append("  - Evidence strength: Medium (auto-added; not narrated by the model)")
+        lines.append(f"  - Source: {url}")
+        bullets.append("\n".join(lines))
+    if not bullets:
+        return 0
+    section_body = "\n\n".join(bullets)
+    injected = 0
+    raw_updates = result.get("updates")
+    if not isinstance(raw_updates, list):
+        return 0
+    for update in raw_updates:
+        if not isinstance(update, dict):
+            continue
+        if not is_daily_month_path(str(update.get("path", "")).replace("\\", "/")):
+            continue
+        if isinstance(update.get("english_block"), str):
+            update["english_block"] = _append_discussion_bullets(
+                str(update["english_block"]), section_body
+            )
+            injected += 1
+            continue
+        content = str(update.get("content", ""))
+        if not content.strip():
+            continue
+        english_end = content.find("### 中文")
+        if english_end != -1:
+            update["content"] = (
+                _append_discussion_bullets(content[:english_end], section_body)
+                + content[english_end:]
+            )
+        else:
+            update["content"] = _append_discussion_bullets(content, section_body)
+        injected += 1
+    if injected:
+        RUN_AUDIT["discussion_auto_added"] = len(bullets)
+    return injected
+
+
+def _append_discussion_bullets(block: str, section_body: str) -> str:
+    """Put auto-added field reports at the end of `#### 4. User Workflow & Field Notes`."""
+    return _append_section_bullets(block, 4, "User Workflow & Field Notes", section_body)
+
+
 def _append_mainstream_bullets(block: str, section_body: str) -> str:
     """Put auto-added bullets at the end of `#### 3. Mainstream Agent Progress`."""
-    heading = "#### 3. Mainstream Agent Progress"
+    return _append_section_bullets(block, 3, "Mainstream Agent Progress", section_body)
+
+
+def _append_section_bullets(block: str, number: int, title: str, section_body: str) -> str:
+    """Append bullets to canonical day-block section `number`, creating it if absent."""
+    heading = f"#### {number}. {title}"
     if heading in block:
         pattern = re.compile(
-            r"(?ms)^#### 3\. Mainstream Agent Progress\s*\n(.*?)(?=^#### |\Z)"
+            rf"(?ms)^#### {number}\. {re.escape(title)}\s*\n(.*?)(?=^#### |\Z)"
         )
         match = pattern.search(block)
         if match:
             body = match.group(1).rstrip()
             replacement = f"{heading}\n\n{body}\n\n{section_body}\n\n" if body else f"{heading}\n\n{section_body}\n\n"
             return block[: match.start()] + replacement + block[match.end() :]
-    # No mainstream section: insert one before the first later canonical section.
-    for later in ("#### 4.", "#### 5.", "#### 6.", "#### 7.", "#### 8."):
+    # Section absent: insert it before the first later canonical section.
+    for later in tuple(f"#### {n}." for n in range(number + 1, 9)):
         if re.search(rf"(?m)^{re.escape(later)}", block):
             return re.sub(
                 rf"(?m)^({re.escape(later)})",
@@ -4411,6 +4561,11 @@ def validate_synthesis_result(
                 f"MIN_MAINSTREAM_RECALL ({min_mainstream}). "
                 "Cover high-confidence mainstream candidates before emerging repos."
             )
+        # Repair dropped discussion coverage BEFORE the accountability lines, so
+        # the runner does not declare a `Missing social/discussion` gap it is
+        # about to fill, and before the direction quota, which refuses a block
+        # that omitted screened discussion candidates entirely.
+        inject_missing_discussion_signals(result, screen_text, root=root, day=day)
         inject_deterministic_radar_sweep(result)
         ensure_daily_accountability_lines(result, screen_text, root=root)
         validate_daily_direction_quota(result)
@@ -6983,6 +7138,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "model_weighted_recall": RUN_AUDIT.get("model_weighted_recall", 0.0),
         "model_mainstream_recall": RUN_AUDIT.get("model_mainstream_recall", 0.0),
         "mainstream_auto_added": RUN_AUDIT.get("mainstream_auto_added", 0),
+        "discussion_auto_added": RUN_AUDIT.get("discussion_auto_added", 0),
         "accountability_lines_added": RUN_AUDIT.get("accountability_lines_added", 0),
         "mainstream_recall": RUN_AUDIT.get("mainstream_recall", 0.0),
         "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
@@ -7129,6 +7285,7 @@ def run_task(
     RUN_AUDIT["model_weighted_recall"] = 0.0
     RUN_AUDIT["model_mainstream_recall"] = 0.0
     RUN_AUDIT["mainstream_auto_added"] = 0
+    RUN_AUDIT["discussion_auto_added"] = 0
     RUN_AUDIT["accountability_lines_added"] = 0
     RUN_AUDIT["stale_roundup_count"] = 0
     RUN_AUDIT["must_cover_mainstream"] = 0

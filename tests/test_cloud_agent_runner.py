@@ -1119,10 +1119,14 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         "- Coverage ledger: checked=github-changelog, openai-blog; missed=anthropic, google.\n"
                         "- Missing user_workflow: no concrete operator reports in this pass.\n"
                         "- Missing mainstream_product: Anthropic/Google/Microsoft not covered beyond OpenAI.\n"
+                        "- Missing social/discussion: discussion lanes returned nothing this pass.\n"
                     ),
                 }
             ]
         }
+        # The word "operator" used to satisfy the discussion gate on its own; a
+        # block with no discussion coverage must now declare the gap.
+        cloud_agent_runner.RUN_AUDIT["social_discussion_labeled"] = 0
         cloud_agent_runner.validate_daily_direction_quota(result)
         # Gap text suppresses the mainstream marker match by design; Gaps still pass the gate.
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_gaps_present"])
@@ -1189,11 +1193,14 @@ class CloudAgentRunnerTest(unittest.TestCase):
                         "#### 4. User Field Notes\n\n"
                         "- Signal: Claude Code field report: /doctor and Cowork VM-mode.\n"
                         "  - Scenario: operator health checks before long runs.\n"
+                        "  - Source: https://news.ycombinator.com/item?id=41000000\n"
                     ),
                 }
             ]
         }
+        cloud_agent_runner.RUN_AUDIT["social_discussion_labeled"] = 0
         cloud_agent_runner.validate_daily_direction_quota(result)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_social_discussion"])
         self.assertTrue(cloud_agent_runner.RUN_AUDIT["direction_user_workflow"])
         self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["vendor_families_covered"], 2)
         self.assertGreaterEqual(cloud_agent_runner.RUN_AUDIT["breadth_themes_covered"], 2)
