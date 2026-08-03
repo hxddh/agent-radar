@@ -1,5 +1,7 @@
 # Changelog
 
+## Unreleased
+
 ## v0.23.0 - 2026-08-03
 
 Three days of paid-screening data. The pool recovered (16 -> 44) but the 2026-08-03 daily published with `discussion_signal_count = 0` and 6 vendor families, and no gate fired. Investigating why found that all three daily direction quotas — the checks that enforce direction and the first-class status of social/discussion sources — had been effectively inert.
@@ -111,7 +113,9 @@ Free-tier operating mode, after inference moved to the Vercel AI Gateway free mo
 - `inject_deterministic_radar_sweep()` generates `#### 7. Radar Sweep` from the full screening pool after the model responds, so breadth no longer depends on model output budget. `prompts/daily-update.md` tells the model to leave section 7 empty.
 - `call_ai_gateway_model()` retries HTTP 429 across `AI_GATEWAY_429_ROUNDS` rounds honoring `Retry-After`, and paces all Gateway calls with a global `AI_GATEWAY_CALL_INTERVAL` floor.
 
-## Unreleased
+## Unversioned - 2026-07-22 to 2026-07-27
+
+The Vercel AI Gateway migration (PRs #69-#75) shipped between v0.19.5 and v0.20.0 without a version bump; recorded here so the route's history is not lost.
 
 ### Changed
 - Replaced the OpenRouter inference path with the OpenAI-compatible Vercel AI Gateway endpoint and `AI_GATEWAY_API_KEY`.
