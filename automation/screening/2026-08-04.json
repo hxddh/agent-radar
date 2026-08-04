@@ -1,0 +1,287 @@
+{
+  "summary": "Daily agent/agent-infra sweep: three vendor releases (Copilot, Claude Code, Cloudflare Computer), DeepSeek security/perf alert, rising infra (agentdock, livekit), and multiple user-workflow signals about long-lived sessions, secret-leak experiments, and new MCP integrations.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Customize the reasoning level for Copilot cloud agent",
+      "why_it_matters": "GitHub Copilot adds configurable reasoning levels for cloud agent behavior.",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-03-customize-the-reasoning-level-for-copilot-cloud-agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Monitor GitHub Copilot rollout notes for enterprise defaults and API flags."
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Anthropic: Claude Code v2.1.221 release",
+      "why_it_matters": "Claude Code gets a new non-prerelease update (agent workflow implications).",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.221"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Read release notes to track behavior/memory/tooling changes affecting operators.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Cloudflare: 'Your agent needs a computer, not a container' (Cloudflare Computer)",
+      "why_it_matters": "Cloudflare pushes a new agent runtime/edge-compute pitch for agent deployments.",
+      "evidence": [
+        "https://blog.cloudflare.com/cloudflare-computer/",
+        "https://blog.cloudflare.com/agents-week-welcome/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Check SDK/docs and pricing to assess viability for production agent orchestration."
+    },
+    {
+      "id": "scr-4d5e6f7a",
+      "title": "DeepSeek V4-Flash: retraining lift + reported autonomous-attack misuse",
+      "why_it_matters": "Model claimed large benchmark gains and a news-reported misuse case for autonomous attacks.",
+      "evidence": [
+        "https://bsky.app/profile/ralphdev.bsky.social/post/3ms7r45xos32p",
+        "https://bsky.app/profile/tmgibs.bsky.social/post/3ms7qvgkcrk22",
+        "https://bsky.app/profile/aegisbot.bsky.social/post/3ms7mzrr2o22t",
+        "https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Look for vendor statement from DeepSeek and technical details of the HelpNetSecurity report.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e6f7a8b",
+      "title": "uvwt/agentdock — secure MCP runtime (GitHub repo)",
+      "why_it_matters": "Claims a secure MCP runtime for agents controlling machines and containers.",
+      "evidence": [
+        "https://github.com/uvwt/agentdock"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Need independent coverage or adoption signal (docs, blog, social) before promoting.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-6f7a8b9c",
+      "title": "livekit/agents — realtime voice AI agents",
+      "why_it_matters": "High-star framework for realtime voice/video agents (bridge to agent UX).",
+      "evidence": [
+        "https://github.com/livekit/agents"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for releases, example deployments, or integration blogs for production signals.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-7a8b9c0d",
+      "title": "Operator experiment: 'Skill with zero lines of code' failed to stop secret leaks",
+      "why_it_matters": "Single-operator test sho\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/ebibibien.bsky.social/post/3msa5f742a52t"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Attempt reproduction or solicit more operator reports; check tool/linter integrations.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-8b9c0d1e",
+      "title": "User report: keeping Claude Code sessions running for weeks",
+      "why_it_matters": "Long-lived sessions chan\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/canary.muninnai.ai/post/3msa3vaorqc22"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Collect other user reports and measure memory drift/cost effects empirically.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-9c0d1e2f",
+      "title": "H/N Launch: Hoplite — deploy cloud coding agents (Launch HN)",
+      "why_it_matters": "New startup aiming to simplify cloud coding-agent deployment (operationalization signal).",
+      "evidence": [
+        "https://hoplite.sh/",
+        "https://news.ycombinator.com/item?id=0000000"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Track traction/comments on adoption, pricing, and supported runtimes.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-a0d1e2f3",
+      "title": "NanmiCoder/cc-haha — local-first Claude Code/agent desktop workspace (13.9k★)",
+      "why_it_matters": "Large-adoption open-source agent workspace with multi-model, multi-agent integrations.",
+      "evidence": [
+        "https://github.com/NanmiCoder/cc-haha"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Seek blog posts, forks or downstream integrations to confirm enterprise usage.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b1e2f3a4",
+      "title": "nexu-io/open-design — high-adoption local-first design agent workspace",
+      "why_it_matters": "Large community project turning coding agents into a design engine (local-first).",
+      "evidence": [
+        "https://github.com/nexu-io/open-design"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor release cadence and integrations with Claude/Codex/Cursor to gauge longevity.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-c2f3a4b5",
+      "title": "Armature: product analytics + evals for agent sessions on MCP (Show HN)",
+      "why_it_matters": "Tooling to measure agent session metrics and evaluation on MCP deployments.",
+      "evidence": [
+        "https://armature.tech/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Check HN discussion for early adopters and integration guides."
+    },
+    {
+      "id": "scr-d3f4a5c6",
+      "title": "Fastmail MCP server now supports Gemini Spark (social report)",
+      "why_it_matters": "Fastmail integration lets operators choose read-only vs read-write for agent access.",
+      "evidence": [
+        "https://bsky.app/profile/dmewes.com/post/3msa7s5b7us2i",
+        "https://www.fastmail.help/hc/en-us/articles"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Confirm with Fastmail/Gemini docs for exact capabilities and admin controls.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-e4f5b6d7",
+      "title": "Vercel: 'Give your eve agent a browser' (changelog)",
+      "why_it_matters": "Vercel adds browser capabilities to agent runtimes, enabling agent-driven browsing.",
+      "evidence": [
+        "https://vercel.com/changelog/give-your-eve-agent-a-browser"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Assess security controls and CSP limits for agent browser usage."
+    },
+    {
+      "id": "scr-f5a6b7c8",
+      "title": "arXiv: Adversarial Attacks in Multi-Agent LLM Pipelines",
+      "why_it_matters": "Research exposing structural vulnerabilities in multi-agent pipelines.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/arxiv-daily-bot.bsky.social/post/3msa6sxknrn2y"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Fetch the arXiv paper and summarize attacker model and mitigations.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-0f6e7d8c",
+      "title": "OpenAI/codex prerelease tags (rust-v0.147.0-alpha.*)",
+      "why_it_matters": "OpenAI Codex prereleases indicate active SDK/runtime changes for agent use.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.147.0-alpha.6",
+        "https://github.com/openai/codex/releases/tag/rust-v0.147.0-alpha.1.2"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Watch for stable release notes and breaking changes affecting agent SDKs."
+    }
+  ],
+  "gaps": [
+    "Missing corroborating vendor statement on the DeepSeek incident (official post/forensics).",
+    "Missing independent coverage for several GitHub-only projects (agentdock, Armature) — repo-only evidence needs extra sources.",
+    "Missing broader Reddit discussion snapshots due to collection 429 errors (some MCP/community threads may be under-sampled)."
+  ]
+}

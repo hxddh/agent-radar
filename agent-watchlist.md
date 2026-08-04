@@ -377,3 +377,12 @@ Status:
 - Why it matters: Provides a hosted, scalable environment for coding agents, lowering deployment friction and enabling large‑scale agent workloads.
 - Evidence strength: Strong (GitHub release).
 - Source: https://github.com/OpenHands/OpenHands/releases/tag/cloud-1.46.2
+
+
+## GitHub Copilot
+
+- Category: Coding agent / cloud agent
+- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
+- Recent changes: 2026-08-03 — GitHub added configurable reasoning levels for Copilot cloud agents, enabling operators to tune stepwise decomposition vs concise responses. Source: https://github.blog/changelog/2026-08-03-customize-the-reasoning-level-for-copilot-cloud-agent
+- Why it matters: Provides an operator knob to trade latency/cost for higher-step reasoning; affects tooling telemetry and containment surface. Evidence strength: Strong (official changelog).
+- replace_section anchor: `## GitHub Copilot`

@@ -272,3 +272,18 @@ AI Agent workloads create demand for:
 - 2026-08-03: Vercel AI SDK + gateway model availability
   - Implication: gateway‑level model routing and workflow APIs put pressure on secure checkpointing, artifact signing, and short‑term object retention policies for agent tasks.
   - Sources: https://github.com/vercel/ai/releases/tag/ai%407.0.42, https://vercel.com/changelog/qwen-3-8-max-now-available-on-vercel-ai-gateway
+
+
+- Signal: Persistent workspace snapshot requirements rising with long-running runtimes.
+  - Implication: Operators need object storage templates for session snapshots (workspace files, tool outputs, memory checkpoints) with versioned metadata and tamper-evident logging.
+  - Source class: Product blogs + social
+  - Evidence strength: Strong/Medium
+  - Source: Copilot changelog, Vercel changelog, Cloudflare Computer blog
+  - Watch trigger: vendor-offered snapshot API or an emerging cross-vendor workspace snapshot standard.
+
+- Signal: Forensic artifact retention for incident response.
+  - Implication: Append-only storage buckets and immutable audit logs should be standard for agent session recording; integrate with SIEM for automated IOC detection.
+  - Source class: News + community experiments
+  - Evidence strength: Medium
+  - Source: https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/
+  - Watch trigger: public release of IOCs or vendor advisory referencing saved session artifacts.

@@ -185,3 +185,15 @@ Evidence:
   4. Capture full execution traces and signed checkpoints for post‑mortem.
 - Evidence: Anthropic containment blog; OpenAI Codex npm release. Sources: https://www.anthropic.com/engineering/how-we-contain-claude, https://www.npmjs.com/package/%40openai/codex
 - Applicable when running evals, local CI agents, or developer previews.
+
+
+## Playbook candidate: Manage long-lived agent sessions
+
+- When useful: teams adopting long-lived Claude/Eve/Copilot sessions to preserve state across multi-day workflows.
+- Steps:
+  1. Enforce short-lived ephemeral credentials for any tool that accesses secrets; rotate on an automated schedule (e.g., hourly or per critical action).
+  2. Snapshot session memory to an auditable object store on checkpoints; include hashes and metadata for replay/forensics.
+  3. Require reauthorization (explicit human-in-the-loop) for any elevated tool call after N hours of session uptime.
+  4. Add a session-expiry policy in MCP servers and log all tool calls with request/response fingerprints.
+- Evidence: community reports of long sessions and secret-leak experiments; vendor runtime deltas (Copilot reasoning-level, Vercel browser). Evidence strength: Medium.
+- Should promote to playbook? yes (after one more operator-validated runbook and sample automation scripts).

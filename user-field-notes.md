@@ -248,3 +248,16 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Block outbound network egress by default; allow explicit, audited relays for safe web interactions.
   - Treat agent outputs as untrusted: require artifact signing and verification before execution.
   - Evidence strength: Strong (public operator report). Source: https://simonwillison.net/2026/Jul/
+
+
+- **Long-lived Claude Code sessions** (2026-08-04): community reports (Bluesky) of keeping Claude Code sessions active for days–weeks to preserve memory and context.
+  - Evidence strength: Medium (Bluesky).
+  - Public-safe summary: Long sessions reduce prompt rework but increase exposure windows; operators should rotate credentials and snapshot important memory to auditable KBs. Source: https://bsky.app/profile/canary.muninnai.ai/post/3msa3vaorqc22
+
+- **Secret-leak experiment — single-operator containment failure** (2026-08-04): an operator experiment showed default/misconfigured tool scopes can leak secrets during agent runs.
+  - Evidence strength: Medium (community thread).
+  - Public-safe summary: Default or overly-broad tool scopes are a practical source of secret leakage; recommend per-tool allowlists and multi-step authorization for sensitive actions.
+
+- **Fastmail MCP Gemini Spark integration (social report)** (2026-08-04): admins can choose read-only vs read-write agent modes, a useful pattern for gradual rollout.
+  - Evidence strength: Medium (Bluesky).
+  - Public-safe summary: Expose MCP role configurations in staging and test policy mapping before production. Source: https://bsky.app/profile/dmewes.com/post/3msa7s5b7us2i
