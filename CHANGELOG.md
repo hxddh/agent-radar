@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v0.23.1 - 2026-08-04
+
+Hotfix for the first scheduled run on v0.23.0 (Issue #93): `Task daily failed: Refusing daily update: high-confidence mainstream candidates were dropped (Cloudflare ...; QwenLM ...)`. The must-cover gate and `inject_missing_mainstream_signals()` use *identical* matching, so the injector had to have been a no-op — and it was, silently.
+
+### Fixed
+- **Injectors and gates disagreed about which field is authoritative.** `normalize_result_updates()` — which every gate reads through — uses `english_block`+`chinese_block` only when **both** are strings, falls back to `content`, and also reads the legacy `files` array. Each injector had its own guess. Two payload shapes lost the repair silently: `english_block` without `chinese_block` (injector writes a field nobody reads, and still returns `injected=1`), and `files` (no injector ever visited it). Reproduced both, then fixed by routing `inject_missing_mainstream_signals`, `inject_missing_discussion_signals`, `inject_deterministic_radar_sweep`, and `ensure_daily_accountability_lines` through one shared `daily_update_block_targets()` / `transform_daily_english_blocks()`. `strip_dead_citations()` now covers `files` too.
+- Regression tests assert all four payload shapes reach the gate, that the 中文 block is never touched, and that non-daily/malformed entries are skipped.
+
 ## v0.23.0 - 2026-08-03
 
 Three days of paid-screening data. The pool recovered (16 -> 44) but the 2026-08-03 daily published with `discussion_signal_count = 0` and 6 vendor families, and no gate fired. Investigating why found that all three daily direction quotas — the checks that enforce direction and the first-class status of social/discussion sources — had been effectively inert.
