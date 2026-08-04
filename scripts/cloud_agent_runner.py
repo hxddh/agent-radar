@@ -3744,6 +3744,24 @@ def inject_deterministic_radar_sweep(result: dict[str, Any]) -> int:
     return injected
 
 
+def count_discussion_signal_bullets(result: dict[str, Any]) -> int:
+    """Discussion-cited signal bullets the day block currently carries.
+
+    Same measure `audit_daily_depth()` records as `discussion_signal_count`,
+    exposed separately so the MODEL's own count can be captured before
+    `inject_missing_discussion_signals()` repairs the block.
+    """
+    bodies = daily_update_bodies(result)
+    if not bodies:
+        return 0
+    english = "\n".join(bodies).split("### 中文")[0]
+    return sum(
+        1
+        for bullet in split_daily_signal_bullets(strip_radar_sweep_sections(english))
+        if bullet.startswith("- ") and bullet_cites_discussion_host(bullet)
+    )
+
+
 def audit_daily_depth(result: dict[str, Any]) -> None:
     """Soft depth/coverage audit: count signals, flag shallow bullets, check
     the Storage/Infra Angle carries watch triggers. Warnings + telemetry only —
@@ -4401,9 +4419,9 @@ def inject_missing_discussion_signals(
     synthesis drops them first: the 2026-08-03 daily published with
     `social_discussion_labeled=10` and `discussion_signal_count=0`. Refusing
     would void a finished report, so the runner repairs the omission the same
-    way it repairs dropped mainstream deltas. Pre-repair
-    `discussion_signal_count` stays in telemetry as the honest measure of what
-    the model itself wrote.
+    way it repairs dropped mainstream deltas. `discussion_signal_count` is
+    measured AFTER this runs, so read `model_discussion_signal_count` for what
+    the model itself wrote and `discussion_auto_added` for the repair.
     """
     if not screen_text:
         return 0
@@ -4540,6 +4558,12 @@ def validate_synthesis_result(
         # the runner does not declare a `Missing social/discussion` gap it is
         # about to fill, and before the direction quota, which refuses a block
         # that omitted screened discussion candidates entirely.
+        # Capture what the MODEL itself wrote before repair, mirroring
+        # model_mainstream_recall. `discussion_signal_count` is measured after
+        # the injectors run, so on its own it cannot distinguish "the model
+        # covered 3 discussions" from "the runner added all 3" — the
+        # 2026-08-03 daily was the latter.
+        RUN_AUDIT["model_discussion_signal_count"] = count_discussion_signal_bullets(result)
         inject_missing_discussion_signals(result, screen_text, root=root, day=day)
         inject_deterministic_radar_sweep(result)
         ensure_daily_accountability_lines(result, screen_text, root=root)
@@ -7114,6 +7138,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "model_mainstream_recall": RUN_AUDIT.get("model_mainstream_recall", 0.0),
         "mainstream_auto_added": RUN_AUDIT.get("mainstream_auto_added", 0),
         "discussion_auto_added": RUN_AUDIT.get("discussion_auto_added", 0),
+        "model_discussion_signal_count": RUN_AUDIT.get("model_discussion_signal_count", 0),
         "accountability_lines_added": RUN_AUDIT.get("accountability_lines_added", 0),
         "mainstream_recall": RUN_AUDIT.get("mainstream_recall", 0.0),
         "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
@@ -7261,6 +7286,7 @@ def run_task(
     RUN_AUDIT["model_mainstream_recall"] = 0.0
     RUN_AUDIT["mainstream_auto_added"] = 0
     RUN_AUDIT["discussion_auto_added"] = 0
+    RUN_AUDIT["model_discussion_signal_count"] = 0
     RUN_AUDIT["accountability_lines_added"] = 0
     RUN_AUDIT["stale_roundup_count"] = 0
     RUN_AUDIT["must_cover_mainstream"] = 0

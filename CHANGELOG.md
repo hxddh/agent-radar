@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.23.2 - 2026-08-04
+
+The first daily to exercise v0.23.0's discussion machinery (2026-08-03) worked — pool 46, 8 signals, `must_cover_missing=0`, `model_mainstream_recall=1.00`, Mini end to end — and exposed a claim in the v0.23.0 notes that is not true.
+
+### Fixed
+- **`discussion_signal_count` is not the honest pre-repair measure.** It is recorded by `audit_daily_depth()`, which runs *after* `inject_missing_discussion_signals()`. The 2026-08-03 daily shows `discussion_signal_count=3` with `discussion_auto_added=3`: the model wrote **zero** discussion bullets and the metric read as if it wrote three. `model_discussion_signal_count` is now captured before the injector, mirroring `model_mainstream_recall`, and the misleading sentence is corrected in `CHANGELOG.md`, `docs/release-v0.23.0.md`, and the injector docstring.
+
 ## v0.23.1 - 2026-08-04
 
 Hotfix for the first scheduled run on v0.23.0 (Issue #93): `Task daily failed: Refusing daily update: high-confidence mainstream candidates were dropped (Cloudflare ...; QwenLM ...)`. The must-cover gate and `inject_missing_mainstream_signals()` use *identical* matching, so the injector had to have been a no-op — and it was, silently.
@@ -20,7 +27,7 @@ Three days of paid-screening data. The pool recovered (16 -> 44) but the 2026-08
 - **`"gap" in text and "mainstream" in text` opened the mainstream and user hatches permanently** — section 8 is titled "Assessment & Gaps", so `"gap"` is in every block. A gap must now be an explicit `Missing <class>: <reason>` line (`declared_gap_lines()`).
 
 ### Added
-- `inject_missing_discussion_signals()` adds up to 3 dropped discussion/field candidates to `#### 4. User Workflow & Field Notes`, mirroring `inject_missing_mainstream_signals()`. Without it the repaired gate would have *refused* the 2026-08-03 daily (screening had 10 discussion candidates, the block covered none) — repairing beats voiding a finished report. Pre-repair `discussion_signal_count` stays in telemetry as the honest measure; `discussion_auto_added` records the repair.
+- `inject_missing_discussion_signals()` adds up to 3 dropped discussion/field candidates to `#### 4. User Workflow & Field Notes`, mirroring `inject_missing_mainstream_signals()`. Without it the repaired gate would have *refused* the 2026-08-03 daily (screening had 10 discussion candidates, the block covered none) — repairing beats voiding a finished report. `discussion_auto_added` records the repair. (Corrected in v0.23.2 — see below.)
 
 ### Changed
 - The whole model route moves to `openai/gpt-5-mini`. Measured from real token telemetry against the $4/month budget: **≈$1.91/month (48%)**; GPT-5 overruns it anywhere it is placed (105–129%). Synthesis left the free GPT-OSS 120B after it lost the 2026-08-02 weekly to `report lacks substantive 中文 content`. Every fallback target remains a free model, so a billing problem degrades quality instead of failing the run.
