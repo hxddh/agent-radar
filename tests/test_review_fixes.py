@@ -627,3 +627,90 @@ class DiscussionInjectionTest(unittest.TestCase):
             ]
         }
         self.assertEqual(cloud_agent_runner.inject_missing_discussion_signals(result, screen), 0)
+
+
+class InjectorTargetAgreementTest(unittest.TestCase):
+    """Injectors and gates must read the same authoritative field (Issue #93)."""
+
+    SCREEN = json.dumps(
+        {
+            "candidates": [
+                {
+                    "title": "Cloudflare: Your agent needs a computer, not a container",
+                    "why_it_matters": "Agent runtime shift.",
+                    "signal_class": "mainstream_product",
+                    "relevance_score": 9,
+                    "confidence": "high",
+                    "evidence": ["https://blog.cloudflare.com/agent-computer"],
+                }
+            ]
+        }
+    )
+    DAY = (
+        "## 2026-08-04\n\n### English\n\n#### 2. New Signals\n\n"
+        "- Signal: Something else.\n  - Source: https://openai.com/x\n\n"
+        "#### 8. Assessment & Gaps\n\n- g\n\n"
+        "### 中文\n\n#### 2. 新信号\n\n- 信号：别的。\n"
+    )
+
+    def _shapes(self) -> dict[str, dict]:
+        return {
+            "updates+content": {
+                "updates": [{"path": "daily/2026-08.md", "mode": "append", "content": self.DAY}]
+            },
+            "updates+both_blocks": {
+                "updates": [
+                    {
+                        "path": "daily/2026-08.md",
+                        "mode": "append",
+                        "day_heading": "## 2026-08-04",
+                        "english_block": "#### 2. New Signals\n\n- Signal: Something else.\n",
+                        "chinese_block": "#### 2. 新信号\n\n- 信号：别的。\n",
+                    }
+                ]
+            },
+            # english_block without chinese_block: normalize_result_updates falls
+            # back to `content`, so an injector writing english_block was a
+            # silent no-op that still reported success.
+            "updates+english_block_only": {
+                "updates": [
+                    {
+                        "path": "daily/2026-08.md",
+                        "mode": "append",
+                        "english_block": "#### 2. New Signals\n\n- Signal: Something else.\n",
+                        "content": self.DAY,
+                    }
+                ]
+            },
+            # Legacy `files` array: read by the gates, never visited by injectors.
+            "files_legacy": {"files": [{"path": "daily/2026-08.md", "content": self.DAY}]},
+        }
+
+    def test_mainstream_injection_reaches_the_gate_in_every_shape(self) -> None:
+        for name, result in self._shapes().items():
+            with self.subTest(shape=name):
+                cloud_agent_runner.inject_missing_mainstream_signals(result, self.SCREEN)
+                hay = "\n".join(cloud_agent_runner.daily_update_bodies(result)).lower()
+                self.assertIn("cloudflare", hay)
+                # The gate uses exactly this check; it must now pass.
+                cloud_agent_runner.validate_must_cover_mainstream(result, self.SCREEN)
+
+    def test_chinese_block_is_never_touched(self) -> None:
+        for name, result in self._shapes().items():
+            with self.subTest(shape=name):
+                cloud_agent_runner.inject_missing_mainstream_signals(result, self.SCREEN)
+                hay = "\n".join(cloud_agent_runner.daily_update_bodies(result))
+                self.assertIn("信号：别的", hay)
+                self.assertNotIn("Cloudflare", hay.split("### 中文", 1)[-1])
+
+    def test_targets_skip_non_daily_and_malformed_entries(self) -> None:
+        result = {
+            "updates": [
+                {"path": "radar.md", "content": "x"},
+                "not-a-dict",
+                {"path": "daily/2026-08.md"},
+                {"path": "daily/2026-08.md", "content": "   "},
+            ],
+            "files": [{"path": "weekly/2026-W32.md", "content": "y"}],
+        }
+        self.assertEqual(cloud_agent_runner.daily_update_block_targets(result), [])

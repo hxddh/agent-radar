@@ -26,6 +26,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+from collections.abc import Callable
 from typing import Any
 
 
@@ -3048,8 +3049,9 @@ def strip_dead_citations(result: dict[str, Any], dead_urls: list[str]) -> int:
     if not dead:
         return 0
     removed = 0
-    raw_updates = result.get("updates")
-    if not isinstance(raw_updates, list):
+    raw_updates = list(result.get("updates") or [])
+    raw_updates += list(result.get("files") or [])
+    if not raw_updates:
         return 0
     for update in raw_updates:
         if not isinstance(update, dict):
@@ -3715,37 +3717,25 @@ def inject_deterministic_radar_sweep(result: dict[str, Any]) -> int:
     if not SHARED_SWEEP_LINES:
         return 0
     injected = 0
-    raw_updates = result.get("updates")
-    if not isinstance(raw_updates, list):
-        return 0
-    for update in raw_updates:
-        if not isinstance(update, dict):
-            continue
-        rel_path = str(update.get("path", "")).replace("\\", "/")
-        if not is_daily_month_path(rel_path):
-            continue
-        # english_block/chinese_block payloads: inject into each part directly.
-        if isinstance(update.get("english_block"), str):
-            block = str(update["english_block"])
-            if "#### 8." not in block:
+    for holder, field, text in daily_update_block_targets(result):
+        if field == "english_block":
+            if "#### 8." not in text:
                 continue
-            update["english_block"] = _sweep_replace_english(block)
-            zh = update.get("chinese_block")
+            holder[field] = _sweep_replace_english(text)
+            zh = holder.get("chinese_block")
             if isinstance(zh, str):
-                update["chinese_block"] = _sweep_replace_chinese(zh)
+                holder["chinese_block"] = _sweep_replace_chinese(zh)
             injected += 1
             continue
-        content = str(update.get("content", ""))
-        if "### English" not in content or "#### 8." not in content:
+        if "### English" not in text or "#### 8." not in text:
             continue
-        english_end = content.find("### 中文")
-        english = content[:english_end] if english_end != -1 else content
+        english_end = text.find("### 中文")
         if english_end != -1:
-            update["content"] = _sweep_replace_english(english) + _sweep_replace_chinese(
-                content[english_end:]
+            holder[field] = _sweep_replace_english(text[:english_end]) + _sweep_replace_chinese(
+                text[english_end:]
             )
         else:
-            update["content"] = _sweep_replace_english(content)
+            holder[field] = _sweep_replace_english(text)
         injected += 1
     if injected:
         RUN_AUDIT["apply_warnings"].append(
@@ -4082,33 +4072,9 @@ def ensure_daily_accountability_lines(
     if not additions:
         return 0
     body = "\n".join(additions)
-    injected = 0
-    raw_updates = result.get("updates")
-    if not isinstance(raw_updates, list):
-        return 0
-    for update in raw_updates:
-        if not isinstance(update, dict):
-            continue
-        rel_path = str(update.get("path", "")).replace("\\", "/")
-        if not is_daily_month_path(rel_path):
-            continue
-        if isinstance(update.get("english_block"), str):
-            update["english_block"] = _append_assessment_lines(
-                str(update["english_block"]), body
-            )
-            injected += 1
-            continue
-        content = str(update.get("content", ""))
-        if not content.strip():
-            continue
-        english_end = content.find("### 中文")
-        if english_end != -1:
-            update["content"] = (
-                _append_assessment_lines(content[:english_end], body) + content[english_end:]
-            )
-        else:
-            update["content"] = _append_assessment_lines(content, body)
-        injected += 1
+    injected = transform_daily_english_blocks(
+        result, lambda block: _append_assessment_lines(block, body)
+    )
     if injected:
         RUN_AUDIT["accountability_lines_added"] = len(additions)
         warning = (
@@ -4298,6 +4264,64 @@ def validate_must_cover_mainstream(
         )
 
 
+def daily_update_block_targets(result: dict[str, Any]) -> list[tuple[dict[str, Any], str, str]]:
+    """Every daily day-block body a gate will read, as (holder, field, text).
+
+    Injectors and gates MUST agree on which field is authoritative.
+    `normalize_result_updates()` uses `english_block`+`chinese_block` only when
+    BOTH are strings, otherwise `content` — and it also reads the legacy `files`
+    array, which no injector looked at. An injector that guessed differently
+    wrote into a field nobody read and still reported success: the 2026-08-04
+    daily was refused for dropped mainstream candidates the runner had already
+    "added" (Issue #93).
+    """
+    targets: list[tuple[dict[str, Any], str, str]] = []
+    raw_updates = result.get("updates")
+    if isinstance(raw_updates, list):
+        for update in raw_updates:
+            if not isinstance(update, dict):
+                continue
+            if not is_daily_month_path(str(update.get("path", "")).replace("\\", "/")):
+                continue
+            english = update.get("english_block")
+            chinese = update.get("chinese_block")
+            if isinstance(english, str) and isinstance(chinese, str):
+                targets.append((update, "english_block", english))
+                continue
+            content = update.get("content")
+            if isinstance(content, str) and content.strip():
+                targets.append((update, "content", content))
+    raw_files = result.get("files")
+    if isinstance(raw_files, list):
+        for item in raw_files:
+            if not isinstance(item, dict):
+                continue
+            if not is_daily_month_path(str(item.get("path", "")).replace("\\", "/")):
+                continue
+            content = item.get("content")
+            if isinstance(content, str) and content.strip():
+                targets.append((item, "content", content))
+    return targets
+
+
+def transform_daily_english_blocks(
+    result: dict[str, Any], transform: Callable[[str], str]
+) -> int:
+    """Apply `transform` to the English half of every authoritative day block."""
+    changed = 0
+    for holder, field, text in daily_update_block_targets(result):
+        if field == "english_block":
+            holder[field] = transform(text)
+            changed += 1
+            continue
+        marker = text.find("### 中文")
+        holder[field] = (
+            transform(text[:marker]) + text[marker:] if marker != -1 else transform(text)
+        )
+        changed += 1
+    return changed
+
+
 def inject_missing_mainstream_signals(
     result: dict[str, Any],
     screen_text: str | None,
@@ -4350,34 +4374,9 @@ def inject_missing_mainstream_signals(
     if not bullets:
         return 0
     section_body = "\n\n".join(bullets)
-    injected = 0
-    raw_updates = result.get("updates")
-    if not isinstance(raw_updates, list):
-        return 0
-    for update in raw_updates:
-        if not isinstance(update, dict):
-            continue
-        rel_path = str(update.get("path", "")).replace("\\", "/")
-        if not is_daily_month_path(rel_path):
-            continue
-        if isinstance(update.get("english_block"), str):
-            update["english_block"] = _append_mainstream_bullets(
-                str(update["english_block"]), section_body
-            )
-            injected += 1
-            continue
-        content = str(update.get("content", ""))
-        if not content.strip():
-            continue
-        english_end = content.find("### 中文")
-        if english_end != -1:
-            update["content"] = (
-                _append_mainstream_bullets(content[:english_end], section_body)
-                + content[english_end:]
-            )
-        else:
-            update["content"] = _append_mainstream_bullets(content, section_body)
-        injected += 1
+    injected = transform_daily_english_blocks(
+        result, lambda block: _append_mainstream_bullets(block, section_body)
+    )
     if injected:
         RUN_AUDIT["mainstream_auto_added"] = len(bullets)
         RUN_AUDIT["apply_warnings"].append(
@@ -4450,33 +4449,9 @@ def inject_missing_discussion_signals(
     if not bullets:
         return 0
     section_body = "\n\n".join(bullets)
-    injected = 0
-    raw_updates = result.get("updates")
-    if not isinstance(raw_updates, list):
-        return 0
-    for update in raw_updates:
-        if not isinstance(update, dict):
-            continue
-        if not is_daily_month_path(str(update.get("path", "")).replace("\\", "/")):
-            continue
-        if isinstance(update.get("english_block"), str):
-            update["english_block"] = _append_discussion_bullets(
-                str(update["english_block"]), section_body
-            )
-            injected += 1
-            continue
-        content = str(update.get("content", ""))
-        if not content.strip():
-            continue
-        english_end = content.find("### 中文")
-        if english_end != -1:
-            update["content"] = (
-                _append_discussion_bullets(content[:english_end], section_body)
-                + content[english_end:]
-            )
-        else:
-            update["content"] = _append_discussion_bullets(content, section_body)
-        injected += 1
+    injected = transform_daily_english_blocks(
+        result, lambda block: _append_discussion_bullets(block, section_body)
+    )
     if injected:
         RUN_AUDIT["discussion_auto_added"] = len(bullets)
     return injected
