@@ -11,9 +11,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
-- Maturity: Active coding-agent product with growing developer adoption; Anthropic's 'Making of Claude Code' article confirms trajectory from alpha CLI to significant product.
-- Recent changes: v2.1.215 released (2026-07-19). Simon Willison observes Claude Code now runs on Bun (Rust), potentially improving startup and resource usage (2026-07-19). v2.1.214 released (2026-07-18) with critical permission-check bypass fixes. v2.1.211 released (2026-07-16). v2.1.208 released (2026-07-14) with sandbox and reliability fixes. Anthropic published containment engineering post (2026-07-09). Fable 5 jailbreak scoring framework proposed (2026-07-10). Claude Science AI workbench launched (2026-07-14). Claude for Teachers launched (2026-07-16). Claude web fetch exfiltration attack demonstrated (2026-07-15). User reports: 33k token overhead vs OpenCode 7k (2026-07-14); nested CLAUDE.md lazy loading (2026-07-14).
-- replace_section anchor: `## Claude Code`
+- Maturity: Active coding-agent product with growing developer adoption; Anthropic's engineering posts track containment practices and runtime evolution.
+- Recent changes: v2.1.221 released (2026-08-04) with runtime/permission/Conductor fixes; prior cadence included v2.1.215 (2026-07-19) and multiple permission-check patches through July. Community reports note long‑lived sessions and experiments demonstrating secret‑leak risks; Anthropic containment engineering posts remain relevant. Freshness: follow-up (previously covered 2026-08-03).
+- Notes: Operators should validate tool-scope behavior and run sandboxed integration tests on upgrades.
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.221
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.

@@ -287,3 +287,12 @@ AI Agent workloads create demand for:
   - Evidence strength: Medium
   - Source: https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/
   - Watch trigger: public release of IOCs or vendor advisory referencing saved session artifacts.
+
+
+- Persistent workspace & snapshot demand (2026-08-04): Vendor runtime deltas (Copilot reasoning levels, Vercel browser capability, Cloudflare Computer) point toward more long-lived agent sessions and therefore increased need for object-storage backed workspace snapshots, artifact retention, and replayable session artifacts.
+  - Implication: Operators should evaluate object stores that support append-only logs, snapshot diffs, and cheap immutable object tagging for forensic replay.
+  - Watch trigger: A major vendor publishes a first-party workspace snapshot API or an emergence of a cross-vendor workspace snapshot standard.
+
+- Tamper-evident audit trails & artifact retention (2026-08-04): Security reports (DeepSeek-linked incidents) and community secret-leak experiments increase the importance of tamper-evident action logs tied to agent sessions for incident response and compliance.
+  - Implication: Favor storage solutions with write-once/read-many (WORM) semantics or cryptographic bundling of session artifacts; design retention/TTL policies aligned with forensic needs.
+  - Watch trigger: Public forensic artifact release or vendor advisory that references session artifact formats or IOCs.
