@@ -714,3 +714,42 @@ class InjectorTargetAgreementTest(unittest.TestCase):
             "files": [{"path": "weekly/2026-W32.md", "content": "y"}],
         }
         self.assertEqual(cloud_agent_runner.daily_update_block_targets(result), [])
+
+
+class HonestDiscussionMetricTest(unittest.TestCase):
+    def test_model_count_is_captured_before_repair(self) -> None:
+        # The 2026-08-03 daily recorded discussion_signal_count=3 with
+        # discussion_auto_added=3: the model wrote none. That metric is
+        # measured after the injector, so it cannot stand alone as the
+        # honest measure of model output.
+        day = (
+            "## 2026-08-04\n\n### English\n\n#### 2. New Signals\n\n"
+            "- Signal: Vendor shipped X.\n  - Source: https://openai.com/x\n\n"
+            "### 中文\n\n#### 2. 新信号\n\n- 信号：厂商发布 X。\n"
+        )
+        result = {"updates": [{"path": "daily/2026-08.md", "mode": "append", "content": day}]}
+        self.assertEqual(cloud_agent_runner.count_discussion_signal_bullets(result), 0)
+        screen = json.dumps(
+            {
+                "candidates": [
+                    {
+                        "title": "Operators debate agent sandboxes on Bluesky",
+                        "evidence": ["https://bsky.app/profile/a/post/1"],
+                    }
+                ]
+            }
+        )
+        cloud_agent_runner.inject_missing_discussion_signals(result, screen)
+        # Post-repair the count is 1, which is exactly why the pre-repair
+        # number has to be recorded separately.
+        self.assertEqual(cloud_agent_runner.count_discussion_signal_bullets(result), 1)
+
+    def test_model_written_discussion_bullets_are_counted(self) -> None:
+        day = (
+            "## 2026-08-04\n\n### English\n\n#### 2. New Signals\n\n"
+            "- Signal: HN debates agent sandboxes.\n"
+            "  - Source: https://news.ycombinator.com/item?id=1\n\n"
+            "### 中文\n\n#### 2. 新信号\n\n- 信号：HN 讨论。\n"
+        )
+        result = {"updates": [{"path": "daily/2026-08.md", "mode": "append", "content": day}]}
+        self.assertEqual(cloud_agent_runner.count_discussion_signal_bullets(result), 1)

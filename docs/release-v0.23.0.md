@@ -39,7 +39,7 @@ Verified against both real day blocks: 2026-07-31 → `True` (six cited bullets)
 
 ## Repair, not refusal
 
-Fixing the gate alone would have **refused** the 08-03 daily — screening had discussion candidates and the block covered none, which raises. `inject_missing_discussion_signals()` instead adds up to three dropped discussion/field candidates to `#### 4. User Workflow & Field Notes`, mirroring `inject_missing_mainstream_signals()`. Pre-repair `discussion_signal_count` stays in telemetry as the honest measure of what the model itself wrote; `discussion_auto_added` records the repair.
+Fixing the gate alone would have **refused** the 08-03 daily — screening had discussion candidates and the block covered none, which raises. `inject_missing_discussion_signals()` instead adds up to three dropped discussion/field candidates to `#### 4. User Workflow & Field Notes`, mirroring `inject_missing_mainstream_signals()`. `discussion_auto_added` records the repair. (Corrected in v0.23.2: `discussion_signal_count` is measured *after* the injector, so it was not the honest pre-repair measure this sentence claimed — `model_discussion_signal_count` is.)
 
 This follows the principle that governed the whole v0.18–v0.23 arc: **a deterministic gate should repair what the runner can derive and refuse only genuine degeneracy** — never discard a finished run over something the runner already knows.
 
