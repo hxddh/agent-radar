@@ -291,10 +291,10 @@ Status:
 
 ## Cloudflare Agents
 - Category: Edge agent platform / agent detection
-- Recent changes: Cloudflare published the "Computer" product framing and continues to ship agent SDKs (agents@0.17.4, voice@0.3.4, think@0.13.0). Blog post "Cloudflare Computer" outlines agent‑focused runtime and network/egress controls (2026‑07/08). Precursor network detection and MoQ relay docs remain relevant for containment strategies.
-- Why it matters: Cloudflare's edge + network posture can provide built‑in egress filtering and relay isolation useful for production agent deployments.
-- Evidence strength: Strong (official blog + SDK releases)
-- Source: https://blog.cloudflare.com/cloudflare-computer/; https://github.com/cloudflare/agents/releases
+- Recent changes: Cloudflare published the "Agent Development Lifecycle" (ADL) with SDK/packaging guidance for deploying agents to Workers and edge runtimes, plus explicit egress/egress-audit guidance. Existing Computer framing and Precursor detection docs remain relevant; ADL formalizes CI/CD and versioning patterns for edge agents. Source: https://blog.cloudflare.com/agent-development-lifecycle/
+- Infra implication: operators must add edge-compatible CI for agent artifacts, egress audit sinks, and centralized archival for edge-deployed logs.
+- Evidence strength: Strong
+- replace_section anchor: `## Cloudflare Agents`
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.

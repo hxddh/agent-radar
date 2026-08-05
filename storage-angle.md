@@ -296,3 +296,10 @@ AI Agent workloads create demand for:
 - Tamper-evident audit trails & artifact retention (2026-08-04): Security reports (DeepSeek-linked incidents) and community secret-leak experiments increase the importance of tamper-evident action logs tied to agent sessions for incident response and compliance.
   - Implication: Favor storage solutions with write-once/read-many (WORM) semantics or cryptographic bundling of session artifacts; design retention/TTL policies aligned with forensic needs.
   - Watch trigger: Public forensic artifact release or vendor advisory that references session artifact formats or IOCs.
+
+
+- Headroom token/log compression implications (2026-08-05): Compression proxies that reduce token size change downstream storage needs—operators may store compressed artifacts instead of raw transcripts, and archival schemas must record compression metadata for replay fidelity.
+  - Watch trigger: measurable drop in stored-token counts reported in telemetry or a vendor announcing native compressed-archive support. Source: https://github.com/headroomlabs-ai/headroom
+
+- Edge agent lifecycle & storage (Cloudflare ADL, 2026-08-05): Edge-deployed agents encourage ephemeral artifact patterns and centralized audit sinks; object-storage strategy should favor immutable release artifacts + centralized archival for audits rather than scattered edge logs.
+  - Watch trigger: Cloudflare SDK/CLI adding direct sinks to S3/GCS or documentation recommending centralized audit sinks. Source: https://blog.cloudflare.com/agent-development-lifecycle/

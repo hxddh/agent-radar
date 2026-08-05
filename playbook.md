@@ -197,3 +197,15 @@ Evidence:
   4. Add a session-expiry policy in MCP servers and log all tool calls with request/response fingerprints.
 - Evidence: community reports of long sessions and secret-leak experiments; vendor runtime deltas (Copilot reasoning-level, Vercel browser). Evidence strength: Medium.
 - Should promote to playbook? yes (after one more operator-validated runbook and sample automation scripts).
+
+
+## Persist named facts to KV (playbook candidate)
+
+- When useful: long-running agents or multi-step coding tasks where the same few facts recur across turns (credentials metadata, client preferences, short config flags).
+- Steps:
+  1. Identify 3-6 high-value facts reused across turns (e.g., repo_root, primary_language, billing_id).
+  2. Store them under short deterministic keys (e.g., agent:acct:{acct_id}:profile).
+  3. On agent start, fetch named keys and append only diffs/changes to the prompt; avoid sending full transcripts.
+  4. Apply TTLs for keys that can stalen and add a validation step to detect contradictions.
+- Evidence: Bluesky operator tip (2026-08-05). Evidence strength: Weak→Medium.
+- Should promote to playbook? yes (low-cost, high-impact guardrail). Source: https://bsky.app/profile/elizabethfue12.bsky.social/post/3mscfrjpovv2m

@@ -261,3 +261,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Fastmail MCP Gemini Spark integration (social report)** (2026-08-04): admins can choose read-only vs read-write agent modes, a useful pattern for gradual rollout.
   - Evidence strength: Medium (Bluesky).
   - Public-safe summary: Expose MCP role configurations in staging and test policy mapping before production. Source: https://bsky.app/profile/dmewes.com/post/3msa7s5b7us2i
+
+
+- **Named-KV memory trick** (2026-08-05): Operators recommend persisting frequently reused facts under short, named KV keys (example: customer_profile:acct123) instead of re-sending whole transcripts on restarts. Benefits: token cost reduction, faster restarts, simpler continuity. Risks: stale facts if TTLs not managed. Evidence: Bluesky operator tip; Evidence strength: Weak→Medium. Source: https://bsky.app/profile/elizabethfue12.bsky.social/post/3mscfrjpovv2m
+
+- **ADK workflow incident (field report)** (2026-08-05): A Bluesky report states Google removed three ADK workflows after a malicious GitHub issue caused privileged actions. Practical mitigation: gate external triggers with human approvals and tighten webhook scopes. Evidence strength: Weak (social); follow-up: vendor confirmation requested. Source: https://bsky.app/profile/hacker.at.thenote.app/post/3msclmhcwrc2a

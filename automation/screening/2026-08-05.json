@@ -1,0 +1,204 @@
+{
+  "summary": "Daily agent/agent-infra screening: Cloudflare and AWS product pushes, Microsoft governance toolkit traction, multiple infra primitives (sandboxes, observability, token compression), social reports of attacks and operator tips.",
+  "candidates": [
+    {
+      "id": "scr-4f1a2b",
+      "title": "Cloudflare: Agent Development Lifecycle arrives",
+      "why_it_matters": "Cloudflare positions Workers/Agents as first-class for agent deployments.",
+      "evidence": [
+        "https://blog.cloudflare.com/agent-development-lifecycle/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-9c8d3e",
+      "title": "Microsoft: Agent Governance Toolkit (GitHub)",
+      "why_it_matters": "Tooling for policy, zero-trust identity, sandboxing across enterprise agents.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/microsoft/agent-governance-toolkit"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "monitor adoption/announcements",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a7b2f1",
+      "title": "DeepSeek tied to automated cyberattacks",
+      "why_it_matters": "Report links DeepSeek to autonomous attack tooling—operator security risk.",
+      "evidence": [
+        "https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/",
+        "https://bsky.app/profile/smtprocess.bsky.social/post/3msb62yjkep27"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up for vendor/incident advisory",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-2e5c9a",
+      "title": "Google deleted 3 ADK workflows after malicious GitHub issue",
+      "why_it_matters": "Field incident: malicious issue could trigger privileged agent actions.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/hacker.at.thenote.app/post/3msclmhcwrc2a"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "look for official Google advisory/logs",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-6b3f0d",
+      "title": "Agent-Sandbox: E2B-compatible enterprise sandboxes (GitHub)",
+      "why_it_matters": "Enterprise-grade sandbox for running untrusted agent-generated code and browser actions.",
+      "evidence": [
+        "https://github.com/agent-sandbox/agent-sandbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "seek user reports/adoption metrics",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-1d8e4f",
+      "title": "Huatuo: eBPF observability for kernel & agent sandboxes",
+      "why_it_matters": "Low-level observability for agent sandboxes/runtime using eBPF.",
+      "evidence": [
+        "https://github.com/ccfos/huatuo"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor integrations with sandboxes/MCPs",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-0f9b6c",
+      "title": "Headroom (headroomlabs): token/log compression proxy for agents",
+      "why_it_matters": "Compresses logs/RAG chunks to cut token costs before LLM consumption.",
+      "evidence": [
+        "https://github.com/headroomlabs-ai/headroom"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "watch for MCP integrations/docs",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b5a7d2",
+      "title": "Key-value memory tip: persist named facts to avoid transcript resend",
+      "why_it_matters": "Operator trick: named KV\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/elizabethfue12.bsky.social/post/3mscfrjpovv2m"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "collect concrete how-to examples and code snippets",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-e3c4b8",
+      "title": "AWS: Amazon Connect can export agent cases to CSV",
+      "why_it_matters": "Admins can export agent workspace cases to CSV for team data sharing.",
+      "evidence": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-connect-export-cases/",
+        "https://bsky.app/profile/awswhatsnew.bsky.social/post/3msc2vpijc222"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "track regional rollout notes",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5f2a6e",
+      "title": "Reddit threads: enterprise usage questions for agentic loops and platforms",
+      "why_it_matters": "Operators ask about real\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/GithubCopilot/comments/1vfl5jt/does_anyone_actually_use_agentic_loops/",
+        "https://www.reddit.com/r/GithubCopilot/comments/1vficn2/is_jenkins_a_good_platform_for_running_ai_agents/",
+        "https://www.reddit.com/r/GithubCopilot/comments/1vfi4po/what_agentic_ai_platform_are_you_using_in/"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 3,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor for high-signal operator reports",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-8a6d1f",
+      "title": "JetBrains: IntelliJ IDEA exposes LSP for VS Code, Cursor, and agent flows",
+      "why_it_matters": "Java/Kotlin intelligence becomes available to VS Code and agentic integrations.",
+      "evidence": [
+        "https://blog.jetbrains.com/idea/2026/08/intellij-idea-goes-lsp/"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up for plugin/docs updates"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: OpenAI agent-specific changelog/advisory (no clear agent security changelog found)",
+    "Missing user_workflow: verified enterprise postmortems about Microsoft Agent Governance Toolkit adoption"
+  ],
+  "confidence": "medium"
+}
