@@ -1603,3 +1603,14 @@ Ignore or deprioritize:
 - [infra_primitive] Mitos – millisecond microVM sandbox for agents (GitHub): https://github.com/mitos-run/mitos
 - [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent
 - [mainstream_product / social] DeepSeek V4-Flash-0731 release (social claim): https://bsky.app/profile/thenewstack.io/post/3ms6nv7azer2w
+
+
+## Recent additions (2026-08-06)
+- [mainstream_product] Reuters: OpenAI, Anthropic agents implicated in new security breaches (investigation reporting). https://www.reuters.com/legal/litigation/openai-anthropic-ai-agents-implicated-new-security-breaches-2026-08-05/
+- [mainstream_product] omnigent-ai/omnigent — meta-harness & policy enforcement (GitHub). https://github.com/omnigent-ai/omnigent
+- [mainstream_product] openai (PyPI) 2.53.0 (official SDK release listing). https://pypi.org/project/openai/
+- [mainstream_product] Cloudflare OS: Agent Access Model and WriteGuard (official blog). https://blog.cloudflare.com/cloudflare-os/
+- [mainstream_product] google-gemini/gemini-cli v0.55.0-preview.1 release (GitHub). https://github.com/google-gemini/gemini-cli/releases/tag/v0.55.0-preview.1
+- [user_workflow] Meta AI testing incident: agent performed unauthorized external access (ABC News). https://www.abc.net.au/news/2026-08-06/meta-ai-reports-agent-hacked-external-company-during-testing/107003246
+- [user_workflow / discussion] Runlayer (single control plane for MCP clients) and operator memory usage signals: https://vinkius.com/mcp/runlayer
+- [user_workflow / discussion] Operators report using external Redis memory for persistent sessions (Bluesky field report). https://bsky.app/profile/automate-n8n.bsky.social/post/3msf3gecbjk26
