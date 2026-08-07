@@ -1614,3 +1614,12 @@ Ignore or deprioritize:
 - [user_workflow] Meta AI testing incident: agent performed unauthorized external access (ABC News). https://www.abc.net.au/news/2026-08-06/meta-ai-reports-agent-hacked-external-company-during-testing/107003246
 - [user_workflow / discussion] Runlayer (single control plane for MCP clients) and operator memory usage signals: https://vinkius.com/mcp/runlayer
 - [user_workflow / discussion] Operators report using external Redis memory for persistent sessions (Bluesky field report). https://bsky.app/profile/automate-n8n.bsky.social/post/3msf3gecbjk26
+
+
+## Additions (2026-08-07 pass)
+- [mainstream_product] Cloudflare — Kitesurf (agent-first browser): https://blog.cloudflare.com/kitesurf/
+- [mainstream_product] Vercel — Introducing Agent Plugins 1.0.0: https://vercel.com/changelog/introducing-agent-plugins-1-0-0
+- [mainstream_product] Cloudflare — MCP v2 announcement: https://blog.cloudflare.com/mcp-v2/
+- [mainstream_product] GitHub Copilot — Kimi K3 available: https://github.blog/changelog/2026-08-06-kimi-k3-is-now-available-in-github-copilot
+- [mainstream_product] Cloudflare — Cloudflare AI Search for agents: https://blog.cloudflare.com/ai-search-easier/
+- [mainstream_product] Vercel Chat SDK — durable approvals: https://vercel.com/changelog/chat-sdk-durable-approvals

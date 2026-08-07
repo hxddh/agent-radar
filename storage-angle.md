@@ -303,3 +303,16 @@ AI Agent workloads create demand for:
 
 - Edge agent lifecycle & storage (Cloudflare ADL, 2026-08-05): Edge-deployed agents encourage ephemeral artifact patterns and centralized audit sinks; object-storage strategy should favor immutable release artifacts + centralized archival for audits rather than scattered edge logs.
   - Watch trigger: Cloudflare SDK/CLI adding direct sinks to S3/GCS or documentation recommending centralized audit sinks. Source: https://blog.cloudflare.com/agent-development-lifecycle/
+
+
+- Cloudflare AI Search — vendor-managed retrieval
+  - Implication: organizations must partition, redact, or send sanitized subsets to vendor search; platform-managed embeddings/indices shift storage responsibility and retention obligations.
+  - Evidence strength: Strong (Cloudflare blog)
+  - Source: https://blog.cloudflare.com/ai-search-easier/
+  - Watch trigger: vendor publishes customer-side encryption or explicit embedding export API.
+
+- MCP v2 snapshots & audit trails
+  - Implication: MCP lifecycle hooks will increase snapshot and audit log volume; operators must budget object storage and set retention policies to support forensic and compliance needs.
+  - Evidence strength: Strong (Cloudflare MCP v2 announcement)
+  - Source: https://blog.cloudflare.com/mcp-v2/
+  - Watch trigger: MCP v2 default retention longer than 30 days or snapshot export APIs added.

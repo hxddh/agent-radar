@@ -260,10 +260,14 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- Category: AI coding assistant / agent
-- Maturity: Mature product with millions of users; expanding agent capabilities and security features.
-- Recent changes: Repository-level usage metrics GA (2026-07-17). Copilot CLI v1.0.71 released (2026-07-18). Code review customization improvements (2026-07-17). Mobile PR comment fix with Copilot Cloud Agent (2026-07-17). Security reviews now available in GitHub Copilot app (2026-07-14). Code scanning shows AI security detections on pull requests (2026-07-14). Copilot CLI v1.0.70 on npm (2026-07-11). GPT-5.6 Sol, Terra, and Luna models available (2026-07-09). GitHub Innersource security advisories now GA. PR dashboard GA includes agent-created PRs (2026-07-09). CodeQL 2.26.0 adds AI prompt-injection detection (2026-07-10).
-- Source: https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available
+- Category: Coding agent / cloud agent
+- Maturity: Broad enterprise adoption; Copilot remains a core developer-facing agent.
+- Recent changes: 2026-08-06 — Kimi K3 model is now available in GitHub Copilot. Operators should be aware of model-level behavior changes and possible billing/credit implications when model backends change.
+- User impact: Potential semantic changes in code suggestions and variation in token usage; CI/pipeline teams should pin model versions where reproducibility is required.
+- Infra implication: Add model-version gating and token-budget alerts for Copilot-driven automation.
+- Source class: Tier 1 (GitHub changelog)
+- Evidence strength: Strong
+- Source: https://github.blog/changelog/2026-08-06-kimi-k3-is-now-available-in-github-copilot
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
@@ -291,10 +295,11 @@ Status:
 
 ## Cloudflare Agents
 - Category: Edge agent platform / agent detection
-- Recent changes: Cloudflare published the "Agent Development Lifecycle" (ADL) with SDK/packaging guidance for deploying agents to Workers and edge runtimes, plus explicit egress/egress-audit guidance. Existing Computer framing and Precursor detection docs remain relevant; ADL formalizes CI/CD and versioning patterns for edge agents. Source: https://blog.cloudflare.com/agent-development-lifecycle/
-- Infra implication: operators must add edge-compatible CI for agent artifacts, egress audit sinks, and centralized archival for edge-deployed logs.
+- Recent changes: Multiple product deltas (2026-08): Kitesurf (agent-first browser using V8 isolates on Workers), MCP v2 (orchestration + policy hooks), and Cloudflare AI Search (agent-focused retrieval). These releases centralize runtime isolation and retrieval primitives and introduce WriteGuard-style egress/policy controls.
+- User impact: Easier edge deployment for agents, built-in retrieval for RAG pipelines, and new policy hooks that operators should adopt to limit egress and privilege scope.
+- Infra implication: Edge runtime + MCP v2 increases the importance of policy templates, snapshot retention, and export APIs; plan migration for registered MCP clients.
 - Evidence strength: Strong
-- replace_section anchor: `## Cloudflare Agents`
+- Sources: https://blog.cloudflare.com/kitesurf/ ; https://blog.cloudflare.com/mcp-v2/ ; https://blog.cloudflare.com/ai-search-easier/
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.

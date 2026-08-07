@@ -266,3 +266,22 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Named-KV memory trick** (2026-08-05): Operators recommend persisting frequently reused facts under short, named KV keys (example: customer_profile:acct123) instead of re-sending whole transcripts on restarts. Benefits: token cost reduction, faster restarts, simpler continuity. Risks: stale facts if TTLs not managed. Evidence: Bluesky operator tip; Evidence strength: Weak→Medium. Source: https://bsky.app/profile/elizabethfue12.bsky.social/post/3mscfrjpovv2m
 
 - **ADK workflow incident (field report)** (2026-08-05): A Bluesky report states Google removed three ADK workflows after a malicious GitHub issue caused privileged actions. Practical mitigation: gate external triggers with human approvals and tighten webhook scopes. Evidence strength: Weak (social); follow-up: vendor confirmation requested. Source: https://bsky.app/profile/hacker.at.thenote.app/post/3msclmhcwrc2a
+
+
+- Redis-backed persistent sessions (Bluesky field report)
+  - Observed: operators using external Redis to resume long-running agent sessions.
+  - Implication: simpler resumption vs stale beliefs & exfil risk.
+  - Suggested mitigation: encrypt at-rest, apply ACLs, and add periodic revalidation TTLs.
+  - Source class: Social / Bluesky
+  - Source: https://bsky.app/profile/automate-n8n.bsky.social/post/3msf3gecbjk26
+
+- Copilot MCP credit spike (Bluesky field report)
+  - Observed: long-running MCP workflows consumed unexpectedly large credits.
+  - Implication: surprise billing and quota exhaustion for teams.
+  - Suggested mitigation: per-job token budgets, conservative reasoning-level defaults, monitor model switches in CI.
+  - Source: https://bsky.app/profile/ngkazu.bsky.social/post/3mshitck5pk2p
+
+- Muse Code early claim (Bluesky)
+  - Observed: social claim describing a terminal-first coding agent.
+  - Implication: interesting UX possibility; treat as unverified until repo/release evidence.
+  - Source: https://bsky.app/profile/coreati.bsky.social/post/3msfq2etlsw2m

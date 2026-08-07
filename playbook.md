@@ -209,3 +209,10 @@ Evidence:
   4. Apply TTLs for keys that can stalen and add a validation step to detect contradictions.
 - Evidence: Bluesky operator tip (2026-08-05). Evidence strength: Weak→Medium.
 - Should promote to playbook? yes (low-cost, high-impact guardrail). Source: https://bsky.app/profile/elizabethfue12.bsky.social/post/3mscfrjpovv2m
+
+
+- Playbook candidate: "Durable approvals for agent writes"
+  - When useful: any agent workflow that performs writes to production systems, modifies infra, or triggers billable external actions.
+  - Evidence: Vercel Chat SDK durable approvals (2026 changelog) — allows workflows to pause and await explicit human approval.
+  - Should promote to playbook? yes
+  - Source: https://vercel.com/changelog/chat-sdk-durable-approvals

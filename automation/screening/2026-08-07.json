@@ -1,0 +1,226 @@
+{
+  "summary": "Agent ecosystem: Cloudflare and Vercel push agent-first products and MCP improvements; multiple social reports show operator cost/privacy friction; several popular infra repos surfaced but lack independent corroboration.",
+  "candidates": [
+    {
+      "id": "scr-a1f3d9b",
+      "title": "Cloudflare: Introducing Kitesurf (agent-first browser)",
+      "why_it_matters": "Agent-first browser using V8 isolates on Workers changes runtime isolation for agents.",
+      "evidence": [
+        "https://blog.cloudflare.com/kitesurf/"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Monitor adoption posts and demos; check security/SDK docs for agent integrations."
+    },
+    {
+      "id": "scr-b2c4e8f",
+      "title": "Vercel: Introducing Agent Plugins 1.0.0",
+      "why_it_matters": "Marketplace agent plugins enable installing provider skills into Vercel agents.",
+      "evidence": [
+        "https://vercel.com/changelog/introducing-agent-plugins-1-0-0"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Watch for provider skill listings and examples in Marketplace."
+    },
+    {
+      "id": "scr-c3d5f7a",
+      "title": "Cloudflare: The next generation of MCP (MCP v2)",
+      "why_it_matters": "Cloudflare MCP v2 pushes new orchestration, policy, and boundary controls for agents.",
+      "evidence": [
+        "https://blog.cloudflare.com/mcp-v2/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Track rollout notes, SDKs, and enterprise security docs."
+    },
+    {
+      "id": "scr-d4e6a1c",
+      "title": "GitHub Changelog: Kimi K3 available in GitHub Copilot",
+      "why_it_matters": "New model integration in Copilot affects developer agent behavior and billing.",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-06-kimi-k3-is-now-available-in-github-copilot"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Look for user reports on differences in completions and cost."
+    },
+    {
+      "id": "scr-e5a7b2d",
+      "title": "Cloudflare: Cloudflare AI Search for agents",
+      "why_it_matters": "Built search for agents to query org data; affects retrieval and RAG pipelines.",
+      "evidence": [
+        "https://blog.cloudflare.com/ai-search-easier/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "Check docs for connectors, rate limits, and privacy guarantees."
+    },
+    {
+      "id": "scr-f6b8c3e",
+      "title": "google/gemini-cli: preview/nightly releases",
+      "why_it_matters": "Gemini CLI preview releases indicate tooling updates for developer-facing agents.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.55.0-preview.2",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0-nightly.20260807.gd5c9a97dc"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Verify release notes for breaking changes and new agent commands."
+    },
+    {
+      "id": "scr-g7c9d4f",
+      "title": "Bluesky: Meta Muse Code claim (new terminal coding agent)",
+      "why_it_matters": "Social claims Muse Code \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/coreati.bsky.social/post/3msfq2etlsw2m"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "defer",
+      "next_check": "Seek official Meta announcement or benchmark artifact for verification.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-h8d0e5a",
+      "title": "Bluesky: GitHub Copilot MCP usage — high credit consumption",
+      "why_it_matters": "Operator report: using M\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/ngkazu.bsky.social/post/3mshitck5pk2p"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Corroborate with more user reports and billing logs.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-i9e1f6b",
+      "title": "HKUDS/nanobot (popular personal agent framework)",
+      "why_it_matters": "Ultra-lightweight personal agent framework with MCP, memory, multi-agent workflows.",
+      "evidence": [
+        "https://github.com/HKUDS/nanobot"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "Needs independent coverage (blog post, news, or enterprise adoption) to promote.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-j0f2a7c",
+      "title": "strands-agents/evals (agent evaluation framework)",
+      "why_it_matters": "Comprehensive evals framework for agents and LLM applications.",
+      "evidence": [
+        "https://github.com/strands-agents/evals"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "defer",
+      "next_check": "Find benchmark citations or third-party adoption before promoting.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-k1b3c8d",
+      "title": "AgentX-lab/SandboxFleet (isolated agent sandboxes)",
+      "why_it_matters": "Run multiple isolated agent sandboxes as dynamic slots on shared workers.",
+      "evidence": [
+        "https://github.com/AgentX-lab/SandboxFleet"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Look for production reports or security audits to corroborate.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-l2c4d9e",
+      "title": "Bluesky: n8n-claw — autonomous agent in n8n (operator build)",
+      "why_it_matters": "Operator-built autonomou\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/agentwire.kynth.studio/post/3mshcamuqmq2b"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Request repository or demo to validate reproducibility.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-m3d5e0f",
+      "title": "Vercel: Pause workflows for approval with Chat SDK",
+      "why_it_matters": "Adds durable approvals to Chat SDK workflows — improves operator control.",
+      "evidence": [
+        "https://vercel.com/changelog/chat-sdk-durable-approvals"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "workflow",
+      "promotion_status": "candidate",
+      "next_check": "Track examples showing approvals in multi-agent pipelines.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Anthropic official changelog",
+    "Missing social/discussion: Reddit threads for OpenAI/Claude/MCP due to collection errors",
+    "Missing independent corroboration for large GitHub projects (nanobot, strands-agents/evals, SandboxFleet)"
+  ]
+}
