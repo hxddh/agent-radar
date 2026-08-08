@@ -1,0 +1,197 @@
+{
+  "summary": "Daily agent/AI infra and workflow screening: vendor releases (GitHub, Vercel, Anthropic, Cloudflare), notable security advisory (OpenYak), operator workflow wins, and several single-repo infra primitives needing corroboration.",
+  "candidates": [
+    {
+      "id": "scr-1a8f2c",
+      "title": "GitHub: 'Relates to' issue links & multi-select fields GA",
+      "why_it_matters": "Eases cross-issue relationships and rich labeling for agent-driven workflows.",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-07-connecting-issues-and-multi-select-field-support"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-2b7d4e",
+      "title": "Cloudflare: Unifying Workers AI and AI Gateway control plane",
+      "why_it_matters": "Cloudflare consolidates control plane for Workers AI and AI Gateway (provider-level MCP impact).",
+      "evidence": [
+        "https://blog.cloudflare.com/workers-ai-gateway-unification/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3c6e5b",
+      "title": "Vercel: AI Gateway & Sandbox available on Hermes Agent",
+      "why_it_matters": "Per-agent Vercel sandboxes enable isolated agent deployments and dev sandboxes.",
+      "evidence": [
+        "https://vercel.com/changelog/vercel-ai-gateway-and-vercel-sandbox-now-available-on-hermes-agent",
+        "https://vercel.com/changelog/give-every-agent-in-herdr-its-own-vercel-sandbox"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-4d9b1f",
+      "title": "Anthropic: Claude Code release (v2.1.225) — workspace trust, spend warnings",
+      "why_it_matters": "Adds workspace trust prompts and gateway spend limits for Claude agents (operator controls).",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.225",
+        "https://bsky.app/profile/claudecodechanges.bsky.social/post/3msjykaalae26"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e2c7a",
+      "title": "OpenYak: critical CVE reported (9.6) for local-first agent runtime",
+      "why_it_matters": "High-severity vulnerabil\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/euvd-bot.bsky.social/post/3msjnxr5txu2u2y"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "verify official ENISA/EUVD advisory and vendor patch notes",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-6f3d8b",
+      "title": "Dev.to: Kiro Crew replaced 4 hours weekly toil via agent cron jobs",
+      "why_it_matters": "Concrete operator workflow: scheduled scans, git hygiene and EOW reports cost ~$2.10/week.",
+      "evidence": [
+        "https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-7a4f9c",
+      "title": "Bluesky: Cohere Health uses Amazon Bedrock AgentCore for prior-authorization",
+      "why_it_matters": "Shows Bedrock AgentCore \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/sipirtu.com/post/3msjykp7zcs2t"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "find official AWS/Amazon/AWS ML blog confirmation",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-8b0e6d",
+      "title": "boxlite: micro-VM for AI agents (local/cloud embed)",
+      "why_it_matters": "Micro-VM offers lightweight runtime isolation for embedding agent execution.",
+      "evidence": [
+        "https://github.com/boxlite-ai/boxlite"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "require independent coverage or vendor blog before promotion",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9c5a2e",
+      "title": "hol-guard: open-source antivirus for AI agents (runtime blocking)",
+      "why_it_matters": "Provides runtime safeguards against risky tools, prompt injection, malicious packages and plugins.",
+      "evidence": [
+        "https://github.com/hashgraph-online/hol-guard"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "defer",
+      "next_check": "seek third-party audit or adoption signals",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a0b1d4",
+      "title": "GitHub Copilot: weekly releases & agent app activity in usage metrics API",
+      "why_it_matters": "Copilot adds agent activity telemetry and continues weekly releases—affects org observability.",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-07-github-copilot-weekly-releases-august-3",
+        "https://github.blog/changelog/2026-08-07-copilot-usage-metrics-api-adds-agent-app-activity"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-b1c6f7",
+      "title": "Bluesky: cross-vendor agreement on a single agent plugin format",
+      "why_it_matters": "Multi-vendor plugin form\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/michaelnemtsev.bsky.social/post/3msjziev4ab2j"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "confirm with vendor announcements (Amazon, Microsoft, OpenAI, Cursor, Vercel)",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
+    }
+  ],
+  "gaps": [
+    "Missing official AWS/Amazon blog post confirming Cohere Health Bedrock AgentCore use-case",
+    "Missing authoritative ENISA/vendor advisory link for OpenYak CVE and patch guidance"
+  ]
+}

@@ -1623,3 +1623,14 @@ Ignore or deprioritize:
 - [mainstream_product] GitHub Copilot — Kimi K3 available: https://github.blog/changelog/2026-08-06-kimi-k3-is-now-available-in-github-copilot
 - [mainstream_product] Cloudflare — Cloudflare AI Search for agents: https://blog.cloudflare.com/ai-search-easier/
 - [mainstream_product] Vercel Chat SDK — durable approvals: https://vercel.com/changelog/chat-sdk-durable-approvals
+
+
+## Recent additions (2026-08-08)
+- [mainstream_product] Anthropic — Claude Code v2.1.225 release (workspace trust prompts, gateway spend limits): https://github.com/anthropics/claude-code/releases/tag/v2.1.225
+- [mainstream_product] Cloudflare — Workers AI + AI Gateway control plane unification: https://blog.cloudflare.com/workers-ai-gateway-unification/
+- [mainstream_product] GitHub — 'Relates to' issue links & multi-select fields GA: https://github.blog/changelog/2026-08-07-connecting-issues-and-multi-select-field-support
+- [mainstream_product] Vercel — AI Gateway & Sandbox on Hermes Agent: https://vercel.com/changelog/vercel-ai-gateway-and-vercel-sandbox-now-available-on-hermes-agent
+- [mainstream_product] GitHub Copilot — weekly releases & agent app activity in usage metrics API: https://github.blog/changelog/2026-08-07-github-copilot-weekly-releases-august-3
+- [user_workflow] Dev.to — Kiro Crew cron jobs replaced ~4 hours weekly: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h
+- [infra_primitive / security] OpenYak CVE report (social): https://bsky.app/profile/euvd-bot.bsky.social/post/3msjnxr5txu2u2y
+- [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent

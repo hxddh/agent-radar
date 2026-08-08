@@ -316,3 +316,8 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong (Cloudflare MCP v2 announcement)
   - Source: https://blog.cloudflare.com/mcp-v2/
   - Watch trigger: MCP v2 default retention longer than 30 days or snapshot export APIs added.
+
+
+- Persistent session backends (Redis) are now an operator-level decision: pros — fast resume and low-latency session state; cons — single ACL/privilege choke point and potential PII persistence. Operators should enforce ACLs, rotate keys, and add automated scrubbing of PII from persisted session blobs. Watch trigger: vendor docs or 3+ popular agent runtimes standardizing Redis as recommended backend.
+
+- Object-store snapshots for agent workspaces (used by sandboxes and workspace trust flows) provide replayable execution history and artifact retention but require retention, encryption, and access policies. Recommended: default encrypt-at-rest, set short retention for intermediate artifacts, and treat snapshots as sensitive artifacts in compliance reviews. Watch trigger: SDK-level snapshot API or public sample showing workspace restore across vendors.

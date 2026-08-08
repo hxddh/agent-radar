@@ -11,10 +11,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
-- Maturity: Active coding-agent product with growing developer adoption; Anthropic's engineering posts track containment practices and runtime evolution.
-- Recent changes: v2.1.221 released (2026-08-04) with runtime/permission/Conductor fixes; prior cadence included v2.1.215 (2026-07-19) and multiple permission-check patches through July. Community reports note long‑lived sessions and experiments demonstrating secret‑leak risks; Anthropic containment engineering posts remain relevant. Freshness: follow-up (previously covered 2026-08-03).
-- Notes: Operators should validate tool-scope behavior and run sandboxed integration tests on upgrades.
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.221
+- Maturity: Active; deployed in developer and enterprise contexts with ongoing containment and runtime hardening work.
+- Recent changes: v2.1.225 released (2026-08-08) introducing workspace trust prompts and gateway spend-limit controls to limit runaway spend and enforce per-workspace consent. Prior cadence included v2.1.221 (2026-08-04) and earlier permission/Conductor fixes. Community reports continue to note long-lived sessions and secret-leak experiments; containment engineering posts remain relevant. Freshness: follow-up (previously covered 2026-08-03).
+- replace_section anchor: `## Claude Code`
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.225
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.

@@ -216,3 +216,12 @@ Evidence:
   - Evidence: Vercel Chat SDK durable approvals (2026 changelog) — allows workflows to pause and await explicit human approval.
   - Should promote to playbook? yes
   - Source: https://vercel.com/changelog/chat-sdk-durable-approvals
+
+
+## Durable approval pattern (Vercel Chat SDK)
+
+- When useful: long-running agent flows that require human-in-the-loop pauses (approvals, compliance gates, deploy gating).
+- Evidence: Vercel Chat SDK durable approvals feature announced (changelog). Evidence strength: Strong (vendor changelog).
+- Recipe summary: implement a durable-approval webhook that pauses agent action, creates a human-approval ticket (linked via GitHub 'Relates to'), and resumes the agent when approved. Tie approval artifacts to object-store snapshots for an auditable trail.
+- Should promote to playbook? yes
+- Source: https://vercel.com/changelog/chat-sdk-durable-approvals
