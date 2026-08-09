@@ -90,3 +90,12 @@ Last updated: 2026-07-09
 - Safety Alignment for Long‑Horizon Models (openai-safety-horizon): promoted as a governance signal; Source: https://openai.com/index/safety-alignment-long-horizon-models
 - Gemini 3.6 Flash Release: promoted; Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
 - Claude Code Conductor 2.51.1: promoted; Source: https://pypi.org/project/claude-code-conductor/2.51.1/
+
+
+### 2026-08-09 Promotions
+
+- OpenAI Python SDK (openai PyPI): promoted — reason: official SDK release changes client/auth/integration surface used by many agent runtimes; this has high operational impact on runtime compatibility, telemetry, and persisted session artifacts. Source: https://pypi.org/project/openai/
+
+- Cloudflare OS (Agent Access Model / WriteGuard): promoted — reason: major vendor-level policy and egress primitives that shift containment, edge snapshot/export patterns, and audit sinks to the platform; affects Thesis 8 (platform-vendor MCP entry) and Thesis 9 (containment/security). Source: https://blog.cloudflare.com/cloudflare-os/
+
+- Omnigent: promoted (upgrade) — reason: agent meta-harness with strong community adoption and immediate operator relevance for cross-runtime orchestration, policy enforcement, and verifiable action receipts. Source: https://github.com/omnigent-ai/omnigent

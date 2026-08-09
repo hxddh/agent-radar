@@ -3130,3 +3130,17 @@ All candidates above are added to the inbox for further evaluation during daily 
 - **Anthropic Claude Code v2.1.225** (scr-4d9b1f): release adds workspace trust prompts and gateway spend limits; why it matters: operator guardrails reduce billing/exfil blast radius; evidence strength: Strong (GitHub release); promotion_status: candidate->monitor; candidate_seen_at: 2026-08-08; last_checked_at: 2026-08-08; follow-up: test workspace-trust UX and spend-limit enforcement in staging. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.225
 
 - **OpenYak CVE report** (scr-5e2c7a): social report of a high-severity runtime CVE (~9.6) for a local-first agent runtime. Why it matters: local runtime compromise escalates attack surface for agent deployments. Evidence strength: Medium (Bluesky social); promotion_status: candidate (security); defer_reason: missing canonical advisory (NVD/GitHub Advisory). follow-up needed: obtain NVD entry or vendor advisory and patch timeline. candidate_seen_at: 2026-08-08; last_checked_at: 2026-08-08. Source: https://bsky.app/profile/euvd-bot.bsky.social/post/3msjnxr5txu2u2y
+
+
+- **OpenAI (PyPI) 2.53.0 (scr-1a2b3c4)**: promotion_status: promoted; reason: official SDK release is strong first-party evidence and materially affects runtime integrations, auth surface, and persisted session behavior across many agent clients and MCP tooling. candidate_seen_at: 2026-08-06, last_checked_at: 2026-08-09, defer_count: 0.
+  - Source: https://pypi.org/project/openai/
+
+- **Cloudflare OS / Agent Access Model / WriteGuard (scr-2b7c6d9e)**: promotion_status: promoted; reason: Cloudflare's official launch documents platform-level access/egress controls and WriteGuard primitives with direct storage and audit implications for edge-deployed agents. candidate_seen_at: 2026-08-06, last_checked_at: 2026-08-09, defer_count: 0.
+  - Source: https://blog.cloudflare.com/cloudflare-os/
+
+- **Omnigent (scr-omnigent)**: promotion_status: promoted; reason: sustained community adoption (public repo, installer packs, adapter activity) and clear operator-facing policy/enforcement primitives make Omnigent immediately relevant as an orchestration/meta-harness. candidate_seen_at: earlier, last_checked_at: 2026-08-09, defer_count: 0.
+  - Source: https://github.com/omnigent-ai/omnigent
+
+- Checked but deferred (incremented defer_count): **google-gemini/gemini-cli v0.56.0-nightly** (scr-gemini) — defer_count: +1; note: nightly/prerelease; follow-up: check stable changelog and official release notes for operator-impacting changes. last_checked_at: 2026-08-09.
+
+- Checked but deferred (incremented defer_count): **OpenYak CVE (scr-5e2c7a)** — defer_count: +1; note: social report of runtime CVE needs canonical NVD/GitHub Advisory before promotion; follow-up: obtain NVD/GitHub Advisory entry. last_checked_at: 2026-08-09.

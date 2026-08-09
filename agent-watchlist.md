@@ -165,20 +165,15 @@ Status:
 # Emerging Agents
 
 ## Omnigent
-
 - Category: Agent meta-harness / orchestration
-- Why it matters: Directly addresses agent runtime fragmentation by orchestrating Claude Code, Codex, Cursor, Pi, and custom agents under a single harness with policy enforcement, sandboxing, and real-time collaboration.
-- Recent signal: Public GitHub repo with 5,945 stars and active updates (2026-07-01).
-- Source class: Official public source.
-- Source visibility: Public.
-- Evidence strength: Medium (strong community interest, but no production user evidence yet).
-- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal (weak).
-- Infra angle: Agent orchestration, harness swapping, policy enforcement, sandboxing, real-time collaboration.
-- Risk: Early-stage; may be absorbed by mainstream agent platforms or remain a power-user tool.
-- Public corroboration: GitHub stars and recent activity suggest growing interest, but no independent user reports yet.
-- Watch next: Whether Omnigent publishes integration docs, user case studies, or enterprise adoption signals.
+- Why it matters: Orchestrates multiple coding agents under a single harness with policy enforcement, mediated egress, and verifiable action receipts. Addresses fragmentation across Claude Code, Codex, Cursor and other runtimes and surfaces operator-facing governance primitives that materially affect containment, audit, and MCP integration choices.
+- Recent signal: Active public GitHub repo with strong community adoption and continued updates (installer packs, adapters, policy hooks) observed across July–August 2026.
+- Evidence strength: Strong (official GitHub repo + community adoption)
+- User evidence: Early community deployments and adapter contributions; independent enterprise case studies still limited.
+- Infra angle: Agent orchestration, mediated egress / audit receipts, sandbox adapters, policy enforcement hooks, and runtime governance primitives.
+- Risk: May be absorbed by mainstream platforms or require security audits before enterprise adoption.
+- Watch next: integration docs, enterprise adoption signals, and security audit results.
 - Source: https://github.com/omnigent-ai/omnigent
-
 ## Vestige
 
 - Category: Agent memory / debugging
@@ -392,3 +387,12 @@ Status:
 - Recent changes: 2026-08-03 — GitHub added configurable reasoning levels for Copilot cloud agents, enabling operators to tune stepwise decomposition vs concise responses. Source: https://github.blog/changelog/2026-08-03-customize-the-reasoning-level-for-copilot-cloud-agent
 - Why it matters: Provides an operator knob to trade latency/cost for higher-step reasoning; affects tooling telemetry and containment surface. Evidence strength: Strong (official changelog).
 - replace_section anchor: `## GitHub Copilot`
+
+
+## Cloudflare OS
+
+- Category: Platform OS / agent workspace & governance
+- Why it matters: Cloudflare OS introduces a vendor-level Agent Access Model and WriteGuard primitives that push egress control, policy templates, and runtime isolation into the platform layer. This changes operator responsibilities for snapshot exports, retention policies, and edge audit sinks—shifting some containment responsibilities to a major vendor and affecting MCP integration patterns.
+- Recent changes: Official Cloudflare launch announcement describing Agent Access Model and WriteGuard policy examples (2026-08-06).
+- Evidence strength: Strong (official Cloudflare blog)
+- Source: https://blog.cloudflare.com/cloudflare-os/
