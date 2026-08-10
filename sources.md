@@ -1634,3 +1634,11 @@ Ignore or deprioritize:
 - [user_workflow] Dev.to — Kiro Crew cron jobs replaced ~4 hours weekly: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h
 - [infra_primitive / security] OpenYak CVE report (social): https://bsky.app/profile/euvd-bot.bsky.social/post/3msjnxr5txu2u2y
 - [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent
+
+
+## Recent additions (2026-08-10)
+- [mainstream_product] Anthropic — Claude Code 'auto mode' default (report): https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/
+- [mainstream_product] Meta — Muse Code coding agent debut: https://www.cnbc.com/2026/08/05/meta-debuts-muse-code-to-take-on-anthropic-and-openai-.html
+- [mainstream_product] @github/copilot (npm package listing): https://www.npmjs.com/package/%40github/copilot
+- [mainstream_product] AWS — Amazon Bedrock AgentCore adds memory, policy, and harness in GovCloud: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcore-memory-policy-harness-govcloud/
+- [mainstream_product] Vercel — AI Gateway & Sandbox now available on Hermes Agent: https://vercel.com/changelog/vercel-ai-gateway-and-vercel-sandbox-now-available-on-hermes-agent
