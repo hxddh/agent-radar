@@ -336,3 +336,14 @@ AI Agent workloads create demand for:
 - Storage implications: SDK-level changes can alter default auth flows, telemetry hooks, and error-handling paths that affect how runtimes persist session artifacts, how retries/partial writes occur, and whether new fields appear in persisted artifact schemas. Operators should audit SDK changelogs for breaking changes that touch upload/streaming endpoints, default timeout/retry behavior, and any metadata fields that land in persisted logs or object-store snapshots.
 - Evidence strength: Strong
 - Source: https://pypi.org/project/openai/
+
+
+- Agent snapshot lifecycles: short TTL object buckets
+  - Observation: With more local/open models and disposable sandboxes, operators prefer pushing completed runs/artifacts to object storage with automated lifecycle rules (24–72h) to balance auditability and data minimization.
+  - Implication: Bucket lifecycle templates, automatic redaction, and encryption-at-rest are required to avoid persistent leakage.
+  - Watch trigger: A vendor publishes a recommended snapshot lifecycle template or S3 lifecycle policy example for agent artifacts.
+
+- Signed artifacts and append-only logs for audit
+  - Observation: Image signing and append-only log streams provide stronger forensics for agent actions across short‑lived sandboxes.
+  - Implication: Registries and logging infrastructure must support signing and append-only retention to preserve action receipts.
+  - Watch trigger: Registry or sandbox project announces native TTL + signing support for agent images.

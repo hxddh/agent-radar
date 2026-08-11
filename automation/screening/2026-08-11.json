@@ -1,0 +1,226 @@
+{
+  "summary": "Daily agent-space screening: Meta’s Muse Glimmer launch and Cloudflare Agents Week lead product news; multiple new sandbox/MCP repos and social reports show operational shifts (Docker sandboxes, AWS Kiro/MCP, Anthropic Claude Code changes). Several GitHub infra repos need corroboration.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Meta releases Muse Glimmer (30B agent model, open weights)",
+      "why_it_matters": "30B open agent model that targets always-on local agent workflows on consumer GPUs.",
+      "evidence": [
+        "https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model",
+        "https://bsky.app/profile/canivibe.ai/post/3msrjwrbp2i27",
+        "https://news.ycombinator.com/item?id=4925"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Track adoption, benchmarks, and published inference requirements/guide.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion",
+      "evidence_strength": "Strong (multiple independent user reports)",
+      "corroboration": "multi-platform"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Cloudflare: Agents Week roundup (multiple agent launches/updates)",
+      "why_it_matters": "Vendor-level agent platform updates that affect integrations and hosting choices.",
+      "evidence": [
+        "https://blog.cloudflare.com/agents-week-review-august-2026/",
+        "https://bsky.app/profile/patrickcmiller.bsky.social/post/3msqp7b45hk2n"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Drill into each announced feature (MCP, tooling, OSS components) for follow-ups.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "JetBrains: Chrome DevTools Connect for WebStorm",
+      "why_it_matters": "Lets AI agents interact with browser debugging from WebStorm (agent + browser integration).",
+      "evidence": [
+        "https://blog.jetbrains.com/webstorm/2026/08/chrome-connect-webstorm/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for user reports showing concrete agent workflows enabled by the feature."
+    },
+    {
+      "id": "scr-4d5e6f70",
+      "title": "Docker (social reports): 'Sandboxes' disposable microVM sandboxes for coding agents",
+      "why_it_matters": "Disposable microVMs isol\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/breachprotocol.bsky.social/post/3msrl5dibou2r",
+        "https://bsky.app/profile/argosvix.com/post/3msrkbxxpnk25"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Find official Docker announcement/docs to confirm feature and APIs.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Strong (multiple independent user reports)",
+      "corroboration": "multi-platform"
+    },
+    {
+      "id": "scr-5e6f7081",
+      "title": "Anthropic: Claude Code release v2.1.227 (coding-agent update)",
+      "why_it_matters": "Claude Code release changes agent behavior/limits relevant to multi-subagent runs.",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.227",
+        "https://github.com/anthropics/claude-code/commit/66edf5358349356774812264b75b8ea792f0d0a3"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Monitor release notes for specific operator-facing behavior changes/caveats."
+    },
+    {
+      "id": "scr-6f708192",
+      "title": "OpenSandbox: Secure, fast, extensible sandbox runtime for agents (large OSS project)",
+      "why_it_matters": "Sandbox runtime choice impacts safety, memory and runtime isolation for agents.",
+      "evidence": [
+        "https://github.com/opensandbox-group/OpenSandbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Seek independent adoption reports or vendor docs to corroborate project maturity.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-708192a3",
+      "title": "Omnigent: Open-source agent harness/meta-harness",
+      "why_it_matters": "Orchestration/harness that swaps agent harnesses, enforces policies, and supports collaboration.",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Look for third-party integrations, demos, or user threads that confirm production use.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8192a3b4",
+      "title": "affaan-m/ECC: Agent harness performance optimization system (large-star OSS)",
+      "why_it_matters": "Performance/skill management changes can reorder which harnesses are preferred.",
+      "evidence": [
+        "https://github.com/affaan-m/ECC"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "Require independent coverage or adoption metrics before promotion.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-92a3b4c5",
+      "title": "AWS rebuilt 'Kiro' with the Model Context Protocol (social report)",
+      "why_it_matters": "Shifts differentiation t\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/thenewstack.io/post/3msrjf6qgt72z"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Verify via AWS blog/announcement and operator reports.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-a3b4c5d6",
+      "title": "Reverse-engineer: Meta's Muse Code binary reveals hidden agent workflows",
+      "why_it_matters": "Forensics on binary uncovers hidden workflow hooks and security/operational risks.",
+      "evidence": [
+        "https://runtimewire.com/article/exclusive-meta-s-muse-code-binary-reveals-hidden-agent-workflows-and-a-git-plugi",
+        "https://news.ycombinator.com/item?id=4924"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Track authoritative technical analysis or official response from Meta.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-b4c5d6e7",
+      "title": "cocofhu/approving: self-hostable visual, reviewable agent delivery workflows (repo)",
+      "why_it_matters": "Pauses for human approval in agent pipelines ease recoverability and reviewability.",
+      "evidence": [
+        "https://github.com/cocofhu/approving"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Search for independent user reports or demo videos showing it in production.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-c5d6e7f8",
+      "title": "vishalsachdev/canvas-mcp: Canvas LMS MCP server (education-focused tools)",
+      "why_it_matters": "MCP server offering 80+ tools shows vertical MCP adoption in education workflows.",
+      "evidence": [
+        "https://github.com/vishalsachdev/canvas-mcp"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Find educator/operator threads or adoption examples to corroborate claims.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Reddit agent-ops threads (reddit-rss collection errors)",
+    "Missing mainstream_product: official Docker announcement for 'Sandboxes' (only social signals found)",
+    "Missing mainstream_product: clear OpenAI agent product/changelog entry relevant to today's agent deltas"
+  ]
+}

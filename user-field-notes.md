@@ -290,3 +290,6 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Kiro Crew cron jobs (Dev.to)**: scheduled agent cron jobs replaced ~4 hours of weekly toil for an ops team at cost ~$2.10/week. Why it matters: demonstrates low-cost, high-signal automation pattern that is safe when scoped read-only and budget-capped. Evidence strength: Medium (dev.to). candidate_seen_at: 2026-08-08. Source: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h
 
 - **Persistent sessions in Redis (Bluesky reports)**: operators report using external Redis for session persistence and resume. Why it matters: centralizes session state and becomes a high-value target for exfil and stale-belief bugs. Evidence strength: Medium (Bluesky). candidate_seen_at: 2026-08-08. Source: https://bsky.app/profile/automate-n8n.bsky.social/post/3msf3gecbjk26
+
+
+- **Disposable sandbox pattern (2026-08-11)**: Operators report using ephemeral Docker/microVM sandboxes for coding agents to reduce blast radius. Common practice: mount the repo read-only, write outputs to an S3-compatible bucket with a 24–72h TTL, and destroy the container/image after each session. Evidence strength: Medium (Bluesky community reports). Source: https://bsky.app/profile/breachprotocol.bsky.social/post/3msrl5dibou2r

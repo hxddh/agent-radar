@@ -225,3 +225,15 @@ Evidence:
 - Recipe summary: implement a durable-approval webhook that pauses agent action, creates a human-approval ticket (linked via GitHub 'Relates to'), and resumes the agent when approved. Tie approval artifacts to object-store snapshots for an auditable trail.
 - Should promote to playbook? yes
 - Source: https://vercel.com/changelog/chat-sdk-durable-approvals
+
+
+## Sandbox test checklist (candidate playbook)
+
+- When useful: validating new agent versions (models, tool adapters) before production rollout.
+- Steps:
+  1. Launch agent in ephemeral sandbox (container/microVM) with repo mounted read-only.
+  2. Route agent outputs/logs to a short‑lived object storage bucket (TTL 24h) with server-side encryption.
+  3. Run a red-team/test harness that exercises tool calls and egress attempts for ~100 representative tasks.
+  4. Verify image signing and registry immutability for the sandbox image; destroy image and volumes after testing.
+- Evidence: community sandbox reports + vendor sandbox docs (Cloudflare/Vercel).
+- Should promote to playbook? yes (after internal validation and templating).

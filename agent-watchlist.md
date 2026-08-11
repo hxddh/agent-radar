@@ -12,9 +12,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; deployed in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: v2.1.225 released (2026-08-08) introducing workspace trust prompts and gateway spend-limit controls to limit runaway spend and enforce per-workspace consent. Prior cadence included v2.1.221 (2026-08-04) and earlier permission/Conductor fixes. Community reports continue to note long-lived sessions and secret-leak experiments; containment engineering posts remain relevant. Freshness: follow-up (previously covered 2026-08-03).
-- replace_section anchor: `## Claude Code`
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.225
+- Recent changes: v2.1.227 released (2026-08-11) with runtime adjustments that affect workspace trust and spend controls. Prior cadence included v2.1.225 (2026-08-08) introducing workspace trust prompts and gateway spend-limit controls. Community reports continue to note long‑lived sessions and secret‑leak experiments; containment engineering posts remain relevant. Freshness: follow-up (previously covered 2026-08-03).
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.227
+- Evidence strength: Strong
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -290,11 +290,10 @@ Status:
 
 ## Cloudflare Agents
 - Category: Edge agent platform / agent detection
-- Recent changes: Multiple product deltas (2026-08): Kitesurf (agent-first browser using V8 isolates on Workers), MCP v2 (orchestration + policy hooks), and Cloudflare AI Search (agent-focused retrieval). These releases centralize runtime isolation and retrieval primitives and introduce WriteGuard-style egress/policy controls.
-- User impact: Easier edge deployment for agents, built-in retrieval for RAG pipelines, and new policy hooks that operators should adopt to limit egress and privilege scope.
-- Infra implication: Edge runtime + MCP v2 increases the importance of policy templates, snapshot retention, and export APIs; plan migration for registered MCP clients.
+- Recent changes: Cloudflare Agents Week (Aug 2026) documents Kitesurf (agent-first browser), MCP v2 orchestration hooks, WriteGuard-style egress controls, and AI Search focused on retrieval for agents. These releases centralize runtime isolation, retrieval, and egress/policy controls at the edge and introduce first-party audit/export sinks.
+- Impact: Raises the bar for hosted-agent containment and shifts some operator responsibilities to vendor policy mappings and audit configuration.
+- Source: https://blog.cloudflare.com/agents-week-review-august-2026/
 - Evidence strength: Strong
-- Sources: https://blog.cloudflare.com/kitesurf/ ; https://blog.cloudflare.com/mcp-v2/ ; https://blog.cloudflare.com/ai-search-easier/
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
