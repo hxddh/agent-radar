@@ -347,3 +347,20 @@ AI Agent workloads create demand for:
   - Observation: Image signing and append-only log streams provide stronger forensics for agent actions across short‑lived sandboxes.
   - Implication: Registries and logging infrastructure must support signing and append-only retention to preserve action receipts.
   - Watch trigger: Registry or sandbox project announces native TTL + signing support for agent images.
+
+
+## 2026-08-12 storage & infra notes
+
+- DDoS-resilient memory sync patterns
+  - Observation: Cloudflare H1 2026 DDoS report increases risk of intermittent network outages for agent gateways and memory/KV syncs.
+  - Implication: Use write-ahead queues, durable local caches, and idempotent memory update APIs to prevent corruption or silent loss of agent state; implement exponential backoff and circuit breakers for remote memory stores.
+  - Evidence strength: Strong (Cloudflare H1 2026 DDoS report).
+  - Source: https://blog.cloudflare.com/ddos-threat-report-2026-h1/
+  - Watch trigger: Sustained retry-queue growth or memory-store timeouts during high-volume DDoS events.
+
+- Memory SDK compatibility & backup
+  - Observation: mem0 v2.0.18 updates Python/Node SDKs used by agents for persistent memory.
+  - Implication: Validate serialization and snapshot/restore flows before upgrading; ensure backups and migration steps exist for memory stores containing sensitive context.
+  - Evidence strength: Strong (mem0 release).
+  - Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.18
+  - Watch trigger: Any deserialization errors or missing recall items in staging after mem0 SDK upgrade.

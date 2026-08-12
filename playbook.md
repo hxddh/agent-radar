@@ -237,3 +237,12 @@ Evidence:
   4. Verify image signing and registry immutability for the sandbox image; destroy image and volumes after testing.
 - Evidence: community sandbox reports + vendor sandbox docs (Cloudflare/Vercel).
 - Should promote to playbook? yes (after internal validation and templating).
+
+
+## Candidate playbook: Sanitize example commands and header echoes
+
+- Trick: When generating or shipping example curl/HTTP commands from agent toolkits, always replace identifiable headers (User-Agent, From, Authorization) with placeholders (e.g. "User-Agent: <redacted@example.com>"). Include a short note: "Replace placeholders with safe credentials in secure environments."
+- When useful: Tooling that prints ready-to-run commands (CLI scaffolds, SDK quickstart snippets, debug outputs).
+- Evidence: Claude Code issue where example output included a real email (public GitHub issue, 2026-08-12); repeated community field reports about accidental leaks when copying examples.
+- Should promote to playbook? yes
+- Rationale: Low-friction, high-impact mitigation for a common operator privacy leak; easily automated in codegen templates and docs pipelines.

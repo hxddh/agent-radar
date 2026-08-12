@@ -293,3 +293,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 
 
 - **Disposable sandbox pattern (2026-08-11)**: Operators report using ephemeral Docker/microVM sandboxes for coding agents to reduce blast radius. Common practice: mount the repo read-only, write outputs to an S3-compatible bucket with a 24–72h TTL, and destroy the container/image after each session. Evidence strength: Medium (Bluesky community reports). Source: https://bsky.app/profile/breachprotocol.bsky.social/post/3msrl5dibou2r
+
+
+- 2026-08-12: Claude Code example outputs leaking User-Agent email (public GitHub issue). Public-safe summary: example curl commands emitted by the toolkit included a real email address in User-Agent; operators should sanitize example headers and avoid copy-pasting unredacted examples. Evidence strength: Medium. Source: https://github.com/anthropics/claude-code/issues/78431
+
+- 2026-08-12: Community reports (Bluesky) of developers shifting to terminal/CLI-first flows as agents automate editor work. Public-safe summary: CLI workflows simplify automation but increase shell-history/token persistence risks; teams should document ephemeral-shell patterns. Evidence strength: Weak→Medium. Source: https://bsky.app/profile/purnamana.bsky.social/post/3msu4pgx6ak2l
