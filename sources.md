@@ -1642,3 +1642,13 @@ Ignore or deprioritize:
 - [mainstream_product] @github/copilot (npm package listing): https://www.npmjs.com/package/%40github/copilot
 - [mainstream_product] AWS — Amazon Bedrock AgentCore adds memory, policy, and harness in GovCloud: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcore-memory-policy-harness-govcloud/
 - [mainstream_product] Vercel — AI Gateway & Sandbox now available on Hermes Agent: https://vercel.com/changelog/vercel-ai-gateway-and-vercel-sandbox-now-available-on-hermes-agent
+
+
+## Recent additions (2026-08-13)
+- [mainstream_product] Anthropic — Introducing Claude Opus 5 (product announcement). https://www.anthropic.com/news/claude-opus-5
+- [mainstream_product] GitHub — Agent Plugins 1.0 in VS Code, Copilot CLI, and the Copilot app (changelog). https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
+- [mainstream_product] Vercel — AI Gateway: Grok 4.6, DeepSeek weight updates, agent setup (changelog). https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+- [mainstream_product] Anthropic — Claude Code v2.1.229 release (GitHub release). https://github.com/anthropics/claude-code/releases/tag/v2.1.229
+- [mainstream_product] Mistral — Studio / Vibe / Forge product pages (product). https://mistral.ai/products/studio/
+- [user_workflow / discussion] Memory safety: operators report poisoned add-only memories in real codebases (Bluesky field report). https://bsky.app/profile/foursignalsdev.bsky.social/post/3mswnni4xpo26
+- [infra_primitive / security] Cloudflare — DDoS Threat Report H1 2026 (infra-scale threat report). https://blog.cloudflare.com/ddos-threat-report-2026-h1/
