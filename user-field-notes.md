@@ -298,3 +298,14 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - 2026-08-12: Claude Code example outputs leaking User-Agent email (public GitHub issue). Public-safe summary: example curl commands emitted by the toolkit included a real email address in User-Agent; operators should sanitize example headers and avoid copy-pasting unredacted examples. Evidence strength: Medium. Source: https://github.com/anthropics/claude-code/issues/78431
 
 - 2026-08-12: Community reports (Bluesky) of developers shifting to terminal/CLI-first flows as agents automate editor work. Public-safe summary: CLI workflows simplify automation but increase shell-history/token persistence risks; teams should document ephemeral-shell patterns. Evidence strength: Weak→Medium. Source: https://bsky.app/profile/purnamana.bsky.social/post/3msu4pgx6ak2l
+
+
+- JetBrains agent install fix (2026-08-14)
+  - Source class: Official vendor blog
+  - Evidence strength: Strong
+  - Public-safe summary: JetBrains fixed agent installs targeting the wrong Python interpreter; reported task success rates rose to ~95%. Operational takeaway: add explicit interpreter binding (python -m pip install or a dedicated venv) to onboarding scripts and CI to reduce agent flakiness. Source: https://blog.jetbrains.com/pycharm/2026/08/we-stopped-ai-agents-from-installing-into-the-wrong-python-task-success-rates-jumped-to-95/
+
+- Gemma on EC2 G5g field report (2026-08-14)
+  - Source class: Community field report (dev.to)
+  - Evidence strength: Medium
+  - Public-safe summary: Serving Gemma 4 on Graviton2+GPU instances was blocked by a 64 KiB shared-memory limit; operators should preflight shm settings and prefer x86 GPU hosts until packaging/runtime fixes are available. Source: https://dev.to/gde/running-gemma-4-on-ec2-g5g-graviton2-amd-with-nvidia-gpu-25ci

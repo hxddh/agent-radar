@@ -1,0 +1,147 @@
+{
+  "summary": "Daily agent/infra screening: multi-agent runtimes and agent plugins gained momentum (Grok, GitHub Copilot plugins); field reports surface deployment quirks (Gemma on Graviton/GPU); several new infra primitives (MCP memory, session search, autonomous gateway) need corroboration.",
+  "candidates": [
+    {
+      "id": "scr-1f3a9b2",
+      "title": "Agent Plugins 1.0 in VS Code, Copilot CLI, and Copilot App (GitHub)",
+      "why_it_matters": "Agent Plugins 1.0 expands plugin surface across VS Code, Copilot CLI and app",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor adoption reports and extension marketplace telemetry"
+    },
+    {
+      "id": "scr-7b2c4e6",
+      "title": "Grok 4.6 reported (xAI) — big context window for long-running agent work",
+      "why_it_matters": "Grok 4.6 adds ~500K cont\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/1ban-news.bsky.social/post/3msykar2pwc2j",
+        "https://bsky.app/profile/testingcatalog.com/post/3msyk465mvm2r",
+        "https://bsky.app/profile/index.www.testingcatalog.com.ap.brid.gy/post/3msyk36evr3k2"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "confirm via official xAI/xai.grok release notes or Cursor/OpenRouter integration pages",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-a9d8f11",
+      "title": "Vercel AI SDK / workflow release (ai-sdk/workflow@1.0.65, ai@7.0.65)",
+      "why_it_matters": "Vercel updates SDKs relevant to agent/workflow deployments and gateway usage",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%401.0.65",
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.65"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "check changelog for breaking changes and Blackbox/AI Gateway notes"
+    },
+    {
+      "id": "scr-4c6e2d9",
+      "title": "Field report: Running Gemma 4 on EC2 G5g (Graviton2 + NVIDIA)",
+      "why_it_matters": "Serving Gemma 4 on EC2 G5g blocked by a 64 KiB shared-memory limitation",
+      "evidence": [
+        "https://dev.to/gde/running-gemma-4-on-ec2-g5g-graviton2-amd-with-nvidia-gpu-25ci",
+        "https://dev.to/aws-builders/running-gemma-4-on-ec2-g5g-graviton2-amd-with-nvidia-gpu-13j"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "verify with vLLM/Gemma builder docs and community threads for workarounds",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9e5b7c3",
+      "title": "JetBrains: Fixing agent installs into wrong Python raised success rates",
+      "why_it_matters": "Fixing agent install Python envs raised task success to ~95%+, improving reliability",
+      "evidence": [
+        "https://blog.jetbrains.com/pycharm/2026/08/we-stopped-ai-agents-from-installing-into-the-wrong-python-task-success-rates-jumped-to-95/"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "track which patterns/guardrails JetBrains published (ext configs, env isolation) for reproducibility"
+    },
+    {
+      "id": "scr-ebf0aa4",
+      "title": "Autonomous AI Agency (strikersam/autonomous-ai-agency) — OpenAI-compatible gateway w/ MCP",
+      "why_it_matters": "OpenAI-compatible gateway claiming MCP, orchestration, tool calling and observability",
+      "evidence": [
+        "https://github.com/strikersam/autonomous-ai-agency"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "seek independent user reports, release notes, or package/registry entries to corroborate",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-2d5f4b7",
+      "title": "ai-session-search (ahundt) — Rust-powered session search for agent logs",
+      "why_it_matters": "Ultra-fast search across millions of agent messages for observability and forensics",
+      "evidence": [
+        "https://github.com/ahundt/ai-session-search"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "find field reports or integration examples (MCP, Codex, Claude) to validate scale claims",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-c3a6d55",
+      "title": "MCP Memory (fellowgeek/mcp-memory) — fast agent memory using OKF + SQLite FTS5",
+      "why_it_matters": "Lightweight durable memory for multiple agents using OKF and SQLite full-text search",
+      "evidence": [
+        "https://github.com/fellowgeek/mcp-memory"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "monitor HN/social threads and seek deployment examples or benchmarks",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Reddit thread coverage (collector returned HTTP 429 errors)"
+  ]
+}

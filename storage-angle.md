@@ -364,3 +364,18 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong (mem0 release).
   - Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.18
   - Watch trigger: Any deserialization errors or missing recall items in staging after mem0 SDK upgrade.
+
+
+- Durable FTS memory vs vector DBs
+  - Signal: mcp-memory shows a cheap, auditable path (SQLite FTS5) for persistent agent memory and retrieval.
+  - Storage implication: Consider FTS-backed stores for low-cost recall + strong audit trails; use vector DBs where semantic similarity quality is required.
+  - Evidence strength: Medium (GitHub repo)
+  - Source: https://github.com/fellowgeek/mcp-memory
+  - Watch trigger: Multi-framework adoption or published benchmark showing comparable RAG recall rates across representative tasks.
+
+- Fast session search and forensic indexing
+  - Signal: ai-session-search indicates a need for high-throughput session indexes for agent logs and forensics.
+  - Storage implication: Indexing pipelines and retention/PII policies must be designed before enabling session search in prod; cold archives alone are insufficient for rapid triage.
+  - Evidence strength: Medium (GitHub repo)
+  - Source: https://github.com/ahundt/ai-session-search
+  - Watch trigger: Published ingestion adapters for common agent runtimes or a PoC demonstrating sub-second queries across >1M messages.

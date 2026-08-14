@@ -246,3 +246,11 @@ Evidence:
 - Evidence: Claude Code issue where example output included a real email (public GitHub issue, 2026-08-12); repeated community field reports about accidental leaks when copying examples.
 - Should promote to playbook? yes
 - Rationale: Low-friction, high-impact mitigation for a common operator privacy leak; easily automated in codegen templates and docs pipelines.
+
+
+## Ensure agent installer targets the expected Python interpreter
+- When useful: IDE-hosted and CLI agents that install Python packages as part of setup (reduces silent failures).
+- Evidence: JetBrains report showing ~95% task success after ensuring installers use explicit interpreters/venvs.
+- Steps: (1) In onboarding scripts use the explicit interpreter: /path/to/python -m pip install <pkg> or activate a named virtualenv; (2) add a post-install check that imports the installed package using the intended interpreter; (3) CI: add a smoke test that runs a small agent task end-to-end in a container matching target host.
+- Should promote to playbook? yes
+- Source: https://blog.jetbrains.com/pycharm/2026/08/we-stopped-ai-agents-from-installing-into-the-wrong-python-task-success-rates-jumped-to-95/

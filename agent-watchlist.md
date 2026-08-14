@@ -256,13 +256,9 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; Copilot remains a core developer-facing agent.
-- Recent changes: 2026-08-06 — Kimi K3 model is now available in GitHub Copilot. Operators should be aware of model-level behavior changes and possible billing/credit implications when model backends change.
-- User impact: Potential semantic changes in code suggestions and variation in token usage; CI/pipeline teams should pin model versions where reproducibility is required.
-- Infra implication: Add model-version gating and token-budget alerts for Copilot-driven automation.
-- Source class: Tier 1 (GitHub changelog)
-- Evidence strength: Strong
-- Source: https://github.blog/changelog/2026-08-06-kimi-k3-is-now-available-in-github-copilot
+- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
+- Recent changes: Agent Plugins 1.0 rolled out across VS Code, Copilot CLI, and the Copilot app on 2026-08-12. This standardizes plugin interfaces across developer surfaces and increases the operator surface for third-party code in IDE and CLI hosts. Operators should review Copilot plugin permission models, marketplace vetting, and consider sandboxing untrusted plugins. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app (Evidence strength: Strong)
+- replace_section anchor: `## GitHub Copilot`
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
