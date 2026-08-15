@@ -312,11 +312,11 @@ Status:
 
 ## Qwen Code
 - Category: Coding agent (open-weight)
-- Maturity: Active open‑source coding agent from QwenLM; ongoing releases maintain compatibility with developer toolchains.
-- Recent changes: v0.21.4 released (2026-08-02) with code tooling updates that operators should validate against CI/test suites.
-- Why it matters: Keeps an open‑weight coding agent option viable for self‑host and low‑latency workflows; competes with Claude/Codex/Gemini CLI.
-- Evidence strength: Strong (GitHub release)
-- Source: https://github.com/QwenLM/qwen-code/releases/tag/v0.21.4
+- Maturity: Active; ongoing releases maintain compatibility with developer toolchains.
+- Recent changes: v0.21.12 released (2026-08-15) with code-tooling and runtime fixes; operators should validate CI and local integrations against this patch release. Prior noted: v0.21.4 (2026-08-02) — continue to track release cadence.
+- Infra implication: Self-hosted deployments and CI matrices should include explicit compatibility tests and pinning policies to avoid silent regressions.
+- Evidence strength: Strong (GitHub release).
+- Source: https://github.com/QwenLM/qwen-code/releases/tag/v0.21.12
 ## agent-browser
 
 - Category: Browser automation / tool calling

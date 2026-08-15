@@ -309,3 +309,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Source class: Community field report (dev.to)
   - Evidence strength: Medium
   - Public-safe summary: Serving Gemma 4 on Graviton2+GPU instances was blocked by a 64 KiB shared-memory limit; operators should preflight shm settings and prefer x86 GPU hosts until packaging/runtime fixes are available. Source: https://dev.to/gde/running-gemma-4-on-ec2-g5g-graviton2-amd-with-nvidia-gpu-25ci
+
+
+- Gemma 4 on EC2 G5g (2026-08-15): operator report shows AArch64 + NVIDIA + vLLM path works but 64 KiB shared memory limits were the blocker; recommendation: bake shmmax/shmall kernel tuning and container runtime flags into infra templates. Source: dev.to (https://dev.to/gde/running-gemma-4-on-ec2-g5g-graviton2-amd-with-nvidia-gpu-25ci); Evidence strength: Medium.
+
+- Memory poisoning (2026-08-15): Bluesky operator notes repeated poisoned add-only memory entries causing degraded agent behavior; interim mitigation: add TTLs, deduplication, and signed entries; longer-term: integrate memory integrity checks and WAL checkpoints. Source: Bluesky (https://bsky.app/profile/foursignalsdev.bsky.social/post/3mswnni4xpo26); Evidence strength: Medium.
