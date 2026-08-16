@@ -99,3 +99,12 @@ Last updated: 2026-07-09
 - Cloudflare OS (Agent Access Model / WriteGuard): promoted — reason: major vendor-level policy and egress primitives that shift containment, edge snapshot/export patterns, and audit sinks to the platform; affects Thesis 8 (platform-vendor MCP entry) and Thesis 9 (containment/security). Source: https://blog.cloudflare.com/cloudflare-os/
 
 - Omnigent: promoted (upgrade) — reason: agent meta-harness with strong community adoption and immediate operator relevance for cross-runtime orchestration, policy enforcement, and verifiable action receipts. Source: https://github.com/omnigent-ai/omnigent
+
+
+### 2026-08-16 Promotions
+
+- Vercel AI Gateway (promoted): Gateway-level model routing and one-command agent setup materially affect operator model mix, deployment artifacts, and snapshot/retention needs. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+
+- Anthropic — Claude Code v2.1.229 (promoted): Runtime/conductor release that can change containment, tool-call semantics, and session streaming expectations for operators running Claude Code agents. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
+
+- GitHub Copilot — Agent Plugins 1.0 (promoted): Standardizes plugin interfaces across VS Code, Copilot CLI, and Copilot app; expands third-party plugin execution surface and increases operator governance requirements around plugin permissions, sandboxing, and artifact retention. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app

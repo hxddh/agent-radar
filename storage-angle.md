@@ -379,3 +379,15 @@ AI Agent workloads create demand for:
   - Evidence strength: Medium (GitHub repo)
   - Source: https://github.com/ahundt/ai-session-search
   - Watch trigger: Published ingestion adapters for common agent runtimes or a PoC demonstrating sub-second queries across >1M messages.
+
+
+### 2026-08-16: Vercel AI Gateway — storage implications
+
+- What happened: Vercel AI Gateway now advertises one-command coding-agent setup and gateway-level model routing (including Grok 4.6 weight availability).
+- Storage implication: Gateway-level model routing and hosted deployment flows raise several storage concerns for operators:
+  - Model-weight caching and tamper checks: hosted weight caches require integrity checks and versioning to avoid silent model drift.
+  - Deployment artifact retention: gateway-created deployment manifests, signed images, and per-run snapshots should be stored in an object store with explicit lifecycle and erase controls.
+  - Workspace snapshot pressure: lowering deployment friction increases the number of short-lived runs and snapshots; recommend automated lifecycle rules (24–72h for ephemeral artifacts) and WORM or signed-archive options for forensic artifacts.
+  - Admin/erase APIs: operators need explicit retention/erase APIs or export hooks so platform-managed embeddings or hosted artifacts can be removed for compliance.
+- Evidence strength: Strong
+- Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway

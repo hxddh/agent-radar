@@ -255,10 +255,13 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
-- Recent changes: Agent Plugins 1.0 rolled out across VS Code, Copilot CLI, and the Copilot app on 2026-08-12. This standardizes plugin interfaces across developer surfaces and increases the operator surface for third-party code in IDE and CLI hosts. Operators should review Copilot plugin permission models, marketplace vetting, and consider sandboxing untrusted plugins. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app (Evidence strength: Strong)
-- replace_section anchor: `## GitHub Copilot`
+- What it is: GitHub's integrated coding assistant surface (VS Code, Copilot CLI, Copilot App) used widely in developer workflows.
+- Recent changes: Agent Plugins 1.0 rolled out (2026-08-12) across VS Code, Copilot CLI, and the Copilot app, standardizing plugin interfaces and enabling third-party plugin-created agents and skills.
+- Why it matters: Standardized agent/plugin interfaces expand the third-party execution surface (plugins can create agents, call tools, and surface UI flows). Operators must now treat plugin installs and plugin-supplied tools as part of the attack/containment surface: permission models, vetting, sandboxing, and org-level admin controls matter for governance. Plugin-created artifacts (attachments, workspace edits, web captures) increase storage/retention considerations and audit needs.
+- Evidence strength: Strong (official GitHub changelog)
+- Relevance score: 9
+- Follow-up needed: collect plugin security model docs, admin controls, marketplace vetting rules, recommended sandboxing patterns, and concrete storage retention guidance for plugin-created artifacts.
+- Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
@@ -391,3 +394,24 @@ Status:
 - Recent changes: Official Cloudflare launch announcement describing Agent Access Model and WriteGuard policy examples (2026-08-06).
 - Evidence strength: Strong (official Cloudflare blog)
 - Source: https://blog.cloudflare.com/cloudflare-os/
+
+
+## Vercel AI Gateway (scr-vercel-ai-gateway)
+
+- What it is: Vercel's hosted AI Gateway and SDK that enables one-command coding-agent setup, gateway-level model routing, and managed model-weight availability (announced model mix includes Grok 4.6 and third-party weight routing).
+- Why it matters: Gateway-level model routing plus one-command deployment materially lowers operator friction for deploying coding agents and changes which models are available by default. This centralization affects runtime artifact patterns (cached model weights, deployment manifests, hosted agent images) and increases pressure on snapshot/retention and signed-artifact workflows.
+- Evidence strength: Strong (Vercel changelog)
+- Relevance score: 9
+- Follow-up needed: gather Hermes Agent integration docs, gateway admin controls, deployment manifests, and example retention/lifecycle patterns for gateway-created artifacts.
+- Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+
+
+## Anthropic — Claude Code (scr-claude-code)
+
+- What it is: Claude Code runtime and orchestration components for coding agents.
+- Recent change: Release v2.1.229 published (2026-08-13). Runtime and conductor updates can affect tool-calling semantics, session streaming, and containment behaviors operators rely on.
+- Why it matters: Runtime-level changes in a major coding-agent provider can shift containment assumptions (sandboxing, session streaming, workspace trust), alter artifact formats, and require ops teams to re-validate CI/compatibility and audit pipelines.
+- Evidence strength: Strong (official GitHub release)
+- Relevance score: 9
+- Follow-up needed: extract and publish release-note deltas that affect containment, tool-call sandboxes, or storage schemas; run staging compatibility checks for tool calls and session persistence.
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
