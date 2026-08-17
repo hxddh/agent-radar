@@ -391,3 +391,18 @@ AI Agent workloads create demand for:
   - Admin/erase APIs: operators need explicit retention/erase APIs or export hooks so platform-managed embeddings or hosted artifacts can be removed for compliance.
 - Evidence strength: Strong
 - Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+
+
+## 2026-08-17 — Storage implications from recent agent deltas
+
+- S3 as orchestration & snapshot store:
+  - Implication: durable, versioned job inputs and outputs simplify replay and compliance but require strict lifecycle, ACL, and encryption policies.
+  - Recommended immediate step: enforce server-side encryption, object lock/retention for critical artifacts, and a TTL for ephemeral prompts.
+  - Watch trigger: published reference architectures or Terraform modules for agent orchestration using S3 Files.
+  - Source: AWS blog; Evidence strength: Strong; Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+
+- Build cache & artifact retention (Vercel Grok Build):
+  - Implication: one-command builds can leave transient copies of repos and secrets in vendor caches; operators must set retention and scrubbing policies.
+  - Recommended immediate step: scan CI/build hooks for credentials and add pre-build credential-scrub steps.
+  - Watch trigger: Vercel publishes explicit guidance on repo data handling for Grok Build.
+  - Source: Vercel changelog; Evidence strength: Strong; Source: https://vercel.com/changelog/grok-build-harness-adapter

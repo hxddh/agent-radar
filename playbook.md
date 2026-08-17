@@ -254,3 +254,12 @@ Evidence:
 - Steps: (1) In onboarding scripts use the explicit interpreter: /path/to/python -m pip install <pkg> or activate a named virtualenv; (2) add a post-install check that imports the installed package using the intended interpreter; (3) CI: add a smoke test that runs a small agent task end-to-end in a container matching target host.
 - Should promote to playbook? yes
 - Source: https://blog.jetbrains.com/pycharm/2026/08/we-stopped-ai-agents-from-installing-into-the-wrong-python-task-success-rates-jumped-to-95/
+
+
+## S3 Files orchestration pattern (candidate playbook)
+
+- When useful: multi-agent flows that require durable inputs, snapshotable execution logs, and low-cost retention (cron replacements, long-running workflows).
+- Evidence: AWS blog describing S3 Files usage as an orchestration store for multi-agent architectures (see research-log and daily update 2026-08-17).
+- Steps (tentative): 1) write canonical job input (prompt, context refs) to S3; 2) publish a small pointer event to orchestration queue (SNS/SQS); 3) agents fetch inputs by canonical IDs; 4) agents write structured outputs & provenance metadata back to S3; 5) run periodic signed checkpoints and lifecycle policies.
+- Should promote to playbook? yes (candidate) — requires 2–3 adopter examples before full promotion.
+- Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ (Evidence strength: Strong)

@@ -1652,3 +1652,16 @@ Ignore or deprioritize:
 - [mainstream_product] Mistral — Studio / Vibe / Forge product pages (product). https://mistral.ai/products/studio/
 - [user_workflow / discussion] Memory safety: operators report poisoned add-only memories in real codebases (Bluesky field report). https://bsky.app/profile/foursignalsdev.bsky.social/post/3mswnni4xpo26
 - [infra_primitive / security] Cloudflare — DDoS Threat Report H1 2026 (infra-scale threat report). https://blog.cloudflare.com/ddos-threat-report-2026-h1/
+
+
+## Additions (2026-08-17 pass)
+- [mainstream_product] Wired — The Safety Reckoning Inside OpenAI: https://www.wired.com/story/openai-safety-security-ai-agents-culture/
+- [mainstream_product] Daring Fireball — Anthropic's 'Watermark' Text Adulteration in Claude Is a Perversion of Writing: https://daringfireball.net/2026/08/anthropics_watermark_text_adulteration_in_claude_is_a_perversion_of_writing
+- [mainstream_product] Anthropic — The Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code
+- [mainstream_product] browser-use/browser-use v0.13.8 release: https://github.com/browser-use/browser-use/releases/tag/0.13.8
+- [mainstream_product] @github/copilot (Copilot CLI) npm listing: https://www.npmjs.com/package/%40github/copilot
+- [mainstream_product] openai.chatgpt VS Code extension (open-vsx listing): https://open-vsx.org/extension/openai/chatgpt
+- [infra_primitive / security] AgentShield — Offline Rust security scanner for AI agent tools and MCP: https://github.com/aiconnai/agentshield
+- [infra_primitive / security] Customhouse — deterministic MCP proxy that blocks agent exfiltration: https://github.com/vineetpant/customhouse
+
+Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-08-17 screening. See research-log.md Candidate inbox for new candidate entries and gaps discovered during the sweep.
