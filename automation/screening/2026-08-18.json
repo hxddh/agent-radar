@@ -1,0 +1,195 @@
+{
+  "summary": "Today’s signals: Vercel SDK updates for AI workflows, JetBrains Junie switching to Gemini 3.7 Flash, Anthropic/Google nightly tooling updates; infra signals from Cloudflare (MCP detection), AWS S3 orchestration, and popular sandbox/runtime repos; user reports about self-hosted sandboxes and rate/limit pain for coding agents.",
+  "candidates": [
+    {
+      "id": "scr-1f3a9b",
+      "title": "Vercel AI SDK updates: workflow-harness, sandbox-vercel, togetherai releases",
+      "why_it_matters": "Vercel pushed SDK releases adding workflow harness and sandbox integrations for AI apps.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fsandbox-vercel%401.0.73",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Ftogetherai%403.0.32"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Read changelog for breaking changes and provider adapters (24–48h)."
+    },
+    {
+      "id": "scr-2b7c4d",
+      "title": "JetBrains Junie now defaults to Gemini 3.7 Flash (discounted pricing)",
+      "why_it_matters": "JetBrains IDE Junie switches default model to Gemini 3.7 Flash; cost/perf change for users.",
+      "evidence": [
+        "https://blog.jetbrains.com/junie/2026/08/junie-gemini-3-7-flash/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Monitor user feedback on cost/perf and any rollout notes (48–72h)."
+    },
+    {
+      "id": "scr-3d9e8f",
+      "title": "Anthropic: Claude Code release v2.1.234",
+      "why_it_matters": "Claude Code update may include agent-focused fixes and feature tweaks for coding agents.",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.234",
+        "https://www.anthropic.com/features/making-of-claude-code"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Inspect release notes for agent APIs/tooling changes (24h)."
+    },
+    {
+      "id": "scr-4a6b21",
+      "title": "Google Gemini CLI nightly releases updated",
+      "why_it_matters": "Gemini CLI nightlies updated — operator tooling changes may affect local workflows.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0-nightly.20260818.g194edea47",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0-nightly.20260817.g9a15c45fb"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for stable release notes and breaking CLI changes (48h).",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e2f90",
+      "title": "Cloudflare: How Cloudflare detects MCP traffic and helps secure it",
+      "why_it_matters": "Cloudflare details MCP detection rules to reduce attacker/agent traffic surface.",
+      "evidence": [
+        "https://blog.cloudflare.com/mcp-security-updates/",
+        "https://developers.cloudflare.com/changelog/post/2026-08-17-waf-release/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Map detection rules to our MCP traffic and test false-positive rates (week)."
+    },
+    {
+      "id": "scr-6c8d33",
+      "title": "AWS blog: Orchestrating multi-agent AI architectures with S3 Files",
+      "why_it_matters": "AWS documents S3-based orchestration pattern for multi-agent coordination and artifact storage.",
+      "evidence": [
+        "https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "Review code samples for durability/consistency tradeoffs (48–72h)."
+    },
+    {
+      "id": "scr-7f4b55",
+      "title": "OpenSandbox (popular sandbox runtime repo)",
+      "why_it_matters": "OpenSandbox promotes a secure, fast runtime for hosting AI agents.",
+      "evidence": [
+        "https://github.com/opensandbox-group/OpenSandbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Need independent user reports or changelog/blog to corroborate repo-only claims.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8a1c77",
+      "title": "Reddit: Run Coding Agents in Self-Hosted Sandboxes (user report)",
+      "why_it_matters": "User shares how they run\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/ClaudeAI/comments/1vqupxf/selfhosted_sandbox_for_coding_agents/"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Search for additional threads or walkthroughs to corroborate (72h).",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-9b2d11",
+      "title": "Community reports: Codex weekly limits draining fast (rate/limit ops pain)",
+      "why_it_matters": "Operators report weekly limits being consumed unexpectedly, affecting agent uptime.",
+      "evidence": [
+        "https://community.openai.com/t/codex-weekly-limits-are-draining-way-too-fast-is-this-a-bug/1390408",
+        "https://news.ycombinator.com/item?id=4932"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Track provider status and billing logs to confirm cause (24–48h).",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-a4f0e6",
+      "title": "rulesync: Utility CLI for AI coding agents (popular GitHub repo)",
+      "why_it_matters": "CLI for syncing policy/rule state across coding agents and repos.",
+      "evidence": [
+        "https://github.com/dyoshikawa/rulesync"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "Seek user adoption reports or a changelog/blog to corroborate repo-only signal.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b6e2c4",
+      "title": "Dev.to: 'Coding agents got boring' — operational perspective",
+      "why_it_matters": "First-person view on stable coding-agent workflows and operator/maintenance patterns.",
+      "evidence": [
+        "https://dev.to/backboardio/coding-agents-got-boring-the-moment-we-built-a-really-good-one-1mc4"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Extract concrete operator patterns and examples for playbook inclusion (week).",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky collection failed (403) — potential early signals absent",
+    "Missing corroboration: several repo-only infra signals (OpenSandbox, rulesync) need independent user reports or vendor changelogs"
+  ]
+}

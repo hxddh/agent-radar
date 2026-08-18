@@ -323,3 +323,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Memory poisoning incidents (field report — Bluesky): operators report append-only memory designs that accepted adversarial inputs and then propagated incorrect facts to decisioning agents. Practical mitigation in the field: periodic human-verified checkpoints and snapshot hashing before replay. Source: https://bsky.app/profile/foursignalsdev.bsky.social/post/3mswnni4xpo26 (Evidence strength: Medium)
 
 - Cron → agent migration (Dev.to case): teams replacing scheduled cron tasks with agents are instrumenting structured job artifacts (JSON prompt+context+output) into S3 to ensure reproducibility and auditability. Source: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h (Evidence strength: Medium)
+
+
+- **Self-hosted sandbox recipes (2026-08-18)**: Multiple users shared lightweight Docker / microVM-based sandboxes for running coding agents locally to avoid vendor retention/egress defaults. Positive: full control over logs and egress. Pain: operational burden (patching, scaling), missing centralized audit unless paired with a proxy. Evidence strength: Weak–Medium (Reddit). Source: https://www.reddit.com/r/ClaudeAI/comments/1vqupxf/selfhosted_sandbox_for_coding_agents/
+
+- **Quota observability (2026-08-18)**: Operators report weekly quotas being consumed unexpectedly by long-running Codex sessions; concrete mitigation is to instrument tokens-per-session and implement quota-aware circuit breakers that route work across models or pause loops. Evidence strength: Medium (community.openai.com). Source: https://community.openai.com/t/codex-weekly-limits-are-draining-way-too-fast-is-this-a-bug/1390408
+
+- **Vercel one-command deployment note (2026-08-18)**: Teams adopting Vercel SDK report faster deployments but flagged the need to review artifact retention and repo upload policies before enabling broad org-level use. Evidence strength: Strong (Vercel release + changelog). Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway

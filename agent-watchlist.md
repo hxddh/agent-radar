@@ -397,15 +397,12 @@ Status:
 
 
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
-
-- What it is: Vercel's hosted AI Gateway and SDK that enables one-command coding-agent setup, gateway-level model routing, and managed model-weight availability (announced model mix includes Grok 4.6 and third-party weight routing).
-- Why it matters: Gateway-level model routing plus one-command deployment materially lowers operator friction for deploying coding agents and changes which models are available by default. This centralization affects runtime artifact patterns (cached model weights, deployment manifests, hosted agent images) and increases pressure on snapshot/retention and signed-artifact workflows.
-- Evidence strength: Strong (Vercel changelog)
-- Relevance score: 9
-- Follow-up needed: gather Hermes Agent integration docs, gateway admin controls, deployment manifests, and example retention/lifecycle patterns for gateway-created artifacts.
-- Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
-
-
+- Category: Gateway / deployment / platform
+- Maturity: Promoted (high operator exposure; platform-managed agent paths)
+- Recent changes: Vercel published @ai-sdk/workflow-harness v1.0.73 (2026-08-18) and updated sandbox-vercel adapters and togetherai integrations. The release adds a workflow harness for multi-step AI tasks and first-party sandbox adapters that enable one-command agent deployment via the AI Gateway. This reduces operator friction but increases platform-managed artifact and telemetry surfaces. Operators should inspect Vercel retention and egress defaults and add deployment audit logging when enabling the new SDK.
+- Source class: GitHub release + vendor changelog
+- Evidence strength: Strong
+- Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73, https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
 ## Anthropic — Claude Code (scr-claude-code)
 
 - What it is: Claude Code runtime and orchestration components for coding agents.

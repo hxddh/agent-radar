@@ -406,3 +406,20 @@ AI Agent workloads create demand for:
   - Recommended immediate step: scan CI/build hooks for credentials and add pre-build credential-scrub steps.
   - Watch trigger: Vercel publishes explicit guidance on repo data handling for Grok Build.
   - Source: Vercel changelog; Evidence strength: Strong; Source: https://vercel.com/changelog/grok-build-harness-adapter
+
+
+- **S3 as orchestration & audit plane (2026-08-18)**
+  - Observation: AWS published an S3-driven orchestration pattern for multi-agent workflows; S3 acts as both coordination plane (checkpoints, artifacts) and audit sink.
+  - Implication: Storage policies (lifecycle, encryption at rest, access logging, object-level immutability) become governance levers for agent fleets. Teams should standardize retention and indexing of agent artifacts for replay and incident analysis.
+  - Source class: Vendor blog
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+  - Watch trigger: Publication of OSS templates or SDKs that default to storing agent checkpoints in S3 or a vendor-managed object store.
+
+- **Platform-managed artifact risk (Vercel)**
+  - Observation: Vercel's one-command agent deployment increases uploads of repository artifacts and build outputs to vendor-managed storage.
+  - Implication: Artifact scanning, secret detection, and retention policies must be part of the deployment checklist; tokenized or secret-containing files could be accidentally persisted.
+  - Source class: GitHub release + vendor changelog
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73, https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+  - Watch trigger: Operator reports of accidental retention/exfiltration or vendor adding explicit artifact-scan/retention toggles in the next SDK patch.
