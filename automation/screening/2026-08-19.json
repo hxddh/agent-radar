@@ -1,0 +1,180 @@
+{
+  "summary": "Daily agent/agent-infra screening: notable vendor releases (GenKit, Cloudflare Agents, AWS AgentCore GA), safety/ops news around OpenAI, plus operator-facing workflow writeups and several infra primitives (CLI orchestrators, MCP security).",
+  "candidates": [
+    {
+      "id": "scr-genkit-1",
+      "title": "genkit (open-source agent framework)",
+      "why_it_matters": "Large, multi-language framework used in production; accelerates agent app development.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/genkit-ai/genkit"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Watch for blog posts or company announcements citing production deployments",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cloudflare-releases-2",
+      "title": "Cloudflare Agents releases (agents, hono-agents, worker-bundler)",
+      "why_it_matters": "Multiple Cloudflare Agents package updates affecting worker bundling and runtime.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/hono-agents%403.0.12",
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.21.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/worker-bundler%400.2.3",
+        "https://blog.cloudflare.com/mcp-security-updates/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Scan Cloudflare changelog and release notes for breaking API or MCP changes"
+    },
+    {
+      "id": "scr-aws-agentcore-3",
+      "title": "Amazon Bedrock AgentCore: payments now generally available",
+      "why_it_matters": "AgentCore payments GA enables real payments workflows on Bedrock-hosted agents.",
+      "evidence": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-agentcore-payments-ga/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Track docs for billing integrations and security guidance"
+    },
+    {
+      "id": "scr-openai-pause-4",
+      "title": "OpenAI slows development after rogue agent / safety overhaul",
+      "why_it_matters": "Vendor-level pause and safety protocol overhaul affects training cadence and ops.",
+      "evidence": [
+        "https://www.theguardian.com/technology/2026/aug/18/open-ai-pause-hack",
+        "https://www.wired.com/story/openai-overhauls-safety-protocols-after-its-ai-agents-went-rogue/",
+        "https://news.ycombinator.com/item?id=49345619"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Monitor official OpenAI status/incident posts and vendor changelogs",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-jetbrains-adopt-5",
+      "title": "JetBrains research: AI Coding Agents — Adoption Trends",
+      "why_it_matters": "Survey/telemetry shows concrete adoption patterns for coding agents in dev workflows.",
+      "evidence": [
+        "https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Extract operator-facing stats (IDE use, security opt-ins) for briefings"
+    },
+    {
+      "id": "scr-devto-kiro-6",
+      "title": "How I built a Kiro Crew app in 5 minutes (operator tutorial)",
+      "why_it_matters": "One-curl install demo shows fast onboarding and deployable cron/skill pattern.",
+      "evidence": [
+        "https://dev.to/aws-builders/how-i-built-a-kiro-crew-app-in-5-minutes-full-tutorial-with-code-3el0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Confirm platform limits, MCP endpoints used, and security defaults",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-fx-agent-7",
+      "title": "fx — tiny native coding agent (community momentum)",
+      "why_it_matters": "Small native coding agent gaining attention; may influence lightweight agent UX patterns.",
+      "evidence": [
+        "https://fx.sh",
+        "https://news.ycombinator.com/item?id=49346321"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for integration posts or a Vercel/official blog announcement",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-comanda-8",
+      "title": "comanda — CLI-native orchestrator for agent workflows",
+      "why_it_matters": "Terminal-first declarative YAML orchestrator targets developer-centric agent ops.",
+      "evidence": [
+        "https://github.com/kris-hansen/comanda"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Needs independent adoption report, blog post, or changelog to corroborate repo-only signal",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-cloudflare-mcpblog-9",
+      "title": "How Cloudflare detects MCP traffic and helps secure it",
+      "why_it_matters": "Cloudflare documents MCP detection and mitigation patterns for agent traffic.",
+      "evidence": [
+        "https://blog.cloudflare.com/mcp-security-updates/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Map recommended mitigations to common MCP implementations (Bedrock, MCP servers)"
+    },
+    {
+      "id": "scr-clinch-10",
+      "title": "Clinch — local-first Warp fork for agent session management (Show HN)",
+      "why_it_matters": "Local-first session manager for agent sessions suggests alternate, privacy-preserving workflows.",
+      "evidence": [
+        "https://clinch.sh/",
+        "https://news.ycombinator.com/item?id=49345619"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Confirm active maintainers, security audit, and real-user reports before promotion",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion capture: Bluesky and multiple Reddit collectors returned errors (403/429) — may hide operator reports",
+    "Missing mainstream_product: direct Microsoft Copilot official follow-up posts (social reports exist but no vendor changelog in snapshot)"
+  ]
+}

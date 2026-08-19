@@ -288,11 +288,12 @@ Status:
 - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.51.0-preview.0
 
 ## Cloudflare Agents
-- Category: Edge agent platform / agent detection
-- Recent changes: Cloudflare Agents Week (Aug 2026) documents Kitesurf (agent-first browser), MCP v2 orchestration hooks, WriteGuard-style egress controls, and AI Search focused on retrieval for agents. These releases centralize runtime isolation, retrieval, and egress/policy controls at the edge and introduce first-party audit/export sinks.
-- Impact: Raises the bar for hosted-agent containment and shifts some operator responsibilities to vendor policy mappings and audit configuration.
-- Source: https://blog.cloudflare.com/agents-week-review-august-2026/
+- Category: Edge-hosted agent runtime / developer platform
+- Maturity: Active; platform-managed edge agents with bundler and runtime updates
+- Recent changes: hono-agents@3.0.12 released with worker-bundler updates that alter packaging and deployed artifact lists. Cloudflare also published MCP detection/security guidance (see Cloudflare blog). Operators should treat bundler-output diffs as a CI gate and audit edge log retention after upgrades.
+- Source class: GitHub release, vendor blog
 - Evidence strength: Strong
+- Source: https://github.com/cloudflare/agents/releases/tag/hono-agents%403.0.12; https://blog.cloudflare.com/mcp-security-updates/
 ## Manus
 - Category: AI agent platform
 - Maturity: High-profile startup; acquisition turmoil signals strategic importance.
@@ -412,3 +413,12 @@ Status:
 - Relevance score: 9
 - Follow-up needed: extract and publish release-note deltas that affect containment, tool-call sandboxes, or storage schemas; run staging compatibility checks for tool calls and session persistence.
 - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
+
+
+## Amazon Bedrock AgentCore
+
+- Category: Platform agent runtime / payments & monetization
+- What it is: Bedrock AgentCore is Amazon's hosted agent runtime offering on Bedrock; the recent GA adds payments support for agent workloads.
+- Why it matters: Payments GA makes transactional agent use-cases viable (paid skills, microtransactions), introducing finance, audit, and fraud-detection needs to operator playbooks.
+- Evidence strength: Strong
+- Source: https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-agentcore-payments-ga/

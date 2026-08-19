@@ -423,3 +423,18 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong
   - Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73, https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
   - Watch trigger: Operator reports of accidental retention/exfiltration or vendor adding explicit artifact-scan/retention toggles in the next SDK patch.
+
+
+- AWS S3 as agent orchestration plane
+  - Observation: AWS blog documents patterns where S3 objects are used to hand off inputs/outputs and coordinate multi-agent flows.
+  - Implication: S3 bucket policies, lifecycle rules, and encryption must be part of agent threat models; object lifecycle choices affect replayability and storage costs.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+  - Watch trigger: discovery of public S3 objects from agent pipelines or vendor docs changing default lifecycles.
+
+- Edge bundler artifact retention (Cloudflare bundler changes)
+  - Observation: Cloudflare bundler updates can change which files are packaged into edge deploys.
+  - Implication: Track bundler output artifacts over releases; snapshot artifacts and add retention policies for edge logs to preserve audit trails.
+  - Evidence strength: Strong
+  - Source: https://github.com/cloudflare/agents/releases/tag/hono-agents%403.0.12
+  - Watch trigger: CI bundle diffs show new files or a spike in edge log volume after a bundler upgrade.

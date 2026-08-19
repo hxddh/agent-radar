@@ -330,3 +330,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Quota observability (2026-08-18)**: Operators report weekly quotas being consumed unexpectedly by long-running Codex sessions; concrete mitigation is to instrument tokens-per-session and implement quota-aware circuit breakers that route work across models or pause loops. Evidence strength: Medium (community.openai.com). Source: https://community.openai.com/t/codex-weekly-limits-are-draining-way-too-fast-is-this-a-bug/1390408
 
 - **Vercel one-command deployment note (2026-08-18)**: Teams adopting Vercel SDK report faster deployments but flagged the need to review artifact retention and repo upload policies before enabling broad org-level use. Evidence strength: Strong (Vercel release + changelog). Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+
+
+- Kiro Crew cron->agent migration (2026-08-19): Dev.to operator tutorial demonstrates a one-curl install and a small cron replacement that saved ~4 hours/week. Operator takeaway: start with low-risk scheduled tasks, capture pre/post metrics, and include a rollback plan. Source: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h (Evidence strength: Medium)
+
+- Vercel AI Gateway onboarding note (2026-08-19): one-command agent setup speeds onboarding but some adapters upload workspace artifacts by default. Operator takeaway: add a pre-deploy checklist to opt-out of workspace uploads and verify retention/egress defaults before enabling production deployments. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway (Evidence strength: Strong)

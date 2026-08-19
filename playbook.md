@@ -263,3 +263,17 @@ Evidence:
 - Steps (tentative): 1) write canonical job input (prompt, context refs) to S3; 2) publish a small pointer event to orchestration queue (SNS/SQS); 3) agents fetch inputs by canonical IDs; 4) agents write structured outputs & provenance metadata back to S3; 5) run periodic signed checkpoints and lifecycle policies.
 - Should promote to playbook? yes (candidate) — requires 2–3 adopter examples before full promotion.
 - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ (Evidence strength: Strong)
+
+
+## Vercel / One-command Agent Deployment Audit (candidate playbook)
+
+- When useful: Before enabling Vercel AI Gateway one-command deployments or similar platform-managed agent onboarding flows.
+- Steps (high-level):
+  - Validate what files/artifacts the adapter will upload; run a dry-run bundling step and inspect output.
+  - Confirm retention and egress defaults; ensure encryption-at-rest and appropriate lifecycle policies are set.
+  - Disable automatic repo/workspace uploads where not needed; require explicit consent for sensitive data.
+  - Add CI gate: fail deploy if bundle contains denylisted files (.env, secret keys, ~/.ssh, etc.).
+  - Add post-deploy audit: snapshot deployed artifact list and edge logs for 7 days for quick rollback/forensics.
+- Evidence: Vercel AI Gateway / workflow-harness release notes and community reports.
+- Should promote to playbook? yes (promote once corroborated with 2+ operator reports).
+- Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73; https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
