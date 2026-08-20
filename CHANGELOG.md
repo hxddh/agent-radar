@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v0.24.0 - 2026-08-20
+
+Sixteen days unattended (2026-08-04 → 08-20) published 15 of 20 dailies. All five losses were refusals where the runner held enough to repair (Issue #96).
+
+### Fixed
+- **Recall measured pool size, not model effort.** `compute_synthesis_recall_details()` divided by the entire merged screening pool, while `mainstream_recall` had long been bounded to what a day block can realistically cover. Restoring 4 screening shards in v0.22.1 grew the pool from ~16 to ~50 — so the pipeline working *better* pushed `weighted_recall` under `MIN_WEIGHTED_SYNTHESIS_RECALL` and voided the day: pool 8–12 scored 0.75–1.00, pool 45–50 scored 0.32–0.57. Recall is now measured over the diversified top-N the model was actually shown (`SCREEN_PROMPT_CANDIDATES`, default 20); a model that ignores screening still fails.
+- **Radar Sweep needed a `#### 8.` anchor to exist.** When the model omitted section 8, the sweep was skipped entirely, leaving section 7 missing too — and the structure gate then refused for both. The sweep now appends when there is no anchor.
+- **`ensure_daily_required_sections()`**: a missing canonical section is added with an explicit gap line and an `apply_warnings` entry instead of voiding the daily. Sections 7 and 8 are runner-owned; 1, 2 and 6 belong to the model, so the runner states plainly that they are missing rather than inventing content. A block missing **both** Lead Analysis and New Signals is genuinely degenerate and still refuses.
+
+### Notes
+- Measured cost for the month: **$1.95** against the $4 budget (49%) — the v0.23.0 estimate of $1.91 held.
+- `model_discussion_signal_count` (v0.23.2) shows the model writes ~3 discussion bullets per daily on its own, not 0 as predicted. The discussion injector is topping up, not carrying the section.
+
 ## v0.23.2 - 2026-08-04
 
 The first daily to exercise v0.23.0's discussion machinery (2026-08-03) worked — pool 46, 8 signals, `must_cover_missing=0`, `model_mainstream_recall=1.00`, Mini end to end — and exposed a claim in the v0.23.0 notes that is not true.

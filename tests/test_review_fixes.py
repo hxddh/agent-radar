@@ -753,3 +753,109 @@ class HonestDiscussionMetricTest(unittest.TestCase):
         )
         result = {"updates": [{"path": "daily/2026-08.md", "mode": "append", "content": day}]}
         self.assertEqual(cloud_agent_runner.count_discussion_signal_bullets(result), 1)
+
+
+class PoolSizeIndependentRecallTest(unittest.TestCase):
+    """Recall must measure model effort, not pool size (Issue #96)."""
+
+    @staticmethod
+    def _screen(n: int) -> str:
+        return json.dumps(
+            {
+                "candidates": [
+                    {
+                        "title": f"Vendor {i} shipped thing {i}",
+                        "signal_class": "mainstream_product",
+                        "confidence": "high" if i < 5 else "medium",
+                        "relevance_score": 9 - (i % 5),
+                        "evidence": [f"https://vendor{i}.com/post"],
+                    }
+                    for i in range(n)
+                ]
+            }
+        )
+
+    @staticmethod
+    def _result(covered: int) -> dict:
+        cited = " ".join(f"https://vendor{i}.com/post" for i in range(covered))
+        return {
+            "updates": [
+                {
+                    "path": "daily/2026-08.md",
+                    "mode": "append",
+                    "content": (
+                        "## 2026-08-20\n\n### English\n\n#### 2. New Signals\n\n"
+                        f"- Signal: covered {cited}\n"
+                    ),
+                }
+            ]
+        }
+
+    def test_same_coverage_scores_the_same_regardless_of_pool_size(self) -> None:
+        # Restoring 4 shards in v0.22.1 grew the pool ~16 -> ~50, and the old
+        # whole-pool denominator voided four August dailies on days the
+        # pipeline was working better.
+        small = cloud_agent_runner.compute_synthesis_recall_details(
+            self._screen(12), self._result(7)
+        )["weighted_recall"]
+        large = cloud_agent_runner.compute_synthesis_recall_details(
+            self._screen(50), self._result(7)
+        )["weighted_recall"]
+        self.assertGreaterEqual(
+            large, cloud_agent_runner.DEFAULT_MIN_WEIGHTED_SYNTHESIS_RECALL
+        )
+        # A 4x pool must not cost more than the shown-list cap explains.
+        self.assertGreater(large, 7 / 50)
+        self.assertGreaterEqual(small, large)
+
+    def test_ignoring_screening_still_fails(self) -> None:
+        details = cloud_agent_runner.compute_synthesis_recall_details(
+            self._screen(50), self._result(0)
+        )
+        self.assertLess(
+            details["weighted_recall"],
+            cloud_agent_runner.DEFAULT_MIN_WEIGHTED_SYNTHESIS_RECALL,
+        )
+
+
+class DailySectionRepairTest(unittest.TestCase):
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        cloud_agent_runner.RUN_AUDIT["daily_sections_repaired"] = 0
+
+    def _result(self, english: str) -> dict:
+        return {
+            "updates": [
+                {
+                    "path": "daily/2026-08.md",
+                    "mode": "append",
+                    "content": f"## 2026-08-20\n\n### English\n\n{english}",
+                }
+            ]
+        }
+
+    def test_missing_required_sections_are_added_not_refused(self) -> None:
+        result = self._result(
+            "#### 1. Lead Analysis\n\nnarrative\n\n#### 2. New Signals\n\n- Signal: x\n"
+        )
+        healed = cloud_agent_runner.ensure_daily_required_sections(result)
+        self.assertIn("#### 6. Storage / Infra Angle", healed)
+        # The gate that used to void the daily now passes.
+        cloud_agent_runner.validate_daily_section_structure(result)
+        body = result["updates"][0]["content"]
+        self.assertIn("Missing storage/infra angle", body)
+        self.assertTrue(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+
+    def test_block_without_lead_or_signals_still_refuses(self) -> None:
+        result = self._result("#### 3. Mainstream Agent Progress\n\n- x\n")
+        with self.assertRaises(SystemExit):
+            cloud_agent_runner.ensure_daily_required_sections(result)
+
+    def test_radar_sweep_lands_without_a_section_8_anchor(self) -> None:
+        cloud_agent_runner.SHARED_SWEEP_LINES[:] = ["- [infra] thing | https://x.dev/a"]
+        try:
+            result = self._result("#### 2. New Signals\n\n- Signal: x\n")
+            cloud_agent_runner.inject_deterministic_radar_sweep(result)
+            self.assertIn("#### 7. Radar Sweep", result["updates"][0]["content"])
+        finally:
+            cloud_agent_runner.SHARED_SWEEP_LINES[:] = []
