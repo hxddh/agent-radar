@@ -2555,6 +2555,18 @@ def compute_synthesis_recall_details(screen_text: str | None, result: dict[str, 
     candidates = screening_actionable_candidates(data)
     if not candidates:
         return {"recall": 1.0, "weighted_recall": 1.0, "mainstream_recall": 1.0}
+    # Measure recall over the candidates the model was actually SHOWN, not the
+    # whole merged pool. `build_screened_summary()` injects a diversified top-N
+    # (SCREEN_PROMPT_CANDIDATES, default 20); faulting the model for candidates
+    # it never saw made this gate a function of pool size, not of model effort.
+    # Restoring 4 screening shards in v0.22.1 grew the pool from ~16 to ~50 and
+    # voided four August dailies on days the pipeline was working BETTER:
+    # pool 8-12 scored 0.75-1.00, pool 45-50 scored 0.32-0.57 (Issue #96).
+    # mainstream_recall was already bounded this way; weighted_recall was not.
+    shown = diversify_screening_candidates(
+        candidates, env_int("SCREEN_PROMPT_CANDIDATES", DEFAULT_SCREEN_PROMPT_CANDIDATES)
+    )
+    shown_ids = {id(cand) for cand in shown}
     hay_parts = [str(result.get("summary", ""))]
     for update in normalize_result_updates(result):
         hay_parts.append(str(update.get("content", "")))
@@ -2577,19 +2589,22 @@ def compute_synthesis_recall_details(screen_text: str | None, result: dict[str, 
     weight_matched = 0.0
     mainstream_total = 0
     mainstream_matched = 0
+    shown_total = 0
     for cand in candidates:
         signal_class = infer_signal_class(cand)
         weight = float(SIGNAL_CLASS_RECALL_WEIGHTS.get(signal_class, 1.0))
-        weight_total += weight
         hit = candidate_mentioned_in_text(cand, hay)
-        if hit:
-            matched += 1
-            weight_matched += weight
+        if id(cand) in shown_ids:
+            shown_total += 1
+            weight_total += weight
+            if hit:
+                matched += 1
+                weight_matched += weight
         if id(cand) in mainstream_ids:
             mainstream_total += 1
             if hit:
                 mainstream_matched += 1
-    recall = matched / len(candidates)
+    recall = matched / shown_total if shown_total else 1.0
     weighted = weight_matched / weight_total if weight_total else 1.0
     mainstream = mainstream_matched / mainstream_total if mainstream_total else 1.0
     return {
@@ -3657,6 +3672,67 @@ def daily_english_section_headings(text: str) -> list[str]:
     return headings
 
 
+DAILY_SECTION_GAP_LINES = {
+    "#### 1. Lead Analysis": (
+        "- Missing lead analysis: the model returned signals without a cross-signal "
+        "narrative; read section 2 directly."
+    ),
+    "#### 2. New Signals": (
+        "- Missing new signals: the model narrated no fresh candidate this pass; "
+        "the full screened pool is in Radar Sweep."
+    ),
+    "#### 6. Storage / Infra Angle": (
+        "- Missing storage/infra angle: no storage-relevant candidate surfaced in this "
+        "pass; see Radar Sweep for the full pool."
+    ),
+    "#### 8. Assessment & Gaps": "- Coverage ledger: checked=see run log; missed=unrecorded.",
+}
+
+
+def ensure_daily_required_sections(result: dict[str, Any]) -> list[str]:
+    """Add canonical required sections the block lacks, with an honest gap line.
+
+    Voiding a whole daily because one required heading is absent is the refusal
+    pattern this pipeline has been retiring since v0.18 — it cost two August
+    dailies (Issue #96). Sections 7 and 8 are runner-owned and were already
+    repairable; 1, 2 and 6 belong to the model, so the runner states plainly
+    that they are missing rather than inventing content. A block missing BOTH
+    Lead Analysis and New Signals is genuinely degenerate and still refuses.
+    """
+    healed: list[str] = []
+
+    def repair(block: str) -> str:
+        present = set(daily_english_section_headings(block))
+        if not present:
+            return block
+        missing = [h for h in DAILY_REQUIRED_SECTIONS if h not in present]
+        if "#### 1. Lead Analysis" in missing and "#### 2. New Signals" in missing:
+            raise SystemExit(
+                "Refusing daily update: the day block has neither Lead Analysis nor "
+                "New Signals; nothing substantive to publish."
+            )
+        for heading in missing:
+            if heading == "#### 7. Radar Sweep" and not SHARED_SWEEP_LINES:
+                body = "- Radar Sweep unavailable: screening returned no pool this pass."
+            else:
+                body = DAILY_SECTION_GAP_LINES.get(heading, "- (auto-added by the runner)")
+            number = int(heading.split(".", 1)[0].removeprefix("#### "))
+            title = heading.split(". ", 1)[1]
+            block = _append_section_bullets(block, number, title, body)
+            healed.append(heading)
+        return block
+
+    transform_daily_english_blocks(result, repair)
+    if healed:
+        RUN_AUDIT["daily_sections_repaired"] = len(healed)
+        warning = "Daily update was missing canonical section(s): " + ", ".join(
+            sorted(set(healed))
+        ) + "; the runner added them with an explicit gap line"
+        if warning not in RUN_AUDIT["apply_warnings"]:
+            RUN_AUDIT["apply_warnings"].append(warning)
+    return healed
+
+
 def validate_daily_section_structure(result: dict[str, Any]) -> None:
     """Lock the daily template so section sets stop drifting day to day."""
     if not env_bool("STRICT_DAILY_SECTIONS", True):
@@ -3694,7 +3770,11 @@ def _sweep_replace_english(block: str) -> str:
     section = "#### 7. Radar Sweep\n\n" + "\n".join(lines) + "\n\n"
     if _SWEEP_SECTION_RE.search(block):
         return _SWEEP_SECTION_RE.sub(lambda _m: section, block, count=1)
-    return re.sub(r"(?m)^(#### 8\.)", lambda m: section + m.group(1), block, count=1)
+    if re.search(r"(?m)^#### 8\.", block):
+        return re.sub(r"(?m)^(#### 8\.)", lambda m: section + m.group(1), block, count=1)
+    # No section 8 to anchor against: append rather than silently skip, which
+    # left section 7 missing and the structure gate voided the daily.
+    return block.rstrip() + "\n\n" + section
 
 
 def _sweep_replace_chinese(block: str) -> str:
@@ -3703,7 +3783,7 @@ def _sweep_replace_chinese(block: str) -> str:
         return _SWEEP_SECTION_RE.sub(lambda _m: section, block, count=1)
     if re.search(r"(?m)^#### 8\.", block):
         return re.sub(r"(?m)^(#### 8\.)", lambda m: section + m.group(1), block, count=1)
-    return block
+    return block.rstrip() + "\n\n" + section
 
 
 def inject_deterministic_radar_sweep(result: dict[str, Any]) -> int:
@@ -3719,15 +3799,13 @@ def inject_deterministic_radar_sweep(result: dict[str, Any]) -> int:
     injected = 0
     for holder, field, text in daily_update_block_targets(result):
         if field == "english_block":
-            if "#### 8." not in text:
-                continue
             holder[field] = _sweep_replace_english(text)
             zh = holder.get("chinese_block")
             if isinstance(zh, str):
                 holder["chinese_block"] = _sweep_replace_chinese(zh)
             injected += 1
             continue
-        if "### English" not in text or "#### 8." not in text:
+        if "### English" not in text:
             continue
         english_end = text.find("### 中文")
         if english_end != -1:
@@ -4569,6 +4647,7 @@ def validate_synthesis_result(
         ensure_daily_accountability_lines(result, screen_text, root=root)
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text, root=root, day=day)
+        ensure_daily_required_sections(result)
         validate_daily_section_structure(result)
         audit_daily_depth(result)
         # Prefer auto-label over discarding an otherwise-valid bilingual day block.
@@ -7139,6 +7218,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "mainstream_auto_added": RUN_AUDIT.get("mainstream_auto_added", 0),
         "discussion_auto_added": RUN_AUDIT.get("discussion_auto_added", 0),
         "model_discussion_signal_count": RUN_AUDIT.get("model_discussion_signal_count", 0),
+        "daily_sections_repaired": RUN_AUDIT.get("daily_sections_repaired", 0),
         "accountability_lines_added": RUN_AUDIT.get("accountability_lines_added", 0),
         "mainstream_recall": RUN_AUDIT.get("mainstream_recall", 0.0),
         "must_cover_mainstream": RUN_AUDIT.get("must_cover_mainstream", 0),
@@ -7287,6 +7367,7 @@ def run_task(
     RUN_AUDIT["mainstream_auto_added"] = 0
     RUN_AUDIT["discussion_auto_added"] = 0
     RUN_AUDIT["model_discussion_signal_count"] = 0
+    RUN_AUDIT["daily_sections_repaired"] = 0
     RUN_AUDIT["accountability_lines_added"] = 0
     RUN_AUDIT["stale_roundup_count"] = 0
     RUN_AUDIT["must_cover_mainstream"] = 0
