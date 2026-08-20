@@ -340,3 +340,11 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Anthropic MCP connector break (2026-08-20)**: multiple Reddit reports describe custom MCP connectors failing after upstream changes. Public-safe summary: operators experienced connector incompatibilities that broke automated workflows; community-suggested mitigation is to pin connector SDK versions and add end-to-end smoke tests on upstream upgrades. Source class: Discussion (Reddit). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
 
 - **Codex CLI / quota pain (2026-08-20)**: community threads note weekly-limit exhaustion affecting CI-driven Codex runs; practical mitigation is local quota instrumentation and conservative backoff to avoid silent depletion. Source class: Community forum. Evidence strength: Medium. Source: (community thread referenced in research-log)
+
+
+## 2026-08-20
+
+- Field note: Codex weekly-limits drain (community forum)
+  - What happened: Multiple community posts report teams hitting weekly API limits that throttle automated coding workflows and CI jobs, causing repeated retries and degraded developer CI performance.
+  - Why it matters: Quota windows that are too coarse force operators to architect around quota boundaries (batches, fallbacks, hybrid-model routing) and can silently degrade automation reliability.
+  - Evidence strength: Medium (public forum threads); follow-up: collect vendor quota docs and assess mitigation patterns (local caching, batching, multi-model routing).

@@ -57,18 +57,17 @@ Last updated: 2026-07-09
 
 - Added signal: AWS GuardDuty AI Protection is now available as first-party threat detection for AI workloads, signaling that major cloud providers are building AI-specific security services. Directly reinforces thesis 9 (agent containment/security as first-class infrastructure). Evidence strength: Strong (official AWS announcement). Source: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-guardduty-ai-protection-aws/
 ## Open Questions
-- Will agent usage remain IDE-centric, or shift toward cloud task runners?
-- Will MCP become the default tool integration layer?
-- Will long-running agents be priced by seat, token, task, or compute time?
-- Which agent categories will expand beyond coding first?
-- Will meta-harnesses like Omnigent become standard or remain power-user tools?
-- Will agent memory primitives like Vestige be absorbed into mainstream platforms?
-- Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge?
-- Will MCP server proliferation lead to standardization (convergence) or fragmentation (divergence)?
-- Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate?
-- Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos?
-- Will the agent trust gap (low eval trust + high autonomous deployment) lead to a major incident that forces regulatory action?
-
+- Will agent usage remain IDE-centric, or shift toward cloud task runners? — New evidence (Copilot CLI, JetBrains IDE updates, Vercel AI Gateway, Daytona sandboxes) points to a hybrid trajectory: IDEs remain primary for coding workflows while cloud task runners grow for long‑running/background tasks.
+- Will MCP become the default tool integration layer? — New evidence: multiple MCP server releases and router projects (modelcontextprotocol servers, mcp-ai-router) increase adoption signals but do not establish a single default implementation yet.
+- Will long-running agents be priced by seat, token, task, or compute time? — Unchanged: no clear market consensus observed this week; pricing signals remain fragmented.
+- Which agent categories will expand beyond coding first? — Unchanged: signs of voice and browser automation growth exist, but coding still dominates adoption metrics.
+- Will meta-harnesses like Omnigent become standard or remain power-user tools? — New evidence: Omnigent uptake and OSS alternatives (swarms) suggest meta-harnesses are moving toward broader operator use, though standardization is not guaranteed.
+- Will agent memory primitives like Vestige be absorbed into mainstream platforms? — New evidence: multiple memory projects (agenticow, remem-ai, Neo4j agent-memory client) surfaced; no clear absorption into a single mainstream platform yet.
+- Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge? — Unchanged: KB‑backed MCP server patterns exist but not universally dominant.
+- Will MCP server proliferation lead to standardization (convergence) or fragmentation (divergence)? — New evidence: proliferation of server implementations increases fragmentation risk absent a strong governance push.
+- Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate? — Unchanged: multiple viable approaches coexist; dominance unresolved.
+- Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos? — New evidence: ongoing vendor entries (AWS Bedrock/AgentCore, Cloudflare OS, Vercel Gateway, JetBrains) likely accelerate adoption but also risk vendor siloing.
+- Will the agent trust gap (low eval trust + high autonomous deployment) lead to a major incident that forces regulatory action? — New evidence: press coverage and reported incidents this week increase the near-term risk; status: risk elevated but not resolved.
 ## Thesis Scorecard
 
 | # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter‑evidence |

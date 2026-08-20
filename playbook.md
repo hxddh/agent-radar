@@ -284,3 +284,11 @@ Evidence:
   - Evidence: OpenAI official zero-data-retention announcement (2026-08-20) and AWS/Cloudflare storage/MCP patterns.
   - Steps: 1) Map pipelines that can tolerate no remote retention. 2) Instrument local ephemeral logs with signed receipts and short TTL storage in an encrypted forensic bucket. 3) Add automated export hooks that trigger only under incident with airtight approval. 4) Add a test that verifies proof-of-execution receipts are retained for a configurable window. 5) Document policy in runbook and update incident response playbooks.
   - Should promote to playbook? yes
+
+
+## Ops playbook additions (2026-08-20)
+
+- Pin and smoke-test connector and runtime versions: when vendors release MCP or runtime changes, pin versions in CI and run end-to-end canaries before rolling to production.
+- Pre-flight blast-radius checks: add automated workspace scans (secrets, extension signing, dependency checks) as pre-deploy steps for agent runs.
+- Forensic receipts with zero-retention vendors: when vendor retention is opt-out/zero, capture signed short‑term receipts (local ephemeral logs, signed artifact manifests) to preserve auditability without violating privacy settings.
+- Least privilege for tool calls: enforce narrow tool scopes and time-limited credentials for agents; prefer append-only memory stores with signed records where possible.

@@ -453,3 +453,9 @@ AI Agent workloads create demand for:
   - Source class: Official / Strong
   - Source: https://openai.com/index/offering-zero-data-retention-for-frontier-models
   - Watch trigger: vendor publishes API flags or sample enterprise contract language describing how zero-retention interacts with incident investigations.
+
+
+## Storage Notes (2026-08-20)
+
+- AWS S3 orchestration pattern: object storage is being used as the durable coordination and artifact bus for multi-step agent workflows. Operational implications: per-bucket lifecycle rules, per-artifact SSE, per-request audit tags, and automated TTLs for ephemeral artifacts.
+- Zero-data-retention tradeoff: vendor-side zero retention options (OpenAI) shift forensic responsibility to operators. Recommended pattern: short-term secure forensic buckets with automated rotation and signed run receipts to preserve auditability while minimizing long-term retention.

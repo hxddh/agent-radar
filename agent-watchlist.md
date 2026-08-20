@@ -18,7 +18,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
-- Recent changes: 0day RCE vulnerability disclosed via full disclosure — malicious extensions can execute arbitrary code in Cursor IDE (2026-07-15). Users should audit installed extensions and disable untrusted ones. Freshness: follow-up on Cursor changelog (last covered 2026-07-09).
+- Recent changes: Active product updates continue (Composer, Automations, Marketplace). Community reports and security disclosures have highlighted a local-extension/0day RCE class of issues that operators should treat as high‑priority for enterprise installations. Immediate actions: enforce extension signing policies, run pre-deploy extension audits, and enable workspace‑isolation modes where available. Source: https://cursor.com/changelog#main
+- Freshness: refreshed 2026-08-20 (this watchlist entry updated to reflect recent security discussion and product cadence).
 - replace_section anchor: `## Cursor`
 ## Devin / Cognition
 
@@ -255,13 +256,11 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- What it is: GitHub's integrated coding assistant surface (VS Code, Copilot CLI, Copilot App) used widely in developer workflows.
-- Recent changes: Agent Plugins 1.0 rolled out (2026-08-12) across VS Code, Copilot CLI, and the Copilot app, standardizing plugin interfaces and enabling third-party plugin-created agents and skills.
-- Why it matters: Standardized agent/plugin interfaces expand the third-party execution surface (plugins can create agents, call tools, and surface UI flows). Operators must now treat plugin installs and plugin-supplied tools as part of the attack/containment surface: permission models, vetting, sandboxing, and org-level admin controls matter for governance. Plugin-created artifacts (attachments, workspace edits, web captures) increase storage/retention considerations and audit needs.
-- Evidence strength: Strong (official GitHub changelog)
-- Relevance score: 9
-- Follow-up needed: collect plugin security model docs, admin controls, marketplace vetting rules, recommended sandboxing patterns, and concrete storage retention guidance for plugin-created artifacts.
-- Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
+- Category: Coding agent / cloud agent
+- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
+- Recent changes: Agent Plugins 1.0 (standardizes plugin interfaces across VS Code, Copilot CLI, and Copilot app) and Copilot CLI (@github/copilot) expand runtime surfaces to terminal/CI and increase governance needs around plugin permissions and CLI auth defaults. Operators should audit plugin permission scopes, pin CLI versions in CI, and validate telemetry/retention settings when enabling agent plugins. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app; https://www.npmjs.com/package/%40github/copilot
+- Freshness: refreshed 2026-08-20.
+- replace_section anchor: `## GitHub Copilot`
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
@@ -422,3 +421,46 @@ Status:
 - Why it matters: Payments GA makes transactional agent use-cases viable (paid skills, microtransactions), introducing finance, audit, and fraud-detection needs to operator playbooks.
 - Evidence strength: Strong
 - Source: https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-agentcore-payments-ga/
+
+
+## Devin / Cognition
+
+- Category: Agent runtime / platform
+- What it is: Formerly tracked for unique runtime/IDE integrations.
+- Status: deprioritized (no public dated update since 2026-07-12 in our watchlist snapshot). Follow-up: watch for vendor changelog or enterprise adoption notes; refresh when new official posts appear.
+- Evidence strength: stale
+
+
+## Replit Agent
+
+- Category: Cloud IDE / coding agent
+- Status: deprioritized pending new public updates (no dated update in our watchlist since 2026-07-12). Follow-up: add if Replit publishes a new agent/connector changelog or security advisory.
+- Evidence strength: stale
+
+
+## Warp
+
+- Category: Terminal / developer productivity agent
+- Status: deprioritized in this pass (no public update since 2026-07-12). Follow-up: refresh if Warp publishes agent product changes or integration docs.
+- Evidence strength: stale
+
+
+## Amp
+
+- Category: Agent / productivity assistant
+- Status: deprioritized (no public update since 2026-07-12 in our snapshot). Follow-up: monitor vendor blog/changelog for product deltas.
+- Evidence strength: stale
+
+
+## Factory
+
+- Category: Agent orchestration / platform
+- Status: deprioritized pending new public updates (last snapshot 2026-07-12). Follow-up: refresh on new releases or enterprise adoption notes.
+- Evidence strength: stale
+
+
+## Raycast AI
+
+- Category: Desktop assistant / agent integration
+- Status: deprioritized (no dated update since 2026-07-12). Follow-up: add back to watchlist when Raycast publishes agent plugin marketplace changes or security notes.
+- Evidence strength: stale
