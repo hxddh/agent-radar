@@ -956,3 +956,43 @@ class ChineseMirrorRepairTest(unittest.TestCase):
             + "\n### 中文\n\n#### 1. 章节\n\n- 空：\n"
         )
         self.assertFalse(radar_bilingual.is_block_bilingual_format(daily))
+
+
+class ChineseMirrorDiagnosticsTest(unittest.TestCase):
+    """The 2026-08-20 weekly degraded twice and the log could not say why."""
+
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        cloud_agent_runner.RUN_AUDIT["chinese_mirror_repaired"] = 0
+        cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"] = 0
+
+    def _monthly(self) -> str:
+        english = "\n".join(
+            f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+            for i in range(1, 26)
+        )
+        return (
+            "# Agent Radar Monthly - 2026-08\n\n## English\n\n"
+            f"### 1. Executive Summary\n\n{english}\n\n"
+            "## 中文\n\n### 1. Executive Summary\n\n- 摘要：\n"
+        )
+
+    def test_missing_chinese_block_key_is_named(self) -> None:
+        with mock.patch.object(
+            cloud_agent_runner,
+            "call_ai_gateway_model",
+            return_value={"choices": [{"message": {"content": '{"chinese": "x"}'}}]},
+        ), mock.patch.object(cloud_agent_runner, "model_provider", return_value="vercel-ai-gateway"):
+            self.assertEqual(cloud_agent_runner.request_chinese_mirror("weekly/x.md", "body"), "")
+        joined = "\n".join(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        self.assertIn("no `chinese_block`", joined)
+        self.assertIn("chinese", joined)  # the keys that WERE present
+
+    def test_thin_mirror_records_the_shortfall(self) -> None:
+        with mock.patch.object(
+            cloud_agent_runner, "request_chinese_mirror", return_value="### 1. 摘要\n\n- 一条。"
+        ):
+            cloud_agent_runner.repair_report_chinese_block("monthly/2026-08.md", self._monthly())
+        joined = "\n".join(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
+        self.assertIn("CJK line(s), need", joined)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"], 1)

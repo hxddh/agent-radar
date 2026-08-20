@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v0.24.2 - 2026-08-20
+
+The v0.24.1 verification run broke the deadlock — `weekly/2026-W34.md` went from a 1451-byte shell to 15,876 bytes with 11 URLs, the first weekly published since W30 and the first `weekly` entry in August's run log. But it published via the **fallback**, not the repair: `chinese_mirror_degraded=2`, `chinese_mirror_repaired=0`.
+
+### Fixed
+- The two failure modes shared one warning line, so the log could not say whether the mirror call came back empty or came back too thin — and those need opposite fixes. `request_chinese_mirror()` now names the keys the response actually carried when `chinese_block` is absent, and the degraded path records the CJK line count it achieved against the count required.
+
+### Known
+- Path A (mirror regeneration) has not yet succeeded in production. The run made 4 `gpt-5-mini` calls where a weekly normally makes 2, so both mirror calls were issued and returned valid JSON (a raising call logs a different warning, which is absent). The next weekly will say which of the two modes it is.
+
 ## v0.24.1 - 2026-08-20
 
 The weekly/monthly publishing surface had been dead for a month: the last real weekly is W30 (late July), and `weekly/2026-W31|W32|W33.md` plus `monthly/2026-08.md` are all 1.4 KB template shells with zero URLs. Every one was lost to `report lacks substantive 中文 content with CJK text` (Issue #96, alerts on 08-02, 08-09, 08-15, 08-16).

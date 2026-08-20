@@ -6922,7 +6922,13 @@ def request_chinese_mirror(rel_path: str, english_body: str) -> str:
     except (json.JSONDecodeError, TypeError):
         return ""
     block = payload.get("chinese_block") if isinstance(payload, dict) else None
-    return str(block).strip() if isinstance(block, str) else ""
+    if not isinstance(block, str) or not block.strip():
+        keys = ", ".join(sorted(payload)[:6]) if isinstance(payload, dict) else type(payload).__name__
+        RUN_AUDIT["apply_warnings"].append(
+            f"中文 mirror for {rel_path}: response carried no `chinese_block` (keys: {keys})"
+        )
+        return ""
+    return block.strip()
 
 
 def repair_report_chinese_block(rel_path: str, merged: str) -> str:
@@ -6950,6 +6956,14 @@ def repair_report_chinese_block(rel_path: str, merged: str) -> str:
                     f"{rel_path}: 中文 half was thin; regenerated it from the English body"
                 )
                 return candidate
+            # Distinguishing "no mirror came back" from "the mirror came back
+            # too thin" is what tells the next run whether to fix the prompt or
+            # the request: the 2026-08-20 weekly degraded twice and the log
+            # could not say which.
+            RUN_AUDIT["apply_warnings"].append(
+                f"中文 mirror for {rel_path}: regenerated {radar_bilingual.substantive_chinese_cjk_lines(candidate)} "
+                f"CJK line(s), need {radar_bilingual.required_chinese_lines(radar_bilingual.substantive_english_lines(candidate))}"
+            )
     # Fallback: publish rather than discard, and say so. The gate is bypassed
     # explicitly and recorded, so telemetry keeps showing the real state.
     RUN_AUDIT["chinese_mirror_degraded"] += 1
