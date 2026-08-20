@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v0.24.1 - 2026-08-20
+
+The weekly/monthly publishing surface had been dead for a month: the last real weekly is W30 (late July), and `weekly/2026-W31|W32|W33.md` plus `monthly/2026-08.md` are all 1.4 KB template shells with zero URLs. Every one was lost to `report lacks substantive 中文 content with CJK text` (Issue #96, alerts on 08-02, 08-09, 08-15, 08-16).
+
+### Fixed
+- **A structural check gated the repair that a substance check demanded.** Reproduced: a rich English weekly gives `substantive_english_lines=31` against `required_chinese_lines=19`, while the shell's Chinese half holds 3 placeholder CJK lines, so `missing_chinese_substance` is true — but `ensure_bilingual_file_content()` returns early whenever `is_block_bilingual_format()` is true, which it is, because the file *has* `## English` / `## 中文` headings; they are simply empty. `bilingualize_report()` therefore never ran. And because the write was refused, the file stayed a shell and the next period repeated it — a deadlock, the same shape as the v0.19.4 period-boundary one.
+- `repair_report_chinese_block()` now handles it in two stages. Unlike every other repair in this runner, the missing content is **not** something the runner holds — `bilingualize_report()` only emits empty `- 中文：` scaffolding and the repo is stdlib-only, so there is no offline translation. So it asks the model for the mirror (`request_chinese_mirror()`, one extra call on `FINAL_SYNTHESIS_MODEL`, ~6/month ≈ $0.15), and if that call fails or still falls short it publishes with `> 本期中文镜像未能生成` instead of raising.
+- The degraded path deliberately does **not** dress up the measurement: a report published that way still reports `missing_chinese_substance = True`, and `chinese_mirror_repaired` / `chinese_mirror_degraded` land in telemetry. `validate` treats thin Chinese as a warning (`require_chinese` defaults false), so a degraded report does not block the commit.
+- Daily day blocks are unaffected — they use the `### English` / `### 中文` day format, not the block-bilingual one, and their gate has not been failing. They still refuse.
+
 ## v0.24.0 - 2026-08-20
 
 Sixteen days unattended (2026-08-04 → 08-20) published 15 of 20 dailies. All five losses were refusals where the runner held enough to repair (Issue #96).

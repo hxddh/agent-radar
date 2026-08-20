@@ -91,6 +91,8 @@ Add a new agent as a full section with `append`; never invent a `replace_section
 
 Update only the subsections that changed. When both languages need updates, use separate anchors under `## English` and `## 中文`, or replace uniquely titled sections such as `### 15. Changed Thesis`.
 
+**Update both languages in the same task.** A weekly/monthly whose `## 中文` half stays thin relative to its `## English` half is no longer refused — the runner regenerates the mirror with an extra model call, and if that fails it publishes with `> 本期中文镜像未能生成` and records `chinese_mirror_degraded`. That is a fallback, not the plan: three consecutive weeklies were lost to the old refusal, and a regenerated mirror is always weaker than writing both halves yourself.
+
 When the same `### N.` title appears under both `## English` and `## 中文`, add `"within": "## 中文"` (or `"within": "## English"`) so the runner replaces the correct language block.
 
 ```json
@@ -125,7 +127,7 @@ Do not `full`-rewrite an existing weekly file.
 - Daily: under each `## YYYY-MM-DD`, write `### English` then `### 中文` (or use `english_block` / `chinese_block` in JSON).
 - Mirror section headings in both languages. English bullets contain English prose only; Chinese bullets contain real Simplified Chinese prose only.
 - Daily Chinese substance gate is lighter than weekly/monthly: mirror major signal sections; URLs and metadata stay in English only.
-- At least 60% of substantive English lines must have a real Chinese counterpart in weekly/monthly, or the update is rejected.
+- At least 60% of substantive English lines must have a real Chinese counterpart in weekly/monthly. Falling short no longer rejects the update — the runner regenerates the 中文 mirror, or publishes it labeled — but a regenerated mirror is a fallback, not the goal.
 - Keep URLs, repo names, product names, versions, and star counts once in English (or as language-neutral lines). Enumerated fields may pair inline, for example `- Evidence strength: 强（Strong）` in the Chinese section.
 - Never write the same URL twice for one item.
 - In daily day blocks, list at most **3 public URLs per signal bullet**; put additional URLs in `research-log.md`.
