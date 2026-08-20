@@ -1665,3 +1665,14 @@ Ignore or deprioritize:
 - [infra_primitive / security] Customhouse — deterministic MCP proxy that blocks agent exfiltration: https://github.com/vineetpant/customhouse
 
 Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-08-17 screening. See research-log.md Candidate inbox for new candidate entries and gaps discovered during the sweep.
+
+
+## Recent additions (2026-08-20)
+- [mainstream_product] OpenAI — Offering zero data retention for frontier models (privacy/compliance update): https://openai.com/index/offering-zero-data-retention-for-frontier-models
+- [mainstream_product] @openai/codex (Codex CLI / npm listing): https://www.npmjs.com/package/%40openai/codex
+- [mainstream_product] Anthropic — Opus 5 coherence regressions (public issue): https://github.com/anthropics/claude-code/issues/77136
+- [mainstream_product] AWS Bedrock — Web Search expansions / External Web Access for AgentCore (whats-new): https://aws.amazon.com/about-aws/whats-new/2026/08/web-search-amazon-bedrock/
+- [mainstream_product] kyegomez/swarms (swarms.ai orchestration framework): https://github.com/kyegomez/swarms
+- [user_workflow] Anthropic MCP connectors broken for users (Reddit field reports): https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+- [mainstream_product] OpenAI pause after rogue-agent hack (press coverage): https://www.theguardian.com/technology/2026/aug/18/open-ai-pause-hack
+- [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent
