@@ -665,6 +665,8 @@ RUN_AUDIT: dict[str, Any] = {
     "source_lanes": {},
     "collected_source_items": 0,
     "budget_status": "normal",
+    "chinese_mirror_repaired": 0,
+    "chinese_mirror_degraded": 0,
     "token_usage": {},
     "started_at": 0.0,
     "prompt_chars": 0,
@@ -6877,6 +6879,91 @@ def merge_update_content(
     raise SystemExit(f"Unknown update mode: {mode!r}")
 
 
+DEFAULT_CHINESE_MIRROR_ENGLISH_CHARS = 40_000
+
+
+def build_chinese_mirror_prompt(rel_path: str, english_body: str) -> str:
+    cap = env_int("CHINESE_MIRROR_ENGLISH_CHARS", DEFAULT_CHINESE_MIRROR_ENGLISH_CHARS)
+    body = truncate_keep_ends(english_body, cap)
+    return f"""You are producing the Simplified-Chinese half of a bilingual report.
+
+File: {rel_path}
+
+Below is the finished `## English` body. Write the `## 中文` mirror of it.
+
+Rules:
+- Mirror the SAME `### N. Title` headings, in the same order, with the English
+  numbering and title text kept verbatim (the runner matches on them).
+- Translate the substance of every bullet. Do not summarize away bullets, and do
+  not invent claims that are not in the English body.
+- Keep URLs, version numbers, product names, and metric values exactly as-is.
+- Write natural Simplified Chinese prose, not transliteration.
+
+Return ONLY this JSON object and nothing else:
+{{"chinese_block": "<the full markdown body that goes under ## 中文>"}}
+
+--- ENGLISH BODY ---
+{body}
+"""
+
+
+def request_chinese_mirror(rel_path: str, english_body: str) -> str:
+    """One targeted model call for a report's 中文 mirror. '' when unavailable."""
+    if model_provider() != "vercel-ai-gateway":
+        return ""
+    model = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
+    try:
+        data = call_ai_gateway_model(build_chinese_mirror_prompt(rel_path, english_body), model)
+    except SystemExit as exc:
+        RUN_AUDIT["apply_warnings"].append(f"中文 mirror call failed for {rel_path}: {exc}"[:220])
+        return ""
+    try:
+        payload = json.loads(normalize_model_json_text(response_output_text(data)))
+    except (json.JSONDecodeError, TypeError):
+        return ""
+    block = payload.get("chinese_block") if isinstance(payload, dict) else None
+    return str(block).strip() if isinstance(block, str) else ""
+
+
+def repair_report_chinese_block(rel_path: str, merged: str) -> str:
+    """Fill a weekly/monthly report's thin 中文 half instead of discarding the run.
+
+    Unlike every other repair in this runner, the missing content is not
+    something the runner holds: `bilingualize_report()` only emits empty
+    `- 中文：` scaffolding and the repo is stdlib-only, so there is no offline
+    translation. So this asks the model for the mirror (one extra call), and
+    falls back to publishing with an honest label rather than raising — three
+    consecutive weeklies (W31/W32/W33) and the 2026-08 monthly were lost to
+    that refusal, and because the write was refused the file stayed a template
+    shell and the next period repeated it (Issue #96).
+    """
+    prefix, english_body, chinese_body = radar_bilingual.split_block_sections(merged)
+    if not english_body:
+        return merged
+    if env_bool("CHINESE_MIRROR_REPAIR", True):
+        mirror = request_chinese_mirror(rel_path, english_body)
+        if mirror:
+            candidate = f"{prefix}\n\n## English\n\n{english_body}\n\n## 中文\n\n{mirror}\n"
+            if not radar_bilingual.missing_chinese_substance(candidate):
+                RUN_AUDIT["chinese_mirror_repaired"] += 1
+                RUN_AUDIT["apply_warnings"].append(
+                    f"{rel_path}: 中文 half was thin; regenerated it from the English body"
+                )
+                return candidate
+    # Fallback: publish rather than discard, and say so. The gate is bypassed
+    # explicitly and recorded, so telemetry keeps showing the real state.
+    RUN_AUDIT["chinese_mirror_degraded"] += 1
+    RUN_AUDIT["apply_warnings"].append(
+        f"{rel_path}: published with a thin 中文 half (mirror regeneration unavailable); "
+        "English body is authoritative for this period"
+    )
+    note = "> 本期中文镜像未能生成，请以上方 `## English` 正文为准。"
+    if note in chinese_body:
+        return merged
+    body = f"{note}\n\n{chinese_body}".strip()
+    return f"{prefix}\n\n## English\n\n{english_body}\n\n## 中文\n\n{body}\n"
+
+
 def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
     updates: list[dict[str, Any]] = []
     raw_updates = result.get("updates")
@@ -7080,9 +7167,15 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
         if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
             if radar_bilingual.missing_chinese_substance(merged):
-                raise SystemExit(
-                    f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
-                )
+                # Weekly/monthly use the `## English` / `## 中文` block format and
+                # can have their Chinese half regenerated. The daily's own
+                # bilingual gate has not been failing, so it still refuses.
+                if radar_bilingual.is_block_bilingual_format(merged):
+                    merged = repair_report_chinese_block(rel_path, merged)
+                else:
+                    raise SystemExit(
+                        f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
+                    )
         if mode == "full" and old and len(old) > 500 and len(merged) < len(old) // 2:
             raise SystemExit(
                 f"Refusing to replace {rel_path}: new content is much shorter than the existing file."
@@ -7186,6 +7279,8 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "source_error_count": len(RUN_AUDIT["source_errors"]),
         "source_lanes": RUN_AUDIT.get("source_lanes", {}),
         "budget_status": RUN_AUDIT["budget_status"],
+        "chinese_mirror_repaired": RUN_AUDIT.get("chinese_mirror_repaired", 0),
+        "chinese_mirror_degraded": RUN_AUDIT.get("chinese_mirror_degraded", 0),
         "token_usage": RUN_AUDIT.get("token_usage", {}),
         "input_tokens": total_gateway_tokens()[0],
         "output_tokens": total_gateway_tokens()[1],
@@ -7335,6 +7430,8 @@ def run_task(
     RUN_AUDIT["source_lanes"] = {}
     RUN_AUDIT["collected_source_items"] = 0
     RUN_AUDIT["budget_status"] = "normal"
+    RUN_AUDIT["chinese_mirror_repaired"] = 0
+    RUN_AUDIT["chinese_mirror_degraded"] = 0
     # Shared screening runs in the preflight, before this reset. Its calls are
     # already carried over via preflight_screen_calls; its tokens must be too —
     # screening is the stage most likely to be on a paid model.

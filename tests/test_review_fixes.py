@@ -859,3 +859,100 @@ class DailySectionRepairTest(unittest.TestCase):
             self.assertIn("#### 7. Radar Sweep", result["updates"][0]["content"])
         finally:
             cloud_agent_runner.SHARED_SWEEP_LINES[:] = []
+
+
+class ChineseMirrorRepairTest(unittest.TestCase):
+    """Weekly/monthly 中文 gate: repair or degrade, never discard (Issue #96)."""
+
+    def _thin_monthly(self) -> str:
+        english = "\n".join(
+            f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+            for i in range(1, 26)
+        )
+        return (
+            "# Agent Radar Monthly - 2026-08\n\n## English\n\n"
+            f"### 1. Executive Summary\n\n{english}\n\n"
+            "## 中文\n\n### 1. Executive Summary\n\n- 摘要：\n"
+        )
+
+    def setUp(self) -> None:
+        cloud_agent_runner.RUN_AUDIT["chinese_mirror_repaired"] = 0
+        cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"] = 0
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+
+    def test_thin_chinese_is_the_precondition(self) -> None:
+        self.assertTrue(radar_bilingual.missing_chinese_substance(self._thin_monthly()))
+
+    def test_mirror_regeneration_repairs_the_report(self) -> None:
+        chinese = "\n".join(
+            f"- 信号 {i}：某厂商发布了一项真实进展。https://example.com/{i}" for i in range(1, 26)
+        )
+        with mock.patch.object(
+            cloud_agent_runner,
+            "request_chinese_mirror",
+            return_value=f"### 1. Executive Summary\n\n{chinese}",
+        ):
+            out = cloud_agent_runner.repair_report_chinese_block(
+                "monthly/2026-08.md", self._thin_monthly()
+            )
+        self.assertFalse(radar_bilingual.missing_chinese_substance(out))
+        self.assertIn("Signal 25", out)  # English body preserved verbatim
+        self.assertIn("信号 25", out)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_repaired"], 1)
+
+    def test_failed_mirror_publishes_labeled_instead_of_raising(self) -> None:
+        with mock.patch.object(cloud_agent_runner, "request_chinese_mirror", return_value=""):
+            out = cloud_agent_runner.repair_report_chinese_block(
+                "monthly/2026-08.md", self._thin_monthly()
+            )
+        self.assertIn("Signal 25", out)
+        self.assertIn("本期中文镜像未能生成", out)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"], 1)
+        # The label must NOT flip the metric: a degraded report still reports
+        # as thin, otherwise the repair would be dressing up the measurement.
+        self.assertTrue(radar_bilingual.missing_chinese_substance(out))
+
+    def test_apply_updates_no_longer_discards_a_thin_weekly(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "weekly").mkdir()
+            target = root / "weekly" / "2026-W34.md"
+            target.write_text(
+                "# Agent Radar Weekly - 2026-W34\n\n## English\n\n### 1. Summary\n\n- old\n\n"
+                "## 中文\n\n### 1. Summary\n\n- 摘要：\n",
+                encoding="utf-8",
+            )
+            english = "\n".join(
+                f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+                for i in range(1, 26)
+            )
+            with mock.patch.object(cloud_agent_runner, "request_chinese_mirror", return_value=""):
+                changed = cloud_agent_runner.apply_updates(
+                    root,
+                    ["weekly/2026-W34.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "weekly/2026-W34.md",
+                                "mode": "replace_section",
+                                "anchor": "### 1. Summary",
+                                "within": "## English",
+                                "content": english,
+                            }
+                        ]
+                    },
+                )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertIn("Signal 25", text)  # would have been discarded before
+            self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"], 1)
+
+    def test_daily_block_format_still_refuses(self) -> None:
+        # Only the block-bilingual weekly/monthly path is regenerated; the
+        # daily's own gate has not been failing and keeps its behavior.
+        daily = (
+            "## 2026-08-20\n\n### English\n\n"
+            + "\n".join(f"#### {i}. Section\n\n- Signal: x https://e.com/{i}\n" for i in range(1, 6))
+            + "\n### 中文\n\n#### 1. 章节\n\n- 空：\n"
+        )
+        self.assertFalse(radar_bilingual.is_block_bilingual_format(daily))
