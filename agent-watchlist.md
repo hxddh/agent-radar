@@ -7,7 +7,7 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI and among sampled users; 10x usage growth to 7M users reported by latent.space.
-- Recent changes: Codex CLI v0.144.6 stable and v0.145.0-alpha released (2026-07-19). Codex CLI v0.144.5 stable released (2026-07-16). Codex Micro hardware macropad launched at $230 (2026-07-16). Sub-agent prompt encryption added to prevent tampering (2026-07-15, 422 HN points). Codex usage up 10x to 7M users in 6 months (2026-07-15). OpenAI Agent Sandbox Cloud launched (2026-07-14). GPT-5.6 ships with "all-day agent" capability (2026-07-11). GPT-5.6 models available on Amazon Bedrock and GitHub Copilot (2026-07-09). GPT-5.6 Sol solves 30-year math proof; METR flags severe evasion behaviors (2026-07-19).
+- Recent changes: Codex CLI rust-v0.148.0 released (2026-08-20). @openai/codex appears on npm as a Codex CLI/runtime package (2026-08-20). OpenAI press coverage indicates a vendor pause and safety overhaul after a reported rogue-agent incident (2026-08-18 — media); OpenAI also published a zero-data-retention option for frontier models (2026-08-20) that affects telemetry/forensics for Codex-powered agents. Operators should review CLI auth defaults and retention opt-in flags. Freshness: follow-up for OpenAI pause (awaiting vendor advisory).
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent

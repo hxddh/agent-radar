@@ -5,9 +5,9 @@ Last checked: 2026-08-20
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
 | arxiv | 3 | 0 | 18 |
-| bluesky | 0 | 14 | 0 |
+| bluesky | 0 | 10 | 0 |
 | crates | 9 | 0 | 45 |
-| devto | 4 | 2 | 16 |
+| devto | 6 | 0 | 24 |
 | docker | 3 | 0 | 15 |
 | feed | 15 | 0 | 84 |
 | github | 17 | 0 | 85 |
@@ -15,10 +15,10 @@ Last checked: 2026-08-20
 | lobsters | 1 | 0 | 6 |
 | npm | 9 | 0 | 45 |
 | open-vsx | 9 | 0 | 45 |
-| page | 21 | 0 | 120 |
+| page | 21 | 1 | 120 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 9 | 0 | 45 |
-| reddit-rss | 1 | 6 | 4 |
+| reddit-rss | 1 | 7 | 4 |
 | release | 32 | 0 | 93 |
 | tag | 32 | 0 | 93 |
 

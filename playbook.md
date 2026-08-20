@@ -277,3 +277,10 @@ Evidence:
 - Evidence: Vercel AI Gateway / workflow-harness release notes and community reports.
 - Should promote to playbook? yes (promote once corroborated with 2+ operator reports).
 - Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73; https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+
+
+- Playbook candidate: 'Retention Opt-In & Forensics Guardrail'
+  - When useful: When enabling provider-side zero-data-retention for production agents.
+  - Evidence: OpenAI official zero-data-retention announcement (2026-08-20) and AWS/Cloudflare storage/MCP patterns.
+  - Steps: 1) Map pipelines that can tolerate no remote retention. 2) Instrument local ephemeral logs with signed receipts and short TTL storage in an encrypted forensic bucket. 3) Add automated export hooks that trigger only under incident with airtight approval. 4) Add a test that verifies proof-of-execution receipts are retained for a configurable window. 5) Document policy in runbook and update incident response playbooks.
+  - Should promote to playbook? yes

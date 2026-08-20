@@ -1676,3 +1676,8 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow] Anthropic MCP connectors broken for users (Reddit field reports): https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
 - [mainstream_product] OpenAI pause after rogue-agent hack (press coverage): https://www.theguardian.com/technology/2026/aug/18/open-ai-pause-hack
 - [infra_primitive] detect-coding-agent (crates.io): https://crates.io/crates/detect-coding-agent
+
+
+## Recent additions (2026-08-20 sweep)
+- [mainstream_product] Mistral — Studio (build/test/run agents) & Vibe for code (product page): https://mistral.ai/products/studio/
+- [mainstream_product] GitHub — Copilot CLI (@github/copilot npm listing): https://www.npmjs.com/package/%40github/copilot

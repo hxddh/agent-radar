@@ -438,3 +438,18 @@ AI Agent workloads create demand for:
   - Evidence strength: Strong
   - Source: https://github.com/cloudflare/agents/releases/tag/hono-agents%403.0.12
   - Watch trigger: CI bundle diffs show new files or a spike in edge log volume after a bundler upgrade.
+
+
+- S3 as coordination plane (operator guidance)
+  - Observation: AWS blog recommends using S3 Files as an artifact/coordination plane for multi-agent architectures.
+  - Implication: Treat object storage as an active control surface — separate ephemeral buckets (short TTL) from forensic buckets (restricted access, longer TTL, encryption at rest + access logging).
+  - Source class: Official / Strong
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+  - Watch trigger: evidence of sample AWS templates or OSS examples adopting S3 orchestration; or an incident where sensitive data is observed exfiltrated via S3 artifacts.
+
+- Forensic receipts vs zero-retention
+  - Observation: Provider zero-data-retention options reduce vendor-side logs; operators need alternative evidence for incidents.
+  - Implication: Implement short-lived signed receipts (hashes and signed metadata stored in a restricted bucket) and local ephemeral logging to reconcile agent actions while honoring provider retention settings.
+  - Source class: Official / Strong
+  - Source: https://openai.com/index/offering-zero-data-retention-for-frontier-models
+  - Watch trigger: vendor publishes API flags or sample enterprise contract language describing how zero-retention interacts with incident investigations.

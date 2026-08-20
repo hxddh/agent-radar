@@ -335,3 +335,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Kiro Crew cron->agent migration (2026-08-19): Dev.to operator tutorial demonstrates a one-curl install and a small cron replacement that saved ~4 hours/week. Operator takeaway: start with low-risk scheduled tasks, capture pre/post metrics, and include a rollback plan. Source: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h (Evidence strength: Medium)
 
 - Vercel AI Gateway onboarding note (2026-08-19): one-command agent setup speeds onboarding but some adapters upload workspace artifacts by default. Operator takeaway: add a pre-deploy checklist to opt-out of workspace uploads and verify retention/egress defaults before enabling production deployments. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway (Evidence strength: Strong)
+
+
+- **Anthropic MCP connector break (2026-08-20)**: multiple Reddit reports describe custom MCP connectors failing after upstream changes. Public-safe summary: operators experienced connector incompatibilities that broke automated workflows; community-suggested mitigation is to pin connector SDK versions and add end-to-end smoke tests on upstream upgrades. Source class: Discussion (Reddit). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+- **Codex CLI / quota pain (2026-08-20)**: community threads note weekly-limit exhaustion affecting CI-driven Codex runs; practical mitigation is local quota instrumentation and conservative backoff to avoid silent depletion. Source class: Community forum. Evidence strength: Medium. Source: (community thread referenced in research-log)
