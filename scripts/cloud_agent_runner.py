@@ -6971,7 +6971,9 @@ def repair_report_chinese_block(rel_path: str, merged: str) -> str:
         f"{rel_path}: published with a thin 中文 half (mirror regeneration unavailable); "
         "English body is authoritative for this period"
     )
-    note = "> 本期中文镜像未能生成，请以上方 `## English` 正文为准。"
+    note = (
+        f"> {radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER}，请以上方 `## English` 正文为准。"
+    )
     if note in chinese_body:
         return merged
     body = f"{note}\n\n{chinese_body}".strip()

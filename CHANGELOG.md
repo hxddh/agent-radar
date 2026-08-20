@@ -9,6 +9,11 @@ The v0.24.1 verification run broke the deadlock — `weekly/2026-W34.md` went fr
 ### Fixed
 - The two failure modes shared one warning line, so the log could not say whether the mirror call came back empty or came back too thin — and those need opposite fixes. `request_chinese_mirror()` now names the keys the response actually carried when `chinese_block` is absent, and the degraded path records the CJK line count it achieved against the count required.
 
+### Also fixed
+- **A degraded report failed CI, and my v0.24.1 note about that was wrong.** I checked that `require_chinese` defaults to `False` in the CLI and concluded a labeled report would not block the commit — but `validate.yml` sets `REQUIRE_CHINESE=true` explicitly for push/PR ("the repo invariant"), so thin Chinese is a hard error there. I never ran `validate` against an actual degraded report. `chinese_substance_findings()` now routes a report carrying `CHINESE_MIRROR_DEGRADED_MARKER` to warnings even under `--require-chinese`; an **unmarked** thin report is still an error. The invariant exists to stop reports shipping English-only *silently*, and erroring on a marked one would discard the very report the marker belongs to.
+- This was not only a CI-cosmetics problem: `cloud-agent.yml` runs `validate --tier full --require-chinese` on Sundays, so the 08-23 scheduled weekly would have failed its own validate step — the fix would have broken the run it was meant to rescue. Thursday's run passed only because `--tier daily` does not cover weekly files.
+- The marker is now one constant (`radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER`) used by both the writer and the checker, with a test asserting they agree.
+
 ### Known
 - Path A (mirror regeneration) has not yet succeeded in production. The run made 4 `gpt-5-mini` calls where a weekly normally makes 2, so both mirror calls were issued and returned valid JSON (a raising call logs a different warning, which is absent). The next weekly will say which of the two modes it is.
 

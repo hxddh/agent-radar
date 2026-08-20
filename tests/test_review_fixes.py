@@ -996,3 +996,51 @@ class ChineseMirrorDiagnosticsTest(unittest.TestCase):
         joined = "\n".join(cloud_agent_runner.RUN_AUDIT["apply_warnings"])
         self.assertIn("CJK line(s), need", joined)
         self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"], 1)
+
+
+class ChineseSubstanceInvariantTest(unittest.TestCase):
+    """`--require-chinese` is a repo invariant on push/PR; a RECORDED
+    degradation is an accepted state, an unmarked one is not (Issue #96)."""
+
+    def _thin(self, marker: bool) -> str:
+        english = "\n".join(
+            f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+            for i in range(1, 26)
+        )
+        note = (
+            f"> {radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER}，请以上方 `## English` 正文为准。\n\n"
+            if marker
+            else ""
+        )
+        return (
+            "# Agent Radar Weekly - 2026-W34\n\n## English\n\n"
+            f"### 1. Summary\n\n{english}\n\n## 中文\n\n{note}### 1. Summary\n\n- 摘要：\n"
+        )
+
+    def _findings(self, marker: bool) -> tuple[list[str], list[str]]:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "2026-W34.md"
+            path.write_text(self._thin(marker), encoding="utf-8")
+            return agent_radar.chinese_substance_findings(path, strict=True)
+
+    def test_unmarked_thin_report_is_still_an_error(self) -> None:
+        errors, warnings = self._findings(marker=False)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(warnings, [])
+
+    def test_recorded_degradation_is_a_warning_not_an_error(self) -> None:
+        errors, warnings = self._findings(marker=True)
+        self.assertEqual(errors, [])
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("recorded as a mirror degradation", warnings[0])
+
+    def test_runner_marker_matches_what_validate_looks_for(self) -> None:
+        # The runner writes the note and validate detects it; a drift between
+        # the two would silently turn every degraded report into a CI failure.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"] = 0
+        with mock.patch.object(cloud_agent_runner, "request_chinese_mirror", return_value=""):
+            out = cloud_agent_runner.repair_report_chinese_block(
+                "weekly/2026-W34.md", self._thin(marker=False)
+            )
+        self.assertTrue(radar_bilingual.has_recorded_chinese_degradation(out))

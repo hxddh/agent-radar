@@ -233,6 +233,16 @@ def required_chinese_lines(english_count: int) -> int:
     return max(MIN_CJK_LINES_FOR_SUBSTANCE, math.ceil(english_count * MIN_CJK_RATIO))
 
 
+# Written by the runner when it published a report whose 中文 half could not be
+# regenerated. A report carrying this is a RECORDED degradation, not a silent
+# one, so `--require-chinese` treats it as a warning instead of an error.
+CHINESE_MIRROR_DEGRADED_MARKER = "本期中文镜像未能生成"
+
+
+def has_recorded_chinese_degradation(content: str) -> bool:
+    return CHINESE_MIRROR_DEGRADED_MARKER in content
+
+
 def missing_chinese_substance(content: str) -> bool:
     if not is_report_content(content):
         return False

@@ -844,16 +844,28 @@ def warn_identical_bilingual_pairs(path: Path, strict: bool = False) -> list[str
     return [f"{message}; run bilingualize to repair placeholders"]
 
 
-def warn_missing_chinese_substance(path: Path, strict: bool = False) -> list[str]:
+def chinese_substance_findings(path: Path, strict: bool = False) -> tuple[list[str], list[str]]:
+    """(errors, warnings) for one report's 中文 substance."""
     if not path.exists():
-        return []
+        return [], []
     content = path.read_text(encoding="utf-8")
     if not radar_bilingual.missing_chinese_substance(content):
-        return []
+        return [], []
     message = f"{path}: Chinese sections lack substantive 中文 content (need CJK text, not empty placeholders)"
+    if radar_bilingual.has_recorded_chinese_degradation(content):
+        # The runner published this deliberately and said so IN the file. The
+        # invariant exists to stop reports shipping English-only *silently*; a
+        # marked one is the honest outcome of a failed mirror regeneration, and
+        # erroring here would discard the very report the marker belongs to.
+        return [], [message + "; recorded as a mirror degradation by the runner"]
     if strict:
-        return [message]
-    return [message + "; cloud agent should add real Chinese translations"]
+        return [message], []
+    return [], [message + "; cloud agent should add real Chinese translations"]
+
+
+def warn_missing_chinese_substance(path: Path, strict: bool = False) -> list[str]:
+    errors, warnings = chinese_substance_findings(path, strict=strict)
+    return errors + warnings
 
 
 def command_bilingualize(args: argparse.Namespace) -> int:
@@ -945,7 +957,9 @@ def command_validate(args: argparse.Namespace) -> int:
         warnings.extend(warn_empty_chinese_labels(path))
     if require_chinese:
         for path in report_paths:
-            errors.extend(warn_missing_chinese_substance(path, strict=True))
+            found_errors, found_warnings = chinese_substance_findings(path, strict=True)
+            errors.extend(found_errors)
+            warnings.extend(found_warnings)
     elif tier == "full":
         for path in report_paths:
             warnings.extend(warn_missing_chinese_substance(path))
