@@ -243,6 +243,20 @@ def has_recorded_chinese_degradation(content: str) -> bool:
     return CHINESE_MIRROR_DEGRADED_MARKER in content
 
 
+def chinese_half_clears_floor(content: str) -> bool:
+    """True when the 中文 half stands on its own.
+
+    `missing_chinese_substance()` exempts reports under 10 substantive English
+    lines outright, so it answers False for a report with NO Chinese at all.
+    That exemption is right for a publish gate — a five-line report should not
+    be blocked — but it must never be read as "the Chinese is fine", which is
+    what clearing a degradation marker asserts.
+    """
+    return substantive_chinese_cjk_lines(content) >= required_chinese_lines(
+        substantive_english_lines(content)
+    )
+
+
 def strip_chinese_degradation_note(content: str) -> str:
     """Remove the degradation marker line (and its trailing blank)."""
     lines = content.splitlines()

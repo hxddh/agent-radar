@@ -7206,7 +7206,9 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
                     raise SystemExit(
                         f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
                     )
-            elif radar_bilingual.has_recorded_chinese_degradation(merged):
+            elif radar_bilingual.has_recorded_chinese_degradation(
+                merged
+            ) and radar_bilingual.chinese_half_clears_floor(merged):
                 # A later update supplied the Chinese an earlier mirror could
                 # not: the marker was true when written and is false now.
                 # Leaving it publishes a false statement about the report and

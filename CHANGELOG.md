@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v0.24.5 - 2026-08-21
+
+Fixes a hole that v0.24.4 opened, found by an automated review on #101 and confirmed against the code before acting on it.
+
+### Fixed
+- **The marker could be cleared off a report with no Chinese at all.** v0.24.4 cleared it whenever `missing_chinese_substance()` returned False — but that function exempts reports under 10 substantive English lines outright, so it also returns False for a report whose 中文 half is empty. An update that shrinks the English body below that line would have stripped the warning from a genuinely untranslated report: exactly the silent English-only publish the marker exists to prevent, introduced by the fix meant to make the marker honest.
+- `chinese_half_clears_floor()` decides the clear now: the 中文 half must reach `required_chinese_lines()` on its own. Verified across all three cases — English 5 / Chinese 0 keeps the marker, English 37 / Chinese 28 clears it, English 37 / Chinese 3 keeps it.
+- The exemption itself is unchanged and still right for the publish gate; it just must not be read as "the Chinese is fine", which is what clearing the marker asserts.
+
 ## v0.24.4 - 2026-08-21
 
 The v0.24.3 prompt fix moved the mirror from `regenerated 0 CJK line(s)` to `regenerated 6 CJK line(s), need 23` — real progress, still short. But the run exposed a worse problem than the shortfall.

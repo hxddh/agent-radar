@@ -1163,3 +1163,71 @@ class StaleDegradationMarkerTest(unittest.TestCase):
         self.assertTrue(radar_bilingual.missing_chinese_substance(content))
         # A genuinely thin report keeps its marker; only the stale case clears.
         self.assertTrue(radar_bilingual.has_recorded_chinese_degradation(content))
+
+
+class DegradationMarkerFloorTest(unittest.TestCase):
+    """v0.24.4 cleared the marker whenever `missing_chinese_substance()` said
+    False — but that function exempts reports under 10 substantive English
+    lines outright, so it says False for a report with NO Chinese at all."""
+
+    def _report(self, english_lines: int, chinese_lines: int) -> str:
+        english = "\n".join(
+            f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+            for i in range(1, english_lines + 1)
+        )
+        chinese = (
+            "\n".join(f"- 信号 {i}：某厂商发布了一项真实进展。" for i in range(1, chinese_lines + 1))
+            or "- 摘要："
+        )
+        note = f"> {radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER}，请以上方 `## English` 正文为准。\n\n"
+        return (
+            "# Agent Radar Weekly - 2026-W34\n\n## English\n\n"
+            f"### 1. Summary\n\n{english}\n\n## 中文\n\n{note}### 1. Summary\n\n{chinese}\n"
+        )
+
+    def test_low_volume_exemption_does_not_clear_the_marker(self) -> None:
+        # English shrinks below 10 lines with the Chinese half still empty:
+        # the publish gate exempts it, but the marker is still accurate.
+        content = self._report(english_lines=5, chinese_lines=0)
+        self.assertFalse(radar_bilingual.missing_chinese_substance(content))
+        self.assertFalse(radar_bilingual.chinese_half_clears_floor(content))
+
+    def test_genuinely_mirrored_report_clears(self) -> None:
+        content = self._report(english_lines=37, chinese_lines=28)
+        self.assertTrue(radar_bilingual.chinese_half_clears_floor(content))
+
+    def test_thin_chinese_does_not_clear(self) -> None:
+        content = self._report(english_lines=37, chinese_lines=3)
+        self.assertFalse(radar_bilingual.chinese_half_clears_floor(content))
+
+    def test_apply_updates_keeps_the_marker_under_the_exemption(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "weekly").mkdir()
+            target = root / "weekly" / "2026-W34.md"
+            target.write_text(self._report(english_lines=37, chinese_lines=0), encoding="utf-8")
+            cloud_agent_runner.RUN_AUDIT["chinese_mirror_marker_cleared"] = 0
+            cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+            with mock.patch.object(cloud_agent_runner, "request_chinese_mirror", return_value=""):
+                cloud_agent_runner.apply_updates(
+                    root,
+                    ["weekly/2026-W34.md"],
+                    {
+                        "updates": [
+                            {
+                                "path": "weekly/2026-W34.md",
+                                "mode": "replace_section",
+                                "anchor": "### 1. Summary",
+                                "within": "## English",
+                                "content": "\n".join(
+                                    f"- Signal {i}: a vendor shipped something real."
+                                    f" https://example.com/{i}"
+                                    for i in range(1, 6)
+                                ),
+                            }
+                        ]
+                    },
+                )
+            text = target.read_text(encoding="utf-8")
+            self.assertTrue(radar_bilingual.has_recorded_chinese_degradation(text))
+            self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_marker_cleared"], 0)
