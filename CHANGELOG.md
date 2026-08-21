@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## v0.24.3 - 2026-08-21
+
+The v0.24.2 diagnostics paid for themselves on their first run. Both surfaces now publish, and the mirror's real failure mode is named.
+
+- `weekly/2026-W34.md`: **path A succeeded** — `chinese_mirror_repaired=1`, 30,239 bytes / 24 URLs, 49 CJK lines against a requirement of 42, marker removed.
+- `monthly/2026-08.md`: published (9,414 bytes, no longer a shell) but via the fallback, and the new diagnostic said exactly why: `中文 mirror for monthly/2026-08.md: regenerated 0 CJK line(s), need 17`.
+
+### Fixed
+- **The mirror prompt was asking for the one shape that scores zero.** `substantive_chinese_cjk_lines()` counts *bullet lines* carrying CJK; the prompt said "Write natural Simplified Chinese **prose**, not transliteration". Tested every mirror shape against the counter: bullets score, bullets under a heading score, a `## 中文` heading in the payload is harmless — only flowing prose scores 0, which is what the prompt requested. The prompt now requires `- ` bullets, one per English bullet, and says headings do not count.
+- **The prompt never named the threshold.** The model had no way to know 17 lines were needed. `build_chinese_mirror_prompt()` now takes `required_lines`, derived from the merged report via `required_chinese_lines(substantive_english_lines(merged))`, and states it twice.
+
+### Note
+- The 2026-08-20 weekly failure is still not characterized — the diagnostics only fire on failure, and that run's mode has not recurred. The leading hypothesis remains that repair runs per-update rather than once per file (that run made 4 calls and repaired twice on partial merges; the successful ones make 3 and repair once). Not fixed here.
+
 ## v0.24.2 - 2026-08-20
 
 The v0.24.1 verification run broke the deadlock — `weekly/2026-W34.md` went from a 1451-byte shell to 15,876 bytes with 11 URLs, the first weekly published since W30 and the first `weekly` entry in August's run log. But it published via the **fallback**, not the repair: `chinese_mirror_degraded=2`, `chinese_mirror_repaired=0`.

@@ -1044,3 +1044,55 @@ class ChineseSubstanceInvariantTest(unittest.TestCase):
                 "weekly/2026-W34.md", self._thin(marker=False)
             )
         self.assertTrue(radar_bilingual.has_recorded_chinese_degradation(out))
+
+
+class ChineseMirrorPromptTest(unittest.TestCase):
+    """The 2026-08-21 monthly logged `regenerated 0 CJK line(s), need 17`.
+
+    Only one mirror shape scores zero: Chinese prose with no `- ` bullets —
+    and the prompt was asking for exactly that ("Write natural Simplified
+    Chinese prose"), while never naming the count the checker required.
+    """
+
+    def test_prose_without_bullets_is_the_zero_case(self) -> None:
+        prefix = "# Agent Radar Monthly - 2026-08"
+        english = "\n".join(f"- Signal {i}: vendor shipped X. https://e.com/{i}" for i in range(1, 28))
+        bullets = "\n".join(f"- 信号 {i}：厂商发布了 X。" for i in range(1, 20))
+        prose = "本月主线是 agent 运行时从容器转向完整计算机，厂商在安全与遏制上投入显著增加。"
+        for label, mirror, expect_zero in (
+            ("bullets", bullets, False),
+            ("bullets under a heading", f"### 1. Summary\n\n{bullets}", False),
+            ("prose", prose, True),
+        ):
+            with self.subTest(shape=label):
+                candidate = f"{prefix}\n\n## English\n\n{english}\n\n## 中文\n\n{mirror}\n"
+                counted = radar_bilingual.substantive_chinese_cjk_lines(candidate)
+                self.assertEqual(counted == 0, expect_zero)
+
+    def test_prompt_demands_bullets_and_names_the_count(self) -> None:
+        prompt = cloud_agent_runner.build_chinese_mirror_prompt("monthly/2026-08.md", "- a\n- b\n", 17)
+        self.assertIn("markdown bullet starting with `- `", prompt)
+        self.assertIn("at least 17", prompt)
+        self.assertNotIn("Simplified Chinese prose", prompt)  # the instruction that caused it
+
+    def test_required_count_is_derived_from_the_merged_report(self) -> None:
+        english = "\n".join(f"- Signal {i}: x https://e.com/{i}" for i in range(1, 28))
+        merged = (
+            "# Agent Radar Monthly - 2026-08\n\n## English\n\n"
+            f"### 1. Summary\n\n{english}\n\n## 中文\n\n### 1. Summary\n\n- 摘要：\n"
+        )
+        seen: dict[str, int] = {}
+
+        def _capture(rel_path: str, body: str, required_lines: int = 0) -> str:
+            seen["required"] = required_lines
+            return ""
+
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        cloud_agent_runner.RUN_AUDIT["chinese_mirror_degraded"] = 0
+        with mock.patch.object(cloud_agent_runner, "request_chinese_mirror", _capture):
+            cloud_agent_runner.repair_report_chinese_block("monthly/2026-08.md", merged)
+        self.assertEqual(
+            seen["required"],
+            radar_bilingual.required_chinese_lines(radar_bilingual.substantive_english_lines(merged)),
+        )
+        self.assertGreater(seen["required"], 0)
