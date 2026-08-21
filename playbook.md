@@ -292,3 +292,12 @@ Evidence:
 - Pre-flight blast-radius checks: add automated workspace scans (secrets, extension signing, dependency checks) as pre-deploy steps for agent runs.
 - Forensic receipts with zero-retention vendors: when vendor retention is opt-out/zero, capture signed short‑term receipts (local ephemeral logs, signed artifact manifests) to preserve auditability without violating privacy settings.
 - Least privilege for tool calls: enforce narrow tool scopes and time-limited credentials for agents; prefer append-only memory stores with signed records where possible.
+
+
+## Pin connector/runtime versions & staging canaries
+
+- Trick: Pin third-party MCP connectors and agent runtime versions in CI, and require passing staging canaries (end-to-end connector + sandboxed tool-call tests) before promoting to production.
+- When useful: After upstream SDK/connector releases or before enabling new model/plugin combinations in production.
+- Evidence: Multiple operator reports of connector breakage and Anthropic/other runtime regressions this week; recommended as immediate mitigation.
+- Should promote to playbook? yes
+- Follow-up: Add a CI job template for connector canaries and a checklist for auditing plugin/tool-call permissions.

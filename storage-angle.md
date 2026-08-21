@@ -459,3 +459,18 @@ AI Agent workloads create demand for:
 
 - AWS S3 orchestration pattern: object storage is being used as the durable coordination and artifact bus for multi-step agent workflows. Operational implications: per-bucket lifecycle rules, per-artifact SSE, per-request audit tags, and automated TTLs for ephemeral artifacts.
 - Zero-data-retention tradeoff: vendor-side zero retention options (OpenAI) shift forensic responsibility to operators. Recommended pattern: short-term secure forensic buckets with automated rotation and signed run receipts to preserve auditability while minimizing long-term retention.
+
+
+- Signal: Object storage as orchestration/coordination plane (2026-08-21)
+  - Related to: multi-step agent workflows and artifact durability
+  - Storage implication: Treat agent buckets as coordination planes with per-artifact metadata (origin, signer, TTL), server-side encryption, and strict lifecycle rules to separate short-term forensic traces from longer-term artifacts.
+  - Source class: vendor blog (AWS)
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+
+- Signal: Vendor zero-data-retention options (OpenAI) shift forensic posture
+  - Related to: operator auditability and vendor telemetry
+  - Storage implication: If vendor-side retention is disabled, operators must implement ephemeral local receipts (signed run receipts) and short-term forensic buckets with restricted access; ensure retention windows cover investigation SLAs.
+  - Source class: vendor announcement
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/offering-zero-data-retention-for-frontier-models

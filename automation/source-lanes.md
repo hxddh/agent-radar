@@ -1,11 +1,11 @@
 # Source Lanes
 
-Last checked: 2026-08-20
+Last checked: 2026-08-21
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
 | arxiv | 3 | 0 | 18 |
-| bluesky | 0 | 11 | 0 |
+| bluesky | 0 | 10 | 0 |
 | crates | 5 | 0 | 25 |
 | devto | 4 | 0 | 16 |
 | docker | 3 | 0 | 15 |
@@ -18,7 +18,7 @@ Last checked: 2026-08-20
 | page | 21 | 0 | 120 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 5 | 0 | 25 |
-| reddit-rss | 1 | 7 | 4 |
+| reddit-rss | 2 | 5 | 8 |
 | release | 32 | 0 | 93 |
 | tag | 32 | 0 | 93 |
 

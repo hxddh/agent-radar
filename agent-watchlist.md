@@ -22,21 +22,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Freshness: refreshed 2026-08-20 (this watchlist entry updated to reflect recent security discussion and product cadence).
 - replace_section anchor: `## Cursor`
 ## Devin / Cognition
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but independent evidence on rescued vs successful sessions remains weak.
-- Category: Coding agent / software engineering agent
-- Maturity: Enterprise-oriented product with active release notes; adoption strength still needs external user evidence.
-- Core use case: Software engineering sessions, code review, automations, Slack/Linear workflows, and enterprise review loops.
-- Recent changes: Release notes mention Slack thread context, `!agent` routing, Slack updates for automation runs, Linear project filters, MCP error logs, Axiom MCP integration, structured playbook outputs, enterprise knowledge limit increase, Devin Review support for GHES, and Devin Desktop/Windsurf fixes for autonomous diffs, cloud-session reconnect, MCP status, permission frontmatter, sandbox exclusions, and large session event caches.
-- Strengths: Deep workflow integration across Slack, Linear, MCP, playbooks, enterprise knowledge, code review, local desktop sessions, and sandbox policy.
-- Weaknesses: Needs more public evidence on reliability, cost, and how often sessions close without human rescue.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: MCP observability, structured outputs, enterprise knowledge stores, Slack synchronization, Linear-triggered automations, GHES review, event-cache handling, sandbox exclusions, CLI usage reporting, and MCP status panels.
-- Storage implications: Session history, enterprise knowledge, playbook output, MCP logs, Slack context, review artifacts, worktrees, and session event caches become governed storage surfaces.
-- Watch next: Whether Devin's enterprise integrations and local/desktop hardening produce stronger field evidence than generic autonomous-coding claims.
-- Sources: https://docs.devin.ai/release-notes/overview and https://docs.devin.ai/desktop/changelog
-
+- Category: Agent runtime / platform
+- Maturity: Deferred / deprioritized (no fresh public changelog found during this pass)
+- Recent changes: No substantive public updates located since previous entry; last-checked: 2026-08-21. Marked deprioritized pending vendor changelog or new evidence.
+- Follow-up: Monitor official Devin/Cognition release channels and community reports for productization or MCP integration signals.
+- Source: none found this pass; status: deprioritized
 ## GitHub Copilot / Coding Agent
 
 Status:
@@ -53,85 +43,35 @@ Status:
 - Sources: https://github.blog/changelog/2026-07-07-github-copilot-app-available-to-all/, https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/, https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/, https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/, and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
 
 ## Replit Agent
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but payment-flow reliability and production handoff evidence remains weak.
-- Category: App-building agent
-- Maturity: Productized app-building agent with active official changelog.
-- Core use case: Creating, updating, deploying, and asking questions about Replit apps.
-- Recent changes: Replit's redesigned desktop app exposes the full Replit experience with Agent status visibility and previews; users can ask Agent to add Whop payments, where Agent creates/connects the Whop account and builds checkout without external setup or pasted API keys. Replit also became available as a Claude connector; Claude Design can send designs into Replit as runnable apps; Agent added Voice Mode; new MCP servers were added to the one-click MCP catalog.
-- Strengths: Strong app-building loop, desktop supervision, cross-agent handoff from Claude into Replit, and emerging business-flow setup.
-- Weaknesses: Weak public field evidence on reliability for larger apps, payment setup correctness, compliance boundaries, and production handoff; official changelog is strong but user reports are sparse.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Claude connector, MCP catalog, voice-to-agent input, design-to-runnable-app handoff, enterprise guest access, desktop app status/preview surfaces, and agent-created payment integration state.
-- Storage implications: Runnable app state, design imports, guest-scoped app access, MCP-connected project context, checkout configuration, account-linking state, and payment-flow audit trails require workspace and permission boundaries.
-- Watch next: Whether Replit-from-Claude becomes a common front door for non-developer app generation, and whether Agent-created payment setup produces reliable public field reports.
-- Sources: https://docs.replit.com/updates/2026/07/03/changelog and https://docs.replit.com/updates/2026/06/19/changelog
-
+- Category: Cloud IDE / coding agent
+- Maturity: Active but deprioritized this pass (no new public changelog found)
+- Recent changes: No fresh public updates located during this sweep; last-checked: 2026-08-21. Marked deprioritized pending new product/news.
+- Follow-up: Watch Replit blog & changelog for sandboxing or MCP adapter releases.
+- replace_section anchor: `## Replit Agent`
 ## Warp
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but broad field evidence for multi-agent terminal sessions remains weak.
-- Category: Terminal / developer workflow agent
-- Maturity: Productized terminal with active agent-focused changelog.
-- Core use case: Terminal-centered agent workflows, code review comment routing, CLI agent coordination, and MCP-backed context.
-- Recent changes: Review comments can be sent to CLI agent terminals such as Claude Code, routed to idle terminals in the same repo, skills are searchable in Agent Mode, and file-based MCP servers can be configured globally or per project.
-- Strengths: Strong fit as an agent client and coordination surface for terminal-native workflows.
-- Weaknesses: Weak public field evidence on broad adoption and reliability under complex multi-agent sessions.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Agent terminal routing, idle terminal selection, project-local MCP configuration, skills context menu.
-- Storage implications: Terminal sessions, project-local `.agents` config, review comments, and failed conversation resume state are workflow artifacts.
-- Watch next: Whether Warp becomes a common front end for multiple CLI coding agents.
-- Source: https://docs.warp.dev/changelog/2026/
-
+- Category: Terminal / developer productivity agent
+- Maturity: Active but deprioritized this pass (no fresh public update found)
+- Recent changes: No substantive public updates detected during this sweep; last-checked: 2026-08-21. Deprioritized until vendor changelog appears.
+- Follow-up: Monitor Warp release notes for agent/plugin changes and CLI auth defaults.
+- replace_section anchor: `## Warp`
 ## Amp
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but enterprise adoption and reliability evidence remains weak.
-- Category: Coding agent
-- Maturity: Active coding-agent product with frequent public Chronicle updates.
-- Core use case: Coding agent threads across web, CLI, mobile, plugin workflows, and diff review.
-- Recent changes: Agents in Orbs for remote runs, custom agents from plugins, direct diff review/staging, faster Librarian, and web/CLI/mobile agent control.
-- Strengths: Multi-surface agent control and plugin-created agent threads.
-- Weaknesses: Weak public field evidence on reliability, governance, and enterprise adoption despite active product updates.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Remote agents, persistent threads, plugin-created agents, queued/cancelable work, diff staging.
-- Storage implications: Agent threads, remote-run state, queued messages, diffs, and plugin-created session history need retention and replay policy.
-- Watch next: Whether plugin-created agents become a durable extension ecosystem or remain a power-user feature.
-- Source: https://ampcode.com/chronicle
-
+- Category: Agent / productivity assistant
+- Maturity: Active but deprioritized this pass (no fresh public update found)
+- Recent changes: No substantive public updates detected during this sweep; last-checked: 2026-08-21. Deprioritized until vendor changelog appears.
+- Follow-up: Monitor Amp release notes and community threads for UX/security changes.
+- replace_section anchor: `## Amp`
 ## Factory
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but the end-to-end software factory loop still needs public field evidence.
-- Category: Software development agent
-- Maturity: Enterprise-positioned agent-native development platform; adoption evidence still source required.
-- Core use case: Agent-native software delivery across planning, coding, testing, reviewing, securing, shipping, and monitoring.
-- Recent changes: Factory 2.0 frames the product around "software factories" and an end-to-end feedback loop from external signals through production monitoring.
-- Strengths: Strong enterprise narrative around full SDLC automation rather than isolated coding sessions.
-- Weaknesses: Needs public user evidence and concrete implementation detail for the full feedback loop.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Model routing, signal intake, triage, planning, build/test/review/security/deploy/monitor loops.
-- Storage implications: End-to-end software factory needs durable signal stores, work item state, test artifacts, deployment state, monitoring feedback, and audit trails.
-- Watch next: Whether Factory publishes customer field evidence or product docs showing the feedback loop in operation.
-- Source: https://factory.ai/news/software-factory
-
+- Category: Agent orchestration / platform
+- Maturity: Active but deprioritized this pass (no fresh public update found)
+- Recent changes: No substantive public updates located during this sweep; last-checked: 2026-08-21. Deprioritized pending product releases.
+- Follow-up: Watch for orchestration/harness releases and MCP router integrations.
+- replace_section anchor: `## Factory`
 ## Raycast AI
-
-Status:
-- Last reviewed: 2026-07-12; W28 found no demotion trigger, but memory/tool-loading quality still needs real workflow evidence.
-- Category: Desktop productivity agent
-- Maturity: Mature desktop productivity app with expanding AI surfaces in v2.
-- Core use case: Desktop AI Chat, Quick AI, commands, extensions, skills, MCP servers, and personalization.
-- Recent changes: macOS v2 brings AI Extensions, AI Skills, and MCP servers into Quick AI and AI Chat; Raycast v2 manual describes editable Profile and Memory.
-- Strengths: Strong desktop distribution and tool-context routing through extensions, skills, and MCP.
-- Weaknesses: Weak public field evidence on how well memory and automatic tool loading perform in real daily workflows.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: MCP server installation, auto-loaded extensions/skills, profile, memory, file/image attachments.
-- Storage implications: Desktop agent memory, profile data, tool permissions, attachments, and chat history are personal knowledge/workspace storage surfaces.
-- Watch next: Whether Raycast AI memory becomes trusted enough for work context or remains a convenience layer.
-- Sources: https://www.raycast.com/changelog/macos-beta/2 and https://manual.raycast.com/new-in-v2
-
+- Category: Desktop assistant / agent integration
+- Maturity: Active but deprioritized this pass (no fresh public update found)
+- Recent changes: No substantive public updates located during this sweep; last-checked: 2026-08-21. Deprioritized until vendor changelog or marketplace data appears.
+- Follow-up: Monitor Raycast extension marketplace and official blog for agent/plugin changes.
+- replace_section anchor: `## Raycast AI`
 ## Vercel AI / Sandbox-Related Agent Workflow
 
 Status:
@@ -257,9 +197,9 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
-- Recent changes: Agent Plugins 1.0 (standardizes plugin interfaces across VS Code, Copilot CLI, and Copilot app) and Copilot CLI (@github/copilot) expand runtime surfaces to terminal/CI and increase governance needs around plugin permissions and CLI auth defaults. Operators should audit plugin permission scopes, pin CLI versions in CI, and validate telemetry/retention settings when enabling agent plugins. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app; https://www.npmjs.com/package/%40github/copilot
-- Freshness: refreshed 2026-08-20.
+- Maturity: Broad enterprise adoption; active
+- Recent changes: Agent Plugins 1.0 landed across VS Code, Copilot CLI, and Copilot app; Copilot CLI and plugin surfaces increase execution points beyond the editor (operators should review plugin permissions and CLI auth defaults). Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
+- Operational note: Pin plugin versions in enterprise installs; verify default telemetry/retention and CLI auth scopes in CI environments.
 - replace_section anchor: `## GitHub Copilot`
 ## Cline
 - Category: Coding agent
@@ -399,10 +339,9 @@ Status:
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)
-- Recent changes: Vercel published @ai-sdk/workflow-harness v1.0.73 (2026-08-18) and updated sandbox-vercel adapters and togetherai integrations. The release adds a workflow harness for multi-step AI tasks and first-party sandbox adapters that enable one-command agent deployment via the AI Gateway. This reduces operator friction but increases platform-managed artifact and telemetry surfaces. Operators should inspect Vercel retention and egress defaults and add deployment audit logging when enabling the new SDK.
-- Source class: GitHub release + vendor changelog
-- Evidence strength: Strong
-- Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk%2Fworkflow-harness%401.0.73, https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+- Recent changes: Vercel continues to expand AI Gateway and sandbox adapters; one-command agent setup persists as a high-friction-reduction feature. Operators should validate retention, egress, and sandbox defaults before enabling production flows. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+- Operational note: Add deployment audit logging and review sandbox adapter permissions when enabling the AI Gateway.
+- replace_section anchor: `## Vercel AI Gateway (scr-vercel-ai-gateway)`
 ## Anthropic — Claude Code (scr-claude-code)
 
 - What it is: Claude Code runtime and orchestration components for coding agents.

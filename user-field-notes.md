@@ -348,3 +348,20 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - What happened: Multiple community posts report teams hitting weekly API limits that throttle automated coding workflows and CI jobs, causing repeated retries and degraded developer CI performance.
   - Why it matters: Quota windows that are too coarse force operators to architect around quota boundaries (batches, fallbacks, hybrid-model routing) and can silently degrade automation reliability.
   - Evidence strength: Medium (public forum threads); follow-up: collect vendor quota docs and assess mitigation patterns (local caching, batching, multi-model routing).
+
+
+- **Redis-backed persistent sessions (field note, 2026-08-21)**
+  - Scenario: Operators are using Redis to persist agent session state across restarts and to share short-term memories between agent runs.
+  - Positive: Low-latency, easy to integrate with existing infra; enables quick resume and shared context.
+  - Pain point: Increases attack surface (exposed keys, no append-only guarantees by default), TTL management and poisoning risks.
+  - Useful trick: Use authenticated Redis instances with per-key TTLs, signed append-only sequences for memory writes, and rotate keys on suspect runs.
+  - Source class: social / Bluesky field report
+  - Evidence strength: Medium
+  - Source: https://bsky.app/profile/automate-n8n.bsky.social/post/3msf3gecbjk26
+
+- **Staging canaries for MCP connector upgrades (field note, 2026-08-21)**
+  - Scenario: Vendors update MCP connector APIs; operators see connector breakage during rollout.
+  - Useful trick: Create lightweight staging canaries that exercise MCP connectors and tool-call permissions on every release; block rollout if canaries fail.
+  - Source class: social / Reddit & operator threads
+  - Evidence strength: Medium
+  - Public-safe summary: Add automated canaries that run end-to-end connector checks after each upstream release and before production promotion.

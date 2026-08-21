@@ -1,0 +1,248 @@
+{
+  "summary": "Weekly agent/agent-infra roundup: several high‑traction agent platforms and vendor releases, operator workflow threads (LangSmith, Claude CLI delegation, AGENTS.md), and multiple MCP/sandbox/eval primitives needing corroboration.",
+  "candidates": [
+    {
+      "id": "scr-1f2a8b",
+      "title": "Composio (ComposioHQ/composio) — large open agent workbench",
+      "why_it_matters": "Large open workbench powering 1k+ toolkits, sandboxed workbench for agent tool discovery.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/ComposioHQ/composio"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-2b3c7d",
+      "title": "Osaurus — native macOS offline agent harness",
+      "why_it_matters": "Offline native macOS harness for persistent memory, autonomous execution and crypto identity.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/osaurus-ai/osaurus"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-3c4d9e",
+      "title": "Omnigent — open agent orchestration/meta-harness",
+      "why_it_matters": "Meta-harness to orchestrate multiple agent providers with sandboxing and policy enforcement.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-4d5e1f",
+      "title": "Anthropic — Claude Opus 5 (official)",
+      "why_it_matters": "Opus 5 improves long‑running agents and coding/professional work performance.",
+      "evidence": [
+        "https://www.anthropic.com/news/claude-opus-5"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5e6f2a",
+      "title": "Mistral — Vibe (agents) and Studio (agent dev)",
+      "why_it_matters": "Mistral's Studio and Vibe target building, testing, and running long‑horizon agents.",
+      "evidence": [
+        "https://mistral.ai/products/studio/",
+        "https://mistral.ai/products/vibe/code/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-6f7a3b",
+      "title": "Vercel Agent now available in Slack code channels",
+      "why_it_matters": "Vercel exposes agent features directly inside Slack code channels for deployments.",
+      "evidence": [
+        "https://vercel.com/changelog/vercel-agent-is-now-available-in-slack-code-channels"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-7a8b4c",
+      "title": "Keep every LangSmith trace without 10x retention bill (dev.to)",
+      "why_it_matters": "Operator trick to retain LangSmith traces cheaply for debugging live systems.",
+      "evidence": [
+        "https://dev.to/aviadr1/keep-every-langsmith-trace-without-the-10x-retention-bill-2gl1"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-8b9c5d",
+      "title": "Feature request: AGENTS.md for Claude Code (community demand)",
+      "why_it_matters": "Developers ask for a standard AGENTS.md to document agent behavior and expectations.",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49345619",
+        "https://github.com/anthropics/claude-code/issues/6235"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9c0d6e",
+      "title": "Operator thread: Claude Code + Antigravity CLI delegation (Reddit)",
+      "why_it_matters": "Users report struggles g\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/ClaudeAI/comments/1vu1636/anyone_got_claude_code_antigravity_cli_agy/"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-a0b1c2",
+      "title": "Cloudflare: How Cloudflare detects MCP traffic and helps secure it",
+      "why_it_matters": "Cloudflare describes detection and protection techniques for MCP traffic and threats.",
+      "evidence": [
+        "https://blog.cloudflare.com/mcp-security-updates/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-b1c2d3",
+      "title": "NVIDIA/SkillEvaluator — multi‑tier agent skill evaluation framework",
+      "why_it_matters": "Framework measures skill quality, synthetic dataset gen, and live agent evals for gating.",
+      "evidence": [
+        "https://github.com/NVIDIA/SkillEvaluator"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-c2d3e4",
+      "title": "api-evangelist/scrapybara — virtual desktops for computer‑use agents",
+      "why_it_matters": "Provides remote desktops and browser control APIs for computer‑use agent workflows.",
+      "evidence": [
+        "https://github.com/api-evangelist/scrapybara"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-d3e4f5",
+      "title": "bharatvansh/gemini-deep-research-mcp — Gemini MCP server (repo only)",
+      "why_it_matters": "Repo claims to expose Gemini Deep Research as MCP tools for high-quality web research.",
+      "evidence": [
+        "https://github.com/bharatvansh/gemini-deep-research-mcp"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-e4f5g6",
+      "title": "opena2a-org/ai-trust — AI package & MCP trust scoring",
+      "why_it_matters": "Registry to score MCP servers, skills and packages for supply-chain/trust decisions.",
+      "evidence": [
+        "https://github.com/opena2a-org/ai-trust"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky AI‑agent threads (collection error 403) — need Bluesky monitoring for early operational reports"
+  ]
+}
