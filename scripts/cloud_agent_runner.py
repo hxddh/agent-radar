@@ -6882,7 +6882,7 @@ def merge_update_content(
 DEFAULT_CHINESE_MIRROR_ENGLISH_CHARS = 40_000
 
 
-def build_chinese_mirror_prompt(rel_path: str, english_body: str) -> str:
+def build_chinese_mirror_prompt(rel_path: str, english_body: str, required_lines: int) -> str:
     cap = env_int("CHINESE_MIRROR_ENGLISH_CHARS", DEFAULT_CHINESE_MIRROR_ENGLISH_CHARS)
     body = truncate_keep_ends(english_body, cap)
     return f"""You are producing the Simplified-Chinese half of a bilingual report.
@@ -6892,12 +6892,20 @@ File: {rel_path}
 Below is the finished `## English` body. Write the `## 中文` mirror of it.
 
 Rules:
+- **Every translated line must be a markdown bullet starting with `- `.** The
+  checker counts bullet lines carrying CJK text; flowing paragraphs count as
+  zero no matter how much Chinese they contain.
+- **Produce at least {required_lines} such bullet lines.** Below that the mirror
+  is rejected and the report publishes English-only.
 - Mirror the SAME `### N. Title` headings, in the same order, with the English
-  numbering and title text kept verbatim (the runner matches on them).
-- Translate the substance of every bullet. Do not summarize away bullets, and do
-  not invent claims that are not in the English body.
+  numbering and title text kept verbatim (the runner matches on them). Headings
+  are not bullets and do not count toward the {required_lines}.
+- Translate the substance of every English bullet, one Chinese bullet per
+  English bullet. Do not merge bullets together, and do not invent claims that
+  are not in the English body.
 - Keep URLs, version numbers, product names, and metric values exactly as-is.
-- Write natural Simplified Chinese prose, not transliteration.
+- Write idiomatic Simplified Chinese, not transliteration — but keep it inside
+  the bullet structure above.
 
 Return ONLY this JSON object and nothing else:
 {{"chinese_block": "<the full markdown body that goes under ## 中文>"}}
@@ -6907,13 +6915,15 @@ Return ONLY this JSON object and nothing else:
 """
 
 
-def request_chinese_mirror(rel_path: str, english_body: str) -> str:
+def request_chinese_mirror(rel_path: str, english_body: str, required_lines: int = 0) -> str:
     """One targeted model call for a report's 中文 mirror. '' when unavailable."""
     if model_provider() != "vercel-ai-gateway":
         return ""
     model = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
     try:
-        data = call_ai_gateway_model(build_chinese_mirror_prompt(rel_path, english_body), model)
+        data = call_ai_gateway_model(
+            build_chinese_mirror_prompt(rel_path, english_body, required_lines), model
+        )
     except SystemExit as exc:
         RUN_AUDIT["apply_warnings"].append(f"中文 mirror call failed for {rel_path}: {exc}"[:220])
         return ""
@@ -6947,7 +6957,10 @@ def repair_report_chinese_block(rel_path: str, merged: str) -> str:
     if not english_body:
         return merged
     if env_bool("CHINESE_MIRROR_REPAIR", True):
-        mirror = request_chinese_mirror(rel_path, english_body)
+        required = radar_bilingual.required_chinese_lines(
+            radar_bilingual.substantive_english_lines(merged)
+        )
+        mirror = request_chinese_mirror(rel_path, english_body, required)
         if mirror:
             candidate = f"{prefix}\n\n## English\n\n{english_body}\n\n## 中文\n\n{mirror}\n"
             if not radar_bilingual.missing_chinese_substance(candidate):
