@@ -3312,3 +3312,22 @@ All candidates above are added to the inbox for further evaluation during daily 
 - **Cloudflare — MCP security updates (scr-4d5e6f7a)**: promoted; Why it matters: network/edge-level MCP detection and WriteGuard primitives shift containment responsibilities toward the CDN/edge. Evidence strength: Strong (official blog). Promotion reason: platform-level containment primitives are operationally material. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: promoted, defer_count: 0, stale_after_days: 30. Source: https://blog.cloudflare.com/mcp-security-updates/
 
 - Notes: flagged follow-ups: collect Anthropic recommended upgrade/testing windows and Cloudflare detection rule examples to convert into operator IDS policies (action: playbook.md updates).
+
+
+- **Google Gemini CLI v0.56.0** (scr-0a1b2c): why it matters: CLI release broadens provider and MCP/remote-workflow integrations for developer agent tooling; Evidence strength: Strong (GitHub release). Relevance score: 7; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0
+
+- **Microsoft Copilot CVE-2026-24301 / secret input leak** (scr-9i0j1k): why it matters: operator-impacting vulnerability that allowed secret input to be revealed by agent tooling; Evidence strength: Strong (press coverage) + Primary CVE (NVD). Relevance score: 10; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
+  - Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- **Memory API mismatch warning** (scr-6a7b8c): why it matters: operators report memory store vs memory API inconsistencies causing agents to lose evidence/context; Evidence strength: Medium (operator blog). Relevance score: 6; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h
+
+- **Repo indexing speedups for coding agents** (scr-3d4e5f): why it matters: reduces symbol-index latency massively (improves coding-agent responsiveness); Evidence strength: Medium (engineering writeup); Relevance score: 6; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://dev.to/wulun811/how-we-cut-repo-wide-symbol-indexing-for-llm-agents-from-30s-to-98ms-1mn2
+
+- **Daytona sandboxes via Stripe Projects** (scr-ij56kl): why it matters: reduces friction to provision isolated agent compute/sandboxes; Evidence strength: Medium (product notes / docs); Relevance score: 6; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.daytona.io/dotfiles/daytona-stripe-projects
+
+- **Kassette — object-storage‑backed durable workflows** (scr-qr90st): why it matters: durable agent workflows backed by object storage change session persistence models; Evidence strength: Medium (GitHub repo / Show HN); Relevance score: 6; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/lostinpatterns/kassette

@@ -5,7 +5,6 @@ Last checked: 2026-08-21
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
 | arxiv | 3 | 0 | 18 |
-| bluesky | 0 | 1 | 0 |
 | crates | 9 | 0 | 45 |
 | devto | 6 | 0 | 24 |
 | docker | 3 | 0 | 15 |
@@ -18,7 +17,7 @@ Last checked: 2026-08-21
 | page | 21 | 0 | 120 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 9 | 0 | 45 |
-| reddit-rss | 1 | 1 | 4 |
+| reddit-rss | 1 | 2 | 4 |
 | release | 32 | 0 | 93 |
 | tag | 32 | 0 | 93 |
 

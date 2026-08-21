@@ -11,9 +11,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
-- Maturity: Active; deployed in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: v2.1.227 / v2.1.229 releases (August) and the broader Opus 5 model rollout have introduced workspace trust prompts, gateway spend limits, and runtime adjustments that materially affect long‑running agents and connector behavior. Community reports and a public GH issue describe coherence/regression symptoms and broken MCP connectors; operators should validate MCP connector compatibility, enable workspace trust and spend controls, and stage upgrades behind test lanes. Evidence strength: Strong (vendor release + GH issue). Sources: https://www.anthropic.com/news/claude-opus-5 ; https://github.com/anthropics/claude-code/releases/tag/v2.1.229 ; https://github.com/anthropics/claude-code/issues/77136
-- replace_section anchor: `## Claude Code`
+- Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
+- Recent changes: Claude Code continues rapid release cadence (v2.1.229 in August) paired with the Opus 5 model rollout. Community and operator reports describe coherence regressions and broken MCP connectors (public GH issue threads), plus Anthropic published an engineering post on patterns for Scaling Managed Agents which materially affects operator deployment architecture for long‑running agents.
+- Operator guidance: stage Opus/Conductor upgrades behind canary lanes; validate MCP connector compatibility in CI; enable workspace trust prompts and per-run spend limits; collect run snapshots to object storage for post‑incident forensics.
+- Evidence strength: Strong (vendor releases + engineering blog + public GH issue threads).
+- Sources: https://github.com/anthropics/claude-code/releases/tag/v2.1.229 ; https://www.anthropic.com/news/claude-opus-5 ; https://www.anthropic.com/engineering/managed-agents ; https://github.com/anthropics/claude-code/issues/77136
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -196,10 +198,10 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; active
-- Recent changes: Agent Plugins 1.0 landed across VS Code, Copilot CLI, and Copilot app; Copilot CLI and plugin surfaces increase execution points beyond the editor (operators should review plugin permissions and CLI auth defaults). Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
-- Operational note: Pin plugin versions in enterprise installs; verify default telemetry/retention and CLI auth scopes in CI environments.
-- replace_section anchor: `## GitHub Copilot`
+- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
+- Recent changes & security note: August 2026 press and field reports described an incident where Copilot revealed secret input that led to an exploitable scenario; reporting surfaced a tracked vulnerability CVE-2026-24301 (NVD entry). Operators should treat this as high-priority: rotate keys/tokens used by Copilot agents, review CLI and agent auth defaults, and inspect recent agent session logs and snapshots for sensitive exposure. Evidence strength: Strong (press coverage + NVD advisory).
+- Operator guidance: (1) audit saved session/connector logs and snapshot retention policies, (2) rotate or scope API keys and enforce short-lived credentials in CI, (3) enable enablement of workspace trust & plugin permission gating where available, (4) schedule forensic snapshot exports to object storage on suspicious runs.
+- Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.

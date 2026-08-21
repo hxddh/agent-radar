@@ -484,3 +484,19 @@ AI Agent workloads create demand for:
   - Snapshot schema: include run metadata, tool-call transcripts, connector IDs, and model version (e.g., Opus 5) to enable fast triage.
   - Use object storage lifecycle rules to retain short-term investigative copies while archiving a smaller forensics set for longer periods.
 - Evidence: AWS S3 orchestration patterns and Cloudflare/Vercel gateway export features discussed in vendor docs and changelogs (see monthly sources).
+
+
+## Object Storage as Artifact Plane (Aug 2026)
+
+- Thesis: object storage (S3 / R2 / vendor snapshot stores) is the canonical durable plane for agent snapshots, logs, artifacts, and forensic exports — treat it as first-class runtime state.
+
+- Recommended operator actions
+  - Define a snapshot lifecycle: on-run-start (minimal), on-run-end (full), on-suspicious‑event (forensic). Automate exports to encrypted buckets and keep manifests.
+  - Apply bucket-level lifecycle and immutability policies for forensic copies; enable logging (access logs) and server-side encryption with customer‑managed keys where required.
+  - Standardize snapshot schemas (inputs, tool‑calls, outputs, metadata, run manifest) so cross‑vendor analysis and replay is possible.
+
+- Integration notes
+  - Platforms (Vercel, Cloudflare, AWS Bedrock AgentCore) increasingly offer snapshot/export integrations. Treat these as convenience paths but ensure copies land in customer-controlled buckets for retention policy control.
+  - Durable workflow projects (e.g., Kassette) and S3 orchestration examples show patterns for resuming and replaying agent state across restarts.
+
+- Sources: Cloudflare MCP security updates; vendor gateway/snapshot docs; Kassette (object-storage durable workflows).

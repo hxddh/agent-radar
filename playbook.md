@@ -313,3 +313,30 @@ Evidence:
   - Apply Cloudflare WriteGuard / MCP detection rules (map vendor examples into IDS) and block unusual egress patterns.
   - Run compatibility tests for MCP connectors in CI before upgrading production fleets (test harness: small inputs, tool-call smoke tests, artifact roundtrip checks).
 - Follow-up: collect minimal repro cases and open a vendor support ticket with artifact bundle (snapshot + logs).
+
+
+## Containment & Incident Playbook (Aug 2026)
+
+- Purpose: quick operator checklist for handling agent-related regressions, connector breakage, and observed secret/input leakage.
+
+- Pre‑upgrade staging
+  - Create canary lanes and run full MCP connector tests in CI before upgrading agent runtimes or models.
+  - Snapshot a reproducible test corpus to object storage (S3 / R2) for rollback testing.
+
+- Authentication & tokens
+  - Rotate keys and prefer short‑lived credentials; enforce least privilege for agent connectors and CLI tokens.
+  - Audit CLI defaults and disable permissive auth/telemetry defaults in automation scripts.
+
+- Run‑time containment
+  - Map vendor edge detection rules (e.g., Cloudflare WriteGuard examples) into enterprise IDS and edge policies.
+  - Enforce per-run spend limits and workspace trust prompts where supported.
+
+- Forensics & recovery
+  - On suspicious runs, export session traces, tool call logs, and snapshots to encrypted object storage and flag for offline analysis.
+  - Retain a tamper-evident index (manifest) for runs to assist incident triage and regulator requests.
+
+- Post‑incident
+  - Rotate affected credentials; notify downstream connector owners; run targeted synthetic tests that exercise the leaked path.
+  - Feed learned mitigations back into CI gating and the operator KB (MCP connector test suites).
+
+- Sources & templates: Anthropic managed agents engineering guidance, Cloudflare MCP security updates, NVD CVE advisories (see monthly sources).

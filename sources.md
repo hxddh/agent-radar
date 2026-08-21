@@ -1692,3 +1692,12 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - Cloudflare — How Cloudflare detects MCP traffic and helps secure it (MCP security updates). Source class: Tier 1 (official blog). Evidence strength: Strong. URL: https://blog.cloudflare.com/mcp-security-updates/
 
 - Anthropic — Claude Code releases / cadence (GitHub release for v2.1.229). Source class: Tier 2 (GitHub releases). Evidence strength: Strong. URL: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
+
+
+### Added (2026-08-21)
+- [mainstream_product] Google Gemini CLI v0.56.0 release (GitHub release). Evidence strength: Strong. URL: https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0
+- [mainstream_product / security] Microsoft Copilot security incident coverage (Ars Technica) and canonical NVD CVE entry (CVE-2026-24301). Evidence strength: Strong. URLs: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+- [user_workflow] Memory API mismatch operator report (dev.to). Evidence strength: Medium. URL: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h
+- [infra_primitive] Repo indexing speedups for coding agents (engineering writeup). Evidence strength: Medium. URL: https://dev.to/wulun811/how-we-cut-repo-wide-symbol-indexing-for-llm-agents-from-30s-to-98ms-1mn2
+- [infra_primitive] Daytona sandboxes via Stripe Projects (product notes). Evidence strength: Medium. URL: https://www.daytona.io/dotfiles/daytona-stripe-projects
+- [infra_primitive] Kassette — durable agent workflows backed by object storage (GitHub). Evidence strength: Medium. URL: https://github.com/lostinpatterns/kassette
