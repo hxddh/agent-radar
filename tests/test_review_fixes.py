@@ -1096,3 +1096,70 @@ class ChineseMirrorPromptTest(unittest.TestCase):
             radar_bilingual.required_chinese_lines(radar_bilingual.substantive_english_lines(merged)),
         )
         self.assertGreater(seen["required"], 0)
+
+
+class StaleDegradationMarkerTest(unittest.TestCase):
+    """The 2026-08-21 monthly passed the substance check but still carried the
+    marker: a later update supplied the Chinese an earlier mirror could not."""
+
+    def _report(self, chinese_lines: int, marker: bool) -> str:
+        english = "\n".join(
+            f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+            for i in range(1, 38)
+        )
+        chinese = "\n".join(f"- 信号 {i}：某厂商发布了一项真实进展。" for i in range(1, chinese_lines + 1))
+        note = (
+            f"> {radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER}，请以上方 `## English` 正文为准。\n\n"
+            if marker
+            else ""
+        )
+        return (
+            "# Agent Radar Monthly - 2026-08\n\n## English\n\n"
+            f"### 1. Summary\n\n{english}\n\n## 中文\n\n{note}### 1. Summary\n\n{chinese}\n"
+        )
+
+    def test_stripping_keeps_the_chinese_and_drops_only_the_note(self) -> None:
+        content = self._report(chinese_lines=28, marker=True)
+        self.assertFalse(radar_bilingual.missing_chinese_substance(content))
+        out = radar_bilingual.strip_chinese_degradation_note(content)
+        self.assertFalse(radar_bilingual.has_recorded_chinese_degradation(out))
+        self.assertFalse(radar_bilingual.missing_chinese_substance(out))
+        self.assertIn("信号 28", out)
+        self.assertNotIn("\n\n\n", out)
+
+    def test_apply_updates_clears_the_stale_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "monthly").mkdir()
+            target = root / "monthly" / "2026-08.md"
+            target.write_text(self._report(chinese_lines=28, marker=True), encoding="utf-8")
+            cloud_agent_runner.RUN_AUDIT["chinese_mirror_marker_cleared"] = 0
+            cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+            changed = cloud_agent_runner.apply_updates(
+                root,
+                ["monthly/2026-08.md"],
+                {
+                    "updates": [
+                        {
+                            "path": "monthly/2026-08.md",
+                            "mode": "replace_section",
+                            "anchor": "### 1. Summary",
+                            "within": "## English",
+                            "content": "\n".join(
+                                f"- Signal {i}: a vendor shipped something real. https://example.com/{i}"
+                                for i in range(1, 38)
+                            ),
+                        }
+                    ]
+                },
+            )
+            self.assertEqual(changed, 1)
+            text = target.read_text(encoding="utf-8")
+            self.assertFalse(radar_bilingual.has_recorded_chinese_degradation(text))
+            self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_marker_cleared"], 1)
+
+    def test_marker_stays_when_the_report_is_still_thin(self) -> None:
+        content = self._report(chinese_lines=3, marker=True)
+        self.assertTrue(radar_bilingual.missing_chinese_substance(content))
+        # A genuinely thin report keeps its marker; only the stale case clears.
+        self.assertTrue(radar_bilingual.has_recorded_chinese_degradation(content))

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v0.24.4 - 2026-08-21
+
+The v0.24.3 prompt fix moved the mirror from `regenerated 0 CJK line(s)` to `regenerated 6 CJK line(s), need 23` — real progress, still short. But the run exposed a worse problem than the shortfall.
+
+### Fixed
+- **A report was publishing a false statement about itself.** `monthly/2026-08.md` now passes the substance check on its own (English 37 / Chinese 28 / required 23, `missing_chinese_substance=False`) yet still carried `> 本期中文镜像未能生成`. Repair runs per update: an early update was genuinely thin and wrote the marker, later updates supplied the Chinese, and nothing ever revisited the claim. Beyond being untrue to readers, the marker permanently downgrades that file's `--require-chinese` check to a warning — so a real regression in it would no longer fail CI.
+- `apply_updates` now clears the marker when the merged report passes on its own (`strip_chinese_degradation_note()`, counted as `chinese_mirror_marker_cleared`). A genuinely thin report keeps its marker.
+- Cleaned the stale marker off the published `monthly/2026-08.md`.
+
+### Known
+- The mirror still returns 6 bullets where 23 are needed, so path A has succeeded once (the weekly) and fallen back twice (the monthly). The prompt now demands bullets and names the count; the next lever is one retry with the shortfall quoted back, not another blind prompt edit.
+- Three of these test fixtures asserted nothing for two revisions: `- Signal {i}: x https://e.com/{i}` scores `substantive_english_lines = 0`, so the threshold under test was never reached. Fixed here; worth remembering that a passing bilingual test says little unless the fixture clears the substance floor.
+
 ## v0.24.3 - 2026-08-21
 
 The v0.24.2 diagnostics paid for themselves on their first run. Both surfaces now publish, and the mirror's real failure mode is named.

@@ -243,6 +243,22 @@ def has_recorded_chinese_degradation(content: str) -> bool:
     return CHINESE_MIRROR_DEGRADED_MARKER in content
 
 
+def strip_chinese_degradation_note(content: str) -> str:
+    """Remove the degradation marker line (and its trailing blank)."""
+    lines = content.splitlines()
+    kept: list[str] = []
+    for index, line in enumerate(lines):
+        if CHINESE_MIRROR_DEGRADED_MARKER in line:
+            # Drop one following blank so the block does not gain a gap.
+            if index + 1 < len(lines) and not lines[index + 1].strip():
+                lines[index + 1] = "\x00"
+            continue
+        if line == "\x00":
+            continue
+        kept.append(line)
+    return "\n".join(kept).rstrip("\n") + "\n"
+
+
 def missing_chinese_substance(content: str) -> bool:
     if not is_report_content(content):
         return False

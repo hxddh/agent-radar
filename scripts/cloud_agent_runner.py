@@ -667,6 +667,7 @@ RUN_AUDIT: dict[str, Any] = {
     "budget_status": "normal",
     "chinese_mirror_repaired": 0,
     "chinese_mirror_degraded": 0,
+    "chinese_mirror_marker_cleared": 0,
     "token_usage": {},
     "started_at": 0.0,
     "prompt_chars": 0,
@@ -7205,6 +7206,17 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
                     raise SystemExit(
                         f"Refusing to update {rel_path}: report lacks substantive 中文 content with CJK text."
                     )
+            elif radar_bilingual.has_recorded_chinese_degradation(merged):
+                # A later update supplied the Chinese an earlier mirror could
+                # not: the marker was true when written and is false now.
+                # Leaving it publishes a false statement about the report and
+                # permanently downgrades this file's CI check to a warning.
+                merged = radar_bilingual.strip_chinese_degradation_note(merged)
+                RUN_AUDIT["chinese_mirror_marker_cleared"] += 1
+                RUN_AUDIT["apply_warnings"].append(
+                    f"{rel_path}: cleared a stale 中文 degradation marker; the block now "
+                    "carries enough Chinese on its own"
+                )
         if mode == "full" and old and len(old) > 500 and len(merged) < len(old) // 2:
             raise SystemExit(
                 f"Refusing to replace {rel_path}: new content is much shorter than the existing file."
@@ -7310,6 +7322,7 @@ def append_telemetry(root: Path, task: str, day: dt.date, changed: int, summary:
         "budget_status": RUN_AUDIT["budget_status"],
         "chinese_mirror_repaired": RUN_AUDIT.get("chinese_mirror_repaired", 0),
         "chinese_mirror_degraded": RUN_AUDIT.get("chinese_mirror_degraded", 0),
+        "chinese_mirror_marker_cleared": RUN_AUDIT.get("chinese_mirror_marker_cleared", 0),
         "token_usage": RUN_AUDIT.get("token_usage", {}),
         "input_tokens": total_gateway_tokens()[0],
         "output_tokens": total_gateway_tokens()[1],
@@ -7461,6 +7474,7 @@ def run_task(
     RUN_AUDIT["budget_status"] = "normal"
     RUN_AUDIT["chinese_mirror_repaired"] = 0
     RUN_AUDIT["chinese_mirror_degraded"] = 0
+    RUN_AUDIT["chinese_mirror_marker_cleared"] = 0
     # Shared screening runs in the preflight, before this reset. Its calls are
     # already carried over via preflight_screen_calls; its tokens must be too —
     # screening is the stage most likely to be on a paid model.
