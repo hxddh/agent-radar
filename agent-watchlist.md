@@ -12,10 +12,7 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Claude Code continues rapid release cadence (v2.1.229 in August) paired with the Opus 5 model rollout. Community and operator reports describe coherence regressions and broken MCP connectors (public GH issue threads), plus Anthropic published an engineering post on patterns for Scaling Managed Agents which materially affects operator deployment architecture for long‑running agents.
-- Operator guidance: stage Opus/Conductor upgrades behind canary lanes; validate MCP connector compatibility in CI; enable workspace trust prompts and per-run spend limits; collect run snapshots to object storage for post‑incident forensics.
-- Evidence strength: Strong (vendor releases + engineering blog + public GH issue threads).
-- Sources: https://github.com/anthropics/claude-code/releases/tag/v2.1.229 ; https://www.anthropic.com/news/claude-opus-5 ; https://www.anthropic.com/engineering/managed-agents ; https://github.com/anthropics/claude-code/issues/77136
+- Recent changes: Anthropic released Opus 5 (2026-08) and published an engineering post on patterns for Scaling Managed Agents which materially affects operator deployment architecture for long‑running agents. Claude Code continues a rapid release cadence (v2.1.229 and subsequent point releases in August) and public GH issue threads report coherence regressions and broken MCP connectors (see linked issue). Operators should: stage Opus 5 upgrades in sandboxes, validate MCP connector compatibility in CI (integration + smoke tests), enable workspace trust/spend controls, and snapshot runs to object storage before/after upgrading model/runtime. Evidence strength: Strong (vendor announcement + engineering blog) + Strong (public GH issue). Sources: https://www.anthropic.com/news/claude-opus-5 ; https://www.anthropic.com/engineering/managed-agents ; https://github.com/anthropics/claude-code/issues/77136
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -330,9 +327,7 @@ Status:
 
 ## Cloudflare OS
 - Category: Platform OS / agent workspace & governance
-- Recent changes: Cloudflare published MCP security updates introducing network-layer detection for agentic MCP traffic and WriteGuard examples for egress control and artifact containment. Impact: platform-level primitives now exist to detect and quarantine suspect agent sessions at the edge; operators should map these rules into enterprise IDS and edge policies. Evidence strength: Strong (official blog). Source: https://blog.cloudflare.com/mcp-security-updates/
-- Operational note: treat Cloudflare MCP guidance as a priority for early containment — convert their WriteGuard examples into enterprise firewall/ingress rules and into incident playbooks.
-- replace_section anchor: `## Cloudflare OS`
+- Recent changes: Cloudflare published MCP security updates introducing network-layer MCP detection and WriteGuard examples for egress control and artifact containment. Impact: platform-level primitives now exist to detect, quarantine, and export suspect agent sessions at the edge; operators should map these rules into enterprise IDS and edge policies and test quarantine playbooks in staging. Evidence strength: Strong (official blog). Source: https://blog.cloudflare.com/mcp-security-updates/
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)

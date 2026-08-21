@@ -340,3 +340,44 @@ Evidence:
   - Feed learned mitigations back into CI gating and the operator KB (MCP connector test suites).
 
 - Sources & templates: Anthropic managed agents engineering guidance, Cloudflare MCP security updates, NVD CVE advisories (see monthly sources).
+
+
+## Containment & Incident Playbook (promoted 2026-08)
+
+Purpose: practical checklist for operators running MCP-connected agents (coding or long‑running) to reduce blast radius, speed forensics, and enable safe upgrades.
+
+1) Staged upgrade workflow
+- Stage: test upgrades in a non-production sandbox with a copy of MCP connectors and a shadowed workspace.
+- Gate: CI tests for connector compatibility (unit + integration + end‑to‑end smoke) before production rollout.
+
+2) Workspace trust & spend controls
+- Enable workspace-level trust controls where available (Anthropic Managed Agents guidance).
+- Enforce per-connector spend limits and per-run quotas; require manual approval for runs exceeding a threshold.
+
+3) Auth & secret hygiene
+- Rotate agent tokens on a scheduled cadence and immediately after any anomalous session.
+- Validate CLI defaults: require least-privilege and explicit consent for egressing secrets.
+
+4) Network/edge containment
+- Map Cloudflare WriteGuard and MCP detection rules into edge/IDS policies; quarantine suspect sessions and flag for manual review.
+- Enforce egress allowlists at the edge for managed sandboxes.
+
+5) Forensics & snapshotting
+- Write immutable run traces and checkpoints to object storage (S3/R2) with per-run metadata (agent id, run id, connector versions, model version).
+- Retain short-term high‑fidelity traces (7–30 days) and longer-term hashed/summary traces for compliance (configurable).
+
+6) Incident triage playflow
+- Immediate: rotate tokens, snapshot the running workspace to object storage, preserve network captures for 72 hours, and isolate the agent runtime.
+- Follow-up: run connector compatibility tests, review tool-call logs, and notify downstream teams.
+
+7) Automation & monitoring
+- Integrate detect-coding-agent / runtime scanners into CI to detect suspicious tool-call patterns.
+- Alert on memory API mismatches, connector failures, and major model-version changes.
+
+---
+
+## 简要 中文镜像
+
+目的：为运行 MCP 连接代理的运维/平台团队提供可操作的隔离与应急清单，包括分阶段升级、费用/信任控制、边缘/网络拦截、对象存储快照与取证步骤。
+
+主要动作：分阶段升级 + CI 门控、启用工作区信任与费用限制、令牌轮换与最小权限、将 Cloudflare WriteGuard 规则映射到 IDS、把运行快照写入对象存储以便取证、事件处置流程（隔离→快照→调查）。

@@ -3331,3 +3331,22 @@ All candidates above are added to the inbox for further evaluation during daily 
 
 - **Kassette — object-storage‑backed durable workflows** (scr-qr90st): why it matters: durable agent workflows backed by object storage change session persistence models; Evidence strength: Medium (GitHub repo / Show HN); Relevance score: 6; promotion_status: candidate; candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-21; defer_count: 0; stale_after_days: 30.
   - Source: https://github.com/lostinpatterns/kassette
+
+
+## Monthly aggregation pass (2026-08-21)
+
+- **Promotions / confirmations (this pass)**:
+  - **Anthropic — Scaling Managed Agents** (scr-1a2b3c4d): promoted; why: vendor engineering guidance materially affects managed/long-running agent architecture (auth, lifecycle, spend controls). Evidence: Anthropic engineering blog. candidate_seen_at: 2026-08-21; promotion_status: promoted; follow-up: capture recommended staged-upgrade windows.
+  - **Anthropic — Claude Opus 5** (scr-2b3c4d5e): promoted; why: major model/runtime release with operator-facing regressions (connector breakage) and direct impact on long-running agents. candidate_seen_at: 2026-08-21; promotion_status: promoted; follow-up: track fixes and CI gating notes. Source: Anthropic Opus 5 + GH issue.
+  - **Cloudflare — MCP security updates / WriteGuard** (scr-3c4d5e6f): promoted; why: platform-level network/edge detection and egress controls shift containment responsibilities toward CDN/edge. candidate_seen_at: 2026-08-21; promotion_status: promoted; follow-up: extract WriteGuard rule examples for playbook.
+
+- **Candidate updates (monitor / deferred)**:
+  - **Gemini CLI v0.56.0**: candidate; why: expands remote MCP/workflow tooling (candidate_seen_at: 2026-08-21); promotion_status: candidate; follow-up: test remote MCP flows.
+  - **Copilot secret-leak (CVE-2026-24301)**: recorded as high-priority incident; evidence: Ars Technica + NVD. candidate_seen_at: 2026-08-21; promotion_status: candidate (security incident); follow-up: collect vendor advisory and remediation timeline.
+  - **Memory API mismatch reports** (dev.to): operator pain; candidate_seen_at: 2026-08-21; promotion_status: candidate; follow-up: gather more operator reports and CI test patterns.
+  - **Kassette (object-storage durable workflows)**: candidate; follow-up: evaluate for snapshot/restore patterns and forensics use.
+  - **Daytona Stripe Projects (sandbox provisioning)**: candidate; follow-up: verify enterprise provisioning flow and any numeric claims (number checks flagged when present).
+
+- **Corroboration queue**: convert Cloudflare blog examples into IDS rules; capture Anthropic recommended upgrade windows; collect any official OpenAI advisory re: vendor pause/retention changes.
+
+- **Runner note**: this aggregation pass pulled from the screening snapshot dated 2026-08-21 and from weekly passes W31–W34. If any of the promoted items already exist in the candidate inbox, this pass updates promotion_status and follow-up fields rather than duplicating old candidates.

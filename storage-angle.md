@@ -500,3 +500,30 @@ AI Agent workloads create demand for:
   - Durable workflow projects (e.g., Kassette) and S3 orchestration examples show patterns for resuming and replaying agent state across restarts.
 
 - Sources: Cloudflare MCP security updates; vendor gateway/snapshot docs; Kassette (object-storage durable workflows).
+
+
+## Snapshot & Artifact Lifecycle Template (added 2026-08)
+
+Context: vendors and platform gateways increasingly rely on object storage as the canonical artifact plane for agent workspaces, run traces, and recoverable state.
+
+Recommended minimal lifecycle
+- Snapshot trigger: on model-version change, connector update, or before any production rollout.
+- Snapshot contents: workspace fs diff, tool-call logs, model metadata (model id, prompt hash), connector versions, MCP session id, per-run metrics.
+- Storage target: S3 (AWS), R2 (Cloudflare), or equivalent object store with versioning enabled.
+- Encryption: server-side encryption (SSE) + envelope encryption for high‑sensitivity artifacts.
+- Retention tiers:
+  - Hot traces: 7–30 days (full fidelity) for triage.
+  - Warm summaries: 90 days (compressed trace + metadata) for incident analysis.
+  - Cold hashed archive: 1–7 years (hashed indexes + audit receipts) for compliance; store only when required.
+- Access control: IAM roles with least privilege, signed short-term URLs for retrieval.
+- Restore: automated restore job that can recreate the sandboxed workspace and replay tool calls in a quarantined environment.
+
+Operational notes
+- Tag snapshots with run_id, agent_version, connector_hash, and infra_version to support CI gating and quick rollbacks.
+- Integrate snapshot writes into the agent run lifecycle (pre-commit + post-run), and fail open only when snapshot storage is unavailable but alert immediately.
+
+---
+
+## 中文要点
+
+建议：在对象存储上启用版本与加密；将快照分为短期高保真（7–30 天）、中期摘要（90 天）和长期哈希档案（合规需求时）。将快照写入流程整合到 agent 运行生命周期以便快速恢复与调查。
