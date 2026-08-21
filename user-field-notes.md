@@ -365,3 +365,23 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Source class: social / Reddit & operator threads
   - Evidence strength: Medium
   - Public-safe summary: Add automated canaries that run end-to-end connector checks after each upstream release and before production promotion.
+
+
+- 2026-08-21: Anthropic Opus 5 upgrade notes (field guidance).
+  - Context: Anthropic Opus 5 + managed-agent engineering post published (2026-08-21).
+  - Public-safe summary: Operators should stage Opus 5 in isolated sandboxes, run MCP connector compatibility smoke tests (write→call→tool assertion), snapshot runs to object storage before/after upgrade, and add rollback/timeout gates to managed-agent controllers.
+  - Actionable checklist:
+    - Create a pre-upgrade smoke test that validates MCP connectors and tool-call receipts.
+    - Snapshot active sessions to object storage (indexed by run id + timestamp) before performing staged upgrade.
+    - Gate rollout on smoke test pass + no critical connector regressions.
+  - Source class: Tier 1 / Tier 2
+  - Sources: https://www.anthropic.com/news/claude-opus-5 ; https://www.anthropic.com/engineering/managed-agents
+
+- 2026-08-21: Cloudflare WriteGuard mapping note.
+  - Context: Cloudflare MCP security updates include network detection and WriteGuard examples.
+  - Public-safe summary: Map Cloudflare WriteGuard quarantines to an object-storage audit sink and add a staging test that triggers quarantine+export to validate retention and indexing.
+  - Actionable checklist:
+    - Identify quarantine export format and target bucket policies.
+    - Add test that simulates a disallowed egress and verifies an exported artifact lands in the audit bucket.
+  - Source class: Tier 1
+  - Source: https://blog.cloudflare.com/mcp-security-updates/

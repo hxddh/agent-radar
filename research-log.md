@@ -3350,3 +3350,19 @@ All candidates above are added to the inbox for further evaluation during daily 
 - **Corroboration queue**: convert Cloudflare blog examples into IDS rules; capture Anthropic recommended upgrade windows; collect any official OpenAI advisory re: vendor pause/retention changes.
 
 - **Runner note**: this aggregation pass pulled from the screening snapshot dated 2026-08-21 and from weekly passes W31–W34. If any of the promoted items already exist in the candidate inbox, this pass updates promotion_status and follow-up fields rather than duplicating old candidates.
+
+
+- **Mistral Vibe / Studio / Forge** (scr-mistral-prod): integrated agent dev/run product push from Mistral. Why it matters: another major vendor packaging end-to-end agent build/test/run tooling raises pressure on plugin/MCP interoperability and operator choices for where to stage CI flows. Evidence strength: Strong (official product pages). Relevance score: 8. Defer reason: Needs hands-on CI integration reports. Follow-up needed: smoke-test Mistral Studio with common MCP connectors. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://mistral.ai/products/vibe/ ; https://mistral.ai/products/studio/
+
+- **Boxlite micro-VM sandbox** (scr-boxlite): lightweight micro-VM intended for local and cloud agent sandboxes. Why it matters: potential low-overhead isolation primitive for desktop and cloud agent runs. Evidence strength: Medium (GitHub repo). Relevance score: 7. Defer reason: repo-only evidence; needs benchmark/security audit. Follow-up needed: compare with existing micro-VMs and run basic escape/resilience tests. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://github.com/boxlite-ai/boxlite
+
+- **Kassette — object-storage durable workflows** (scr-kassette): durable agent workflows backed by object storage. Why it matters: changes session persistence and forensic patterns for long-running agents. Evidence strength: Medium (GitHub repo). Relevance score: 7. Defer reason: integration/perf unknown. Follow-up needed: test snapshot→restore cycles and pricing/retention tradeoffs. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://github.com/lostinpatterns/kassette
+
+- **Memory API mismatch (operator reports)** (scr-mem-mismatch): operator-sourced report of memory store vs API mismatch causing lost context. Why it matters: breaks long-horizon tasks and increases debugging load. Evidence strength: Medium (dev.to). Relevance score: 6. Defer reason: needs additional corroboration. Follow-up needed: gather more operator examples and propose CI smoke tests. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h
+
+- **Daytona / Stripe Projects sandboxing claim** (scr-daytona-stripe): provisioning sandboxes via Stripe Projects (product notes). Why it matters: reduces friction to provision isolated agent compute. Evidence strength: Medium (product notes). Relevance score: 6. Defer reason: verify enterprise provisioning flow and numeric claims. Follow-up needed: confirm with official Daytona docs/announcements. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://www.daytona.io/dotfiles/daytona-stripe-projects

@@ -381,3 +381,17 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 目的：为运行 MCP 连接代理的运维/平台团队提供可操作的隔离与应急清单，包括分阶段升级、费用/信任控制、边缘/网络拦截、对象存储快照与取证步骤。
 
 主要动作：分阶段升级 + CI 门控、启用工作区信任与费用限制、令牌轮换与最小权限、将 Cloudflare WriteGuard 规则映射到 IDS、把运行快照写入对象存储以便取证、事件处置流程（隔离→快照→调查）。
+
+
+## Playbook candidate: Opus 5 staged-upgrade and snapshot rollback
+
+- When useful: upgrading a model/runtime (e.g., Anthropic Opus 5) for production-managed agents or coding pipelines.
+- Steps:
+  1. Create a sandbox environment mirroring MCP connectors and tool endpoints.
+  2. Run a pre-upgrade smoke suite: for each connector, perform write→tool-call→assert on expected artifact outputs.
+  3. Snapshot live run state to object storage (run-id, timestamp, connector receipts) and mark snapshot as immutable.
+  4. Deploy Opus 5 to a canary fleet; run targeted integration tests for long-horizon sessions.
+  5. If failures occur, revert traffic to previous runtime and restore from snapshot if needed; record incident in audit bucket.
+- Evidence: Anthropic managed-agents guidance + community upgrade reports.
+- Should promote to playbook? yes
+- Source: https://www.anthropic.com/engineering/managed-agents ; https://www.anthropic.com/news/claude-opus-5

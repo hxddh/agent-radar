@@ -527,3 +527,16 @@ Operational notes
 ## 中文要点
 
 建议：在对象存储上启用版本与加密；将快照分为短期高保真（7–30 天）、中期摘要（90 天）和长期哈希档案（合规需求时）。将快照写入流程整合到 agent 运行生命周期以便快速恢复与调查。
+
+
+## 2026-08-21: Storage angle notes — snapshots, audits, and object-store workflows
+
+- Object-store as canonical audit/forensic sink
+  - Rationale: With long-running agents and edge-level quarantines (Cloudflare WriteGuard), operators need an immutable audit sink for session artifacts, tool-call receipts, and quarantined blobs. Object storage provides durability, snapshot lifecycle, and indexable metadata for replay.
+  - Practical recommendation: define a minimal snapshot schema (run_id, agent_version, connector_manifest, receipts[], timestamp) and require snapshot-before-upgrade policies.
+  - Watch trigger: published integration examples showing snapshot→restore for a failed upgrade or regulatory audit request.
+
+- Durable workflow pattern (Kassette)
+  - Rationale: Projects like Kassette propose using object-store primitives to persist workflow state and allow replayable runs; this reduces the need for specialized databases for every orchestration flow.
+  - Risk: storage costs and retention governance; large artifact volumes require lifecycle policies and searchable indices.
+  - Source: https://github.com/lostinpatterns/kassette
