@@ -474,3 +474,13 @@ AI Agent workloads create demand for:
   - Source class: vendor announcement
   - Evidence strength: Strong
   - Source: https://openai.com/index/offering-zero-data-retention-for-frontier-models
+
+
+## August 2026: Storage-angle updates
+
+- Observation: multiple vendor updates this month (Cloudflare OS, Vercel AI Gateway, AWS AgentCore) make object storage an operational coordination plane: snapshots, run artifacts, logs, and replay data should be treated as privileged artifacts with lifecycle and encryption policies.
+- Recommended operator actions:
+  - Default retention & encryption policies: enforce server-side encryption and limited retention for snapshots; provide immutable audit copies when investigating incidents.
+  - Snapshot schema: include run metadata, tool-call transcripts, connector IDs, and model version (e.g., Opus 5) to enable fast triage.
+  - Use object storage lifecycle rules to retain short-term investigative copies while archiving a smaller forensics set for longer periods.
+- Evidence: AWS S3 orchestration patterns and Cloudflare/Vercel gateway export features discussed in vendor docs and changelogs (see monthly sources).

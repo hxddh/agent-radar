@@ -301,3 +301,15 @@ Evidence:
 - Evidence: Multiple operator reports of connector breakage and Anthropic/other runtime regressions this week; recommended as immediate mitigation.
 - Should promote to playbook? yes
 - Follow-up: Add a CI job template for connector canaries and a checklist for auditing plugin/tool-call permissions.
+
+
+## Containment & Incident Playbook (promoted 2026-08-21)
+
+- Purpose: quick operator steps for MCP-connected agents after vendor releases or suspicious behavior (e.g., Opus 5 regressions, connector breakage).
+- Immediate steps:
+  - Isolate affected agent sessions: revoke connector tokens, toggle workspace-trust to restrictive mode, and move affected runs to staged sandbox IDs.
+  - Enforce spend & token limits per-agent and per-connector; apply gateway-level spend caps where supported (Vercel/Anthropic examples).
+  - Enable export & snapshot to object storage for all suspect runs (S3/R2), preserving logs, inputs, and tool-call transcripts for forensics.
+  - Apply Cloudflare WriteGuard / MCP detection rules (map vendor examples into IDS) and block unusual egress patterns.
+  - Run compatibility tests for MCP connectors in CI before upgrading production fleets (test harness: small inputs, tool-call smoke tests, artifact roundtrip checks).
+- Follow-up: collect minimal repro cases and open a vendor support ticket with artifact bundle (snapshot + logs).

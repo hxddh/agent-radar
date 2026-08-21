@@ -12,9 +12,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; deployed in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: v2.1.227 released (2026-08-11) with runtime adjustments that affect workspace trust and spend controls. Prior cadence included v2.1.225 (2026-08-08) introducing workspace trust prompts and gateway spend-limit controls. Community reports continue to note long‑lived sessions and secret‑leak experiments; containment engineering posts remain relevant. Freshness: follow-up (previously covered 2026-08-03).
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.227
-- Evidence strength: Strong
+- Recent changes: v2.1.227 / v2.1.229 releases (August) and the broader Opus 5 model rollout have introduced workspace trust prompts, gateway spend limits, and runtime adjustments that materially affect long‑running agents and connector behavior. Community reports and a public GH issue describe coherence/regression symptoms and broken MCP connectors; operators should validate MCP connector compatibility, enable workspace trust and spend controls, and stage upgrades behind test lanes. Evidence strength: Strong (vendor release + GH issue). Sources: https://www.anthropic.com/news/claude-opus-5 ; https://github.com/anthropics/claude-code/releases/tag/v2.1.229 ; https://github.com/anthropics/claude-code/issues/77136
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -328,14 +327,10 @@ Status:
 
 
 ## Cloudflare OS
-
 - Category: Platform OS / agent workspace & governance
-- Why it matters: Cloudflare OS introduces a vendor-level Agent Access Model and WriteGuard primitives that push egress control, policy templates, and runtime isolation into the platform layer. This changes operator responsibilities for snapshot exports, retention policies, and edge audit sinks—shifting some containment responsibilities to a major vendor and affecting MCP integration patterns.
-- Recent changes: Official Cloudflare launch announcement describing Agent Access Model and WriteGuard policy examples (2026-08-06).
-- Evidence strength: Strong (official Cloudflare blog)
-- Source: https://blog.cloudflare.com/cloudflare-os/
-
-
+- Recent changes: Cloudflare published MCP security updates introducing network-layer detection for agentic MCP traffic and WriteGuard examples for egress control and artifact containment. Impact: platform-level primitives now exist to detect and quarantine suspect agent sessions at the edge; operators should map these rules into enterprise IDS and edge policies. Evidence strength: Strong (official blog). Source: https://blog.cloudflare.com/mcp-security-updates/
+- Operational note: treat Cloudflare MCP guidance as a priority for early containment — convert their WriteGuard examples into enterprise firewall/ingress rules and into incident playbooks.
+- replace_section anchor: `## Cloudflare OS`
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)

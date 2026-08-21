@@ -107,3 +107,13 @@ Last updated: 2026-07-09
 - Anthropic — Claude Code v2.1.229 (promoted): Runtime/conductor release that can change containment, tool-call semantics, and session streaming expectations for operators running Claude Code agents. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
 
 - GitHub Copilot — Agent Plugins 1.0 (promoted): Standardizes plugin interfaces across VS Code, Copilot CLI, and Copilot app; expands third-party plugin execution surface and increases operator governance requirements around plugin permissions, sandboxing, and artifact retention. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
+
+### 2026-08-21
+
+- Added signal: Anthropic — "Scaling Managed Agents" engineering post (operational model for managed/long-running agents). Strengthens Thesis 1 (task-based execution) and Thesis 8 (platform MCP entry) by providing concrete operator patterns for decoupling managed agent control planes. Evidence: Strong (vendor engineering blog). Source: https://www.anthropic.com/engineering/managed-agents
+
+- Added signal: Anthropic — Claude Opus 5 release & observed coherence regressions (public GH issue). Strengthens Thesis 2 (coding agents) and Thesis 9 (containment/security) because runtime changes affect long-running sessions, connector compatibility, and containment controls. Evidence: Strong (vendor announcement) + Strong (public issue threads). Source: https://www.anthropic.com/news/claude-opus-5 ; https://github.com/anthropics/claude-code/issues/77136
+
+- Added signal: Cloudflare — MCP security updates (network detection, WriteGuard). Reinforces Thesis 9 (containment/security) and Thesis 8 (platform-vendor MCP entry). Evidence: Strong (official blog). Source: https://blog.cloudflare.com/mcp-security-updates/
+
+- Thesis Scorecard delta (compact): increased confidence in Thesis 9 (containment/security) and Thesis 8 (platform MCP entry); Thesis 7 (memory+MCP convergence) gained modest confidence due to continued MCP server/router releases and storage orchestration patterns observed in vendor docs.

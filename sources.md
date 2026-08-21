@@ -1681,3 +1681,14 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 ## Recent additions (2026-08-20 sweep)
 - [mainstream_product] Mistral — Studio (build/test/run agents) & Vibe for code (product page): https://mistral.ai/products/studio/
 - [mainstream_product] GitHub — Copilot CLI (@github/copilot npm listing): https://www.npmjs.com/package/%40github/copilot
+
+
+## Added (2026-08-21)
+
+- Anthropic — Scaling Managed Agents (engineering blog). Source class: Tier 1 (official engineering blog). Evidence strength: Strong. URL: https://www.anthropic.com/engineering/managed-agents
+
+- Anthropic — Claude Opus 5 (product announcement/news). Source class: Tier 1 (official news). Evidence strength: Strong. URL: https://www.anthropic.com/news/claude-opus-5
+
+- Cloudflare — How Cloudflare detects MCP traffic and helps secure it (MCP security updates). Source class: Tier 1 (official blog). Evidence strength: Strong. URL: https://blog.cloudflare.com/mcp-security-updates/
+
+- Anthropic — Claude Code releases / cadence (GitHub release for v2.1.229). Source class: Tier 2 (GitHub releases). Evidence strength: Strong. URL: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
