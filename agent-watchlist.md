@@ -12,7 +12,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released Opus 5 (2026-08) and published an engineering post on patterns for Scaling Managed Agents which materially affects operator deployment architecture for long‑running agents. Claude Code continues a rapid release cadence (v2.1.229 and subsequent point releases in August) and public GH issue threads report coherence regressions and broken MCP connectors (see linked issue). Operators should: stage Opus 5 upgrades in sandboxes, validate MCP connector compatibility in CI (integration + smoke tests), enable workspace trust/spend controls, and snapshot runs to object storage before/after upgrading model/runtime. Evidence strength: Strong (vendor announcement + engineering blog) + Strong (public GH issue). Sources: https://www.anthropic.com/news/claude-opus-5 ; https://www.anthropic.com/engineering/managed-agents ; https://github.com/anthropics/claude-code/issues/77136
+- Recent changes: Anthropic released a Claude Code point release v2.1.239 (2026-08-21) continuing a rapid cadence after Opus 5; public GH issues continue to report connector regressions and coherence concerns. Impact: Operators should stage Opus/point upgrades in sandboxes, validate MCP connector compatibility in CI (integration + smoke tests), enable workspace trust/spend controls, and snapshot runs to object storage before/after upgrading model/runtime. Monitor for vendor advisories that document connector contract changes.
+- Evidence strength: Strong (vendor release + community issues)
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.239
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -196,9 +199,10 @@ Status:
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
 - Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
-- Recent changes & security note: August 2026 press and field reports described an incident where Copilot revealed secret input that led to an exploitable scenario; reporting surfaced a tracked vulnerability CVE-2026-24301 (NVD entry). Operators should treat this as high-priority: rotate keys/tokens used by Copilot agents, review CLI and agent auth defaults, and inspect recent agent session logs and snapshots for sensitive exposure. Evidence strength: Strong (press coverage + NVD advisory).
-- Operator guidance: (1) audit saved session/connector logs and snapshot retention policies, (2) rotate or scope API keys and enforce short-lived credentials in CI, (3) enable enablement of workspace trust & plugin permission gating where available, (4) schedule forensic snapshot exports to object storage on suspicious runs.
-- Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+- Recent changes: 2026-08-21 — GitHub announced a Copilot experience integrated into Slack channels for team-shared agent workflows (official changelog). Impact: Copilot is moving beyond IDE/CLI boundaries into team chat surfaces, increasing the surface area for plugin/tool permission management, audit trails, and egress controls. Operators should validate channel permission mappings to Copilot plugin permissions, enable logging/exports of channel agent sessions, and test plugin behavior in a restricted channel before broad rollout.
+- Evidence strength: Strong (official changelog)
+- Source: https://github.blog/changelog/2026-08-21-the-new-github-copilot-experience-in-slack/
+- replace_section anchor: `## GitHub Copilot`
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.

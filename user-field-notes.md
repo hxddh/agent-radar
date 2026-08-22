@@ -385,3 +385,18 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
     - Add test that simulates a disallowed egress and verifies an exported artifact lands in the audit bucket.
   - Source class: Tier 1
   - Source: https://blog.cloudflare.com/mcp-security-updates/
+
+
+- **Memory API mismatch (2026-08-22)**
+  - Tool: memory APIs used by agents (generic)
+  - Scenario: agent writes state during a long-running flow but subsequent reads via the memory API return stale/empty results, causing task failures.
+  - Public-safe summary: operators report silent memory-store/recall mismatches; recommended immediate mitigation is an end-to-end CI test that writes/reads a sentinel value via the same API used in production and fails the pipeline on mismatch.
+  - Evidence strength: Medium (dev.to blog)
+  - Source: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h
+
+- **MCP connector outages (2026-08-22)**
+  - Tool: custom MCP connectors for Claude Code
+  - Scenario: connectors stopped working after a runtime release; community threads share rollback and repin workarounds.
+  - Public-safe summary: pin connector images, maintain rollback snapshots, and add connector smoke tests to deployment pipelines to detect breakages early.
+  - Evidence strength: Medium (Reddit field reports)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/

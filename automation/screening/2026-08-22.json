@@ -1,0 +1,188 @@
+{
+  "summary": "Daily agent/agent-infrastructure screening: GitHub Copilot Slack integration and vendor releases (Anthropic, OpenAI) are high-priority; memory and MCP primitives show strong open-source activity but need corroboration; multiple operator reports about real-world agent workflows emerging.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c",
+      "title": "GitHub Copilot: shared agentic work in Slack (official)",
+      "why_it_matters": "Brings Copilot agent workflows into Slack channels for team collaboration",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-21-the-new-github-copilot-experience-in-slack/",
+        "https://news.ycombinator.com/item?id=4939"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "watch for adoption metrics, partner docs and any admin/security controls details",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4d5e6f",
+      "title": "Anthropic: Claude Code release v2.1.239",
+      "why_it_matters": "Minor Claude Code release for a leading coding agent platform",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.239"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "scan release notes for security/faucet or MCP compatibility changes",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-7g8h9i",
+      "title": "OpenAI Codex: pre-release SDK update (rust v0.150.0-alpha.6)",
+      "why_it_matters": "Codex SDK update affects agent runtimes and developer integrations",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.150.0-alpha.6"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "check stable changelog and docs once release exits prerelease",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a1b2c3",
+      "title": "AVIDS2/memorix: cross-agent memory layer (popular OSS)",
+      "why_it_matters": "Shared memory layer enables consistent context across multiple coding agents",
+      "evidence": [
+        "https://github.com/AVIDS2/memorix"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "seek independent user reports or integration docs (only GitHub repo present)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-d4e5f6",
+      "title": "neuralmind 3.3.0 (PyPI): persistent local memory for coding agents",
+      "why_it_matters": "Persistent, local memory claims promise large cost and latency savings for code queries",
+      "evidence": [
+        "https://pypi.org/project/neuralmind/3.3.0/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "find GitHub repo or user-install reports to corroborate PyPI listing"
+    },
+    {
+      "id": "scr-0f1e2d",
+      "title": "Dev.to: Pi Agent vs OpenCode — 100+ hours real-use comparison",
+      "why_it_matters": "Operator report comparing agent reliability, costs, and workflows after prolonged use",
+      "evidence": [
+        "https://dev.to/composiodev/pi-agent-vs-opencode-after-100-hours-of-real-use-1mh7"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor follow-up comments and reproducibility notes from other users",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9a8b7c",
+      "title": "Reddit (LocalLLaMA): how to give a local LLM/agent access to a real web browser",
+      "why_it_matters": "Practical operator walkt\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/LocalLLaMA/comments/1vuykgj/how_to_give_a_local_llmagent_access_to_a_real_web/"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "collect corroborating posts or step-by-step guides to validate methods and security risks",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-3c4b5a",
+      "title": "PradeepaRW/project-nova: multi-agent architecture using n8n and MCP servers",
+      "why_it_matters": "Blueprint connecting 25+ specialized agents via MCPs for end-to-end assistant ecosystems",
+      "evidence": [
+        "https://github.com/PradeepaRW/project-nova"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "look for demos, third-party forks, or social reports (currently only repo)",
+      "why_it_matters_truncated": "",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-5f6g7h",
+      "title": "nicolasmelo1/logion: open registry of agent artifacts",
+      "why_it_matters": "A versioned registry for skills, plugins, MCP servers and provenance for agents",
+      "evidence": [
+        "https://github.com/nicolasmelo1/logion"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "defer",
+      "next_check": "seek integrations or independent listings to confirm adoption",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8h7g6f",
+      "title": "Bluesky post: Owlfiles MCP server claims multi-provider storage connectors",
+      "why_it_matters": "Social promotion claims \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/sustainablex.in/post/3mtn67okdfl2p",
+        "https://bsky.app/profile/everydevai.bsky.social/post/3mtmzdw5roo2t"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "find official docs or GitHub repo to verify connectors and security model",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Google/Gemini official changelog covering agent integrations",
+    "Missing user_workflow: enterprise partner reports on Salesforce Agentforce revenue/adoption",
+    "Missing social/discussion: stronger multi-platform threads (Reddit/Bluesky/HN) corroborating popular MCP/server claims"
+  ]
+}

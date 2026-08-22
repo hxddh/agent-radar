@@ -540,3 +540,18 @@ Operational notes
   - Rationale: Projects like Kassette propose using object-store primitives to persist workflow state and allow replayable runs; this reduces the need for specialized databases for every orchestration flow.
   - Risk: storage costs and retention governance; large artifact volumes require lifecycle policies and searchable indices.
   - Source: https://github.com/lostinpatterns/kassette
+
+
+- Object-storage snapshots for managed/long-running agents
+  - Rationale: Vendor guidance and community practice point to snapshotting agent workspace state and tool outputs into object storage to enable rollback, reproducibility, and forensic analysis (e.g., before/after runtime upgrades).
+  - Practical notes: include raw inputs, tool-call logs, connector versions, and a small manifest (JSON) linking artifacts to the agent run. Apply lifecycle rules (archive → deep‑freeze) to control cost.
+  - Evidence strength: Strong (vendor guidance + community practice)
+  - Sources: https://github.com/anthropics/claude-code/releases/tag/v2.1.239
+  - Watch trigger: vendor SDK or major project publishes a canonical snapshot manifest schema (would enable cross-vendor tooling).
+
+- Durable workflows backed by object storage (Kassette and peers)
+  - Rationale: Durable, object-backed session stores change retention and access patterns for agent artifacts and allow replayable execution histories.
+  - Practical notes: design access controls (S3 IAM policies), lifecycle rules, and immutable object hashes for forensic integrity; consider encryption-at-rest and key rotation policies for long-lived snapshots.
+  - Evidence strength: Medium (community repos)
+  - Sources: https://github.com/lostinpatterns/kassette
+  - Watch trigger: a mainstream vendor (AWS/Azure/GCP/Anthropic/GitHub) publishes a first-party SDK or managed feature that natively stores agent sessions to object storage with documented manifest format.

@@ -3366,3 +3366,22 @@ All candidates above are added to the inbox for further evaluation during daily 
 
 - **Daytona / Stripe Projects sandboxing claim** (scr-daytona-stripe): provisioning sandboxes via Stripe Projects (product notes). Why it matters: reduces friction to provision isolated agent compute. Evidence strength: Medium (product notes). Relevance score: 6. Defer reason: verify enterprise provisioning flow and numeric claims. Follow-up needed: confirm with official Daytona docs/announcements. candidate_seen_at: 2026-08-21, last_checked_at: 2026-08-21, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
   - Source: https://www.daytona.io/dotfiles/daytona-stripe-projects
+
+
+- **GitHub Copilot Slack experience** (scr-1a2b3c): official changelog announces Copilot integrated into Slack channels (2026-08-21). Why it matters: expands Copilot into team chat surfaces, increasing governance, egress, and audit needs. Evidence strength: Strong (official changelog). Relevance score: 10. Promotion_status: tracked/upgraded in watchlist. candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.blog/changelog/2026-08-21-the-new-github-copilot-experience-in-slack/
+
+- **Anthropic Claude Code v2.1.239** (scr-4d5e6f): GitHub release tag for Claude Code v2.1.239 (2026-08-21). Why it matters: runtime point release affects connector compatibility and runtime semantics for long-running agents. Evidence strength: Strong (release + community issues). Relevance score: 9. Promotion_status: tracked/promoted in watchlist; follow-up: capture vendor upgrade guidance and any breaking change notes. candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.239
+
+- **Operator workflow: Memory API mismatch** (scr-mem-mismatch): dev.to operator report of memory store/recall inconsistency causing lost context. Why it matters: breaks long-horizon tasks and forces greater CI/instrumentation work. Evidence strength: Medium. Promotion_status: candidate. candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 0; stale_after_days: 30.
+  - Source: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h
+
+- **MCP connector breakage (Claude)** (scr-claude-mcp-break): Reddit thread reporting broken custom MCP connectors after runtime upgrades. Why it matters: operator-impacting integration regressions; adds to upgrade/friction story. Evidence strength: Medium (community reports). Promotion_status: candidate. candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+- **detect-coding-agent** (scr-detect-ca): crates.io follow-up; detection primitive for agent-originated coding actions. Evidence strength: Medium. Promotion_status: candidate (follow-up). candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 1; stale_after_days: 30.
+  - Source: https://crates.io/crates/detect-coding-agent
+
+- **remem-ai** (scr-remem-ai): crates.io follow-up; persistent local memory for coding agents. Evidence strength: Medium. Promotion_status: candidate (follow-up). candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 1; stale_after_days: 30.
+  - Source: https://crates.io/crates/remem-ai

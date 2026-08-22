@@ -395,3 +395,15 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 - Evidence: Anthropic managed-agents guidance + community upgrade reports.
 - Should promote to playbook? yes
 - Source: https://www.anthropic.com/engineering/managed-agents ; https://www.anthropic.com/news/claude-opus-5
+
+
+## Snapshot-before-upgrade (playbook candidate)
+
+- When useful: Before upgrading agent runtimes, models, or MCP connectors that power production workflows.
+- Steps (high-level):
+  - 1) Pause noncritical runs or redirect traffic to a staging endpoint.
+  - 2) Export current workspace metadata and tool-call logs to object storage (include timestamps, connector versions, and model/runtime version).
+  - 3) Run integration & connector smoke tests in sandbox; if failures occur, abort and restore pinned connector/runtime images.
+  - 4) If upgrade passes, tag snapshot with upgrade metadata and keep for at least one retention window (configurable per compliance teams).
+- Evidence: Recommended by Anthropic operational guidance and community upgrade regressions; useful to support forensic rollback and A/B testing.
+- Should promote to playbook? yes (after we collect canonical snapshot manifest examples)
