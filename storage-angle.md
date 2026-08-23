@@ -555,3 +555,19 @@ Operational notes
   - Evidence strength: Medium (community repos)
   - Sources: https://github.com/lostinpatterns/kassette
   - Watch trigger: a mainstream vendor (AWS/Azure/GCP/Anthropic/GitHub) publishes a first-party SDK or managed feature that natively stores agent sessions to object storage with documented manifest format.
+
+
+## Storage angle update — 2026-08-23
+
+- S3 as orchestration plane: Object storage is being used as a durable coordination/artifact bus for multi-agent orchestration (orchestrating multi-agent AI architectures with Amazon S3 Files). Operators should adopt per-bucket lifecycle, SSE, per-artifact audit tags, and tight IAM policies. Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+
+- Durable replayable workflows: Projects like Kassette demonstrate agent workflow durability via object storage. These patterns help debugging and forensics but require attention to retention costs and sensitive artifact redaction. Source: https://github.com/lostinpatterns/kassette
+
+
+### 2026-08-23: remem-ai (scr-remem-ai)
+
+- What it is: remem-ai is an emerging local-first/persistent memory crate for coding agents (crates.io follow-up).
+- Why it matters: Continued emergence of local/persistent memory primitives (remem-ai, agenticow, mem0, etc.) reinforces storage needs for agent memory: snapshotting, integrity checks, replayable histories, and namespace isolation. remem-ai highlights operator choices between local-first durable memory stores (SQLite/FTS) and vector-db-backed semantic stores.
+- Evidence strength: Medium (crate release / registry entry).
+- Storage implications: Treat local persistent memory as a first-class artifact: include snapshot metadata, integrity verification (hashes/signatures), retention policies, and backup/migration procedures. Consider write-ahead queues and idempotent sync when bridging local memory to centralized vector/embedding stores.
+- Source: https://crates.io/crates/remem-ai

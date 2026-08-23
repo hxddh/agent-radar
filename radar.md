@@ -117,3 +117,25 @@ Last updated: 2026-07-09
 - Added signal: Cloudflare — MCP security updates (network detection, WriteGuard). Reinforces Thesis 9 (containment/security) and Thesis 8 (platform-vendor MCP entry). Evidence: Strong (official blog). Source: https://blog.cloudflare.com/mcp-security-updates/
 
 - Thesis Scorecard delta (compact): increased confidence in Thesis 9 (containment/security) and Thesis 8 (platform MCP entry); Thesis 7 (memory+MCP convergence) gained modest confidence due to continued MCP server/router releases and storage orchestration patterns observed in vendor docs.
+
+## Anthropic — Claude Code (scr-claude-code)
+
+What it is: Claude Code runtime and orchestration components for coding agents.
+
+Recent change: Release v2.1.229 published (2026-08-13). Runtime and conductor updates can affect tool-calling semantics, session streaming, and containment behaviors operators rely on.
+
+Why it matters: Runtime-level changes in a major coding-agent provider can shift containment assumptions (sandboxing, session streaming, workspace trust), alter artifact formats, and require ops teams to re-validate CI/compatibility and audit pipelines.
+
+Evidence strength: Strong (official GitHub release)
+
+Relevance score: 9
+
+Follow-up needed: extract and publish release-note deltas that affect containment, tool-call sandboxes, or storage schemas; run staging compatibility checks for tool calls and session persistence.
+
+Operational signal (2026-08-22): community reports surfaced a regression where custom MCP connectors stopped functioning after a runtime/upgrade event. Multiple community posts describe connector breakage and connector-runtime incompatibilities that prevented previously working integrations from connecting.
+
+- Why it matters: This is an operator-impacting integration regression. Broken MCP connectors cause immediate availability and workflow failures for customers who rely on third-party connectors or custom MCP adapters. The incident underscores the need for explicit connector compatibility matrices, pinned connector versions, and pre-upgrade snapshot/restore playbooks. Operators should treat runtime upgrades as high-risk for connector contracts and add upgrade-time compatibility gates (test harnesses that validate connector behavior in staging before production rollout).
+- Evidence strength: Medium (community reports / Reddit thread).
+- Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+Action items: document connector compatibility tests, require connector CI against a staging runtime, and add pre-upgrade workspace snapshots to enable quick rollback when connector regressions are observed.

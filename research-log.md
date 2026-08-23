@@ -3385,3 +3385,49 @@ All candidates above are added to the inbox for further evaluation during daily 
 
 - **remem-ai** (scr-remem-ai): crates.io follow-up; persistent local memory for coding agents. Evidence strength: Medium. Promotion_status: candidate (follow-up). candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-22; defer_count: 1; stale_after_days: 30.
   - Source: https://crates.io/crates/remem-ai
+
+- **Anthropic — Claude Code v2.1.241 release** (scr-claude-code-21241): Patch release for Claude Code agent runtime. Why it matters: Continues rapid release cadence, potential impact on connector compatibility and runtime stability. Evidence strength: Strong (GitHub release). Relevance score: 9. Defer reason: Incremental update. Follow-up needed: Monitor for operator reports on regressions. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.241
+- **Meta Platforms (META) Undercuts Anthropic and OpenAI on Price With New Coding Agent** (scr-meta-price-cut): Reports indicate Meta is offering coding agent services at significantly lower prices. Why it matters: Aggressive pricing could disrupt the market and force competitors to re-evaluate their models. Evidence strength: High (Bluesky). Relevance score: 10. Defer reason: Needs official confirmation and sustained pricing. Follow-up needed: Monitor Meta's agent offerings and pricing. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://bsky.app/profile/beyondlink.bsky.social/post/3mtppc2y7fs2t
+- **Mistral — Studio, Forge and Vibe agent platform updates** (scr-mistral-prod-updates): Updates to Mistral's agent platform. Why it matters: Streamlines development, testing, and deployment of long-horizon agents and custom models. Evidence strength: Strong (Product page). Relevance score: 8. Defer reason: Needs hands-on CI integration reports. Follow-up needed: Smoke-test Mistral Studio with common MCP connectors. candidate_seen_at: 2026-08-23, last_checked_at: 2023-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://mistral.ai/products/studio/
+- **OpenAI — codex rust client prerelease 0.150.0-alpha.7** (scr-codex-rust-prerelease): Prerelease update for the Codex Rust client. Why it matters: Affects local and embedded coding runtimes and SDK compatibility. Evidence strength: Strong (GitHub release). Relevance score: 9. Defer reason: Prerelease status. Follow-up needed: Test in isolated environments. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://github.com/openai/codex/releases/tag/rust-v0.150.0-alpha.7
+- **AI agents read your whole repo — .env, MCP configs, CI workflows — before you check what they can see.** (scr-agent-repo-access): Social post highlighting broad agent access to sensitive data. Why it matters: Underscores need for robust security, access controls, and containment policies. Evidence strength: High (Bluesky). Relevance score: 8. Defer reason: General concern, not a specific product. Follow-up needed: Monitor for vendor advisories on data access controls. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://bsky.app/profile/dev-ctun.bsky.social/post/3mtoklgcxfv2n
+- **Picking an agent SDK is really picking a lock-in profile.** (scr-sdk-lockin): Discussion on agent SDK implications. Why it matters: Highlights trade-offs between vendor-specific SDKs and open standards, impacting flexibility and interoperability. Evidence strength: High (Bluesky). Relevance score: 7. Defer reason: General discussion. Follow-up needed: Track vendor strategies for interoperability. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://bsky.app/profile/paul-crinigan.bsky.social/post/3mtpovckzjc2a
+- **Vercel AI Gateway updates** (scr-vercel-ai-gateway-updates): Continued expansion of Vercel AI Gateway capabilities. Why it matters: Simplified agent setup and new model integrations lower barrier to entry. Evidence strength: Strong (Changelog). Relevance score: 8. Defer reason: Incremental updates. Follow-up needed: Monitor for new integrations and pricing changes. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+- **GitHub Copilot in Microsoft Teams** (scr-copilot-teams): Integration of Copilot into Microsoft Teams. Why it matters: Extends agentic capabilities into team communication, impacting collaboration and requiring new governance. Evidence strength: Strong (Changelog). Relevance score: 9. Defer reason: Integration into existing platform. Follow-up needed: Track adoption and any reported governance issues. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-23, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://github.blog/changelog/2026-08-21-shared-agentic-work-with-github-copilot-in-microsoft-teams
+
+
+- **detect-coding-agent** (scr-detect-ca): primary source confirmed on crates.io; evidence strength: Medium. Follow-up: run FP/FN tests in CI/IDE hooks to evaluate detection quality and tuning. promotion_status: tracked; defer_count: 0; stale_after_days: 30.
+  - Source: https://crates.io/crates/detect-coding-agent
+  - candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-23
+
+- **Daytona funding / Stripe Projects numeric check**: social claims about a $24M financing and Stripe-related projects lack a primary press release or SEC/Crunchbase confirmation. Flagged numeric_claims_flagged=1; follow-up: search for press release, Crunchbase entry, or Stripe partnership announcement. promotion_status: pending-official; defer_count: 0; stale_after_days: 14.
+  - candidate_seen_at: 2026-08-21; last_checked_at: 2026-08-23
+
+- **Cursor / SpaceXAI Grok pricing claim**: social claim that Grok undercuts competition on coding-agent pricing; no authoritative vendor changelog located matching the social pricing snapshot. Marked pending-official; follow-up: vendor pricing pages / press releases.
+  - candidate_seen_at: 2026-08-23; last_checked_at: 2026-08-23; promotion_status: deferred; defer_count: 0; stale_after_days: 14
+
+- **Kassette (object-storage durable workflows)**: repo evidence present; relevance to storage orchestration for agents is Medium. Follow-up: test Kassette with S3-backed replayable agent workflows in a staging project. candidate_seen_at: 2026-08-20; last_checked_at: 2026-08-23; promotion_status: candidate; evidence: https://github.com/lostinpatterns/kassette
+
+
+## 2026-08-23 Promote-candidates pass
+
+- **detect-coding-agent** (scr-detect-ca): promoted -> Added to agent-watchlist.md as a detection primitive for agent-originated coding actions. Why: Direct operator/security implication (telemetry, policy gating, supply-chain risk mitigation). Evidence strength: Medium (crates.io); relevance_score: 7. candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-23; promotion_status: promoted; defer_count: 1.
+  - Source: https://crates.io/crates/detect-coding-agent
+
+- **remem-ai** (scr-remem-ai): promoted -> Added to storage-angle.md under Agent Memory. Why: Local/persistent memory primitive that affects snapshot, integrity, and replay patterns for agent storage; storage policy implications (snapshot schema, retention, backup). Evidence strength: Medium (crate). candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-23; promotion_status: promoted; defer_count: 1.
+  - Source: https://crates.io/crates/remem-ai
+
+- **MCP connector breakage (Claude)** (scr-claude-mcp-break): promoted -> Added to radar.md (Anthropic — Claude Code section) as an operational/regression signal. Why: Connector/runtime incompatibilities cause real operator outages and raise urgent need for compatibility testing, connector version pinning, and pre-upgrade snapshots. Evidence strength: Medium (community reports). candidate_seen_at: 2026-08-22; last_checked_at: 2026-08-23; promotion_status: promoted; defer_count: 0.
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+Notes:
+- Promotions limited to 3 candidates this run (policy). Each promoted candidate has been surfaced into a relevant public file with non-template substance (agent-watchlist.md, storage-angle.md, radar.md).
+- No other candidates were promoted or archived in this pass. Candidates consulted but not promoted should have their defer_count incremented on next check; none were modified in this pass beyond the three listed.

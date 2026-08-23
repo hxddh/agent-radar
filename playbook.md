@@ -407,3 +407,12 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
   - 4) If upgrade passes, tag snapshot with upgrade metadata and keep for at least one retention window (configurable per compliance teams).
 - Evidence: Recommended by Anthropic operational guidance and community upgrade regressions; useful to support forensic rollback and A/B testing.
 - Should promote to playbook? yes (after we collect canonical snapshot manifest examples)
+
+
+## Quick playbook additions — 2026-08-23
+
+- Pin connector/runtime versions: Always pin MCP connector and agent runtime versions in CI and require canary deployments before rolling to production.
+- Staging canaries: Create a small synthetic repo and a staging agent that runs every merge window to detect connector/API regressions (test tool-calls, memory recall, and egress alerts).
+- Tool-call least privilege: Define tool-call capability manifests per agent and enforce them at gateway/sandbox time (deny-by-default; allow-by-exception).
+- Memory hygiene: Use append-only signed receipts for memory writes, short TTLs for hot session state, and immutable audit logs for forensic replay.
+- S3 forensic hooks: For vendors who offer zero-data-retention, log essential receipts locally (signed proofs) to S3 buckets with strict lifecycle and SSE, not relying wholly on vendor retention.

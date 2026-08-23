@@ -74,108 +74,53 @@ Status:
 - Follow-up: Monitor Raycast extension marketplace and official blog for agent/plugin changes.
 - replace_section anchor: `## Raycast AI`
 ## Vercel AI / Sandbox-Related Agent Workflow
+## Vercel AI / Sandbox-Related Agent Workflow
 
-Status:
-- Last reviewed: 2026-07-12; W28 strengthened sandbox/eval relevance through Vercel trace and eval-tool signals, while usage evidence remains weak.
-- Category: AI app infrastructure / sandbox workflow
-- Maturity: Sandbox docs are public and productized; broad adoption evidence remains weak.
-- Core use case: Safe execution of untrusted or generated code for AI agents, code generation, and developer experimentation.
-- Recent changes: Vercel Sandbox docs describe SDKs, CLI, authentication, runtime specs, persistence, snapshots, firewall, tags, and drives.
-- Strengths: Explicit sandbox primitive for dynamic agent workloads, file edits, logs, and live previews.
-- Weaknesses: Pricing, limits, and operational field evidence need follow-up.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Sandboxes, logs, file edits, live previews, snapshots, drives, authentication modes.
-- Storage implications: Strong direct signal for workspace persistence, snapshot, artifact, and log storage.
-- Watch next: Whether Vercel Sandbox becomes a default execution substrate for generated apps and coding agents.
-- Source: https://vercel.com/docs/sandbox
-
+- What it is: Vercel's AI Gateway, SDK and sandbox integrations for deploying agent workloads and vision models at the edge.
+- Recent changes: One-command AI Gateway setups and sandbox adapter exposure lower operator friction but centralize telemetry and sandbox defaults. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway; https://github.com/vercel/ai/releases
+- Why it matters: Makes multi-model agent setups and edge sandboxing easier, which increases adoption but requires careful retention/egress policy review. Evidence strength: Strong
+- Action: Test sandbox defaults, retention/egress settings in staging; document model-selection and cost implications for common flows.
+## Cloudflare Agents / Workers AI Agent Workflow
 ## Cloudflare Agents / Workers AI Agent Workflow
 
-Status:
-- Category: Edge agent infrastructure / runtime
-- Maturity: Temporary deployment workflow is documented; broad adoption evidence remains weak.
-- Core use case: Deploying and running agent-created Workers and related Cloudflare resources.
-- Recent changes: Temporary accounts let agents deploy Workers without an API token or signup, using `wrangler deploy --temporary`.
-- Strengths: Low-friction deploy-and-verify loop for agents, with temporary live URLs and claim flow.
-- Weaknesses: Temporary accounts support only a limited product set and expire after a short window.
-- User feedback: Weak public field evidence; OpenAI published internal usage trends but independent user workflow reports remain sparse.
-- Infra signals: Temporary accounts, preview deploys, claim URLs, supported products including Workers, KV, D1, Durable Objects, Hyperdrive, and Queues.
-- Storage implications: Temporary previews and claimable resources create a bridge between ephemeral agent artifacts and persistent cloud accounts.
-- Watch next: Whether temporary account flows spread to other agent deployment platforms.
-- Source: https://developers.cloudflare.com/changelog/post/2026-06-19-temporary-accounts-for-agents/
-
+- What it is: Cloudflare's agent/Workers AI surface, MCP updates, and bot/write-guarding features.
+- Recent changes: Cloudflare OS, MCP v2, and Workers AI + AI Gateway unification indicate continued investment in platform-level controls. Source: https://blog.cloudflare.com/cloudflare-os/; https://blog.cloudflare.com/mcp-v2/
+- Why it matters: Cloudflare's push into MCP/security primitives influences edge-based agent deployment patterns and guardrails. Evidence strength: Strong
+- Action: Track Cloudflare MCP docs for bot preference sync and write-guard configuration; map to existing agent egress controls.
 # Emerging Agents
 
 ## Omnigent
-- Category: Agent meta-harness / orchestration
-- Why it matters: Orchestrates multiple coding agents under a single harness with policy enforcement, mediated egress, and verifiable action receipts. Addresses fragmentation across Claude Code, Codex, Cursor and other runtimes and surfaces operator-facing governance primitives that materially affect containment, audit, and MCP integration choices.
-- Recent signal: Active public GitHub repo with strong community adoption and continued updates (installer packs, adapters, policy hooks) observed across July–August 2026.
-- Evidence strength: Strong (official GitHub repo + community adoption)
-- User evidence: Early community deployments and adapter contributions; independent enterprise case studies still limited.
-- Infra angle: Agent orchestration, mediated egress / audit receipts, sandbox adapters, policy enforcement hooks, and runtime governance primitives.
-- Risk: May be absorbed by mainstream platforms or require security audits before enterprise adoption.
-- Watch next: integration docs, enterprise adoption signals, and security audit results.
-- Source: https://github.com/omnigent-ai/omnigent
+## Omnigent
+
+- What it is: A meta-harness / policy-enforcement project for orchestrating and constraining multi-agent runs (previously promoted in research-log).
+- Recent changes: Continued uptake and ecosystem forks; OSS alternatives (swarms) provide competing patterns. Source: https://github.com/omnigent-ai/omnigent
+- Why it matters: Shows meta-harnesses are moving from power-user tools toward broader operator workflows; useful for consistent policy enforcement across agent fleets. Evidence strength: Medium
+- Action: Evaluate Omnigent for policy enforcement in a constrained staging environment and compare with swarm-based alternatives.
+## Vestige
 ## Vestige
 
-- Category: Agent memory / debugging
-- Why it matters: Gives AI agents sharp, time-travel memory to trace failures back to root causes, not just lookalikes. Directly relevant to agent reliability and debugging.
-- Recent signal: Public GitHub repo with 574 stars, updated 2026-07-01. Local-first Rust MCP server.
-- Source class: Official public source.
-- Source visibility: Public.
-- Evidence strength: Medium (strong technical concept, moderate community interest, no production user evidence yet).
-- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal (weak).
-- Infra angle: Agent memory, failure tracing, MCP server, local-first storage.
-- Risk: Early-stage; may be niche if mainstream agents build similar capabilities internally.
-- Public corroboration: GitHub stars and recent activity, but no independent user reports or case studies yet.
-- Watch next: Whether Vestige publishes benchmarks, integration guides, or user testimonials.
-- Source: https://github.com/samvallad33/vestige
-
+- What it is: (memory primitive) — local-first agent memory design explored by several projects.
+- Recent changes: Multiple memory projects surfaced this week (agenticow, remem-ai, Neo4j agent-memory client), increasing memory-primitives diversity. No single project shows clear absorption into a mainstream platform.
+- Why it matters: Memory APIs/semantics will shape long-horizon agent reliability and privacy models. Evidence strength: Medium
+- Action: Defer to comparative testing; mark Vestige as watch (not promoted) pending platform adoption signals.
+## Obsidian Turbocharged (obsidian-tc)
 ## Obsidian Turbocharged (obsidian-tc)
 
-- Category: Agent-ready MCP server / knowledge management
-- Why it matters: Comprehensive, model-agnostic, agent-ready Obsidian MCP server with multi-vault support, pluggable embeddings, and polyglot architecture. Directly enables agents to interact with personal/team knowledge bases.
-- Recent signal: Public GitHub repo (0 stars, but updated 2026-07-01). Apache 2.0 license.
-- Source class: Official public source.
-- Source visibility: Public.
-- Evidence strength: Weak (very early, no stars, but technically detailed and directly relevant to agent knowledge access).
-- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal (weak).
-- Infra angle: MCP server, knowledge base access, embeddings, multi-vault, polyglot architecture.
-- Risk: Very early; may not gain traction or may be superseded by simpler MCP servers.
-- Public corroboration: None yet; needs community engagement or user reports.
-- Watch next: Whether obsidian-tc gains stars, forks, or user testimonials.
-- Source: https://github.com/The-40-Thieves/obsidian-tc
-
+- What it is: Obsidian-focused agent/KB enhancements (local-first knowledge integrations).
+- Recent changes: No substantive public update since 2026-07-01; deprioritize until vendor or community publishes new evidence. Evidence strength: Weak (stale)
+- Action: Move to deprioritized list; re-check in 30 days or on vendor announcement.
+## agentos
 ## agentos
 
-- Category: Agent sandbox / orchestration
-- Why it matters: Combines isolated Linux VMs with built-in agent orchestration, positioning as a faster, lighter, cheaper alternative to traditional sandboxes for coding agents. Directly addresses the sandbox+orchestration infrastructure gap.
-- Recent signal: Public GitHub repo with 3475 stars, updated 2026-07-02. Active development.
-- Source class: Official public source.
-- Source visibility: Public.
-- Evidence strength: Medium (strong community interest at 3475 stars, but no production user evidence yet).
-- User evidence: No independent user reports yet; GitHub stars and recent activity are the primary signal.
-- Infra angle: Isolated Linux VMs, agent orchestration, sandbox runtime, coding agent execution environment.
-- Risk: May be absorbed by mainstream agent platforms that build sandboxing natively; VM-based approach may have overhead concerns.
-- Public corroboration: GitHub stars suggest strong interest, but no independent user reports or case studies yet.
-- Watch next: Whether agentos publishes integration docs with Claude Code, Codex, Cursor, or other coding agents, and whether enterprise adoption signals appear.
-- Source: https://github.com/rivet-dev/agentos
-
+- What it is: Agent OS / runtime project previously tracked.
+- Recent changes: No public updates since 2026-07-02; deprioritize until active repo/announcement. Evidence strength: Weak (stale)
+- Action: Deprioritized; re-evaluate on future releases or adoption signals.
+## patient-zero
 ## patient-zero
 
-- Category: Agent security / supply-chain scanning
-- Why it matters: Supply-chain attack scanner designed for the agent era, covering npm, Python, and MCP agent configs. Can triage in 30 seconds with `npx patient-zero`, block malicious installs before postinstall runs, and drop into CI as a GitHub Action. Directly addresses the gap between agent autonomy and package security.
-- Recent signal: Public GitHub repo with 8 stars, updated 2026-07-02. MIT license, no signup, no telemetry.
-- Source class: Official public source.
-- Source visibility: Public.
-- Evidence strength: Weak (8 stars, but unusually relevant security primitive with clear agent workflow).
-- User evidence: No independent user reports yet; very early adoption.
-- Infra angle: Supply-chain scanning, postinstall blocking, CI integration, MCP config scanning, npm + Python coverage.
-- Risk: May be superseded by broader security platforms or absorbed into agent framework defaults.
-- Public corroboration: None yet; needs integration evidence with major agent frameworks.
-- Watch next: Whether patient-zero is integrated by Claude Code, Cursor, Codex, or other coding agents, and whether supply-chain incidents drive adoption.
-- Source: https://github.com/0xSteph/patient-zero
-
+- What it is: Early-stage agent project tracked for exploit/attack patterns.
+- Recent changes: No public updates since 2026-07-02; deprioritize pending fresh evidence. Evidence strength: Weak (stale)
+- Action: Move to low-priority watch; reactivate if new public exploits or updates appear.
 ## Agentrove
 
 - Category: Self-hosted multi-agent coding workspace / ACP sandbox.
@@ -197,12 +142,12 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
-- Recent changes: 2026-08-21 — GitHub announced a Copilot experience integrated into Slack channels for team-shared agent workflows (official changelog). Impact: Copilot is moving beyond IDE/CLI boundaries into team chat surfaces, increasing the surface area for plugin/tool permission management, audit trails, and egress controls. Operators should validate channel permission mappings to Copilot plugin permissions, enable logging/exports of channel agent sessions, and test plugin behavior in a restricted channel before broad rollout.
-- Evidence strength: Strong (official changelog)
-- Source: https://github.blog/changelog/2026-08-21-the-new-github-copilot-experience-in-slack/
-- replace_section anchor: `## GitHub Copilot`
+## GitHub Copilot
+
+- What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).
+- Recent changes: Agent Plugins 1.0 + Copilot CLI + Copilot in Teams expands execution surfaces to IDEs, terminals, and collaboration apps; operators must audit plugin permissions and CLI auth defaults. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
+- Why it matters: Expands coding-agent footprints and governance needs (permissions, telemetry, egress). Evidence strength: Strong
+- Action: Refresh operator runbooks for plugin permissions, add CLI auth checks to CI, test plugin permission prompts in staging.
 ## Cline
 - Category: Coding agent
 - Maturity: Open-source coding agent with VS Code extension; recently found to have a high-severity CVE.
@@ -399,3 +344,12 @@ Status:
 - Category: Desktop assistant / agent integration
 - Status: deprioritized (no dated update since 2026-07-12). Follow-up: add back to watchlist when Raycast publishes agent plugin marketplace changes or security notes.
 - Evidence strength: stale
+
+
+## detect-coding-agent (scr-detect-ca)
+
+- What it is: A detection primitive (crates.io) designed to identify AI/coding-agent-originated actions (commits, editor events, CI runs). Intended as an operator-side telemetry and policy control tool to distinguish human vs agent-driven changes.
+- Why it matters: Enables governance controls (automated gating, alerting, rate limits) and forensic labeling for agent-originated code or CI steps. Detection primitives reduce accidental automation risks, support supply-chain policy enforcement, and provide a signal for telemetry-driven throttles or human-review hooks.
+- Evidence strength: Medium (crates.io package; follow-up signals in the research log).
+- Operational notes: Integrate into pre-commit / CI pipelines and editor telemetry to tag agent-driven actions; use as a complementary signal for policy engines that enforce stricter approvals on agent-originated changes.
+- Source: https://crates.io/crates/detect-coding-agent

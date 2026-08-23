@@ -400,3 +400,12 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Public-safe summary: pin connector images, maintain rollback snapshots, and add connector smoke tests to deployment pipelines to detect breakages early.
   - Evidence strength: Medium (Reddit field reports)
   - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+
+## 2026-08-23 — Operator field notes (weekly synthesis)
+
+- Repo access scope: Operators report agents often enumerate repository assets (.env, MCP configs, CI workflows) before access is validated — immediate recommendation: run a pre-flight access audit and adopt least-privilege service accounts for agent-run tasks. Source: social/operator reports (Bluesky). Evidence strength: High.
+
+- Memory/session pattern: Multiple operators use small append-only Redis-backed sessions with TTLs for persistent context across short agent restarts — pragmatic but increases attack surface; require auth, rotation, and signed append receipts. Evidence strength: Medium.
+
+- SDK lock-in: Field threads emphasize choosing an agent SDK is a lock-in decision; prefer SDKs with clear migration paths or adopt MCP abstraction layers where feasible. Evidence strength: High.
