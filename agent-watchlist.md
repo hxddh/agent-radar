@@ -6,16 +6,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
-- Maturity: Strong adoption signal inside OpenAI and among sampled users; 10x usage growth to 7M users reported by latent.space.
-- Recent changes: Codex CLI rust-v0.148.0 released (2026-08-20). @openai/codex appears on npm as a Codex CLI/runtime package (2026-08-20). OpenAI press coverage indicates a vendor pause and safety overhaul after a reported rogue-agent incident (2026-08-18 — media); OpenAI also published a zero-data-retention option for frontier models (2026-08-20) that affects telemetry/forensics for Codex-powered agents. Operators should review CLI auth defaults and retention opt-in flags. Freshness: follow-up for OpenAI pause (awaiting vendor advisory).
-- replace_section anchor: `## Codex / ChatGPT Coding Agent`
+- Maturity: Strong adoption signal inside OpenAI ecosystems and third‑party tooling integration.
+- Recent changes: OpenAI/codex rust client tag rust-v0.149.1 observed (2026-08); operators should review SDK auth/telemetry and pin client versions in production. Evidence strength: Strong (GitHub release). Source: https://github.com/openai/codex/releases/tag/rust-v0.149.1
+- Operator guidance: run SDK compatibility tests and verify retention/telemetry defaults after upgrading.
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released a Claude Code point release v2.1.239 (2026-08-21) continuing a rapid cadence after Opus 5; public GH issues continue to report connector regressions and coherence concerns. Impact: Operators should stage Opus/point upgrades in sandboxes, validate MCP connector compatibility in CI (integration + smoke tests), enable workspace trust/spend controls, and snapshot runs to object storage before/after upgrading model/runtime. Monitor for vendor advisories that document connector contract changes.
-- Evidence strength: Strong (vendor release + community issues)
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.239
-- replace_section anchor: `## Claude Code`
+- Recent changes: Anthropic continued point releases (v2.1.239→v2.1.241 series) and community reports of MCP connector regressions after upgrades. Impact: Operators should stage Opus/point upgrades in sandboxes, validate connector compatibility in CI (integration + smoke tests), enable workspace trust/spend controls, and snapshot runs to object storage before/after upgrading model/runtime. Monitor vendor advisories for connector contract changes. Evidence strength: Strong (releases) + Medium (community reports). Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.241 ; https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -142,6 +139,10 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
+- Category: Coding agent / cloud agent
+- Maturity: Broad enterprise adoption; central to many developer workflows.
+- Recent changes: Security reporting surfaced a Copilot input/leak vector and a linked CVE (CVE-2026-24301) in public reporting; operators should treat Copilot flows as security‑sensitive (check plugin permissions, egress, and telemetry defaults). Evidence strength: Strong (press + NVD). Source: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+- Operator guidance: require least‑privilege plugin scopes, run egress inspection, and add Copilot to incident runbooks; snapshot workspaces before enabling new plugins or CLI options.
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).
@@ -201,12 +202,10 @@ Status:
 
 
 ## Qwen Code
-- Category: Coding agent (open-weight)
-- Maturity: Active; ongoing releases maintain compatibility with developer toolchains.
-- Recent changes: v0.21.12 released (2026-08-15) with code-tooling and runtime fixes; operators should validate CI and local integrations against this patch release. Prior noted: v0.21.4 (2026-08-02) — continue to track release cadence.
-- Infra implication: Self-hosted deployments and CI matrices should include explicit compatibility tests and pinning policies to avoid silent regressions.
-- Evidence strength: Strong (GitHub release).
-- Source: https://github.com/QwenLM/qwen-code/releases/tag/v0.21.12
+- Category: Coding agent / terminal-first runtime
+- Maturity: Growing adoption in developer toolchains; active release cadence.
+- Recent changes: Observed repository release activity consistent with a v0.22.0 series; operators should validate CLI/tool-call behavior changes and pin integrations in CI. Evidence strength: Strong (GitHub). Source: https://github.com/QwenLM/qwen-code
+- Operator guidance: include Qwen in routine compatibility smoke tests and review any changed defaults for telemetry or auth.
 ## agent-browser
 
 - Category: Browser automation / tool calling

@@ -416,3 +416,16 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 - Tool-call least privilege: Define tool-call capability manifests per agent and enforce them at gateway/sandbox time (deny-by-default; allow-by-exception).
 - Memory hygiene: Use append-only signed receipts for memory writes, short TTLs for hot session state, and immutable audit logs for forensic replay.
 - S3 forensic hooks: For vendors who offer zero-data-retention, log essential receipts locally (signed proofs) to S3 buckets with strict lifecycle and SSE, not relying wholly on vendor retention.
+
+
+## Snapshot-before-upgrade (playbook candidate)
+
+- When useful: Before upgrading agent runtimes (Claude, Codex, Qwen) or enabling new agent plugins in production.
+- Steps:
+  1. Run full connector smoke tests in a staging runtime clone that mirrors production connectors.
+  2. Snapshot the agent workspace (files, environment, logs, MCP connector state) to object storage (S3) with versioned keys.
+  3. Apply the runtime/plugin upgrade to staging; run regression smoke tests; if failures found, abort and roll back production schedule.
+  4. If staging passes, apply to canary hosts then roll out.
+- Evidence: Community connector breakage reports + vendor guidance on using durable object storage for orchestration.
+- Should promote to playbook? yes
+- Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/

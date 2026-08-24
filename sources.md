@@ -1701,3 +1701,34 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [infra_primitive] Repo indexing speedups for coding agents (engineering writeup). Evidence strength: Medium. URL: https://dev.to/wulun811/how-we-cut-repo-wide-symbol-indexing-for-llm-agents-from-30s-to-98ms-1mn2
 - [infra_primitive] Daytona sandboxes via Stripe Projects (product notes). Evidence strength: Medium. URL: https://www.daytona.io/dotfiles/daytona-stripe-projects
 - [infra_primitive] Kassette — durable agent workflows backed by object storage (GitHub). Evidence strength: Medium. URL: https://github.com/lostinpatterns/kassette
+
+
+## Recent additions (2026-08-24)
+- [security / mainstream_product] Microsoft Copilot security incident coverage (Ars Technica) and canonical NVD CVE entry (CVE-2026-24301). Evidence strength: Strong. Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- [mainstream_product] QwenLM — qwen-code repository (release activity around v0.22.0). Evidence strength: Strong (GitHub). Source: https://github.com/QwenLM/qwen-code
+
+- [mainstream_product] Mistral — Studio & Vibe product page (vendor product). Evidence strength: Strong. Source: https://mistral.ai/products/studio/
+
+- [mainstream_product] OpenAI — Codex rust client release (rust-v0.149.1). Evidence strength: Strong. Source: https://github.com/openai/codex/releases/tag/rust-v0.149.1
+
+- [mainstream_product] Anthropic — Claude Code releases (v2.1.239–241 observed). Evidence strength: Strong. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.241
+
+- [storage / orchestration] AWS blog — Orchestrating multi-agent AI architectures with Amazon S3 Files (follow-up). Evidence strength: Strong. Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+
+- [user_workflow / discussion] Reddit / Bluesky community reports on MCP connector regressions and plugin failures. Evidence strength: Medium. Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w ; https://bsky.app/profile/dev-ctun.bsky.social/post/3mtoklgcxfv2n
+
+- [infra_primitive] detect-coding-agent (crates.io). Evidence strength: Medium. Source: https://crates.io/crates/detect-coding-agent
+
+- [infra_primitive / storage] remem-ai (crates.io). Evidence strength: Medium. Source: https://crates.io/crates/remem-ai
+
+- [infra_primitive / storage] Kassette (GitHub). Evidence strength: Medium. Source: https://github.com/lostinpatterns/kassette
+
+- [platform] Vercel AI Gateway changelog (one-command agent setup). Evidence strength: Strong. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
+
+
+### Added (2026-08-24) — social & infra primitives
+- [user_workflow / discussion] Claude Code plugin install/run failures (Bluesky). Evidence strength: Medium. Source: https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w
+- [user_workflow / discussion] OpenCode OOM kills when using Ox Alpha preview tokens (Bluesky). Evidence strength: Medium. Source: https://bsky.app/profile/alexgude.com/post/3mts5yjp2yc2e
+- [infra_primitive] luckyPipewrench/pipelock — open-source agent firewall that scans egress and emits verifiable action receipts. Evidence strength: Medium. Source: https://github.com/luckyPipewrench/pipelock
+- [infra_primitive / sandbox] opensandbox-group/OpenSandbox — secure, extensible sandbox runtime for agents. Evidence strength: Medium. Source: https://github.com/opensandbox-group/OpenSandbox

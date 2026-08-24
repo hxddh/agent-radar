@@ -571,3 +571,18 @@ Operational notes
 - Evidence strength: Medium (crate release / registry entry).
 - Storage implications: Treat local persistent memory as a first-class artifact: include snapshot metadata, integrity verification (hashes/signatures), retention policies, and backup/migration procedures. Consider write-ahead queues and idempotent sync when bridging local memory to centralized vector/embedding stores.
 - Source: https://crates.io/crates/remem-ai
+
+
+- S3 as orchestration & snapshot layer (delta / follow-up)
+  - What changed: Continued vendor guidance and community practice of writing agent workspaces and artifacts to object storage for durability and replay.
+  - Why it matters: Durable snapshots enable rollback when runtime upgrades or connector regressions break workflows; they also provide an auditable artifact store for incident forensics.
+  - Evidence strength: Strong (AWS blog) + Medium (Kassette experiments)
+  - Sources: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; https://github.com/lostinpatterns/kassette
+  - Watch trigger: Official SDKs or runtime CLI flags that add a first‑class "snapshot to S3" operation.
+
+- Memory & replay primitives (remem-ai, Kassette)
+  - What changed: Emerging crates and repositories (remem-ai, Kassette) position memory and durable workflow tooling around object storage-backed persistence.
+  - Why it matters: Storage policies (versioning, encryption, retention) become governance levers for agent memory and replay; operators must include storage policy in agent onboarding.
+  - Evidence strength: Medium
+  - Sources: https://crates.io/crates/remem-ai ; https://github.com/lostinpatterns/kassette
+  - Watch trigger: A released adapter that connects remem-ai/Kassette to two or more mainstream runtimes (e.g., Claude + Codex).

@@ -409,3 +409,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Memory/session pattern: Multiple operators use small append-only Redis-backed sessions with TTLs for persistent context across short agent restarts — pragmatic but increases attack surface; require auth, rotation, and signed append receipts. Evidence strength: Medium.
 
 - SDK lock-in: Field threads emphasize choosing an agent SDK is a lock-in decision; prefer SDKs with clear migration paths or adopt MCP abstraction layers where feasible. Evidence strength: High.
+
+
+- **MCP connector breakage (Claude)**: Multiple community reports (Reddit) of custom MCP connectors failing after a Claude Code point release. Why it matters: integration outages; mitigation: require connector CI and pre-upgrade snapshot to object storage. Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ (public)
+
+- **Plugin install vs run failures (Claude)**: Field posts (Bluesky) report plugins installing but failing at runtime due to missing tool-call contract enforcement. Operational tip: maintain a runtime->plugin compatibility matrix and fail CI for unsupported combos. Evidence strength: Medium. Source: https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w (public)
+
+- **Repo scanning / secret exposure concerns**: Community notes that some agents scan entire repos and surface secrets (.env), suggesting default agent repo access should be least-privilege. Evidence strength: Medium. Source: https://bsky.app/profile/dev-ctun.bsky.social/post/3mtoklgcxfv2n (public)
