@@ -586,3 +586,18 @@ Operational notes
   - Evidence strength: Medium
   - Sources: https://crates.io/crates/remem-ai ; https://github.com/lostinpatterns/kassette
   - Watch trigger: A released adapter that connects remem-ai/Kassette to two or more mainstream runtimes (e.g., Claude + Codex).
+
+
+- Mem0 SDK v2.0.19 — policy & migration note
+  - What it is: Memory SDK updates and a Vercel provider adapter (v2.0.19).
+  - Storage implication: Provider adapters expand persistence endpoints; changes in serialization or default retention require schema migration plans and encryption checks.
+  - Evidence strength: Strong (release)
+  - Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.19
+  - Watch trigger: a published migration guide or a breaking change in default serialization/retention policy.
+
+- Kassette / S3-backed durable workflows
+  - What it is: Durable agent workflow patterns using object storage for snapshots and replay (Kassette example repo).
+  - Storage implication: Object storage is the pragmatic layer for replayable agent runs; standardize snapshot namespaces, retention policies, and access control across environments.
+  - Evidence strength: Medium (repo)
+  - Source: https://github.com/lostinpatterns/kassette
+  - Watch trigger: a major vendor shipping a first-class snapshot/replay API that interoperates with existing object-storage schemas.

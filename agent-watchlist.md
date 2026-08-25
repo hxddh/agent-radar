@@ -12,7 +12,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic continued point releases (v2.1.239→v2.1.241 series) and community reports of MCP connector regressions after upgrades. Impact: Operators should stage Opus/point upgrades in sandboxes, validate connector compatibility in CI (integration + smoke tests), enable workspace trust/spend controls, and snapshot runs to object storage before/after upgrading model/runtime. Monitor vendor advisories for connector contract changes. Evidence strength: Strong (releases) + Medium (community reports). Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.241 ; https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+- Recent changes: Anthropic released Claude Code v2.1.243 (2026-08-25). Release notes reference containment/safety fixes that can change tool-calling or session semantics. Community reports continue to show MCP connector/plugin regressions after runtime upgrades — operators should pin connector versions, stage upgrades in a sandbox, and snapshot workspaces to object storage before upgrading. Evidence strength: Strong (release) + Medium (community reports).
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.243 ; https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -352,3 +354,20 @@ Status:
 - Evidence strength: Medium (crates.io package; follow-up signals in the research log).
 - Operational notes: Integrate into pre-commit / CI pipelines and editor telemetry to tag agent-driven actions; use as a complementary signal for policy engines that enforce stricter approvals on agent-originated changes.
 - Source: https://crates.io/crates/detect-coding-agent
+
+
+## Google Gemini CLI
+
+- What it is: Command-line tooling for Gemini-family models and remote MCP integrations (CLI + connectors).
+- Why it matters: Simplifies local-to-remote routing and integration into existing agent harnesses; preview releases add flags that affect MCP routing semantics.
+- Evidence strength: Strong (official release)
+- Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.57.0-preview.1
+- replace_section anchor: `## Google Gemini CLI`
+
+## JetBrains Junie
+
+- What it is: JetBrains' local-first agent runtime (Junie) with a local-only mode for macOS and notes referencing Qwen 3.6 optimizations.
+- Why it matters: Local-only agent runtime reduces egress risk and enables privacy-sensitive developer workflows; expect platform-specific packaging and resource-limit considerations.
+- Evidence strength: Strong (vendor blog)
+- Source: https://blog.jetbrains.com/junie/2026/08/junie-local-launch/
+- replace_section anchor: `## JetBrains Junie`

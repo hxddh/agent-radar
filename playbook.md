@@ -429,3 +429,12 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 - Evidence: Community connector breakage reports + vendor guidance on using durable object storage for orchestration.
 - Should promote to playbook? yes
 - Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+
+
+## Pre-upgrade snapshot & connector CI (playbook candidate)
+
+- Trick: Before any runtime/conductor upgrade, snapshot active workspaces, connector configurations, and session artifacts to an object-storage bucket (S3) with versioned keys; then run a connector compatibility CI job against a staging clone of the new runtime.
+- When useful: Any runtime/conductor/agent release that changes tool-calling, serialization, or connector contracts (example: Anthropic Claude Code point releases).
+- Evidence: Community reports of connector regressions after Anthropic upgrades; vendor release cadence increases upgrade risk.
+- Should promote to playbook? yes
+- Notes: Snapshot schema should include workspace manifest, connector version list, and minimal replay metadata to support fast rollback. Automate rollback by pointing production routing to the prior runtime and replaying snapshots in a staging environment.

@@ -3451,3 +3451,25 @@ Notes:
 
 - **OpenSandbox (scr-opensandbox)**: Secure, extensible sandbox runtime for agents (OpenSandbox). Why it matters: could standardize local/hosted isolation layers for agent execution and reduce operator friction around secure testing and containment. Evidence strength: Medium (GitHub). Relevance score: 8. Defer reason: Needs security audit results and adoption metrics. Follow-up needed: compare runtime primitives and APIs against other sandboxes (microVMs, Firecracker variants); validate integration path with MCP connectors. candidate_seen_at: 2026-08-24, last_checked_at: 2026-08-24, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
   - Source: https://github.com/opensandbox-group/OpenSandbox
+
+
+- **Anthropic — Claude Code v2.1.243** (scr-1a2f3b4): Release noted with containment/safety deltas; operator impact high (connector compatibility risk); evidence strength: Strong (GitHub release). Follow-up: extract release-note deltas affecting connector contracts; run connector CI tests. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: tracked; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.243
+
+- **Google — gemini-cli v0.57.0-preview.1** (scr-5c6d7e8): Preview/nightly release expands remote MCP/CLI features; evidence strength: Strong (GitHub release). Follow-up: test new CLI flags in isolated CI. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.57.0-preview.1
+
+- **JetBrains — Junie local launch** (scr-9b0c1d2): JetBrains announces local-only Junie for macOS; evidence strength: Strong (vendor blog). Follow-up: test packaging, resource caps, and local sandbox options. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://blog.jetbrains.com/junie/2026/08/junie-local-launch/
+
+- **Vercel — Sandbox GA** (scr-d3e4f5a): Vercel Sandbox now globally available; evidence strength: Strong (vendor changelog). Follow-up: validate sandbox defaults for retention and egress. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://vercel.com/changelog/vercel-sandbox-is-now-globally-available
+
+- **Mem0 SDK v2.0.19** (scr-1f2e3d4): Memory SDK updates and Vercel adapter; evidence strength: Strong. Follow-up: run memory migration tests and validate encryption at rest. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.19
+
+- **Omnigent (infra primitive)** (scr-2f3e4b5): Orchestrator / meta-harness repo; evidence strength: Medium. Follow-up: evaluate cross-runtime policy enforcement and integration tests with Claude/Codex. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/omnigent-ai/omnigent
+
+- **vArmor (Bytedance)** (scr-8d9e0f1): Container hardening for agent workloads; evidence strength: Medium. Follow-up: test AppArmor/BPF/Seccomp profiles for common agent runtimes. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/bytedance/vArmor

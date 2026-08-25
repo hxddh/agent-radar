@@ -416,3 +416,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Plugin install vs run failures (Claude)**: Field posts (Bluesky) report plugins installing but failing at runtime due to missing tool-call contract enforcement. Operational tip: maintain a runtime->plugin compatibility matrix and fail CI for unsupported combos. Evidence strength: Medium. Source: https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w (public)
 
 - **Repo scanning / secret exposure concerns**: Community notes that some agents scan entire repos and surface secrets (.env), suggesting default agent repo access should be least-privilege. Evidence strength: Medium. Source: https://bsky.app/profile/dev-ctun.bsky.social/post/3mtoklgcxfv2n (public)
+
+
+- **MCP connector regressions (2026-08-25)**: Operators report custom MCP connectors failing after recent Anthropic runtime updates; immediate mitigation is pre-upgrade workspace/object-store snapshots and connector CI against a staging runtime. Source class: Discussion (Reddit). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+- **Claude plugin install/run mismatches (2026-08-25)**: Several Bluesky field reports describe plugins that install but fail at runtime after point releases; pin plugin versions and add smoke tests exercising typical tool calls. Source class: Discussion (Bluesky). Evidence strength: Medium. Source: https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w
+
+- **Operator recipe: Kiro Crew + MCP (2026-08-25)**: dev.to writeup shows a real-world replacement of repetitive cron jobs with an MCP-connected agent (34 tools); useful playbook seeds include a central tool manifest and human checkpoints for high-impact ops. Source class: Long-form operator writeup. Evidence strength: Medium. Source: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h

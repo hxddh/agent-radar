@@ -1,0 +1,322 @@
+{
+  "summary": "Daily agent-ecosystem screening: vendor releases (Anthropic, Google Gemini, JetBrains, Vercel, Mem0), operator threads on MCP/harness and outages, notable infra primitives (Omnigent, ComfyUI-MCP, vArmor). Several single-repo tools need corroboration.",
+  "candidates": [
+    {
+      "id": "scr-1a2f3b4",
+      "title": "Anthropic: Claude Code release v2.1.243 + safety/containment updates",
+      "why_it_matters": "Claude Code release and safety engineering notes affect operator containment and runtime risk.",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.243",
+        "https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards",
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Watch for patch notes and post-release incident reports",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5c6d7e8",
+      "title": "Google: gemini-cli preview/nightly releases (v0.57.0-preview.1 + nightlies)",
+      "why_it_matters": "Gemini CLI updates change local agent runtimes and provider compatibility.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.57.0-preview.1",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0-nightly.20260825.g812f7a2bc",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.56.0-nightly.20260824.g5411f113c"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Track stable release notes and breaking CLI changes"
+    },
+    {
+      "id": "scr-9b0c1d2",
+      "title": "JetBrains Junie: local-only launch + Qwen 3.6 optimization post",
+      "why_it_matters": "Junie can run fully locally on Mac; changes local dev-agent deployment and privacy tradeoffs.",
+      "evidence": [
+        "https://blog.jetbrains.com/junie/2026/08/junie-local-launch/",
+        "https://blog.jetbrains.com/junie/2026/08/qwen-for-junie/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor user reports of performance and Mac-specific issues"
+    },
+    {
+      "id": "scr-d3e4f5a",
+      "title": "Vercel: Sandbox now globally available",
+      "why_it_matters": "Vercel Sandbox GA affects web-side agent testing and ephemeral runtime availability.",
+      "evidence": [
+        "https://vercel.com/changelog/vercel-sandbox-is-now-globally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Check integration notes for agent runtimes and resource limits"
+    },
+    {
+      "id": "scr-7f8e9a0",
+      "title": "Dev.to: AWS DevOps AI agent built with Kiro Crew + MCP",
+      "why_it_matters": "Concrete operator workflow: one config block, 34 tools, autonomous incident detection/fix on AWS.",
+      "evidence": [
+        "https://dev.to/aws-builders/i-built-an-aws-devops-ai-agent-using-kiro-crew-mcp-fk0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Look for replication threads or repo/config examples from author",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-0a1b2c3",
+      "title": "HN: Ask HN — MCP vs. Agent Harness discussion",
+      "why_it_matters": "Operator-level debate co\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49411877"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Monitor follow-up threads and concrete operator counters",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-4b5c6d7",
+      "title": "HN: Anthropic Claude & API service outages thread",
+      "why_it_matters": "Operational outage reports affect reliability assumptions for agent orchestration and failover.",
+      "evidence": [
+        "https://status.claude.com/uptime",
+        "https://news.ycombinator.com/item?id=4940"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch status updates and incident postmortems",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-2f3e4b5",
+      "title": "Omnigent: large open-source agent framework & orchestrator (v0.11.0)",
+      "why_it_matters": "High-adoption orchestrator for mixing Claude Code, Codex, Cursor and custom agents.",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent",
+        "https://github.com/omnigent-ai/omnigent/releases/tag/v0.11.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Track adoption reports and integration guides from operators"
+    },
+    {
+      "id": "scr-6a7b8c9",
+      "title": "ComfyUI-MCP: local-first agent-native control plane for creative workflows",
+      "why_it_matters": "Local MCP server + sidebar agent for editing live graphs; impacts image/video agent pipelines.",
+      "evidence": [
+        "https://github.com/artokun/comfyui-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Watch for third-party posts showing production use",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8d9e0f1",
+      "title": "Bytedance vArmor: cloud-native container hardening for agent workloads",
+      "why_it_matters": "Container hardening (AppArmor/BPF/Seccomp) targets runtime attack surface for agent apps.",
+      "evidence": [
+        "https://github.com/bytedance/vArmor"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Seek benchmarks or enterprise adoption notes",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-1f2e3d4",
+      "title": "Mem0: SDK releases (Python/Node + Vercel AI provider)",
+      "why_it_matters": "Memory SDK updates and provider integrations affect agent personalization and storage.",
+      "evidence": [
+        "https://github.com/mem0ai/mem0/releases/tag/v2.0.19",
+        "https://github.com/mem0ai/mem0/releases/tag/vercel-ai-v3.0.2",
+        "https://github.com/mem0ai/mem0/releases/tag/ts-v3.1.7"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Track breaking changes and migration notes"
+    },
+    {
+      "id": "scr-3c4d5e6",
+      "title": "OpenAI: codex repo prerelease (rust) 0.150.0-alpha.8",
+      "why_it_matters": "Codex prerelease can indicate upcoming runtime or SDK changes for coding agents.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.150.0-alpha.8"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Monitor for stable release and changelog details",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9f8e7d6",
+      "title": "Supabase: Enterprise-managed auth for Supabase MCP server",
+      "why_it_matters": "Enterprise auth for MCP servers affects multi-tenant, compliant MCP deployments.",
+      "evidence": [
+        "https://supabase.com/blog/enterprise-managed-auth-for-the-supabase-mcp-server"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Check enterprise docs and supported auth providers"
+    },
+    {
+      "id": "scr-a7b6c5d",
+      "title": "Model Context Protocol: python-sdk v2.1.0 release",
+      "why_it_matters": "MCP-related SDK update can change context handling and integrations for agent memory.",
+      "evidence": [
+        "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.1.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Look for upgrade guidance and breaking changes",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b1c2d3e",
+      "title": "HN: 'Never put an API key where your coding agent can read it' (operational advice)",
+      "why_it_matters": "Practical operator warning about secrets and agent workspace exposures.",
+      "evidence": [
+        "https://zipbox.ai",
+        "https://news.ycombinator.com/item?id=4939"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Collect examples of accidental exposures and mitigation patterns",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-c4d5e6f",
+      "title": "Session-migrate: migrate coding agent sessions across Claude Code, Codex, Pi (repo)",
+      "why_it_matters": "Repo aims to port sessions across vendors; useful for continuity but repo-only evidence.",
+      "evidence": [
+        "https://github.com/xhluca/session-migrate"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "Needs independent user reports or blog post demonstrating usage",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-d6e7f8a",
+      "title": "OpenOx: protocol for self-evolving agents (HN link)",
+      "why_it_matters": "New protocol proposal could influence agent evolution and governance research.",
+      "evidence": [
+        "https://openox.ai/",
+        "https://news.ycombinator.com/item?id=4940"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "signal_class": "research",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Track community reaction and technical specs",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-e8f9a0b",
+      "title": "Session/skill ecosystem threads: what languages are agent skills written in?",
+      "why_it_matters": "Discussion helps operators choose skill implementation languages for portability.",
+      "evidence": [
+        "https://plicara.ai/research/agent-skill-languages/",
+        "https://news.ycombinator.com/item?id=4938"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 2,
+      "signal_class": "research",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Monitor for surveys and repo examples",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky and Reddit agent threads (collection errors prevented capture)",
+    "Missing mainstream_product: Microsoft/GitHub official agent changelogs in snapshot",
+    "Missing corroboration for single-repo signals (session-migrate, many GitHub-only tools)"
+  ]
+}
