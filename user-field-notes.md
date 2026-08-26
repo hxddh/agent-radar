@@ -423,3 +423,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Claude plugin install/run mismatches (2026-08-25)**: Several Bluesky field reports describe plugins that install but fail at runtime after point releases; pin plugin versions and add smoke tests exercising typical tool calls. Source class: Discussion (Bluesky). Evidence strength: Medium. Source: https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w
 
 - **Operator recipe: Kiro Crew + MCP (2026-08-25)**: dev.to writeup shows a real-world replacement of repetitive cron jobs with an MCP-connected agent (34 tools); useful playbook seeds include a central tool manifest and human checkpoints for high-impact ops. Source class: Long-form operator writeup. Evidence strength: Medium. Source: https://dev.to/aws-builders/how-kiro-crews-cron-jobs-replaced-4-hours-of-weekly-toil-37h
+
+
+- **MCP connector regressions (2026-08-26)**: multiple community reports indicate custom MCP connectors broke after runtime/plugin updates; operators found that having a pre-upgrade connector CI (boots staging runtime with target release tag + runs E2E smoke tests) plus object-storage snapshots enabled fast rollback. Evidence strength: Medium. Sources: Reddit (r/ClaudeAI), Bluesky. Follow-up: collect anonymized failure logs and reproduce in staging. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w
+
+- **Claude plugin install/run mismatch**: field reports show installs succeed but runtime tool-calls fail; practical mitigation: pin plugin versions, capture verbose runtime logs into a separate artifact bucket (object storage) to speed triage. Evidence strength: Medium. Source: Bluesky.
+
+- **Local-first workspace experiments**: community prototypes suggest local-first durable workspaces are attractive for privacy/egress concerns; hybrid pattern (local compute + object-store mirroring of durable artifacts) recommended for reproducibility and audit. Evidence strength: Medium. Source: Bluesky.

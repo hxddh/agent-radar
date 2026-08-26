@@ -142,9 +142,10 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; central to many developer workflows.
-- Recent changes: Security reporting surfaced a Copilot input/leak vector and a linked CVE (CVE-2026-24301) in public reporting; operators should treat Copilot flows as security‑sensitive (check plugin permissions, egress, and telemetry defaults). Evidence strength: Strong (press + NVD). Source: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
-- Operator guidance: require least‑privilege plugin scopes, run egress inspection, and add Copilot to incident runbooks; snapshot workspaces before enabling new plugins or CLI options.
+- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
+- Recent changes: 2026-08-03 — GitHub added configurable reasoning levels for Copilot cloud agents, enabling operators to tune stepwise decomposition vs concise responses. 2026-08-25 — Copilot app 'Customize' tab is generally available, allowing workspace-level behavior presets; additionally, Rule Insights dashboard (2026-08-25) provides repo-level rule visibility that operators should correlate with agent activity. Operators should validate workspace presets, lock high-risk capabilities in sensitive repos, and map Rule Insights events to agent audit logs. Evidence strength: Strong (official GitHub changelogs).
+- replace_section anchor: `## GitHub Copilot`
+- Source: https://github.blog/changelog/2026-08-25-github-copilot-app-customize-tab-is-generally-available ; https://github.blog/changelog/2026-08-25-rule-insights-dashboard-generally-available
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).

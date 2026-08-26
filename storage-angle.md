@@ -601,3 +601,16 @@ Operational notes
   - Evidence strength: Medium (repo)
   - Source: https://github.com/lostinpatterns/kassette
   - Watch trigger: a major vendor shipping a first-class snapshot/replay API that interoperates with existing object-storage schemas.
+
+
+- Signal: Treat object storage as canonical snapshot/rollback plane for agent workspaces
+  - Rationale: Vendor guidance and operator experience show that restoring a prior workspace snapshot from durable object storage is the fastest recovery path when connectors or plugins break. (AWS blog follow-up: orchestrating multi-agent AI with S3 files.)
+  - Actionable item: Standardize snapshot naming (runtime-tag + timestamp + agent-id) and retention policies; ensure snapshots include plugin binaries, connector manifests, and minimal metadata for restore.
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files
+  - Watch trigger: Vendors publishing a standardized S3-backed workspace API or first-party SDK that reads/writes the snapshot format.
+
+- Signal: Artifact/checkpoint schema drift risk from frequent CLI/SDK updates
+  - Rationale: Orchestration tooling (example: E2B CLI/SDK releases) can alter artifact packaging; without schema compatibility checks, restores may fail.
+  - Actionable item: Add schema validation to CI for all snapshot uploads and require backward-compatible metadata fields; keep a migration adapter in the storage layer.
+  - Source: https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.18.0
+  - Watch trigger: Release notes that explicitly change snapshot/checkpoint schema.

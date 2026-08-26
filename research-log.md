@@ -3473,3 +3473,10 @@ Notes:
 
 - **vArmor (Bytedance)** (scr-8d9e0f1): Container hardening for agent workloads; evidence strength: Medium. Follow-up: test AppArmor/BPF/Seccomp profiles for common agent runtimes. candidate_seen_at: 2026-08-25; last_checked_at: 2026-08-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
   - Source: https://github.com/bytedance/vArmor
+
+
+- **rocketride-server** (scr-rocketride): High-performance AI pipeline engine (C++ core + SDKs). Why it matters: potential runtime for high-throughput agent pipelines that changes artifact handling and storage needs. Evidence strength: Medium; relevance score: 8; defer reason: needs benchmark and security audit. Follow-up needed: run small synthetic pipeline, measure latency and artifact IO. candidate_seen_at: 2026-08-26, last_checked_at: 2026-08-26, promotion_status: deferred, defer_count: 0, stale_after_days: 30. Source: https://github.com/rocketride-org/rocketride-server
+
+- **yotta-memory** (scr-yottamem): File-based cross-agent memory standard proposal. Why it matters: could standardize memory interchange formats and affect storage tooling. Evidence strength: Low-Medium; relevance score: 7; defer reason: early spec, adoption unknown. Follow-up needed: track spec revisions and test import/export. candidate_seen_at: 2026-08-26, last_checked_at: 2026-08-26, promotion_status: deferred, defer_count: 0, stale_after_days: 45. Source: https://github.com/YottaMeta/yotta-memory
+
+- **Follow-up: Kassette / remem-ai / detect-coding-agent** (ongoing storylines): these remain in candidate inbox; current coverage today was limited to Delta / Freshness: follow-up notes in the daily block. No promotion this pass; continue monitoring for official integrations or GA releases. last_checked_at: 2026-08-26.

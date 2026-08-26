@@ -1,0 +1,233 @@
+{
+  "summary": "Digest: mix of vendor releases (OpenAI, GitHub, Google, JetBrains, E2B), rising local-first workspaces and model/harness chatter on Bluesky, and infra primitives (rocketride, cross-agent memory) needing corroboration.",
+  "candidates": [
+    {
+      "id": "scr-a1b2c3d4",
+      "title": "OpenAI: 'Introducing admin plugin' blog post",
+      "why_it_matters": "OpenAI posts admin plugin announcement affecting plugin management and controls",
+      "evidence": [
+        "https://openai.com/index/introducing-admin-plugin"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "monitor for docs/adoption details"
+    },
+    {
+      "id": "scr-b2c3d4e5",
+      "title": "GitHub: Copilot app 'Customize' tab generally available",
+      "why_it_matters": "Copilot app Customize tab GA enables workspace-level tailoring of Copilot behavior",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-25-github-copilot-app-customize-tab-is-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up on admin/enterprise rollout notes"
+    },
+    {
+      "id": "scr-c3d4e5f6",
+      "title": "Google Gemini CLI: multiple releases (v0.57/v0.58 previews)",
+      "why_it_matters": "Gemini CLI updates affect local/dev workflows and integrations",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.58.0-preview.0",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.59.0-nightly.20260826.g64b5b79a6",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.57.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "watch for changelog highlights and enterprise notes"
+    },
+    {
+      "id": "scr-d4e5f6a7",
+      "title": "E2B: CLI & SDK releases (@e2b/cli, python-sdk)",
+      "why_it_matters": "E2B updates refine MCP/agent orchestration tooling and SDKs",
+      "evidence": [
+        "https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.18.0",
+        "https://github.com/e2b-dev/E2B/releases/tag/e2b%402.46.0",
+        "https://github.com/e2b-dev/E2B/releases/tag/%40e2b/python-sdk%402.46.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "track upgrade notes and compatibility matrix"
+    },
+    {
+      "id": "scr-e5f6a7b8",
+      "title": "Apache Maka (Incubating) — local-first agent workspace (Bluesky)",
+      "why_it_matters": "Local-first agent workspace supports Desktop/TUI/CLI durable runtime; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/github-trending.bsky.social/post/3mtx2maa4n32i",
+        "https://bsky.app/profile/github-trending.bsky.social/post/3mtx2m4rdmn2x"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "look for repo/releases and install guides for verification",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-f6a7b8c9",
+      "title": "DeepSeek V4-Flash-Vision-Exp chatter and harness discussion (Bluesky)",
+      "why_it_matters": "Community claims new mul\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/pulseofnations.lol/post/3mtwvune4c52u",
+        "https://bsky.app/profile/erikfiala.bsky.social/post/3mtwow2s4bd2y",
+        "https://bsky.app/profile/sabrinaramonov.bsky.social/post/3mtvuradg5e2i"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "seek official DeepSeek release notes and benchmark details",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-g7b8c9d0",
+      "title": "rocketride-server — high-performance AI pipeline engine (GitHub)",
+      "why_it_matters": "C++ core engine + IDE, SDKs and many provider integrations for LLM workflows",
+      "evidence": [
+        "https://github.com/rocketride-org/rocketride-server"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "needs independent coverage or blogpost before promotion",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-h8c9d0e1",
+      "title": "yotta-memory: file-based cross-agent memory standard (GitHub)",
+      "why_it_matters": "Proposes local file memory standard for cross-agent recall and scopes",
+      "evidence": [
+        "https://github.com/YottaMeta/yotta-memory"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "look for adoption examples or secondary writeups",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-i9d0e1f2",
+      "title": "konnga/skill-buddy: desktop Skills & MCP manager (GitHub)",
+      "why_it_matters": "Desktop workspace for installing/syncing Skills and MCP servers across agents",
+      "evidence": [
+        "https://github.com/konnga/skill-buddy"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "seek user reports or release notes to corroborate",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-j0e1f2a3",
+      "title": "Report: Microsoft Copilot 'Cowork' sandbox bypass (PromptArmor/HN)",
+      "why_it_matters": "Report shows Copilot Cowork sandbox bypass allowing attacker control of cowork session",
+      "evidence": [
+        "https://www.promptarmor.com/resources/microsoft-copilot-cowork-sandbox-bypass",
+        "https://news.ycombinator.com/item?id=0000000000"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "verify with vendor advisory and reproduction details",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-k1f2a3b4",
+      "title": "Multi-agent 'amnesia' problem — operator blog analysis",
+      "why_it_matters": "Agents rediscover/forget lessons; affects memory tiers and cross-agent context design",
+      "evidence": [
+        "https://empirical.gauzza.com/blog/multi-agent-amnesia-multi-agent-workflows-amnesia-problem"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "monitor for tools addressing amnesia (indexers/memory layers)",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-l2a3b4c5",
+      "title": "GitHub: Rule insights dashboard generally available (Changelog)",
+      "why_it_matters": "Rule insights GA adds visibility for repo rules and security/compliance workflows",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-25-rule-insights-dashboard-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "track enterprise uptake and API hooks"
+    },
+    {
+      "id": "scr-m3b4c5d6",
+      "title": "JetBrains: Junie Local / Qwen optimization coverage",
+      "why_it_matters": "JetBrains ships Junie Local (on-device coding agent) and Qwen tuning for Junie",
+      "evidence": [
+        "https://techstrong.ai/articles/jetbrains-releases-junie-local-bringing-its-coding-agent-fully-on-device-to-macs/",
+        "https://blog.jetbrains.com/junie/2026/08/qwen-for-junie/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "watch for macOS packaging and enterprise notes"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Anthropic product changelog coverage (Claude Code/Tag), OpenRouter/Modal release notes",
+    "Missing user_workflow: Reddit/HN threads from core operator communities (r/agentdevelopment, r/ClaudeAI) due to collection errors"
+  ],
+  "confidence": "medium"
+}

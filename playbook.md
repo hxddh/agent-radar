@@ -438,3 +438,15 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 - Evidence: Community reports of connector regressions after Anthropic upgrades; vendor release cadence increases upgrade risk.
 - Should promote to playbook? yes
 - Notes: Snapshot schema should include workspace manifest, connector version list, and minimal replay metadata to support fast rollback. Automate rollback by pointing production routing to the prior runtime and replaying snapshots in a staging environment.
+
+
+## Pre-upgrade agent connector playbook (candidate)
+
+- When useful: Before rolling runtime/plugin upgrades that affect MCP connectors or agent plugins.
+- Steps:
+  1. Snapshot current workspaces, plugins, and connector state to object storage (tag with runtime-release, timestamp, and repo/agent id).
+  2. Run connector CI: boot a staging runtime using the incoming release tag, run end-to-end smoke tests (auth, tool-calls, error paths), and assert no regression in error rates.
+  3. If tests fail, hold rollout and open a compatibility ticket with vendor; if tests pass, proceed with staged rollout.
+  4. Post-upgrade: monitor Rule Insights / agent audit logs for anomalous rule hits or unexpected commits for 24–72 hours.
+- Evidence: community reports (Reddit/Bluesky) and vendor changelogs suggesting compatibility risk. Evidence strength: Medium.
+- Should promote to playbook? yes (after adding concrete CI scripts and artifact commands).
