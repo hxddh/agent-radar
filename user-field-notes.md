@@ -430,3 +430,19 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Claude plugin install/run mismatch**: field reports show installs succeed but runtime tool-calls fail; practical mitigation: pin plugin versions, capture verbose runtime logs into a separate artifact bucket (object storage) to speed triage. Evidence strength: Medium. Source: Bluesky.
 
 - **Local-first workspace experiments**: community prototypes suggest local-first durable workspaces are attractive for privacy/egress concerns; hybrid pattern (local compute + object-store mirroring of durable artifacts) recommended for reproducibility and audit. Evidence strength: Medium. Source: Bluesky.
+
+
+- **MCP connector regressions (2026-08-27)**
+  - Tool: Anthropic Claude Code / custom MCP connectors
+  - Scenario: After a runtime upgrade many community users report connectors failing to negotiate sessions or plugin interfaces.
+  - Observable effect: Outages for integrations relying on custom MCP adapters; temporary fixes involve downgrading runtimes or pinning connector versions.
+  - Actionable operator advice: Always snapshot workspaces prior to runtime upgrades; add connector compatibility tests to CI and block upgrades on failures.
+  - Source class: Reddit / Bluesky (discussion)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w
+
+- **Memory API mismatch (2026-08-27)**
+  - Tool: Agent memory APIs
+  - Scenario: Developers report that memory read semantics differ between local dev harness and production agent runtime, leading to stale context.
+  - Actionable operator advice: Add round-trip memory read/write tests to CI and include memory schema version checks in deployment pipelines.
+  - Source class: dev.to
+  - Source: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h

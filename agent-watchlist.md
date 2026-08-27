@@ -12,9 +12,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released Claude Code v2.1.243 (2026-08-25). Release notes reference containment/safety fixes that can change tool-calling or session semantics. Community reports continue to show MCP connector/plugin regressions after runtime upgrades — operators should pin connector versions, stage upgrades in a sandbox, and snapshot workspaces to object storage before upgrading. Evidence strength: Strong (release) + Medium (community reports).
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.243 ; https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
-- replace_section anchor: `## Claude Code`
+- Recent changes: Anthropic released Fable 5 safeguards updates (vendor blog) and recent Claude Code runtime upgrades have been associated with community reports of MCP connector/plugin incompatibilities. Operators should pin connector versions, stage upgrades in a sandbox, and snapshot workspaces to object storage before upgrading. Evidence strength: Strong (Anthropic blog) + Medium (community reports).
+- Source: https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards ; community reports: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -143,9 +142,8 @@ Status:
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
 - Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
-- Recent changes: 2026-08-03 — GitHub added configurable reasoning levels for Copilot cloud agents, enabling operators to tune stepwise decomposition vs concise responses. 2026-08-25 — Copilot app 'Customize' tab is generally available, allowing workspace-level behavior presets; additionally, Rule Insights dashboard (2026-08-25) provides repo-level rule visibility that operators should correlate with agent activity. Operators should validate workspace presets, lock high-risk capabilities in sensitive repos, and map Rule Insights events to agent audit logs. Evidence strength: Strong (official GitHub changelogs).
-- replace_section anchor: `## GitHub Copilot`
-- Source: https://github.blog/changelog/2026-08-25-github-copilot-app-customize-tab-is-generally-available ; https://github.blog/changelog/2026-08-25-rule-insights-dashboard-generally-available
+- Recent changes: Public reporting and NVD entry for a secret-input leakage vulnerability (CVE-2026-24301). Immediate actions: rotate suspected secrets, enable sanitization and secret-guarding layers around Copilot sessions, and apply vendor patches when available. Evidence strength: Strong (Ars Technica + NVD).
+- Source: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).

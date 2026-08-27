@@ -1732,3 +1732,21 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / discussion] OpenCode OOM kills when using Ox Alpha preview tokens (Bluesky). Evidence strength: Medium. Source: https://bsky.app/profile/alexgude.com/post/3mts5yjp2yc2e
 - [infra_primitive] luckyPipewrench/pipelock — open-source agent firewall that scans egress and emits verifiable action receipts. Evidence strength: Medium. Source: https://github.com/luckyPipewrench/pipelock
 - [infra_primitive / sandbox] opensandbox-group/OpenSandbox — secure, extensible sandbox runtime for agents. Evidence strength: Medium. Source: https://github.com/opensandbox-group/OpenSandbox
+
+
+## Recent additions (2026-08-27)
+- [mainstream_product / security] OpenAI → Hugging Face incident (independent investigation). Evidence strength: High. Source: https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/
+
+- [mainstream_product / security] Microsoft Copilot secret-input leak (CVE-2026-24301). Evidence strength: Strong. Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- [mainstream_product] Anthropic — Fable 5 biology safeguards update. Evidence strength: Strong (vendor post). Source: https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards
+
+- [mainstream_product] Vercel — AI Gateway adds Muse Image, Gemini 3.5 Transcribe, Qwen 3.8 Flash (changelog). Evidence strength: Strong. Source: https://vercel.com/changelog/muse-image-now-available-on-ai-gateway
+
+- [mainstream_product] open-vsx: openai.chatgpt VS Code extension (extension listing). Evidence strength: Strong. Source: https://open-vsx.org/extension/openai/chatgpt
+
+- [user_workflow] JetBrains — AI Agents in DataGrip (vendor blog / operator UX). Evidence strength: Medium. Source: https://blog.jetbrains.com/datagrip/2026/08/26/ai-agents-in-datagrip/
+
+- [infra_primitive / memory] mnemoverse.mnemoverse-vscode — persistent memory for agents (VS Code extension). Evidence strength: Medium. Source: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+
+- [user_workflow / discussion] Google Gemini CLI free‑tier removal (reddit field report). Evidence strength: Medium (social). Source: https://www.reddit.com/r/ChatGPTCoding/comments/1vzmyt3/google_killed_gemini_clis_free_tier_the_free/

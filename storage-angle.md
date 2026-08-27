@@ -614,3 +614,16 @@ Operational notes
   - Actionable item: Add schema validation to CI for all snapshot uploads and require backward-compatible metadata fields; keep a migration adapter in the storage layer.
   - Source: https://github.com/e2b-dev/E2B/releases/tag/%40e2b/cli%402.18.0
   - Watch trigger: Release notes that explicitly change snapshot/checkpoint schema.
+
+
+- Snapshot-first upgrades
+  - Summary: Storing pre-upgrade workspace snapshots in versioned object storage (S3) enables fast rollback and forensic replay for connector/runtime regressions.
+  - Why it matters: Community reports show upgrades cause connector and plugin failures; immutable snapshots reduce MTTR and improve auditability.
+  - Watch trigger: A vendor publishes an official 'upgrade rollback' playbook referencing S3 or an adapter for Kassette.
+  - Sources: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; https://github.com/lostinpatterns/kassette
+
+- Durable workflow retention & memory persistence
+  - Summary: Durable orchestration tools that persist run artifacts to object store (snapshots + execution logs) improve investigation of fleet-level incidents and allow time-travel style debugging of agent sessions.
+  - Why it matters: Forensic analysis of agent misbehavior requires deterministic replay and persistent artifact storage tied to runs.
+  - Watch trigger: A mainstream agent runtime offers first-party integration with object-store based replay (e.g., explicit Kassette/ S3 hooks in a release note).
+  - Sources: https://github.com/lostinpatterns/kassette ; https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/

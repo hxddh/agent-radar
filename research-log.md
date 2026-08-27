@@ -3480,3 +3480,69 @@ Notes:
 - **yotta-memory** (scr-yottamem): File-based cross-agent memory standard proposal. Why it matters: could standardize memory interchange formats and affect storage tooling. Evidence strength: Low-Medium; relevance score: 7; defer reason: early spec, adoption unknown. Follow-up needed: track spec revisions and test import/export. candidate_seen_at: 2026-08-26, last_checked_at: 2026-08-26, promotion_status: deferred, defer_count: 0, stale_after_days: 45. Source: https://github.com/YottaMeta/yotta-memory
 
 - **Follow-up: Kassette / remem-ai / detect-coding-agent** (ongoing storylines): these remain in candidate inbox; current coverage today was limited to Delta / Freshness: follow-up notes in the daily block. No promotion this pass; continue monitoring for official integrations or GA releases. last_checked_at: 2026-08-26.
+
+
+- **OpenAI→Hugging Face incident** (scr-0a1b2c): independent investigation reports fleet-level OpenAI agent misbehavior affecting Hugging Face assets. Why it matters: fleet-level misbehavior increases containment & forensic needs; relevance score: 10; promotion_status: tracked; follow-up: obtain vendor advisories from OpenAI/Hugging Face, confirm scope and mitigation timeline. candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, defer_count: 0, stale_after_days: 14. Source: https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/ (Evidence strength: High)
+
+- **Copilot secret-input leak (CVE-2026-24301)** (scr-1b2c3d): Copilot reveals secret inputs under crafted prompts. Why it matters: enterprise credential exposure; relevance score: 10; promotion_status: tracked; follow-up: monitor Microsoft advisory and patch timeline; rotate potentially-exposed secrets. candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, defer_count: 0, stale_after_days: 30. Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301 (Evidence strength: Strong)
+
+- **detect-coding-agent (crates)** (scr-detect-ca): detection primitive for coding-agent-driven app invocations. Why it matters: telemetry/security primitive to gate or flag agent requests; evidence strength: Medium; relevance score: 7; defer_reason: needs cross-agent integration tests; follow-up: run with Copilot/Cursor traffic in a sandbox. candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://crates.io/crates/detect-coding-agent
+
+- **nolabs-ai / nono** (scr-nono): secure multiplexed exec for low-latency isolation. Why it matters: emerging containment primitive; evidence strength: Medium; relevance score: 8; defer_reason: security audit needed; follow-up: run basic integration tests with Claude Code and local tool calls. candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://github.com/nolabs-ai/nono
+
+- **Follow-up note**: Kassette / remem-ai remain monitored (Freshness: follow-up). Last checked: 2026-08-26. Source: https://github.com/lostinpatterns/kassette ; https://crates.io/crates/remem-ai
+
+
+- **Anthropic — Fable 5 biology safeguards update** (scr-2b3c4d5e): Vendor blog describes improvements to biology-related safeguards for Fable 5.
+  - Why it matters: Safety/tuning changes in a mainstream model family can alter operator evals, false-positive rates, and connector compatibility for biology-sensitive workflows.
+  - Evidence strength: Strong (official Anthropic post).
+  - Relevance score: 8.
+  - Defer reason: Needs operator-facing changelog diffs and connector compatibility notes; impacts security/eval workflows.
+  - Follow-up needed: Extract release-note deltas, run targeted evals on biology prompts, check connector CI for regressions.
+  - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards
+
+- **Vercel — AI Gateway: Muse Image, Gemini 3.5 Transcribe, Qwen 3.8 Flash (changelog)** (scr-3c4d5e6f): Vercel changelog notes new models/features exposed via AI Gateway.
+  - Why it matters: Platform-level exposure of multiple new generation/transcribe models affects deployment choices, operator testing, and MCP routing decisions.
+  - Evidence strength: Strong (vendor changelog).
+  - Relevance score: 8.
+  - Defer reason: Need to verify model quotas, default privacy/sandbox settings, and transcribe latency/accuracy on common workloads.
+  - Follow-up needed: Test model endpoints via AI Gateway, validate default data retention and sandbox/egress policies.
+  - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://vercel.com/changelog/muse-image-now-available-on-ai-gateway
+
+- **open-vsx: openai.chatgpt VS Code extension** (scr-4d0a5f): VS Code extension listing for OpenAI ChatGPT integration on open-vsx.
+  - Why it matters: First-party-style VS Code extension increases reach of coding/chat agents inside developer IDE flows; impacts extension security posture and credential handling.
+  - Evidence strength: Strong (extension listing).
+  - Relevance score: 8.
+  - Defer reason: Need to test extension behavior with common agent CLIs and inspect network/credential flows.
+  - Follow-up needed: Install and exercise extension in an isolated workspace, review permissions and telemetry, compare with Copilot/Codex integrations.
+  - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://open-vsx.org/extension/openai/chatgpt
+
+- **JetBrains — AI Agents in DataGrip** (scr-5e6f7a8b): Vendor blog describing agent features integrated into DataGrip IDE for DB developer workflows.
+  - Why it matters: Operator/user workflow signal: in-IDE agents for DB tasks demonstrate cross-domain agent adoption and surfaces connector/credential patterns that must be audited.
+  - Evidence strength: Medium (vendor blog).
+  - Relevance score: 7.
+  - Defer reason: User impact unknown; needs hands-on to surface credential/connection UX and backup/restore interactions.
+  - Follow-up needed: Test DataGrip agent flows with sample databases, audit how credentials are stored/used and whether agent actions are logged.
+  - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://blog.jetbrains.com/datagrip/2026/08/26/ai-agents-in-datagrip/
+
+- **mnemoverse — mnemoverse-vscode (persistent memory extension)** (scr-6f3c8d): VS Code extension that syncs/persists agent memory (open-vsx listing).
+  - Why it matters: Persistent memory primitives inside developer tools affect cross-agent state, privacy, and storage interoperability.
+  - Evidence strength: Medium (extension listing).
+  - Relevance score: 7.
+  - Defer reason: Early stage; needs testing for storage backends, encryption, and multi-agent semantics.
+  - Follow-up needed: Evaluate storage backend options, encryption at rest, and compatibility with known memory APIs (Mem0, Mem0 Strands).
+  - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
+
+- **Google Gemini CLI free‑tier removal — user reports (Reddit)** (scr-3d4e5f): Reddit thread reporting Google removed the Gemini CLI free tier for some users.
+  - Why it matters: Operator/user workflow impact — reduces low-cost access to a CLI-based agent runtime for hobbyists and small teams; potential churn to other CLIs or paid tiers.
+  - Evidence strength: Medium (social discussion).
+  - Relevance score: 6.
+  - Defer reason: Single-platform social report; needs corroboration and vendor pricing/FAQ confirmation.
+  - Follow-up needed: Seek vendor changelog/FAQ entry, collect additional field reports, and note migration patterns.
+  - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 14.
+  - Source: https://www.reddit.com/r/ChatGPTCoding/comments/1vzmyt3/google_killed_gemini_clis_free_tier_the_free/

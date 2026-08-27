@@ -450,3 +450,16 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
   4. Post-upgrade: monitor Rule Insights / agent audit logs for anomalous rule hits or unexpected commits for 24–72 hours.
 - Evidence: community reports (Reddit/Bluesky) and vendor changelogs suggesting compatibility risk. Evidence strength: Medium.
 - Should promote to playbook? yes (after adding concrete CI scripts and artifact commands).
+
+
+## Pre-upgrade Connector Compatibility & Snapshot Playbook (candidate)
+
+- When useful: Before upgrading agent runtimes (Claude Code, Codex/SDK releases, Vercel Gateway) or changing gateway defaults.
+- Steps:
+  1. Create immutable snapshot of affected workspaces/artifacts to versioned S3 prefix (object-store versioning ON).
+  2. Run connector compatibility matrix in CI: spin a staging runtime with the new release tag and execute connector smoke tests (session negotiation + plugin RPCs).
+  3. If CI fails, block rollout and rollback staging to previous runtime; if passes, promote to canary with 1–5% traffic and monitor tool-call errors.
+  4. Maintain quick rollback playbook referencing S3 snapshot keys and connector pins.
+- Evidence: Community reports of connector/plugin regressions; AWS S3 multi-agent orchestration blog; Kassette durable-workflow project.
+- Should promote to playbook? yes
+- Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; https://github.com/lostinpatterns/kassette
