@@ -280,9 +280,10 @@ Status:
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)
-- Recent changes: Vercel continues to expand AI Gateway and sandbox adapters; one-command agent setup persists as a high-friction-reduction feature. Operators should validate retention, egress, and sandbox defaults before enabling production flows. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
-- Operational note: Add deployment audit logging and review sandbox adapter permissions when enabling the AI Gateway.
-- replace_section anchor: `## Vercel AI Gateway (scr-vercel-ai-gateway)`
+- Recent changes: Vercel added support to run Claude Managed Agents via the Chat SDK (Claude-managed agent flows). Operators should validate default retention, egress, and sandbox settings before enabling managed agents for production; test one-command provisioning in staging to capture default artifact retention behavior.
+- Source class: Tier 1 — vendor changelog
+- Evidence strength: Strong
+- Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk
 ## Anthropic — Claude Code (scr-claude-code)
 
 - What it is: Claude Code runtime and orchestration components for coding agents.
@@ -370,3 +371,12 @@ Status:
 - Evidence strength: Strong (vendor blog)
 - Source: https://blog.jetbrains.com/junie/2026/08/junie-local-launch/
 - replace_section anchor: `## JetBrains Junie`
+
+
+## Cloudflare Agents (agents@0.22.0)
+
+- What it is: Cloudflare's edge agent runtime and adapter suite for running agent workflows at the edge, including telephony/voice connectors.
+- Why it matters: 0.22.0 introduces voice/Twilio packages and runtime changes that affect egress, quarantine, and platform-hosted agent behavior at the network edge. Operators should review telephony integrations in staging and map new agent tool-calls to existing IDS/quarantine policies.
+- Evidence strength: Strong
+- Source class: Tier 2 — GitHub release
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0

@@ -446,3 +446,28 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Actionable operator advice: Add round-trip memory read/write tests to CI and include memory schema version checks in deployment pipelines.
   - Source class: dev.to
   - Source: https://dev.to/kenwalger/your-memory-api-is-lying-to-your-agent-252h
+
+
+- **MCP connector regressions (2026-08-28)**
+  - Tool: Custom MCP connectors for Claude Code
+  - Scenario: After a runtime upgrade, connectors stopped receiving tool-call events and failed to register.
+  - Pain: Production automations broke; teams lacked easy rollback points.
+  - Useful trick recorded: snapshot connector config + runtime version + workspace artifacts to object storage (S3) before upgrades; pin runtime in connector CI to catch compatibility regressions.
+  - Evidence strength: Medium (Reddit / Bluesky community reports)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+- **DataGrip AI agents (2026-08-26)**
+  - Tool: JetBrains DataGrip agent features
+  - Scenario: DB developers using agent-suggested migrations and query rewrites.
+  - Pain: Unclear audit trail for agent-originated DB changes; credential handling needs review.
+  - Useful trick recorded: require human approval for schema-change actions suggested by agents; enable and monitor DB query audit logs for agent identity.
+  - Evidence strength: Medium (vendor blog)
+  - Source: https://blog.jetbrains.com/datagrip/2026/08/26/ai-agents-in-datagrip/
+
+- **Gemini CLI free-tier (field alert 2026-08-28)**
+  - Tool: Google Gemini CLI
+  - Scenario: Users report reduced free-tier access, increasing friction for low-cost experimentation.
+  - Pain: Higher barrier to entry for hobbyists and classroom scenarios.
+  - Useful trick recorded: provide curated low-cost sandbox accounts or emulate CLI flows locally for training environments.
+  - Evidence strength: Medium (Reddit)
+  - Source: https://www.reddit.com/r/ChatGPTCoding/comments/1vzmyt3/google_killed_gemini_clis_free_tier_the_free/

@@ -3546,3 +3546,12 @@ Notes:
   - Follow-up needed: Seek vendor changelog/FAQ entry, collect additional field reports, and note migration patterns.
   - candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-27, promotion_status: deferred, defer_count: 0, stale_after_days: 14.
   - Source: https://www.reddit.com/r/ChatGPTCoding/comments/1vzmyt3/google_killed_gemini_clis_free_tier_the_free/
+
+
+- **Anthropic — Model Hardware Standard (MHS) (scr-1a2b3c4d)**: research preview proposing a shared spec for device-attached agents. Why it matters: standardizes attestation and runtime expectations for hardware-controlling agents; evidence strength: Strong; promotion_status: candidate_follow-up; follow-up_needed: extract recommended attestation flows and map to operator test cases. candidate_seen_at: 2026-08-28, last_checked_at: 2026-08-28. Source: https://www.anthropic.com/news/model-hardware-standard-research-preview
+
+- **Cloudflare agents@0.22.0 (scr-2b3c4d5e)**: release with voice/Twilio packages and runtime updates. Why it matters: edge-hosted voice tooling and runtime deltas affect egress/edge quarantine; evidence strength: Strong; promotion_status: candidate; follow-up_needed: test voice connectors in staging and validate edge egress rules. candidate_seen_at: 2026-08-28, last_checked_at: 2026-08-28. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
+
+- **Vercel — Claude Managed Agents via Chat SDK (scr-3c4d5e6f)**: Vercel changelog entry enabling Claude-managed agents through Chat SDK. Why it matters: gateway-level managed agent support centralizes retention/egress defaults; evidence strength: Strong; promotion_status: candidate; follow-up_needed: verify retention/egress defaults and sandbox options on AI Gateway. candidate_seen_at: 2026-08-28, last_checked_at: 2026-08-28. Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk
+
+- **Follow-up: trace-mcp & earendil-works/pi**: Trace-mcp and pi remain infra primitives under observation; evidence strength: Medium/Weak respectively; promotion_status: deferred (need independent user reports & security review). last_checked_at: 2026-08-28. Sources: https://github.com/nikolai-vysotskyi/trace-mcp ; https://github.com/earendil-works/pi

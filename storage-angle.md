@@ -627,3 +627,18 @@ Operational notes
   - Why it matters: Forensic analysis of agent misbehavior requires deterministic replay and persistent artifact storage tied to runs.
   - Watch trigger: A mainstream agent runtime offers first-party integration with object-store based replay (e.g., explicit Kassette/ S3 hooks in a release note).
   - Sources: https://github.com/lostinpatterns/kassette ; https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+
+
+- Signal: S3-backed workspace snapshots as an operational primitive.
+  - Why it matters: Vendor gateway defaults and runtime upgrades can break connector contracts; having reproducible workspace snapshots plus runtime metadata (version, commit hash, connector checksums) allows fast rollback and forensic reconstruction.
+  - Concrete: store workspace tarball, connector config JSON, and a small manifest.json (runtime_version, connector_version, commit_sha) in short-lived S3 buckets with lifecycle rules and immutable prefixes.
+  - Evidence strength: Strong (AWS S3 Files guidance + community operator practices).
+  - Sources: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; https://www.anthropic.com/news/model-hardware-standard-research-preview
+  - Watch trigger: release of a vendor-provided compatibility matrix or an S3-native snapshot-to-restore example in a vendor SDK.
+
+- Signal: Gateway retention defaults should be exported to operator-owned storage.
+  - Why it matters: Vercel and Cloudflare gateway changes concentrate default retention/egress choices that may not match operator compliance needs.
+  - Concrete: implement export hooks from gateway logs to S3 or enable platform-managed export-to-S3 toggles during provisioning.
+  - Evidence strength: Strong (Vercel changelog + Cloudflare agents release).
+  - Sources: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk ; https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
+  - Watch trigger: a Vercel or Cloudflare UI update exposing export-to-S3 toggle or a new retention API.

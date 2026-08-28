@@ -1750,3 +1750,9 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [infra_primitive / memory] mnemoverse.mnemoverse-vscode — persistent memory for agents (VS Code extension). Evidence strength: Medium. Source: https://open-vsx.org/extension/mnemoverse/mnemoverse-vscode
 
 - [user_workflow / discussion] Google Gemini CLI free‑tier removal (reddit field report). Evidence strength: Medium (social). Source: https://www.reddit.com/r/ChatGPTCoding/comments/1vzmyt3/google_killed_gemini_clis_free_tier_the_free/
+
+
+### Added (2026-08-28)
+- [mainstream_product] Anthropic — Model Hardware Standard (MHS) research preview. Evidence strength: Strong. Source: https://www.anthropic.com/news/model-hardware-standard-research-preview
+- [mainstream_product] Cloudflare — agents@0.22.0 release (voice packages). Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
+- [mainstream_product] Vercel — Run Claude Managed Agents with Chat SDK (changelog). Evidence strength: Strong. Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk

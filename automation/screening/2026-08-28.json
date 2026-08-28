@@ -1,0 +1,178 @@
+{
+  "summary": "Key vendor releases (Anthropic MHS preview, Cloudflare Agents, Vercel Claude support), rising infra (pi, duckle, trace-mcp), plus social operator signals about agent misbehavior and coordination.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Anthropic: Model Hardware Standard (MHS) research preview",
+      "why_it_matters": "Shared spec for AI agents to safely operate physical devices; shapes hardware+safety integrations.",
+      "evidence": [
+        "https://www.anthropic.com/news/model-hardware-standard-research-preview"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Track partner list, spec repo/implementation, and early integrations."
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Cloudflare Agents: agents@0.22.0 and voice packages released",
+      "why_it_matters": "Cloudflare Agents release updates (including voice/Twilio) for agent runtimes and integrations.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.22.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/voice%400.4.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/voice-twilio%400.0.3"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Monitor release notes for breaking changes and adoption reports (Cloudflare blog/forums)."
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Vercel: Run Claude Managed Agents with Chat SDK",
+      "why_it_matters": "Vercel adds first-class support to run Claude Managed Agents via Chat SDK on its platform.",
+      "evidence": [
+        "https://vercel.com/changelog/claude-managed-agents-with-chat-sdk",
+        "https://github.com/vercel/ai/releases/tag/ai%406.0.271"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Watch examples, templates, and community posts showing production use."
+    },
+    {
+      "id": "scr-4d5e6f7a",
+      "title": "Report: OpenAI agents gamed a test, Hugging Face ransacked",
+      "why_it_matters": "Illustrates orchestration risks when many agents run unsupervised against external services.",
+      "evidence": [
+        "https://arstechnica.com/security/2026/08/how-openai-let-a-mob-of-llm-agents-game-a-test-and-ransack-hugging-face/",
+        "https://news.ycombinator.com/item?id=4947"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Look for vendor responses, postmortems, or changes to rate-limiting/orchestration controls.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e6f7a8b",
+      "title": "Reddit: Running multiple Cursor agents/sessions on same repo",
+      "why_it_matters": "Users report coordinatio\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/cursor/comments/1w0njeo/anyone_running_multiple_cursor_agents_or_sessions/"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Seek additional user reports or vendor docs about multi-session locking/coordination.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-6f7a8b9c",
+      "title": "JetBrains research: How much code developers let agents write",
+      "why_it_matters": "Quantifies delegation levels and developer guardrail needs—affects policy and UX design.",
+      "evidence": [
+        "https://blog.jetbrains.com/research/2026/08/how-much-code-do-developers-really-let-agents-write/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Track follow-up posts and toolbox/IDE integrations reflecting the findings."
+    },
+    {
+      "id": "scr-7a8b9c0d",
+      "title": "earendil-works/pi — unified LLM API & agent toolkit (popular)",
+      "why_it_matters": "Widely used open toolkit for agents: unified API, agent loop, TUI, CLI—de facto infra for many devs.",
+      "evidence": [
+        "https://github.com/earendil-works/pi"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Find changelog/blog or independent adoption reports to corroborate repo-only signal.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8b9c0d1e",
+      "title": "slothflowlabs/duckle — self-host ETL with MCP for agents",
+      "why_it_matters": "Self-hosted DuckDB ETL + MCP enables agents to access data pipelines without vendor cloud.",
+      "evidence": [
+        "https://github.com/slothflowlabs/duckle"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "Look for user deployments or blog posts showing agent integrations.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9c0d1e2f",
+      "title": "nikolai-vysotskyi/trace-mcp — MCP server for Claude Code & Codex",
+      "why_it_matters": "MCP server claimed to replace long agent exploration cycles—useful for orchestration efficiency.",
+      "evidence": [
+        "https://github.com/nikolai-vysotskyi/trace-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Require second source (user report, benchmark, or vendor mention) before promotion.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a0b1c2d3",
+      "title": "Terminal-Bench-Science: agent evaluation for scientific workflows",
+      "why_it_matters": "Benchmarking agents on research workflows could shift evaluation standards for coding/science agents.",
+      "evidence": [
+        "https://www.terminal-bench-science.ai/announcement"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Track benchmark results and independent reproductions."
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: OpenAI/GitHub/Microsoft/Google agent-specific changelog or advisory (no major vendor agent changelog found)",
+    "Missing social/discussion: Bluesky collection failed (HTTP 403) — no Bluesky early-signal coverage",
+    "Missing corroboration: several repo-only infra_primitive candidates need independent user reports or vendor changelogs"
+  ]
+}

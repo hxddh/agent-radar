@@ -463,3 +463,16 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 - Evidence: Community reports of connector/plugin regressions; AWS S3 multi-agent orchestration blog; Kassette durable-workflow project.
 - Should promote to playbook? yes
 - Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; https://github.com/lostinpatterns/kassette
+
+
+## Pre-upgrade connector compatibility & snapshot playbook (candidate)
+
+- When useful: before any runtime/conductor upgrade for agent runtimes that integrate via MCP or custom connectors.
+- Steps:
+  1. Snapshot current workspace artifacts, connector configs, and runtime version metadata to object storage (S3) with timestamp and checksums.
+  2. Run connector CI against a pinned staging runtime that mirrors production; include end-to-end tool-call smoke tests.
+  3. If staging connector tests fail, block production rollout and open a compatibility issue with vendor runtime details.
+  4. If rollout proceeds, monitor connector heartbeats and audit logs for 30 minutes post-upgrade; have an automated rollback script that restores the pinned runtime and workspace snapshot.
+- Evidence: Community reports of connector breakage after runtime upgrades; vendor runtime churn (Cloudflare, Anthropic).
+- Should promote to playbook? yes (after we validate steps with a short-runner test harness)
+- Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
