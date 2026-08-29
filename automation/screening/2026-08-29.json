@@ -1,0 +1,196 @@
+{
+  "summary": "Daily agent/agent-infra signals: Anthropic previews Model Hardware Standard; GitHub Copilot changelogs and policy/billing updates; Cloudflare launches BotBase operator path. Early operator reports and infra tooling (Grith, dmx, distro-rig-vps) show focus on syscall supervision, gated MCP loops, and sandbox rigs.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "GitHub Copilot weekly releases (Aug 24)",
+      "why_it_matters": "Regular Copilot deltas affect coding-agent integrations and UX expectations.",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-28-github-copilot-weekly-releases-august-24"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Anthropic research preview: Model Hardware Standard (MHS)",
+      "why_it_matters": "Spec for safely operating physical devices with agents; impacts device-control integrations.",
+      "evidence": [
+        "https://www.anthropic.com/news/model-hardware-standard-research-preview"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Cloudflare: BotBase for Operators (join bots/agents directory)",
+      "why_it_matters": "New operator path to list/deploy bots via Cloudflare directory and tooling.",
+      "evidence": [
+        "https://blog.cloudflare.com/botbase-for-operators/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4d5e6f7a",
+      "title": "Upcoming changes to GitHub Copilot policies and billing",
+      "why_it_matters": "Policy and billing shifts will change cost and access patterns for agent usage.",
+      "evidence": [
+        "https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-5e6f7a8b",
+      "title": "Grith – syscall-level supervision for AI coding agents (live)",
+      "why_it_matters": "Provides syscall-level supervision/proxy for safer agent execution on Linux hosts.",
+      "evidence": [
+        "https://grith.ai/blog/grith-is-live",
+        "https://news.ycombinator.com/item?id=494..."
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-6f7a8b9c",
+      "title": "dmx – MCP server for configurable gated loops in coding agents",
+      "why_it_matters": "Adds configurable, gated control loops (MCP) to agent workflows for safety/governance.",
+      "evidence": [
+        "https://dmx.deepmodel.ai/",
+        "https://news.ycombinator.com/item?id=494..."
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-7a8b9c0d",
+      "title": "shafir-info/distro-rig-vps — disposable real-boot KVM sandbox rig",
+      "why_it_matters": "Sandbox rig pattern for disposable VMs limits host exposure for agent testing.",
+      "evidence": [
+        "https://github.com/shafir-info/distro-rig-vps"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8b9c0d1e",
+      "title": "Reddit: Context documents and dev workflow skill / agent usage (r/GithubCopilot)",
+      "why_it_matters": "Operator-level tip: cont\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/GithubCopilot/comments/1w130m1/context_documents_and_dev_workflow_skill_agent/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-9c0d1e2f",
+      "title": "How to run cloud coding agents overnight (operational tips)",
+      "why_it_matters": "Concrete operator guidance for long-running/cloud agent orchestration and cost control.",
+      "evidence": [
+        "https://mouse.dev/blog/running-code-agents-overnight/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-a0b1c2d3",
+      "title": "Bluesky: OpenAI agents coordinated via makeshift message board (early report)",
+      "why_it_matters": "Operator/infosec observa\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/patrickcmiller.bsky.social/post/3mu77tbikx22z"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-b1c2d3e4",
+      "title": "Cloudflare Agents release agents@0.22.0",
+      "why_it_matters": "Cloudflare Agents updates affect runtime and integration for edge-deployed agents.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.22.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: more Bluesky/Reddit threads corroborating Anthropic MHS operational impacts",
+    "Missing mainstream_product: explicit OpenAI product changelog for Cursor decision (monitor official blog)"
+  ]
+}
