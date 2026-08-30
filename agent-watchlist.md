@@ -7,13 +7,16 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption signal inside OpenAI ecosystems and third‑party tooling integration.
-- Recent changes: OpenAI/codex rust client tag rust-v0.149.1 observed (2026-08); operators should review SDK auth/telemetry and pin client versions in production. Evidence strength: Strong (GitHub release). Source: https://github.com/openai/codex/releases/tag/rust-v0.149.1
-- Operator guidance: run SDK compatibility tests and verify retention/telemetry defaults after upgrading.
+- Recent changes: OpenAI released codex rust client tag rust-v0.151.0 (2026-08-30). Operators should review SDK auth/telemetry changes, pin client versions in production, and run CI/regression tests for CLI integrations. Evidence strength: Strong (GitHub release).
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.151.0
+- replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released Fable 5 safeguards updates (vendor blog) and recent Claude Code runtime upgrades have been associated with community reports of MCP connector/plugin incompatibilities. Operators should pin connector versions, stage upgrades in a sandbox, and snapshot workspaces to object storage before upgrading. Evidence strength: Strong (Anthropic blog) + Medium (community reports).
-- Source: https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards ; community reports: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+- Recent changes: Anthropic released Claude Code v2.1.251 (2026-08-30). Operators continue to report connector/plugin incompatibilities following recent runtime upgrades; treat upgrades as high-risk and run connector compatibility tests in staging. Evidence strength: Strong (release) + Medium (community reports).
+- follow-up: extract release-note deltas that affect containment, tool-call semantics, and storage schemas; add upgrade-time compatibility gates and workspace snapshot playbooks.
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.251
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -141,9 +144,11 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; Copilot is a central operator-facing coding assistant.
-- Recent changes: Public reporting and NVD entry for a secret-input leakage vulnerability (CVE-2026-24301). Immediate actions: rotate suspected secrets, enable sanitization and secret-guarding layers around Copilot sessions, and apply vendor patches when available. Evidence strength: Strong (Ars Technica + NVD).
-- Source: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+- Maturity: Broad enterprise adoption; Copilot sits at the IDE/CLI/cloud intersection and is central to many developer workflows.
+- Recent changes: Security exposure reported and tracked as CVE-2026-24301 (Ars Technica coverage + NVD advisory). Operators should treat Copilot-related upgrades/config changes like security patches: run egress/permission scans, enable extension signing, require workspace snapshots before enabling new plugins, and add Copilot flows to incident playbooks.
+- Evidence strength: Strong (press + NVD)
+- Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+- replace_section anchor: `## GitHub Copilot`
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).
@@ -280,10 +285,10 @@ Status:
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)
-- Recent changes: Vercel added support to run Claude Managed Agents via the Chat SDK (Claude-managed agent flows). Operators should validate default retention, egress, and sandbox settings before enabling managed agents for production; test one-command provisioning in staging to capture default artifact retention behavior.
-- Source class: Tier 1 — vendor changelog
-- Evidence strength: Strong
+- Recent changes: Vercel added managed-agent flows (Claude-managed agents via Chat SDK) and continues to centralize model routing + one-command provisioning. Default retention and egress settings can expose artifacts if left unchecked; operators should validate sandbox defaults, retention, and egress policies in staging before enabling managed agents.
+- Evidence strength: Strong (vendor changelog)
 - Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk
+- replace_section anchor: `## Vercel AI Gateway (scr-vercel-ai-gateway)`
 ## Anthropic — Claude Code (scr-claude-code)
 
 - What it is: Claude Code runtime and orchestration components for coding agents.
@@ -374,9 +379,52 @@ Status:
 
 
 ## Cloudflare Agents (agents@0.22.0)
-
-- What it is: Cloudflare's edge agent runtime and adapter suite for running agent workflows at the edge, including telephony/voice connectors.
-- Why it matters: 0.22.0 introduces voice/Twilio packages and runtime changes that affect egress, quarantine, and platform-hosted agent behavior at the network edge. Operators should review telephony integrations in staging and map new agent tool-calls to existing IDS/quarantine policies.
-- Evidence strength: Strong
-- Source class: Tier 2 — GitHub release
+- Category: Platform / edge agent runtime
+- Maturity: Active; edge‑hosted agent tooling expanding (voice, Twilio, edge orchestration)
+- Recent changes: agents@0.22.0 adds voice/Twilio packages and runtime updates. Impact: edge voice egress widens the attack/egress surface; operators should validate edge quarantine/playbook and test voice connectors in staging.
+- Evidence strength: Strong (GitHub release)
 - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
+- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
+
+
+## Omnigent
+
+- What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).
+- Why it matters: Meta‑harnesses simplify multi‑runtime orchestration and can centralize policy, verification, and receipts across agent fleets — uptake suggests movement beyond power users.
+- Evidence strength: Medium-Strong (community adoption + OSS alternatives)
+- Follow-up: track cross‑runtime adapters and governance integrations; candidate_seen_at: 2026-08-16, promotion_status: promoted
+- Source: https://github.com/omnigent-ai/omnigent
+
+
+## Vestige
+
+- What it is: Agent memory primitive / versioned memory approach (multiple memory projects in the ecosystem follow similar goals).
+- Why it matters: Memory primitives shape long‑horizon agent state, personalization, and auditability; multiple competing projects surfaced this month.
+- Evidence strength: Medium (multiple repo listings and ecosystem signals)
+- Follow-up: monitor vendor adoption or absorption into larger platforms; candidate_seen_at: 2026-07-07, promotion_status: deferred
+- Source: ecosystem memory package listings (see research-log entries)
+
+
+## Cloudflare — BotBase for Operators (scr-cloud-botbase)
+
+- What it is: Cloudflare's BotBase for Operators is a vendor directory/onboarding flow for bots and agents that surfaces operator controls, egress policies, and integration patterns for edge-deployed agents.
+- Why it matters: Strong platform-level signal that edge vendors are building operator-facing directories and onboarding flows that alter default egress/retention behaviors; affects containment, export-to-customer-storage patterns, and quarantine workflows for agent-created artifacts.
+- Key operator impacts: map BotBase onboarding to existing snapshot/export playbooks; validate default retention/egress settings; ensure operator-owned export hooks to S3/R2 for compliance.
+- Evidence strength: Strong (official Cloudflare blog).
+- Source: https://blog.cloudflare.com/botbase-for-operators/
+
+## GitHub Copilot — Policy & Billing Changes (scr-copilot-polchg)
+
+- What it is: GitHub announced upcoming policy and billing changes that change feature access and cost model for Copilot and Copilot-for-Agents surfaces.
+- Why it matters: Copilot represents a mainstream coding-agent surface; billing/policy shifts materially affect operator cost forecasts (background tasks, CI agents, seat vs token billing) and may change which features (streaming, attachments, plugin access) remain available to automated agent runs.
+- Key operator impacts: quantify delta for common CI/background tasks; re-evaluate background-run architecture and snapshot retention if costs rise; add cost-gating to high-frequency agent workflows.
+- Evidence strength: Strong (official GitHub changelog entry).
+- Source: https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing
+
+## remem-ai (scr-remem-ai)
+
+- What it is: remem-ai is an emerging local-first/persistent memory crate for coding agents (crates.io entry).
+- Why it matters: Continued emergence of local/persistent memory crates strengthens the case for treating memory snapshots and integrity metadata as first-class operator artifacts (snapshots, signed manifests, backup/migration plans). remem-ai is an infrastructure primitive that can change on-host storage and sync patterns for agent memory.
+- Evidence strength: Medium (registry/crate entry).
+- Follow-up needed: validate adapter availability for mainstream runtimes (Claude/Codex/Copilot) and test snapshot/restore flows into operator-owned object stores.
+- Source: https://crates.io/crates/remem-ai

@@ -3566,3 +3566,60 @@ Notes:
 - **dmx (MCP gated loops)** (scr-dmx): Why it matters: gated MCP loops allow automated human approvals and governance; Evidence strength: Medium; promotion_status: candidate; follow-up_needed: prototype gating UX and measure latency for approval loops. candidate_seen_at: 2026-08-29, last_checked_at: 2026-08-29, defer_count: 0, stale_after_days: 30. Source: https://dmx.deepmodel.ai/
   
 - **Follow-up note**: Kassette and remem-ai remain monitored as Freshness: follow-up (recent checks 2026-08-26 / 2026-08-24). Do not duplicate existing research-log entries; update them when implementation/usage evidence appears. Source: https://github.com/lostinpatterns/kassette ; https://crates.io/crates/remem-ai
+
+
+- **JetBrains — Cadence security incident** (scr-9i0j1k2l): vendor security advisory for Cadence affecting PyCharm/IDE agent integrations; why it matters: IDE-side incident that can expose agent-plugin surface and stored credentials; evidence strength: Strong; promotion_status: candidate; follow-up needed: capture CVE if published, map affected plugin versions, and run extension-signing/permission audits.  
+  - Source: https://blog.jetbrains.com/pycharm/2026/08/cadence-security-incident-august-2026/  
+  - candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, defer_count: 0, stale_after_days: 30.
+
+- **openai/codex rust-v0.151.0 release** (scr-1a2b3c4d): official codex rust client stable release; why it matters: SDK surface changes affect local/CI agent runners; evidence strength: Strong; promotion_status: candidate_follow-up; follow-up needed: test auth/telemetry changes in CI and document migration steps.  
+  - Source: https://github.com/openai/codex/releases/tag/rust-v0.151.0  
+  - candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, defer_count: 0, stale_after_days: 30.
+
+- **Anthropic — Claude Code v2.1.251** (scr-2f4e6d8a): runtime release; why it matters: connector/plugin compatibility regressions observed in the wild; evidence strength: Strong + Medium (community); follow-up needed: extract breaking changes and test connectors.  
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.251  
+  - candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, defer_count: 0, stale_after_days: 30.
+
+- **Cloudflare agents@0.22.0** (scr-4d5e6f1a): release with voice/Twilio packages; why it matters: edge voice egress and retention primitives; evidence strength: Strong; follow-up needed: test voice connectors and edge quarantine in staging.  
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0  
+  - candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, defer_count: 0, stale_after_days: 30.
+
+- **library/mongodb/mongodb-mcp-server (Docker Hub)** (scr-2b3c4d): official MongoDB MCP image enabling DB MCP access; why it matters: agents gain first-class DB MCP access surface; evidence strength: Strong; follow-up needed: audit default ACLs and retention guidance.  
+  - Source: https://hub.docker.com/r/library/mongodb/mongodb-mcp-server  
+  - candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, defer_count: 0, stale_after_days: 30.
+
+- **Community MCP connector regressions (reddit)**: why it matters: operator outage risk; evidence strength: Medium; follow-up needed: collect connector PRs and vendor compatibility notes.  
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/  
+  - candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, promotion_status: deferred.
+
+
+
+- **Resolved: Vercel AI Gateway managed-agent retention/egress concern** (2026-08-30): promoted to Strong — primary source: Vercel changelog enabling Claude‑managed agents via Chat SDK. Follow-up: extract default retention & sandbox options; candidate_seen_at: 2026-08-28, last_checked_at: 2026-08-30, promotion_status: promoted.
+  - Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk
+
+- **Resolved: MongoDB MCP server (library/mongodb/mongodb-mcp-server)** (2026-08-30): primary Docker Hub image found and promoted to Strong; operators must audit default ACLs and retention guidance. candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, promotion_status: promoted.
+  - Source: https://hub.docker.com/r/library/mongodb/mongodb-mcp-server
+
+- **Corroboration pending: Vercel Muse Image addition (2026-08-27)** — queue entry lacked a complete changelog URL in the snapshot; mark pending-official; follow-up needed to find canonical changelog entry. candidate_seen_at: 2026-08-27, last_checked_at: 2026-08-30, promotion_status: deferred, defer_count: 0, stale_after_days: 14.
+
+- **Corroboration pending: Anthropic — service accounts for Claude Console (2026-08-30 social report)** — social reports surfaced; primary vendor doc not yet found in snapshot; mark pending-official. candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, promotion_status: deferred.
+
+- **Added / verified: Codex rust client release (rust-v0.151.0)** — Strong (GitHub release); follow-up: test auth/telemetry deltas in CI. candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, promotion_status: promoted.
+  - Source: https://github.com/openai/codex/releases/tag/rust-v0.151.0
+
+- **Added / verified: Claude Code v2.1.251** — Strong (GitHub release) + community connector reports; follow-up: enumerate breaking changes and CI tests. candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, promotion_status: candidate_follow-up.
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.251
+
+- **Added: JetBrains Cadence security incident** — Strong (vendor advisory); follow-up: map affected plugin versions and check for CVE publication. candidate_seen_at: 2026-08-30, last_checked_at: 2026-08-30, promotion_status: candidate_follow-up.
+  - Source: https://blog.jetbrains.com/pycharm/2026/08/cadence-security-incident-august-2026/
+
+
+- **Cloudflare BotBase for Operators** (scr-cloud-botbase): promoted → Added to agent-watchlist.md and storage-angle.md. Why promoted: strong first-party evidence; direct operator governance and egress/retention implications for edge-deployed agents. Promotion_reason: platform-level onboarding & export defaults materially change operator snapshot/egress playbooks. candidate_seen_at: 2026-08-29, last_checked_at: 2026-08-30, promotion_status: promoted, promoted_to: [agent-watchlist.md, storage-angle.md], stale_after_days: 90. Source: https://blog.cloudflare.com/botbase-for-operators/
+
+- **GitHub Copilot — Policy & Billing Changes** (scr-copilot-polchg): promoted → Added to agent-watchlist.md and radar.md. Why promoted: official GitHub changelog; mainstream product policy/billing changes will change operator cost/feature calculus for many agent workflows. Promotion_reason: immediate operational impact on background CI/agent economics and retention decisions. candidate_seen_at: 2026-08-29, last_checked_at: 2026-08-30, promotion_status: promoted, promoted_to: [agent-watchlist.md, radar.md], stale_after_days: 60. Source: https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing
+
+- **remem-ai** (scr-remem-ai): promoted → Added to agent-watchlist.md and storage-angle.md. Why promoted: emerging local-first memory primitive with direct implications for snapshotting, integrity metadata, and migration plans; merits watchlist status for operator adoption and adapter availability. Promotion_reason: infra-primitive relevance for agent memory/storage flows. candidate_seen_at: 2026-08-23, last_checked_at: 2026-08-30, promotion_status: promoted, promoted_to: [agent-watchlist.md, storage-angle.md], stale_after_days: 60. Source: https://crates.io/crates/remem-ai
+
+Notes:
+- Promotions limited to 3 candidates this run per Promote-candidates gate.
+- Follow-ups: for each promoted item, validate adapter/SDK integration (BotBase export hooks, Copilot cost/feature matrices, remem-ai adapters for mainstream runtimes) and add integration test targets to the corroboration queue.

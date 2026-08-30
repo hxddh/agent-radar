@@ -476,3 +476,14 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
 - Evidence: Community reports of connector breakage after runtime upgrades; vendor runtime churn (Cloudflare, Anthropic).
 - Should promote to playbook? yes (after we validate steps with a short-runner test harness)
 - Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
+
+
+- 2026-08-30 — Pre-upgrade snapshot playbook (operational):
+  - When: before any runtime/agent platform upgrade or before enabling a managed‑agent flow.
+  - Steps:
+    1. Pin current runtime & connector versions in CI manifest.
+    2. Snapshot workspace files, connector manifests, and agent tool plugin lists to an S3 prefix labeled with datetime and runtime version.
+    3. Run connector smoke tests against a staging runtime that mirrors production.
+    4. If tests fail, abort rollout and open an incident; if pass, proceed with controlled rollout and short retention of live snapshots for rollback.
+  - Rationale: connector regressions and runtime churn are producing production outages; snapshots enable fast rollback and forensic analysis.
+  - Evidence: community connector regression reports and vendor runtime releases (Claude Code, Codex).

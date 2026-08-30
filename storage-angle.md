@@ -642,3 +642,24 @@ Operational notes
   - Evidence strength: Strong (Vercel changelog + Cloudflare agents release).
   - Sources: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk ; https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
   - Watch trigger: a Vercel or Cloudflare UI update exposing export-to-S3 toggle or a new retention API.
+
+
+- 2026-08-30 — Storage angle update: DB MCP servers (MongoDB MCP image) change agent storage patterns — agents can write structured artifacts to DB backends instead of only object stores.
+  - Practical implications:
+    - Map object-store snapshot playbooks to DB retention/backups (point‑in‑time recovery) and attach query/audit logs to MCP client actions.
+    - Ensure RBAC/ACLs for MCP users are explicit and testable; default DB permissions must be validated before production rollout.
+  - Watch triggers: a public incident involving unintended DB writes or a vendor doc revealing default permissive ACLs.
+  - Sources: MongoDB MCP Docker Hub listing; vendor platform gateway changelogs.
+
+
+### 2026-08-30: BotBase & local-first memory primitives — storage implications
+
+- Cloudflare BotBase for Operators (promoted): BotBase centralizes operator onboarding and egress/retention defaults for edge-hosted bots and agents.
+  - Storage implication: operators should require BotBase provisioning to include an explicit export-to-customer-bucket option (S3/R2) and map BotBase retention defaults into local snapshot life-cycle policies. Treat BotBase onboarding as a trigger to apply per-project snapshot templates and short-term forensic buckets.
+  - Recommended immediate step: add a provisioning checklist that enforces operator-owned export hooks and server-side encryption for any BotBase-provisioned artifact store.
+  - Evidence: https://blog.cloudflare.com/botbase-for-operators/ (Strong)
+
+- remem-ai (promoted): local-first persistent memory crates emphasize per-host durable memory with FTS/SQLite or similar storage backends.
+  - Storage implication: persist memory snapshots with integrity metadata (hash/signature), include write-ahead logs for safe sync, and design migration/backup paths before enabling cross-host syncing to vector stores.
+  - Recommended immediate step: when adopting remem-ai or similar crates, require snapshot + manifest writes to operator-controlled object storage and validate restore paths in staging.
+  - Evidence: crates.io remem-ai (Medium)

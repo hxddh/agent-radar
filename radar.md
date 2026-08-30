@@ -139,3 +139,12 @@ Operational signal (2026-08-22): community reports surfaced a regression where c
 - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
 
 Action items: document connector compatibility tests, require connector CI against a staging runtime, and add pre-upgrade workspace snapshots to enable quick rollback when connector regressions are observed.
+
+
+### 2026-08-30 Promotions
+
+- Cloudflare — BotBase for Operators (promoted): Platform-level operator directory and onboarding flow that affects egress/retention and snapshot/export defaults. Reason for promotion: strong first-party evidence and direct operator governance impact on snapshot/egress workflows. Source: https://blog.cloudflare.com/botbase-for-operators/
+
+- GitHub Copilot — Policy & Billing Changes (promoted): Changelog shows upcoming policy/billing changes that will affect operator cost models and feature access for Copilot agent surfaces. Reason for promotion: mainstream product change with strong operational impact for coding-agent fleets and background runs. Source: https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing
+
+- remem-ai (promoted): Local-first/persistent memory crate for coding agents. Reason for promotion: direct infra primitive for agent memory with concrete storage/snapshot implications; promotes memory-as-artifact operational work. Source: https://crates.io/crates/remem-ai

@@ -471,3 +471,18 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Useful trick recorded: provide curated low-cost sandbox accounts or emulate CLI flows locally for training environments.
   - Evidence strength: Medium (Reddit)
   - Source: https://www.reddit.com/r/ChatGPTCoding/comments/1vzmyt3/google_killed_gemini_clis_free_tier_the_free/
+
+
+- **MCP connector regressions (2026-08-30)**
+  - Summary: Multiple Reddit posts report custom MCP connectors stopped working after a runtime upgrade; immediate operator impact: broken integrations and downtime. Evidence strength: Medium (public discussion). Actionable: stage runtime upgrades, run connector CI, and snapshot workspaces to object storage before upgrades. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+- **Claude plugin install/run failures (2026-08-30)**
+  - Summary: Bluesky posts and small threads show plugin registration/installation failures across Claude desktop/managed flows; workaround: manual re-registration and manifest backups. Evidence strength: Medium (Bluesky). Actionable: capture plugin manifests, test installs in staging. Source: https://bsky.app/profile/jarvisstudio.bsky.social/post/3mts7tnvqbh2w
+
+- **Token fragmentation (2026-08-30)**
+  - Summary: Hacker News field report of cross-account token exhaustion causing job failures; operators should add cross-provider quota monitoring and routing fallbacks. Evidence strength: Medium (HN). Source: https://news.ycombinator.com/item?id=49495398
+
+
+- 2026-08-30: Operator field note — multiple teams reported immediate workflow breakage after runtime upgrades to Claude Code (connector/plugin incompatibility). Mitigation taken: restored workspace snapshot from S3 prefix and rolled back runtime pin. Action: add connector smoke tests to CI and save workspace+manifest before upgrades.
+
+- 2026-08-30: Operator field note — gate managed-agent onboarding (Vercel/Cloudflare) with an internal checklist: (1) inspect default retention/egress; (2) run connector smoke tests in staging; (3) snapshot workspace manifest; (4) enable audit logging upstream (DB or object storage).
