@@ -487,3 +487,20 @@ Purpose: practical checklist for operators running MCP-connected agents (coding 
     4. If tests fail, abort rollout and open an incident; if pass, proceed with controlled rollout and short retention of live snapshots for rollback.
   - Rationale: connector regressions and runtime churn are producing production outages; snapshots enable fast rollback and forensic analysis.
   - Evidence: community connector regression reports and vendor runtime releases (Claude Code, Codex).
+
+
+## Containment & Incident Playbook (promoted Aug 2026)
+- Purpose: rapid operator checklist for MCP connector incidents, session leaks, and memory/credential compromise.
+- When to use: runtime upgrade failures, connector breakage, credential leaks, unexpected egress, or suspicious agent tool calls.
+
+Checklist:
+- Isolate: suspend affected agent/conductor versions; snapshot running workspaces to object storage (immutable bucket + versioning).
+- Rotate: immediate rotation of any exposed session tokens, API keys, or CLI credentials (per-connector rotation); rotate secrets that may have been persisted to repos or artifacts.
+- Audit: collect run traces, tool-call logs, and action receipts; export to a dedicated forensic S3/R2 bucket with retained metadata (time, agent-id, run-id, tool-call arguments masked where policy requires).
+- Reproduce safely: run the failing task in a staged sandbox with traffic/egress blocked to reproduce connector/upgrade failure.
+- Patch & Pin: apply vendor-recommended patches, pin conductor/runtime to a vetted version, and open a ticket to monitor vendor remediation timeline.
+- CI Safety Gate: add connector compatibility tests to pre-upgrade CI; require green on connector CI before production rollout.
+- Network/Edge: map vendor/edge detection rules (Cloudflare WriteGuard / BotBase examples) into enterprise IDS/edge policies.
+- Post-incident: run a lessons-learned review, add new secret-scan signatures (for session-like URLs), and publish mitigations to internal runbooks.
+
+Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multiple connector incidents and a high-confidence CVE affecting Copilot surfaces.

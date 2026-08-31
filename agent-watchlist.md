@@ -13,9 +13,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released Claude Code v2.1.251 (2026-08-30). Operators continue to report connector/plugin incompatibilities following recent runtime upgrades; treat upgrades as high-risk and run connector compatibility tests in staging. Evidence strength: Strong (release) + Medium (community reports).
-- follow-up: extract release-note deltas that affect containment, tool-call semantics, and storage schemas; add upgrade-time compatibility gates and workspace snapshot playbooks.
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.251
+- Recent changes: Anthropic released Claude Code v2.1.251 / Opus 5 (late Aug 2026). Operators report coherence regressions and connector/plugin incompatibilities after recent runtime upgrades; a public GitHub issue documented session-like URLs appearing in commits/PRs (session-URL leakage), increasing supply-chain risk. Treat upgrades as high-risk: run connector compatibility tests in staging, add SCM secret-scans, and require pre-upgrade workspace snapshots. Evidence strength: Strong (vendor release) + Medium-Strong (GH issue).
+- Operational advice: pin conductor/runtime versions in CI, snapshot workspaces before upgrades, add connector compatibility CI gates, and run repo secret scans on commit histories.
 - replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
@@ -143,11 +142,10 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- Category: Coding agent / cloud agent
-- Maturity: Broad enterprise adoption; Copilot sits at the IDE/CLI/cloud intersection and is central to many developer workflows.
-- Recent changes: Security exposure reported and tracked as CVE-2026-24301 (Ars Technica coverage + NVD advisory). Operators should treat Copilot-related upgrades/config changes like security patches: run egress/permission scans, enable extension signing, require workspace snapshots before enabling new plugins, and add Copilot flows to incident playbooks.
-- Evidence strength: Strong (press + NVD)
-- Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+- Category: Coding assistant / cloud agent
+- Maturity: Mainstream; high enterprise exposure across IDE, CLI, and cloud surfaces.
+- Recent changes: Canonical coverage surfaced a secret-input handling flaw (CVE-2026-24301) that enabled exploitable input/exfil paths; GitHub also published upcoming policy & billing changes that will affect entitlement and cost planning for operator fleets. Immediate actions: follow vendor advisory, rotate affected credentials, apply recommended patches, and reassess CI/IDE connector trust boundaries and billing allocation for long-running/background runs. Evidence strength: Strong (Ars Technica + NVD; GitHub changelog).
+- Operational advice: prioritize Copilot CVE mitigation plans in fleet reviews, map billing/policy changes to budget owners, and add Copilot-specific test cases to connector compatibility CI.
 - replace_section anchor: `## GitHub Copilot`
 ## GitHub Copilot
 
@@ -285,9 +283,8 @@ Status:
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)
-- Recent changes: Vercel added managed-agent flows (Claude-managed agents via Chat SDK) and continues to centralize model routing + one-command provisioning. Default retention and egress settings can expose artifacts if left unchecked; operators should validate sandbox defaults, retention, and egress policies in staging before enabling managed agents.
-- Evidence strength: Strong (vendor changelog)
-- Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk
+- Recent changes: Vercel continues to centralize model routing and one-command provisioning for coding agents; ai@7.0.85 (Aug 2026) updated SDK/CLI behavior and Vercel added new AI Gateway integrations (Muse Image, Gemini transcribe). Default retention and egress settings can expose artifacts if left unchecked; operators should validate sandbox defaults, retention, and egress policies in staging before enabling managed agents.
+- Operational advice: test Vercel Gateway onboarding flows in a staging account, audit default export/retention settings, and add object-storage snapshot hooks to incident playbooks.
 - replace_section anchor: `## Vercel AI Gateway (scr-vercel-ai-gateway)`
 ## Anthropic — Claude Code (scr-claude-code)
 

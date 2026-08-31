@@ -663,3 +663,28 @@ Operational notes
   - Storage implication: persist memory snapshots with integrity metadata (hash/signature), include write-ahead logs for safe sync, and design migration/backup paths before enabling cross-host syncing to vector stores.
   - Recommended immediate step: when adopting remem-ai or similar crates, require snapshot + manifest writes to operator-controlled object storage and validate restore paths in staging.
   - Evidence: crates.io remem-ai (Medium)
+
+
+- 2026-08-31 — S3 as multi-agent workspace (vendor doc follow-up): AWS patterns for orchestrating multi-agent AI with S3 increase the need to treat object storage ACLs, presigned URL lifetimes, lifecycle rules, and provenance metadata as core operator controls. Operators should require retention/lifecycle examples in any S3-based orchestration docs and add SCM secret-scan + object-ACL audits to upgrade playbooks. Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; Evidence strength: Medium-Strong.
+  - Watch trigger: vendor examples that include presigned/session URLs without lifecycle/short TTLs or missing ACL guidance.
+
+- 2026-08-31 — Memory-as-artifact (remem-ai follow-up): promoted memory crates (remem-ai) shift the policy surface: memory blobs must be versioned, signed, and included in backup/retention plans; operators should instrument provenance metadata for memory writes. Source: https://crates.io/crates/remem-ai ; Evidence strength: Medium.
+  - Watch trigger: official adapters for mainstream runtimes (Claude, Codex, Copilot) that persist memory via remem-ai or similar libraries.
+
+
+## Snapshot & Artifact Lifecycle (promoted Aug 2026)
+- Thesis: treat object storage (S3, R2, snapshot stores) as the canonical artifact plane for agent runs: snapshots, logs, action receipts, and forensics.
+
+Minimal lifecycle template:
+- Ingest: on agent run start, create a run-id and pre-run snapshot (workspace tarball, pinned runtime version, connector list) saved to an encrypted, versioned object store.
+- Emit: each tool-call and run-trace appends a small JSON record to the run-id prefix (Parquet/JSONL), capturing agent decisions and tool arguments (with policy masking for secrets).
+- Lock: for critical incidents, apply an immutable retention hold on the run prefix for the incident window (legal/forensic hold).
+- Rotate keys: ensure server-side encryption keys and per-bucket ACLs; map memory namespaces to bucket prefixes and use AgentCore memory ACLs when available (AWS Bedrock AgentCore example).
+- Retention & deletion: define short and long retention tiers (hot: 30d; warm: 180d; cold: 3y) and automate lifecycle transitions; ensure deletion requires dual-approval where required by policy.
+
+Operational implications:
+- Recovery: pre-upgrade snapshots enable rollbacks when connector regressions are observed.
+- Forensics: object-store records + run traces provide a replayable trail for incident analysis.
+- Governance: map object-store lifecycle policies to procurement and vendor onboarding requirements; enforce encryption-at-rest and per-namespace ACLs when vendors provide memory ACL primitives (e.g., AWS Bedrock AgentCore).
+
+References: promoted from monthly (Aug 2026) after increased operator use of S3-backed orchestration patterns and vendor memory controls.

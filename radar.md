@@ -3,7 +3,6 @@
 Last updated: 2026-07-09
 
 ## Current Thesis
-
 1. AI Agents are moving from chat and IDE autocomplete toward task-based execution.
 2. Coding agents are becoming the first high-frequency adoption path.
 3. Cloud sandbox, persistent workspace, tool calling, memory, and evaluation are becoming core infrastructure.
@@ -11,10 +10,9 @@ Last updated: 2026-07-09
 5. Object storage may become an important layer for agent workspace, snapshots, artifacts, logs, knowledge bases, and replayable execution history.
 6. Agent meta-harnesses and cross-runtime orchestration are emerging as a response to fragmentation across Claude Code, Codex, Cursor, and other coding agents.
 7. Agent memory, knowledge bases, and the broader MCP server ecosystem are converging into one agent-integration layer (memory lifecycle/time-travel debugging, KB access such as Obsidian vaults, web/observability/governance servers), with an unresolved standardization-vs-fragmentation tension.
-8. Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
-9. Agent containment and security (blast-radius isolation, sandbox/worktree boundaries, tool scoping, supply-chain hardening) are becoming first-class agent infrastructure, driven by first-party engineering practice and real agent CVEs.
+8. Major platform vendors (Cloudflare, Vercel, AWS, GitHub and others) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption. Confidence Δ: ↑ this month as platform onboarding/managed sandboxes and export/retention defaults became operational levers.
+9. Agent containment and security (blast-radius isolation, sandbox/worktree boundaries, tool scoping, supply-chain hardening) are becoming first-class agent infrastructure, driven by first-party engineering practice, network/edge detection primitives, and real agent CVEs/bugs. Confidence Δ: ↑ (August incidents & vendor primitives strengthened this thesis).
 10. Agent cost economics (model pricing pressure, token budgets, quota windows) increasingly shape agent adoption and tool choice; operators route work across tools by remaining quota rather than committing to one.
-
 ## Changed Thesis
 ### 2026-07-12
 - Added signal: Vercel Agent Eval Playground (npm package) enters agent evaluation space, signaling platform-vendor interest in eval infrastructure. Evidence: official Vercel npm package. Confidence: Medium.

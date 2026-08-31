@@ -3623,3 +3623,49 @@ Notes:
 Notes:
 - Promotions limited to 3 candidates this run per Promote-candidates gate.
 - Follow-ups: for each promoted item, validate adapter/SDK integration (BotBase export hooks, Copilot cost/feature matrices, remem-ai adapters for mainstream runtimes) and add integration test targets to the corroboration queue.
+
+
+- **Anthropic — Claude session-URL leakage (scr-1a2b3c4d)**: Public GitHub issue documents session-like URLs appearing in commits/PRs. Why it matters: SCM-based secret exposure increases supply-chain blast radius for agent sessions and connectors. Evidence strength: Medium-Strong (GitHub issue). Relevance score: 9. Defer reason: vendor follow-up / remediation notes pending. Follow-up needed: capture vendor response, list affected runtime versions, add SCM secret-scan rules. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 30. Source: https://github.com/anthropics/claude-code/issues/66504
+
+
+- **Microsoft Copilot secret-input flaw (CVE-2026-24301)** (scr-2b3c4d5e): Why it matters: a Copilot secret-input handling flaw enabled exfiltration/attack paths in enterprise workflows; affects operator risk and CI/IDE integrations. Evidence strength: Strong (Ars Technica writeup; NVD entry). Relevance score: 10. Defer reason: vendor mitigation/patch cadence and guidance pending. Follow-up needed: capture MS advisory, affected Copilot versions, and recommended mitigations for agent connectors. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 30.
+  - Source: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- **US court rules Pentagon blacklisting of Anthropic unlawful** (scr-3c4d5e6f): Why it matters: legal/procurement reversal shifts enterprise risk calculus and vendor-decision timelines for Anthropic products (procurement, enterprise gating). Evidence strength: Strong (mainstream press coverage). Relevance score: 8. Defer reason: secondary vendor/contract impacts need mapping. Follow-up needed: collect vendor statements, procurement guidance changes, and any immediate product reinstatements. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://www.theguardian.com/technology/2026/aug/28/us-court-rules-pentagon-anthropic-ban-illegal-trump-claude-ai
+
+- **vercel/ai @ ai@7.0.85 (release)** (scr-2b3c4d): Why it matters: SDK/CLI release that can change agent integration and deployment flows (breaking or new features for agent deployment). Evidence strength: Strong (GitHub release). Relevance score: 8. Defer reason: release impact depends on breaking changes and operator migration notes. Follow-up needed: extract changelog highlights, test compatibility with common agent stacks, and note any new defaults affecting retention/egress. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 30.
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.85
+
+- **Running coding agents in parallel with git worktrees** (scr-4d5e6f7a): Why it matters: concrete operator trick to run multiple agent workflows per repo (parallel worktrees reduce merge/branch conflicts for agent runs). Evidence strength: Medium (operator post / how-to). Relevance score: 6. Defer reason: social/operator tactic — needs additional field reports to assess scale & tooling. Follow-up needed: collect example commands, failure modes, and whether major agent frameworks support per-worktree state. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+  - Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i
+
+- **agent-security-scanner-mcp (npm)** (scr-5e6f7a8b): Why it matters: MCP pre-flight scanner that flags prompt-injection, hallucinated packages, and embedded secrets before agent runs — useful operator primitive for safe deployment. Evidence strength: Medium (npm listing). Relevance score: 7. Defer reason: repo/package-only evidence; needs integration tests and independent user reports. Follow-up needed: run scanner on canonical agent prompts, validate detection coverage, and request integration examples for popular MCP clients. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://www.npmjs.com/package/agent-security-scanner-mcp
+
+- **AWS Bedrock: AgentCore Memory — fine-grained ACLs & namespaces** (scr-e5f6a7b8): Why it matters: vendor memory controls materially change how operators partition and secure agent memory — affects governance and multi-tenant MCP designs. Evidence strength: Strong (AWS whats-new). Relevance score: 8. Defer reason: documentation/SDK examples required to map to existing memory adapters. Follow-up needed: extract API/ACL semantics, test namespace isolation, and add to memory-correspondence matrix for operator guidance. candidate_seen_at: 2026-08-31, last_checked_at: 2026-08-31, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control
+
+- Coverage note: Anthropic session-URL leakage (scr-1a2b3c4d) is already in the Candidate inbox (seen 2026-08-31); no duplicate appended. See existing entry in research-log.md.
+
+
+## 2026-08-31 Monthly sweep (aggregated W31–W36)
+- **Anthropic — session-URL leakage (scr-1a2b3c4d)**: public GH issue reports session-like URLs left in commits/PRs. Why it matters: SCM-based session leakage increases supply-chain blast radius for agent sessions and connectors; requires repo secret-scan & rotation playbook. Evidence strength: Medium-Strong (GitHub issue). promotion_status: candidate_follow-up; candidate_seen_at: 2026-08-31; last_checked_at: 2026-08-31. Source: https://github.com/anthropics/claude-code/issues/66504
+
+- **Microsoft Copilot secret-input flaw (CVE-2026-24301)**: coverage + canonical NVD entry found. Why it matters: secret‑input handling allowed exfiltration/attack paths in Copilot surfaces; immediate mitigation required for enterprise CI/IDE usage. Evidence strength: Strong. promotion_status: candidate_follow-up; candidate_seen_at: 2026-08-31; last_checked_at: 2026-08-31. Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- **US court ruling on Anthropic procurement** (scr-3c4d5e6f): The Guardian report signals procurement/legal tailwinds for Anthropic. Why it matters: procurement changes alter enterprise vendor calculus and risk assessments. Evidence strength: Strong. promotion_status: candidate; candidate_seen_at: 2026-08-31; last_checked_at: 2026-08-31. Source: https://www.theguardian.com/technology/2026/aug/28/us-court-rules-pentagon-anthropic-ban-illegal-trump-claude-ai
+
+- **Vercel ai@7.0.85 release (scr-2b3c4d)**: SDK/CLI release relevant to agent deployment flows. Why it matters: agent integration and default behaviors may change; operators should review changelog and test. Evidence strength: Strong. promotion_status: candidate_follow-up; candidate_seen_at: 2026-08-31; last_checked_at: 2026-08-31. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.85
+
+- **AWS Bedrock: AgentCore Memory (scr-e5f6a7b8)**: fine-grained ACLs & namespaces for agent memory. Why it matters: vendor memory controls change governance and multi-tenant memory designs; immediate work: map API to existing memory adapters. Evidence strength: Strong. promotion_status: candidate-follow-up; candidate_seen_at: 2026-08-31; last_checked_at: 2026-08-31. Source: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control
+
+- **Operator trick: running coding agents in parallel with git worktrees (scr-4d5e6f7a)**: practical operator tactic reducing merge conflicts across agent runs. Evidence strength: Medium (dev.to how-to). promotion_status: deferred; follow-up: collect example commands and failure modes. Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i
+
+- **agent-security-scanner-mcp (scr-5e6f7a8b)**: npm pre-flight scanner for MCP agents (prompt-injection, secrets). Evidence strength: Medium (npm). promotion_status: candidate; follow-up: integrate into canonical pre-run CI tests. Source: https://www.npmjs.com/package/agent-security-scanner-mcp
+
+- Promotions / follow-ups this pass:
+  - Promoted playbook candidates -> containment & incident playbook (appended to playbook.md); snapshot & artifact lifecycle (appended to storage-angle.md).
+  - Corroboration queue: collect Anthropic remediation notes for session-URL leak, Microsoft advisory for Copilot CVE, Cloudflare detection rule examples.
+
+- Coverage note: deduplication applied against existing candidate entries; refer to prior inbox entries for remem-ai, BotBase, and Copilot policy changes already tracked earlier in August.

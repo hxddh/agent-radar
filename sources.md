@@ -1756,3 +1756,35 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product] Anthropic — Model Hardware Standard (MHS) research preview. Evidence strength: Strong. Source: https://www.anthropic.com/news/model-hardware-standard-research-preview
 - [mainstream_product] Cloudflare — agents@0.22.0 release (voice packages). Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
 - [mainstream_product] Vercel — Run Claude Managed Agents with Chat SDK (changelog). Evidence strength: Strong. Source: https://vercel.com/changelog/claude-managed-agents-with-chat-sdk
+
+
+### Added (2026-08-31)
+- [mainstream_product / security] Microsoft Copilot secret-input flaw (CVE-2026-24301). Evidence strength: Strong (Ars Technica + NVD). Source: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- [mainstream_product / legal] US court ruling: Pentagon blacklisting of Anthropic declared unlawful. Evidence strength: Strong (press coverage). Source: https://www.theguardian.com/technology/2026/aug/28/us-court-rules-pentagon-anthropic-ban-illegal-trump-claude-ai
+
+- [mainstream_product / release] Vercel — ai@7.0.85 release (SDK/CLI). Evidence strength: Strong (GitHub release). Source: https://github.com/vercel/ai/releases/tag/ai%407.0.85
+
+- [user_workflow / discussion] Running coding agents in parallel using git worktrees (operator trick). Evidence strength: Medium (dev.to operator post). Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i
+
+- [infra_primitive / security] agent-security-scanner-mcp (npm) — MCP pre-flight scanner for prompt-injection/secret checks. Evidence strength: Medium. Source: https://www.npmjs.com/package/agent-security-scanner-mcp
+
+- [infra_primitive / memory] AWS Bedrock: AgentCore Memory — fine-grained ACLs & flexible namespaces (Agent memory controls). Evidence strength: Strong (AWS whats-new). Source: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control
+
+
+### Added (2026-08-31 monthly sweep)
+- [mainstream_product / security] Microsoft Copilot secret-input flaw (Ars Technica + NVD CVE-2026-24301). Evidence strength: Strong. Sources: https://arstechnica.com/security/2026/08/microsoft-copilot-reveals-secret-input-that-allowed-it-to-be-hacked/ ; https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+
+- [mainstream_product] Anthropic — Claude Opus 5 (news) and "Scaling Managed Agents" (engineering post). Evidence strength: Strong. Sources: https://www.anthropic.com/news/claude-opus-5 ; https://www.anthropic.com/engineering/managed-agents
+
+- [mainstream_product / legal] US court ruling: Pentagon blacklisting of Anthropic declared unlawful (press coverage). Evidence strength: Strong. Source: https://www.theguardian.com/technology/2026/aug/28/us-court-rules-pentagon-anthropic-ban-illegal-trump-claude-ai
+
+- [mainstream_product / release] Vercel — ai@7.0.85 (release) & AI Gateway changelog entries. Evidence strength: Strong. Sources: https://github.com/vercel/ai/releases/tag/ai%407.0.85 ; https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway ; https://vercel.com/changelog/muse-image-now-available-on-ai-gateway
+
+- [platform / infra] Cloudflare — MCP security updates & BotBase for Operators. Evidence strength: Strong. Sources: https://blog.cloudflare.com/mcp-security-updates/ ; https://blog.cloudflare.com/botbase-for-operators/
+
+- [infra_primitive / memory] AWS Bedrock: AgentCore Memory adds fine-grained ACLs & flexible namespaces. Evidence strength: Strong. Source: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control
+
+- [user_workflow / discussion] Running coding agents in parallel with git worktrees (operator trick). Evidence strength: Medium. Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i
+
+- [infra_primitive] agent-security-scanner-mcp (npm). Evidence strength: Medium. Source: https://www.npmjs.com/package/agent-security-scanner-mcp

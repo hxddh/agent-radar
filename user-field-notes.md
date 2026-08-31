@@ -486,3 +486,6 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - 2026-08-30: Operator field note — multiple teams reported immediate workflow breakage after runtime upgrades to Claude Code (connector/plugin incompatibility). Mitigation taken: restored workspace snapshot from S3 prefix and rolled back runtime pin. Action: add connector smoke tests to CI and save workspace+manifest before upgrades.
 
 - 2026-08-30: Operator field note — gate managed-agent onboarding (Vercel/Cloudflare) with an internal checklist: (1) inspect default retention/egress; (2) run connector smoke tests in staging; (3) snapshot workspace manifest; (4) enable audit logging upstream (DB or object storage).
+
+
+- 2026-08-31 — MCP connector regressions (community reports): Multiple integrations reported that custom MCP connectors stopped working after recent runtime upgrades. Practical mitigation recommended by operators: snapshot connector configuration and secrets, pin connector versions, and run connector-compat smoke tests in staging before production upgrades. Evidence strength: Medium (Reddit thread). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
