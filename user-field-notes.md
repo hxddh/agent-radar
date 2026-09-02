@@ -489,3 +489,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 
 
 - 2026-08-31 — MCP connector regressions (community reports): Multiple integrations reported that custom MCP connectors stopped working after recent runtime upgrades. Practical mitigation recommended by operators: snapshot connector configuration and secrets, pin connector versions, and run connector-compat smoke tests in staging before production upgrades. Evidence strength: Medium (Reddit thread). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+
+- **Mid-run network revocation (operator test)**: measured ~127 ms cutover in an operator writeup when revoking outbound access from a running coding agent. Why it matters: practical containment primitive for long-running agents; evidence strength: Medium; follow-up: include kill-switch latency checks in staging incident playbooks and pair with workspace snapshot/rollback tests. Source: https://medium.com/data-science-collective/your-coding-agent-has-your-aws-keys-and-an-open-internet-connection-b4f3f7dfc15f
+
+- **Credential-fetch-as-read containment heuristic**: operator guidance proposing that credential fetches be treated as privileged reads in write-target sandboxes to avoid implicit escalation. Why it matters: clarifies sandbox policy semantics and reduces exfil risk; evidence strength: Medium; follow-up: codify in sandbox policy and add tests that separate fetch vs use. Source: https://dev.to/pm25coder/a-credential-fetch-is-a-read-the-containment-guard-your-write-target-sandbox-was-missing-329m
+
+- **Connector compatibility drift (follow-up)**: community reports that custom MCP connectors broke after runtime upgrades (Freshness: follow-up; previously tracked 2026-08-31). Why it matters: upgrade-time contract changes lead to production outages; evidence strength: Medium; follow-up: require connector CI against staged runtime and snapshot artifacts pre-upgrade. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

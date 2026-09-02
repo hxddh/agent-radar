@@ -3669,3 +3669,13 @@ Notes:
   - Corroboration queue: collect Anthropic remediation notes for session-URL leak, Microsoft advisory for Copilot CVE, Cloudflare detection rule examples.
 
 - Coverage note: deduplication applied against existing candidate entries; refer to prior inbox entries for remem-ai, BotBase, and Copilot policy changes already tracked earlier in August.
+
+
+- **Vercel ai@7.0.90 (scr-2b3c4d5e follow-up)**: why it matters: SDK/CLI defaults can change managed-agent provisioning and retention/egress behavior; evidence strength: Strong; promotion_status: candidate_follow-up; follow-up: extract changelog breaking notes and test AI Gateway/managed agent defaults in staging. candidate_seen_at: 2026-09-02; last_checked_at: 2026-09-02; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.90
+
+- **Langfuse v4.27.0 (scr-ac14d5e6 follow-up)**: why it matters: telemetry/observability updates that improve agent evaluation and incident forensics; evidence strength: High; promotion_status: candidate; follow-up: plan Langfuse integration for agent CI and telemetry correlation. candidate_seen_at: 2026-09-02; last_checked_at: 2026-09-02; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/langfuse/langfuse/releases/tag/v4.27.0
+
+- **marm-mcp-server 2.46.2 (scr-9b03c4d5 follow-up)**: why it matters: local-first MCP memory server for privacy-first agent setups; evidence strength: Medium; promotion_status: candidate; follow-up: test compatibility with common MCP clients and document isolation/backup semantics. candidate_seen_at: 2026-09-02; last_checked_at: 2026-09-02; defer_count: 0; stale_after_days: 30.
+  - Source: https://pypi.org/project/marm-mcp-server/2.46.2/

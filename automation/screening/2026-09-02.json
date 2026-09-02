@@ -1,0 +1,246 @@
+{
+  "summary": "Daily agent/AI-ops screening: vendor releases (Copilot/Claude, Vercel, Gemini), Cloudflare infra updates, Anthropic MHS preview, plus operator signals on sandboxing, credential reads, and MCP/memory tooling.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Claude Fable 5.1 generally available in GitHub Copilot",
+      "why_it_matters": "New Claude model in Copilot affects coding-agent behavior and review flows.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor community feedback and Copilot regression reports"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Vercel ai@7.0.90 release (multiple ai package updates)",
+      "why_it_matters": "Vercel platform updates change developer/agent integration primitives.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.90",
+        "https://github.com/vercel/ai/releases/tag/ai%406.0.275",
+        "https://github.com/vercel/ai/releases/tag/ai%405.0.251"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "scan changelogs for breaking API changes and sample agent integrations"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Google Gemini CLI preview/nightly releases",
+      "why_it_matters": "Gemini CLI updates affect agent dev tooling and provider integrations.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.59.0-preview.0",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.59.0-nightly.20260902.g4963a4456"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "verify stable changelog and doc changes in Google Gemini docs"
+    },
+    {
+      "id": "scr-4d5e6f70",
+      "title": "Anthropic previews Model Hardware Standard (MHS) research",
+      "why_it_matters": "MHS spec targets safe agent operation of physical devices.",
+      "evidence": [
+        "https://www.anthropic.com/news/model-hardware-standard-research-preview"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "track community adoption and reference implementations"
+    },
+    {
+      "id": "scr-5e6f7081",
+      "title": "Cloudflare: Zstandard + Pingora cache-transcoding to save petabytes",
+      "why_it_matters": "Storage/transcoding technique reduces cache footprint for large-scale AI workloads.",
+      "evidence": [
+        "https://blog.cloudflare.com/cache-transcoding/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "assess operator impact for edge caching of model artifacts"
+    },
+    {
+      "id": "scr-6f708192",
+      "title": "Cutting an AI agent's network access mid-run (measured 127 ms)",
+      "why_it_matters": "Shows a concrete technique to revoke network access mid-run for agent containment.",
+      "evidence": [
+        "https://medium.com/data-science-collective/your-coding-agent-has-your-aws-keys-and-an-open-internet-connection-b4f3f7dfc15f",
+        "https://news.ycombinator.com/item?id=49509184"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security|runtime",
+      "promotion_status": "candidate",
+      "next_check": "validate measurements in own sandbox and note toolchain used",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-7f8192a3",
+      "title": "A credential fetch is a read — containment guard for write-target sandboxes",
+      "why_it_matters": "Operator-level guard: treat credential fetches as reads to prevent sandbox escapes.",
+      "evidence": [
+        "https://dev.to/pm25coder/a-credential-fetch-is-a-read-the-containment-guard-your-write-target-sandbox-was-missing-329m"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security|sandbox",
+      "promotion_status": "candidate",
+      "next_check": "collect examples of integrations (Podman, container runtimes) and mitigations",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-8a92b3c4",
+      "title": "Show HN: Decispher — persistent engineering context/memory for coding agents",
+      "why_it_matters": "Persistent memory for co\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49509142"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "seek repo/docs or demos to corroborate claims",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-9b03c4d5",
+      "title": "marm-mcp-server (PyPI) — local-first MCP + memory server",
+      "why_it_matters": "Enables zero-cloud, privacy-first MCP memory for multi-agent swarms on-device.",
+      "evidence": [
+        "https://pypi.org/project/marm-mcp-server/2.46.2/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp|memory",
+      "promotion_status": "candidate",
+      "next_check": "check GitHub repo and adoption examples for production readiness"
+    },
+    {
+      "id": "scr-ac14d5e6",
+      "title": "Langfuse v4.27.0 release — observability/telemetry updates",
+      "why_it_matters": "Langfuse update improves agent evaluation and telemetry tooling.",
+      "evidence": [
+        "https://github.com/langfuse/langfuse/releases/tag/v4.27.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "review changelog for new agent-centric hooks and SDKs",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-bd25e6f7",
+      "title": "Omnigent open-source meta-harness for multi-agent orchestration",
+      "why_it_matters": "Orchestrator that enforces policies, sandboxing and multi-agent swaps for operators.",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime|security|deployment",
+      "promotion_status": "candidate",
+      "next_check": "look for independent user reports or integrations",
+      "risk_flags": [
+        "single-repo-source"
+      ],
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-ce36f708",
+      "title": "vinkius-labs/mcp-database — open MCP server metadata index",
+      "why_it_matters": "Potentially useful open dataset for MCP server discovery and integration metadata.",
+      "evidence": [
+        "https://github.com/vinkius-labs/mcp-database"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "needs second independent source (blog, adoption) to promote",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-df47g819",
+      "title": "Cloudflare BotBase for Operators — clearer path to Cloudflare bots directory",
+      "why_it_matters": "Operator onboarding path to Cloudflare bot marketplace affects deployment reach.",
+      "evidence": [
+        "https://blog.cloudflare.com/botbase-for-operators/"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment|security",
+      "promotion_status": "candidate",
+      "next_check": "track directory entries and operator guides",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-e058h92a",
+      "title": "OpenAI blog: AI-native company workflows (index items flagged)",
+      "why_it_matters": "OpenAI guidance on embedding AI in company workflows may shape vendor/operator patterns.",
+      "evidence": [
+        "https://openai.com/index/ai-native-company-workflows"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "parse blog details for concrete infra recommendations",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky (collector returned 403)",
+    "Missing reddit coverage due to reddit-rss 429 errors",
+    "Missing mainstream_product: Microsoft vendor changelog/agent guidance"
+  ]
+}

@@ -504,3 +504,11 @@ Checklist:
 - Post-incident: run a lessons-learned review, add new secret-scan signatures (for session-like URLs), and publish mitigations to internal runbooks.
 
 Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multiple connector incidents and a high-confidence CVE affecting Copilot surfaces.
+
+
+- **Pre-upgrade connector compatibility & snapshot playbook**
+  - When useful: before rolling runtime/model updates (e.g., Copilot/Claude runtime/model swaps, Vercel SDK upgrades)
+  - Steps: 1) Run connector CI against a staging runtime that mirrors prod; 2) Create a full workspace & MCP connector snapshot (artifacts + metadata + memory state); 3) Run smoke tests exercising tool-calls and credential flows; 4) If failures occur, rollback using the snapshot and pin connector/runtime versions; 5) Log incompatibilities in a compatibility matrix.
+  - Evidence: community connector breakages after runtime upgrades (Freshness: follow-up) and vendor changelogs noting model exposures.
+  - Should promote to playbook? yes
+  - Source: community reports; Copilot changelog; Vercel release notes.

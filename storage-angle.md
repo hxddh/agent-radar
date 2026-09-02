@@ -688,3 +688,20 @@ Operational implications:
 - Governance: map object-store lifecycle policies to procurement and vendor onboarding requirements; enforce encryption-at-rest and per-namespace ACLs when vendors provide memory ACL primitives (e.g., AWS Bedrock AgentCore).
 
 References: promoted from monthly (Aug 2026) after increased operator use of S3-backed orchestration patterns and vendor memory controls.
+
+
+- **Edge cache-transcoding reduces cache footprint but complicates replay/forensics**
+  - Related to: Cloudflare cache-transcoding (Zstd + Pingora) for large artifacts.
+  - Storage implication: transcodes reduce edge storage but may discard fidelity needed for exact run replay; operators should keep canonical archives for forensics and compliance.
+  - Source class: vendor blog
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/cache-transcoding/
+  - Watch trigger: vendor guidance or API for preserving original artifacts alongside transcodes; or unexpected replay mismatches when comparing archived vs live outputs.
+
+- **Platform default retention/egress changes can silently move artifacts**
+  - Related to: Vercel ai@7.0.90 SDK/CLI updates and managed-agent provisioning defaults.
+  - Storage implication: default retention windows or new export paths may increase retention costs or violate compliance unless explicitly configured.
+  - Source class: GitHub release / vendor docs
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.90
+  - Watch trigger: changelog entries that explicitly change default retention/egress configuration values or new CLI flags that alter artifact export behavior.

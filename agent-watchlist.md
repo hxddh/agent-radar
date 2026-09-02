@@ -142,11 +142,12 @@ Status:
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- Category: Coding assistant / cloud agent
-- Maturity: Mainstream; high enterprise exposure across IDE, CLI, and cloud surfaces.
-- Recent changes: Canonical coverage surfaced a secret-input handling flaw (CVE-2026-24301) that enabled exploitable input/exfil paths; GitHub also published upcoming policy & billing changes that will affect entitlement and cost planning for operator fleets. Immediate actions: follow vendor advisory, rotate affected credentials, apply recommended patches, and reassess CI/IDE connector trust boundaries and billing allocation for long-running/background runs. Evidence strength: Strong (Ars Technica + NVD; GitHub changelog).
-- Operational advice: prioritize Copilot CVE mitigation plans in fleet reviews, map billing/policy changes to budget owners, and add Copilot-specific test cases to connector compatibility CI.
-- replace_section anchor: `## GitHub Copilot`
+- Category: Coding agent / task agent
+- Maturity: Strong adoption signal across IDE and cloud surfaces.
+- Recent changes: GitHub announced Claude Fable 5.1 generally available inside GitHub Copilot (2026-09-01). Operational impact: model behavior changes can affect tool-calls, connector contracts, and suggestion patterns; operators should validate Copilot-powered CI/automation and connector compatibility in staging before rolling to prod.
+- Immediate actions: run connector compatibility tests, pin connector versions in CI, and add pre-upgrade workspace snapshots for quick rollback.
+- Evidence strength: Strong (official GitHub changelog)
+- Source: https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).
