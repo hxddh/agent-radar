@@ -1788,3 +1788,16 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / discussion] Running coding agents in parallel with git worktrees (operator trick). Evidence strength: Medium. Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i
 
 - [infra_primitive] agent-security-scanner-mcp (npm). Evidence strength: Medium. Source: https://www.npmjs.com/package/agent-security-scanner-mcp
+
+
+### Added (2026-09-03)
+- [mainstream_product] Anthropic — Claude Fable 5.1 system card. Evidence strength: Strong. Source: https://www.anthropic.com/document/claude-fable-5-1-system-card
+- [mainstream_product] JetBrains — TeamCity 2026.2: Pipelines GA, BYOK for AI Assistant. Evidence strength: Strong. Source: https://blog.jetbrains.com/teamcity/2026/09/teamcity-20262/
+- [mainstream_product] mastra-ai/mastra — meta-orchestrator for cross-agent workflows. Evidence strength: Strong (GitHub repo). Source: https://github.com/mastra-ai/mastra
+- [mainstream_product] Google — Gemini agentic video: reduced token usage for video-capable agents. Evidence strength: Strong. Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-agentic-video-in-gemini/
+- [mainstream_product] omnigent-ai/omnigent — open meta-harness to orchestrate many coding agents with policy/sandboxing. Evidence strength: Strong (GitHub repo). Source: https://github.com/omnigent-ai/omnigent
+- [mainstream_product / infra] New Relic — @newrelic/browser-agent (npm): browser telemetry/agent observability. Evidence strength: Medium-High. Source: https://www.npmjs.com/package/%40newrelic/browser-agent
+- [mainstream_product / security-report] Claude Code stores OAuth tokens in plaintext (investigation blog). Evidence strength: Medium. Source: https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
+- [mainstream_product / distribution] openai.chatgpt (VS Code) extension distribution (open-vsx listing). Evidence strength: Strong (public distribution). Source: https://open-vsx.org/extension/openai/chatgpt
+- [mainstream_product / memory] mem0ai/mem0 SDK releases (v2.x). Evidence strength: Strong (GitHub release). Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.20
+- [user_workflow / discussion] Are Supabase docs agent-friendly? (practical retrieval report). Evidence strength: Medium-High (practical blog). Source: https://supabase.com/blog/are-supabase-docs-agent-friendly

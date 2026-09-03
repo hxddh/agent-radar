@@ -705,3 +705,18 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Strong
   - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.90
   - Watch trigger: changelog entries that explicitly change default retention/egress configuration values or new CLI flags that alter artifact export behavior.
+
+
+- **S3 Files as orchestration primitive**
+  - What it is: Durable file/object layer used as the handoff and artifact sink between agents (manifests, receipts, logs, snapshots).
+  - Why it matters: Durable, low-cost orchestration increases reproducibility and forensic traceability for multi-agent runs; retention and lifecycle policies become governance levers.
+  - Evidence strength: Strong (AWS blog)
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+  - Watch trigger: Multiple production OSS projects or vendors documenting S3-first agent choreography patterns.
+
+- **MCP sync and connector schema versioning implications**
+  - What it is: Amazon Quick adding MCP sync/tool-settings reduces connector drift but creates a need to snapshot schema versions and migration logs.
+  - Why it matters: Without versioned migrations, MCP sync can mask breaking schema changes; operators must snapshot and retain migration logs for rollback and audit.
+  - Evidence strength: Strong (AWS whats-new)
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-quick-adds-tool-settings-mcp-sync/
+  - Watch trigger: A connector regression traced to an unversioned MCP-sync migration.

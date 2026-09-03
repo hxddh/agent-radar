@@ -512,3 +512,11 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Evidence: community connector breakages after runtime upgrades (Freshness: follow-up) and vendor changelogs noting model exposures.
   - Should promote to playbook? yes
   - Source: community reports; Copilot changelog; Vercel release notes.
+
+
+- **Pre-upgrade connector compatibility test harness**
+  - When useful: Before runtime/conductor upgrades that touch MCP/connector formats or session URL semantics.
+  - Evidence: Multiple connector regressions reported in community threads; TeamCity + BYOK pipelines provide a natural place to gate upgrades.
+  - Steps (candidate playbook): 1) snapshot current workspace & connector configs; 2) run a matrix of connector CI tests against staging runtime; 3) validate MCP sync/migrations (if present); 4) run secret-scan & prompt-injection preflight; 5) approve via audited pipeline with BYOK-protected keys; 6) roll forward/rollback plan.
+  - Should promote to playbook? yes
+  - Source: Reddit connector thread; JetBrains TeamCity 2026.2 (BYOK) guidance; community operator posts.

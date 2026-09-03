@@ -3679,3 +3679,40 @@ Notes:
 
 - **marm-mcp-server 2.46.2 (scr-9b03c4d5 follow-up)**: why it matters: local-first MCP memory server for privacy-first agent setups; evidence strength: Medium; promotion_status: candidate; follow-up: test compatibility with common MCP clients and document isolation/backup semantics. candidate_seen_at: 2026-09-02; last_checked_at: 2026-09-02; defer_count: 0; stale_after_days: 30.
   - Source: https://pypi.org/project/marm-mcp-server/2.46.2/
+
+
+- **Anthropic — Claude Fable 5.1 system card** (scr-a1b2c3d4-followup): vendor system card released; matters for eval baselines and safe deploy; evidence strength: Strong; promotion_status: candidate_follow-up; candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.anthropic.com/document/claude-fable-5-1-system-card
+
+- **JetBrains TeamCity 2026.2 (Pipelines GA, BYOK)** (scr-e5f6g7h8-followup): enterprise CI features for AI Assistant; evidence strength: Strong; relevance: high for operator workflows and key control; candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; promotion_status: candidate_follow-up; defer_count: 0; stale_after_days: 30.
+  - Source: https://blog.jetbrains.com/teamcity/2026/09/teamcity-20262/
+
+- **mastra-ai/mastra** (scr-3c4d5e6f-followup): meta-orchestrator repo flagged MUST in screening; matters for cross-agent orchestration and policy enforcement; evidence strength: Strong (repo); promotion_status: candidate-follow-up; candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/mastra-ai/mastra
+
+- **Google Gemini agentic video** (scr-5e6f7a8b-followup): cost-reduction for video agent tasks; evidence strength: Strong; candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; promotion_status: candidate_follow-up; defer_count: 0; stale_after_days: 30.
+  - Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-agentic-video-in-gemini/
+
+- **omnigent-ai/omnigent** (scr-4d5e6f70-followup): open meta-harness continuing to mature; evidence strength: Strong (repo); candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; promotion_status: candidate_follow-up; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/omnigent-ai/omnigent
+
+- **kubernetes-sigs/agent-sandbox** (scr-1a2b3c4d): sandbox runtime for isolated agent workloads; evidence strength: High; candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/kubernetes-sigs/agent-sandbox
+
+- **AWS S3 Files orchestration / Amazon Quick MCP sync** (scr-3c4d5e6f-aws): using S3 Files as durable coordination + MCP sync added; evidence strength: Strong; candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Sources: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/ ; https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-quick-adds-tool-settings-mcp-sync/
+
+
+- **2026-09-03 Source-sweep pass**: verified MUST mainstream candidates flagged in screening (Anthropic Claude Fable 5.1; JetBrains TeamCity 2026.2; mastra-ai/mastra; Google Gemini agentic video; omnigent-ai/omnigent). All five are already present in the Candidate inbox / monthly sweep entries (no promotions during source-sweep). candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; promotion_status: sweep-checked; defer_count: 0; stale_after_days: 30.
+
+- **@newrelic/browser-agent** (scr-c4d5e6f7): New Relic browser agent (npm). Why it matters: vendor browser telemetry/observability for web UIs and in-browser agents — impacts telemetry, privacy, and agent UX instrumentation. Evidence strength: Medium-High (npm listing & vendor pages). Relevance score: 7. Defer reason: Needs integration examples with common agent frameworks and privacy/telemetry configs. Follow-up needed: collect changelog, inspect default telemetry hooks, test with popular in-browser agent demos. candidate_seen_at: 2026-09-03, last_checked_at: 2026-09-03, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+
+- **Claude Code stores OAuth tokens in plaintext** (scr-b4c3d2e1): Third-party blog report describing OAuth token storage in plaintext for Claude Code. Why it matters: direct secret-management and agent runtime risk for deployments using Claude Code; potential immediate mitigation for operators (rotate tokens, audit storage). Evidence strength: Medium (security write-up; requires vendor confirmation). Relevance score: 9. Defer reason: Needs vendor advisory / corroborating reports (GitHub issue, vendor response, CVE/NVD). Follow-up needed: search for Anthropic response, file/track a corroborating GH issue or vendor advisory; recommend short-term operator guidance (rotate tokens, audit extensions). candidate_seen_at: 2026-09-03, last_checked_at: 2026-09-03, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 14.
+
+- **openai.chatgpt (VS Code) extension distribution** (scr-9f1a2b3c): OpenAI ChatGPT extension listing on Open VSX. Why it matters: wide VS Code distribution affects editor-based agent deployment surface and potential enterprise distribution controls. Evidence strength: Strong (public marketplace listing). Relevance score: 8. Defer reason: Distribution alone; need telemetry/usage metrics and changelog deltas. Follow-up needed: snapshot extension versioning and release notes, test on policy/enterprise extension controls. candidate_seen_at: 2026-09-03, last_checked_at: 2026-09-03, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+
+- **mem0ai/mem0 SDK releases (v2.0.20)** (scr-6f708192): mem0 memory SDK updates (Python & Node). Why it matters: memory primitive improvements change agent memory semantics and operational integration (namespaces, ACLs). Evidence strength: Strong (GitHub release). Relevance score: 7. Defer reason: Needs integration notes and migration guidance. Follow-up needed: review changelog for breaking API changes, test memory adapters. candidate_seen_at: 2026-09-03, last_checked_at: 2026-09-03, promotion_status: candidate, defer_count: 0, stale_after_days: 30.
+
+- **Are Supabase docs agent-friendly?** (scr-4d5e6f7a): Practical user-facing evaluation of docs retrieval/QA relevance. Why it matters: shows how documentation structure affects retrieval and RAG/agent QA workflows — actionable operator guidance for making docs agent-friendly. Evidence strength: Medium-High (practical test report). Relevance score: 7. Defer reason: Not a product release; operational guidance only. Follow-up needed: extract concrete doc-struct recommendations (headings, anchor text, metadata) and collate with other doc-eval reports. candidate_seen_at: 2026-09-03, last_checked_at: 2026-09-03, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
+
+- **Coverage note / next steps**: MUST mainstream items were sweep-checked and remain in the Candidate inbox (no promotions). Security items (Claude Code OAuth plaintext) flagged for immediate corroboration; recommend vendor contact / monitor NVD/GitHub advisories. Research-log deduplication: did not duplicate entries already present; new candidates added above (5 items). Next sweep: follow up on Claude security corroboration, collect TeamCity BYOK operator guidance, and verify New Relic telemetry defaults with in-browser agent demos. candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; defer_count: 0.

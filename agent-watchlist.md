@@ -426,3 +426,12 @@ Status:
 - Evidence strength: Medium (registry/crate entry).
 - Follow-up needed: validate adapter availability for mainstream runtimes (Claude/Codex/Copilot) and test snapshot/restore flows into operator-owned object stores.
 - Source: https://crates.io/crates/remem-ai
+
+
+## mastra-ai/mastra
+- What it is: Open meta-orchestration / coordination framework for running and coordinating many specialized agents (task dispatch, policy gates, action receipts).
+- Why it matters: Lowers operator friction for cross-agent flows; becomes a potential enforcement/control plane for policies and sandboxing across multiple runtimes.
+- Evidence strength: Strong (GitHub repo, screening MUST)
+- Immediate operator notes: Evaluate in staging for policy enforcement, connector compatibility, and artifact provenance; treat as candidate meta-harness for standardization efforts.
+- Source: https://github.com/mastra-ai/mastra
+- replace_section anchor: `## mastra-ai/mastra`
