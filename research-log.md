@@ -3716,3 +3716,19 @@ Notes:
 - **Are Supabase docs agent-friendly?** (scr-4d5e6f7a): Practical user-facing evaluation of docs retrieval/QA relevance. Why it matters: shows how documentation structure affects retrieval and RAG/agent QA workflows — actionable operator guidance for making docs agent-friendly. Evidence strength: Medium-High (practical test report). Relevance score: 7. Defer reason: Not a product release; operational guidance only. Follow-up needed: extract concrete doc-struct recommendations (headings, anchor text, metadata) and collate with other doc-eval reports. candidate_seen_at: 2026-09-03, last_checked_at: 2026-09-03, promotion_status: deferred, defer_count: 0, stale_after_days: 30.
 
 - **Coverage note / next steps**: MUST mainstream items were sweep-checked and remain in the Candidate inbox (no promotions). Security items (Claude Code OAuth plaintext) flagged for immediate corroboration; recommend vendor contact / monitor NVD/GitHub advisories. Research-log deduplication: did not duplicate entries already present; new candidates added above (5 items). Next sweep: follow up on Claude security corroboration, collect TeamCity BYOK operator guidance, and verify New Relic telemetry defaults with in-browser agent demos. candidate_seen_at: 2026-09-03; last_checked_at: 2026-09-03; defer_count: 0.
+
+
+- **OpenAI — GPT‑6 Astra (scr-1f4a2b)**: why it matters: model + system card change affects agent defaults, eval baselines, and tool-call semantics; evidence strength: Strong; relevance score: 10; promotion_status: candidate; follow-up needed: add Astra to CI/regression evals and collect token-cost deltas. candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-04; defer_count: 0; stale_after_days: 30.
+  - Source: https://openai.com/index/gpt-6-astra/
+
+- **Cloudflare — vulnerability-discovery + Daybreak (scr-2b8d6e-followup)**: why it matters: platform-level model-driven remediation affects triage/export/playbook hygiene; evidence strength: Strong; promotion_status: candidate_follow-up; follow-up: map Cloudflare outputs into enterprise triage pipelines and validate export settings. candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-04; defer_count: 0; stale_after_days: 30.
+  - Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
+
+- **Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)**: why it matters: managed sandbox runtime for Cursor agents changes retention/egress defaults and onboarding; evidence strength: Strong; promotion_status: candidate_follow-up; follow-up: test sandbox defaults and connector compatibility. candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-04; defer_count: 0; stale_after_days: 30.
+  - Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
+
+- **Manifold Security — Git/hijack supply-chain flaw (scr-5d2b9c)**: why it matters: supply-chain vector enabling untrusted code execution in coding agents; evidence strength: High-Medium; relevance score: 9; promotion_status: candidate; follow-up: draft operator checklist for repo pinning and pre-exec vetting. candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-04; defer_count: 0; stale_after_days: 14.
+  - Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+
+- **Hugging Face — Funes (scr-7b1a8e)**: why it matters: local-first memory primitive affects privacy & snapshot semantics; evidence strength: Strong; relevance score: 8; promotion_status: candidate; follow-up: evaluate backup/export formats and compatibility with central RAG stores. candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-04; defer_count: 0; stale_after_days: 30.
+  - Source: https://huggingface.co/blog/funes

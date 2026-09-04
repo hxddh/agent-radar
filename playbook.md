@@ -520,3 +520,16 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Steps (candidate playbook): 1) snapshot current workspace & connector configs; 2) run a matrix of connector CI tests against staging runtime; 3) validate MCP sync/migrations (if present); 4) run secret-scan & prompt-injection preflight; 5) approve via audited pipeline with BYOK-protected keys; 6) roll forward/rollback plan.
   - Should promote to playbook? yes
   - Source: Reddit connector thread; JetBrains TeamCity 2026.2 (BYOK) guidance; community operator posts.
+
+
+## Connector compatibility test harness & pre-upgrade snapshot (candidate playbook — 2026-09-04)
+
+- When useful: Before runtime or model upgrades for coding-agent fleets (Claude Code, Cursor, Codex) or before switching default sandbox/egress settings in managed platforms.
+- Evidence: Multiple operator reports of broken MCP connectors and vendor model/runtime system-card changes (Reddit community follow-ups; OpenAI/Anthropic system card releases; Vercel sandbox announcement).
+- Steps (high-level):
+  1. Create a staging cluster that mirrors production sandbox defaults.
+  2. Run a connector compatibility matrix (unit + integration) that exercises tool calls, auth refresh, and artifact export.
+  3. Snapshot workspaces and store immutable copies in object storage with strict ACLs.
+  4. On upgrade, run smoke tests against pinned connector versions; only promote if green.
+- Should promote to playbook? yes
+- Sources: community reports / vendor posts (see daily 2026-09-04 block)

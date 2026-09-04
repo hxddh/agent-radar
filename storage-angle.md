@@ -720,3 +720,10 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Strong (AWS whats-new)
   - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-quick-adds-tool-settings-mcp-sync/
   - Watch trigger: A connector regression traced to an unversioned MCP-sync migration.
+
+
+- Durable object storage as coordination plane (2026-09-04): Using S3 Files as a durable coordination and snapshot plane (AWS blog) enables reproducible multi-agent orchestration but raises retention and secret persistence risks. Operators should apply immutability/retention policies and encrypt snapshots with BYOK. Evidence strength: Strong. Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+  - Watch trigger: discovery of unrotated credentials in S3 snapshots or unusually broad ACLs on agent snapshot buckets.
+
+- Platform sandbox export hygiene (2026-09-04): Cloudflare and Vercel sandboxing choices surface the risk that sandboxed runs will export artifacts (vuln triage outputs, logs) into long-lived storage; operators must map sandbox export endpoints to restricted object stores and add automated secret scans. Evidence strength: Strong. Sources: https://blog.cloudflare.com/vulnerability-discovery-remediation/ ; https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
+  - Watch trigger: any automated sandbox export job that writes to a public or corporate-wide shared bucket without tagging/TTL metadata.

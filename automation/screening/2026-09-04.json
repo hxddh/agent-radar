@@ -1,0 +1,166 @@
+{
+  "summary": "Daily agent/AI-coding signal sweep: vendor releases (OpenAI, Anthropic, Vercel, Cloudflare), memory/MCP work, a coding-agent supply-chain flaw, and operator workflow reports.",
+  "candidates": [
+    {
+      "id": "scr-1f4a2b",
+      "title": "OpenAI launches GPT‑6 Astra (system card and coverage)",
+      "why_it_matters": "Major vendor model release changes agent capabilities and safety posture.",
+      "evidence": [
+        "https://openai.com/index/gpt-6-astra/",
+        "https://deploymentsafety.openai.com/gpt-6-astra",
+        "https://www.reuters.com/legal/litigation/openai-launches-new-astra-model-amid-growing-scrutiny-over-agents-safety-2026-09-03/"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor safety disclosures and incident threads"
+    },
+    {
+      "id": "scr-2b8d6e",
+      "title": "Cloudflare: context-aware vulnerability discovery + OpenAI Daybreak models",
+      "why_it_matters": "Cloudflare integrates Daybreak models into vulnerability discovery/remediation workflows.",
+      "evidence": [
+        "https://blog.cloudflare.com/vulnerability-discovery-remediation/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "check for partner integrations and customer reports"
+    },
+    {
+      "id": "scr-3c9f7a",
+      "title": "Vercel: Cursor Cloud Agents can run in Vercel Sandbox",
+      "why_it_matters": "Cloud vendor enables hosted agent runtime isolation for Cursor Cloud Agents.",
+      "evidence": [
+        "https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "verify latency/cost docs and example deployments"
+    },
+    {
+      "id": "scr-4a7e1d",
+      "title": "Anthropic: Claude Fable & Mythos 5.1 announced",
+      "why_it_matters": "Anthropic released model updates targeted at coding/knowledge work.",
+      "evidence": [
+        "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "track changelog for tool-calling and code-run deltas"
+    },
+    {
+      "id": "scr-5d2b9c",
+      "title": "Git/hijack supply-chain flaw lets untrusted repos run code in coding agents",
+      "why_it_matters": "Untrusted repo content can cause agent tool invocation or code execution risk.",
+      "evidence": [
+        "https://www.manifold.security/blog/ai-coding-agents-git-hijack"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "monitor vendor advisories and exploit reports"
+    },
+    {
+      "id": "scr-6e3c4f",
+      "title": "Which tools do Claude, Codex and Cursor choose? (17k runs measurement)",
+      "why_it_matters": "Empirical data shows which OS/tools coding agents actually install and use.",
+      "evidence": [
+        "https://armature.tech/blog/which-tools-coding-agents-install"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "look for follow-up threads or replication data"
+    },
+    {
+      "id": "scr-7b1a8e",
+      "title": "Hugging Face open‑sources Funes — local‑first memory for coding agents",
+      "why_it_matters": "New local-first memory layer affects agent privacy, offline workflows and RAG architecture.",
+      "evidence": [
+        "https://huggingface.co/blog/funes"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "watch adoption/examples and integration docs"
+    },
+    {
+      "id": "scr-8f0d5a",
+      "title": "Engram (Show HN): shared procedural runbook memory via MCP",
+      "why_it_matters": "Procedural/shared runbook memory helps teams standardize agent-driven operations.",
+      "evidence": [
+        "https://github.com/aiengram/engram"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "seek social discussion and adoption metrics",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9c6f2b",
+      "title": "Dev.to: an AI coding workflow that stopped repeating work",
+      "why_it_matters": "Operator describes concrete workflow steps that reduced prompt/state repetition.",
+      "evidence": [
+        "https://dev.to/sizzlebop/the-ai-coding-workflow-that-finally-stopped-making-me-repeat-myself-8ol"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor comments for tooling/config snippets",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-a1d8e6",
+      "title": "Fly.io: Your Agent Speaks MCP. Give It a Computer.",
+      "why_it_matters": "Cloud run vendor guidance for running MCP-connected agents at the edge/runtime layer.",
+      "evidence": [
+        "https://fly.io/blog/sprites-mcp/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "check example manifests and MCP benchmarks"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky and several Reddit collectors returned errors — may have missed early operator threads",
+    "Missing mainstream_product: explicit Cursor vendor blog or GitHub release for Cursor Cloud Agents (we have Vercel changelog but direct Cursor vendor post not in snapshot)"
+  ]
+}
