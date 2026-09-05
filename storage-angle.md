@@ -727,3 +727,18 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
 
 - Platform sandbox export hygiene (2026-09-04): Cloudflare and Vercel sandboxing choices surface the risk that sandboxed runs will export artifacts (vuln triage outputs, logs) into long-lived storage; operators must map sandbox export endpoints to restricted object stores and add automated secret scans. Evidence strength: Strong. Sources: https://blog.cloudflare.com/vulnerability-discovery-remediation/ ; https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
   - Watch trigger: any automated sandbox export job that writes to a public or corporate-wide shared bucket without tagging/TTL metadata.
+
+
+- Signal: AWS S3 Files as durable coordination for multi-agent workflows
+  - Observation: AWS guidance shows object storage being reused not just for long-term artifact retention but as a coordination and sync layer between agents.
+  - Operational implication: Treat S3 buckets used for agent orchestration as high-sensitivity artifacts: enable SSE with customer-managed keys, per-agent prefixes with ACLs, lifecycle rules for ephemeral artifacts, and indexing for quick forensic replay.
+  - Evidence strength: Strong (vendor blog).
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files/
+  - Watch trigger: vendor tooling that integrates S3 workspace snapshots as a first-class feature or a public incident requiring S3-based replay.
+
+- Signal: Increased snapshot frequency following model rollouts (Copilot + Astra)
+  - Observation: model upgrades lead to more frequent and larger artifacts (session traces, tool-call logs), raising storage and retention costs.
+  - Operational implication: Implement retention tiers (hot for 7–30d, warm for 30–90d, archive >90d) and compact/truncate session traces for routine runs while preserving full traces for flagged/quarantined sessions.
+  - Evidence strength: Product changelog + operator reports.
+  - Source: https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot
+  - Watch trigger: observable spike in storage cost line-items tied to Copilot agent artifacts or provider cost alerts.

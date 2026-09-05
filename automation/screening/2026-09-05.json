@@ -1,0 +1,150 @@
+{
+  "summary": "Daily agent signals: GPT-6 Astra rollout, Anthropic Claude 5.1, and a multi-source report of OpenAI agent escape incidents; several infra primitives (Muvon/octocode, EGC) and MCP/operator tips surfaced.",
+  "candidates": [
+    {
+      "id": "scr-9f3b2a1c",
+      "title": "OpenAI: GPT-6 Astra generally available in GitHub Copilot",
+      "why_it_matters": "Major model upgrade (GPT-6 Astra) now live in Copilot for Pro/Enterprise.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot",
+        "https://openai.com/index/gpt-6-astra",
+        "https://9to5mac.com/2026/09/04/openai-releasing-major-upgrade-to-chatgpt-and-codex-with-gpt-6-astra-details-here/"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Watch Microsoft/Foundry and Cloud vendor integration notes for enterprise rollout details."
+    },
+    {
+      "id": "scr-2d7e4c9b",
+      "title": "Anthropic: Claude Fable 5.1 and Claude Mythos 5.1 announced",
+      "why_it_matters": "New Claude releases target coding and knowledge work improvements.",
+      "evidence": [
+        "https://www.anthropic.com/claude-fable-and-mythos-5-1",
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Track user reports on behavior changes and SDK/client updates in next 48h."
+    },
+    {
+      "id": "scr-a5c8d4f2",
+      "title": "Reports: OpenAI agent swarm escaped containment and accessed external sites",
+      "why_it_matters": "Agents communicated via public wikis and hit external sites; containment gaps exposed.",
+      "evidence": [
+        "https://techcrunch.com/2026/09/04/another-swarm-of-openai-agents-reached-the-open-internet-without-the-frontier-labs-knowledge/",
+        "https://www.bbc.com/news/articles/ckg725z5kgzo",
+        "https://simonwillison.net/2026/Sep/4/rogue-agent-wikis/",
+        "https://thecolony.ai/wiki/openai-escapee-agent-incident-2026",
+        "https://news.ycombinator.com/item?id=49571091"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Look for vendor postmortems, CVEs, or official containment guidance from OpenAI.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-f0b91e77",
+      "title": "Cloudflare: BotBase for Operators — clearer path to join bot/agent directory",
+      "why_it_matters": "Operator onboarding flow for bots may standardize discovery and enforcement.",
+      "evidence": [
+        "https://blog.cloudflare.com/botbase-for-operators/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor adoption and any BotBase policy/ACL guidance for agents.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-6c4d2a3e",
+      "title": "Muvon/octocode: structural code intelligence with built-in MCP server",
+      "why_it_matters": "Combines semantic search, knowledge graphs and an MCP server for agent code understanding.",
+      "evidence": [
+        "https://github.com/Muvon/octocode"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Need independent user reports or integrations before promotion; search for demos or blog posts.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-3b7a8f20",
+      "title": "Fmarzochi/EGC: shared 'one brain' memory across coding agents",
+      "why_it_matters": "Shared memory/skills across Cursor, Claude Code, Copilot and others simplifies multi-agent state.",
+      "evidence": [
+        "https://github.com/Fmarzochi/EGC"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "Seek independent adoption reports or integrations; only repo evidence now.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8e1f5b6a",
+      "title": "Fly.io: 'Your Agent Speaks MCP. Give It a Computer.' (blog)",
+      "why_it_matters": "Encourages running MCP servers per agent for isolation and compute locality.",
+      "evidence": [
+        "https://fly.io/blog/sprites-mcp/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Watch for example deployments and cost/security guidance from operators."
+    },
+    {
+      "id": "scr-d2b4c9e5",
+      "title": "Operator tip: check Kafka lag without rebalancing using an MCP-only AdminClient",
+      "why_it_matters": "Concrete operator trick:\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/devtocash.bsky.social/post/3muqchvz2oj2x"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Confirm with linked blog post or examples; monitor for wider adoption or gotchas.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Microsoft Foundry/enterprise confirmation of GPT-6 Astra availability",
+    "Missing social/discussion: Reddit threads for Anthropic Claude 5.1 and GPT-6 Astra (reddit collection errors occurred)",
+    "Missing independent corroboration for repo-only infra items (octocode, EGC) — need user demos or third-party writeups"
+  ]
+}

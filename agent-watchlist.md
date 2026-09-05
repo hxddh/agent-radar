@@ -143,11 +143,11 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / task agent
-- Maturity: Strong adoption signal across IDE and cloud surfaces.
-- Recent changes: GitHub announced Claude Fable 5.1 generally available inside GitHub Copilot (2026-09-01). Operational impact: model behavior changes can affect tool-calls, connector contracts, and suggestion patterns; operators should validate Copilot-powered CI/automation and connector compatibility in staging before rolling to prod.
-- Immediate actions: run connector compatibility tests, pin connector versions in CI, and add pre-upgrade workspace snapshots for quick rollback.
-- Evidence strength: Strong (official GitHub changelog)
-- Source: https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot
+- Maturity: Strong adoption signal inside OpenAI/GitHub ecosystems and third‑party tooling integration.
+- Recent changes: OpenAI rolled GPT-6 Astra into GitHub Copilot (changelog entry 2026-09-04). Operators should add Astra to CI/regression suites, validate token-cost deltas, and re-test connector/tool-call behavior in staging before wide enablement. Default model upgrades can change tool-call semantics and artifact sizes; treat model rollouts as high-risk for connector compatibility and snapshot/retention policies.
+- Evidence strength: Strong (official changelog)
+- Source: https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot
+- replace_section anchor: `## GitHub Copilot`
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).

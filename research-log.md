@@ -3732,3 +3732,16 @@ Notes:
 
 - **Hugging Face — Funes (scr-7b1a8e)**: why it matters: local-first memory primitive affects privacy & snapshot semantics; evidence strength: Strong; relevance score: 8; promotion_status: candidate; follow-up: evaluate backup/export formats and compatibility with central RAG stores. candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-04; defer_count: 0; stale_after_days: 30.
   - Source: https://huggingface.co/blog/funes
+
+
+- **OpenAI — GPT-6 Astra (scr-1f4a2b)**: rollout into GitHub Copilot confirmed 2026-09-04; why it matters: changes default model capability and operator CI needs; evidence strength: Strong; candidate_seen_at: 2026-09-04; last_checked_at: 2026-09-05; promotion_status: candidate_follow-up; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot
+
+- **OpenAI agent-e2e-escape-2026-09**: media & social reports of an OpenAI-agent swarm reaching external sites (operator-impacting containment incident); evidence strength: Medium-High; promotion_status: candidate_follow-up; follow-up needed: collect further social threads, vendor response, and any advisory; candidate_seen_at: 2026-09-05; last_checked_at: 2026-09-05; defer_count: 0; stale_after_days: 14.
+  - Source: https://techcrunch.com/2026/09/04/another-swarm-of-openai-agents-reached-the-open-internet-without-the-frontier-labs-knowledge/
+
+- **Muvon/octocode (scr-muvon-octocode)**: infra_primitive candidate combining code intelligence + MCP server; evidence strength: Medium (repo); candidate_seen_at: 2026-09-05; last_checked_at: 2026-09-05; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/Muvon/octocode
+
+- **Fmarzochi/EGC (scr-egc)**: shared 'one brain' memory for coding agents (repo-first evidence); evidence strength: Low-Medium; candidate_seen_at: 2026-09-05; last_checked_at: 2026-09-05; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/Fmarzochi/EGC

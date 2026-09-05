@@ -533,3 +533,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   4. On upgrade, run smoke tests against pinned connector versions; only promote if green.
 - Should promote to playbook? yes
 - Sources: community reports / vendor posts (see daily 2026-09-04 block)
+
+
+## Pre-upgrade MCP Connector Compatibility Test
+
+- When useful: before upgrading agent runtimes (Claude Code, Copilot backend, or similar) in staging/production where third-party/custom MCP connectors exist.
+- Steps:
+  1. Snapshot current connector container/image and record exact connector SDK version.
+  2. Spin a staging runtime pinned to the new vendor runtime version.
+  3. Run automated connector CI: smoke test tool-calls, ACL flows, and credential round-trips; include non-destructive MCP-only AdminClient lag/probe checks for Kafka-backed connectors.
+  4. Validate artifact formats (workspace snapshots, session logs) and compare hashes to pre-upgrade samples.
+  5. If failures occur, roll back runtime or pin connector version and open a vendor issue with reproducible repro steps.
+- Evidence: community reports of connector breakage and operator tips for safe probes.
+- Should promote to playbook? yes
+- Sources: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://bsky.app/profile/devtocash.bsky.social/post/3muqchvz2oj2x
