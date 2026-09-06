@@ -519,3 +519,17 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Practical note: use an MCP-only AdminClient read probe for safe observability; script into runbooks to avoid accidental rebalances in production.
   - Evidence strength: Medium (social/operator post).
   - Source: https://bsky.app/profile/devtocash.bsky.social/post/3muqchvz2oj2x
+
+
+## 2026-09-06
+
+- MCP connector upgrade playbook (operator field note): pre-upgrade snapshot connectors + run per-connector smoke tests in staging; rotate tokens if connector storage touched by runtime upgrade. Source: Reddit operator thread (public). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Browser-agent workspace binding: prefer ephemeral containerized browser contexts per agent instead of profile-only isolation to avoid cookie/service-worker leakage across agents. Source: Dev.to operator writeup. Evidence strength: Medium. Source: https://dev.to/volker_schukai/multiple-browser-agents-need-more-than-separate-profiles-565j
+
+
+## 2026-09-06
+
+- Mid‑run network revocation (kill-switch) measured in operator reports at ~100–200 ms; recommended to add automated staging tests that exercise revocation and record latency. Evidence strength: Medium (operator writeups).
+- Treat credential fetches as privileged 'reads' in sandbox policy design — separate authorization required before write-target tool access. Add this heuristic to sandbox policy docs and code reviews. Evidence strength: Medium (dev.to operator posts).
+- Pre-upgrade checklist: snapshot workspace, run connector compatibility CI, validate playback/replay of compressed artifacts when edge cache/transcoding is used.

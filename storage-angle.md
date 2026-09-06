@@ -742,3 +742,33 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Product changelog + operator reports.
   - Source: https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot
   - Watch trigger: observable spike in storage cost line-items tied to Copilot agent artifacts or provider cost alerts.
+
+
+## 2026-09-06 — Bedrock KB connectors & platform gateway storage implications
+
+- Summary: AWS Bedrock's new managed KB connectors with auto-sync (SharePoint/OneDrive/Confluence/ServiceNow) make enterprise content a live source for agents; operators must treat KB sync cadence and connector ACLs as first-class storage policy decisions. Evidence: AWS whats-new (Strong).
+- Recommended actions: enforce least-privilege connector scopes, enable server-side encryption and object-store lifecycle rules for agent artifacts, and track sync deltas for rapid rollback.
+- Watch triggers: Bedrock documents exposing default auto-sync cadence or auto-indexing behaviors; sudden spike in KB-change webhook events.
+- Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-managed-knowledge-base-user-managed-setup-sharepoint-onedrive-confluence/
+
+
+## 2026-09-06 storage angle
+
+- Edge cache-transcoding (Cloudflare) materially reduces cache footprint for large artifacts; operators should test replay fidelity (lossless vs lossy) before relying on compressed edge caches for forensic or replay needs. Source: Cloudflare blog — cache-transcoding.
+- KB connector auto-sync (AWS Bedrock) increases index churn and local RAG cache growth; add connector-level retention controls and track per-connector delta rates to estimate storage headroom. Source: AWS whats-new — Bedrock Managed Knowledge Base connectors.
+- Platform gateways (Vercel) change where artifacts are stored and what default retention settings apply; operators must audit gateway export hooks and ensure artifact encryption at rest.
+
+
+## 2026-09-06: Promotions affecting storage angle
+
+- Cloudflare Daybreak / vulnerability-discovery (Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/)
+  - Storage implications: automated vulnerability triage and remediation exports increase demand for controlled export sinks (operator-owned object buckets), immutable forensic prefixes (WORM/incident hold), and explicit export/erase controls in vendor UI/SDK. Operators should map Daybreak export endpoints to restricted buckets with lifecycle/TTL and enable signed receipts for forensic reconciliation.
+  - Evidence strength: Strong
+
+- Vercel Cursor Cloud Agents / Sandbox (Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox)
+  - Storage implications: managed sandbox defaults (retention/egress/export) can cause artifacts to land outside operator-controlled storage. Recommended immediate step: require export-to-operator-bucket toggles during sandbox provisioning and add automated secret scans on sandbox-exported artifacts. Set short default lifecycle (24–72h) for ephemeral snapshots and a separate forensic bucket for flagged runs.
+  - Evidence strength: Strong
+
+- MemOS (Source: https://github.com/MemTensor/MemOS)
+  - Storage implications: hybrid retrieval memory reduces stored token volume but requires stronger provenance metadata (snapshot hashes, versioned manifests) to preserve replay fidelity after compression or token-reduction steps. When integrating MemOS, include manifest+schema versioning and test restore fidelity from compressed/optimized snapshots.
+  - Evidence strength: Medium

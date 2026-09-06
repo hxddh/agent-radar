@@ -547,3 +547,23 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Evidence: community reports of connector breakage and operator tips for safe probes.
 - Should promote to playbook? yes
 - Sources: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://bsky.app/profile/devtocash.bsky.social/post/3muqchvz2oj2x
+
+
+## Connector Upgrade Playbook (candidate)
+
+- When useful: Before runtime or gateway upgrades that could change MCP/connector contracts.
+- Steps:
+  1. Snapshot workspace and connector state (config + token metadata) to immutable object storage.
+  2. Run per-connector smoke tests against a staging runtime that mirrors production tool-call contracts.
+  3. Validate token storage semantics and rotate keys if upgrade touches storage layers.
+  4. If rollback needed, restore connector state from snapshot and redeploy previous runtime version.
+- Evidence: Multiple operator reports of connector breakage after runtime upgrades (community). Evidence strength: Medium.
+- Should promote to playbook? yes (operationally actionable, low overhead).
+
+
+
+## 2026-09-06 — Operator playbook updates
+
+- Add a "mid-run revocation" test case to incident runbooks: simulate revoking network access, measure latency, and validate agent behavior post-revocation.
+- Pre-upgrade gate: require connector compatibility CI that exercises all MCP connectors against a staging runtime before production upgrades; include automatic rollback on failure.
+- Snapshot policy: create a lightweight workspace snapshot before any runtime/SDK upgrade; store snapshot metadata and retention controls in object storage with immutable tags for audit.

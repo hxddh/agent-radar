@@ -146,3 +146,18 @@ Action items: document connector compatibility tests, require connector CI again
 - GitHub Copilot — Policy & Billing Changes (promoted): Changelog shows upcoming policy/billing changes that will affect operator cost models and feature access for Copilot agent surfaces. Reason for promotion: mainstream product change with strong operational impact for coding-agent fleets and background runs. Source: https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing
 
 - remem-ai (promoted): Local-first/persistent memory crate for coding agents. Reason for promotion: direct infra primitive for agent memory with concrete storage/snapshot implications; promotes memory-as-artifact operational work. Source: https://crates.io/crates/remem-ai
+
+
+### 2026-09-06 Promotions
+
+- Cloudflare — Vulnerability Discovery / Daybreak (promoted)
+  - Why promoted: Strong first-party product signal that changes export/egress and triage playbooks; raises containment and forensic-sink requirements (affects Thesis 9: containment/security and Thesis 8: platform‑vendor MCP entry).
+  - Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
+
+- Vercel — Cursor Cloud Agents in Vercel Sandbox (promoted)
+  - Why promoted: Platform-managed sandbox defaults materially affect where agent artifacts are stored and the default retention/egress semantics operators must reconcile (affects Thesis 5: object storage as artifact plane; Thesis 8: platform-vendor MCP entry).
+  - Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
+
+- MemOS — hybrid retrieval memory (promoted)
+  - Why promoted: Memory-as-artifact primitive that may reduce token storage while increasing snapshot/provenance requirements; strengthens Thesis 7 (memory + MCP convergence) and has direct storage/schema implications for snapshots and replay.
+  - Source: https://github.com/MemTensor/MemOS

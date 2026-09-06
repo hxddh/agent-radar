@@ -13,9 +13,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released Claude Code v2.1.251 / Opus 5 (late Aug 2026). Operators report coherence regressions and connector/plugin incompatibilities after recent runtime upgrades; a public GitHub issue documented session-like URLs appearing in commits/PRs (session-URL leakage), increasing supply-chain risk. Treat upgrades as high-risk: run connector compatibility tests in staging, add SCM secret-scans, and require pre-upgrade workspace snapshots. Evidence strength: Strong (vendor release) + Medium-Strong (GH issue).
-- Operational advice: pin conductor/runtime versions in CI, snapshot workspaces before upgrades, add connector compatibility CI gates, and run repo secret scans on commit histories.
-- replace_section anchor: `## Claude Code`
+- Recent changes (2026-09-06 refresh): Anthropic/Claude variants (Fable/Opus lines) continue to be integrated into mainstream developer tooling; community reports flag connector/plugin incompatibilities after runtime upgrades. Operators: treat upgrades as high‑risk — run connector compatibility tests in staging and add pre‑upgrade workspace snapshots. Evidence strength: Strong (vendor releases) + Medium (community reports).
+- Sources: (see Anthropic releases & GH issues tracked in research-log)
+- Last refreshed: 2026-09-06
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
@@ -90,6 +90,11 @@ Status:
 # Emerging Agents
 
 ## Omnigent
+- Category: Meta-harness / orchestration
+- Maturity: Increasing among power users and operator toolchains.
+- Recent changes (2026-09-06 refresh): Omnigent and several OSS alternatives (swarms) continue to show uptake; operator guidance now recommends treating meta‑harness adoption as an ops decision (governance, audit, policy hooks) rather than a lightweight plugin. Evidence strength: Medium (community adoption + repo activity).
+- Action: For orgs adopting Omnigent, require flight‑recorder integration, connector CI, and role-based operator controls.
+- Last refreshed: 2026-09-06
 ## Omnigent
 
 - What it is: A meta-harness / policy-enforcement project for orchestrating and constraining multi-agent runs (previously promoted in research-log).
@@ -143,11 +148,11 @@ Status:
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
 - Category: Coding agent / task agent
-- Maturity: Strong adoption signal inside OpenAI/GitHub ecosystems and third‑party tooling integration.
-- Recent changes: OpenAI rolled GPT-6 Astra into GitHub Copilot (changelog entry 2026-09-04). Operators should add Astra to CI/regression suites, validate token-cost deltas, and re-test connector/tool-call behavior in staging before wide enablement. Default model upgrades can change tool-call semantics and artifact sizes; treat model rollouts as high-risk for connector compatibility and snapshot/retention policies.
-- Evidence strength: Strong (official changelog)
-- Source: https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot
-- replace_section anchor: `## GitHub Copilot`
+- Maturity: Strong adoption across developer ecosystems.
+- Recent changes (2026-09-06 refresh): Copilot now surfaces Anthropic Claude Fable 5.1 as a model option (Copilot changelog 2026-09-01). Operators should validate model-driven differences in tool-calls and connector behavior in staging. Evidence strength: Strong (GitHub blog/changelog).
+- Action: Add Fable/Astra to Copilot regression tests; pin integrations where necessary.
+- Last refreshed: 2026-09-06
+- Source: https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).
@@ -284,9 +289,10 @@ Status:
 ## Vercel AI Gateway (scr-vercel-ai-gateway)
 - Category: Gateway / deployment / platform
 - Maturity: Promoted (high operator exposure; platform-managed agent paths)
-- Recent changes: Vercel continues to centralize model routing and one-command provisioning for coding agents; ai@7.0.85 (Aug 2026) updated SDK/CLI behavior and Vercel added new AI Gateway integrations (Muse Image, Gemini transcribe). Default retention and egress settings can expose artifacts if left unchecked; operators should validate sandbox defaults, retention, and egress policies in staging before enabling managed agents.
-- Operational advice: test Vercel Gateway onboarding flows in a staging account, audit default export/retention settings, and add object-storage snapshot hooks to incident playbooks.
-- replace_section anchor: `## Vercel AI Gateway (scr-vercel-ai-gateway)`
+- Recent changes (2026-09-06 refresh): GPT‑6 Astra became available on Vercel AI Gateway; this reduces friction for provisioning high-capability models but brings gateway retention/egress defaults into operator threat models. Operators should validate sandbox defaults, retention, and egress policies in staging before enabling managed agents. Evidence strength: Strong (Vercel changelog).
+- Action: Test gateway retention/egress and ensure artifact encryption/export hooks are configured.
+- Source: https://vercel.com/changelog/gpt-6-astra-now-available-on-vercel-ai-gateway
+- Last refreshed: 2026-09-06
 ## Anthropic — Claude Code (scr-claude-code)
 
 - What it is: Claude Code runtime and orchestration components for coding agents.
@@ -379,12 +385,10 @@ Status:
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
 - Maturity: Active; edge‑hosted agent tooling expanding (voice, Twilio, edge orchestration)
-- Recent changes: agents@0.22.0 adds voice/Twilio packages and runtime updates. Impact: edge voice egress widens the attack/egress surface; operators should validate edge quarantine/playbook and test voice connectors in staging.
-- Evidence strength: Strong (GitHub release)
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.22.0
-- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
-
-
+- Recent changes (2026-09-06 refresh): Cloudflare published Adaptive Intelligence & cache-transcoding posts that change detection/quarantine and storage patterns at the edge. Voice/Twilio packages increase egress/attack surface; validate edge quarantine/playbooks in staging. Evidence strength: Strong (Cloudflare blog).
+- Action: Map Cloudflare detection outputs into enterprise IDS and test quarantine playbooks.
+- Source: https://blog.cloudflare.com/introducing-adaptive-intelligence/
+- Last refreshed: 2026-09-06
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).
@@ -435,3 +439,30 @@ Status:
 - Immediate operator notes: Evaluate in staging for policy enforcement, connector compatibility, and artifact provenance; treat as candidate meta-harness for standardization efforts.
 - Source: https://github.com/mastra-ai/mastra
 - replace_section anchor: `## mastra-ai/mastra`
+
+
+## Cloudflare — Vulnerability Discovery / Daybreak (scr-2b8d6e-followup)
+
+- What it is: Cloudflare's vulnerability-discovery and Daybreak remediation tooling for platform-level triage and export/playbook hygiene.
+- Why it matters: Platform-level vulnerability discovery that can automatically triage and export remediation artifacts reshapes operator workflows: export sinks, forensics, and egress policies become operational levers rather than optional integrations. This directly affects operator attack surface and containment controls for agent-driven vulnerability triage runs.
+- Evidence strength: Strong (official Cloudflare blog)
+- Promotion reason: strong first-party product signal with immediate operator governance impact; promotes containment/security thesis and snapshot/export controls.
+- Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
+
+
+## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)
+
+- What it is: Vercel's managed sandbox runtime for Cursor Cloud Agents (one-command run + managed sandbox defaults for retention/egress).
+- Why it matters: Managed sandbox defaults (export, retention, egress) change where agent artifacts land and what defaults operators must override. This affects onboarding friction, artifact retention policies, and whether snapshots/export hooks land in operator-owned buckets.
+- Evidence strength: Strong (Vercel changelog)
+- Promotion reason: direct platform vendor change altering snapshot/export defaults and operator retention controls; immediate operational relevance.
+- Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
+
+
+## MemOS — hybrid retrieval memory (MemTensor / MemOS)
+
+- What it is: MemOS (MemTensor/MemOS) — hybrid retrieval memory claiming token‑savings via a self‑evolving persistent memory + retrieval stack.
+- Why it matters: If validated, MemOS changes the storage tradeoffs for agent memory (lower token counts, different snapshot/retention patterns) and increases pressure on operators to version memory snapshots, record provenance, and include memory manifests in snapshot exports.
+- Evidence strength: Medium (GitHub repo; notable community interest)
+- Promotion reason: memory-as-artifact primitive with direct storage and replay implications for agent fleets; merits watchlist entry to track adoption and integrations.
+- Source: https://github.com/MemTensor/MemOS

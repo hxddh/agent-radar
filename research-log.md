@@ -3745,3 +3745,38 @@ Notes:
 
 - **Fmarzochi/EGC (scr-egc)**: shared 'one brain' memory for coding agents (repo-first evidence); evidence strength: Low-Medium; candidate_seen_at: 2026-09-05; last_checked_at: 2026-09-05; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
   - Source: https://github.com/Fmarzochi/EGC
+
+
+- **OpenAI — GPT‑6 Astra (scr-1f4a2b)**: Confirmed rollout + system card page reviewed; evidence strength: Strong; follow-up: add Astra to regression/eval runs and collect token-cost deltas across common agent tasks. Source: https://openai.com/index/gpt-6-astra/
+  - promotion_status: candidate; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 30.
+
+- **Vercel — GPT‑6 Astra on AI Gateway (scr-8b9c0d1e)**: Platform distribution confirmed (Vercel changelog); follow-up: test sandbox retention/egress defaults and connector compatibility. Evidence strength: Strong. Source: https://vercel.com/changelog/gpt-6-astra-now-available-on-vercel-ai-gateway
+  - promotion_status: candidate_follow-up; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 30.
+
+- **Google — Gemini agentic video token-cut (scr-4b2e9d8f)**: Official blog reviewed; follow-up: track video artifact ingestion tools and cost impact on agent pipelines. Evidence strength: Strong. Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-agentic-video-in-gemini/
+  - promotion_status: candidate; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 30.
+
+- **AWS — Bedrock Managed Knowledge Base connectors (scr-a0b1c2d3)**: Official whats-new entry reviewed; follow-up: collect connector auth/ACL docs and default auto-sync cadence. Evidence strength: Strong. Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-managed-knowledge-base-user-managed-setup-sharepoint-onedrive-confluence/
+  - promotion_status: candidate_follow-up; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 30.
+
+- **Cloudflare — Adaptive Intelligence (scr-7a8b9c0d)**: Official blog reviewed; follow-up: map outputs to IDS/SIEM integration patterns.
+  - promotion_status: candidate; evidence strength: Strong; Source: https://blog.cloudflare.com/introducing-adaptive-intelligence/
+
+- **Operator incident — custom MCP connectors broken (scr-ongoing)**: Ongoing Reddit thread flagged for operator-impacting regressions. Follow-up: collect vendor response and file/track compatibility test guidelines. Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+  - promotion_status: candidate_follow-up; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 14.
+
+Notes: this sweep prioritized must-cover mainstream product deltas (OpenAI, Google, Vercel, AWS, Cloudflare) and operator-reported connector regressions. Follow-ups: validate Anthropic changelog coverage, confirm Microsoft/Copilot rollout notes for Astra, and monitor vendor security advisories for Claude-related token storage reports.
+
+
+## 2026-09-06 Weekly sweep follow-ups
+- **Anthropic Claude Opus/Fable 5.1 system-card verification**: corroboration pending — need to fetch the detailed Anthropic changelog/system card deltas referenced in social reports. Evidence strength: Medium (social + changelog references). promotion_status: deferred; follow-up needed: vendor changelog/GH issue links; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 14.
+- **deepsweep (VS Code flight recorder)**: verify extension privacy defaults, telemetry, and enterprise telemetry opt-out docs. Evidence strength: Medium (open-vsx listing). promotion_status: deferred; follow-up needed: vendor docs & marketplace privacy page; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 30. Source: https://open-vsx.org/extension/deepsweep-ai/deepsweep
+- **AxmeAI.axme-code extension claims (ServiceNow auto-sync)**: Claim audit flagged mismatch between social claim and extension page—needs direct docs or vendor comment. promotion_status: deferred; follow-up needed: extension docs and release notes; candidate_seen_at: 2026-09-06; last_checked_at: 2026-09-06; defer_count: 0; stale_after_days: 21.
+- **Corroboration queue status**: Several screening items (Bedrock KB connectors, GPT‑6 Astra distribution, Cloudflare Adaptive Intelligence) verified to Strong this week; remaining pending items moved to the candidate inbox above for targeted follow-up.
+
+
+- **Cloudflare — vulnerability-discovery + Daybreak** (scr-2b8d6e-followup): promotion_status: promoted; promotion_reason: strong first-party product signal altering export/egress/playbook hygiene and requiring operator-owned forensic sinks; last_checked_at: 2026-09-06. Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
+
+- **Vercel — Cursor Cloud Agents in Vercel Sandbox** (scr-3c9f7a-followup): promotion_status: promoted; promotion_reason: managed sandbox defaults alter artifact retention and export surfaces; operators should require export-to-operator-bucket toggles and short lifecycle defaults; last_checked_at: 2026-09-06. Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
+
+- **MemOS hybrid retrieval memory** (MemTensor/MemOS): promotion_status: promoted; promotion_reason: memory storage primitive with practical token/storage savings implications and a need for provenance/versioned snapshot manifests; last_checked_at: 2026-09-06. Source: https://github.com/MemTensor/MemOS
