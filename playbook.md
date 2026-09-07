@@ -567,3 +567,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Add a "mid-run revocation" test case to incident runbooks: simulate revoking network access, measure latency, and validate agent behavior post-revocation.
 - Pre-upgrade gate: require connector compatibility CI that exercises all MCP connectors against a staging runtime before production upgrades; include automatic rollback on failure.
 - Snapshot policy: create a lightweight workspace snapshot before any runtime/SDK upgrade; store snapshot metadata and retention controls in object storage with immutable tags for audit.
+
+
+## Connector Upgrade & Rollback Playbook (candidate)
+
+- When useful: Before upgrading agent runtimes or applying connector/SDK changes in production.
+- Steps:
+  1. Create a staging runtime snapshot mirroring production (config + sample workspaces).
+  2. Run connector smoke tests that validate auth, tool-call schemas, and a minimal end-to-end flow.
+  3. If tests pass, roll out to a canary subset with continued monitoring of connector error rates and latencies.
+  4. Maintain pinned connector versions; on failure, rollback via workspace snapshot restore and connector pin reversion.
+  5. Postmortem: collect connector failure signatures and publish compatibility matrix for next upgrade.
+- Evidence: community reports of connector regressions; vendor runtime upgrade patterns.
+- Should promote to playbook? yes
+- Sources: Reddit connector thread (https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a)

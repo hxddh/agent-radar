@@ -533,3 +533,16 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Mid‑run network revocation (kill-switch) measured in operator reports at ~100–200 ms; recommended to add automated staging tests that exercise revocation and record latency. Evidence strength: Medium (operator writeups).
 - Treat credential fetches as privileged 'reads' in sandbox policy design — separate authorization required before write-target tool access. Add this heuristic to sandbox policy docs and code reviews. Evidence strength: Medium (dev.to operator posts).
 - Pre-upgrade checklist: snapshot workspace, run connector compatibility CI, validate playback/replay of compressed artifacts when edge cache/transcoding is used.
+
+
+- **Broken MCP connectors (2026-09-07)**
+  - Summary: Multiple operators report custom MCP connectors failing after runtime upgrades; breakages include auth handshake differences and altered tool-call schemas.
+  - Evidence strength: Medium (Reddit thread)
+  - Public sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+  - Actionable: Add connector smoke tests to pre-upgrade CI, pin connector versions, and snapshot workspaces to enable rollback.
+
+- **Sandbox spin-up cost/latency observation (2026-09-07)**
+  - Summary: After optimizing model token spend, operators observe sandbox cold-start latency now dominates cost and latency profiles; warm pools reduce effective latency/cost.
+  - Evidence strength: Medium (Bluesky operator note)
+  - Public sources: https://bsky.app/profile/reidmarlow.com/post/3muuvevovzj2x
+  - Actionable: Measure spin-up metrics, consider warm pools or snapshot-restore strategies, and include sandbox lifecycle in cost models.

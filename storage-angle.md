@@ -772,3 +772,16 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
 - MemOS (Source: https://github.com/MemTensor/MemOS)
   - Storage implications: hybrid retrieval memory reduces stored token volume but requires stronger provenance metadata (snapshot hashes, versioned manifests) to preserve replay fidelity after compression or token-reduction steps. When integrating MemOS, include manifest+schema versioning and test restore fidelity from compressed/optimized snapshots.
   - Evidence strength: Medium
+
+
+- Bedrock Managed KB connectors raise new storage/retention risks
+  - Summary: Scheduled/managed syncs from SharePoint/OneDrive/Confluence into Bedrock KBs can create uncontrolled writes and long-lived snapshots. Operators must insist on explicit export-to-operator-bucket controls and short retention defaults for ephemeral ingestion artifacts.
+  - Evidence strength: Strong (AWS whats-new)
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-managed-knowledge-base-user-managed-setup-sharepoint-onedrive-confluence/
+  - Watch trigger: spikes in outbound sync counts, unexpected data landing in vendor-managed ingestion stores, or new default retention changelogs.
+
+- Platform sandboxes & detect-agent change artifact residency
+  - Summary: Detect-agent semantics combined with sandbox platform defaults (Vercel, Modal, Daytona) determine whether artifacts stay on‑platform or export to operator storage; this has direct compliance and forensics implications.
+  - Evidence strength: Strong (Vercel detect-agent + sandbox announcements)
+  - Source: https://www.npmjs.com/package/%40vercel/detect-agent
+  - Watch trigger: vendor changelog entries about default retention or auto-export toggles; sudden changes in platform-side artifact counts.
