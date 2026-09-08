@@ -1,0 +1,215 @@
+{
+  "summary": "Daily agent/MCP/ops snapshot: vendor containment guidance, new agent tooling releases, and multiple GitHub harnesses & security reports requiring operator checks.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4",
+      "title": "Anthropic: How we contain Claude across products",
+      "why_it_matters": "Engineering guidance on containment for long-running agents and blast-radius controls.",
+      "evidence": [
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "monitor operator impact and CVEs (48h)"
+    },
+    {
+      "id": "scr-2b3c4d5",
+      "title": "Mistral: Vibe for code (coding agents in terminal/IDE/background)",
+      "why_it_matters": "Product page highlights terminal/IDE agent integration for coding workflows.",
+      "evidence": [
+        "https://mistral.ai/products/vibe/code/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "watch for SDK/CLI release notes (72h)"
+    },
+    {
+      "id": "scr-3c4d5e6",
+      "title": "Cloudflare: BotBase for Operators",
+      "why_it_matters": "Cloudflare offers clearer path to list/manage bots and agents in its directory.",
+      "evidence": [
+        "https://blog.cloudflare.com/botbase-for-operators/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "track operator onboarding feedback (1 week)",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4d5e6f7",
+      "title": "GitSpawn/Git-hijack: Untrusted repos can run code in coding-agent CLIs",
+      "why_it_matters": "Security advisory about repo-sourced payloads executing in coding agent CLIs.",
+      "evidence": [
+        "https://www.manifold.security/blog/ai-coding-agents-git-hijack",
+        "https://news.ycombinator.com/item?id=49599000"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "confirm vendor mitigations and CVE status (24h)",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e6f7g8",
+      "title": "QwenLM: qwen-code release v0.23.1-preview.2",
+      "why_it_matters": "New preview release for Qwen's coding agent tooling (nightly/preview cadence).",
+      "evidence": [
+        "https://github.com/QwenLM/qwen-code/releases/tag/v0.23.1-preview.2",
+        "https://github.com/QwenLM/qwen-code/releases/tag/v0.23.0-nightly.20260907.f1ed3bc31a"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "watch for stable release notes and breaking changes (48h)"
+    },
+    {
+      "id": "scr-6f7g8h9",
+      "title": "Google: gemini-cli nightly release",
+      "why_it_matters": "Gemini CLI nightly shows active cadence for agent/CLI tooling updates.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.60.0-nightly.20260908.g85aca163f",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.60.0-nightly.20260907.g85aca163f"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "note breaking API/CLI changes in release notes (24-48h)"
+    },
+    {
+      "id": "scr-7g8h9i0",
+      "title": "HN: Ask HN — How to roll out Agents for knowledge workers?",
+      "why_it_matters": "Operator discussion with\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49596428"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "aggregate common rollout steps from thread (48h)",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-8h9i0j1",
+      "title": "crewAIInc/crewAI — orchestration framework (58k stars)",
+      "why_it_matters": "Popular orchestration framework for role-playing/collaborative agent workflows.",
+      "evidence": [
+        "https://github.com/crewAIInc/crewAI"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "seek independent adoption reports or vendor blog (72h)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9i0j1k2",
+      "title": "twaldin/harness — unified Python interface for agent CLIs",
+      "why_it_matters": "Unifies running diverse coding-agent CLIs as subprocesses for tooling portability.",
+      "evidence": [
+        "https://github.com/twaldin/harness"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "look for user reports or integration examples (48h)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a0b1c2d",
+      "title": "guanyang/open-agent-hub — CLI to manage/activate coding assistant capabilities",
+      "why_it_matters": "Lightweight CLI to manage agent capabilities across multiple assistants locally.",
+      "evidence": [
+        "https://github.com/guanyang/open-agent-hub"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "defer",
+      "next_check": "search for social chatter or integrations (48h)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b1c2d3e",
+      "title": "HN: secure temporary file sharing for AI agents (aispace-client)",
+      "why_it_matters": "Operator tool for secure temp file exchange between agents and humans.",
+      "evidence": [
+        "https://github.com/aispace-sh/aispace-client",
+        "https://news.ycombinator.com/item?id=49598765"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "validate threat model and vendor adoption (48h)",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-c2d3e4f",
+      "title": "OpenAI: codex repo release 0.154.0-alpha.6",
+      "why_it_matters": "OpenAI codex prerelease update for coding-agent runtime components.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.154.0-alpha.6"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor repo for stable release and changelog details (72h)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky agent channels (collection errors prevented capture)",
+    "Missing mainstream_product: Microsoft/Copilot or Cursor official changelog in last 48h",
+    "Missing corroboration: several GitHub-only projects need independent user reports or vendor mentions before promotion"
+  ]
+}

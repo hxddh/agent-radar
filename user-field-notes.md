@@ -546,3 +546,19 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Evidence strength: Medium (Bluesky operator note)
   - Public sources: https://bsky.app/profile/reidmarlow.com/post/3muuvevovzj2x
   - Actionable: Measure spin-up metrics, consider warm pools or snapshot-restore strategies, and include sandbox lifecycle in cost models.
+
+
+- **2026-09-08 / Connector breakage (Reddit follow-up)**
+  - Summary: Community reports that custom MCP connectors stopped working after recent runtime upgrades; mitigation patterns include pinning connector versions, snapshot+rollback playbooks, and connector CI that exercises handshake flows in staging.
+  - Evidence strength: Medium (Reddit thread)
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **2026-09-08 / Sandbox cold-start vs inference spend (operator Bluesky note)**
+  - Summary: Operator field report: prewarmed sandboxes reduce retries/latency but raise infra cost; recommend small warm pools during heavy windows and route short interactive tasks to warm instances.
+  - Evidence strength: Medium (Bluesky)
+  - Source: https://bsky.app/profile/reidmarlow.com/post/3muuvevovzj2x
+
+- **2026-09-08 / GitSpawn / git‑hijack advisory (operator caution)**
+  - Summary: Security writeup describes repo-sourced payloads executing in some coding-agent CLIs. Triage: treat repo inputs as untrusted, require signed recipes, and run CLI actions in ephemeral sandboxes.
+  - Evidence strength: Medium
+  - Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack

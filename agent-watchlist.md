@@ -294,16 +294,12 @@ Status:
 - Source: https://vercel.com/changelog/gpt-6-astra-now-available-on-vercel-ai-gateway
 - Last refreshed: 2026-09-06
 ## Anthropic — Claude Code (scr-claude-code)
-
 - What it is: Claude Code runtime and orchestration components for coding agents.
-- Recent change: Release v2.1.229 published (2026-08-13). Runtime and conductor updates can affect tool-calling semantics, session streaming, and containment behaviors operators rely on.
-- Why it matters: Runtime-level changes in a major coding-agent provider can shift containment assumptions (sandboxing, session streaming, workspace trust), alter artifact formats, and require ops teams to re-validate CI/compatibility and audit pipelines.
-- Evidence strength: Strong (official GitHub release)
-- Relevance score: 9
-- Follow-up needed: extract and publish release-note deltas that affect containment, tool-call sandboxes, or storage schemas; run staging compatibility checks for tool calls and session persistence.
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
-
-
+- Recent changes: Anthropic published a detailed engineering post describing containment patterns for Claude across products; the post provides recommended containment primitives (scoped tool access, sandboxing patterns, connector contracts) that operators can map into SOC/IR playbooks. Separately, third‑party investigation flagged plaintext OAuth token storage in certain Claude Code artifacts (investigation blog) — operators should audit stored artifacts and rotate affected credentials.
+- Why it matters: Runtime and containment guidance from a major vendor materially reduce operator ambiguity about blast‑radius controls and upgrade windows; token storage findings create immediate remediation work (credential rotation, artifact audits).
+- Evidence strength: Strong (containment engineering post) + Medium (security investigation)
+- Sources: https://www.anthropic.com/engineering/how-we-contain-claude ; https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
+- Operational recommendation: require connector CI, pre-upgrade staging tests, and automated artifact scans for credentials; enforce short retention and export-to-operator-bucket defaults during upgrades.
 ## Amazon Bedrock AgentCore
 
 - Category: Platform agent runtime / payments & monetization

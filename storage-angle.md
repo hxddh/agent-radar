@@ -785,3 +785,18 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Strong (Vercel detect-agent + sandbox announcements)
   - Source: https://www.npmjs.com/package/%40vercel/detect-agent
   - Watch trigger: vendor changelog entries about default retention or auto-export toggles; sudden changes in platform-side artifact counts.
+
+
+- Vercel / Managed sandbox export defaults
+  - Observation: Platform sandboxes (Vercel Cursor Sandbox) change where artifacts are stored and often default to short retention or platform‑hosted export paths.
+  - Storage implication: Operators must require an "export to customer bucket" option (S3/GCS) and short default lifetimes for transient artifacts; object storage should host versioned manifests for replayability.
+  - Evidence strength: Strong
+  - Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
+  - Watch trigger: vendor publishes a documented per-session export toggle or retention policy.
+
+- Memory namespacing & ACLs (AWS AgentCore Memory)
+  - Observation: AWS added fine‑grained memory ACLs and namespace support for agent memory.
+  - Storage implication: Memory‑as‑artifact needs per‑namespace retention, provenance metadata, and lifecycle policies in object storage; design snapshot manifests to include ACLs and replay metadata.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control
+  - Watch trigger: published memory export schema or example S3 manifest referencing namespace ACLs.

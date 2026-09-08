@@ -581,3 +581,12 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Evidence: community reports of connector regressions; vendor runtime upgrade patterns.
 - Should promote to playbook? yes
 - Sources: Reddit connector thread (https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a)
+
+
+## Connector compatibility preflight (candidate playbook)
+
+- Trick: Run a connector compatibility harness before any runtime/client upgrade. The harness should perform a staged handshake, a short end‑to‑end sample task, artifact export, and credential rotation smoke test against a staging runtime snapshot.
+- When useful: Before upgrading agent runtimes (Claude Code, Codex, Qwen, Gemini) or when onboarding new connector implementations.
+- Evidence: Anthropic containment guidance recommends explicit connector compatibility checks; community reports show connector breakage after upgrades.
+- Should promote to playbook? yes
+- Sources: https://www.anthropic.com/engineering/how-we-contain-claude ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
