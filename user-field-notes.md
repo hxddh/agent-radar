@@ -562,3 +562,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Summary: Security writeup describes repo-sourced payloads executing in some coding-agent CLIs. Triage: treat repo inputs as untrusted, require signed recipes, and run CLI actions in ephemeral sandboxes.
   - Evidence strength: Medium
   - Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+
+
+## 2026-09-09
+
+- Field note: git worktrees as a low-friction isolation pattern for parallel coding-agent runs.
+  - When seen: 2026-09-09 (operator blog/dev.to)
+  - Summary: Developers use git worktrees to run multiple agent instances against the same repo without full clones. Best practice: attach pre-run cleanup hooks that strip secrets, run a quick static risk scan, and ensure artifacts are written to per-worktree temp dirs that are swept after the run. Evidence strength: Medium. Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i

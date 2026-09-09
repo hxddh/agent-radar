@@ -1,0 +1,169 @@
+{
+  "summary": "Daily agent/agentics screening: multiple mainstream releases (GitHub Enterprise Server GA, Google Gemini CLI nightlies), large agent IDE repo activity, rising infra primitives (Ouroboros, Microsoft agent framework) and operator reports on containment, Copilot costs, and latency breakdowns.",
+  "candidates": [
+    {
+      "id": "scr-1f3a9b",
+      "title": "GitHub Enterprise Server 3.22 GA",
+      "why_it_matters": "GA release affects self-hosted agent deployments and enterprise rollouts.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-08-github-enterprise-server-3-22-is-now-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Track early enterprise adoption notes and security advisories."
+    },
+    {
+      "id": "scr-2c7d4e",
+      "title": "superset-sh/superset — agentic IDE for 100+ coding agents",
+      "why_it_matters": "High-star agentic IDE enabling parallel orchestration of many coding agents.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/superset-sh/superset"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Look for official website/blog or third-party coverage to corroborate product positioning.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-3e8f6a",
+      "title": "google-gemini/gemini-cli active prereleases (v0.60 / v0.61 nightlies)",
+      "why_it_matters": "Active Gemini CLI nightlies show rapid tooling iteration for agent workflows.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.60.0-preview.0",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.61.0-nightly.20260909.ged2ac40df",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.60.0-nightly.20260908.g85aca163f"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for stable release notes and breaking changes affecting agent integrations."
+    },
+    {
+      "id": "scr-4b5c6d",
+      "title": "Q00/ouroboros — 'Agent OS' with MCP and 14 runtimes",
+      "why_it_matters": "Agent OS/MCP with staged eval and multi-runtime support—core infra primitive.",
+      "evidence": [
+        "https://github.com/Q00/ouroboros"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Seek independent coverage (blog, tutorial, or multiple user reports) to corroborate claims.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-5d6e7f",
+      "title": "ikaruscareer/SafeAI — SAST for agents and MCPs",
+      "why_it_matters": "Static analysis for prompts, tools and MCP servers to catch risks before deploy.",
+      "evidence": [
+        "https://github.com/ikaruscareer/SafeAI"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Request demo/examples and third-party validation for SAST effectiveness.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-6a7b8c",
+      "title": "microsoft/agent-framework-go",
+      "why_it_matters": "Microsoft-provided framework for building, orchestrating and deploying agents in Go.",
+      "evidence": [
+        "https://github.com/microsoft/agent-framework-go"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor Microsoft blog/changelog for official guidance and examples.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-7f8g9h",
+      "title": "Analysis: 'OpenAI German Wiki Hack' — containment failure discussion",
+      "why_it_matters": "Post-incident analysis highlights containment limits and policy/ops gaps.",
+      "evidence": [
+        "https://securityboulevard.com/2026/09/openais-german-wiki-hack-is-less-about-rogue-ai-than-failed-agent-containment/",
+        "https://news.ycombinator.com/item?id=49619830"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Watch for official OpenAI statement and technical postmortem details.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-8i9j0k",
+      "title": "GitHub Copilot user reports: assisted permissions spike token spend",
+      "why_it_matters": "Operators report assiste\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://www.reddit.com/r/GithubCopilot/comments/1wazz5g/using_assisted_permissions_seem_to_increase_token/",
+        "https://www.reddit.com/r/GithubCopilot/comments/1wbbhzs/open_code_vs_github_cp/"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Corroborate with more Reddit threads, vendor docs, or billing support threads.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-9l0m1n",
+      "title": "HN: timing breakdowns for coding-agent turns (TTFT vs decode vs tools)",
+      "why_it_matters": "Operational latency brea\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49619830"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Find original measurements or repo demonstrating the timing breakdown.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: Anthropic and OpenAI official changelog/security advisory coverage (no recent vendor release noted here).",
+    "Missing social/discussion: Bluesky and several Reddit channels due to collection errors (403/429); need those feeds for broader user_workflow signals.",
+    "Missing corroboration: Several repo-only infra primitives (Ouroboros, SafeAI) need independent coverage or vendor blogs before high-confidence promotion."
+  ]
+}
