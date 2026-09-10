@@ -569,3 +569,31 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Field note: git worktrees as a low-friction isolation pattern for parallel coding-agent runs.
   - When seen: 2026-09-09 (operator blog/dev.to)
   - Summary: Developers use git worktrees to run multiple agent instances against the same repo without full clones. Best practice: attach pre-run cleanup hooks that strip secrets, run a quick static risk scan, and ensure artifacts are written to per-worktree temp dirs that are swept after the run. Evidence strength: Medium. Source: https://dev.to/servatj/running-coding-agents-in-parallel-with-git-worktrees-507i
+
+
+- **Claude memory import failures (2026-09-10)**
+  - Tool: Claude / Claude Code connectors
+  - Scenario: Operators report repeated "couldn't import memory" errors during bulk memory uploads; sessions desynced across conductor and connector.
+  - Positive: memory features allow richer stateful agent interactions when they work.
+  - Pain point: imports can silently fail, leaving partial state and causing incorrect agent behavior.
+  - Useful trick: run a small-batch import first and verify session manifests and connector logs; capture a sample memory snapshot for rollback testing.
+  - Source class: social/discussion (Reddit)
+  - Evidence strength: Medium
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1wc8bhz/when_i_try_to_upload_to_memory_i_get_couldnt/
+
+- **Token-cost trimming trick for coding agents (2026-09-10)**
+  - Tool: Claude Code (operator trick)
+  - Scenario: High token spend on iterative code edits.
+  - Useful trick: batch edits, send compressed diffs or unified patch text rather than entire file contexts; run local diff pre-processing to reduce tokens consumed by instruction/context.
+  - Source class: social/discussion (Hacker News)
+  - Evidence strength: Medium
+  - Source: https://news.ycombinator.com/item?id=49587379
+
+- **Supply-chain risk: repo bootstrap execution (2026-09-10)**
+  - Tool: coding-agent CLIs
+  - Scenario: Agents auto-run repo-provided install or bootstrap scripts.
+  - Pain point: untrusted repositories may execute arbitrary code during agent setup.
+  - Useful trick: sandbox the initial bootstrap in an ephemeral container or VM and require verified-install signatures before execution.
+  - Source class: vendor analysis / blog
+  - Evidence strength: Medium
+  - Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack

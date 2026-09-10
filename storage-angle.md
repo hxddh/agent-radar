@@ -800,3 +800,18 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Strong
   - Source: https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control
   - Watch trigger: published memory export schema or example S3 manifest referencing namespace ACLs.
+
+
+- Vercel persistent memory consequences (2026-09-10)
+  - Summary: Platform-managed persistent memory for agents centralizes agent state; default retention and egress policies matter for privacy and forensic readiness.
+  - Operational implication: Exportability and audit trails must be validated; operators need automated snapshot hooks to save memories into tenant-controlled object storage (S3/GCS) before platform purges occur.
+  - Evidence strength: Strong (Vercel changelog)
+  - Source: https://vercel.com/changelog/persistent-memory-for-eve-agents
+  - Watch trigger: an API or CLI that lists memory snapshots per-agent and supports export to customer-owned buckets.
+
+- KB access controls & Bedrock debugging (2026-09-10)
+  - Summary: AWS Bedrock KB debugging adds document-level access control debugging APIs; this changes how operators map agents to KB ACLs and audit logs.
+  - Operational implication: Map agent identities to KB ACLs, enable document-level audit logging, and add KB-access events to SIEM/forensics pipelines.
+  - Evidence strength: Strong (AWS whats-new)
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-knowledge-base-debugging-document-access-control/
+  - Watch trigger: availability of an agent-identity → document-access export endpoint (if present, integrate into retention/audit playbooks).

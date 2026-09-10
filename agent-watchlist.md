@@ -294,12 +294,12 @@ Status:
 - Source: https://vercel.com/changelog/gpt-6-astra-now-available-on-vercel-ai-gateway
 - Last refreshed: 2026-09-06
 ## Anthropic — Claude Code (scr-claude-code)
-- What it is: Claude Code runtime and orchestration components for coding agents.
-- Recent changes: Anthropic published a detailed engineering post describing containment patterns for Claude across products; the post provides recommended containment primitives (scoped tool access, sandboxing patterns, connector contracts) that operators can map into SOC/IR playbooks. Separately, third‑party investigation flagged plaintext OAuth token storage in certain Claude Code artifacts (investigation blog) — operators should audit stored artifacts and rotate affected credentials.
-- Why it matters: Runtime and containment guidance from a major vendor materially reduce operator ambiguity about blast‑radius controls and upgrade windows; token storage findings create immediate remediation work (credential rotation, artifact audits).
-- Evidence strength: Strong (containment engineering post) + Medium (security investigation)
-- Sources: https://www.anthropic.com/engineering/how-we-contain-claude ; https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
-- Operational recommendation: require connector CI, pre-upgrade staging tests, and automated artifact scans for credentials; enforce short retention and export-to-operator-bucket defaults during upgrades.
+- Recent changes: Anthropic published containment engineering guidance and has now publicly disclosed a fourth cybersecurity incident affecting an early Claude build. Operators should treat recent runtime sessions and persisted artifacts (memories, connector logs) as potential forensic evidence and rotate any service tokens used by connectors.
+- Impact: Elevated security posture required for Claude Code operators — add credential-rotation, per-connector compatibility testing, and session-level audit retention to upgrade playbooks.
+- Evidence strength: Strong (press + vendor engineering guidance for containment); corroboration: community reports on connector breakage and plaintext token storage investigations remain relevant and should be reconciled with vendor advisories.
+- Sources:
+  - Reuters: https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/
+  - Anthropic containment engineering (previously recorded): https://www.anthropic.com/engineering/how-we-contain-claude
 ## Amazon Bedrock AgentCore
 
 - Category: Platform agent runtime / payments & monetization

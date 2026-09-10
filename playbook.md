@@ -590,3 +590,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Evidence: Anthropic containment guidance recommends explicit connector compatibility checks; community reports show connector breakage after upgrades.
 - Should promote to playbook? yes
 - Sources: https://www.anthropic.com/engineering/how-we-contain-claude ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+## Pre-upgrade connector compatibility playbook (candidate)
+
+- When useful: Before upgrading agent runtimes (Claude, Codex, Gemini CLI) or MCP server versions that host connectors.
+- Steps:
+  1. Snapshot current workspace and exported connector manifests (memory snapshots, connector versions, session logs).
+  2. Run connector CI against a staging runtime that mirrors the upcoming runtime version; include smoke tests for auth flows, tool-call contracts, and large-memory imports.
+  3. Validate token handling and storage (search for plaintext tokens or filesystem persistence) and require rotation of any exposed credentials.
+  4. Hold an upgrade window; if connector failures appear, roll back via the workspace snapshot and escalate to vendor support with session logs attached.
+- Evidence: motivated by Anthropic disclosure and community connector breakage reports.
+- Promote to playbook? yes (requires templated CI job and snapshot export script)
+- Source classes: Tier 1 (press) + Tier 3 (community reports)
+- Sources: https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/ ; https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/

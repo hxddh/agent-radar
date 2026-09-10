@@ -1801,3 +1801,18 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product / distribution] openai.chatgpt (VS Code) extension distribution (open-vsx listing). Evidence strength: Strong (public distribution). Source: https://open-vsx.org/extension/openai/chatgpt
 - [mainstream_product / memory] mem0ai/mem0 SDK releases (v2.x). Evidence strength: Strong (GitHub release). Source: https://github.com/mem0ai/mem0/releases/tag/v2.0.20
 - [user_workflow / discussion] Are Supabase docs agent-friendly? (practical retrieval report). Evidence strength: Medium-High (practical blog). Source: https://supabase.com/blog/are-supabase-docs-agent-friendly
+
+
+### Added (2026-09-10 source-sweep)
+- [mainstream_product / security] Anthropic — fourth cybersecurity incident reported (press coverage). Evidence strength: Strong. Source: https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/
+- [mainstream_product / security] Google — guidance on prompt-injection and harness protections for agentic/coding flows. Evidence strength: Strong. Source: https://cloud.google.com/blog/topics/threat-intelligence/from-prompting-to-autonomy-the-evolution-of-adversarial-ai
+- [mainstream_product / governance] GitHub — Enterprise managed permissions for Copilot agent operations (changelog). Evidence strength: Strong. Source: https://github.blog/changelog/2026-09-09-enterprise-managed-permissions-for-github-copilot-agent-operations
+- [mainstream_product] Mistral — Studio / Vibe / Forge product pages (vendor product suite). Evidence strength: Strong. Source: https://mistral.ai/products/studio/
+- [mainstream_product / memory] Vercel — Persistent memory for eve agents (platform changelog). Evidence strength: Strong. Source: https://vercel.com/changelog/persistent-memory-for-eve-agents
+- [mainstream_product / runtime] OpenAI — GPT-6 Astra announcement (model release). Evidence strength: Strong. Source: https://openai.com/index/gpt-6-astra/
+- [user_workflow / discussion] Claude memory import failure (Reddit field report). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1wc8bhz/when_i_try_to_upload_to_memory_i_get_couldnt/
+- [user_workflow / discussion] Operator trick: reduce Claude Code token spend (~80%) (Hacker News thread). Evidence strength: Medium. Source: https://news.ycombinator.com/item?id=49587379
+- [infra_primitive / security] Cloudflare — context-aware vulnerability discovery & remediation (Managed Defense + Daybreak). Evidence strength: Strong. Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
+- [infra_primitive / memory] AWS Bedrock — Managed Knowledge Base: doc-level access control debugging (whats-new). Evidence strength: Strong. Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-knowledge-base-debugging-document-access-control/
+
+> Note: This file records short canonical links used by the sweep. Strong vendor changelogs and public discussion threads were prioritized. For candidate-level detail and follow-ups see research-log.md.
