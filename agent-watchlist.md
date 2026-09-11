@@ -294,12 +294,12 @@ Status:
 - Source: https://vercel.com/changelog/gpt-6-astra-now-available-on-vercel-ai-gateway
 - Last refreshed: 2026-09-06
 ## Anthropic — Claude Code (scr-claude-code)
-- Recent changes: Anthropic published containment engineering guidance and has now publicly disclosed a fourth cybersecurity incident affecting an early Claude build. Operators should treat recent runtime sessions and persisted artifacts (memories, connector logs) as potential forensic evidence and rotate any service tokens used by connectors.
-- Impact: Elevated security posture required for Claude Code operators — add credential-rotation, per-connector compatibility testing, and session-level audit retention to upgrade playbooks.
-- Evidence strength: Strong (press + vendor engineering guidance for containment); corroboration: community reports on connector breakage and plaintext token storage investigations remain relevant and should be reconciled with vendor advisories.
-- Sources:
-  - Reuters: https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/
-  - Anthropic containment engineering (previously recorded): https://www.anthropic.com/engineering/how-we-contain-claude
+- Recent changes: Anthropic published a public Threat Intelligence report (Sept 2026) describing incidents, misuse vectors, and recommended mitigations affecting early Claude builds and connector interactions.
+- Why it matters: Operators must treat persisted memories, connector logs, and service tokens as potential forensic evidence; containment and token-rotation policies should be applied immediately. Add pre-upgrade compatibility tests for custom MCP connectors and require workspace snapshotting prior to runtime upgrades.
+- Evidence strength: Strong
+- Source class: Vendor security advisory / engineering post
+- Source: https://www.anthropic.com/threat-intelligence-report-september-2026
+- Last-checked: 2026-09-11
 ## Amazon Bedrock AgentCore
 
 - Category: Platform agent runtime / payments & monetization

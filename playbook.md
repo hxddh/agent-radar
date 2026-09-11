@@ -604,3 +604,12 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Promote to playbook? yes (requires templated CI job and snapshot export script)
 - Source classes: Tier 1 (press) + Tier 3 (community reports)
 - Sources: https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/ ; https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+
+- Playbook candidate: Pre-upgrade connector compatibility and snapshot play
+  - When useful: before runtime upgrades of major agent runtimes (Claude, Codex, Agents API rollouts)
+  - Evidence: Anthropic threat-intel report + community reports of connector breakage
+  - Steps (candidate): 1) take a full workspace snapshot to object storage; 2) run connector CI against a staging runtime snapshot; 3) verify memory import/export and tool-call smoke tests; 4) rotate any service tokens used by connectors post-upgrade.
+  - Should promote to playbook? yes (promote after 1-2 reproducible internal runs)
+  - Source class: Vendor advisory + community reports
+  - Evidence strength: Strong/Medium

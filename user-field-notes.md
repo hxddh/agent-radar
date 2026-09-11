@@ -597,3 +597,16 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Source class: vendor analysis / blog
   - Evidence strength: Medium
   - Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+
+
+- **Claude memory import failures (field report)** — 2026-09-11
+  - Summary: Multiple Reddit reports describe upload/import failures when users attempt to add memories to Claude; operators report inconsistent attachment and post-import missing items.
+  - Practical note: Preserve a pre-import snapshot (object-store copy) and run post-import verification (counts/hashes). Treat memory imports as a high-risk operation in production deployments.
+  - Evidence strength: Medium (Reddit field reports)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1wc8bhz/when_i_try_to_upload_to_memory_i_get_couldnt/
+
+- **Claude Code token-reduction trick (operator workflow)** — 2026-09-11
+  - Summary: Hacker News thread reports practical caching/delta-update patterns that reduce Claude Code token spend by a reported ~60–80% in certain coding workflows.
+  - Practical note: Implement a small local cache for repeated retrievals and prefer delta patches instead of full-context resends; validate for staleness risk before production rollout.
+  - Evidence strength: Medium (HN discussion)
+  - Source: https://news.ycombinator.com/item?id=49587379

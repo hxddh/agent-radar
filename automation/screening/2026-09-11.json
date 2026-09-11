@@ -1,0 +1,213 @@
+{
+  "summary": "OpenAI Agents API launch and vendor integrations lead daily coverage; Anthropic publishes security/threat-intel updates. Community threads show operator workflows and several infra projects (eval, MCP, sandbox) gaining activity.",
+  "candidates": [
+    {
+      "id": "scr-9f1a2b3c",
+      "title": "OpenAI Agents API (official launch & docs)",
+      "why_it_matters": "New Agents API formalizes runtime/orchestration surface for agent apps.",
+      "evidence": [
+        "https://openai.com/index/introducing-the-agents-api",
+        "https://developers.openai.com/api/docs/guides/agents-api/overview",
+        "https://news.ycombinator.com/item?id=49653369"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "watch for SDK releases, pricing, and early platform partners in 24–72h",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-a3b4c5d6",
+      "title": "Anthropic: Threat intelligence & misuse disclosures",
+      "why_it_matters": "Anthropic published incident details and ongoing misuse countermeasures.",
+      "evidence": [
+        "https://www.anthropic.com/threat-intelligence-report-september-2026",
+        "https://www.anthropic.com/news/improving-alignment-security-efforts",
+        "https://thenextweb.com/news/anthropic-claude-misuse-threat-intelligence-report"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "track follow-up patches, containment guidance, and third-party vendor responses"
+    },
+    {
+      "id": "scr-7e8f9a0b",
+      "title": "Vercel: Build with OpenAI Agents API (integration)",
+      "why_it_matters": "Major hosting vendor adds first-class Agents API support for deployment workflows.",
+      "evidence": [
+        "https://vercel.com/changelog/build-with-openai-agents-api-on-vercel"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "look for example templates, billing implications, and security guidance"
+    },
+    {
+      "id": "scr-2c3d4e5f",
+      "title": "Omnigent: open-source agent orchestration framework (high traction)",
+      "why_it_matters": "Popular OSS harness for orchestrating multiple agent runtimes and policies.",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "seek integration examples with Agents API and user reports of production use",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-5b6c7d8e",
+      "title": "AgentSafeLabs/safelabs-eval: OWASP ASI-aligned red‑teaming framework",
+      "why_it_matters": "Provides a standardized eval/red-team framework for agent security testing.",
+      "evidence": [
+        "https://github.com/AgentSafeLabs/safelabs-eval"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "monitor adoption signals and independent audit results",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-1f2e3d4c",
+      "title": "termaxa: cooperative gate for shell commands (repo)",
+      "why_it_matters": "Tool mediates shell actions from agents with previews, backups, and audits.",
+      "evidence": [
+        "https://github.com/termaxa/termaxa"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "needs independent user reports or integrations to move beyond repo-only signal",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-4a5b6c7d",
+      "title": "HN: 'Those running agents 24/7 — what's your workflow?' (operator thread)",
+      "why_it_matters": "Community details always-on agent ops, monitoring, and failure modes.; social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49653369"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "collect notable operational patterns (cron vs event-driven, observability tools)",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-8b9c0d1e",
+      "title": "ABC News: 'A swarm of AI agents hacked Hugging Face' (investigative report)",
+      "why_it_matters": "Shows real-world compromise vector from agentic tooling to cloud resources.",
+      "evidence": [
+        "https://www.abc.net.au/news/2026-09-11/how-openai-agents-hacked-hugging-face-messages-revealed/107125126"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "watch for vendor incident responses and root-cause details"
+    },
+    {
+      "id": "scr-0f1e2d3c",
+      "title": "Field note: 'What happens when you unplug the coding agent' (littletheta)",
+      "why_it_matters": "Operator report on network/dependency failures when agent loses cloud connectivity.",
+      "evidence": [
+        "https://littletheta.com/field-notes/seventy-minutes-of-nothing"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "gather more anecdotes on offline resilience strategies",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-6d7e8f9a",
+      "title": "Botbin.io (Show HN) — pastebin for agent artifacts with MCP flag",
+      "why_it_matters": "Quick artifact sharing for agent runs could become standard debug/ops tool.",
+      "evidence": [
+        "https://botbin.io/?mcp=true",
+        "https://news.ycombinator.com/item?id=49653369"
+      ],
+      "confidence": "low",
+      "relevance_score": 4,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "seek adoption examples and privacy/security posture; repo-only signals need corroboration",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Datasette 1.0a39 / 0.65.4 security releases",
+      "why_it_matters": "Security fixes for a widely used data explorer used in agent pipelines.",
+      "evidence": [
+        "https://simonwillison.net/2026/Sep/11/datasette-security/"
+      ],
+      "confidence": "high",
+      "relevance_score": 4,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "note CVE details and patch guidance for operator communications"
+    },
+    {
+      "id": "scr-b2c3d4e5",
+      "title": "Bloomberg: Moonshot routed user requests through Claude",
+      "why_it_matters": "Third-party routing of requests through hosted models raises privacy/consent concerns.",
+      "evidence": [
+        "https://www.bloomberg.com/news/articles/2026-09-10/moonshot-secretly-routed-user-requests-through-claude-anthropic-says"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "track vendor responses and any regulatory or platform policy follow-ups"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky agent threads (collection errors blocked)",
+    "Missing mainstream_product: Microsoft/Google agent-specific changelogs or explicit Agent APIs",
+    "Missing corroboration: several repo-only infra_primitive signals need independent user reports"
+  ]
+}

@@ -815,3 +815,18 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Strong (AWS whats-new)
   - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-knowledge-base-debugging-document-access-control/
   - Watch trigger: availability of an agent-identity → document-access export endpoint (if present, integrate into retention/audit playbooks).
+
+
+- S3-first orchestration for multi-agent artifacts (2026-09-11)
+  - Signal: AWS blog describes orchestrating multi-agent architectures using S3 Files as the artifact/control plane.
+  - Implication: Object storage centralizes snapshots, artifacts, and replay history — this simplifies replay but forces explicit retention/egress and lifecycle policy decisions.
+  - Evidence strength: Medium-Strong
+  - Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files
+  - Watch trigger: vendor-published default lifecycle/retention guidance for agent snapshots (e.g., default auto-delete after X days).
+
+- Platform persistent memory & export semantics (Vercel) (2026-09-11)
+  - Signal: Vercel's persistent memory for agent feature changes where agent state is stored and how it is exported.
+  - Implication: Operators must map platform default retention and export APIs to corporate retention/forensic policy. Confirm encryption-at-rest, export formats, and available retention toggles.
+  - Evidence strength: Strong
+  - Source: https://vercel.com/changelog/persistent-memory-for-eve-agents
+  - Watch trigger: Vercel publishes default retention duration or a policy toggle for automatic exports.
