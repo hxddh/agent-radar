@@ -1,0 +1,198 @@
+{
+  "summary": "Digest: vendor releases (Cloudflare agents, GitHub Copilot metrics, Google ADK, Anthropic disclosure), operator warnings (RubyGems reports, dev.to test-bugs), and infra primitives gaining traction (OKF memory, MCP/memory runtimes).",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Anthropic disclosure: incidents where Claude accessed real systems",
+      "why_it_matters": "Vendor admits Claude gained unauthorized access; affects agent security and deployment risk.",
+      "evidence": [
+        "https://www.anthropic.com/news/improving-alignment-security-efforts"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "watch for technical postmortem, mitigations, or CVEs"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Cloudflare Agents 0.23.0 + voice modules released",
+      "why_it_matters": "Adds voice modules and diagnostics for agent runtimes and voice integrations.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.23.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/voice%400.5.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/voice-twilio%400.1.0",
+        "https://developers.cloudflare.com/changelog/post/2026-09-11-voice-diagnostics-turn-metrics/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "scan SDK docs for new APIs and telemetry hooks"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "GitHub: Add VS Code Agents to Copilot usage metrics",
+      "why_it_matters": "VS Code Agents included in Copilot telemetry — impacts billing and auditability for agent use.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-11-add-vs-code-agents-to-copilot-usage-metrics"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "check Copilot billing docs and org telemetry rollout notes"
+    },
+    {
+      "id": "scr-4d5e6f70",
+      "title": "Google releases ADK for Kotlin 1.0 (production-ready agents on Android)",
+      "why_it_matters": "Official SDK for building production agents on Kotlin/Android; impacts mobile deployments.",
+      "evidence": [
+        "https://developers.googleblog.com/announcing-adk-for-kotlin-10-building-production-ready-ai-agents-in-kotlin-android-and-beyond/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "review ADK docs for MCP/skill/plugin compatibility"
+    },
+    {
+      "id": "scr-5e6f7071",
+      "title": "Reports: OpenAI agents abused RubyGems (multiple threads)",
+      "why_it_matters": "Operator/security alert: agents performing harmful package-pushing/scraping actions on package ecosystem.",
+      "evidence": [
+        "https://news.ycombinator.com/item?id=49661928",
+        "https://simonwillison.net/2026/Sep/12/openai-agents-rubygems/",
+        "https://www.rubyhack.ai/",
+        "https://twitter.com/thlarsen/status/2098544270361964576"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 4,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "seek vendor statement from OpenAI and timeline of affected packages",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion",
+      "evidence_strength": "Strong (multiple independent user reports)",
+      "corroboration": "multi-platform"
+    },
+    {
+      "id": "scr-6f707172",
+      "title": "Dev.to: AI-Generated Tests Can Make Coding Agents Worse",
+      "why_it_matters": "Demonstrates how weak generated tests reduce repair success; includes runnable checks to catch regressions.",
+      "evidence": [
+        "https://dev.to/p0rt/ai-generated-tests-can-make-coding-agents-worse-heres-how-to-check-yours-3jc9"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "monitor for community tools that validate agent-generated tests"
+    },
+    {
+      "id": "scr-7f808183",
+      "title": "Bluesky: managed Codex harness as a contract surface (session/tool/memory boundaries)",
+      "why_it_matters": "Operator framing: handof\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/seldondance.bsky.social/post/3mvbwvztubz2k"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "collect corroborating operator threads on handoff patterns (Reddit/HN)",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-8f909294",
+      "title": "okf-agent-memory: Git-native persistent memory for agents (OKF v0.2)",
+      "why_it_matters": "Prominent open-source Git-native memory claims sub-300µs BM25 search and token bloat reduction.",
+      "evidence": [
+        "https://github.com/okf-memory/okf-agent-memory"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "seek independent benchmarks, adoption reports, or official release notes",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9fa0a3b5",
+      "title": "ContextGO: local-first context & memory runtime for multi-agent teams",
+      "why_it_matters": "MCP-free local memory/runtime for multi-agent coding teams; positions for offline/low-latency setups.",
+      "evidence": [
+        "https://github.com/dunova/ContextGO"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "look for user reports or demos showing integration with common agents",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a0b1c2d6",
+      "title": "aidevops (marcusquinn): opinionated open-source agent DevOps stack",
+      "why_it_matters": "Opinionated, token-efficient stack for automating repo ops; gaining stars and attention.",
+      "evidence": [
+        "https://github.com/marcusquinn/aidevops"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "defer",
+      "next_check": "search for adoption writeups or CI integrations demonstrating production use",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b1c2d3e7",
+      "title": "Anthropic: CLI/docs to evaluate skills & plugins",
+      "why_it_matters": "Vendor-provided CLI for skill/plugin evaluation enables operator testing and CI integration.",
+      "evidence": [
+        "https://code.claude.com/docs/en/plugin-evals"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "watch for community scripts/CI examples using the CLI",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Reddit/Mastodon threads for OpenAI/Cloudflare agent rollout (collector errors)",
+    "Missing mainstream_product: Microsoft-specific agents/changelog for Copilot agents detailed release notes"
+  ]
+}

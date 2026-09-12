@@ -3861,3 +3861,20 @@ Notes: this sweep prioritized must-cover mainstream product deltas (OpenAI, Goog
 - **OpenAI Agents API** (scr-9f1a2b3c): Official Agents API launch and docs. Why it matters: formalizes runtime + tool-call lifecycle that platform vendors and operators will target; immediate CI/auth/telemetry work required. Evidence strength: Strong; promotion_status: candidate_follow-up; follow-up needed: collect SDK examples, token format changes, and migration notes. candidate_seen_at: 2026-09-11, last_checked_at: 2026-09-11; Source: https://openai.com/index/introducing-the-agents-api
 
 - **Anthropic Threat Intelligence Report (Sept 2026)** (scr-a3b4c5d6): Vendor-published incident disclosure and mitigations. Why it matters: raises containment and forensic requirements for operators running Claude; immediate action: token rotation, snapshot retention, connector compatibility testing. Evidence strength: Strong; promotion_status: candidate_follow-up; follow-up needed: extract exact affected builds, connector lists, and recommended retention/export APIs. candidate_seen_at: 2026-09-11, last_checked_at: 2026-09-11; Source: https://www.anthropic.com/threat-intelligence-report-september-2026
+
+
+- **Anthropic disclosure follow-up (scr-anthropic-2026-09-12)**: Verified vendor public disclosure (improving-alignment-security-efforts). Action: extract exact affected builds and connector lists; promotion_status: candidate_follow-up; evidence strength: Strong; candidate_seen_at: 2026-09-12; last_checked_at: 2026-09-12. Source: https://www.anthropic.com/news/improving-alignment-security-efforts
+  
+- **Cloudflare Agents @0.23.0 (scr-cloudflare-agents-0.23.0)**: Release includes voice modules + diagnostics. Relevance: edge artifact plane increase (audio/transcripts). Evidence strength: Strong; candidate_seen_at: 2026-09-12; promotion_status: candidate. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
+
+- **GitHub Copilot telemetry (scr-copilot-metrics-2026-09-11)**: VS Code Agents added to Copilot usage metrics (changelog). Relevance: billing/telemetry. Evidence strength: Strong; candidate_seen_at: 2026-09-12; promotion_status: candidate-followup. Source: https://github.blog/changelog/2026-09-11-add-vs-code-agents-to-copilot-usage-metrics
+
+- **Google ADK for Kotlin 1.0 (scr-google-adk-kotlin-1.0)**: production-ready mobile agent SDK; evidence strength: Strong; candidate_seen_at: 2026-09-12; follow-up: capture mobile credential rotation guidance. Source: https://developers.googleblog.com/announcing-adk-for-kotlin-10-building-production-ready-ai-agents-in-kotlin-android-and-beyond/
+
+- **Emerging infra candidates added (deferred)**:
+  - okf-agent-memory (scr-okf-agent-memory): Git-native persistent memory; evidence strength: Medium (GitHub). candidate_seen_at: 2026-09-12; promotion_status: deferred; follow-up: test latency/compat with common RAG stacks. Source: https://github.com/okf-memory/okf-agent-memory
+  - ContextGO (scr-contextgo): local-first memory/runtime for multi-agent teams; evidence strength: Medium; candidate_seen_at: 2026-09-12; promotion_status: deferred. Source: https://github.com/dunova/ContextGO
+
+- **User-workflow candidates logged**:
+  - Dev.to: AI-generated-test quality (scr-devto-tests): actionable CI gate recommendation; evidence strength: Medium-High; candidate_seen_at: 2026-09-12. Source: https://dev.to/p0rt/ai-generated-tests-can-make-coding-agents-worse-heres-how-to-check-yours-3jc9
+  - HN: Claude token-savings trick (scr-hn-claude-token): reproduce and codify; evidence strength: Medium; candidate_seen_at: 2026-09-12. Source: https://news.ycombinator.com/item?id=49587379

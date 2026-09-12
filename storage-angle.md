@@ -830,3 +830,10 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Evidence strength: Strong
   - Source: https://vercel.com/changelog/persistent-memory-for-eve-agents
   - Watch trigger: Vercel publishes default retention duration or a policy toggle for automatic exports.
+
+
+- AWS S3 Files as an orchestration plane (2026-09-12): vendor blog positions S3 as the artifact and coordination plane for multi-agent workflows. Storage implication: operators should treat S3 as a first-class snapshot and replay store (include lifecycle, encryption, and access-control plans). Evidence strength: Strong. Source: https://aws.amazon.com/blogs/storage/orchestrating-multi-agent-ai-architectures-with-amazon-s3-files
+  - Watch trigger: publication of a reference architecture or third-party tool that replays agent sessions directly from S3 snapshots.
+
+- Edge audio artifacts from Cloudflare Agents (2026-09-12): voice modules introduce audio/transcript artifacts stored at the edge. Storage implication: update retention, encryption, and export policies to cover audio; ensure edge buckets follow enterprise retention defaults. Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
+  - Watch trigger: discovery of persistent, unprotected audio buckets or transcript exports in default installs.

@@ -380,11 +380,11 @@ Status:
 
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
-- Maturity: Active; edge‑hosted agent tooling expanding (voice, Twilio, edge orchestration)
-- Recent changes (2026-09-06 refresh): Cloudflare published Adaptive Intelligence & cache-transcoding posts that change detection/quarantine and storage patterns at the edge. Voice/Twilio packages increase egress/attack surface; validate edge quarantine/playbooks in staging. Evidence strength: Strong (Cloudflare blog).
-- Action: Map Cloudflare detection outputs into enterprise IDS and test quarantine playbooks.
-- Source: https://blog.cloudflare.com/introducing-adaptive-intelligence/
-- Last refreshed: 2026-09-06
+- Maturity: Active; edge‑hosted agent tooling expanding (voice, diagnostics, edge orchestration)
+- Recent changes: Release agents@0.23.0 adds voice I/O modules and runtime diagnostics. Operators should evaluate where audio/transcript artifacts are stored and ensure WriteGuard/egress controls cover new artifact types. Impact: increases edge artifact surface and retention/egress requirements; test voice-module permissions and diagnostic export paths in staging before production rollout.
+- Evidence strength: Strong
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
+- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).
