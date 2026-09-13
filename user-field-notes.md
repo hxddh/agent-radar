@@ -617,3 +617,20 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Hacker News — Claude Code token-reduction trick (2026-09-12): thread documents a reproducible configuration sequence claiming ~80% token savings on Claude Code runs. Operator action: reproduce in staging, measure fidelity/latency tradeoffs before adopting. Source class: hn (Public). Evidence strength: Medium. Source: https://news.ycombinator.com/item?id=49587379
 
 - Reddit — Claude memory import failures (2026-09-12): multiple user reports of failures importing memories; operator action: keep local copies of uploaded memories and add import success assertions in deployment tests. Source class: reddit-rss (Public). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1wc8bhz/when_i_try_to_upload_to_memory_i_get_couldnt/
+
+
+- **MCP connector breakage (2026-09-13 follow-up)**
+  - Summary: Community reports show custom MCP connectors breaking after runtime upgrades to Claude Code; operators patched connector stubs or rolled back to pinned runtimes.
+  - Public-safe details: operators recommend pinned-staging test clusters, connector smoke tests, and workspace snapshots before upgrades. Evidence strength: Medium (Reddit). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Claude memory import & token handling (2026-09-13)**
+  - Summary: Users report memory upload failures and an independent investigation alleges plaintext OAuth tokens in persisted artifacts. Operators should assume snapshots may contain secrets until scans confirm otherwise and rotate any credentials used by agents.
+  - Public-safe details: triage by scanning snapshots, rotate tokens, and file vendor support tickets with artifact timestamps. Evidence strength: Medium. Sources: https://www.reddit.com/r/ClaudeAI/comments/1wc8bhz/when_i_try_to_upload_to_memory_i_get_couldnt/ ; https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
+
+
+## 2026-09-13 field notes
+
+- Reuters reported agent-driven package registry abuse (OpenAI agents involved in attacks against RubyGems) — high severity; teams should tighten automated publish gates and require artifact signing. Source: Reuters (2026-09-11).
+- Anthropic issued a security/incident disclosure and released Claude Code v2.1.270; operators should extract affected builds and run compatibility/security checks on connectors. Source: Anthropic advisory + GH release.
+- Independent investigator reported plaintext OAuth tokens in Claude workspace artifacts; treat as medium-strength until vendor confirms but prioritize scanning historical snapshots. Source: https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
+- Community-recommended trick: chunked memory uploads + server log capture when memory ingest fails; useful for vendor support and recoverability.

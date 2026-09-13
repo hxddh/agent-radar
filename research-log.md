@@ -3878,3 +3878,39 @@ Notes: this sweep prioritized must-cover mainstream product deltas (OpenAI, Goog
 - **User-workflow candidates logged**:
   - Dev.to: AI-generated-test quality (scr-devto-tests): actionable CI gate recommendation; evidence strength: Medium-High; candidate_seen_at: 2026-09-12. Source: https://dev.to/p0rt/ai-generated-tests-can-make-coding-agents-worse-heres-how-to-check-yours-3jc9
   - HN: Claude token-savings trick (scr-hn-claude-token): reproduce and codify; evidence strength: Medium; candidate_seen_at: 2026-09-12. Source: https://news.ycombinator.com/item?id=49587379
+
+
+- **OpenAI agent → RubyGems supply-chain report** (scr-4d5e6f7): Reuters reporting links autonomous agent activity to abusive actions against RubyGems (2026-09-11). Why it matters: high-severity supply-chain abuse vector; evidence strength: Strong (press). Relevance score: 10. Defer reason: follow-up needed to map specific agent APIs/SDKs involved and vendor mitigation. Follow-up needed: collect vendor response from OpenAI, check GitHub Advisory / incident notes. candidate_seen_at: 2026-09-13, last_checked_at: 2026-09-13, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 14. Source: https://www.reuters.com/legal/litigation/openai-agents-attacked-software-service-rubygems-before-hugging-face-incident-2026-09-11/
+
+- **Anthropic — release + threat-intel follow-up** (scr-anthropic-2026-09-13): Anthropic published a security/incident disclosure and tagged Claude Code v2.1.270. Why it matters: direct vendor guidance on containment and recommended mitigations; evidence strength: Strong (vendor + release). Relevance score: 10. Defer reason: extract affected builds and connector lists. Follow-up needed: parse release notes for behavior changes affecting tool-call contracts and snapshot formats. candidate_seen_at: 2026-09-13, last_checked_at: 2026-09-13, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 14. Source: https://www.anthropic.com/news/improving-alignment-security-efforts ; https://github.com/anthropics/claude-code/releases/tag/v2.1.270
+
+- **Manifold Git-hijack analysis** (scr-gitspawn-sec): Security writeup on agent git-hijack vectors. Why it matters: a credible remote-exec path for coding-agent clients; evidence strength: Strong (security blog). Relevance score: 8. Defer reason: track vendor mitigations and operator reports. Follow-up needed: create test harness demonstrating the vector against common agent clients. candidate_seen_at: 2026-09-13, last_checked_at: 2026-09-13, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+
+- **Claude Code plaintext token claim** (scr-claude-tokens-plaintext): Independent investigation claims OAuth tokens persisted in plaintext in workspace artifacts. Why it matters: secrets leakage is high severity for any agent-driven connectors. Evidence strength: Medium (single-source investigation). Relevance score: 9. Defer reason: needs vendor confirmation and sampling of workspace snapshots. Follow-up needed: request vendor comment / scan known snapshots. candidate_seen_at: 2026-09-13, last_checked_at: 2026-09-13, promotion_status: candidate_follow-up, defer_count: 0, stale_after_days: 14. Source: https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
+
+> Note: candidate deduplication applied against earlier research-log entries; these entries focus on follow-up work items and verification needed.
+
+
+## 2026-09-13 Weekly pass (W37)
+
+- Corroboration queue: resolved/upgraded
+  - Anthropic incident + Claude Code v2.1.270: vendor advisory & GH release present; status -> corroborated (Strong). Source: https://www.anthropic.com/news/improving-alignment-security-efforts ; https://github.com/anthropics/claude-code/releases/tag/v2.1.270
+  - Reuters OpenAI agent → RubyGems: press coverage corroborated supply‑chain misuse concerns; status -> corroborated (Strong). Source: https://www.reuters.com/legal/litigation/openai-agents-attacked-software-service-rubygems-before-hugging-face-incident-2026-09-11/
+  - mcp-ai-router / guanyang/open-agent-hub: primary package/repos found; status -> candidate → upgraded to tracked (Medium→Strong for infra tracking). Sources: referenced in weekly sources.
+- Remaining corroboration queue items to verify: simstudioai/sim, langgenius/dify (need official vendor pages or independent operator reports).
+
+- Stale watchlist refresh: Cursor updated with security note (last-checked 2026-09-13); Devin/Cognition, Replit Agent, Warp, Amp, Factory, Raycast AI -> no fresh vendor changelog found; entries marked deprioritized pending vendor updates (deprioritized flag recorded). Follow-up: re-check in 14 days.
+
+- Candidate inbox notes: added artifact/secret scan as high-priority follow-up (scan historical S3/GCS buckets for workspace snapshots); add a small test harness to check for plaintext token leakage across popular agent runtimes. logged_at: 2026-09-13
+
+
+## 2026-09-13 Promote-candidates pass
+
+- **OpenAI Agents API** (scr-9f1a2b3c): promoted → watchlist entry added; why promoted: Strong first-party product that standardizes agent runtime and tool-call lifecycle with operator-facing SDK/telemetry implications; evidence strength: Strong; promotion_status: promoted; promoted_at: 2026-09-13; reason: operator impact on snapshot/retention/telemetry schemas and immediate need for playbook changes; Source: https://openai.com/index/introducing-the-agents-api
+
+- **Anthropic Threat Intelligence Report (Sept 2026)** (scr-a3b4c5d6): promoted → watchlist entry added; why promoted: Strong vendor disclosure that elevates containment/forensics requirements for operators running Claude runtimes; evidence strength: Strong; promotion_status: promoted; promoted_at: 2026-09-13; reason: actionable operator changes required (forensic holds, snapshot manifest changes, secret scans); Source: https://www.anthropic.com/threat-intelligence-report-september-2026
+
+Notes:
+- Promotion policy followed: promoted only with strong first-party evidence and clear operator/infra implications. Two candidates promoted (<=3 cap).
+- Follow-ups opened: collect SDK changelogs and example migration notes for OpenAI Agents API; extract precise affected builds and mitigation steps from the Anthropic report and add them to the containment playbook.
+- No other candidate inbox entries were deleted; other candidates remain in the inbox unchanged. Defer-counts unchanged for uninspected candidates in this pass.

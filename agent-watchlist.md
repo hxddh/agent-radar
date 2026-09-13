@@ -6,10 +6,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
-- Maturity: Strong adoption signal inside OpenAI ecosystems and third‑party tooling integration.
-- Recent changes: OpenAI released codex rust client tag rust-v0.151.0 (2026-08-30). Operators should review SDK auth/telemetry changes, pin client versions in production, and run CI/regression tests for CLI integrations. Evidence strength: Strong (GitHub release).
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.151.0
-- replace_section anchor: `## Codex / ChatGPT Coding Agent`
+- Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
+- Recent changes: OpenAI continues to iterate SDKs and clients; operators should pin client versions and run CLI compatibility tests. Last‑checked: 2026-09-13. Evidence strength: Strong (OpenAI releases).
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
@@ -18,16 +16,12 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Last refreshed: 2026-09-06
 ## Cursor
 - Category: AI IDE / coding agent
-- Maturity: Widely adopted AI IDE; security vulnerabilities emerging as adoption grows.
-- Recent changes: Active product updates continue (Composer, Automations, Marketplace). Community reports and security disclosures have highlighted a local-extension/0day RCE class of issues that operators should treat as high‑priority for enterprise installations. Immediate actions: enforce extension signing policies, run pre-deploy extension audits, and enable workspace‑isolation modes where available. Source: https://cursor.com/changelog#main
-- Freshness: refreshed 2026-08-20 (this watchlist entry updated to reflect recent security discussion and product cadence).
-- replace_section anchor: `## Cursor`
+- Maturity: Widely adopted AI IDE; security vulnerabilities remain a key operator concern.
+- Recent changes: Security disclosures and community reports continue to surface extension-level vulnerabilities and local-extension RCE classes. Last‑checked: 2026-09-13. Immediate action: enforce extension signing, enable workspace isolation, and add extension audit to CI. Evidence strength: Strong (vendor changelog + community/security reports). Source: https://cursor.com/changelog#main
 ## Devin / Cognition
 - Category: Agent runtime / platform
-- Maturity: Deferred / deprioritized (no fresh public changelog found during this pass)
-- Recent changes: No substantive public updates located since previous entry; last-checked: 2026-08-21. Marked deprioritized pending vendor changelog or new evidence.
-- Follow-up: Monitor official Devin/Cognition release channels and community reports for productization or MCP integration signals.
-- Source: none found this pass; status: deprioritized
+- Maturity: Deferred; no fresh public changelog located during this pass.
+- Recent changes: No substantive public updates since last entry; last‑checked: 2026-09-13. Action: deprioritized pending vendor changelog or operator reports. Evidence strength: None (no public updates).
 ## GitHub Copilot / Coding Agent
 
 Status:
@@ -45,34 +39,21 @@ Status:
 
 ## Replit Agent
 - Category: Cloud IDE / coding agent
-- Maturity: Active but deprioritized this pass (no new public changelog found)
-- Recent changes: No fresh public updates located during this sweep; last-checked: 2026-08-21. Marked deprioritized pending new product/news.
-- Follow-up: Watch Replit blog & changelog for sandboxing or MCP adapter releases.
-- replace_section anchor: `## Replit Agent`
+- Maturity: Active historically; no fresh public changelog in this pass.
+- Recent changes: No new vendor changelog found; last‑checked: 2026-09-13. Status: deprioritized until vendor publishes new release or operator reports. Evidence strength: None (no update).
 ## Warp
 - Category: Terminal / developer productivity agent
-- Maturity: Active but deprioritized this pass (no fresh public update found)
-- Recent changes: No substantive public updates detected during this sweep; last-checked: 2026-08-21. Deprioritized until vendor changelog appears.
-- Follow-up: Monitor Warp release notes for agent/plugin changes and CLI auth defaults.
-- replace_section anchor: `## Warp`
+- Maturity: Previously active; no public updates found during this pass.
+- Recent changes: last‑checked: 2026-09-13. Status: deprioritized; recheck on vendor changelog. Evidence strength: None.
 ## Amp
 - Category: Agent / productivity assistant
-- Maturity: Active but deprioritized this pass (no fresh public update found)
-- Recent changes: No substantive public updates detected during this sweep; last-checked: 2026-08-21. Deprioritized until vendor changelog appears.
-- Follow-up: Monitor Amp release notes and community threads for UX/security changes.
-- replace_section anchor: `## Amp`
+- Maturity: No fresh public changelog during this pass. Last‑checked: 2026-09-13. Status: deprioritized until new evidence appears.
 ## Factory
 - Category: Agent orchestration / platform
-- Maturity: Active but deprioritized this pass (no fresh public update found)
-- Recent changes: No substantive public updates located during this sweep; last-checked: 2026-08-21. Deprioritized pending product releases.
-- Follow-up: Watch for orchestration/harness releases and MCP router integrations.
-- replace_section anchor: `## Factory`
+- Maturity: No fresh public changelog during this pass. Last‑checked: 2026-09-13. Status: deprioritized until vendor publishes updates or operator reports. Evidence strength: None.
 ## Raycast AI
 - Category: Desktop assistant / agent integration
-- Maturity: Active but deprioritized this pass (no fresh public update found)
-- Recent changes: No substantive public updates located during this sweep; last-checked: 2026-08-21. Deprioritized until vendor changelog or marketplace data appears.
-- Follow-up: Monitor Raycast extension marketplace and official blog for agent/plugin changes.
-- replace_section anchor: `## Raycast AI`
+- Maturity: Previously active; no new public changelog found this pass. Last‑checked: 2026-09-13. Status: deprioritized pending vendor updates. Evidence strength: None.
 ## Vercel AI / Sandbox-Related Agent Workflow
 ## Vercel AI / Sandbox-Related Agent Workflow
 
@@ -294,12 +275,11 @@ Status:
 - Source: https://vercel.com/changelog/gpt-6-astra-now-available-on-vercel-ai-gateway
 - Last refreshed: 2026-09-06
 ## Anthropic — Claude Code (scr-claude-code)
-- Recent changes: Anthropic published a public Threat Intelligence report (Sept 2026) describing incidents, misuse vectors, and recommended mitigations affecting early Claude builds and connector interactions.
-- Why it matters: Operators must treat persisted memories, connector logs, and service tokens as potential forensic evidence; containment and token-rotation policies should be applied immediately. Add pre-upgrade compatibility tests for custom MCP connectors and require workspace snapshotting prior to runtime upgrades.
-- Evidence strength: Strong
-- Source class: Vendor security advisory / engineering post
-- Source: https://www.anthropic.com/threat-intelligence-report-september-2026
-- Last-checked: 2026-09-11
+- Category: Coding agent
+- Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
+- Recent changes: Anthropic published a security/incident disclosure (Sept 2026) and released Claude Code v2.1.270. Vendor guidance includes recommended mitigations and updated containment defaults; operators have reported connector compatibility breakages after recent runtime upgrades (community reports). Immediate actions: rotate OAuth/connector tokens where used, run pinned-staging compatibility tests for MCP connectors, and collect pre/post-upgrade workspace snapshots for rapid rollback.
+- Evidence strength: Strong (vendor blog + GitHub release + press coverage); additional independent investigation (plaintext token claim) is Medium and awaiting vendor confirmation.
+- Source: https://www.anthropic.com/news/improving-alignment-security-efforts ; https://github.com/anthropics/claude-code/releases/tag/v2.1.270 ; https://www.reuters.com/world/china/how-anthropic-says-claude-was-used-weapons-spying-cyber-operations-2026-09-11/
 ## Amazon Bedrock AgentCore
 
 - Category: Platform agent runtime / payments & monetization
@@ -412,13 +392,9 @@ Status:
 - Source: https://blog.cloudflare.com/botbase-for-operators/
 
 ## GitHub Copilot — Policy & Billing Changes (scr-copilot-polchg)
-
-- What it is: GitHub announced upcoming policy and billing changes that change feature access and cost model for Copilot and Copilot-for-Agents surfaces.
-- Why it matters: Copilot represents a mainstream coding-agent surface; billing/policy shifts materially affect operator cost forecasts (background tasks, CI agents, seat vs token billing) and may change which features (streaming, attachments, plugin access) remain available to automated agent runs.
-- Key operator impacts: quantify delta for common CI/background tasks; re-evaluate background-run architecture and snapshot retention if costs rise; add cost-gating to high-frequency agent workflows.
-- Evidence strength: Strong (official GitHub changelog entry).
-- Source: https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing
-
+- Category: Coding agent / platform telemetry & billing
+- Maturity: Broad enterprise reach; telemetry changes increasing granularity of agent metering.
+- Recent changes: Copilot now records VS Code Agents usage in telemetry (impact: billing/usage). Last‑checked: 2026-09-13. Action: review billing impact for IDE/agent usage and update cost forecasts. Source: https://github.blog/changelog/2026-09-11-add-vs-code-agents-to-copilot-usage-metrics
 ## remem-ai (scr-remem-ai)
 
 - What it is: remem-ai is an emerging local-first/persistent memory crate for coding agents (crates.io entry).
@@ -462,3 +438,25 @@ Status:
 - Evidence strength: Medium (GitHub repo; notable community interest)
 - Promotion reason: memory-as-artifact primitive with direct storage and replay implications for agent fleets; merits watchlist entry to track adoption and integrations.
 - Source: https://github.com/MemTensor/MemOS
+
+
+## OpenAI Agents API (scr-9f1a2b3c)
+
+- What it is: Official OpenAI Agents API that formalizes an agents runtime, tool-call lifecycle, auth patterns, and developer/SDK surfaces for building hosted agents and instrumented agent runs.
+- Why it matters: Mainstream vendor product that standardizes runtime semantics and operator-facing integration points (auth, telemetry, tool-calls), creating immediate migration and compatibility work for agent runtimes and operator playbooks. Operators and infra teams will need to re-check snapshot/receipt schemas, SDK auth flows, and default telemetry hooks to avoid silent persistence or missing forensic records.
+- Evidence strength: Strong (official OpenAI launch)
+- Relevance score: 10
+- Promotion: promoted 2026-09-13 — added to watchlist to track operator guidance, SDK changelogs, and snapshot/retention implications.
+- Follow-up needed: collect SDK examples, note any default retention/telemetry toggles, test pre-upgrade snapshot/restore, and capture any migration notes that alter persisted artifact formats.
+- Source: https://openai.com/index/introducing-the-agents-api
+
+
+## Anthropic Threat Intelligence Report (Sept 2026) (scr-a3b4c5d6)
+
+- What it is: Vendor-published threat intelligence / incident disclosure covering observed agent-related incidents and mitigations that affect Claude runtimes and connectors.
+- Why it matters: Raises containment, forensic, and retention requirements for operators running Anthropic-managed or self-hosted Claude/Claude-Code agents; may require immediate token rotation, snapshot retention policy changes, and export/erase playbook updates.
+- Evidence strength: Strong (vendor-published report)
+- Relevance score: 9
+- Promotion: promoted 2026-09-13 — added to watchlist because it materially affects operator containment/security controls and snapshot/audit requirements.
+- Follow-up needed: extract affected builds/versions, enumerate recommended retention/export/connector mitigation steps, and add any recommended forensic artifact formats (IOCs, snapshot manifests) to storage playbooks.
+- Source: https://www.anthropic.com/threat-intelligence-report-september-2026

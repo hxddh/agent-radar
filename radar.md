@@ -161,3 +161,14 @@ Action items: document connector compatibility tests, require connector CI again
 - MemOS — hybrid retrieval memory (promoted)
   - Why promoted: Memory-as-artifact primitive that may reduce token storage while increasing snapshot/provenance requirements; strengthens Thesis 7 (memory + MCP convergence) and has direct storage/schema implications for snapshots and replay.
   - Source: https://github.com/MemTensor/MemOS
+
+
+### 2026-09-13 Promotions
+
+- OpenAI — Agents API (promoted)
+  - Why promoted: Official product launch that formalizes agent runtime/tool-call lifecycle and SDK surfaces; immediate operator and infra impact on snapshot formats, telemetry, and auth integration. Affects Thesis 1 (task-based execution), Thesis 5 (object storage as artifact plane), and Thesis 8 (platform-vendor MCP entry).
+  - Source: https://openai.com/index/introducing-the-agents-api
+
+- Anthropic — Threat Intelligence Report (Sept 2026) (promoted)
+  - Why promoted: Vendor-disclosed incident report that changes containment and forensic requirements for operators running Claude/Claude-Code agents; strengthens Thesis 9 (containment/security) and drives storage/audit playbook changes.
+  - Source: https://www.anthropic.com/threat-intelligence-report-september-2026

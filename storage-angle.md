@@ -837,3 +837,38 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
 
 - Edge audio artifacts from Cloudflare Agents (2026-09-12): voice modules introduce audio/transcript artifacts stored at the edge. Storage implication: update retention, encryption, and export policies to cover audio; ensure edge buckets follow enterprise retention defaults. Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
   - Watch trigger: discovery of persistent, unprotected audio buckets or transcript exports in default installs.
+
+
+- Signal: Persisted workspace snapshots can contain secrets (claims about Claude Code storing OAuth tokens in plaintext).
+  - Storage implication: Treat agent workspace snapshots as sensitive secret stores; enforce server-side encryption, minimal retention, and secret scanning on all snapshot/KB exports. Add object-store lifecycle rules and alerting for unusual snapshot creation frequency.
+  - Evidence strength: Medium (independent investigation); vendor confirmation pending.
+  - Source: https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/
+  - Watch trigger: automated secret-scan detects OAuth tokens in historical snapshots or an external disclosure of leaked credentials tied to agent artifacts.
+
+- Signal: Platform operator tooling (Cloudflare BotBase / Daybreak) and edge agent voice modules expand artifact types (audio, transcripts) stored in object stores.
+  - Storage implication: Expand retention/egress policy matrix to include audio/transcript artifacts and ensure WriteGuard/evidence-sink bindings capture these artifacts for forensic analysis. Evaluate storage cost and access patterns: audio can be large and requires indexing for retrieval.
+  - Evidence strength: Strong (vendor blogs)
+  - Source: https://blog.cloudflare.com/botbase-for-operators ; https://blog.cloudflare.com/vulnerability-discovery-remediation/
+  - Watch trigger: platform defaults enable transcript export to object store without tenant opt-out or a large uptick in edge artifact objects created per agent session.
+
+
+## 2026-09-13 storage notes
+
+- Workspace snapshots and memory exports may contain sensitive credentials. Action: treat snapshot buckets as secret storage—encrypt at rest (KMS), restrict access, enable object-level access logs, and run retroactive secrets scans.
+- New artifact types (audio transcripts, VQA screenshots) expand retention and egress policy surface. Map each artifact type to a retention class and ensure WriteGuard / platform egress controls prevent inadvertent exports.
+- For replayability and forensics, capture immutable indexed metadata (timestamp, runtime tag, connector version, workspace id) alongside each snapshot to enable fast triage and targeted rollback.
+
+
+### 2026-09-13: Promotions with direct storage implications
+
+- OpenAI Agents API (promoted: scr-9f1a2b3c)
+  - Implication: The Agents API formalizes runtime and tool-call lifecycles; operators should expect SDK-driven changes to default auth/telemetry behavior and persisted artifact schemas. Immediate actions: (1) audit OpenAI SDK/Agents defaults for any automatic artifact uploads or telemetry fields that may land in vendor-managed stores; (2) update snapshot manifest schema to include Agents API run_id, tool-call receipts, and SDK version; (3) ensure export-to-operator-bucket hooks exist and test snapshot/restore flows.
+  - Evidence strength: Strong (official OpenAI product announcement)
+  - Source: https://openai.com/index/introducing-the-agents-api
+
+- Anthropic Threat Intelligence Report (promoted: scr-a3b4c5d6)
+  - Implication: Vendor-documented incidents and mitigations increase the need for append-only forensic buckets, short-term full-fidelity traces for triage, and immutable receipts (hash+signed metadata) for run reconciliation. Immediate actions: (1) enforce run receipts and append-only prefixes for suspicious runs; (2) enable object-level access logs and KMS-managed encryption for snapshot prefixes; (3) run retroactive secret scans on recent snapshots if the report indicates credential exposure patterns.
+  - Evidence strength: Strong (vendor report)
+  - Source: https://www.anthropic.com/threat-intelligence-report-september-2026
+
+Notes: These promotions reinforce existing storage-angle guidance (snapshot schema, lifecycle tiers, export hooks). Prioritize playbook updates that (a) add Agents-API-specific manifest fields, (b) validate SDK default retention/telemetry settings for agent runs, and (c) automate secrets-scanning and short-term forensic holds when vendor advisories indicate potential leaks.

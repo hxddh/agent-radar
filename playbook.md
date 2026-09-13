@@ -613,3 +613,29 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Should promote to playbook? yes (promote after 1-2 reproducible internal runs)
   - Source class: Vendor advisory + community reports
   - Evidence strength: Strong/Medium
+
+
+## Pre-upgrade Connector Compatibility & Token Hygiene (candidate playbook)
+
+- When useful: Before rolling runtime/conductor upgrades (Claude Code, Codex, Cursor) that touch tool-call semantics or MCP contracts.
+- Steps:
+  1. Pin a staging runtime to the new release tag and run full connector CI (smoke + regression tests) against a replayed sample of production traffic.
+  2. Snapshot workspace state and store snapshots in an encrypted object store with restricted ACLs; record snapshot object hashes for quick rollback.
+  3. Run secret-scan on snapshots (search for OAuth tokens, AWS keys, other credentials); if tokens found, rotate immediately and invalidate leaked tokens.
+  4. Feature-gate runtime rollout (canary percentage) and monitor agent telemetry for failed tool calls or auth errors.
+  5. Maintain compatibility matrix for connector versions vs runtime versions and publish to internal runbooks.
+- Evidence: Community connector breakage reports + vendor runtime releases (Anthropic v2.1.270). Sources: Reddit, Anthropic GitHub release.
+- Should promote to playbook? yes
+
+
+## 2026-09-13 playbook additions
+
+- Pre-upgrade checklist for agent runtimes:
+  - Pin runtime and connector versions in staging; run connector smoke tests against pinned runtime tags.
+  - Take workspace snapshots and retain them off‑cluster before any runtime upgrade; document rollback steps.
+  - Verify token rotation and connector auth flows are scripted and can be executed automatically if compromise suspected.
+- Secrets & snapshot handling:
+  - Treat snapshot/object stores as secrets stores: require server‑side encryption, fine‑grained IAM, and audit logging.
+  - Run a secrets scan across historical snapshots and automate alerting for discovered OAuth tokens or API keys.
+- Supply‑chain hardening:
+  - Require signed artifacts for any agent-invoked git/OCI pulls; add provenance verification in agent fetch paths.
