@@ -872,3 +872,18 @@ References: promoted from monthly (Aug 2026) after increased operator use of S3-
   - Source: https://www.anthropic.com/threat-intelligence-report-september-2026
 
 Notes: These promotions reinforce existing storage-angle guidance (snapshot schema, lifecycle tiers, export hooks). Prioritize playbook updates that (a) add Agents-API-specific manifest fields, (b) validate SDK default retention/telemetry settings for agent runs, and (c) automate secrets-scanning and short-term forensic holds when vendor advisories indicate potential leaks.
+
+
+- 2026-09-14 — Multimodal KB storage implications:
+  - Observation: AWS Bedrock Managed KB now accepts image/audio/video embeddings; OpenAI posts indicate storage/accuracy deltas with Astra.
+  - Implication: object store budgets and lifecycle policies must be revisited; embeddings may become larger, and media blobs raise retention and egress costs.
+  - Actionable checks: run a KB capacity test ingesting representative media; estimate per‑embedding storage growth and update lifecycle/ttl rules accordingly.
+  - Watch trigger: >10x growth in median KB object size or spike in media embedding counts in telemetry.
+  - Sources: AWS whats‑new; OpenAI Astra blog.
+
+- 2026-09-14 — Edge audio artifacts (Cloudflare agents@0.23.0):
+  - Observation: voice I/O modules at edge produce transcripts and audio blobs that must be stored or streamed.
+  - Implication: audit sinks and retention policies must be extended to include audio objects and their derived transcripts; compliance may require encryption and access logging on these artifacts.
+  - Actionable checks: verify that voice exports flow through existing audit pipelines and that object store lifecycle rules apply.
+  - Watch trigger: transcription export events to public buckets or missing access logs for audio objects.
+  - Source: Cloudflare agents@0.23.0 release.

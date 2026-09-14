@@ -361,10 +361,12 @@ Status:
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
 - Maturity: Active; edge‑hosted agent tooling expanding (voice, diagnostics, edge orchestration)
-- Recent changes: Release agents@0.23.0 adds voice I/O modules and runtime diagnostics. Operators should evaluate where audio/transcript artifacts are stored and ensure WriteGuard/egress controls cover new artifact types. Impact: increases edge artifact surface and retention/egress requirements; test voice-module permissions and diagnostic export paths in staging before production rollout.
-- Evidence strength: Strong
+- Recent changes: Release agents@0.23.0 adds voice I/O modules and expanded runtime diagnostics. Operators should evaluate where audio/transcript artifacts are stored and ensure WriteGuard/egress controls cover the new artifact types. Impact: increases edge artifact surface and retention/egress requirements; test voice‑module permissions, diagnostic export paths, and transcription sinks in staging before production rollout.
+- Action items: add audio artifact lifecycle rules to object stores; confirm encryption‑at‑rest and access logs for voice blobs; run a small end‑to‑end test that exercises voice I/O and diagnostic export to validate policies.
+- Last‑checked: 2026-09-14. Evidence strength: Strong (GitHub release)
 - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
-- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
+
+replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).

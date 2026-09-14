@@ -1816,3 +1816,21 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [infra_primitive / memory] AWS Bedrock — Managed Knowledge Base: doc-level access control debugging (whats-new). Evidence strength: Strong. Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-knowledge-base-debugging-document-access-control/
 
 > Note: This file records short canonical links used by the sweep. Strong vendor changelogs and public discussion threads were prioritized. For candidate-level detail and follow-ups see research-log.md.
+
+
+### Added 2026-09-14 (day pass)
+- [mainstream_product / security] OpenAI agents → RubyGems press investigation (The Guardian). Evidence strength: Strong. Source: https://www.theguardian.com/technology/2026/sep/11/openai-agents-rubygems-malicious-packages
+- [mainstream_product / security] Anthropic / Claude press coverage (Reuters). Evidence strength: Strong. Source: https://www.reuters.com/world/china/how-anthropic-says-claude-was-used-weapons-spying-cyber-operations-2026-09-11/
+- [mainstream_product / release] Cloudflare — agents@0.23.0 release (voice modules + diagnostics). Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
+- [mainstream_product / storage] OpenAI — Astra / storage notes. Evidence strength: Strong. Source: https://openai.com/index/perplexity-improving-accuracy-with-astra
+- [mainstream_product / storage] AWS Bedrock Managed Knowledge Base — multimodal embeddings support. Evidence strength: Strong. Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-managed-knowledge-base-multimodal-embeddings-twelvelabs-marengo/
+- [infra_primitive] detect-coding-agent (crates.io). Evidence strength: Medium. Source: https://crates.io/crates/detect-coding-agent
+
+
+### Added 2026-09-14 (source-sweep)
+- [user_workflow / discussion] How to expose a Goran MCP server to Microsoft 365 Copilot (Bluesky post). Evidence strength: Medium (social/operator how‑to). Source: https://bsky.app/profile/haken.dev/post/3mvhdm2d3pa2k
+- [user_workflow / discussion] Supabase point release adds permission gate to mcp-server-supabase (Bluesky mention). Evidence strength: Low (social mention). Source: https://bsky.app/profile/dunkybot.bsky.social/post/3mvhdh3wns423
+- [user_workflow / discussion] Ask HN: Multi-agent workflows in production — scaling questions. Evidence strength: Low (HN thread / operator Q&A). Source: https://news.ycombinator.com/item?id=49689454
+- [infra_primitive / sandbox] Modal — Sandboxes product page. Evidence strength: Strong (vendor product). Source: https://modal.com/products/sandboxes
+- [mainstream_product / release] Vercel — ai@7.0.99 release. Evidence strength: Strong (GitHub release). Source: https://github.com/vercel/ai/releases/tag/ai%407.0.99
+- [infra_primitive / security] Cloudflare — Automatic remediation policies with Cloudflare CASB. Evidence strength: Strong (vendor blog). Source: https://blog.cloudflare.com/casb-policies/

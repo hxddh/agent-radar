@@ -639,3 +639,10 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Run a secrets scan across historical snapshots and automate alerting for discovered OAuth tokens or API keys.
 - Supply‑chain hardening:
   - Require signed artifacts for any agent-invoked git/OCI pulls; add provenance verification in agent fetch paths.
+
+
+- Pre‑upgrade connector compatibility play (2026-09-14):
+  - When useful: before upgrading agent runtimes or deploying new agent SDK versions that touch MCP/tool‑call contracts.
+  - Steps: (1) snapshot current connector configs and store manifest in governed object store; (2) run connector integration tests against a staging runtime pinned to the new version; (3) run a secret scan on the staging workspace snapshot for plaintext tokens; (4) require a human approval gate for any connector package publish or runtime upgrade that changes connector APIs.
+  - Evidence: community connector breakage reports (Reddit) and Anthropic/OpenAI incident context.
+  - Should promote to playbook? yes (operationally reusable, low friction).
