@@ -637,3 +637,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 
 
 - 2026-09-14: Connector regressions and secret leakage — community reports (Reddit) show custom MCP connectors broke after runtime upgrades; independent investigation claims some Claude workspace snapshots contained OAuth tokens in plaintext. Practical field actions: (1) pin connector adapters and run compatibility CI before upgrades, (2) run retrospective secret scans across recent workspace snapshots stored in object stores, (3) enforce publish gating for package registries. Evidence strength: Medium (community + single investigation). Sources: Reddit thread (connector breakage); secretspec.dev investigation (plaintext tokens) logged in research-log.
+
+
+- **Exposing a Goran MCP server to Microsoft 365 Copilot (2026-09-15)**
+  - Summary: A public Bluesky operator post details stepwise network/ingress configuration and token mapping to expose a Goran MCP endpoint to Copilot. The recipe is practical but highlights easy misconfiguration that widens MCP attack surface.
+  - Evidence strength: Medium (Bluesky operator how‑to)
+  - Public-safe summary: Reproduce steps in isolated lab, avoid broad ingress rules, require origin-restricted tokens or mutual-TLS, and add egress filtering on the MCP host before production exposure.
+  - Source: https://bsky.app/profile/haken.dev/post/3mvhdm2d3pa2k

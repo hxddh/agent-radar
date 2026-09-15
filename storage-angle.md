@@ -887,3 +887,24 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Actionable checks: verify that voice exports flow through existing audit pipelines and that object store lifecycle rules apply.
   - Watch trigger: transcription export events to public buckets or missing access logs for audio objects.
   - Source: Cloudflare agents@0.23.0 release.
+
+
+- AWS Bedrock Managed KB — multimodal embeddings (2026-09)
+  - Impact: image/audio/video embeddings increase object-store volume and diversify KB object types; operators must re-evaluate storage class policies and ingestion cost models.
+  - Immediate action: estimate new storage costs for multimedia KBs; test KB export/import and forensic hold procedures for non-text artifacts.
+  - Watch trigger: a jump in KB ingestion object sizes or counts, automated alerts on S3 (or provider-equivalent) storage growth.
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-managed-knowledge-base-multimodal-embeddings-twelvelabs-marengo/
+
+- OpenAI Astra / storage notes
+  - Impact: Astra-related accuracy & snapshot notes suggest changes to saved session artifacts and eval snapshots; may require SDK/harness updates to maintain replayability.
+  - Immediate action: check SDKs and snapshot exporters for schema changes; add unit tests that validate saved session loads.
+  - Watch trigger: new artifact schema versions in OpenAI release notes or SDK changelogs.
+  - Source: https://openai.com/index/perplexity-improving-accuracy-with-astra
+
+
+## 2026-09-15 storage implications (mid-month)
+
+- Treat agent artifacts as object‑store tenants: audio, transcripts, diagnostic bundles, session snapshots, and multimodal embeddings need explicit retention tiers and lifecycle policies.
+- Multimodal KBs (AWS Bedrock) materially increase index and storage cost; plan capacity and request quota increases before ingesting large corpora.
+- Astra / OpenAI notes: investigate snapshot format changes and evaluate import/export paths for reproducible evals and forensic replay. Update eval harnesses to capture Astra deltas.
+- Operational actions: add storage cost alerts per artifact type; tighten retention defaults for debug/diagnostic exports; require encryption‑at‑rest and access logging for all agent artifact buckets.

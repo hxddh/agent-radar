@@ -3940,3 +3940,27 @@ Notes:
 - **Cloudflare CASB — Automatic remediation policies** (scr-ac1d2e3f-2026-09-14): Cloudflare blog describing CASB policies and automated remediation for detected vulnerabilities/policy violations. Why it matters: platform-level automated remediation can change how operators mitigate agent-driven exfiltration and misbehavior at the edge; relevant to ops playbooks and detection->remediation pipelines. Evidence strength: Strong (vendor blog). Relevance score: 8. Defer reason: needs mapping to agent telemetry sources and demoed remediation actions. Follow-up needed: identify which agent artifacts (uploads, transcripts, tool-call logs) can be detected/remediated by CASB rules and draft mapping for operator playbooks. candidate_seen_at: 2026-09-14, last_checked_at: 2026-09-14, promotion_status: candidate, defer_count: 0, stale_after_days: 30. Source: https://blog.cloudflare.com/casb-policies/
 
 > Note: MUST mainstream items (OpenAI RubyGems press coverage, Anthropic Reuters coverage, cloudflare/agents@0.23.0 release, OpenAI Astra storage notes, AWS Bedrock multimodal KB) are already tracked in the candidate inbox and the corroboration queue (see earlier entries). This sweep focused on capturing social/operator how‑tos and a small set of infra-primitive leads for follow-up. For the MUST mainstream items, follow-ups remain: request vendor advisories (OpenAI), parse Anthropic release notes for affected builds/connectors, test Cloudflare agents voice module in staging, update eval harnesses for Astra, and plan Bedrock capacity tests.
+
+
+- **Vercel ai@7.0.101 release (scr-vercel-ai-7.0.101):** SDK release with memory/tool-hook deltas that affect web-hosted agent integrations. Evidence strength: Strong (GitHub release). Relevance score: 7. Follow-up needed: diff changelog for memory/toolhook API changes; candidate_seen_at: 2026-09-15; last_checked_at: 2026-09-15; promotion_status: candidate. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.101
+
+- **sagemaker 3.22.0 (scr-sagemaker-3.22.0):** PyPI release affecting deployment clients. Evidence strength: Strong (PyPI). Relevance score: 7. Follow-up needed: run CI against 3.22.0 and note changed defaults. candidate_seen_at: 2026-09-15; last_checked_at: 2026-09-15; promotion_status: candidate. Source: https://pypi.org/project/sagemaker/3.22.0/
+
+- **FailproofAI observability (scr-failproofai-2026-09-15):** Runtime observability & enforcement repo for agent harnesses. Evidence strength: Medium (GitHub). Relevance score: 7. Follow-up: short PoC ingestion of agent telemetry. candidate_seen_at: 2026-09-15; last_checked_at: 2026-09-15; promotion_status: candidate. Source: https://github.com/FailproofAI/failproofai
+
+- **Modal Sandboxes (scr-modal-sandboxes-2026-09-15):** Vendor-hosted sandboxes positioning for agent isolation. Evidence strength: Strong (vendor page). Follow-up: request isolation semantics & run threat model. candidate_seen_at: 2026-09-15; last_checked_at: 2026-09-15; promotion_status: candidate. Source: https://modal.com/products/sandboxes
+
+
+## 2026-09-15 mid-month follow-ups
+
+- **OpenAI agents → RubyGems supply-chain press coverage (follow-up)**: request vendor advisory/CVE if applicable; lab task: reproduce agent->package publish flow in isolated network and record egress/credentials used. Evidence strength: Strong (Reuters; The Guardian). Follow-up needed: vendor advisory, mitigation steps. last_checked_at: 2026-09-15.
+
+- **Vercel ai@7.0.101 (scr-a1b2c3d4 follow-up)**: review changelog diff for memory/tool-hook deltas that affect web/IDE agent integrations. Action: run CI compatibility tests against ai@7.0.101 in staging. Evidence strength: Strong (GitHub release). candidate_seen_at: 2026-09-15; promotion_status: candidate; defer_count: 0.
+
+- **sagemaker 3.22.0 (follow-up)**: run test matrix for deployment defaults and auth changes; update infra automation if defaults changed. Evidence strength: Strong (PyPI). last_checked_at: 2026-09-15.
+
+- **Cloudflare CASB policies mapping (follow-up)**: produce mapping worksheet that ties agent artifact types (transcripts, audio, diagnostic archives) to CASB rule types and remediation actions. Evidence strength: Strong (Cloudflare blog). last_checked_at: 2026-09-15.
+
+- **Operator/social signals captured**: Bluesky how‑to exposing Goran MCP to Microsoft 365 Copilot; Reddit Ask HN multi-agent ops thread; Supabase mcp-server permission mention. These are medium/low evidence field signals; plan lab reproductions and extract concrete commands to harden playbooks. last_checked_at: 2026-09-14.
+
+- **Candidate inbox note**: ensure we do not duplicate existing candidate entries for Vercel ai releases or Cloudflare agent releases; update existing entries with the 2026-09-15 checks rather than creating duplicates.

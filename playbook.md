@@ -646,3 +646,34 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Steps: (1) snapshot current connector configs and store manifest in governed object store; (2) run connector integration tests against a staging runtime pinned to the new version; (3) run a secret scan on the staging workspace snapshot for plaintext tokens; (4) require a human approval gate for any connector package publish or runtime upgrade that changes connector APIs.
   - Evidence: community connector breakage reports (Reddit) and Anthropic/OpenAI incident context.
   - Should promote to playbook? yes (operationally reusable, low friction).
+
+
+## Pre-upgrade Connector Compatibility Playbook (candidate)
+
+- When useful: before upgrading an agent runtime (Claude Code, Codex runtime, or any MCP-facing runtime) or before rolling out new SDK/tooling that touches connectors.
+- Steps:
+  1. Snapshot current workspace and connector state (workspace export + connector configs + sample traffic captures).
+  2. Run connector compatibility matrix in a staging runtime that mirrors production (pin connector versions and run representative CI flows).
+  3. Execute a smoke test suite for connectors (auth, tool-calls, upload/download, error handling) and record failures.
+  4. If failures found, pin runtime or connector versions; file remediation ticket and delay rollout.
+  5. Post-upgrade: run canary traffic with increased logging and automated rollback on connector failures.
+- Evidence: repeated community reports of connector breakage and vendor runtime upgrades (Reddit / vendor release notes).
+- Should promote to playbook? yes
+- Example sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+
+## 2026-09-15 promoted playbook items
+
+- Pre-upgrade snapshot & connector smoke tests
+  - Require: workspace snapshot + connector smoke test in staging before runtime/SDK upgrades.
+  - Rationale: connector regressions and broken MCP adapters observed in community reports cause immediate outages.
+
+- Publish token scoping & CI pre-publish gates
+  - Require: least‑privilege publish tokens, signed artifacts, and CI dry‑run checks for any agent-driven package publish.
+  - Rationale: supply‑chain abuse (agent-driven package publishing) observed in press investigations.
+
+- CASB mapping & auto-remediation tests
+  - Require: map agent artifact types (transcripts, audio, diagnostics) to CASB detection rules and test automated remediation flows in staging.
+
+- MCP connector exposure hardening
+  - Require: authenticated endpoints by default, egress filters, and an operator playbook for controlled exposure (with lab reproduction of any discovered how‑tos before accepting them into production).

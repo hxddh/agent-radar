@@ -7,7 +7,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: OpenAI continues to iterate SDKs and clients; operators should pin client versions and run CLI compatibility tests. Last‑checked: 2026-09-13. Evidence strength: Strong (OpenAI releases).
+- Recent changes: Operator CLI surfaced as npm package @openai/codex (2026-09). Combined with press reports of agent‑driven package publication abuse, operators should treat agent publish paths as high‑risk: pin CLI versions, scope and rotate publish tokens to least privilege, require signed artifacts for registries, and add CI pre‑publish policy checks. Last‑checked: 2026-09-15. Evidence strength: Strong (npm release; Reuters/The Guardian coverage of supply‑chain incident).
+- Action: add pre‑publish dry‑run and signature validation to CI templates; require an audit trail for any automated publish triggered by an agent.
+- replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
