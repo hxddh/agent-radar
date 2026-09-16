@@ -3964,3 +3964,16 @@ Notes:
 - **Operator/social signals captured**: Bluesky how‑to exposing Goran MCP to Microsoft 365 Copilot; Reddit Ask HN multi-agent ops thread; Supabase mcp-server permission mention. These are medium/low evidence field signals; plan lab reproductions and extract concrete commands to harden playbooks. last_checked_at: 2026-09-14.
 
 - **Candidate inbox note**: ensure we do not duplicate existing candidate entries for Vercel ai releases or Cloudflare agent releases; update existing entries with the 2026-09-15 checks rather than creating duplicates.
+
+
+- **Cloudflare Workers — Granular Authorization** (scr-2b3c4d5e): vendor blog describing scoped keys/roles for Workers and teammate/agent permission distinctions. Why it matters: changes operator mapping of edge agent permissions and audit sinks; relevance score: 9. Evidence strength: Strong; promotion_status: candidate; follow-up: map new Worker roles to CASB/WriteGuard policies and add to containment playbook. candidate_seen_at: 2026-09-16, last_checked_at: 2026-09-16, defer_count: 0, stale_after_days: 30. Source: https://blog.cloudflare.com/workers-granular-authorization/
+
+- **Google Gemini CLI — preview/nightly (v0.61.0-preview.0)** (scr-3c4d5e6f follow-up): release tags expose remote testing hooks and remote MCP-like flows. Why it matters: CLI-first acceptance tests for agent connectors; Evidence strength: Strong; promotion_status: candidate; follow-up: add Gemini CLI nightly to connector CI matrix. candidate_seen_at: 2026-09-16, last_checked_at: 2026-09-16, defer_count: 0, stale_after_days: 14. Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.61.0-preview.0
+
+- **Vercel ai@7.0.102** (scr-6f7a8b9c follow-up): SDK release with memory/tool-hook deltas; Evidence strength: Strong; promotion_status: candidate; follow-up: run staging deployments and confirm artifact sinks/retention. candidate_seen_at: 2026-09-16, last_checked_at: 2026-09-16, defer_count: 0, stale_after_days: 14. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.102
+
+- **Caura (MemClaw)** (scr-7a8b9c0d): governed shared memory for multi-tenant agent fleets. Why it matters: potential multi-tenant memory primitive with audit trails; Evidence strength: Medium (repo); promotion_status: candidate; follow-up: seek independent adoption evidence or user reports. candidate_seen_at: 2026-09-16, last_checked_at: 2026-09-16, defer_count: 0, stale_after_days: 30. Source: https://github.com/caura-ai/caura
+
+- **strands-agents/evals** (scr-8b9c0d1e): evaluation harness for reproducible execution-based agent evals. Why it matters: improves operator evaluation tooling; Evidence strength: Medium; promotion_status: candidate; follow-up: add to eval comparison matrix. candidate_seen_at: 2026-09-16, last_checked_at: 2026-09-16, defer_count: 0, stale_after_days: 30. Source: https://github.com/strands-agents/evals
+
+- **Operator/social follow-ups**: captured Reddit MCP connector breakage, Bluesky agent chaining reports, and HN Ask thread on multi-agent ops (see daily). Plan: extract reproducible commands for connector testing and publish in playbook candidate list.

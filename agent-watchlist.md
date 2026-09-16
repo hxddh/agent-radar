@@ -344,13 +344,11 @@ Status:
 
 
 ## Google Gemini CLI
-
-- What it is: Command-line tooling for Gemini-family models and remote MCP integrations (CLI + connectors).
-- Why it matters: Simplifies local-to-remote routing and integration into existing agent harnesses; preview releases add flags that affect MCP routing semantics.
-- Evidence strength: Strong (official release)
-- Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.57.0-preview.1
-- replace_section anchor: `## Google Gemini CLI`
-
+- What it is: CLI tooling for Google Gemini that includes local test harnesses and remote invocation flows for Gemini model-powered agents.
+- Recent changes: preview/nightly releases published (v0.61.0-preview.0 and v0.62.0-nightly) exposing remote MCP-like flows, improved remote test hooks, and ergonomics for staging agent runs. Last-checked: 2026-09-16.
+- Why it matters: CLI changes improve operator workflows for integration testing, enabling reproducible connector and MCP contract tests; may increase CI/nightly runs against staging endpoints.
+- Evidence strength: Strong (official GitHub release tags)
+- Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.61.0-preview.0
 ## JetBrains Junie
 
 - What it is: JetBrains' local-first agent runtime (Junie) with a local-only mode for macOS and notes referencing Qwen 3.6 optimizations.

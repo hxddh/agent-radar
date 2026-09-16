@@ -1,0 +1,196 @@
+{
+  "summary": "Daily screening: vendor product updates (AWS S3 Vectors, Cloudflare Workers, Google Gemini CLI, Vercel, GitHub) plus multiple social/ops reports on agent security and operator tuning; several infra primitives (shared memory, evals, orchestration) surfaced but remain repo-only and need corroboration.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "AWS: How Precisely uses Amazon S3 Vectors to improve AI agent UX",
+      "why_it_matters": "S3 Vectors positioned as a scalable vector storage primitive for agent experiences.",
+      "evidence": [
+        "https://aws.amazon.com/blogs/storage/how-precisely-transforms-user-experience-with-ai-agents-using-amazon-s3-vectors/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "check AWS docs for SDKs/pricing and customer case studies"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Cloudflare: granular authorization for Workers (teammates & agents)",
+      "why_it_matters": "New granular auth for Workers changes how agents get scoped access to infra.",
+      "evidence": [
+        "https://blog.cloudflare.com/workers-granular-authorization/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "review SDK examples and migration notes for agent integrations"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Google Gemini CLI: preview/nightly releases (v0.61.0-preview.0, v0.62.0-nightly)",
+      "why_it_matters": "CLI updates affect local/operator workflows for Gemini-powered agents and testing.",
+      "evidence": [
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.61.0-preview.0",
+        "https://github.com/google-gemini/gemini-cli/releases/tag/v0.62.0-nightly.20260916.g6a466a7e2"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "scan release notes for breaking CLI changes and new agent features",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4d5e6f7a",
+      "title": "Agent-driven security incidents: shared boards and agent tool access exploited",
+      "why_it_matters": "Reports show agent memory/tool access can be chained to attack infra and exfiltrate data.",
+      "evidence": [
+        "https://bsky.app/profile/cyfar.ca/post/3mvmb36jhmk2f",
+        "https://dev.to/jamilxt/an-ai-agent-found-admin-access-to-a-13b-startup-in-25-minutes-heres-the-free-tool-it-used-and-337a"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "seek vendor advisories or IOCs and confirm affected services",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e6f7a8b",
+      "title": "GitHub: Copilot suggests custom properties definitions (changelog)",
+      "why_it_matters": "Copilot now suggests custom properties—small UX delta that changes generated code patterns.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-15-github-copilot-suggests-custom-properties-definitions"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "track user reports for regressions or adoption tips"
+    },
+    {
+      "id": "scr-6f7a8b9c",
+      "title": "Vercel AI SDK updates (ai@7.0.102, @ai-sdk/zai@3.0.11)",
+      "why_it_matters": "Vercel SDK releases may change serverless agent deployment and local dev flows.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.102",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/zai%403.0.11"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "review changelog for breaking API or runtime behavior"
+    },
+    {
+      "id": "scr-7a8b9c0d",
+      "title": "Caura (MemClaw) — governed shared memory for multi-tenant agent fleets (GitHub)",
+      "why_it_matters": "Offers MCP-native, multi-tenant memory with trust tiers and audit trails for fleets.",
+      "evidence": [
+        "https://github.com/caura-ai/caura"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "find independent adoption reports, release notes, or vendor integrations",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8b9c0d1e",
+      "title": "strands-agents/evals — evaluation framework for AI agents",
+      "why_it_matters": "Framework for reproducible execution-based agent evaluation and failure analysis.",
+      "evidence": [
+        "https://github.com/strands-agents/evals"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "defer",
+      "next_check": "look for community adoption, benchmarks, or papers using it",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9c0d1e2f",
+      "title": "taskplane — multi-agent coding orchestration with transparency (GitHub)",
+      "why_it_matters": "Orchestration system targeting coding agents and transparent multi-agent flows.",
+      "evidence": [
+        "https://github.com/HenryLach/taskplane"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "check user threads, demos, or integration docs for production use",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a0b1c2d3",
+      "title": "Operator anecdote: agents will chain vulnerabilities when told to break in",
+      "why_it_matters": "Concrete operator cautio\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/coty.bsky.social/post/3mvmc3jtgp22w",
+        "https://bsky.app/profile/criticalnexus.bsky.social/post/3mvk2phk46k27"
+      ],
+      "confidence": "low",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "corroborate with security postmortems or vendor guidance",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-b1c2d3e4",
+      "title": "Tuning a local coding agent: Oh My Pi + Qwen3.8-27B on two RTX 3090s",
+      "why_it_matters": "Practical operator tuning notes for running reasonably capable coding agents on consumer GPUs.",
+      "evidence": [
+        "https://doug.sh/posts/tuning-a-local-coding-agent-oh-my-pi/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "capture concrete config snippets and performance metrics from the post",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: extended Reddit threads (collection errors caused 429s) to corroborate anecdotal workflows",
+    "Missing mainstream_product: explicit Anthropic / Microsoft changelogs in the snapshot (no recent vendor posts found)"
+  ]
+}

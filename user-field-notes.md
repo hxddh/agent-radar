@@ -644,3 +644,14 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Evidence strength: Medium (Bluesky operator how‑to)
   - Public-safe summary: Reproduce steps in isolated lab, avoid broad ingress rules, require origin-restricted tokens or mutual-TLS, and add egress filtering on the MCP host before production exposure.
   - Source: https://bsky.app/profile/haken.dev/post/3mvhdm2d3pa2k
+
+
+- 2026-09-16: Connector breakage & pre-upgrade checklist (derived from Reddit social reports).
+  - Symptom: custom MCP connectors stopped working after a runtime upgrade — authentication failures and schema mismatches reported.
+  - Operator mitigation (public-safe): snapshot active workspaces; pin connector and adapter versions; run connector acceptance tests against staging runtime; rotate short-lived tokens after upgrade; maintain a connector compatibility matrix in CI.
+  - Evidence strength: Medium (Reddit community reports). Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-09-16: Shared-board artifact provenance trick (derived from Bluesky/HN discussions).
+  - Symptom: difficulty attributing artifacts when multiple agents append to shared boards.
+  - Useful trick (should be promoted to playbook after PoC): require per-agent artifact namespaces + signed manifests with provenance headers; enforce read/write ACLs per namespace and block cross-namespace writes by default.
+  - Evidence strength: Medium (Bluesky discussion). Source: https://bsky.app/profile/cyfar.ca/post/3mvmb36jhmk2f

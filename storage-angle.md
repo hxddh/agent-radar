@@ -908,3 +908,10 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
 - Multimodal KBs (AWS Bedrock) materially increase index and storage cost; plan capacity and request quota increases before ingesting large corpora.
 - Astra / OpenAI notes: investigate snapshot format changes and evaluate import/export paths for reproducible evals and forensic replay. Update eval harnesses to capture Astra deltas.
 - Operational actions: add storage cost alerts per artifact type; tighten retention defaults for debug/diagnostic exports; require encryption‑at‑rest and access logging for all agent artifact buckets.
+
+
+- S3 Vectors as object-backed vector stores (2026-09-16): Precisely case study shows S3 Vectors in production, making object storage a primary vector-store substrate. Implications: snapshot/versioning semantics and lifecycle policies become first-class for KBs; operators must design lifecycle, versioning, and provenance (artifact headers) to preserve reproducible retrieval. Evidence strength: Strong. Source: https://aws.amazon.com/blogs/storage/how-precisely-transforms-user-experience-with-ai-agents-using-amazon-s3-vectors/
+  - Follow-up: run a cost/latency matrix for chunk sizes across S3 storage classes.
+
+- Vercel SDK artifact sinks (2026-09-16): ai@7.0.102 introduces memory/tool-hook deltas that can change where ephemeral transcripts and diagnostic artifacts land in serverless deployments. Implications: audit default sinks, enforce explicit artifact-bucket config, and ensure serverless deployments emit provenance metadata. Evidence strength: Strong. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.102
+  - Follow-up: add a staging test that verifies artifact provenance headers and retention policies after SDK upgrades.
