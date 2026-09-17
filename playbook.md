@@ -677,3 +677,11 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 
 - MCP connector exposure hardening
   - Require: authenticated endpoints by default, egress filters, and an operator playbook for controlled exposure (with lab reproduction of any discovered how‑tos before accepting them into production).
+
+
+## Devcontainer-based local agent staging
+
+- Trick: add a devcontainer.json that mirrors the managed agent runtime and enable the chat/agentHost inside the container for local testing.
+  - When useful: when you need reproducible local runs to validate connectors, tool calls, and to reduce token spend during iteration.
+  - Evidence: Bluesky operator tip & multiple community recommendations. Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
+  - Should promote to playbook? yes — low cost, high ROI for connector compatibility and debugging.

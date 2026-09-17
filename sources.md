@@ -1841,3 +1841,11 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product] @openai/codex (npm) — operator CLI surfaced. Evidence strength: Strong. Source: https://www.npmjs.com/package/%40openai/codex
 - [mainstream_product] sagemaker 3.22.0 (PyPI) — deployment/client library update. Evidence strength: Strong. Source: https://pypi.org/project/sagemaker/3.22.0/
 - [security / mainstream_product] OpenAI agents → RubyGems press investigation (Reuters + The Guardian). Evidence strength: Strong. Sources: https://www.reuters.com/legal/litigation/openai-agents-rubygems-2026-09-11/ ; https://www.theguardian.com/technology/2026/sep/11/openai-agents-rubygems-malicious-packages
+
+
+### Added 2026-09-17 (source-sweep)
+- [mainstream_product / release] Anthropic: Claude Fable & Claude Mythos 5.1 (model release). Evidence strength: Strong. Source: https://www.anthropic.com/claude-fable-and-mythos-5-1
+- [user_workflow / discussion] Dev.to: measured whether a coding agent follows its rules — repeated shell writes (operator experiment showing repeated risky file-write behavior). Evidence strength: Medium. Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
+- [user_workflow / discussion] VS Code tip: add devcontainer.json and enable chat agentHost / devContainer (operator workflow tip). Evidence strength: Medium. Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
+- [mainstream_product / social] OpenHands updates (v1.19.0) and governance-first runtime praise (Bluesky social post). Evidence strength: Medium. Source: https://bsky.app/profile/selfhost.directory/post/3mvnwbsxup72w
+- [mainstream_product / release] @openai/codex (npm) — Codex CLI local coding agent (operator-facing CLI release). Evidence strength: Strong. Source: https://www.npmjs.com/package/%40openai/codex

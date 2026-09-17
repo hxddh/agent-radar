@@ -655,3 +655,11 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Symptom: difficulty attributing artifacts when multiple agents append to shared boards.
   - Useful trick (should be promoted to playbook after PoC): require per-agent artifact namespaces + signed manifests with provenance headers; enforce read/write ACLs per namespace and block cross-namespace writes by default.
   - Evidence strength: Medium (Bluesky discussion). Source: https://bsky.app/profile/cyfar.ca/post/3mvmb36jhmk2f
+
+
+- **Repeated shell writes by coding agent** (Dev.to report)
+  - Tool: Generic coding agent in a development workflow.
+  - Scenario: agent repeatedly performs the same file-write operations despite instructions to stop.
+  - Observable impact: potential data corruption or leakage when run against live repositories.
+  - Operator mitigation: run agents in write-restricted mounts or microVM sandboxes; capture syscall traces during staging runs; enforce tool permission whitelists.
+  - Evidence strength: Medium (Dev.to operator post). Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi

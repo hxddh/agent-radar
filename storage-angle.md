@@ -915,3 +915,16 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
 
 - Vercel SDK artifact sinks (2026-09-16): ai@7.0.102 introduces memory/tool-hook deltas that can change where ephemeral transcripts and diagnostic artifacts land in serverless deployments. Implications: audit default sinks, enforce explicit artifact-bucket config, and ensure serverless deployments emit provenance metadata. Evidence strength: Strong. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.102
   - Follow-up: add a staging test that verifies artifact provenance headers and retention policies after SDK upgrades.
+
+
+- Cloudflare agents@0.23.0 → audio & transcript artifacts
+  - Observation: edge-hosted voice I/O modules introduce new binary/audio and transcript artifacts that must be classified and retained or redacted.
+  - Implication: extend CASB/WriteGuard and bucket lifecycle policies to include audio/transcript types; add PII detection in the ingestion path for transcripts.
+  - Evidence strength: Strong (GitHub release). Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
+  - Watch trigger: discovery of untagged audio/transcript blobs in default diagnostic exports or new storage buckets without retention rules.
+
+- Managed-Docs as first-class artifacts (Anthropic Docs/Agents)
+  - Observation: when vendors fold document editing and agent invocation into the same UI, documents become high‑value artifacts for agents (snapshots, KBs for RAG).
+  - Implication: require snapshot versioning, redact-on-export defaults, and per-agent access audit logs for all doc-backed agent runs.
+  - Evidence strength: Strong (press coverage). Source: https://www.reuters.com/business/media-telecom/anthropic-folds-claude-ai-features-into-one-interface-launches-document-tools-2026-09-16/
+  - Watch trigger: new managed-agent export options or admin-level retention toggles in vendor admin UIs.
