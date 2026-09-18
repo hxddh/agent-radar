@@ -685,3 +685,12 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - When useful: when you need reproducible local runs to validate connectors, tool calls, and to reduce token spend during iteration.
   - Evidence: Bluesky operator tip & multiple community recommendations. Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
   - Should promote to playbook? yes — low cost, high ROI for connector compatibility and debugging.
+
+
+- Devcontainer + chat agentHost reproducible local agent environment (candidate playbook)
+  - When useful: developing and testing coding agents locally with consistent tool versions and sandbox boundaries.
+  - Evidence: Bluesky operator tip and multiple devcontainer examples in community posts (medium evidence).
+  - Recipe (summary): include a devcontainer.json that pins a reproducible image, enable the editor/chat agentHost setting, and mount a read-only workspace snapshot for testing; run agent CLI inside the devcontainer with sandboxed filesystem overlays.
+  - Should promote to playbook? yes (after adding concrete devcontainer.json snippet and validated steps).
+  - Source class: social/operator tip (Bluesky)
+  - Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u

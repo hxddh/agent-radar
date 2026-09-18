@@ -1,0 +1,253 @@
+{
+  "summary": "Daily agent radar: three vendor-level updates (GitHub Actions protections GA; Agentic CLI usage metrics; Anthropic Claude Code patch), multiple operator reports on MCP/memory scaling and agent safety, and new/updated local-memory and session-indexing infra projects.",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "GitHub: Workflow execution protections in Actions generally available",
+      "why_it_matters": "Adds guardrails for agent-driven CI workloads; reduces risk of uncontrolled workflow runs.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Read full docs for breaking changes and agent-specific guidance; watch for exploit mitigations in follow-up posts."
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "GitHub: Agentic CLI customizations now in usage metrics API",
+      "why_it_matters": "Enables measuring agent CLI features and custom workflows for operator telemetry.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Check API docs and telemetry schema; confirm whether private-scope usage is supported.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "Anthropic: Claude Code v2.1.276 release",
+      "why_it_matters": "Patch release for Claude Code (vendor-side update affecting coding agents).",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.276",
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.275"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Scan changelog for security or behaviour changes affecting MCP/tooling compatibility."
+    },
+    {
+      "id": "scr-4d5e6f70",
+      "title": "Productionizing Agentic GenAI on AWS: MCP scaling failures",
+      "why_it_matters": "Field report details concrete MCP scaling breakages and operator workarounds on AWS.",
+      "evidence": [
+        "https://dev.to/sharmavarun/productionizing-agentic-genai-on-aws-what-actually-breaks-when-you-scale-mcp-2gkd"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Look for corroborating threads or sample configs; request perf/incident metrics from author.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5e6f7081",
+      "title": "Plugin4Shell: zero-click RCE affecting top coding agents",
+      "why_it_matters": "Operators must patch or isolate vulnerable agent integrations to prevent remote RCE.",
+      "evidence": [
+        "https://www.air.security/blog-posts/plugin4shell",
+        "https://news.ycombinator.com/item?id=49744211"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Confirm vendor advisories/patches and list of affected agent builds; escalate if no fixes in 48h.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-6f708192",
+      "title": "coding_agent_session_search: unified TUI/CLI session indexer",
+      "why_it_matters": "Search local agent session history across 11+ providers for faster troubleshooting.",
+      "evidence": [
+        "https://github.com/Dicklesworthstone/coding_agent_session_search"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Verify security model for stored sessions and MCP/provider credentials.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-7f8092a3",
+      "title": "AVIDS2/memorix: cross-agent memory layer",
+      "why_it_matters": "Open-source memory layer compatible with many coding agents for shared context storage.",
+      "evidence": [
+        "https://github.com/AVIDS2/memorix"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Check adoption notes and how it handles credentialed tools and PII in memory.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8092a3b4",
+      "title": "MemWhale: persistent local memory for coding agents (SQLite + MCP)",
+      "why_it_matters": "Records commands, outputs and fixes locally; helps recover agent state after crashes.",
+      "evidence": [
+        "https://github.com/wuisabel-gif/MemWhale"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Confirm compatibility list for providers and review data retention/security defaults.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-90a3b4c5",
+      "title": "OpenAI Codex: v0.155.0 release",
+      "why_it_matters": "Vendor release for Codex runtime used by many coding-agent stacks.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.155.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Scan release notes for behavioural/security changes affecting agent orchestrators.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a1b2c3d4",
+      "title": "Dev: 'I got tired of babysitting coding agents' — operator loop pain",
+      "why_it_matters": "Concrete workflow friction: frequent human intervention and monitoring drains ops time.",
+      "evidence": [
+        "https://dev.to/brasthapp/i-got-tired-of-babysitting-coding-agents-jen"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Collect corroborating anecdotes or telemetry showing babysitting overhead.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-b2c3d4e5",
+      "title": "Failed compaction wiped AI session; user built infinite memory",
+      "why_it_matters": "Real operator incident: durable session storage is fragile; recovery patterns shared.",
+      "evidence": [
+        "https://dev.to/geco_50/a-failed-compaction-wiped-my-ai-session-so-i-built-it-infinite-memory-18ie"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Verify underlying storage software/version and postmortem details.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-c3d4e5f6",
+      "title": "nexus-mcp: local MCP server for invoking CLI agents",
+      "why_it_matters": "MCP server claims parallel execution, retries, structured output for CLI agent tooling.",
+      "evidence": [
+        "https://github.com/j7an/nexus-mcp"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Needs independent corroboration (user thread or integration example); re-check in 48h.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-d4e5f607",
+      "title": "Flip-Engineering/baton: deterministic coordinator for vendor CLIs",
+      "why_it_matters": "Proposes trust-gated session workers across multiple vendor coding CLIs; early proto.",
+      "evidence": [
+        "https://github.com/Flip-Engineering/baton"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Only single-repo evidence; request usage examples or community reports before promoting.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-e5f60718",
+      "title": "OpenAI agent incidents reported across threads and blogs",
+      "why_it_matters": "Multiple reports of agents performing unsafe or unexpected actions; operational risk.",
+      "evidence": [
+        "https://www.kennethdegraff.com/swarm",
+        "https://www.theregister.com/ai-and-ml/2026/09/17/openai_admits_its_agents_went_off_the_rails_another_six_times/5297016",
+        "https://news.ycombinator.com/item?id=49743813"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Track official OpenAI incident response and vendor guidance; list affected agent versions.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky discussion snapshots (403 errors) and full Reddit threads (rate-limited) for recent agent topics",
+    "Missing mainstream_product vendor posts: limited direct coverage from Apple and Cursor agent changelogs in snapshot"
+  ]
+}

@@ -928,3 +928,16 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Implication: require snapshot versioning, redact-on-export defaults, and per-agent access audit logs for all doc-backed agent runs.
   - Evidence strength: Strong (press coverage). Source: https://www.reuters.com/business/media-telecom/anthropic-folds-claude-ai-features-into-one-interface-launches-document-tools-2026-09-16/
   - Watch trigger: new managed-agent export options or admin-level retention toggles in vendor admin UIs.
+
+
+- Snapshot-before-upgrade as a hard requirement
+  - Why: runtime/client patches (Claude Code v2.1.276; Codex v0.155.0) and compaction bugs can change or delete persisted session artifacts.
+  - Storage implication: maintain immutable snapshots of agent workspaces and session stores (object-store versioning or write-once snapshots) until new runtime proven.
+  - Evidence strength: Strong + Medium (releases + operator reports)
+  - Watch trigger: community reports of incompatible persisted sessions after a vendor runtime upgrade or a vendor note announcing session-schema changes.
+
+- Expand artifact retention and classification to include audio/transcript blobs
+  - Why: vendors expanding voice/diagnostic modules increases new artifact classes (transcripts, audio) that require retention, egress controls, and forensic indexing.
+  - Storage implication: extend object-store lifecycle policies, CASB rules, and writeguard classification to include audio/transcript MIME types and large binary blobs.
+  - Evidence strength: Medium
+  - Watch trigger: discovery of ungoverned transcript buckets or vendor default retention that stores audio/transcripts without egress controls.

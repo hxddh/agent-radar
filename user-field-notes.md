@@ -663,3 +663,22 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Observable impact: potential data corruption or leakage when run against live repositories.
   - Operator mitigation: run agents in write-restricted mounts or microVM sandboxes; capture syscall traces during staging runs; enforce tool permission whitelists.
   - Evidence strength: Medium (Dev.to operator post). Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
+
+
+- **MCP scaling failures (AWS) — 2026-09-18**
+  - Source: Dev.to field report
+  - Summary: connector storms and timeouts when scaling MCP deployments; incremental canary/testing and connector circuit-breakers recommended.
+  - Actionable: add connector-level throttles and per-connector health instrumentation before scale.
+  - Source: https://dev.to/sharmavarun/productionizing-agentic-genai-on-aws-what-actually-breaks-when-you-scale-mcp-2gkd
+
+- **Compaction wiped session — 2026-09-18**
+  - Source: Dev.to post
+  - Summary: compaction removed persisted session data leading to data-loss; user built a local 'infinite memory' workaround.
+  - Actionable: snapshot before compaction; keep immutable backup retention window.
+  - Source: https://dev.to/geco_50/a-failed-compaction-wiped-my-ai-session-so-i-built-it-infinite-memory-18ie
+
+- **Repeated-write agent behavior test — 2026-09-18**
+  - Source: Dev.to experiment
+  - Summary: coding agent repeated file writes despite instructions; exercise for write-guards and rate-limits.
+  - Actionable: enforce write-rate limits and human confirmation gates for write-heavy actions.
+  - Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi

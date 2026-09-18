@@ -7,15 +7,13 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: Operator CLI surfaced as npm package @openai/codex (2026-09). Combined with press reports of agent‑driven package publication abuse, operators should treat agent publish paths as high‑risk: pin CLI versions, scope and rotate publish tokens to least privilege, require signed artifacts for registries, and add CI pre‑publish policy checks. Last‑checked: 2026-09-15. Evidence strength: Strong (npm release; Reuters/The Guardian coverage of supply‑chain incident).
-- Action: add pre‑publish dry‑run and signature validation to CI templates; require an audit trail for any automated publish triggered by an agent.
-- replace_section anchor: `## Codex / ChatGPT Coding Agent`
+- Recent changes: OpenAI published Codex rust-v0.155.0 (2026-09-17) updating runtime/client behavior used by many local and CI coding-agent stacks. Combined with the @openai/codex CLI npm package and increased local agent usage, operators should pin CLI/runtime versions, test devcontainer images, and scope publish/auth tokens. Last-checked: 2026-09-18. Evidence strength: Strong
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.155.0
 ## Claude Code
 - Category: Coding agent
 - Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes (2026-09-06 refresh): Anthropic/Claude variants (Fable/Opus lines) continue to be integrated into mainstream developer tooling; community reports flag connector/plugin incompatibilities after runtime upgrades. Operators: treat upgrades as high‑risk — run connector compatibility tests in staging and add pre‑upgrade workspace snapshots. Evidence strength: Strong (vendor releases) + Medium (community reports).
-- Sources: (see Anthropic releases & GH issues tracked in research-log)
-- Last refreshed: 2026-09-06
+- Recent changes: Anthropic released Claude Code v2.1.276 (2026-09-17). Operators should re-run connector compatibility CI, snapshot relevant workspaces before upgrade, and validate tool-call semantics in staging. Last-checked: 2026-09-18. Evidence strength: Strong
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.276
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities remain a key operator concern.
