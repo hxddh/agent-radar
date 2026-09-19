@@ -1,0 +1,245 @@
+{
+  "summary": "Top agent/agent-infra updates: Cloudflare Agents release, Anthropic Claude Code adds AGENTS.md, GitHub Copilot updates; cost/deployment operator threads and several MCP/eval/memory infra signals.",
+  "candidates": [
+    {
+      "id": "scr-0c9a1b2",
+      "title": "Cloudflare Agents 0.24.0 + related packages released",
+      "why_it_matters": "Cloudflare pushed Agents and integrations (worker-bundler, voice-twilio) updates for agent runtime/deploy.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.24.0",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/worker-bundler%400.2.4",
+        "https://github.com/cloudflare/agents/releases/tag/%40cloudflare/voice-twilio%400.1.1"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-1f3d4e5",
+      "title": "Anthropic Claude Code v2.1.277 adds AGENTS.md support",
+      "why_it_matters": "Official Claude Code now reads AGENTS.md enabling standard agent configs and cross-tooling compatibility.",
+      "evidence": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.277",
+        "https://github.com/anthropics/claude-code/commit/a92ea1cdb11ad21f9d583fad2db181dfdac918a6",
+        "https://code.claude.com/docs/en/changelog",
+        "https://twitter.com/trq212/status/2101009392611278961"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 4,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-2a7b8c9",
+      "title": "GitHub Copilot: weekly releases, code-review UX changes, model deprecation notice",
+      "why_it_matters": "Copilot weekly updates plus model deprecation and improved code-review influence developer workflows and migration planning.",
+      "evidence": [
+        "https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14",
+        "https://github.blog/changelog/2026-09-18-copilot-code-review-an-improved-review-experience",
+        "https://github.blog/changelog/2026-09-18-upcoming-deprecation-of-selected-github-copilot-models-in-mid-october"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-3b2c4d5",
+      "title": "Dev.to: replaced Lovable with $5 VPS, Dokploy and single MCP gateway",
+      "why_it_matters": "Operator walkthrough showing cost-saving VPS+MCP replacement for hosted agent product publishing workflow.",
+      "evidence": [
+        "https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "monitor",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4c5d6e7",
+      "title": "Dev.to: Serving Gemma 4 on an AMD MI300X (practical deployment and throughput)",
+      "why_it_matters": "Step-by-step serving Gemma 4 on MI300X shows low-cost high-memory GPU hosting throughput and MCP tooling usage.",
+      "evidence": [
+        "https://dev.to/gde/serving-gemma-4-on-an-amd-mi300x-what-199-an-hour-buys-52h9"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor"
+    },
+    {
+      "id": "scr-5d6e7f8",
+      "title": "Vercel: WebMCP support added to mcp-handler",
+      "why_it_matters": "Vercel adding WebMCP handler support expands hosting options for MCP-driven agent workflows.",
+      "evidence": [
+        "https://vercel.com/changelog/webmcp-mcp-handler"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "follow-up"
+    },
+    {
+      "id": "scr-6e7f8g9",
+      "title": "@vercel/agent-eval npm (2.3.0) — agent testing sandbox framework",
+      "why_it_matters": "Agent-eval provides a sandboxed eval framework for testing AI coding agents.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40vercel/agent-eval"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "monitor"
+    },
+    {
+      "id": "scr-7f8g9h0",
+      "title": "memcell-ai/cli: living memory for cross-vendor coding agents (repo only)",
+      "why_it_matters": "Repo claims cross-vendor persistent memory and decision recall for coding agents — repo-only; needs corroboration.",
+      "evidence": [
+        "https://github.com/memcell-ai/cli"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "corroborate (needs second independent source)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8g9h0i1",
+      "title": "MCPJam: first testing & eval platform for MCP servers (Show HN)",
+      "why_it_matters": "A focused MCP evaluation platform could standardize MCP server testing and benchmarks.",
+      "evidence": [
+        "https://www.mcpjam.com",
+        "https://news.ycombinator.com/item?id=49751321"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "follow-up",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9h0i1j2",
+      "title": "OpenAI site page: hex-gpt-6-astra (promotional page found)",
+      "why_it_matters": "OpenAI published a page that appears to reference hex/gpt-6/astra — needs changelog/context for product impact.",
+      "evidence": [
+        "https://openai.com/index/hex-gpt-6-astra"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "corroborate (request full changelog)"
+    },
+    {
+      "id": "scr-a1b2c3d",
+      "title": "OpenAI Codex: releases (rust v0.155.1 and alphas)",
+      "why_it_matters": "Codex repo published stable and alpha releases affecting local/rust runtimes for coding agents.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.155.1",
+        "https://github.com/openai/codex/releases/tag/rust-v0.156.0-alpha.6",
+        "https://github.com/openai/codex/releases/tag/rust-v0.156.0-alpha.7"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor"
+    },
+    {
+      "id": "scr-b2c3d4e",
+      "title": "Cloudflare Developers: Session Recording inspector for logs, network and DOM",
+      "why_it_matters": "New session recording inspection helps debugging and security triage for browser-run agent sessions.",
+      "evidence": [
+        "https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/",
+        "https://blog.cloudflare.com/client-side-security-finds-4-malicious-campaigns/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "monitor"
+    },
+    {
+      "id": "scr-c3d4e5f",
+      "title": "Bluesky: 'Agents need a commitment layer' discussion",
+      "why_it_matters": "Community thread arguing\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/ai-news.at.thenote.app/post/3mvtt7wq2ik2d"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-d4e5f6g",
+      "title": "AstrBot (high-star GitHub agent framework) — repo-only evidence",
+      "why_it_matters": "Large-star open-source a\n\n[... middle truncated for prompt budget ...]\n\nternal corroboration.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/AstrBotDevs/AstrBot"
+      ],
+      "confidence": "low",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "defer",
+      "next_check": "corroborate (needs independent coverage)",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: deeper Bluesky/Reddit threads on agent memory and security due to collection errors",
+    "Missing mainstream_product: clearer OpenAI public changelog/notes for the hex-gpt-6-astra page (needs vendor metadata)"
+  ]
+}

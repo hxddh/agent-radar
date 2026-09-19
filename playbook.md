@@ -694,3 +694,15 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Should promote to playbook? yes (after adding concrete devcontainer.json snippet and validated steps).
   - Source class: social/operator tip (Bluesky)
   - Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
+
+
+## Connector compatibility pre-upgrade checklist
+
+- When useful: Before upgrading agent runtimes (Claude Code, Cloudflare Agents, Codex) or deploying new AGENTS.md-based configs.
+- Steps:
+  1. Snapshot active workspaces and AGENTS.md files and push to a versioned object store (S3-compatible) as a named restore point.
+  2. Run connector compatibility CI: bring up a staging runtime matching the new version and run the connector test-suite that exercises tool-calls and MCP handshakes.
+  3. Validate artifact sinks: ingest sample audio/transcript/DOM captures into the staging CASB/WriteGuard pipeline and confirm redaction/egress rules.
+  4. Rollback plan: document the snapshot restore command, and ensure a tested rollback window (e.g., DNS/traffic switch or image redeploy script).
+- Evidence: patterns from Cloudflare/Anthropic releases and community reports (2026-09-19).
+- Should promote to playbook? yes

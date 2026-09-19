@@ -4016,3 +4016,25 @@ Notes:
 
 - **coding_agent_session_search (candidate)** (scr-cass): TUI/CLI session indexer for local agent sessions. Why it matters: accelerates triage and forensic search across agent providers; Evidence strength: Medium; promotion_status: deferred; candidate_seen_at: 2026-09-18; last_checked_at: 2026-09-18; defer_count: 0; stale_after_days: 30.
   - Source: https://github.com/Dicklesworthstone/coding_agent_session_search
+
+
+- **Cloudflare — Browser-run Session Recording inspector (scr-b2c3d4e)**: New browser-run session inspector surfaces logs/network/DOM traces for agent sessions; increases forensic/egress surface. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-19; last_checked_at: 2026-09-19; stale_after_days: 30.
+  - Source: https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/
+
+- **Cloudflare agents@0.24.0 (scr-0c9a1b2)**: Runtime release adds voice modules and diagnostics (audio/transcript artifacts). Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-19; last_checked_at: 2026-09-19.
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
+
+- **Anthropic Claude Code v2.1.277 — AGENTS.md (scr-1f3d4e5)**: Runtime now reads AGENTS.md, adding a standard agent config surface; operators should validate AGENTS.md in CI. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-19;
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
+
+- **GitHub Copilot weekly releases (scr-2a7b8c9)**: Sept 14 weekly changelog includes code-review UX changes and a model deprecation notice. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-19.
+  - Source: https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14
+
+- **OpenAI Codex rust-v0.155.1 (scr-a1b2c3d)**: Codex runtime/CLI release; retest local sandboxes. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-19.
+  - Source: https://github.com/openai/codex/releases/tag/rust-v0.155.1
+
+- **Vercel — WebMCP support (scr-5d6e7f8)**: WebMCP handler support added to mcp-handler; hosting/edge options expand for MCP workflows. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-19.
+  - Source: https://vercel.com/changelog/webmcp-mcp-handler
+
+- **Dev.to — MCP gateway cost trick (scr-3b2c4d5)**: Operator walkthrough replacing hosted product with $5 VPS + Dokploy; practical operator pattern for low-cost MCP hosting. Evidence strength: Medium; candidate_seen_at: 2026-09-19.
+  - Source: https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9

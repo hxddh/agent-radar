@@ -682,3 +682,22 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Summary: coding agent repeated file writes despite instructions; exercise for write-guards and rate-limits.
   - Actionable: enforce write-rate limits and human confirmation gates for write-heavy actions.
   - Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
+
+
+- **Low-cost MCP hosting pattern (Dev.to)** — 2026-09-19
+  - Summary: Operator replaced a hosted MCP product with a $5 VPS + Dokploy and a single MCP gateway to publish agent services.
+  - Why it matters: Practical, low-cost hosting option for small teams; shifts artifact/responsibility to self-hosted sinks.
+  - Key steps to replicate: provision small VPS (ensure TLS + UFW), use Dokploy or simple process supervisor, mount automated snapshot/export to an S3-compatible bucket nightly, and test MCP gateway connectivity in staging.
+  - Evidence strength: Medium (developer blog)
+  - Source: https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9
+
+- **Devcontainer agentHost tip (Bluesky)** — 2026-09-19
+  - Summary: Add agentHost settings to devcontainer.json to reproduce agent runs reliably across developer machines and CI.
+  - Why it matters: Makes local debugging of agent behaviors less brittle across environments.
+  - Evidence strength: Medium (social/operator tip)
+  - Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
+
+- **Connector compatibility reminder (Reddit follow-up)** — 2026-09-19
+  - Summary: Community reports of broken custom MCP connectors continue; operators should snapshot workspaces and run connector CI prior to runtime upgrades.
+  - Evidence strength: Medium (social)
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

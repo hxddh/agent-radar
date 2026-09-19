@@ -7,13 +7,18 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: OpenAI published Codex rust-v0.155.0 (2026-09-17) updating runtime/client behavior used by many local and CI coding-agent stacks. Combined with the @openai/codex CLI npm package and increased local agent usage, operators should pin CLI/runtime versions, test devcontainer images, and scope publish/auth tokens. Last-checked: 2026-09-18. Evidence strength: Strong
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.155.0
+- Recent changes: OpenAI published Codex rust-v0.155.1 (2026-09-19) updating runtime/client behavior used by many local and CI coding-agent stacks. Operators should pin CLI/runtime versions, retest devcontainer images, and validate sandbox hardening for local execution.
+- Last-checked: 2026-09-19
+- Evidence strength: Strong
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.155.1
 ## Claude Code
-- Category: Coding agent
-- Maturity: Active; widely used in developer and enterprise contexts with ongoing containment and runtime hardening work.
-- Recent changes: Anthropic released Claude Code v2.1.276 (2026-09-17). Operators should re-run connector compatibility CI, snapshot relevant workspaces before upgrade, and validate tool-call semantics in staging. Last-checked: 2026-09-18. Evidence strength: Strong
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.276
+- Category: Coding agent / runtime
+- Maturity: Active; widely used in developer and enterprise contexts
+- Recent changes: Anthropic released Claude Code v2.1.277 which adds support for AGENTS.md as a runtime-readable agent config surface. This standardization makes AGENTS.md an operational artifact operators should validate, version, and snapshot as part of release procedures.
+- Action: Add AGENTS.md validation to connector CI, include AGENTS.md diffs in pre-upgrade checks, and run connector compatibility tests against v2.1.277 in staging.
+- Last-checked: 2026-09-19
+- Evidence strength: Strong
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities remain a key operator concern.
@@ -358,13 +363,12 @@ Status:
 
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
-- Maturity: Active; edge‑hosted agent tooling expanding (voice, diagnostics, edge orchestration)
-- Recent changes: Release agents@0.23.0 adds voice I/O modules and expanded runtime diagnostics. Operators should evaluate where audio/transcript artifacts are stored and ensure WriteGuard/egress controls cover the new artifact types. Impact: increases edge artifact surface and retention/egress requirements; test voice‑module permissions, diagnostic export paths, and transcription sinks in staging before production rollout.
-- Action items: add audio artifact lifecycle rules to object stores; confirm encryption‑at‑rest and access logs for voice blobs; run a small end‑to‑end test that exercises voice I/O and diagnostic export to validate policies.
-- Last‑checked: 2026-09-14. Evidence strength: Strong (GitHub release)
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.23.0
-
-replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
+- Maturity: Active; increasingly feature-rich at the edge
+- Recent changes: Release agents@0.24.0 adds voice I/O modules, expanded runtime diagnostics, and Cloudflare published a browser-run session-recording inspector that surfaces logs, DOM, and network traces (2026-09-18). Operators should validate audio/transcript sinks, update CASB/WriteGuard rules to include new artifact types, and add voice/transcript retention to snapshot policies.
+- Impact: increases edge artifact surface (audio/transcripts, DOM snapshots), retention & egress complexity; test voice-module permissions and diagnostic export paths in staging before production rollout.
+- Last-checked: 2026-09-19
+- Evidence strength: Strong
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).
@@ -394,7 +398,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## GitHub Copilot — Policy & Billing Changes (scr-copilot-polchg)
 - Category: Coding agent / platform telemetry & billing
 - Maturity: Broad enterprise reach; telemetry changes increasing granularity of agent metering.
-- Recent changes: Copilot now records VS Code Agents usage in telemetry (impact: billing/usage). Last‑checked: 2026-09-13. Action: review billing impact for IDE/agent usage and update cost forecasts. Source: https://github.blog/changelog/2026-09-11-add-vs-code-agents-to-copilot-usage-metrics
+- Recent changes: Copilot weekly updates (Sept 14) included code-review UX changes and a model deprecation notice which could affect IDE-agent defaults and billing projections. Operators should review Copilot telemetry and update cost forecasts for IDE and background agent usage.
+- Last-checked: 2026-09-19
+- Evidence strength: Strong
+- Source: https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14
 ## remem-ai (scr-remem-ai)
 
 - What it is: remem-ai is an emerging local-first/persistent memory crate for coding agents (crates.io entry).

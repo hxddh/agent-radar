@@ -941,3 +941,18 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Storage implication: extend object-store lifecycle policies, CASB rules, and writeguard classification to include audio/transcript MIME types and large binary blobs.
   - Evidence strength: Medium
   - Watch trigger: discovery of ungoverned transcript buckets or vendor default retention that stores audio/transcripts without egress controls.
+
+
+- Session-recording artifacts broaden the object-store plane (audio, transcripts, DOM snapshots).
+  - Related to: Cloudflare session inspector + agents@0.24.0
+  - Storage implication: Expect increased object counts and the need for content-aware retention (PII redaction, transcript indexing), and coordinate retention policy with CASB.
+  - Evidence strength: Strong
+  - Source: https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
+  - Watch trigger: Vendor publishes default retention/egress config or a helper SDK that auto-uploads raw audio/transcripts to a vendor sink.
+
+- AGENTS.md as a canonical metadata artifact should be versioned and snapshot with workspaces.
+  - Related to: Anthropic Claude Code v2.1.277
+  - Storage implication: Treat AGENTS.md as part of the provenance layer and include it in forensic exports and release snapshots.
+  - Evidence strength: Strong
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
+  - Watch trigger: Emergence of a registry or cross-vendor adoption of AGENTS.md (if multiple vendors publish AGENTS.md, require snapshot hooks in CI).
