@@ -172,3 +172,15 @@ Action items: document connector compatibility tests, require connector CI again
 - Anthropic — Threat Intelligence Report (Sept 2026) (promoted)
   - Why promoted: Vendor-disclosed incident report that changes containment and forensic requirements for operators running Claude/Claude-Code agents; strengthens Thesis 9 (containment/security) and drives storage/audit playbook changes.
   - Source: https://www.anthropic.com/threat-intelligence-report-september-2026
+
+
+### 2026-09-20 Promotions
+
+- GitHub — Workflow Execution Protections (promoted: scr-1a2b3c4d)
+  - Why promoted: GA changelog introduces enforcement points in Actions/runners that give operators a native mechanism to limit or quarantine agent-driven CI. This materially affects operator governance, incident triage, and artifact retention for automated runs. Source: https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available
+
+- GitHub — Agentic CLI telemetry (promoted: scr-2b3c4d5e)
+  - Why promoted: Adding CLI customization telemetry into the usage metrics API surfaces operator-relevant signals for anomaly detection and governance of agentic CLI workflows. This expands the telemetry/observability surface that operators can use to detect and respond to misuse or automation drift. Source: https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
+
+- AVIDS2 — memorix (promoted: scr-avids-memorix)
+  - Why promoted: Cross-agent memory primitives directly impact Thesis 7 (memory + MCP convergence) by pushing memory to an infra primitive that must be snapshotted, versioned, and governed. If adopted broadly, memorix would require snapshot schema extensions and provenance fields. Source: https://github.com/AVIDS2/m

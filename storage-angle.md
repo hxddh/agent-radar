@@ -956,3 +956,39 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong
   - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
   - Watch trigger: Emergence of a registry or cross-vendor adoption of AGENTS.md (if multiple vendors publish AGENTS.md, require snapshot hooks in CI).
+
+
+- Audio/transcript & browser-run artifacts (Cloudflare agents@0.24.0)
+  - Related to: Cloudflare agents adding voice modules and a browser-run session inspector.
+  - Storage implication: new artifact types (audio files, transcripts, DOM/network traces) increase object-store footprint and require tailored retention, redaction, and CASB/WriteGuard policies; indexing/transcript search increases metadata needs.
+  - Evidence strength: Strong
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
+  - Watch trigger: vendor docs adding default retention windows or a first public incident where transcript egress caused a leak; operationally, a spike in object-store usage tied to session recording would confirm impact.
+
+- AGENTS.md as operational artifact (Anthropic Claude Code v2.1.277)
+  - Related to: Anthropic runtime reading AGENTS.md.
+  - Storage implication: AGENTS.md should be versioned, snapped with workspace artifacts, and included in backup/forensic exports; differences in AGENTS.md across deployments become important provenance metadata.
+  - Evidence strength: Strong
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
+  - Watch trigger: common pipelines including AGENTS.md in deployment snapshots or a vendor recommendation to store AGENTS.md in a canonical config store.
+
+
+## Weekly storage update — audio, transcripts, AGENTS.md (2026-09-20)
+
+- Treat audio blobs & transcripts as first-class audit logs: define lifecycle rules, access controls, and index transcripts into searchable forensic stores (support full-text and timestamped utterance mapping).
+- Snapshot AGENTS.md: include AGENTS.md in release artifacts and store alongside workspace snapshots to preserve agent config at the time of execution (use immutable object-store prefixes for forensic holds).
+- KB multimodal vectors: run capacity tests for KBs ingesting images/audio/video and add quotas or tiered lifecycle policies to prevent runaway storage/egress costs (Bedrock multimodal KB signal this week). Source: https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-managed-knowledge-base-multimodal-embeddings-twelvelabs-marengo/
+- Actionables: update object-store lifecycle templates to include transcript retention classes, and add automated snapshot retention holds for suspected incident windows.
+
+
+### 2026-09-20: Implications from GitHub promotions
+
+- GitHub Workflow Execution Protections
+  - Implication: org-level execution controls change the operator threat model for CI-driven agent runs. Operators should ensure that runs blocked or quarantined by these protections still produce an operator-controlled forensic export (snapshot or manifest) when required by incident response policies. Map workflow protection events to snapshot/export hooks so investigations can retrieve run artifacts even when execution is prevented.
+  - Evidence strength: Strong
+  - Source: https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available
+
+- GitHub Agentic CLI telemetry
+  - Implication: increased telemetry surface for agent CLI usage provides new signals for storage/investigation pipelines (usage logs, anomalous tool-call patterns). Ensure telemetry ingestion pipelines write immutable indices and link telemetry events to run-level snapshots (run_id → snapshot prefix) for fast forensic joins.
+  - Evidence strength: Strong
+  - Source: https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api

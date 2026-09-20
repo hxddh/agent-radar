@@ -4038,3 +4038,41 @@ Notes:
 
 - **Dev.to — MCP gateway cost trick (scr-3b2c4d5)**: Operator walkthrough replacing hosted product with $5 VPS + Dokploy; practical operator pattern for low-cost MCP hosting. Evidence strength: Medium; candidate_seen_at: 2026-09-19.
   - Source: https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9
+
+
+- **OpenAI Codex rust-v0.156.0-alpha.9** (scr-openai-codex-156a9): prerelease runtime/CLI tag; why it matters: changes to CLI/runtime surfaces can alter sandbox behavior, session persistence, and artifact formats used by operator stacks; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-20; last_checked_at: 2026-09-20; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/openai/codex/releases/tag/rust-v0.156.0-alpha.9
+
+- **Google Gemini CLI v0.62.0-nightly** (scr-gemini-cli-nightly): nightly release exposing remote-MCP-like flows; why it matters: improves remote staging ergonomics and may change remote execution contracts; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-20; last_checked_at: 2026-09-20; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.62.0-nightly.20260920.gcfbcaa8df
+
+- **OpenAI ChatGPT VS Code extension (Open VSX listing)** (scr-openai-chatgpt-openvsx): extension distribution signal; why it matters: increases install vectors and audit needs; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-20; last_checked_at: 2026-09-20; defer_count: 0; stale_after_days: 30.
+  - Source: https://open-vsx.org/extension/openai/chatgpt
+
+
+## 2026-09-20 Sweep (corroboration & candidate resolutions)
+
+- **Daytona: Series A / sandboxes** (scr-daytona-seriesa): primary source located; Daytona Series A reported and company materials mention sandboxes and scaling of agent compute. Evidence strength: Medium-Strong; promotion_status: candidate -> verified; candidate_seen_at: 2026-09-17; last_checked_at: 2026-09-20; follow-up: track sandbox integrations with Stripe Projects; Source: https://www.daytona.io/dotfiles/daytona-raises-24m-series-a-to-give-every-agent-a-computer
+
+- **@vercel/agent-eval-playground (npm)** (scr-vercel-eval-playground): primary npm listing verified; evidence strength: Medium; promotion_status: candidate -> verified; candidate_seen_at: 2026-09-17; last_checked_at: 2026-09-20; follow-up: test eval playground for headless eval runs. Source: https://www.npmjs.com/package/%40vercel/agent-eval-playground
+
+- **Anthropic — Claude Code AGENTS.md support (v2.1.277 / v2.1.274 references consolidated)** (scr-claude-code-agentsmd): release tags verified (v2.1.277). Evidence strength: Strong; promotion_status: candidate -> verified; candidate_seen_at: 2026-09-19; last_checked_at: 2026-09-20; follow-up: extract AGENTS.md schema diffs for CI lint rules. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
+
+- **sudoprivacy/sudocode** (scr-sudocode): claimed Rust-native CLI coding agent — primary canonical repo not verified in this sweep; evidence strength: Weak->Pending; promotion_status: deferred -> pending-official; candidate_seen_at: 2026-09-17; last_checked_at: 2026-09-20; follow-up: locate primary GitHub/GitLab repo or vendor page; stale_after_days: 14.
+
+- **How Precisely transforms UX with AI agents using Amazon S3 Vectors** (scr-precisely-s3): primary AWS blog located; evidence strength: Medium-High; promotion_status: candidate -> verified; candidate_seen_at: 2026-09-20; last_checked_at: 2026-09-20; follow-up: catalog S3 vector integration patterns for storage playbooks. Source: https://aws.amazon.com/blogs/storage/how-precisely-transforms-user-experience-with-ai-agents-using-amazon-s3-vectors/
+
+- **@catheadowl/dsh-eval (npm)** (scr-dsh-eval): npm package verified; evidence strength: Medium; promotion_status: candidate -> verified; follow-up: test headless case runner for session traces. Source: https://www.npmjs.com/package/%40catheadowl/dsh-eval
+
+- Notes: when primary sources were not found this run (sudocode), items were marked pending-official rather than dropped. Continue follow-up next sweep.
+
+
+## 2026-09-20: Promote-candidates pass
+
+- **GitHub Workflow Execution Protections** (scr-1a2b3c4d): promotion_status: promoted; reason: GA changelog provides first-party enforcement controls for agent-driven CI — high operator governance impact on execution and artifact policies; last_checked_at: 2026-09-20; Source: https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available
+
+- **GitHub Agentic CLI telemetry** (scr-2b3c4d5e): promotion_status: promoted; reason: telemetry for agentic CLI customizations supplies new operator signals for anomaly detection and audit; last_checked_at: 2026-09-20; Source: https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
+
+- **AVIDS2 / memorix** (scr-avids-memorix): promotion_status: promoted; reason: cross-agent memory layer has direct infra implications (shared memory primitives, snapshot schema changes, provenance requirements); evidence strength: Medium; last_checked_at: 2026-09-20; Source: https://github.com/AVIDS2/m
+
+Notes: promoted 3 candidates this run (limit reached). Deferred candidates not promoted during this pass remain in the Candidate inbox unchanged; follow-ups remain assigned on their existing defer schedules.

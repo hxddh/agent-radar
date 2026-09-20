@@ -706,3 +706,31 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   4. Rollback plan: document the snapshot restore command, and ensure a tested rollback window (e.g., DNS/traffic switch or image redeploy script).
 - Evidence: patterns from Cloudflare/Anthropic releases and community reports (2026-09-19).
 - Should promote to playbook? yes
+
+
+## Devcontainer recipe for reproducible local agent runs
+
+- When useful: developing or debugging agent connectors, reproducing connector regressions, and staging agent-driven PRs locally.
+- Recipe (minimal):
+  - devcontainer.json: base image (node:20 or python:3.12), install target agent extension(s) via VSIX or marketplace, set "chat.agentHost": true in the workspace settings, mount project workspace as a non-root user.
+  - Recommended checks: run extension smoke tests on container startup, run a short agent sandbox script that exercises tool calls and file writes.
+- Evidence: Bluesky operator tip; secondary reproducibility across local teams desirable.
+- Should promote to playbook? yes
+- Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
+
+
+## Devcontainer recipe for reproducible local agent runs (2026-09-20)
+
+- Why: reproducible devcontainers reduce environment drift when debugging agent connectors, extensions, or runtimes.
+- Quick recipe (example devcontainer.json snippets):
+
+  - Ensure workspace is mounted read-only for untrusted runs; provide an ephemeral workdir for agent writes.
+  - Pin agent extension versions (extension ID + version) in .vscode/extensions.json and lockfile the devcontainer image.
+  - Enable chat agentHost explicitly in settings: "agent.chat.host": true (vendor-specific key; validate per extension docs).
+
+- CI checks to add:
+  - AGENTS.md lint: validate required fields, allowed tool grants, and version.
+  - Connection smoke test: run connector against staging MCP and assert responses within budget.
+  - Write-throttle assertion: detect repeated identical file mutations during agent runs and fail the CI job.
+
+- Short follow-up: publish example devcontainer repo with pinned extensions and a minimal agent sandbox for onboarding.

@@ -7,10 +7,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: OpenAI published Codex rust-v0.155.1 (2026-09-19) updating runtime/client behavior used by many local and CI coding-agent stacks. Operators should pin CLI/runtime versions, retest devcontainer images, and validate sandbox hardening for local execution.
-- Last-checked: 2026-09-19
+- Recent changes: OpenAI published a prerelease tag rust-v0.156.0-alpha.9 (2026-09-20) updating runtime/CLI behavior; Open VSX listing shows ChatGPT extension distribution beyond the primary marketplace. Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension install vectors across marketplaces.
+- replace_section anchor: `## Codex / ChatGPT Coding Agent`
 - Evidence strength: Strong
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.155.1
+- Sources: https://github.com/openai/codex/releases/tag/rust-v0.156.0-alpha.9 ; https://open-vsx.org/extension/openai/chatgpt
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
@@ -28,20 +28,12 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Maturity: Deferred; no fresh public changelog located during this pass.
 - Recent changes: No substantive public updates since last entry; last‑checked: 2026-09-13. Action: deprioritized pending vendor changelog or operator reports. Evidence strength: None (no public updates).
 ## GitHub Copilot / Coding Agent
-
-Status:
-- Category: Coding assistant / coding agent
-- Maturity: Broad enterprise/devtool footprint; agentic features are expanding across VS Code and JetBrains surfaces.
-- Core use case: IDE assistance, code review, coding agent workflows, browser-backed app inspection.
-- Recent changes: The standalone Copilot app is available on every Copilot plan across macOS, Windows, and Linux, including Copilot Free and GitHub Education; BYOK sessions can run without a Copilot subscription. Copilot agent session streaming is in public preview for Enterprise Cloud customers with enterprise managed users; Copilot vision is generally available; Copilot CLI can run in GitHub Actions using the built-in `GITHUB_TOKEN`; browser tools for GitHub Copilot in VS Code are generally available; Copilot Agent is available in JetBrains AI Assistant.
-- Strengths: Strong IDE and desktop distribution plus enterprise controls around browser access, workflow-token auth, session streaming, organization billing, session limits, and admin policy for CLI/app access.
-- Weaknesses: Weak public field evidence on real-world reliability of browser-driven and desktop-agent workflows; official controls exist but user reports are sparse.
-- User feedback: Weak public Reddit signals show mixed early reaction to the Copilot app and continued cost/tooling comparison against Claude Code, Codex, and terminal multiplexing workflows.
-- Infra signals: Browser session isolation, user-shared tabs, site allow/deny controls, workspace trust, approval prompts, `copilot-requests: write`, session usage-record streaming, REST retrieval for the last 48 hours, organization-level cost centers, session credit limits, desktop app sessions, and BYOK provider routing.
-- Storage implications: Prompts, responses, tool calls, browser screenshots, console output, live app state, image/PDF attachments, per-agent tabs, desktop session state, Actions logs, and org-billed CLI sessions become runtime artifacts that need retention and governance.
-- Watch next: Whether the desktop app becomes the preferred Copilot agent surface, whether session streaming becomes a standard enterprise audit requirement, and whether Actions-native Copilot CLI becomes a pattern for scheduled repo maintenance.
-- Sources: https://github.blog/changelog/2026-07-07-github-copilot-app-available-to-all/, https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/, https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/, https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/, and https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/
-
+- Category: Coding agent / task agent
+- Maturity: Strong adoption in OpenAI/GitHub ecosystems.
+- Recent changes: Copilot weekly releases (Sept) included code-review UX changes and a model deprecation notice; GitHub added enterprise-managed permissions for Copilot agent operations (enterprise telemetry & permissions). Operators should pin extension/CLI versions, validate agent telemetry in usage dashboards, and update cost forecasts for IDE and background agent usage.
+- Actionables: audit extension installs across primary and alternative marketplaces, add Copilot-specific CI checks for model deprecation migrations, and map telemetry to billing forecasts.
+- Last-checked: 2026-09-20
+- Source: https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14 ; https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
 ## Replit Agent
 - Category: Cloud IDE / coding agent
 - Maturity: Active historically; no fresh public changelog in this pass.
@@ -77,10 +69,11 @@ Status:
 
 ## Omnigent
 - Category: Meta-harness / orchestration
-- Maturity: Increasing among power users and operator toolchains.
-- Recent changes (2026-09-06 refresh): Omnigent and several OSS alternatives (swarms) continue to show uptake; operator guidance now recommends treating meta‑harness adoption as an ops decision (governance, audit, policy hooks) rather than a lightweight plugin. Evidence strength: Medium (community adoption + repo activity).
-- Action: For orgs adopting Omnigent, require flight‑recorder integration, connector CI, and role-based operator controls.
-- Last refreshed: 2026-09-06
+- Maturity: Rising; OSS meta-harness with uptake in cross-runtime orchestration.
+- Recent changes: Continued community adoption signals and integrations with sandboxing/policy plugins. Operators evaluating cross-runtime orchestration should test Omnigent for policy enforcement, action receipts, and sandbox integration.
+- Evidence strength: Medium-Strong (GitHub + community adoption)
+- Last-checked: 2026-09-20
+- Source: https://github.com/omnigent-ai/omnigent
 ## Omnigent
 
 - What it is: A meta-harness / policy-enforcement project for orchestrating and constraining multi-agent runs (previously promoted in research-log).
@@ -88,6 +81,12 @@ Status:
 - Why it matters: Shows meta-harnesses are moving from power-user tools toward broader operator workflows; useful for consistent policy enforcement across agent fleets. Evidence strength: Medium
 - Action: Evaluate Omnigent for policy enforcement in a constrained staging environment and compare with swarm-based alternatives.
 ## Vestige
+- Category: Agent memory primitive
+- Maturity: Experimental; part of a crowded memory primitives landscape.
+- Recent changes: Multiple memory projects surfaced this week (agenticow, remem-ai, mem0, memleaf); Vestige remains a notable approach but has not been absorbed by a mainstream platform yet. Operators should design memory adapters to be pluggable and enforce access controls on memory stores.
+- Evidence strength: Medium
+- Last-checked: 2026-09-20
+- Follow-up: monitor for upstream integrations into Bedrock/AgentCore or major runtimes.
 ## Vestige
 
 - What it is: (memory primitive) — local-first agent memory design explored by several projects.
@@ -363,10 +362,10 @@ Status:
 
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
-- Maturity: Active; increasingly feature-rich at the edge
-- Recent changes: Release agents@0.24.0 adds voice I/O modules, expanded runtime diagnostics, and Cloudflare published a browser-run session-recording inspector that surfaces logs, DOM, and network traces (2026-09-18). Operators should validate audio/transcript sinks, update CASB/WriteGuard rules to include new artifact types, and add voice/transcript retention to snapshot policies.
-- Impact: increases edge artifact surface (audio/transcripts, DOM snapshots), retention & egress complexity; test voice-module permissions and diagnostic export paths in staging before production rollout.
-- Last-checked: 2026-09-19
+- Maturity: Active; increasingly feature-rich at the edge.
+- Recent changes: Release agents@0.24.0 adds voice I/O modules, expanded runtime diagnostics, and a browser-run session-recording inspector that surfaces logs, DOM, and network traces. Operators should validate audio/transcript sinks, update CASB/WriteGuard rules to include new artifact types, and add voice/transcript retention to snapshot policies.
+- Actionables: add audio/transcript lifecycle rules to object-store policies; index DOM/network traces into forensic stores; test session inspector in staging before enabling in production.
+- Last-checked: 2026-09-20
 - Evidence strength: Strong
 - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/
 ## Omnigent
@@ -430,14 +429,12 @@ Status:
 
 
 ## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)
-
-- What it is: Vercel's managed sandbox runtime for Cursor Cloud Agents (one-command run + managed sandbox defaults for retention/egress).
-- Why it matters: Managed sandbox defaults (export, retention, egress) change where agent artifacts land and what defaults operators must override. This affects onboarding friction, artifact retention policies, and whether snapshots/export hooks land in operator-owned buckets.
-- Evidence strength: Strong (Vercel changelog)
-- Promotion reason: direct platform vendor change altering snapshot/export defaults and operator retention controls; immediate operational relevance.
-- Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
-
-
+- Category: Platform sandbox / managed agents
+- Maturity: GA/active for managed sandbox use-cases.
+- Recent changes: Vercel announced WebMCP support in mcp-handler, and AI Gateway model availability (GLM-5.3 / FlashX) continues to broaden deployer model choices. Operators should review sandbox default retention, export sinks, and WebMCP hosting options.
+- Last-checked: 2026-09-20
+- Evidence strength: Strong
+- Sources: https://vercel.com/changelog/webmcp-mcp-handler ; https://vercel.com/changelog/glm-5-3-flashx-now-available-on-ai-gateway
 ## MemOS — hybrid retrieval memory (MemTensor / MemOS)
 
 - What it is: MemOS (MemTensor/MemOS) — hybrid retrieval memory claiming token‑savings via a self‑evolving persistent memory + retrieval stack.
@@ -467,3 +464,30 @@ Status:
 - Promotion: promoted 2026-09-13 — added to watchlist because it materially affects operator containment/security controls and snapshot/audit requirements.
 - Follow-up needed: extract affected builds/versions, enumerate recommended retention/export/connector mitigation steps, and add any recommended forensic artifact formats (IOCs, snapshot manifests) to storage playbooks.
 - Source: https://www.anthropic.com/threat-intelligence-report-september-2026
+
+
+## GitHub Workflow Execution Protections (scr-1a2b3c4d)
+
+- What it is: GitHub Actions GA changelog introducing workflow execution protections and enforcement points for Actions and runners (organization-level allowlists, runner policy controls, and execution constraints).
+- Why it matters: Provides a first-party enforcement primitive that operators can use to limit or govern agent-driven CI pipelines and automated workflows. This is a direct governance/control lever for long-running or autonomous agent runs that target repo CI/CD, and it can materially change how operator policies block or quarantine agent actions.
+- Evidence strength: Strong (official changelog)
+- Source: https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available
+- Recommendation: Test agent-driven CI/agentic runners against the new protections; update org allowlists, runner policies, and incident playbooks so blocked or quarantined agent runs still produce operator-owned forensic artifacts when appropriate.
+
+
+## GitHub Agentic CLI telemetry (scr-2b3c4d5e)
+
+- What it is: GitHub changelog entry adding Agentic CLI customization telemetry to the usage metrics API (exposes CLI customization/usage signals to operator telemetry).
+- Why it matters: Operator-visible telemetry for agentic CLI activity enables anomaly detection, usage-based policy enforcement, and improved governance for operator-deployed agents. Telemetry can surface misbehaving or high-risk automation and supports auditing of agent tool invocation patterns.
+- Evidence strength: Strong (official changelog)
+- Source: https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
+- Recommendation: Integrate the new telemetry fields into org SIEM/observability dashboards and adjust alerting for unusual agentic CLI patterns; ensure telemetry collection and retention policies align with privacy/compliance requirements.
+
+
+## AVIDS2 / memorix (scr-avids-memorix)
+
+- What it is: Cross-agent memory layer (GitHub) — emerging project to provide a shared memory primitive for multi-agent coordination and memory syncing across agent runtimes.
+- Why it matters: A shared memory primitive lowers engineering friction for multi-agent workflows and pushes memory to an infra-level concern (snapshotting, provenance, ACLs). If adopted, memorix/AVIDS2 would influence snapshot schemas and memory export/import patterns across runtimes.
+- Evidence strength: Medium (repo-level candidate)
+- Source: https://github.com/AVIDS2/m
+- Recommendation: Track adapter/support work (mem→MCP adapters). If AVIDS2 gains adapters for mainstream runtimes, require inclusion of memory manifest fields (namespace, version, provenance hashes) in operator snapshot playbooks.

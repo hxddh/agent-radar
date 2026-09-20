@@ -701,3 +701,38 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Summary: Community reports of broken custom MCP connectors continue; operators should snapshot workspaces and run connector CI prior to runtime upgrades.
   - Evidence strength: Medium (social)
   - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- **Broken MCP connectors — follow-up (Reddit)**
+  - Tool: Claude Code connectors
+  - Scenario: Community reports connectors failing after runtime upgrades (ongoing thread; Freshness: follow-up).
+  - Pain point: connector incompatibilities prevent integrations from binding to updated runtimes, causing availability/regression for downstream workflows.
+  - Useful trick: maintain pinned connector compatibility matrix and run connector CI against staging runtime before production upgrades.
+  - Source class: reddit-rss / discussion
+  - Evidence strength: Medium
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Repeated-write experiment (Dev.to)**
+  - Tool: generic coding agent (experiment uses local agent flows)
+  - Scenario: agent repeatedly writes the same files / shell writes despite instruction constraints.
+  - Pain point: risk of repo corruption and unintended persistent changes.
+  - Useful trick: add CI checks to detect repeated identical file diffs from agent runs; enforce write-throttling in sandbox configs.
+  - Source class: dev.to / discussion
+  - Evidence strength: Medium
+  - Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
+
+- **Devcontainer + agentHost tip (Bluesky)**
+  - Tool: VS Code devcontainer + chat agentHost
+  - Scenario: stable local dev environment for reproducing agent behaviour and debugging connectors.
+  - Positive: reduces environment drift and makes local reproduction easier.
+  - Useful trick: include devcontainer.json with agentHost enabled and preinstalled extension set; run extension tests inside container.
+  - Source class: bluesky / discussion
+  - Evidence strength: Medium
+  - Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
+
+
+## 2026-09-20 Field Notes
+
+- Low-cost MCP hosting pattern: multiple operator reports (Dev.to, Bluesky) describe hosting MCP gateways on cheap VPS + Dokploy to save costs and retain control. Action: capture a hardened $5-VPS MCP recipe in playbook for small teams. Source: https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9 (Medium).
+- Devcontainer reproducibility tip (Bluesky): add devcontainer.json + chat agentHost to create stable local debugging environments for agents; reduces environment drift for extension/connector debugging. Evidence: Medium; action: add recipe to playbook.
+- Repeat-write failure: operator reproduction shows coding agent repeating file writes despite instructions; reproduce in sandbox and add write-throttle CI checks. Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi (Medium).
