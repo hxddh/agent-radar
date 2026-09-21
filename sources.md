@@ -1849,3 +1849,16 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / discussion] VS Code tip: add devcontainer.json and enable chat agentHost / devContainer (operator workflow tip). Evidence strength: Medium. Source: https://bsky.app/profile/vscode.dev/post/3mvnvvhcnzn2u
 - [mainstream_product / social] OpenHands updates (v1.19.0) and governance-first runtime praise (Bluesky social post). Evidence strength: Medium. Source: https://bsky.app/profile/selfhost.directory/post/3mvnwbsxup72w
 - [mainstream_product / release] @openai/codex (npm) — Codex CLI local coding agent (operator-facing CLI release). Evidence strength: Strong. Source: https://www.npmjs.com/package/%40openai/codex
+
+
+### Added 2026-09-21 (source-sweep)
+- [mainstream_product / security] Cloudflare — Client-side Security finds 4 malicious campaigns (affects browser-run agent flows and third-party script integrity). Evidence strength: Strong. Source: https://blog.cloudflare.com/client-side-security-finds-4-malicious-campaigns/
+- [mainstream_product / release] cloudflare/agents — agents@0.24.0 release (worker-bundler, Twilio voice integration noted in release). Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
+- [mainstream_product / runtime] Microsoft Copilot runtime port report — reported port to Rust (press coverage). Evidence strength: Medium (reported). Source: https://www.theregister.com/devops/2026/09/18/microsoft-agentically-ports-copilot-runtime-to-rust-for-120k/
+- [mainstream_product / model release] Anthropic — Claude Fable & Mythos 5.1. Evidence strength: Strong. Source: https://www.anthropic.com/claude-fable-and-mythos-5-1
+- [mainstream_product / memory] mem0ai/mem0 — v2.1.0 SDK & provider updates (Vercel/Node/Python providers). Evidence strength: Strong. Source: https://github.com/mem0ai/mem0/releases/tag/v2.1.0
+- [mainstream_product / tooling] @openai/codex (npm) — Codex CLI / local coding-agent package (operator-facing runtime CLI). Evidence strength: Strong. Source: https://www.npmjs.com/package/%40openai/codex
+- [infra_primitive / sandbox] Modal — Sandboxes product (vendor sandbox offering for agent workloads). Evidence strength: Strong. Source: https://modal.com/products/sandboxes
+- [user_workflow / discussion] deepsweep-ai.deepsweep (Open VSX) — VS Code flight-recorder / circuit-breaker for agent actions in dev workflows. Evidence strength: Medium. Source: https://open-vsx.org/extension/deepsweep-ai/deepsweep
+- [user_workflow / sandbox] ImanReihanian.deskfish (Open VSX) — sandboxed Linux desktop inside VS Code; 'agent has its own computer' workflow. Evidence strength: Medium. Source: https://open-vsx.org/extension/ImanReihanian/deskfish
+- [infra_primitive / security] GitSpawn repo-hijack analysis — cross-runtime untrusted-repo vector write-up. Evidence strength: High. Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack

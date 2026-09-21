@@ -4076,3 +4076,42 @@ Notes:
 - **AVIDS2 / memorix** (scr-avids-memorix): promotion_status: promoted; reason: cross-agent memory layer has direct infra implications (shared memory primitives, snapshot schema changes, provenance requirements); evidence strength: Medium; last_checked_at: 2026-09-20; Source: https://github.com/AVIDS2/m
 
 Notes: promoted 3 candidates this run (limit reached). Deferred candidates not promoted during this pass remain in the Candidate inbox unchanged; follow-ups remain assigned on their existing defer schedules.
+
+
+- **Cloudflare client-side security (scr-cloud-clientside-2026-09-21)**: investigation of 4 malicious client-side campaigns targeting browser-run agent flows; why it matters: raises client-side integrity and CASB requirements for agent artifacts; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://blog.cloudflare.com/client-side-security-finds-4-malicious-campaigns/
+
+- **Microsoft Copilot runtime → Rust (scr-copilot-rust-2026-09-21)**: reported runtime port to Rust (The Register); why it matters: runtime rewrite creates compatibility & integration risk for plugins/CLIs but could improve memory safety; evidence strength: Medium (reported); promotion_status: candidate; candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; defer_count: 0; stale_after_days: 14.
+  - Source: https://www.theregister.com/devops/2026/09/18/microsoft-agentically-ports-copilot-runtime-to-rust-for-120k/
+
+- **mem0 v2.1.0 (scr-mem0-2026-09-21)**: SDK & provider updates (Vercel/Node/Python); why it matters: memory provider changes affect snapshot formats and replayability; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/mem0ai/mem0/releases/tag/v2.1.0
+
+- **Anthropic — Claude Fable & Mythos 5.1 (scr-anthropic-5.1-2026-09-21)**: model release with coding/safety deltas; why it matters: changes eval baselines and containment assumptions for Claude-powered agents; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.anthropic.com/claude-fable-and-mythos-5-1
+
+- **GitSpawn repo-hijack analysis (scr-gitspawn-2026-09-21)**: manifold security write-up on untrusted-repo vectors across runtimes; why it matters: cross-runtime supply-chain attack vector; evidence strength: High; promotion_status: candidate; candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+
+- **detect-coding-agent (scr-detect-ca-2026-09-21)**: detection crate on crates.io (follow-up); why it matters: operator-level detection primitive for agent invocations; evidence strength: Medium; promotion_status: candidate; candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; defer_count: 0; stale_after_days: 30.
+  - Source: https://crates.io/crates/detect-coding-agent
+
+
+- **cloudflare/agents@0.24.0** (scr-2f3c4d5): Release adds worker-bundler and Twilio voice integration; why it matters: Cloudflare Agents is a mainstream runtime/platform and this release changes available IO surfaces and deployment templates that operators use for agent workloads (impacts deployment, voice/chat integrations, worker bundling security). Evidence strength: Strong (GitHub release). Relevance score: 9. Defer reason: Sweep capture only — needs changelog diff & CI impact analysis. Follow-up needed: extract breaking changes, list new APIs, test audit surface. candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
+
+- **@openai/codex (npm) — Codex CLI / local coding agent** (scr-a1b2c3): Why it matters: operator-facing CLI surfaces a local coding-agent runtime and increases local attack/extension vectors (install-time permissions, default sandboxing, session persistence). Evidence strength: Strong (npm package). Relevance score: 8. Defer reason: Needs security model review and compatibility notes. Follow-up needed: audit default permissions, test in devcontainers, note extension/IDE integration surfaces. candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.npmjs.com/package/%40openai/codex
+
+- **deepsweep-ai.deepsweep (Open VSX)** (scr-445566): VS Code extension providing flight-recorder and circuit-breaker for agent actions; why it matters: actionable operator workflow for in-IDE monitoring and operator-level circuit breaking on agent tool calls. Evidence strength: Medium (Open VSX listing + extension page). Relevance score: 7. Defer reason: Needs user reports and compatibility notes. Follow-up needed: test extension with popular agent plugins, capture UX/instrumentation outputs. candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://open-vsx.org/extension/deepsweep-ai/deepsweep
+
+- **ImanReihanian.deskfish (Open VSX)** (scr-778899): VS Code sandboxed Linux desktop extension; why it matters: enables 'agent has its own computer' developer workflow (sandboxing inside IDE), changing how operators test agents and reproduce actions. Evidence strength: Medium. Relevance score: 7. Defer reason: Needs integration and security evaluation (how isolated is the desktop?). Follow-up needed: test escape vectors, resource limits, and agent networking defaults. candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://open-vsx.org/extension/ImanReihanian/deskfish
+
+- **Modal Sandboxes (vendor product)** (scr-8h9i0j1): Vendor sandbox product for running agent workloads; why it matters: official sandbox offerings affect isolation patterns and operator choices for running untrusted code from agents. Evidence strength: Strong (vendor product page). Relevance score: 8. Defer reason: Product capture — needs technical isolation semantics and pricing. Follow-up needed: request docs/FAQ, test small workload, compare with MicroVM/Firecracker options. candidate_seen_at: 2026-09-21; last_checked_at: 2026-09-21; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://modal.com/products/sandboxes
+
+Notes:
+- Deduplicated against recent sweep entries already in the Candidate inbox (Cloudflare client-side security, Anthropic 5.1, mem0 v2.1.0, GitSpawn write-up, detect-coding-agent and Microsoft Copilot→Rust report are present in the log as of 2026-09-20/21). This pass adds infra & user-workflow candidates that were present in screening but not yet recorded in the inbox.
+- Follow-ups assigned: prioritize changelog diffs for cloudflare/agents@0.24.0 and security model reviews for @openai/codex and VS Code sandbox extensions. Mark items pending deeper technical verification; do not promote during source-sweep.

@@ -734,3 +734,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Write-throttle assertion: detect repeated identical file mutations during agent runs and fail the CI job.
 
 - Short follow-up: publish example devcontainer repo with pinned extensions and a minimal agent sandbox for onboarding.
+
+
+## Pre-upgrade connector compatibility playbook (candidate)
+
+- When useful: Before upgrading agent runtimes, connectors, or memory SDKs in production.
+- Steps:
+  1. Snapshot current connector configs and workspace state.
+  2. Pin connector + runtime + provider versions in staging.
+  3. Run a compatibility test suite (tool-call smoke tests, authentication flow, sample transcripts) that includes adversarial test cases (replay of prior failing flows).
+  4. Validate snapshot rollback works and document expected restore time.
+  5. Stage a canary rollout with telemetry checks for error spikes and data loss.
+- Evidence: Community reports of broken MCP connectors and runtime rewrites (Reddit + vendor releases).
+- Should promote to playbook? yes
+- Source references: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; Cloudflare agents release notes

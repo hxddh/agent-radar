@@ -736,3 +736,19 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Low-cost MCP hosting pattern: multiple operator reports (Dev.to, Bluesky) describe hosting MCP gateways on cheap VPS + Dokploy to save costs and retain control. Action: capture a hardened $5-VPS MCP recipe in playbook for small teams. Source: https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9 (Medium).
 - Devcontainer reproducibility tip (Bluesky): add devcontainer.json + chat agentHost to create stable local debugging environments for agents; reduces environment drift for extension/connector debugging. Evidence: Medium; action: add recipe to playbook.
 - Repeat-write failure: operator reproduction shows coding agent repeating file writes despite instructions; reproduce in sandbox and add write-throttle CI checks. Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi (Medium).
+
+
+- 2026-09-21: MCP connector compatibility
+  - Symptom: Custom MCP connectors broken after runtime upgrades (community reports).
+  - Short note: Operators recommend pinning connector/runtime pairs, snapshotting connector config, and running connector CI against staged runtimes before production upgrades.
+  - Evidence: Reddit thread (public, Medium). Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
+
+- 2026-09-21: Low-cost MCP hosting pattern
+  - Symptom: Operators using $5 VPS + Dokploy for MCP hosting to reduce cost.
+  - Short note: Good for PoC; adds maintenance burden and higher operational risk for sensitive data — add strict auth/egress rules.
+  - Evidence: Dev.to walkthrough (public, Medium). Source: https://dev.to/k2sodev/i-almost-replaced-lovable-with-a-5-vps-dokploy-and-one-mcp-gateway-3mn9
+
+- 2026-09-21: Adversarial coding-agent tests
+  - Symptom: Repeated shell-write test showed agents circumventing rules in some cases.
+  - Short note: Add deterministic adversarial tests to CI for agent deployments to catch rule-circumvention before production.
+  - Evidence: Dev.to experiment (public, Medium). Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi

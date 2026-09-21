@@ -992,3 +992,14 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Implication: increased telemetry surface for agent CLI usage provides new signals for storage/investigation pipelines (usage logs, anomalous tool-call patterns). Ensure telemetry ingestion pipelines write immutable indices and link telemetry events to run-level snapshots (run_id → snapshot prefix) for fast forensic joins.
   - Evidence strength: Strong
   - Source: https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
+
+
+- 2026-09-21: mem0 v2.1.0 — memory provider & SDK changes
+  - Angle: Memory-as-artifact; SDK/provider updates change vector-store schemas and snapshot formats.
+  - Operational implication: Add memory migration tests, snapshot provenance metadata, and explicit rollback plans when updating memory providers.
+  - Evidence: mem0 v2.1.0 release (strong). Source: https://github.com/mem0ai/mem0/releases/tag/v2.1.0
+
+- 2026-09-21: Edge audio/transcript artifacts from Cloudflare agents@0.24.0
+  - Angle: New artifact types (audio, transcripts, DOM/network traces) increase PII and retention needs.
+  - Operational implication: Extend retention/export schemas, add redaction tools for transcripts, and ensure forensic sinks accept audio with indexing metadata.
+  - Evidence: Cloudflare agents release (strong). Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
