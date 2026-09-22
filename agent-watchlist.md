@@ -363,11 +363,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
 - Maturity: Active; increasingly feature-rich at the edge.
-- Recent changes: Release agents@0.24.0 adds voice I/O modules, expanded runtime diagnostics, and a browser-run session-recording inspector that surfaces logs, DOM, and network traces. Operators should validate audio/transcript sinks, update CASB/WriteGuard rules to include new artifact types, and add voice/transcript retention to snapshot policies.
-- Actionables: add audio/transcript lifecycle rules to object-store policies; index DOM/network traces into forensic stores; test session inspector in staging before enabling in production.
-- Last-checked: 2026-09-20
-- Evidence strength: Strong
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/
+- Recent changes: Release agents@0.24.0 adds worker-bundler and Twilio voice integration; Cloudflare also announced Python Workers generally available (2026-09-22), broadening supported edge runtimes where agent connectors and MCP adapters can run. Operators should validate audio/transcript sinks, update CASB/WriteGuard rules to include new artifact types, and add Python Workers egress/retention checks to deployment gating. Evidence strength: Strong
+- Sources: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://blog.cloudflare.com/python-workers-ga/
+- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).

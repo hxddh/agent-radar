@@ -748,3 +748,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Evidence: Community reports of broken MCP connectors and runtime rewrites (Reddit + vendor releases).
 - Should promote to playbook? yes
 - Source references: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/ ; Cloudflare agents release notes
+
+
+## Pre-upgrade MCP connector test & snapshot playbook
+
+- When useful: before upgrading a runtime (Claude Code, Codex runtime, Cloudflare agents) or changing connector contracts.
+- Goal: verify MCP connector compatibility, ensure quick rollback, and preserve memory/workspace artifacts for incident triage.
+- Steps:
+  1. Snapshot current workspace and memory exports to immutable object storage (include run ID, connector version, and timestamp).
+  2. Run a connector-compatibility test harness that executes a representative suite (connect, auth handshake, tool-call, write/rollback) against a staging runtime pinned to the new version.
+  3. Validate artifact roundtrip: agent writes -> memory export -> replay read must be identical within defined reconciliation tolerance.
+  4. If any test fails, abort upgrade and restore from snapshot; capture flight-recorder telemetry (Langfuse or equivalent) and file a breaking-change bug with vendor trace.
+  5. Post-upgrade: run smoke tests against production canary with throttled agent quotas and elevated telemetry alerts for 24–72 hours.
+- Evidence: vendor upgrade regressions (community reports of MCP connector breakage) and new platform runtimes increasing upgrade surface.
+- Should promote to playbook? yes

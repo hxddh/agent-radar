@@ -4115,3 +4115,14 @@ Notes: promoted 3 candidates this run (limit reached). Deferred candidates not p
 Notes:
 - Deduplicated against recent sweep entries already in the Candidate inbox (Cloudflare client-side security, Anthropic 5.1, mem0 v2.1.0, GitSpawn write-up, detect-coding-agent and Microsoft Copilot→Rust report are present in the log as of 2026-09-20/21). This pass adds infra & user-workflow candidates that were present in screening but not yet recorded in the inbox.
 - Follow-ups assigned: prioritize changelog diffs for cloudflare/agents@0.24.0 and security model reviews for @openai/codex and VS Code sandbox extensions. Mark items pending deeper technical verification; do not promote during source-sweep.
+
+
+- **Vercel AI SDK / Workflow (scr-vercel-1a2b3c)**: Workflow release workflow@2.0.40; why it matters: standardizes deployable workflow artifacts for agent deployments and widens sandbox defaults; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: extract workflow manifest schema and test CI smoke. Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%402.0.40
+
+- **Cloudflare Python Workers GA (scr-cloudflare-4d5e6f)**: Python Workers generally available; why it matters: expands edge runtime choices for agent code and MCP adapters; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: map default egress and retention semantics. Source: https://blog.cloudflare.com/python-workers-ga/
+
+- **OpenAI v7 / institutional memory (scr-openai-v7-a1b2c3)**: vendor memory surfaces / v7 docs; why it matters: changes memory snapshot and retention obligations; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: identify memory export schema and reconcile with object-store retention. Source: https://openai.com/index/v7/
+
+- **OpenAI Codex Rust prerelease (scr-openai-codex-5d6e7f)**: rust-v0.157.0-alpha.5 tag; why it matters: local CLI/runtime changes increase local attack surface and compatibility risk; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: audit CLI permissions and devcontainer integration. Source: https://github.com/openai/codex/releases/tag/rust-v0.157.0-alpha.5
+
+- **Langfuse v4.41 (scr-langfuse-4g3h2i)**: observability release; why it matters: improved telemetry for agent/tool-call auditing; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: baseline telemetry with common agent workloads. Source: https://github.com/langfuse/langfuse/releases/tag/v4.41.0

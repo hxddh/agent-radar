@@ -1,0 +1,252 @@
+{
+  "summary": "Today’s feed: Vercel and Cloudflare product updates, OpenAI v7 memory push, rising local/OSS agent runtimes and MCP tooling, plus early social reports on Claude Code UX and a claimed Plugin4Shell RCE.",
+  "candidates": [
+    {
+      "id": "scr-vercel-1a2b3c",
+      "title": "Vercel AI SDK & Workflow releases",
+      "why_it_matters": "Vercel shipped workflow SDK/harness and Jev HTTP/API updates for agent deployments.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%402.0.40",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow-harness%401.0.119",
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.109",
+        "https://vercel.com/changelog/ai-gateway-now-supports-typesafe-clients-and-http-api-for-jev"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Scan changelogs for breaking API changes and Jev integration examples."
+    },
+    {
+      "id": "scr-cloudflare-4d5e6f",
+      "title": "Cloudflare: Python Workers generally available",
+      "why_it_matters": "Python edge runtime GA broadens where agent code and sandboxes can run in-edge.",
+      "evidence": [
+        "https://blog.cloudflare.com/python-workers-ga/",
+        "https://simonwillison.net/2026/Sep/21/cloudflare-python-worker/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Assess compatibility with common agent sandboxes and native C/Python libs."
+    },
+    {
+      "id": "scr-openai-v7-a1b2c3",
+      "title": "OpenAI: v7 / institutional memory push",
+      "why_it_matters": "OpenAI v7 emphasizes institutional memory features useful for multi-session agents.",
+      "evidence": [
+        "https://openai.com/index/v7/",
+        "https://news.ycombinator.com/item?id=4883"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Validate memory API surface and pricing impact on agent designs.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-sandbase-9f8e7d",
+      "title": "Sandbase-harness: local-first agent runtime & MCP bridge",
+      "why_it_matters": "Local-first runtime with sandboxed sessions, credentials, audit/replay for agents.",
+      "evidence": [
+        "https://github.com/sandbaseai/sandbase-harness"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Find demos or third-party writeups to corroborate adoption and security model.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-omnigent-2b7c4a",
+      "title": "Omnigent: open-source multi-agent harness",
+      "why_it_matters": "Large OSS orchestrator for multi-provider agents, policy and sandboxing hooks.",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Audit integrations, documentation and real-world deployments.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-gum-e3f1b0",
+      "title": "ehmo/gum — CLI and MCP server for discovering Google APIs",
+      "why_it_matters": "CLI + MCP server to let agents call Google APIs cleanly from scripts/agents.",
+      "evidence": [
+        "https://github.com/ehmo/gum"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Look for usage examples and security/credential patterns.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-bivack-6c5d4e",
+      "title": "Bivack: cloud dev sandbox for coding agents (AWS Lambda MicroVMs)",
+      "why_it_matters": "Shows per-user Lambda MicroVM + persistent S3 home for safe agent dev and UIs.",
+      "evidence": [
+        "https://dev.to/gunnargrosch/building-bivack-a-cloud-dev-sandbox-for-coding-agents-on-aws-lambda-microvms-24o6"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Verify cost and reproducibility; check repo/examples if published."
+    },
+    {
+      "id": "scr-claudecode-social-7a6b5c",
+      "title": "Early user report: Claude Code Projects UX",
+      "why_it_matters": "Bluesky user: Projects f\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/papoo7.bsky.social/post/3mw3fug2k4n2j"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Seek Anthropic changelog or multiple user reports for confirmation.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-plugin4shell-8d9c0b",
+      "title": "Bluesky alert: 'Plugin4Shell' claimed zero-click RCE in agent plugins",
+      "why_it_matters": "Social security alert cl\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/hermes71.bsky.social/post/3mw3h3j3ia32z"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Search for CVE entries or vendor advisories to corroborate.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-assemblyzero-0c1d2e",
+      "title": "AssemblyZero: parameterized multi-agent orchestration",
+      "why_it_matters": "Orchestration for Claude Code and Gemini—framework for agent coordination.",
+      "evidence": [
+        "https://github.com/martymcenroe/AssemblyZero"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Check examples, integrations and whether projects use it in production.",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-openai-codex-5d6e7f",
+      "title": "OpenAI Codex: multiple prerelease tags (rust)",
+      "why_it_matters": "Active Codex Rust releases indicate ongoing engineering on assistant/coding runtime.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.157.0-alpha.5",
+        "https://github.com/openai/codex/releases/tag/rust-v0.157.0-alpha.4",
+        "https://github.com/openai/codex/releases/tag/rust-v0.157.0-alpha.3"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Track roadmap for assistant-model deprecation/retirement announcements."
+    },
+    {
+      "id": "scr-langfuse-4g3h2i",
+      "title": "Langfuse v4.41 observability release",
+      "why_it_matters": "Langfuse release improves model/agent telemetry and auditability for operators.",
+      "evidence": [
+        "https://github.com/langfuse/langfuse/releases/tag/v4.41.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Review new telemetry features and agent integration docs.",
+      "risk_flags": [
+        "single-repo-source"
+      ],
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-mcp-arith-1f2e3d",
+      "title": "MCP design: 'Put the Arithmetic in the Tool' (AWS waste scanner)",
+      "why_it_matters": "Concrete pattern: MCP server computes totals to keep human and agent answers consistent.",
+      "evidence": [
+        "https://dev.to/aws-builders/put-the-arithmetic-in-the-tool-an-mcp-server-for-an-aws-waste-scanner-3n79"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Check for code snippets and how they handle auth and rate limits."
+    },
+    {
+      "id": "scr-codex-escape-9a8b7c",
+      "title": "Blog: Escaping the OpenAI Codex sandbox (two cases)",
+      "why_it_matters": "Writes up two sandbox escapes—relevant to agent sandbox threat models and mitigations.",
+      "evidence": [
+        "https://accomplish.ai/blog/escaping-the-openai-codex-sandbox-twice/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Look for vendor response, patches, or CVE tracking."
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Reddit threads (collection errors caused HTTP 429)",
+    "Missing mainstream_product: Anthropic official changelog for Claude Code Projects / usage-limit changes",
+    "Missing corroboration: several repo-only signals lack independent third-party reports (watch for adoption proof)"
+  ]
+}
