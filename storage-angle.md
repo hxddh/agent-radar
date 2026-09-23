@@ -1003,3 +1003,14 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Angle: New artifact types (audio, transcripts, DOM/network traces) increase PII and retention needs.
   - Operational implication: Extend retention/export schemas, add redaction tools for transcripts, and ensure forensic sinks accept audio with indexing metadata.
   - Evidence: Cloudflare agents release (strong). Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0
+
+
+- Signal: higher-throughput models + stricter audit defaults change storage tradeoffs (2026-09-23)
+  - Implication: operators must choose between finer-grained event snapshots (higher write/egress cost) or coarser sampling (risk of missing forensic state). Anthropic's Opus 5.5 auditing increases retained metadata per event.
+  - Recommendation: define two-tier snapshot policies (preview = ephemeral, production = durable) and tag all snapshots with provenance metadata (runtime-version, AGENTS.md SHA, connector versions).
+  - Watch trigger: vendor-published snapshot schema change or a >2x sustained increase in session event emission.
+
+- Signal: preview environments (Cloudflare Worker Previews) require separate retention and promotion flows
+  - Implication: preview artifacts should be stored in ephemeral buckets with short TTL and explicit promote APIs that copy to durable storage and attach provenance fields.
+  - Recommendation: implement promotion checklist that copies preview artifacts into the production object-store and records the promotion event in the audit log.
+  - Watch trigger: preview export API availability or changes to default preview retention settings.

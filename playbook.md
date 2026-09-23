@@ -762,3 +762,16 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   5. Post-upgrade: run smoke tests against production canary with throttled agent quotas and elevated telemetry alerts for 24–72 hours.
 - Evidence: vendor upgrade regressions (community reports of MCP connector breakage) and new platform runtimes increasing upgrade surface.
 - Should promote to playbook? yes
+
+
+## Snapshot-before-upgrade (candidate playbook)
+
+- When useful: before upgrading any agent runtime (Claude Code, Codex/Copilot runtime, Cloudflare Agents, etc.) or changing AGENTS.md.
+- Steps (minimal reproducible recipe):
+  1. Lock runtime version in CI; create a temporary staging environment.
+  2. Export AGENTS.md, devcontainer.json, and workspace manifest to object-store with versioned keys (timestamp + git SHA).
+  3. Run connector compatibility tests (automated smoke harness hitting any custom MCP connectors). Fail the upgrade if any connector test regresses.
+  4. Capture a full session trace (telemetry + logs) to ephemeral object-store and push a promotion artifact only on success.
+  5. Post-upgrade: validate audit logs and run canned user-workflow smoke tests.
+- Evidence: accumulated from Anthropic Opus 5.5 operator reports and community writeups (2026-09).
+- Should promote to playbook? yes

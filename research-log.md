@@ -4126,3 +4126,15 @@ Notes:
 - **OpenAI Codex Rust prerelease (scr-openai-codex-5d6e7f)**: rust-v0.157.0-alpha.5 tag; why it matters: local CLI/runtime changes increase local attack surface and compatibility risk; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: audit CLI permissions and devcontainer integration. Source: https://github.com/openai/codex/releases/tag/rust-v0.157.0-alpha.5
 
 - **Langfuse v4.41 (scr-langfuse-4g3h2i)**: observability release; why it matters: improved telemetry for agent/tool-call auditing; evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-09-22; last_checked_at: 2026-09-22; follow-up: baseline telemetry with common agent workloads. Source: https://github.com/langfuse/langfuse/releases/tag/v4.41.0
+
+
+- **mastra-ai/mastra (scr-mastra-2026-09-23)**: TypeScript framework for AI apps and agents. Why it matters: could standardize Node/TS agent app patterns and integrations, lowering friction for web/IDE agent deployments. Evidence strength: Medium (GitHub repo/activity). Relevance score: 7. Defer reason: needs adoption reports (blogs/integrations) and user workflow evidence before promotion. Follow-up needed: capture integration docs, downloads/stars growth, or a vendor blog. candidate_seen_at: 2026-09-23; last_checked_at: 2026-09-23; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/mastra-ai/mastra
+
+- **omnigent-ai/omnigent (scr-omn-2026-09-23)**: Open meta-harness for orchestrating multiple agent engines. Why it matters: provides policy enforcement and swap-and-run capability across runtimes, addressing cross-runtime fragmentation. Evidence strength: Medium (GitHub repo). Relevance score: 8. Defer reason: needs user adoption or vendor integrations. Follow-up needed: collect case studies or integration docs with mainstream runtimes. candidate_seen_at: 2026-09-23; last_checked_at: 2026-09-23; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/omnigent-ai/omnigent
+
+- **Kimi Code CLI (scr-kimi-2026-09-23)**: MoonshotAI starter CLI for next-gen agents (screening hit). Why it matters: local CLI could become a common entrypoint for coding agents. Evidence strength: Weak-to-Medium (GitHub). Relevance score: 6. Defer reason: repo-only signal; move to candidate tracking and re-check for adoption. candidate_seen_at: 2026-09-23; last_checked_at: 2026-09-23; promotion_status: deferred; defer_count: 0; stale_after_days: 30.
+  - Source: GitHub (repo)
+
+Notes: deduplicated against existing candidate inbox entries. Prior high-priority MUST mainstream items (Anthropic Opus 5.5, OpenAI GPT‑6 family, JetBrains Air, Cloudflare Worker Previews) were covered in today's daily summary and not re-added to the candidate inbox.

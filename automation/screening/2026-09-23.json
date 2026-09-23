@@ -1,0 +1,162 @@
+{
+  "summary": "Daily agent-space screening: vendor releases (Anthropic, OpenAI, JetBrains, Cloudflare) plus rising infra projects (Mastra, Omnigent, Kimi Code) and two operator reports (Claude Code setup, Jev experiment).",
+  "candidates": [
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "JetBrains Air: new system for agentic software development",
+      "why_it_matters": "JetBrains launching integrated products for agent-driven development workflows.",
+      "evidence": [
+        "https://blog.jetbrains.com/blog/2026/09/22/introducing-jetbrains-air/",
+        "https://blog.jetbrains.com/qodana/2026/09/code-quality-q-a/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "watch IDE integrations, beta docs, and Copilot/GitHub plugin announcements"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Anthropic: Claude Opus 5.5 with stricter cybersecurity safeguards",
+      "why_it_matters": "Anthropic pushed product-level containment and tighter cybersecurity controls.",
+      "evidence": [
+        "https://www.anthropic.com/claude-opus-5-5",
+        "https://www.theverge.com/ai-artificial-intelligence/998868/anthropic-claude-opus-5-5-cybersecurity",
+        "https://github.blog/changelog/2026-09-22-claude-opus-5-5-is-now-available-in-github-copilot"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "monitor technical containment details, security advisories, and Copilot integration reports"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "OpenAI: GPT-6 Sol & GPT-6 Luna announcements",
+      "why_it_matters": "OpenAI published GPT-6 family posts announcing new models and prompt-caching work.",
+      "evidence": [
+        "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+        "https://openai.com/index/better-prompt-caching-for-gpt-6",
+        "https://github.blog/changelog/2026-09-22-openais-gpt-6-sol-and-gpt-6-luna-now-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "track availability, pricing, and SDK/CLI updates affecting agent runtimes"
+    },
+    {
+      "id": "scr-4d5e6f7a",
+      "title": "Cloudflare Worker Previews: isolated preview envs for agent actions",
+      "why_it_matters": "Isolated preview environments can contain agent-generated changes and reduce blast radius.",
+      "evidence": [
+        "https://blog.cloudflare.com/worker-previews/",
+        "https://blog.cloudflare.com/python-workers-ga/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "watch adoption examples showing agent preview workflows and security notes"
+    },
+    {
+      "id": "scr-5e6f7a8b",
+      "title": "Mastra: TypeScript framework for AI apps and agents (popular repo)",
+      "why_it_matters": "Widespread TypeScript framework may standardize agent app patterns and integrations.",
+      "evidence": [
+        "https://github.com/mastra-ai/mastra"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "seek second-source coverage (blog, release notes, or integrations) to corroborate repo traction",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-6f7a8b9c",
+      "title": "Omnigent: open meta-harness to orchestrate multiple agent engines",
+      "why_it_matters": "Offers cross-harness orchestration, policy enforcement, and swap-and-run capability for agents.",
+      "evidence": [
+        "https://github.com/omnigent-ai/omnigent",
+        "https://github.com/omnigent-ai/omnigent/releases/tag/v0.15.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "monitor independent writeups, integrations, and adoption signals beyond GitHub stars"
+    },
+    {
+      "id": "scr-7a8b9c0d",
+      "title": "Kimi Code CLI — MoonshotAI starter CLI for next-gen agents",
+      "why_it_matters": "CLI could become a common local entrypoint for coding agents and local workflows.",
+      "evidence": [
+        "https://github.com/MoonshotAI/kimi-code"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "look for official release notes or community tutorials to corroborate usage",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8b9c0d1e",
+      "title": "My Claude Code setup (11 commands, 3 agents) — operator walkthrough",
+      "why_it_matters": "Concrete setup and commands illustrate real-world multi-agent developer workflow.",
+      "evidence": [
+        "https://johnmaartifacts.substack.com/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "check for follow-up posts or GitHub dotfiles/recipes to reproduce setup",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-9c0d1e2f",
+      "title": "Jev 1.13 in Practice: decision model vs rules and local LLM",
+      "why_it_matters": "Operator experiment compares latency, cost, and metrics of decision model vs local LLM.",
+      "evidence": [
+        "https://dev.to/marcelotaparelli/jev-113-in-practice-i-tested-a-decision-model-against-rules-and-a-local-llm-3p1c"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "seek reproducibility artifacts and held-out-set details to validate claims",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky and Reddit collectors returned errors; social posts from Bluesky/Reddit may be missing",
+    "Missing mainstream_product: no recent Microsoft/Copilot vendor blog post captured in this snapshot (gap)",
+    "Missing independent corroboration: several high-star GitHub repos need secondary coverage (blog posts, releases, integration notes)"
+  ]
+}

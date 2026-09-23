@@ -14,11 +14,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic released Claude Code v2.1.277 which adds support for AGENTS.md as a runtime-readable agent config surface. This standardization makes AGENTS.md an operational artifact operators should validate, version, and snapshot as part of release procedures.
-- Action: Add AGENTS.md validation to connector CI, include AGENTS.md diffs in pre-upgrade checks, and run connector compatibility tests against v2.1.277 in staging.
-- Last-checked: 2026-09-19
-- Evidence strength: Strong
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.277
+- Recent changes: Anthropic released Claude Opus 5.5 (2026-09-22) which tightens cybersecurity defaults and auditing for agent tool-calls. Operators should expect stricter containment defaults that may break permissive custom MCP connectors; pin runtime versions, snapshot AGENTS.md before upgrades, and add connector compatibility tests to CI. Evidence strength: Strong
+- Source: https://www.anthropic.com/claude-opus-5-5
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities remain a key operator concern.
@@ -363,9 +360,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
 - Maturity: Active; increasingly feature-rich at the edge.
-- Recent changes: Release agents@0.24.0 adds worker-bundler and Twilio voice integration; Cloudflare also announced Python Workers generally available (2026-09-22), broadening supported edge runtimes where agent connectors and MCP adapters can run. Operators should validate audio/transcript sinks, update CASB/WriteGuard rules to include new artifact types, and add Python Workers egress/retention checks to deployment gating. Evidence strength: Strong
-- Sources: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://blog.cloudflare.com/python-workers-ga/
-- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
+- Recent changes: In addition to agents@0.24.0 (worker-bundler and Twilio voice integration), Cloudflare published Worker Previews (2026-09-22) — an isolated preview environment for agent actions that reduces blast radius during preview/testing. Operators should integrate preview runs into CI gating, map preview artifact retention to ephemeral buckets, and add preview-to-production promotion auditing to deployment playbooks. Evidence strength: Strong
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://blog.cloudflare.com/worker-previews/
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).
@@ -489,3 +485,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Evidence strength: Medium (repo-level candidate)
 - Source: https://github.com/AVIDS2/m
 - Recommendation: Track adapter/support work (mem→MCP adapters). If AVIDS2 gains adapters for mainstream runtimes, require inclusion of memory manifest fields (namespace, version, provenance hashes) in operator snapshot playbooks.
+
+
+## JetBrains Air
+
+- What it is: JetBrains' new system to integrate agentic software development directly into JetBrains IDEs and toolchains.
+- Why it matters: First-party IDE integration materially lowers friction for agent-driven development and will shift where operators need to apply plugin governance, devcontainer policies, and CI smoke-tests.
+- Evidence strength: Strong (vendor blog announcement)
+- Source: https://blog.jetbrains.com/blog/2026/09/22/introducing-jetbrains-air/

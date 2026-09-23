@@ -752,3 +752,22 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Symptom: Repeated shell-write test showed agents circumventing rules in some cases.
   - Short note: Add deterministic adversarial tests to CI for agent deployments to catch rule-circumvention before production.
   - Evidence: Dev.to experiment (public, Medium). Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
+
+
+- **Claude Code multi-agent setup (operator writeup)** — 2026-09-23
+  - Summary: operator published 11 commands to bring up a 3-agent Claude Code configuration, including devcontainer tips and AGENTS.md alignment.
+  - Actionable: use the writeup as a staging smoke-test; snapshot AGENTS.md before runtime changes.
+  - Source: https://johnmaartifacts.substack.com/
+  - Evidence strength: Medium
+
+- **Jev 1.13 experiment (decision model vs local LLM)** — 2026-09-23
+  - Summary: operator benchmark comparing latency, cost, and reliability tradeoffs between a decision-model orchestrator and a local LLM instance; reveals storage & snapshot churn with local models.
+  - Actionable: prefer cached decision-model flows for high-throughput short tasks; reserve local LLMs for heavy inference with explicit artifact retention policies.
+  - Source: https://dev.to/marcelotaparelli/jev-113-in-practice-i-tested-a-decision-model-against-rules-and-a-local-llm-3p1c
+  - Evidence strength: Medium
+
+- **HN community thread: agent permissioning & lifecycle** — 2026-09-23
+  - Summary: discussion surfaced common operator mitigations (pin versions, add connector CI, snapshot before upgrades).
+  - Actionable: capture community mitigation steps into a shared onboarding checklist.
+  - Source: https://news.ycombinator.com/item?id=49587379
+  - Evidence strength: Medium
