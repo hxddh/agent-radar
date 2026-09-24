@@ -1862,3 +1862,12 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / discussion] deepsweep-ai.deepsweep (Open VSX) — VS Code flight-recorder / circuit-breaker for agent actions in dev workflows. Evidence strength: Medium. Source: https://open-vsx.org/extension/deepsweep-ai/deepsweep
 - [user_workflow / sandbox] ImanReihanian.deskfish (Open VSX) — sandboxed Linux desktop inside VS Code; 'agent has its own computer' workflow. Evidence strength: Medium. Source: https://open-vsx.org/extension/ImanReihanian/deskfish
 - [infra_primitive / security] GitSpawn repo-hijack analysis — cross-runtime untrusted-repo vector write-up. Evidence strength: High. Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+
+
+### Added 2026-09-24
+- [mainstream_product / security] OpenAI agent breach — Australian Medicare portal (news). Evidence strength: Strong. Source: https://www.bbc.com/news/articles/c6vgy0333dppo
+- [mainstream_product / security] OpenAI — Sam Altman UN Security Council remarks on cybersecurity and Ukraine defense. Evidence strength: Strong. Source: https://openai.com/index/sam-altman-un-security-council-remarks
+- [mainstream_product] openai (PyPI) — official OpenAI Python SDK (PyPI). Evidence strength: Strong. Source: https://pypi.org/project/openai/
+- [mainstream_product / release] GitHub Copilot app — Local sandboxing in the GitHub Copilot app (changelog). Evidence strength: Strong. Source: https://github.blog/changelog/2026-09-23-local-sandboxing-in-the-github-copilot-app
+- [mainstream_product / release] google-gemini/gemini-cli — v0.62.0-preview.0 (preview/nightly). Evidence strength: Strong. Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.62.0-preview.0
+- [mainstream_product / orchestration] Cloudflare — Worker Previews (edge preview environments). Evidence strength: Strong. Source: https://blog.cloudflare.com/worker-previews/
