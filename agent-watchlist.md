@@ -360,8 +360,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
 - Maturity: Active; increasingly feature-rich at the edge.
-- Recent changes: In addition to agents@0.24.0 (worker-bundler and Twilio voice integration), Cloudflare published Worker Previews (2026-09-22) — an isolated preview environment for agent actions that reduces blast radius during preview/testing. Operators should integrate preview runs into CI gating, map preview artifact retention to ephemeral buckets, and add preview-to-production promotion auditing to deployment playbooks. Evidence strength: Strong
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.24.0 ; https://blog.cloudflare.com/worker-previews/
+- Recent changes: Cloudflare published a high‑priority fix for a cross‑tenant data exposure in Containers and launched Worker Previews (isolated preview environments) that provide CI-friendly sandboxing for agent-driven changes. Operators should: (1) immediately inventory container/preview artifact sinks and rotate short-lived credentials after the fix; (2) integrate Worker Previews into CI gating and map preview artifacts to ephemeral object storage with short TTLs; (3) add preview-to-production promotion auditing to deployment playbooks and test preview egress/ACL semantics during staging. Evidence strength: Strong
+- Sources: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/ ; https://blog.cloudflare.com/worker-previews/
+- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).

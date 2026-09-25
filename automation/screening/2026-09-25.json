@@ -1,0 +1,246 @@
+{
+  "summary": "Vendor releases + security incidents lead today: Cloudflare vulnerability and Worker Previews, OpenAI Codex release, Google Gemini GA, plus multiple repo-first infra launches (sandbase, overdeck, couchbase) and HN community MCP/agent workflow threads. Several repo-only leads need corroboration.",
+  "candidates": [
+    {
+      "id": "scr-3f1a2b4c",
+      "title": "Cloudflare fixes cross-tenant data exposure in Containers",
+      "why_it_matters": "High-severity cross-tenant exposure; affects agent containers and multi-tenant workloads.",
+      "evidence": [
+        "https://blog.cloudflare.com/containers-cross-tenant-vulnerability/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Monitor for CVE number, vendor advisory and post-mortem timeline"
+    },
+    {
+      "id": "scr-9b2c3d4e",
+      "title": "OpenAI Codex Rust SDK release v0.157.0",
+      "why_it_matters": "Official Codex SDK update affects local/runtime integrations and agent toolkits.",
+      "evidence": [
+        "https://github.com/openai/codex/releases/tag/rust-v0.157.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Check release notes for breaking changes and new APIs used by agents",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a1b2c3d4",
+      "title": "sandbaseai/sandbase-harness: local-first agent runtime and MCP bridge",
+      "why_it_matters": "Self-hosted runtime with sandboxing, memory, credentials, audit/replay for local agents.",
+      "evidence": [
+        "https://github.com/sandbaseai/sandbase-harness"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "defer",
+      "next_check": "Seek third-party writeups or adoption signals before promotion",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-e5f6a7b8",
+      "title": "Reports: OpenAI agents 'infiltrated' Australian government website",
+      "why_it_matters": "First publicly disclosed agent-driven security incident with policy & ops implications.",
+      "evidence": [
+        "https://www.theregister.com/security/2026/09/24/openai-agents-infiltrated-australian-government-website/5298702",
+        "https://www.wsj.com/tech/ai/openai-agent-hacked-australian-government-website-eecf7a7a",
+        "https://www.theguardian.com/australia-news/2026/sep/24/anthony-albanese-says-openai-hacked-medicare-extreme-concern-sam-altman"
+      ],
+      "confidence": "medium",
+      "relevance_score": 9,
+      "source_diversity": 3,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Track vendor statement and incident timeline; collect operator postmortems"
+    },
+    {
+      "id": "scr-0a1b2c3d",
+      "title": "Public Browser MCP v3.0.0 (Show HN) — perf/token improvements",
+      "why_it_matters": "Community MCP release cl\n\n[... middle truncated for prompt budget ...]\n\nwser (operator metric).; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/Silbercue/public-browser/releases/tag/v3.0.0"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Watch for independent benchmarks or user threads validating claimed savings",
+      "risk_flags": [
+        "single-repo-source"
+      ],
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4c3b2a1f",
+      "title": "eltmon/overdeck: multi-agent orchestration for coding assistants",
+      "why_it_matters": "New orchestration framework for coordinating coding agents and workflows.",
+      "evidence": [
+        "https://github.com/eltmon/overdeck"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Search for demos, issues, or adopters to corroborate utility",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-8f7e6d5c",
+      "title": "Gemini 3.8 Live with Live Avatar is GA (Google)",
+      "why_it_matters": "Google ships Gemini 3.8 Live (avatar/live interactions) — platform capability for agent front-ends.",
+      "evidence": [
+        "https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-8-live-with-live-avatar-is-now-generally-available"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor SDK/CLI updates and sample agent integrations"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Cloudflare Worker Previews: isolated preview environments for agent changes",
+      "why_it_matters": "Worker Previews provide isolated preview environments for agent-driven code changes.",
+      "evidence": [
+        "https://blog.cloudflare.com/worker-previews/"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Check docs for agent CI/CD integrations and RBAC controls"
+    },
+    {
+      "id": "scr-7e6f5d4c",
+      "title": "couchbase/mcp-server-couchbase: Model Context Protocol server for Couchbase",
+      "why_it_matters": "MCP server to connect agents/LLMs to Couchbase/Capella for telemetry and RAG.",
+      "evidence": [
+        "https://github.com/couchbase/mcp-server-couchbase"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Look for vendor blog, docs, or integration examples to confirm production readiness",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-6a5b4c3d",
+      "title": "jev-browse: browser subtasks for coding agents at ~1/3 the cost",
+      "why_it_matters": "Browser subtasking approach reduces agent browsing token/costs — operator cost trick.; reclassified repo→infra",
+      "evidence": [
+        "https://github.com/danielnc/jev-browse"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Collect user benchmarks and HN/Reddit threads validating cost reductions",
+      "risk_flags": [
+        "single-repo-source"
+      ],
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-5f4e3d2c",
+      "title": "Modal: serving trillions of tokens for trillion-parameter coding agents",
+      "why_it_matters": "Guidance on scaling token serving for massive agent workloads (ops scaling playbook).",
+      "evidence": [
+        "https://modal.com/blog/trillion-tokens-trillion-parameters"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor for follow-up case studies or open-source tooling references"
+    },
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "Anthropic engineering: How we contain Claude across products",
+      "why_it_matters": "Vendor engineering practices for containment/mitigation of agent blast radius.",
+      "evidence": [
+        "https://www.anthropic.com/engineering/how-we-contain-claude"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Extract containment patterns relevant to MCP and agent sandboxes"
+    },
+    {
+      "id": "scr-9a8b7c6d",
+      "title": "PAWS: Policy-driven Agentic World Simulation (arXiv)",
+      "why_it_matters": "Research on policy-driven simulation to test agent behaviors and safety scenarios.",
+      "evidence": [
+        "https://arxiv.org/abs/2609.28547"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "research",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Track citations and any benchmark code releases"
+    },
+    {
+      "id": "scr-0f1e2d3c",
+      "title": "DeepSeek API docs, guides and changelog (vendor docs)",
+      "why_it_matters": "DeepSeek publishes API guides and changelog relevant to vision/chat agent integrations.",
+      "evidence": [
+        "https://api-docs.deepseek.com/news",
+        "https://api-docs.deepseek.com/guides/vision",
+        "https://api-docs.deepseek.com/api/create-chat-completion",
+        "https://api-docs.deepseek.com/updates"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Monitor for SDKs, client libraries, or independent adoption notes"
+    }
+  ],
+  "gaps": [
+    "Missing social/discussion: Bluesky and multiple Reddit collector snapshots failed (403/429) — limited social coverage from those sources",
+    "Missing corroboration: Several high-interest GitHub repos are repo-only; need third-party writeups or vendor docs before promotion"
+  ]
+}

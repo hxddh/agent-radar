@@ -1014,3 +1014,11 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Implication: preview artifacts should be stored in ephemeral buckets with short TTL and explicit promote APIs that copy to durable storage and attach provenance fields.
   - Recommendation: implement promotion checklist that copies preview artifacts into the production object-store and records the promotion event in the audit log.
   - Watch trigger: preview export API availability or changes to default preview retention settings.
+
+
+- 2026-09-25: Preview & container artifact stewardship
+  - Signal: Cloudflare container cross-tenant fix and Worker Previews change how operators should treat preview artifacts and container workspaces.
+  - Storage implication: Treat all preview outputs as sensitive by default; place them in ephemeral object stores with short TTLs and enforce ACLs. Add preview->prod promotion records to artifact metadata (who approved, which tests passed).
+  - Evidence strength: Strong (Cloudflare blogs)
+  - Sources: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/ ; https://blog.cloudflare.com/worker-previews/
+  - Watch trigger: vendors expose preview storage TTL defaults or publish preview promotion APIs; discovery of leftover preview artifacts in shared buckets.

@@ -771,3 +771,13 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Actionable: capture community mitigation steps into a shared onboarding checklist.
   - Source: https://news.ycombinator.com/item?id=49587379
   - Evidence strength: Medium
+
+
+- 2026-09-25: Pre-upgrade and preview playbook notes
+  - Scenario: planning a runtime/SDK upgrade or onboarding edge-deployed agent features.
+  - Practical steps observed in the field:
+    1) Snapshot current agent workspaces (include AGENTS.md and devcontainer.json) before any runtime/SDK upgrade.
+    2) Pin SDK/runtime versions in devcontainers and CI images; run connector compatibility smoke-tests that exercise tool-calls and plugin flows in a staging preview.
+    3) Route preview environment artifacts to ephemeral object storage with short TTL (lifecycle policy) and require explicit promotion steps to production.
+  - Evidence strength: Operational synthesis from Cloudflare Worker Previews (vendor) and community connector breakage reports (discussion).
+  - Sources: https://blog.cloudflare.com/worker-previews/ ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
