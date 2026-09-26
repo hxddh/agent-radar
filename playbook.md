@@ -775,3 +775,16 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   5. Post-upgrade: validate audit logs and run canned user-workflow smoke tests.
 - Evidence: accumulated from Anthropic Opus 5.5 operator reports and community writeups (2026-09).
 - Should promote to playbook? yes
+
+
+## Connector compatibility & pre-upgrade smoke test (candidate playbook)
+
+- When useful: Before rolling runtime/conductor upgrades that affect MCP connectors or tool-call semantics.
+- Steps:
+  1. Pin connector package/runtime versions in a reproducible devcontainer.
+  2. Run a connector smoke harness that exercises authentication, tool‑call, and error paths (simulate denied tool calls and network failures).
+  3. Snapshot AGENTS.md / connector configs and store a signed immutable copy in ephemeral object storage for rollback.
+  4. Run a staged promotion: preview → canary → production, with preview artifacts kept in ephemeral buckets and promotion audited.
+  5. After upgrade, run a quick reconciliation test and rollback if connector failures exceed threshold.
+- Evidence: Community reports of connector breakage and vendor runtime churn (Reddit; GitHub changelogs).
+- Should promote to playbook? yes

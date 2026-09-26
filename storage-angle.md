@@ -1022,3 +1022,16 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong (Cloudflare blogs)
   - Sources: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/ ; https://blog.cloudflare.com/worker-previews/
   - Watch trigger: vendors expose preview storage TTL defaults or publish preview promotion APIs; discovery of leftover preview artifacts in shared buckets.
+
+
+- Ephemeral preview storage mapping (2026-09-26): Worker Previews and edge preview environments create a separate artifact class that must not land in long‑lived production buckets. Implement short TTL buckets, immutable preview snapshots for forensics, and automated deletion/archival policies.
+  - Source class: Tier 1 (Cloudflare blog)
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/worker-previews/
+  - Watch trigger: Release notes or docs that expose preview bucket defaults or an incident where preview artifacts remained accessible after promotion.
+
+- Messaging skill artifact retention (2026-09-26): AWS SES/ Messaging "skills" for MCP will create outbound message artifacts outside typical object store flows; retention, indexing, and cross‑system search must be planned into incident playbooks.
+  - Source class: Tier 1 (AWS whats‑new)
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
+  - Watch trigger: Default enablement or logs showing agent-originated SES deliveries captured as part of incident post‑mortems.

@@ -360,9 +360,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cloudflare Agents (agents@0.22.0)
 - Category: Platform / edge agent runtime
 - Maturity: Active; increasingly feature-rich at the edge.
-- Recent changes: Cloudflare published a high‑priority fix for a cross‑tenant data exposure in Containers and launched Worker Previews (isolated preview environments) that provide CI-friendly sandboxing for agent-driven changes. Operators should: (1) immediately inventory container/preview artifact sinks and rotate short-lived credentials after the fix; (2) integrate Worker Previews into CI gating and map preview artifacts to ephemeral object storage with short TTLs; (3) add preview-to-production promotion auditing to deployment playbooks and test preview egress/ACL semantics during staging. Evidence strength: Strong
-- Sources: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/ ; https://blog.cloudflare.com/worker-previews/
-- replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
+- Recent changes: Cloudflare published Turnstile Spin (attestation/gating primitives) and continues to expand Worker Previews as isolated preview environments that can be integrated into CI. Operators should: (1) inventory container/preview artifact sinks and map them to ephemeral object storage with short TTLs; (2) rotate short‑lived credentials and secrets after incident response events; (3) integrate Worker Previews into CI gating and test preview egress/ACL semantics during staging; (4) add preview-to-production promotion auditing to deployment playbooks. Evidence strength: Strong
+- Source: https://blog.cloudflare.com/turnstile-spin/ ; https://blog.cloudflare.com/worker-previews/
+
+replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Omnigent
 
 - What it is: Agent meta-harness / orchestrator (promoted previously for cross‑runtime orchestration and policy enforcement).

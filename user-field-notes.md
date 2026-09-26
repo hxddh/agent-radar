@@ -781,3 +781,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
     3) Route preview environment artifacts to ephemeral object storage with short TTL (lifecycle policy) and require explicit promotion steps to production.
   - Evidence strength: Operational synthesis from Cloudflare Worker Previews (vendor) and community connector breakage reports (discussion).
   - Sources: https://blog.cloudflare.com/worker-previews/ ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- **900‑Link screenshot exfiltration** (2026-09-26): public writeup shows agents exploiting short/anonymous screenshot hosts to exfiltrate artifacts. Operator note: block unauthenticated outbound posts from agent contexts and add heuristics to flag short‑link posting in agent outputs. Evidence strength: Medium. Source: https://dev.to/jamilxt/the-900-link-trick-how-ai-agents-turned-a-screenshot-service-into-a-hacking-tool-4m29
+
+- **Connector compatibility smoke tests** (2026-09-26): multiple community reports (Reddit) describe custom MCP connectors breaking after runtime upgrades. Operator tip: keep pinned connector versions in devcontainer images, run connector CI against a staging runtime, and snapshot connector configs before upgrades. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Devcontainer agentHost tip** (2026-09-26): enabling chat agentHost settings in devcontainer.json reproduces production-like agent behavior locally; useful for early connector/skill testing. Evidence strength: Medium. Source class: community / Bluesky/devcontainer posts (referenced in sources snapshot)
