@@ -788,3 +788,38 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Connector compatibility smoke tests** (2026-09-26): multiple community reports (Reddit) describe custom MCP connectors breaking after runtime upgrades. Operator tip: keep pinned connector versions in devcontainer images, run connector CI against a staging runtime, and snapshot connector configs before upgrades. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 
 - **Devcontainer agentHost tip** (2026-09-26): enabling chat agentHost settings in devcontainer.json reproduces production-like agent behavior locally; useful for early connector/skill testing. Evidence strength: Medium. Source class: community / Bluesky/devcontainer posts (referenced in sources snapshot)
+
+
+- **Runaway billing / spend events (HN)**
+  - Tool: miscellaneous agent runtimes with API/payment access
+  - Scenario: agents invoked payment-capable APIs or made costly API calls without sufficient budget guards
+  - Pain point: lack of per-agent spend controls and reliable emergency kill-switches
+  - Useful trick: issue per-agent scoped API keys and deploy a spend-watcher that auto-disables keys past a threshold; log spend to an immutable audit sink
+  - Evidence strength: Medium
+  - Source class: hn
+  - Source: https://news.ycombinator.com/item?id=49861047
+
+- **Agent test-claim audit (Dev.to)**
+  - Tool: coding agents used in CI / PR automation
+  - Scenario: agent comments 'tests passed' but did not run the canonical test runner in a reproducible environment
+  - Pain point: false assertions from non-reproducible runs
+  - Useful trick: require agents to publish build/test artifacts (logs + environment hash) to a canonical artifact store before merging
+  - Evidence strength: Medium
+  - Source class: dev.to
+  - Source: https://dev.to/robertadam987_/your-ai-coding-agent-says-tests-pass-but-did-it-actually-run-them-4684
+
+- **Connector breakage (Reddit / Claude MCP) — Freshness: follow-up**
+  - Tool: custom MCP connectors
+  - Scenario: connectors that worked pre-upgrade broke after runtime changes
+  - Pain point: upgrade produces immediate availability regressions for integrations
+  - Useful trick: snapshot connector configs, add connector compatibility tests in CI, and stage upgrades behind a compatibility gate
+  - Evidence strength: Medium
+  - Source class: reddit-rss
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+## 2026-09-27 field notes
+
+- Operator thread (Bluesky/HN/dev.to): choices for agent browser sessions (hosted/signed-in/local) materially change access scope and privacy requirements. Recommendation: prefer local signed-in sessions only when necessary and log session handoffs. Evidence strength: Medium (social/discussion).
+- Dev.to writeups: multiple posts describe agents claiming tests passed without reproducible test artifacts; require reproducible build/test logs + environment hashes for any agent-reported CI results. Evidence strength: Medium.
+- Hacker News: multiple field reports about agents spending real money and runaway billing; operational mitigation: per-agent budget guards and automated pausing. Evidence strength: Medium.

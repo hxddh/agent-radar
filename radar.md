@@ -184,3 +184,18 @@ Action items: document connector compatibility tests, require connector CI again
 
 - AVIDS2 — memorix (promoted: scr-avids-memorix)
   - Why promoted: Cross-agent memory primitives directly impact Thesis 7 (memory + MCP convergence) by pushing memory to an infra primitive that must be snapshotted, versioned, and governed. If adopted broadly, memorix would require snapshot schema extensions and provenance fields. Source: https://github.com/AVIDS2/m
+
+
+### 2026-09-27 Promotions
+
+- Cloudflare — Turnstile Spin & Worker Previews (promoted)
+  - Why promoted: Edge attestation + preview sandboxes are a vendor-level change that reduces blast radius and introduces preview/export artifact classes requiring explicit operator mapping to ephemeral vs durable storage. Affects Thesis 5 (object storage as artifact plane), Thesis 8 (platform‑vendor MCP entry), and Thesis 9 (containment/security).
+  - Source: https://blog.cloudflare.com/turnstile-spin/ ; https://blog.cloudflare.com/worker-previews/
+
+- AWS — Messaging/SES AI skills for MCP Server (promoted)
+  - Why promoted: Formalizes privileged outbound messaging connectors at the MCP layer and creates a new artifact category (sent message artifacts & receipts) that operators must index, retain, and govern. Affects Thesis 5 (object storage), Thesis 7 (memory/MCP convergence), and operator incident playbooks.
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
+
+- GitHub — Copilot Agentic autofix uses Copilot Memory (promoted)
+  - Why promoted: Memory persistence for autofix modifies provenance, retention, and forensic requirements for widely-used coding-agent workflows; high operator impact on snapshot/retention/playbooks. Affects Thesis 7 (memory+MCP convergence) and Thesis 5 (artifact plane).
+  - Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory

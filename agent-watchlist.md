@@ -65,12 +65,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 # Emerging Agents
 
 ## Omnigent
-- Category: Meta-harness / orchestration
-- Maturity: Rising; OSS meta-harness with uptake in cross-runtime orchestration.
-- Recent changes: Continued community adoption signals and integrations with sandboxing/policy plugins. Operators evaluating cross-runtime orchestration should test Omnigent for policy enforcement, action receipts, and sandbox integration.
-- Evidence strength: Medium-Strong (GitHub + community adoption)
-- Last-checked: 2026-09-20
-- Source: https://github.com/omnigent-ai/omnigent
+- What it is: Open meta-harness for orchestrating many agents with policy and sandboxing primitives.
+- Why it matters: Increased uptake and visible OSS alternatives indicate meta-harnesses moving from power-user territory toward broader operator adoption; they influence how operators reason about cross-runtime orchestration, verification receipts, and policy enforcement.
+- Recent changes: Continued community adoption and connector examples surfaced this month; evidence strength: Strong (GitHub + community). Follow-up: track integrations with popular runtimes (Codex, Claude, Copilot). Source: https://github.com/omnigent-ai/omnigent
 ## Omnigent
 
 - What it is: A meta-harness / policy-enforcement project for orchestrating and constraining multi-agent runs (previously promoted in research-log).
@@ -78,12 +75,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Why it matters: Shows meta-harnesses are moving from power-user tools toward broader operator workflows; useful for consistent policy enforcement across agent fleets. Evidence strength: Medium
 - Action: Evaluate Omnigent for policy enforcement in a constrained staging environment and compare with swarm-based alternatives.
 ## Vestige
-- Category: Agent memory primitive
-- Maturity: Experimental; part of a crowded memory primitives landscape.
-- Recent changes: Multiple memory projects surfaced this week (agenticow, remem-ai, mem0, memleaf); Vestige remains a notable approach but has not been absorbed by a mainstream platform yet. Operators should design memory adapters to be pluggable and enforce access controls on memory stores.
-- Evidence strength: Medium
-- Last-checked: 2026-09-20
-- Follow-up: monitor for upstream integrations into Bedrock/AgentCore or major runtimes.
+- What it is: An agent-memory primitive (one of several competing approaches).
+- Why it matters: Vestige-like projects illustrate the diversity of memory architectures (copy-on-write, vector branching, versioned objects) and the operational choices vendors and operators must make for retention and provenance.
+- Recent changes: Multiple memory projects surfaced this week (agenticow, remem-ai, mem0 updates) showing the ecosystem is active; no single approach has consolidated mainstream status. Evidence strength: Medium-Strong. Follow-up: test migrations and snapshot exports to ensure forensic continuity.
 ## Vestige
 
 - What it is: (memory primitive) — local-first agent memory design explored by several projects.
@@ -427,10 +421,8 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)
 - Category: Platform sandbox / managed agents
 - Maturity: GA/active for managed sandbox use-cases.
-- Recent changes: Vercel announced WebMCP support in mcp-handler, and AI Gateway model availability (GLM-5.3 / FlashX) continues to broaden deployer model choices. Operators should review sandbox default retention, export sinks, and WebMCP hosting options.
-- Last-checked: 2026-09-20
-- Evidence strength: Strong
-- Sources: https://vercel.com/changelog/webmcp-mcp-handler ; https://vercel.com/changelog/glm-5-3-flashx-now-available-on-ai-gateway
+- Recent changes: Vercel ai@7.0.117 (2026-09-27) — SDK/deploy surface changes; sandbox memory observability and WebMCP support updates increase persisted artifact visibility and change default runtime environment variables. Operators should parse changelog diffs for retention/observability defaults, map preview export sinks to short‑TTL object storage, and re-run deployment tests in staging. Evidence strength: Strong
+- Source: https://github.com/vercel/ai/releases/tag/ai%407.0.117
 ## MemOS — hybrid retrieval memory (MemTensor / MemOS)
 
 - What it is: MemOS (MemTensor/MemOS) — hybrid retrieval memory claiming token‑savings via a self‑evolving persistent memory + retrieval stack.
@@ -495,3 +487,24 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Why it matters: First-party IDE integration materially lowers friction for agent-driven development and will shift where operators need to apply plugin governance, devcontainer policies, and CI smoke-tests.
 - Evidence strength: Strong (vendor blog announcement)
 - Source: https://blog.jetbrains.com/blog/2026/09/22/introducing-jetbrains-air/
+
+
+## Microsoft Copilot App (scr-microsoft-copilot-app)
+- What it is: Microsoft’s unified Copilot application that consolidates Home, Code, and Autopilot surfaces into a single desktop/cloud workspace.
+- Why it matters: Centralizes agent UX and governance points (permissions, billing defaults, memory integration) and changes where operators must apply sandboxing and policy enforcement (desktop + cloud). This has immediate operational effects for enterprises that run long‑running agents or integrate desktop-authed connectors.
+- Recent changes: Announced 2026-09-25 — unified app, new workspace model, and updated onboarding; operators should map default permission grants and billing defaults to existing governance controls.
+- Evidence strength: Strong (official Microsoft blog)
+- Follow-up: capture local sandbox semantics, default telemetry/permissions, and enterprise upgrade guidance; add Copilot-app-specific tests to upgrade CI.
+- Source: https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/
+- replace_section anchor: `## Microsoft Copilot App (scr-microsoft-copilot-app)`
+
+
+## GitHub Copilot — Agentic autofix now uses Copilot Memory (promoted 2026-09-27)
+
+- What it is: GitHub Copilot's agentic autofix feature has been updated to persist autofix decisions and provenance into Copilot Memory (integration announced in changelog).
+- Why it matters: Memory integration changes the lifecycle and residency of autofix histories and provenance. Persisted autofix memory affects auditability (who/what produced a fix), rollback paths (replay or undo), privacy (persisted code/contexts), and storage budgeting for operator environments that run large fleets of automated autofix runs.
+- Operational impact: operators must treat Copilot Memory entries created by autofix as agent artifacts: include them in snapshot/retention policies, export-to-customer-bucket options, and secrets scans. Add tests that validate that autofix memory exports can be scrubbed or redacted before long-term archival.
+- Evidence strength: Strong
+- Relevance score: 9
+- Promotion: promoted 2026-09-27 — added to watchlist due to direct operator governance and forensic impact.
+- Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory

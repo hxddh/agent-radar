@@ -1035,3 +1035,51 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong
   - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
   - Watch trigger: Default enablement or logs showing agent-originated SES deliveries captured as part of incident post‑mortems.
+
+
+- Signal: vendor-managed memory persistence increases forensic/retention requirements
+  - Related to: Copilot Memory integration, Vercel sandbox memory observability
+  - Storage implication: persisted memory blobs and autofix histories require explicit retention TTLs, provenance metadata (agent id, runtime version, env hash), and a write-once forensic archive for incident response.
+  - Evidence strength: Strong/Medium
+  - Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory ; https://vercel.com/changelog/vercel-sandbox-now-supports-memory-observability
+  - Watch trigger: vendor defaults change from ephemeral to persistent memory storage; if observed, require immediate retention policy updates and audit-sink configuration.
+
+- Signal: preview/sandbox export sinks must be mapped to ephemeral object-storage
+  - Related to: Vercel ai releases, Cloudflare Worker Previews
+  - Storage implication: preview artifacts should default to short‑TTL buckets; long-term retention must be opt-in and accompanied by provenance fields and legal hold capabilities.
+  - Evidence strength: Medium
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.117 ; https://blog.cloudflare.com/worker-previews/
+  - Watch trigger: discovery of persistent export-to-S3 configured by default for previews or sandboxes.
+
+## Storage Implications
+
+- Vendor-managed memories and sandbox previews increase the volume and variety of persisted artifacts: memory blobs, autofix history, audio/transcripts, preview export objects.
+- Immediate operator actions:
+  - Map every preview/export sink to a named object store with a retention/TTL policy.
+  - Add provenance metadata to every artifact (agent id, runtime version, env hash, timestamp, connector version).
+  - Implement write-once forensic archives for incident fast-capture and ensure retention policies meet compliance obligations.
+- Watch trigger: a vendor switches from ephemeral defaults to persistent-by-default memory/preview export — treat as an urgent policy change and apply immediate retention & export controls.
+
+
+### 2026-09-27 Promotion — Cloudflare Turnstile Spin & Worker Previews (promoted)
+
+- What it is: Cloudflare's Turnstile Spin adds attestation/gating primitives for interactive flows; Worker Previews create preview sandboxes and preview export flows. Combined, these vendor features shift where preview artifacts and attestation metadata are produced and how preview runs can be gated at the edge.
+- Why it matters: Edge attestation + preview sandboxes materially reduce blast radius for interactive agents but also introduce a new artifact class (preview exports + attestation receipts) that operators must map to ephemeral vs durable object stores. Preview artifacts left on-platform or exported by default can create compliance and forensics gaps.
+- Storage implications / recommended actions:
+  - Map preview exports to ephemeral, tenant-controlled buckets (short TTL) and require an explicit operator opt-in to persist previews into durable buckets.
+  - Persist attestation receipts (Turnstile Spin) into a short-lived append-only audit prefix with provenance metadata (run_id, agent_version, attestation_token, timestamp) and a pathway to copy into a forensic archive on incident hold.
+  - Add preview→promotion hooks in CI/playbooks that copy promoted preview snapshots to durable storage along with AGENTS.md / manifest files and a promotion audit record (who approved, why, tests passed).
+- Evidence strength: Strong
+- Sources: https://blog.cloudflare.com/turnstile-spin/ ; https://blog.cloudflare.com/worker-previews/
+
+
+### 2026-09-27 Promotion — AWS Messaging / SES AI "skills" for MCP (promoted)
+
+- What it is: AWS added messaging/SES "skills" for MCP servers, formalizing privileged messaging connectors at the MCP layer (outbound message connectors and managed messaging skills).
+- Why it matters: Messaging skills create a new class of outbound artifacts (sent messages, delivery receipts) tied to agent actions; these artifacts may be stored outside traditional snapshot/object flows and require retention, audit, and cross-system search for incident triage.
+- Storage implications / recommended actions:
+  - Treat MCP-originated outbound messaging artifacts (sent message bodies, deliveries, receipts) as first-class forensic artifacts: index them into operator-owned object storage or SIEM with run_id and connector manifest metadata.
+  - Define retention and redaction rules for message artifacts (PII removal, short default TTL for ephemeral sends, longer retention only by policy-approved exception).
+  - Ensure message-skill connectors support a configurable export-to-customer-bucket hook and expose provenance metadata (agent id, run_id, message_id, timestamp, connector_version).
+- Evidence strength: Strong
+- Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/

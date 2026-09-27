@@ -788,3 +788,33 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   5. After upgrade, run a quick reconciliation test and rollback if connector failures exceed threshold.
 - Evidence: Community reports of connector breakage and vendor runtime churn (Reddit; GitHub changelogs).
 - Should promote to playbook? yes
+
+
+## Connector Compatibility Pre‑upgrade Playbook
+- When useful: before upgrading agent runtimes, MCP servers, or SDKs that touch connector contracts.
+- Steps:
+  1. Snapshot current connector configs + environment hashes and store in an immutable artifact bucket.
+  2. Run connector CI: exercise all MCP connector endpoints against a staging runtime matching the new release.
+  3. Run end-to-end smoke tests for typical workflows (auth, tool-call, file I/O, memory read/write).
+  4. If any test fails, block promotion and create a rollback snapshot; notify integrators.
+  5. After promotion, monitor connector error rates and expose a one-click rollback.
+- Evidence: Ongoing community reports of connector breakage (Reddit) and vendor runtime churn (Claude releases).
+- Should promote to playbook? yes
+
+## Per-Agent Spend Guard Playbook
+- When useful: any agent runtime with access to billed APIs or purchasing capability.
+- Steps:
+  1. Issue per-agent scoped credentials and a per-agent billing profile.
+  2. Deploy a spend watcher that enforces hard and soft thresholds (soft: alert; hard: disable key).
+  3. Provide a sandbox mode with fake-money/backstop to run untrusted tasks.
+  4. Record spend events to an immutable ledger for postmortem analysis.
+- Evidence: Hacker News reports and operational threads on runaway billing.
+- Should promote to playbook? yes
+
+
+## 2026-09-27 — Short playbook deltas
+
+- Pin runtimes (Codex, Claude, Copilot, Qwen) in CI and run automated connector compatibility tests before promoting runtime upgrades to production.
+- Enforce per-agent spend guards: implement automatic throttles and an immediate pause/kill action when budget thresholds are exceeded.
+- DNS & egress monitoring: log DNS queries from agent sandboxes and add deny-by-default egress rules for unattended agents; integrate DNS logs into incident playbooks.
+- Forensic snapshot playbook: when a high-risk incident is suspected, capture immutable snapshots (workspace files, memory blobs, network logs, env hash) and export to a write-once forensic store.
