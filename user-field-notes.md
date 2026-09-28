@@ -823,3 +823,17 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Operator thread (Bluesky/HN/dev.to): choices for agent browser sessions (hosted/signed-in/local) materially change access scope and privacy requirements. Recommendation: prefer local signed-in sessions only when necessary and log session handoffs. Evidence strength: Medium (social/discussion).
 - Dev.to writeups: multiple posts describe agents claiming tests passed without reproducible test artifacts; require reproducible build/test logs + environment hashes for any agent-reported CI results. Evidence strength: Medium.
 - Hacker News: multiple field reports about agents spending real money and runaway billing; operational mitigation: per-agent budget guards and automated pausing. Evidence strength: Medium.
+
+
+- Snapshot-before-upgrade (operator trick)
+  - When observed: 2026-09-28 (follow-up to connector breakage reports)
+  - What: snapshot AGENTS.md, connector configs, and staging workspaces immediately before runtime/SDK upgrades.
+  - Why useful: enables quick rollback and post-mortem when connector semantics change after upgrades.
+  - Evidence: Reddit connector reports; Evidence strength: Medium
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Devcontainer chat-agentHost tip
+  - When observed: 2026-09-28
+  - What: enabling chat agentHost / devContainer in devcontainer.json stabilizes local agent testing environments and keeps extension-surface consistent across developer machines.
+  - Evidence: community VS Code tips; Evidence strength: Medium
+  - Source class: Bluesky / VS Code social tips

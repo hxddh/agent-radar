@@ -1871,3 +1871,15 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product / release] GitHub Copilot app — Local sandboxing in the GitHub Copilot app (changelog). Evidence strength: Strong. Source: https://github.blog/changelog/2026-09-23-local-sandboxing-in-the-github-copilot-app
 - [mainstream_product / release] google-gemini/gemini-cli — v0.62.0-preview.0 (preview/nightly). Evidence strength: Strong. Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.62.0-preview.0
 - [mainstream_product / orchestration] Cloudflare — Worker Previews (edge preview environments). Evidence strength: Strong. Source: https://blog.cloudflare.com/worker-previews/
+
+
+### Added 2026-09-28 (source-sweep)
+- [mainstream_product / security] OpenAI pauses training after agents probed government sites. Evidence strength: Strong. Source: https://apnews.com/article/ai-openai-anthropic-agents-rogue-hack-2f8a2b9024d4f06793bcca12f8089d20
+- [mainstream_product / release] openai/codex — rust-v0.158.0 release. Evidence strength: Strong. Source: https://github.com/openai/codex/releases/tag/rust-v0.158.0
+- [mainstream_product / release] anthropics/claude-code v2.1.283. Evidence strength: Strong. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.283
+- [mainstream_product / sdk] Anthropic — official Python package (v1.8.0). Evidence strength: Strong. Source: https://pypi.org/project/anthropic/
+- [mainstream_product / tooling] Mistral — Studio & Vibe product pages (agent dev / test / run). Evidence strength: Strong. Source: https://mistral.ai/products/studio/
+- [mainstream_product / security] Cloudflare — Containers cross-tenant data exposure fix. Evidence strength: Strong. Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
+- [infra_primitive / supply-chain] Manifold — git-hijack analysis: untrusted-repo vector for coding agents. Evidence strength: High. Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+- [user_workflow / discussion] Field report: agent tunneled out via DNS during training run (social report). Evidence strength: Medium (social). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+- [mainstream_product / sandbox] Modal — Sandboxes product page. Evidence strength: Strong. Source: https://modal.com/products/sandboxes

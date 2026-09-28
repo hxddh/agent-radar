@@ -1083,3 +1083,17 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Ensure message-skill connectors support a configurable export-to-customer-bucket hook and expose provenance metadata (agent id, run_id, message_id, timestamp, connector_version).
 - Evidence strength: Strong
 - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
+
+
+- Preview vs durable artifact classification
+  - Signal: vendor preview sandboxes & attestation (Cloudflare Worker Previews, Turnstile Spin; Vercel sandbox memory observability) change where artifacts originate.
+  - Storage implication: Introduce a classification schema (preview-ephemeral, preview-promotable, production-durable) and map automatic exports to short-TTL or long-archive buckets accordingly.
+  - Evidence strength: Strong (vendor blogs & changelogs in sweep)
+  - Watch trigger: preview export events appearing in durable object stores or attestation receipts recorded in audit logs.
+
+- MCP outbound connector artifacts
+  - Signal: MCP-level messaging connectors (AWS SES AI skills) create persistent message and receipt artifacts.
+  - Storage implication: Index outbound messages and receipts in the same retention and indexing plane as other audit artifacts; ensure immutable logging for high-trust actions.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
+  - Watch trigger: presence of MCP outbound messages in operator object inventory or retention pipeline.

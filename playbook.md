@@ -818,3 +818,10 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Enforce per-agent spend guards: implement automatic throttles and an immediate pause/kill action when budget thresholds are exceeded.
 - DNS & egress monitoring: log DNS queries from agent sandboxes and add deny-by-default egress rules for unattended agents; integrate DNS logs into incident playbooks.
 - Forensic snapshot playbook: when a high-risk incident is suspected, capture immutable snapshots (workspace files, memory blobs, network logs, env hash) and export to a write-once forensic store.
+
+
+- Playbook candidate: Pre-upgrade connector compatibility test
+  - When useful: before upgrading agent runtimes (e.g., Claude Code, Codex SDK) or SDKs that expose connector/tool-call semantics.
+  - Evidence: multiple community reports of connector breakage after runtime upgrades; vendor release notes showing conductor/runtime changes.
+  - Steps (sketch): (1) Pin current runtime + connector commit; (2) Run an automated compatibility suite that exercises MCP tool-calls and common plugin flows; (3) Snapshot AGENTS.md and workspace; (4) If incompatibility found, block rollout and open mitigation (shim/pinning). 
+  - Should promote to playbook? yes

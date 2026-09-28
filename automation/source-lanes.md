@@ -1,10 +1,10 @@
 # Source Lanes
 
-Last checked: 2026-09-27
+Last checked: 2026-09-28
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
-| arxiv | 3 | 0 | 0 |
+| arxiv | 3 | 0 | 18 |
 | bluesky | 14 | 0 | 56 |
 | crates | 9 | 0 | 45 |
 | devto | 3 | 3 | 12 |
