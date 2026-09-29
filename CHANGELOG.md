@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+## v0.25.0 - 2026-09-29
+
+Five weeks unattended (08-21 → 09-28) published 27 of 28 dailies and every weekly/monthly. This release is a review of what those reports were built from, and the review found the inputs were weaker than the dashboards said.
+
+### Fixed
+- **Dailies published English-only and no gate saw it.** `missing_chinese_substance_daily_block()` pooled every day in the month file and capped the requirement at 6 bullets, so from the 2nd of each month a day passed on its neighbours' Chinese. 10 of September's 27 days, 8 of August's and 5 of July's have no `### 中文` at all (telemetry agrees: cumulative `chinese_cjk_chars` did not move on those days). Only the 1st was really checked, and it was the one daily lost since v0.24 (2026-09-01, #103).
+- The runner now checks each day block it writes on its own (`repair_daily_chinese_blocks()`), regenerates a thin day's mirror from that day's English (one call, the same path weeklies use), and publishes with `> 本期中文镜像未能生成` if that fails, instead of refusing. Untouched history is not rewritten. `validate` lists thin days as warnings; the whole-file error semantics are unchanged, so July's history does not turn CI red.
+- **CDATA titles were deleted.** `strip_html()` treated `<![CDATA[...]]>` as one tag: all 72 cached `openai-blog` items and 36 of 39 `latent-space` items had empty titles, so the model saw bare URLs from OpenAI's own feed.
+- **Daily-only days skipped the lane shards.** `main()` built the shared collection only for multi-task runs, so 14 of September's 27 dailies (the daily-only days) screened in one call with a pool of 8–14 candidates, against 42–65 on shared days. A lone screening task now takes the shared path.
+- **Page collectors scraped navigation.** "Skip to content", "Contact Sales" and product hubs were 50–100% of items from several vendor pages and, being first in document order, used up the per-page limit. `page_link_candidates()` drops them and lists entries under the page's own path first.
+- **HTTP 308 on Python 3.10.** The workflow's Python does not follow 308, so `e2b-blog` and `openrouter-announcements` were auto-disabled for moving. A redirect handler now follows 308 on GET.
+
+### Changed
+- Hacker News requires `HN_MIN_POINTS` (default 10). Newest-first with no floor was mostly 0-point posts: 891 cached items, 2.6% of September's citations.
+- Repos from notes need `MIN_CONTEXT_REPO_STARS` (default 200) to earn a release collector, and `research-log.md` is no longer read for repos. Every cited long-tail repo was becoming a release collector, holding the non-default slots, hitting GitHub's rate limit, and feeding more long-tail citations back in (99 long-tail repos out-cited the 26 defaults, 138 to 119).
+- Tags are fetched only when a repo has no GitHub releases; the separate `tag:` collectors are gone (half the release-lane API calls).
+- The packages screening shard gets 35% of the window (`SCREENING_SHARD_CAP_RATIO`). Registries supplied ~17% of September's citations against ~7% for Anthropic, OpenAI and Google combined.
+- General feeds (`aws-whats-new`, `producthunt`, `jetbrains-blog`, `meta-ai-blog`, Hugging Face blog) keep only agent-topic items.
+
+### Added
+- Feeds for Google AI, GitHub blog AI & ML, Microsoft Foundry and AWS Machine Learning. These URLs were added **unverified**: the build sandbox's network policy blocked them. Collector-state auto-disables any that fail.
+- `advisory:ghsa`: reviewed GitHub Security Advisories for agent packages (`ADVISORY_PACKAGES` to override). Also unverified live: the comma-separated `affects` query is the documented form, but it was not exercised against the API.
+- Optional Reddit app-only OAuth (`REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` secrets). When set, `reddit-api:<sub>` replaces RSS with fresh collector state; unset, nothing changes.
+- `collect-status` separates collectors no run has touched in 7 days (`last_run` is now recorded). The "degraded" Google/Azure feeds it showed were July entries no longer configured, not live outages.
+
+### Housekeeping
+- Archived the one legacy `### Pass:` section from `research-log.md` to `research-log-archive/2026-09.md` via `corpus-audit --fix` (moved, not deleted).
+
+### Known
+- `weekly/2026-W36.md` still carries a correct degradation marker; backfilling it and the English-only days needs a model call and is not done here.
+- The cost estimate for daily-only days on 4 shards is about +$0.6/month (≈$2.7 of $4). Per-day mirror repair adds about one call on thin days.
+
 ## v0.24.5 - 2026-08-21
 
 Fixes a hole that v0.24.4 opened, found by an automated review on #101 and confirmed against the code before acting on it.

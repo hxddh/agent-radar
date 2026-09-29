@@ -105,6 +105,16 @@ jobs:
       REDDIT_RSS_BATCH_SIZE: '10'
       SOCIAL_FEEDS: ${{ vars.SOCIAL_FEEDS || '' }}
       REDDIT_SUBREDDITS: ${{ vars.REDDIT_SUBREDDITS || '' }}
+      # Optional Reddit app-only OAuth. When both secrets are set the
+      # reddit-api lane replaces unauthenticated RSS, which GitHub Actions IPs
+      # get HTTP 429 on. Unset, nothing changes.
+      REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+      REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+      # v0.25.0 source-quality knobs, pinned in-repo like the collection knobs
+      # above: HN stories need this many points; repos found in notes need this
+      # many stars to earn a release collector.
+      HN_MIN_POINTS: '10'
+      MIN_CONTEXT_REPO_STARS: '200'
       X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
       X_SEARCH_QUERIES: ${{ vars.X_SEARCH_QUERIES || '' }}
 

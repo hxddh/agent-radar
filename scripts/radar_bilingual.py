@@ -294,8 +294,79 @@ def missing_chinese_substance_daily_block(content: str) -> bool:
     if english_signals < 3:
         return False
     chinese_cjk = substantive_block_bullets(chinese, require_cjk=True)
-    required = max(MIN_CJK_LINES_FOR_SUBSTANCE, min(english_signals, 6))
-    return chinese_cjk < required
+    return chinese_cjk < daily_required_chinese_bullets(english)
+
+
+def daily_required_chinese_bullets(english: str) -> int:
+    english_signals = count_daily_signal_sections(english) or substantive_english_lines(english)
+    return max(MIN_CJK_LINES_FOR_SUBSTANCE, min(english_signals, 6))
+
+
+DAY_BLOCK_START_RE = re.compile(r"(?m)^(?=## \d{4}-\d{2}-\d{2}\s*$)")
+DAY_BLOCK_LABEL_RE = re.compile(r"^## (\d{4}-\d{2}-\d{2})\s*$", re.MULTILINE)
+
+
+def split_daily_day_blocks(content: str) -> list[tuple[str, str]]:
+    """(label, text) per `## YYYY-MM-DD` block; the preamble has label "".
+
+    Joining the texts gives back ``content`` exactly.
+    """
+    parts: list[tuple[str, str]] = []
+    for piece in DAY_BLOCK_START_RE.split(content):
+        if not piece:
+            continue
+        match = DAY_BLOCK_LABEL_RE.match(piece)
+        parts.append((match.group(1) if match else "", piece))
+    return parts
+
+
+def thin_chinese_day_labels(content: str, *, include_marked: bool = False) -> list[str]:
+    """Day blocks whose own 中文 half is below the floor.
+
+    `missing_chinese_substance()` pools every day in the month file and caps
+    the requirement at 6 bullets, so from the 2nd of a month any single thin
+    day passes on its neighbours' Chinese. Only the 1st was ever really
+    checked — which is the one daily lost since v0.24 (2026-09-01, #103).
+    """
+    labels: list[str] = []
+    for label, block in split_daily_day_blocks(content):
+        if not label or not missing_chinese_substance_daily_block(block):
+            continue
+        if not include_marked and has_recorded_chinese_degradation(block):
+            continue
+        labels.append(label)
+    return labels
+
+
+def replace_daily_chinese_body(block: str, chinese_body: str) -> str:
+    """Swap the body under a day block's `### 中文`, keeping any trailing `---`."""
+    lines = block.splitlines(keepends=True)
+    start = next((index for index, line in enumerate(lines) if DAY_CHINESE_RE.match(line.rstrip("\n"))), None)
+    if start is None:
+        # English-only day (10 of September 2026's 27 had no `### 中文` at
+        # all): add the section before the block's closing `---`, if any.
+        insert_at = len(lines)
+        for index, line in enumerate(lines):
+            if SECTION_BREAK_RE.match(line.rstrip("\n")):
+                insert_at = index
+                break
+        lines[insert_at:insert_at] = ["### 中文\n"]
+        if insert_at > 0 and lines[insert_at - 1].strip():
+            lines.insert(insert_at, "\n")
+            insert_at += 1
+        start = insert_at
+    end = len(lines)
+    for index in range(start + 1, len(lines)):
+        if SECTION_BREAK_RE.match(lines[index].rstrip("\n")):
+            end = index
+            break
+    tail = "".join(lines[end:])
+    body = chinese_body.strip("\n")
+    head = "".join(lines[: start + 1])
+    joined = f"{head}\n{body}\n"
+    if tail:
+        joined += "\n" + tail
+    return joined
 
 
 def assemble_daily_day_block(english_block: str, chinese_block: str, day_heading: str = "") -> str:
