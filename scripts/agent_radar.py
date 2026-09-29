@@ -58,7 +58,7 @@ INIT_PROTECTED_FILES = {
 INIT_PROTECTED_DIRS = ("prompts", "automation", "docs")
 
 
-__version__ = "0.24.5"
+__version__ = "0.25.0"
 
 CORE_FILES = [
     "README.md",
@@ -849,18 +849,29 @@ def chinese_substance_findings(path: Path, strict: bool = False) -> tuple[list[s
     if not path.exists():
         return [], []
     content = path.read_text(encoding="utf-8")
+    day_warnings: list[str] = []
+    if radar_bilingual.is_daily_block_format(content):
+        # The whole-file check pools every day in the month, so a thin day
+        # passes on its neighbours' Chinese. Report thin days individually;
+        # warnings only, because days published before the runner's per-day
+        # repair (v0.25.0) are history and are not rewritten.
+        thin_days = radar_bilingual.thin_chinese_day_labels(content)
+        if thin_days:
+            day_warnings.append(
+                f"{path}: day block(s) with a thin 中文 half: {', '.join(thin_days)}"
+            )
     if not radar_bilingual.missing_chinese_substance(content):
-        return [], []
+        return [], day_warnings
     message = f"{path}: Chinese sections lack substantive 中文 content (need CJK text, not empty placeholders)"
     if radar_bilingual.has_recorded_chinese_degradation(content):
         # The runner published this deliberately and said so IN the file. The
         # invariant exists to stop reports shipping English-only *silently*; a
         # marked one is the honest outcome of a failed mirror regeneration, and
         # erroring here would discard the very report the marker belongs to.
-        return [], [message + "; recorded as a mirror degradation by the runner"]
+        return [], [message + "; recorded as a mirror degradation by the runner"] + day_warnings
     if strict:
-        return [message], []
-    return [], [message + "; cloud agent should add real Chinese translations"]
+        return [message], day_warnings
+    return [], [message + "; cloud agent should add real Chinese translations"] + day_warnings
 
 
 def warn_missing_chinese_substance(path: Path, strict: bool = False) -> list[str]:
@@ -1002,12 +1013,20 @@ def command_collect_status(args: argparse.Namespace) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         return 0
     print(f"Collector status ({payload['disabled_count']} disabled)")
-    for row in payload.get("collectors", []):
+    rows = payload.get("collectors", [])
+    live = [row for row in rows if not row.get("stale")]
+    stale = [row for row in rows if row.get("stale")]
+    for row in live:
         status = row.get("status", "ok")
         disabled = " [disabled]" if row.get("disabled") else ""
         detail = row.get("last_detail", "")
         detail_text = f" — {detail}" if detail else ""
         print(f"- {row.get('name')}: {status}{disabled}{detail_text}")
+    if stale:
+        print(f"\nNot run in the last {radar_collector_state.STALE_AFTER_DAYS} days (retired, renamed, or rotated out):")
+        for row in stale:
+            last_run = row.get("last_run") or "before tracking"
+            print(f"- {row.get('name')}: last run {last_run}")
     if payload.get("rejected_repos"):
         print("\nRejected repos:")
         for repo in payload["rejected_repos"]:

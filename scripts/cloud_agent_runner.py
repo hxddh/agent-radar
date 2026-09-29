@@ -9,6 +9,7 @@ Gateway with public-source collection, or the OpenAI Responses API when configur
 from __future__ import annotations
 
 import argparse
+import base64
 import concurrent.futures
 import datetime as dt
 import hashlib
@@ -82,6 +83,8 @@ DEFAULT_MAX_SYNTHESIS_RESPONSE_CHARS = 96_000
 # and give the day block room to carry the extra signals bilingually.
 DEFAULT_MAX_DAILY_APPEND_CHARS = 22_000
 DEFAULT_SCREEN_PROMPT_CANDIDATES = 20
+DEFAULT_HN_MIN_POINTS = 10
+DEFAULT_MIN_CONTEXT_REPO_STARS = 200
 DEFAULT_SCREEN_GAPS_IN_PROMPT = 4
 DEFAULT_SCREEN_CANDIDATE_WHY_CHARS = 160
 DEFAULT_RADAR_SWEEP_PROMPT_LINES = 100
@@ -449,8 +452,16 @@ DEFAULT_CHANGELOG_FEEDS = [
     # Infra vendors from sources.md that previously had no collectors.
     ("supabase-blog", "https://supabase.com/rss.xml"),
     ("flyio-blog", "https://fly.io/blog/feed.xml"),
-    # Launch/adoption signal.
+    # Launch/adoption signal (topic-filtered: see TOPIC_FILTERED_FEEDS).
     ("producthunt", "https://www.producthunt.com/feed"),
+    # Mainstream vendors that had no working first-party lane (v0.25.0):
+    # September cited Google ~1.7%, Microsoft ~0, and AWS only via storage and
+    # instance-launch posts. Added unverified from the build sandbox; a feed
+    # that 404s is auto-disabled by collector-state like any other.
+    ("google-ai-blog", "https://blog.google/technology/ai/rss/"),
+    ("github-blog-ai", "https://github.blog/ai-and-ml/feed/"),
+    ("ms-foundry-blog", "https://devblogs.microsoft.com/foundry/feed/"),
+    ("aws-ml-blog", "https://aws.amazon.com/blogs/machine-learning/feed/"),
 ]
 DEFAULT_CHANGELOG_PAGES = [
     ("cursor-changelog", "https://cursor.com/changelog"),
@@ -471,7 +482,7 @@ DEFAULT_CHANGELOG_PAGES = [
     # gracefully if a path moves.
     ("modal-blog", "https://modal.com/blog"),
     ("daytona-blog", "https://www.daytona.io/dotfiles"),
-    ("openrouter-announcements", "https://openrouter.ai/announcements/"),
+    ("openrouter-announcements", "https://openrouter.ai/announcements"),
     ("meta-ai-blog", "https://ai.meta.com/blog/"),
 ]
 DEFAULT_REDDIT_SUBREDDITS = [
@@ -485,6 +496,31 @@ DEFAULT_REDDIT_SUBREDDITS = [
     "AI_Agents",
     "GithubCopilot",
     "OpenAI",
+]
+# Packages whose security advisories are agent-radar signals. Before v0.25.0
+# advisories only reached the radar when a model happened to cite NVD or a
+# security blog; GHSA is the primary source and needs no scraping.
+DEFAULT_ADVISORY_PACKAGES = [
+    "mcp",
+    "fastmcp",
+    "@modelcontextprotocol/sdk",
+    "@modelcontextprotocol/inspector",
+    "langchain",
+    "langchain-core",
+    "langgraph",
+    "llama-index",
+    "crewai",
+    "autogen-agentchat",
+    "openai-agents",
+    "litellm",
+    "browser-use",
+    "smolagents",
+    "pydantic-ai",
+    "mem0ai",
+    "@anthropic-ai/claude-code",
+    "@openai/codex",
+    "n8n",
+    "flowise",
 ]
 PYPI_UPDATES_RSS = "https://pypi.org/rss/updates.xml"
 DEFAULT_PYPI_PACKAGES = [
@@ -826,7 +862,15 @@ def collector_enabled(kind: str) -> bool:
         return env_bool("COLLECT_PYPI", True)
     if kind == "x":
         return bool(os.environ.get("X_BEARER_TOKEN", "").strip())
+    if kind == "reddit-api":
+        return reddit_oauth_configured()
     return True
+
+
+def reddit_oauth_configured() -> bool:
+    return bool(
+        os.environ.get("REDDIT_CLIENT_ID", "").strip() and os.environ.get("REDDIT_CLIENT_SECRET", "").strip()
+    )
 
 
 def ensure_report_shells(root: Path, day: dt.date) -> None:
@@ -2214,6 +2258,19 @@ def screening_shard_items(items: list[dict[str, str]]) -> list[tuple[str, list[d
     return shards
 
 
+# Per-shard share of the screening window. Package registries return ~200
+# new-package items a day; with a full window the packages shard contributed
+# as many candidates as discussion or official vendors, and September's
+# dailies drew ~17% of citations from registries against ~7% from
+# Anthropic/OpenAI/Google combined.
+SCREENING_SHARD_CAP_RATIO: dict[str, float] = {"packages": 0.35}
+
+
+def screening_shard_cap(shard_name: str, cap: int) -> int:
+    ratio = SCREENING_SHARD_CAP_RATIO.get(shard_name, 1.0)
+    return max(10, int(cap * ratio))
+
+
 def candidate_dedupe_key(candidate: dict[str, Any]) -> str:
     urls = candidate_evidence_urls(candidate)
     if urls:
@@ -2274,7 +2331,7 @@ def preflight_shared_screening(
     payloads: list[dict[str, Any]] = []
     calls = 0
     for shard_name, shard_items in shards:
-        compact = format_scored_items_for_screening(shard_items, cap)
+        compact = format_scored_items_for_screening(shard_items, screening_shard_cap(shard_name, cap))
         compact = f"Screening shard: {shard_name} sources only.\n{compact}"
         data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model)
         calls += 1
@@ -4794,6 +4851,27 @@ def redact_http_error_body(body: str, limit: int = 240) -> str:
     return compact[:limit] + "..."
 
 
+class PermanentRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Follow HTTP 308 on GET, which urllib only learned in Python 3.11.
+
+    The workflow runs 3.10, where a 308 surfaces as an error: e2b-blog and
+    openrouter-announcements were auto-disabled for moving their URLs.
+    """
+
+    def http_error_308(self, req, fp, code, msg, headers):  # noqa: ANN001 - urllib signature
+        return self.http_error_302(req, fp, code, msg, headers)
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
+        if code == 308 and req.get_method() in {"GET", "HEAD"}:
+            code = 307
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+# Installed globally so every collector's `urllib.request.urlopen` follows it.
+# Non-GET 308s (model calls are POSTs) still raise, exactly as before.
+urllib.request.install_opener(urllib.request.build_opener(PermanentRedirectHandler()))
+
+
 def request_json(url: str, headers: dict[str, str] | None = None, timeout: int = 10) -> Any:
     request = urllib.request.Request(url, headers=headers or {}, method="GET")
     with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -4825,8 +4903,14 @@ def github_request_json(url: str, headers: dict[str, str] | None = None, timeout
     return request_json(url, headers=headers, timeout=timeout)
 
 
+CDATA_RE = re.compile(r"<!\[CDATA\[(.*?)\]\]>", re.DOTALL)
+
+
 def strip_html(value: str) -> str:
-    text = html.unescape(value)
+    # Unwrap CDATA first: the tag scanner below treats `<![CDATA[...]]>` as one
+    # tag and deletes the text inside it, which blanked every title from the
+    # OpenAI and Latent Space feeds.
+    text = html.unescape(CDATA_RE.sub(lambda match: match.group(1), value))
     pieces: list[str] = []
     in_tag = False
     for char in text:
@@ -4866,7 +4950,7 @@ def source_lane(source: str) -> str:
         return "github-release"
     if source.startswith("github"):
         return "github"
-    if source.startswith("reddit-rss:") or source == "reddit":
+    if source.startswith(("reddit-rss:", "reddit-api:")) or source == "reddit":
         return "reddit"
     if source in {"hacker-news", "bluesky", "devto", "lobsters", "x"} or source.startswith("social-feed:"):
         return "social"
@@ -4900,6 +4984,11 @@ def source_lane(source: str) -> str:
         "openrouter-announcements",
         "meta-ai-blog",
         "jetbrains-blog",
+        "google-ai-blog",
+        "github-blog-ai",
+        "ms-foundry-blog",
+        "aws-ml-blog",
+        "ghsa",
     }:
         return "official"
     return "feeds-pages"
@@ -5141,6 +5230,12 @@ def audit_source_status(name: str, status: str, detail: str = "") -> None:
 def collect_hn_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     encoded = urllib.parse.quote(query)
     url = f"https://hn.algolia.com/api/v1/search_by_date?query={encoded}&tags=story&hitsPerPage={limit}"
+    # Newest-first with no floor returned mostly 0-point Show HN posts: 891
+    # cached HN items, 2.6% of September's citations. A points floor keeps the
+    # lane to stories people actually discussed. HN_MIN_POINTS=0 disables it.
+    min_points = env_int("HN_MIN_POINTS", DEFAULT_HN_MIN_POINTS)
+    if min_points > 0:
+        url += "&numericFilters=" + urllib.parse.quote(f"points>={min_points}")
     data = request_json(url)
     for hit in data.get("hits", [])[:limit]:
         story_id = hit.get("objectID", "")
@@ -5166,6 +5261,57 @@ def collect_reddit_rss_items(subreddit: str, limit: int, items: list[dict[str, s
     name = subreddit.removeprefix("r/").removeprefix("R/")
     feed_url = f"https://www.reddit.com/r/{urllib.parse.quote(name)}/new.rss"
     collect_feed_items(feed_url, f"reddit-rss:{name}", limit, items, seen)
+
+
+REDDIT_USER_AGENT = "linux:agent-radar:1.0 (by /u/agent-radar; +https://github.com/hxddh/agent-radar)"
+_REDDIT_TOKEN_LOCK = threading.Lock()
+_REDDIT_TOKEN: dict[str, Any] = {}
+
+
+def reddit_oauth_token() -> str:
+    """App-only (client_credentials) token, fetched once per run.
+
+    Unauthenticated RSS from GitHub Actions IPs gets HTTP 429 on every
+    subreddit; Reddit serves authenticated API traffic from the same IPs.
+    """
+    with _REDDIT_TOKEN_LOCK:
+        cached = _REDDIT_TOKEN.get("token")
+        if cached and time.time() < float(_REDDIT_TOKEN.get("expires", 0)):
+            return str(cached)
+        client_id = os.environ.get("REDDIT_CLIENT_ID", "").strip()
+        secret = os.environ.get("REDDIT_CLIENT_SECRET", "").strip()
+        basic = base64.b64encode(f"{client_id}:{secret}".encode("utf-8")).decode("ascii")
+        request = urllib.request.Request(
+            "https://www.reddit.com/api/v1/access_token",
+            data=b"grant_type=client_credentials",
+            headers={
+                "Authorization": f"Basic {basic}",
+                "User-Agent": REDDIT_USER_AGENT,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(request, timeout=10) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        token = str(payload.get("access_token", ""))
+        if not token:
+            raise RuntimeError("Reddit OAuth returned no access_token")
+        _REDDIT_TOKEN["token"] = token
+        _REDDIT_TOKEN["expires"] = time.time() + max(60, int(payload.get("expires_in", 3600)) - 60)
+        return token
+
+
+def collect_reddit_api_items(subreddit: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    name = subreddit.removeprefix("r/").removeprefix("R/")
+    url = f"https://oauth.reddit.com/r/{urllib.parse.quote(name)}/new?limit={limit}&raw_json=1"
+    headers = {"Authorization": f"Bearer {reddit_oauth_token()}", "User-Agent": REDDIT_USER_AGENT}
+    data = request_json(url, headers=headers)
+    for child in data.get("data", {}).get("children", [])[:limit]:
+        post = child.get("data", {})
+        permalink = post.get("permalink", "")
+        post_url = f"https://www.reddit.com{permalink}" if permalink else post.get("url", "")
+        note = f"subreddit={name}; score={post.get('score', '?')}; comments={post.get('num_comments', '?')}"
+        add_source_item(items, seen, f"reddit-api:{name}", post.get("title", "Reddit post"), post_url, note)
 
 
 def collect_bluesky_items(query: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
@@ -5402,19 +5548,39 @@ def extract_github_repos(text: str, limit: int) -> list[str]:
     return repos
 
 
-def github_repo_exists(root: Path, repo: str) -> bool:
+def github_repo_meta(root: Path, repo: str) -> dict[str, Any] | None:
+    """Repository metadata, or None when it does not exist or cannot be read."""
     if repo in radar_collector_state.rejected_repos(root):
-        return False
+        return None
     try:
-        github_request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
-        return True
+        data = github_request_json(f"https://api.github.com/repos/{repo}", headers=github_headers(), timeout=8)
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
             radar_collector_state.record_repo_rejection(root, repo, f"HTTP Error {exc.code}: Not Found")
-            return False
-        return False
+        return None
     except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError, json.JSONDecodeError):
+        return None
+    return data if isinstance(data, dict) else {}
+
+
+def github_repo_exists(root: Path, repo: str) -> bool:
+    return github_repo_meta(root, repo) is not None
+
+
+def context_repo_qualifies(meta: dict[str, Any] | None) -> bool:
+    """A repo found in notes earns a release collector only with real adoption.
+
+    Every repo a daily cited landed in sources.md, and every repo in
+    sources.md became a release collector: long-tail repos with a handful of
+    stars held the non-default slots, were the ones hitting GitHub's rate
+    limit, and fed more long-tail citations back into the dailies.
+    """
+    if meta is None:
         return False
+    stars = meta.get("stargazers_count")
+    if not isinstance(stars, int):
+        return False
+    return stars >= env_int("MIN_CONTEXT_REPO_STARS", DEFAULT_MIN_CONTEXT_REPO_STARS)
 
 
 def release_repos_from_context(root: Path, limit: int) -> list[str]:
@@ -5433,22 +5599,32 @@ def release_repos_from_context(root: Path, limit: int) -> list[str]:
         if "/" in repo and repo not in seen and repo not in rejected and github_repo_exists(root, repo):
             seen.add(repo)
             repos.append(repo)
+    # The watchlist is curated, so it goes first; sources.md follows. The
+    # research log is not read: it records every URL a run touched.
     context = "\n".join(
         read_text(root / rel_path)
-        for rel_path in ["sources.md", "agent-watchlist.md", "research-log.md"]
+        for rel_path in ["agent-watchlist.md", "sources.md"]
     )
     for repo in extract_github_repos(context, limit * 2):
-        if repo not in seen and repo not in rejected and github_repo_exists(root, repo):
-            seen.add(repo)
-            repos.append(repo)
         if len(repos) >= limit:
             break
+        if repo in seen or repo in rejected:
+            continue
+        seen.add(repo)
+        if context_repo_qualifies(github_repo_meta(root, repo)):
+            repos.append(repo)
     return repos[:limit]
 
 
 def collect_github_releases(repo: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     url = f"https://api.github.com/repos/{repo}/releases?per_page={limit}"
     data = github_request_json(url, headers=github_headers())
+    if not data:
+        # Tags are the fallback for repos that never cut a GitHub release.
+        # Asking for both on every repo doubled the API calls for the same
+        # versions and pushed the tail of the repo list into rate limiting.
+        collect_github_tags(repo, limit, items, seen)
+        return
     for release in data[:limit]:
         title = release.get("name") or release.get("tag_name") or f"{repo} release"
         note = f"published={release.get('published_at', '')}; prerelease={release.get('prerelease', False)}"
@@ -5465,10 +5641,50 @@ def collect_github_tags(repo: str, limit: int, items: list[dict[str, str]], seen
         add_source_item(items, seen, f"github-tag:{repo}", name or f"{repo} tag", tag_url, note)
 
 
+def collect_github_advisories(limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
+    packages = split_env_list("ADVISORY_PACKAGES", DEFAULT_ADVISORY_PACKAGES)
+    affects = urllib.parse.quote(",".join(packages), safe=",@/")
+    url = (
+        "https://api.github.com/advisories?type=reviewed&sort=published&direction=desc"
+        f"&per_page={limit}&affects={affects}"
+    )
+    data = github_request_json(url, headers=github_headers())
+    for advisory in data[:limit]:
+        ghsa_id = advisory.get("ghsa_id", "")
+        summary = advisory.get("summary", "") or "security advisory"
+        affected = sorted(
+            {
+                str(vuln.get("package", {}).get("name", ""))
+                for vuln in advisory.get("vulnerabilities") or []
+                if isinstance(vuln, dict) and vuln.get("package")
+            }
+            - {""}
+        )
+        note = (
+            f"severity={advisory.get('severity', '?')}; cve={advisory.get('cve_id') or 'none'}; "
+            f"published={advisory.get('published_at', '')}; packages={', '.join(affected[:4])}"
+        )
+        add_source_item(items, seen, "ghsa", f"{ghsa_id} {summary}".strip(), advisory.get("html_url", ""), note)
+
+
 FEED_ITEM_SPLIT_RE = re.compile(r"<(?:\w+:)?item(?:\s[^>]*)?>")
 FEED_ENTRY_SPLIT_RE = re.compile(r"<(?:\w+:)?entry(?:\s[^>]*)?>")
 FEED_TITLE_RE = re.compile(r"<(?:\w+:)?title(?:\s[^>]*)?>(.*?)</(?:\w+:)?title>", re.DOTALL)
 FEED_LINK_RE = re.compile(r"<(?:\w+:)?link(?:\s[^>]*)?>(.*?)</(?:\w+:)?link>", re.DOTALL)
+
+
+# General-purpose feeds whose agent-relevant share is small: AWS What's New is
+# mostly instance-type launches, Product Hunt is consumer apps, JetBrains and
+# Meta AI blogs cover PHP, Rust courses and robotics. Unfiltered they filled
+# screening windows the official agent vendors needed. Keep only on-topic items.
+TOPIC_FILTERED_FEEDS = frozenset({"aws-whats-new", "producthunt", "jetbrains-blog", "meta-ai-blog", "hf-blog", "huggingface-blog"})
+AGENT_TOPIC_RE = re.compile(
+    r"\b(?:agents?|agentic|mcp|model context protocol|copilot|coding assistant|ai (?:assistant|coding|ide)|"
+    r"llms?|claude|gpt|gemini|codex|sandbox(?:es)?|bedrock|sagemaker|inference|"
+    r"tool[- ]?(?:use|calling)|computer[- ]use|browser automation|workflow automation|rag\b|vector|"
+    r"embeddings?|agent memory|eval(?:uation)?s?|guardrails?|junie)\b",
+    re.IGNORECASE,
+)
 
 
 def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
@@ -5481,31 +5697,98 @@ def collect_feed_items(feed_url: str, source: str, limit: int, items: list[dict[
     chunks = FEED_ITEM_SPLIT_RE.split(text)[1:]
     if not chunks:
         chunks = FEED_ENTRY_SPLIT_RE.split(text)[1:]
-    for chunk in chunks[:limit]:
+    topic_filtered = source in TOPIC_FILTERED_FEEDS
+    # A topic-filtered feed reads further down so the kept items can still
+    # reach `limit`; an unfiltered feed takes the newest `limit` as before.
+    window = chunks[: limit * 5] if topic_filtered else chunks[:limit]
+    added = 0
+    for chunk in window:
         title_match = FEED_TITLE_RE.search(chunk)
         title = title_match.group(1).strip() if title_match else ""
         link_match = FEED_LINK_RE.search(chunk)
         link = link_match.group(1).strip() if link_match else ""
         if not link and 'href="' in chunk:
             link = chunk.split('href="', 1)[1].split('"', 1)[0]
+        if topic_filtered and not AGENT_TOPIC_RE.search(f"{strip_html(title)} {link}"):
+            continue
         add_source_item(items, seen, source, title or source, link, "rss/feed item")
+        added += 1
+        if added >= limit:
+            break
 
 
 def collect_page_links(page_url: str, source: str, limit: int, items: list[dict[str, str]], seen: set[str]) -> None:
     request = urllib.request.Request(page_url, headers={"User-Agent": FEED_USER_AGENT}, method="GET")
     with urllib.request.urlopen(request, timeout=10) as response:
         text = response.read().decode("utf-8", errors="replace")
-    anchors = re.findall(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)
-    for href, label in anchors:
-        title = strip_html(label)
-        if not title or len(title) < 8:
-            continue
-        absolute_url = urllib.parse.urljoin(page_url, html.unescape(href))
-        if urllib.parse.urlparse(absolute_url).netloc != urllib.parse.urlparse(page_url).netloc:
-            continue
+    for title, absolute_url in page_link_candidates(page_url, text):
         add_source_item(items, seen, source, title, absolute_url, "official page link")
         if len(items) >= limit:
             break
+
+
+# Site chrome that page scraping picked up as "news": skip links, sales/contact
+# CTAs, product and category hubs. Before v0.25.0 these were 50-100% of the
+# items from the modal/xai/cursor/replit/devin/deepseek/meta pages, and because
+# navigation comes first in document order it used up the per-page item limit.
+PAGE_NAV_TITLE_RE = re.compile(
+    r"^(?:skip to\b|contact\b|get in touch|talk to|sign (?:up|in)|log ?in|register\b|get started|"
+    r"start (?:for )?free|try\b|pricing|careers?|about\b|resources|products?\b|solutions?\b|"
+    r"enterprise|business|government|developers?\b|docs?\b|documentation|api (?:guides|reference)|"
+    r"customers?|community|articles|marketplace|use cases|trust\b|security\b|privacy|terms\b|"
+    r"blog\b|news\b|changelog\b|home\b|menu\b|search\b|subscribe|rss\b|read more|learn more|"
+    r"view all|see all|all posts|/llms)",
+    re.IGNORECASE,
+)
+PAGE_NAV_PATH_RE = re.compile(
+    # Hub pages match only as the whole path; product/category trees match as
+    # prefixes (``/products/sandboxes`` is a product page, not an announcement).
+    r"^/(?:(?:pricing|contact(?:-\w+)?|signup|sign-up|login|log-in|register|careers|jobs|about|company|"
+    r"enterprise|customers|legal|privacy|terms|security|trust|docs|llms\.txt|use-cases|community|"
+    r"marketplace|download)/?$|$|(?:category|products?|solutions?|platform)/)",
+    re.IGNORECASE,
+)
+PAGE_MIN_TITLE_CHARS = 12
+PAGE_NAV_TITLE_MAX_CHARS = 30
+
+
+def page_link_candidates(page_url: str, text: str) -> list[tuple[str, str]]:
+    """Content links from an official page, content-section links first.
+
+    A link under the page's own path (``/changelog/...`` on ``/changelog``) is
+    the strongest sign of an entry, so those come first; other same-site links
+    follow in document order. Navigation is dropped outright.
+    """
+    page = urllib.parse.urlparse(page_url)
+    page_path = page.path.rstrip("/")
+    anchors = re.findall(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL)
+    preferred: list[tuple[str, str]] = []
+    others: list[tuple[str, str]] = []
+    seen_urls: set[str] = set()
+    for href, label in anchors:
+        title = strip_html(label)
+        if not title:
+            continue
+        absolute_url, _fragment = urllib.parse.urldefrag(urllib.parse.urljoin(page_url, html.unescape(href)))
+        parsed = urllib.parse.urlparse(absolute_url)
+        if parsed.netloc != page.netloc:
+            continue
+        path = parsed.path.rstrip("/")
+        if path == page_path or absolute_url in seen_urls:
+            continue
+        if PAGE_NAV_PATH_RE.match(parsed.path or "/"):
+            continue
+        # Only short labels are navigation; "Security update for ..." is news.
+        if len(title) <= PAGE_NAV_TITLE_MAX_CHARS and PAGE_NAV_TITLE_RE.match(title):
+            continue
+        if len(title) < PAGE_MIN_TITLE_CHARS and not re.search(r"\d", title):
+            continue
+        seen_urls.add(absolute_url)
+        if page_path and path.startswith(page_path + "/"):
+            preferred.append((title, absolute_url))
+        else:
+            others.append((title, absolute_url))
+    return preferred + others
 
 
 def public_source_budget(task: str) -> int:
@@ -5705,7 +5988,14 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     if collector_enabled("reddit"):
         for query in queries["reddit"]:
             collectors.append((f"reddit:{query}", "reddit", query, per_query))
-    if collector_enabled("reddit-rss"):
+    if collector_enabled("reddit-api"):
+        # OAuth credentials replace the RSS lane rather than adding to it; the
+        # new collector names also start with fresh health state, so the
+        # subreddits RSS got auto-disabled for are polled again.
+        rotation_day = day or dt.datetime.now(dt.timezone.utc).date()
+        for subreddit in reddit_subreddits_for_day(rotation_day):
+            collectors.append((f"reddit-api:{subreddit}", "reddit-api", subreddit, per_subreddit))
+    elif collector_enabled("reddit-rss"):
         rotation_day = day or dt.datetime.now(dt.timezone.utc).date()
         for subreddit in reddit_subreddits_for_day(rotation_day):
             collectors.append((f"reddit-rss:{subreddit}", "reddit-rss", subreddit, per_subreddit))
@@ -5743,6 +6033,8 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     # agent-attack papers that cs.AI misses.
     collectors.append(("arxiv:cs-se", "feed", "arxiv-cs-se=https://rss.arxiv.org/rss/cs.SE", per_feed))
     collectors.append(("arxiv:cs-cr", "feed", "arxiv-cs-cr=https://rss.arxiv.org/rss/cs.CR", per_feed))
+    if collector_enabled("advisories"):
+        collectors.append(("advisory:ghsa", "advisory", "ghsa", per_feed))
     for source_name, feed_url in changelog_feeds():
         collectors.append((f"feed:{source_name}", "feed", f"{source_name}={feed_url}", per_feed))
     for source_name, page_url in changelog_pages():
@@ -5778,7 +6070,6 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     release_repos = release_repos_from_context(root, repo_limit) if root else DEFAULT_RELEASE_REPOS[:repo_limit]
     for repo in release_repos:
         collectors.append((f"release:{repo}", "release", repo, release_limit))
-        collectors.append((f"tag:{repo}", "tag", repo, release_limit))
 
     def run_collector(index: int, entry: tuple[str, str, str, int]) -> tuple[int, str, list[dict[str, str]], str | None]:
         name, kind, value, limit = entry
@@ -5791,6 +6082,8 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
                 collect_reddit_items(value, limit, local_items, local_seen)
             elif kind == "reddit-rss":
                 collect_reddit_rss_items(value, limit, local_items, local_seen)
+            elif kind == "reddit-api":
+                collect_reddit_api_items(value, limit, local_items, local_seen)
             elif kind == "bluesky":
                 collect_bluesky_items(value, limit, local_items, local_seen)
             elif kind == "devto":
@@ -5826,6 +6119,8 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
                 collect_github_releases(value, limit, local_items, local_seen)
             elif kind == "tag":
                 collect_github_tags(value, limit, local_items, local_seen)
+            elif kind == "advisory":
+                collect_github_advisories(limit, local_items, local_seen)
             return index, name, local_items, None
         except Exception as exc:  # noqa: BLE001 - a single collector must never abort the run
             # Includes URL/HTTP/timeout/JSON errors plus schema surprises
@@ -5840,7 +6135,7 @@ def collect_source_items_raw(task: str, root: Path | None = None, day: dt.date |
     reddit_entries: list[tuple[int, tuple[str, str, str, int]]] = []
     parallel_entries: list[tuple[int, tuple[str, str, str, int]]] = []
     for index, collector in enumerate(collectors):
-        if collector[1] == "reddit-rss":
+        if collector[1] in {"reddit-rss", "reddit-api"}:
             reddit_entries.append((index, collector))
         else:
             parallel_entries.append((index, collector))
@@ -6027,6 +6322,7 @@ def format_public_source_snapshot(
         (
             f"- Collectors: reddit-json={'on' if collector_enabled('reddit') else 'off'}; "
             f"reddit-rss={'on' if collector_enabled('reddit-rss') else 'off'}; "
+            f"reddit-api={'on' if collector_enabled('reddit-api') else 'off'}; "
             f"bluesky={'on' if collector_enabled('bluesky') else 'off'}; "
             f"devto={'on' if collector_enabled('devto') else 'off'}; "
             f"pypi={'on' if collector_enabled('pypi') else 'off'}; "
@@ -6890,7 +7186,7 @@ def build_chinese_mirror_prompt(rel_path: str, english_body: str, required_lines
 
 File: {rel_path}
 
-Below is the finished `## English` body. Write the `## 中文` mirror of it.
+Below is the finished English body. Write the 中文 mirror of it.
 
 Rules:
 - **Every translated line must be a markdown bullet starting with `- `.** The
@@ -6898,9 +7194,10 @@ Rules:
   zero no matter how much Chinese they contain.
 - **Produce at least {required_lines} such bullet lines.** Below that the mirror
   is rejected and the report publishes English-only.
-- Mirror the SAME `### N. Title` headings, in the same order, with the English
-  numbering and title text kept verbatim (the runner matches on them). Headings
-  are not bullets and do not count toward the {required_lines}.
+- Mirror the SAME headings (`### N. Title` or `#### N. Title`, whichever the
+  English uses), in the same order, with the English numbering and title text
+  kept verbatim (the runner matches on them). Headings are not bullets and do
+  not count toward the {required_lines}.
 - Translate the substance of every English bullet, one Chinese bullet per
   English bullet. Do not merge bullets together, and do not invent claims that
   are not in the English body.
@@ -6909,7 +7206,7 @@ Rules:
   the bullet structure above.
 
 Return ONLY this JSON object and nothing else:
-{{"chinese_block": "<the full markdown body that goes under ## 中文>"}}
+{{"chinese_block": "<the full markdown body that goes under the 中文 heading>"}}
 
 --- ENGLISH BODY ---
 {body}
@@ -6992,6 +7289,75 @@ def repair_report_chinese_block(rel_path: str, merged: str) -> str:
         return merged
     body = f"{note}\n\n{chinese_body}".strip()
     return f"{prefix}\n\n## English\n\n{english_body}\n\n## 中文\n\n{body}\n"
+
+
+DAILY_CHINESE_DEGRADED_NOTE = (
+    f"> {radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER}，请以上方 `### English` 正文为准。"
+)
+
+
+def repair_daily_day_chinese(rel_path: str, label: str, block: str) -> str:
+    """Per-day counterpart of `repair_report_chinese_block()`.
+
+    The daily used to refuse the whole run when its 中文 half was thin, and
+    checked the month file as a whole, so only the 1st of a month was really
+    gated (2026-09-01 was lost to it, #103). Now each written day block is
+    checked on its own, the mirror is regenerated from that day's English,
+    and a day that still falls short publishes with the marker instead of
+    being discarded.
+    """
+    marked = radar_bilingual.has_recorded_chinese_degradation(block)
+    if not radar_bilingual.missing_chinese_substance_daily_block(block):
+        if marked:
+            RUN_AUDIT["chinese_mirror_marker_cleared"] += 1
+            RUN_AUDIT["apply_warnings"].append(
+                f"{rel_path} ## {label}: cleared a stale 中文 degradation marker"
+            )
+            return radar_bilingual.strip_chinese_degradation_note(block)
+        return block
+    english, _chinese = radar_bilingual.split_daily_block_bodies(block)
+    if not english.strip():
+        return block
+    required = radar_bilingual.daily_required_chinese_bullets(english)
+    if env_bool("CHINESE_MIRROR_REPAIR", True):
+        mirror = request_chinese_mirror(f"{rel_path} ## {label}", english, required)
+        if mirror:
+            candidate = radar_bilingual.replace_daily_chinese_body(block, mirror)
+            if not radar_bilingual.missing_chinese_substance_daily_block(candidate):
+                RUN_AUDIT["chinese_mirror_repaired"] += 1
+                RUN_AUDIT["apply_warnings"].append(
+                    f"{rel_path} ## {label}: 中文 half was thin; regenerated it from the English body"
+                )
+                return candidate
+            _en, zh = radar_bilingual.split_daily_block_bodies(candidate)
+            RUN_AUDIT["apply_warnings"].append(
+                f"中文 mirror for {rel_path} ## {label}: regenerated "
+                f"{radar_bilingual.substantive_block_bullets(zh, require_cjk=True)} CJK bullet(s), need {required}"
+            )
+    RUN_AUDIT["chinese_mirror_degraded"] += 1
+    RUN_AUDIT["apply_warnings"].append(
+        f"{rel_path} ## {label}: published with a thin 中文 half (mirror regeneration unavailable); "
+        "English body is authoritative for this day"
+    )
+    if marked:
+        return block
+    _en, chinese = radar_bilingual.split_daily_block_bodies(block)
+    return radar_bilingual.replace_daily_chinese_body(block, f"{DAILY_CHINESE_DEGRADED_NOTE}\n\n{chinese.strip()}")
+
+
+def repair_daily_chinese_blocks(rel_path: str, old: str, merged: str) -> str:
+    """Check and repair only the day blocks this update wrote or changed.
+
+    Older days are left alone: rewriting history is out of scope for a run,
+    and five July days predate the per-day check.
+    """
+    previous = dict(radar_bilingual.split_daily_day_blocks(old))
+    pieces: list[str] = []
+    for label, block in radar_bilingual.split_daily_day_blocks(merged):
+        if label and previous.get(label) != block:
+            block = repair_daily_day_chinese(rel_path, label, block)
+        pieces.append(block)
+    return "".join(pieces)
 
 
 def normalize_result_updates(result: dict[str, Any]) -> list[dict[str, Any]]:
@@ -7195,11 +7561,14 @@ def apply_updates(root: Path, allowed: list[str], result: dict[str, Any], task: 
                     old_block = old_block_match.group(0) if old_block_match else ""
                     warn_dropped_official_urls(old_block, content, rel_path)
         merged = radar_bilingual.ensure_bilingual_file_content(rel_path, merged)
-        if rel_path.replace("\\", "/").startswith(("daily/", "weekly/", "monthly/")):
+        normalized_path = rel_path.replace("\\", "/")
+        if normalized_path.startswith("daily/") and radar_bilingual.is_daily_block_format(merged):
+            # Per day, not per month file: see repair_daily_day_chinese().
+            merged = repair_daily_chinese_blocks(rel_path, old, merged)
+        elif normalized_path.startswith(("daily/", "weekly/", "monthly/")):
             if radar_bilingual.missing_chinese_substance(merged):
                 # Weekly/monthly use the `## English` / `## 中文` block format and
-                # can have their Chinese half regenerated. The daily's own
-                # bilingual gate has not been failing, so it still refuses.
+                # can have their Chinese half regenerated.
                 if radar_bilingual.is_block_bilingual_format(merged):
                     merged = repair_report_chinese_block(rel_path, merged)
                 else:
@@ -7706,7 +8075,13 @@ def main(argv: list[str] | None = None) -> int:
     warn_public_source_budget_override()
 
     shared_collection: tuple[list[dict[str, str]], dict[str, dict[str, Any]], list[str], int] | None = None
-    if len(tasks) > 1 and model_provider() == "vercel-ai-gateway":
+    # A lone screening task takes the shared path too. Before v0.25.0 a
+    # daily-only day (14 of September's 27) collected per-task and screened
+    # the whole snapshot in one call, so the four lane shards never ran and
+    # the pool held ~12 candidates against ~50 on multi-task days.
+    if (len(tasks) > 1 or any(task_uses_screening(task) for task in tasks)) and (
+        model_provider() == "vercel-ai-gateway"
+    ):
         if os.environ.get("PUBLIC_SOURCE_COLLECTION", "true").lower() not in {"0", "false", "no"}:
             shared_collection = prepare_shared_source_collection(root, day, tasks)
 

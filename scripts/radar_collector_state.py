@@ -142,6 +142,7 @@ def is_disabled(root: Path, collector_name: str) -> bool:
 def record_result(root: Path, collector_name: str, ok: bool, detail: str = "") -> None:
     state = load_state(root)
     record = collector_record(state, collector_name)
+    record["last_run"] = utc_now_iso()[:10]
     disabled = set(state.get("disabled", []))
     if ok:
         record["ok"] = int(record.get("ok", 0)) + 1
@@ -265,9 +266,34 @@ def lane_health_scores(lane_stats: dict[str, dict[str, Any]]) -> dict[str, float
     return scores
 
 
+STALE_AFTER_DAYS = 7
+
+
+def is_stale_record(record: dict[str, Any], tracking: bool, today: str | None = None) -> bool:
+    """A collector no run has touched lately: retired, renamed, or rotated out.
+
+    State is never pruned (history is useful), but listing a July feed that no
+    longer exists as "degraded" read like a live outage. ``tracking`` is False
+    until at least one record carries ``last_run`` (state written before
+    v0.25.0), so an old state file does not show everything as stale.
+    """
+    if not tracking:
+        return False
+    last_run = str(record.get("last_run", ""))
+    if not last_run:
+        return True
+    today = today or utc_now_iso()[:10]
+    try:
+        age = (datetime.fromisoformat(today) - datetime.fromisoformat(last_run)).days
+    except ValueError:
+        return False
+    return age > STALE_AFTER_DAYS
+
+
 def collect_status_payload(root: Path) -> dict[str, Any]:
     state = load_state(root)
     collectors = state.get("collectors", {})
+    tracking = any(isinstance(rec, dict) and rec.get("last_run") for rec in collectors.values())
     rows: list[dict[str, Any]] = []
     for name in sorted(collectors):
         record = collectors[name]
@@ -282,6 +308,8 @@ def collect_status_payload(root: Path) -> dict[str, Any]:
                 "last_detail": record.get("last_detail", ""),
                 "next_retry_after": record.get("next_retry_after", ""),
                 "disabled": name in set(state.get("disabled", [])) | env_disabled_collectors(),
+                "last_run": record.get("last_run", ""),
+                "stale": is_stale_record(record, tracking),
             }
         )
     return {

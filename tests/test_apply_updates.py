@@ -15,6 +15,7 @@ assert spec is not None
 cloud_agent_runner = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(cloud_agent_runner)
+radar_bilingual = cloud_agent_runner.radar_bilingual
 
 
 class ApplyUpdatesTest(unittest.TestCase):
@@ -451,7 +452,10 @@ class ApplyUpdatesTest(unittest.TestCase):
                     {"updates": [{"path": "daily/2026-07.md", "mode": "full", "content": "# Daily\n\n## 2026-07-02\n\n- new\n"}]},
                 )
 
-    def test_rejects_report_without_cjk_chinese(self) -> None:
+    def test_daily_without_cjk_chinese_publishes_with_marker(self) -> None:
+        # v0.25.0: a thin daily day is repaired or published with the marker,
+        # never refused (2026-09-01 was lost to the refusal, #103). Without a
+        # model provider the mirror is unavailable, so the marker path runs.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             content = (
@@ -461,12 +465,13 @@ class ApplyUpdatesTest(unittest.TestCase):
                     for index in range(12)
                 )
             )
-            with self.assertRaises(SystemExit):
-                cloud_agent_runner.apply_updates(
-                    root,
-                    ["daily/2026-07.md"],
-                    {"updates": [{"path": "daily/2026-07.md", "mode": "full", "content": content}]},
-                )
+            cloud_agent_runner.apply_updates(
+                root,
+                ["daily/2026-07.md"],
+                {"updates": [{"path": "daily/2026-07.md", "mode": "full", "content": content}]},
+            )
+            written = (root / "daily" / "2026-07.md").read_text(encoding="utf-8")
+            self.assertIn(radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER, written)
 
     def test_bilingualizes_daily_report_updates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

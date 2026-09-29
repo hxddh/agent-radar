@@ -120,6 +120,11 @@ Notes on source reliability:
 - `api.github.com` calls (search, release, tag lanes) are throttled by `GITHUB_API_MIN_INTERVAL` (default `0.5` seconds) so concurrent workers do not trip GitHub's secondary (burst) rate limit, which returns 403 even with a valid token. Lower it only if you see the github lanes finishing well under `MAX_COLLECT_SECONDS`; raise it if 403s persist.
 - Reddit RSS is aggressively rate-limited by Reddit; `REDDIT_RSS_BATCH_SIZE=1` (default) polls one subreddit per run window. Persistent 429s mean Reddit is blocking the runner IP — reduce `REDDIT_SUBREDDITS`, or disable with `COLLECT_REDDIT_RSS=false` and rely on HN/Bluesky/Lobsters for community signal.
 - X/Twitter requires a paid `X_BEARER_TOKEN`; it stays off unless the secret and `X_SEARCH_QUERIES` are set.
+- Reddit OAuth (v0.25.0): add repository secrets `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` from a Reddit "script" app (https://www.reddit.com/prefs/apps). With both set, the `reddit-api:<subreddit>` lane replaces RSS and uses app-only OAuth, which Reddit serves from GitHub Actions IPs that RSS gets 429 on. Without them nothing changes.
+- Hacker News requires `HN_MIN_POINTS` points (default `10`, pinned in the workflow); `0` restores the unfiltered newest-first feed, which was mostly 0-point posts.
+- Repos found in `agent-watchlist.md` / `sources.md` get a release collector only with at least `MIN_CONTEXT_REPO_STARS` stars (default `200`). `DEFAULT_RELEASE_REPOS` and the `RELEASE_REPOS` variable are never filtered. `research-log.md` is no longer read for repos. Tags are fetched only for repos with no GitHub releases.
+- General feeds (`aws-whats-new`, `producthunt`, `jetbrains-blog`, `meta-ai-blog`, Hugging Face blog) keep only items matching agent topics. Page collectors drop navigation links and list entries under the page's own path first.
+- `collect-status` lists collectors no run has touched in 7 days separately, as retired, renamed, or rotated out, instead of showing them as live outages.
 
 Recommended source budgets (code defaults when `MAX_PUBLIC_SOURCE_ITEMS` is unset):
 
@@ -168,9 +173,10 @@ See `docs/architecture.md` for the full architecture.
 
 ## Automated Social Sources (No Manual Link Entry)
 
-Vercel AI Gateway mode collects social/community signals automatically. Two-stage routing sends the raw public snapshot only to the screening model; the synthesis model receives the screening JSON plus trimmed repository context. In `auto` mode, one collector snapshot is shared across all tasks in the run.
+Vercel AI Gateway mode collects social/community signals automatically. Two-stage routing sends the raw public snapshot only to the screening model; the synthesis model receives the screening JSON plus trimmed repository context. In `auto` mode, one collector snapshot is shared across all tasks in the run; since v0.25.0 a single screening task (a daily-only day) takes the same shared path, so the four lane shards always run.
 
-- **Reddit subreddit RSS** (`COLLECT_REDDIT_RSS=true` by default): watches configured subreddits such as `LocalLLaMA`, `GithubCopilot`, `ClaudeAI`.
+- **Reddit subreddit RSS** (`COLLECT_REDDIT_RSS=true` by default): watches configured subreddits such as `LocalLLaMA`, `GithubCopilot`, `ClaudeAI`. Replaced by the OAuth `reddit-api` lane when `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` are set.
+- **GitHub Security Advisories** (`advisory:ghsa`, v0.25.0): reviewed advisories for agent packages (`mcp`, `@modelcontextprotocol/sdk`, LangChain, LiteLLM, Claude Code, Codex, …; override with `ADVISORY_PACKAGES`), scored in the official lane.
 - **Bluesky search** (`COLLECT_BLUESKY=true` by default): uses `api.bsky.app` public search.
 - **Dev.to tags** (`COLLECT_DEVTO=true` by default): pulls tagged articles via the public API.
 - **Lobsters RSS** (`COLLECT_LOBSTERS=true` by default): newest stories feed.
