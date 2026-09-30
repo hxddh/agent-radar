@@ -74,8 +74,15 @@ jobs:
       INCLUDE_RUNBOOK_CONTEXT: ${{ vars.INCLUDE_RUNBOOK_CONTEXT || 'false' }}
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       # Cross-vendor chain: one exhausted free pool must not kill primary AND fallback.
-      AI_GATEWAY_FALLBACK_MODELS: ${{ vars.AI_GATEWAY_FALLBACK_MODELS || 'google/gemini-2.5-flash-lite,openai/gpt-5-nano' }}
-      AI_GATEWAY_SCREEN_FALLBACK_MODELS: ${{ vars.AI_GATEWAY_SCREEN_FALLBACK_MODELS || 'google/gemini-2.5-flash-lite,openai/gpt-oss-120b' }}
+      # Fallbacks and the 中文 mirror model are pinned here too (v0.26.0): the
+      # repo variables had drifted from this file, so the chain that actually
+      # ran (screen -> Gemini 2.5 Flash Lite, synthesis -> GPT-5 Nano) was not
+      # the one the repo stated. A name the Gateway rejects (404) is skipped,
+      # so a retired model degrades to the next entry instead of ending the chain.
+      AI_GATEWAY_FALLBACK_MODELS: 'anthropic/claude-haiku-4.5,openai/gpt-5-nano'
+      AI_GATEWAY_SCREEN_FALLBACK_MODELS: 'anthropic/claude-haiku-4.5,google/gemini-2.5-flash-lite'
+      # Only called for a thin 中文 half; falls back to FINAL_SYNTHESIS_MODEL.
+      CHINESE_MIRROR_MODEL: 'anthropic/claude-haiku-4.5'
       AI_GATEWAY_MAX_OUTPUT_TOKENS: ${{ vars.AI_GATEWAY_MAX_OUTPUT_TOKENS || '32768' }}
       # Tuned in-repo (repo Actions variables held stale lower values and
       # silently clamped collection breadth; see docs/release-v0.19.0.md).
@@ -136,6 +143,9 @@ jobs:
           echo "Cheap screen model: $CHEAP_SCREEN_MODEL"
           echo "Main research model: $MAIN_RESEARCH_MODEL"
           echo "Final synthesis model: $FINAL_SYNTHESIS_MODEL"
+          echo "中文 mirror model: $CHINESE_MIRROR_MODEL"
+          echo "Synthesis fallbacks: $AI_GATEWAY_FALLBACK_MODELS"
+          echo "Screen fallbacks: $AI_GATEWAY_SCREEN_FALLBACK_MODELS"
           echo "Max public source items: $MAX_PUBLIC_SOURCE_ITEMS"
           echo "Max Vercel AI Gateway calls per task: $MAX_AI_GATEWAY_CALLS_PER_TASK"
           echo "Max context file chars: $MAX_CONTEXT_FILE_CHARS"

@@ -32,39 +32,52 @@ state_spec.loader.exec_module(radar_collector_state)
 
 
 class CloudAgentRunnerTest(unittest.TestCase):
-    def test_ai_gateway_default_model_route_uses_nano_and_gpt_oss(self) -> None:
+    def test_ai_gateway_default_model_route_matches_the_pinned_workflow_route(self) -> None:
+        # v0.26.0: code defaults mirror .github/workflows/cloud-agent.yml, so
+        # dropping a workflow pin no longer reverts to July's Nano/GPT-OSS route.
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(
-                cloud_agent_runner.ai_gateway_models_for_task("daily"),
-                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
-            )
-            self.assertEqual(
-                cloud_agent_runner.ai_gateway_models_for_task("source-sweep"),
-                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
-            )
-            self.assertEqual(
-                cloud_agent_runner.ai_gateway_models_for_task("weekly"),
-                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
-            )
-            self.assertEqual(
-                cloud_agent_runner.ai_gateway_models_for_task("monthly"),
-                ["openai/gpt-5-nano", "openai/gpt-oss-120b"],
-            )
+            for task in ("daily", "source-sweep", "weekly", "monthly"):
+                self.assertEqual(
+                    cloud_agent_runner.ai_gateway_models_for_task(task),
+                    ["openai/gpt-5-mini", "openai/gpt-5-mini"],
+                )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_models_for_task("promote-candidates"),
-                ["openai/gpt-oss-120b"],
+                ["openai/gpt-5-mini"],
             )
 
-    def test_ai_gateway_default_fallbacks_are_tiered_by_workload(self) -> None:
+    def test_ai_gateway_default_fallbacks_are_tiered_by_role(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
-                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-nano"),
-                ["openai/gpt-5-nano", "google/gemini-2.5-flash-lite"],
+                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-mini", "screen"),
+                ["openai/gpt-5-mini", "anthropic/claude-haiku-4.5", "google/gemini-2.5-flash-lite"],
             )
             self.assertEqual(
-                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-oss-120b"),
-                ["openai/gpt-oss-120b", "openai/gpt-5-nano"],
+                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-mini", "synthesis"),
+                ["openai/gpt-5-mini", "anthropic/claude-haiku-4.5", "openai/gpt-5-nano"],
             )
+            self.assertEqual(
+                cloud_agent_runner.ai_gateway_fallback_models("anthropic/claude-haiku-4.5", "mirror"),
+                ["anthropic/claude-haiku-4.5", "openai/gpt-5-mini", "openai/gpt-5-nano"],
+            )
+
+    def test_one_model_for_every_stage_still_tiers_by_role(self) -> None:
+        # The bug v0.26.0 fixes: with screening and synthesis pinned to the same
+        # model, the role was inferred as "screen" for every call, so synthesis
+        # took the screening fallbacks and the 300s screening timeout.
+        env = {
+            "CHEAP_SCREEN_MODEL": "openai/gpt-5-mini",
+            "FINAL_SYNTHESIS_MODEL": "openai/gpt-5-mini",
+            "AI_GATEWAY_SCREEN_FALLBACK_MODELS": "screen-fb",
+            "AI_GATEWAY_FALLBACK_MODELS": "synth-fb",
+        }
+        with mock.patch.dict(os.environ, env, clear=True):
+            self.assertEqual(
+                cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-mini", "synthesis"),
+                ["openai/gpt-5-mini", "synth-fb"],
+            )
+            self.assertEqual(cloud_agent_runner.model_call_timeout("openai/gpt-5-mini", "synthesis"), 900)
+            self.assertEqual(cloud_agent_runner.model_call_timeout("openai/gpt-5-mini", "screen"), 300)
 
     def test_auto_tasks_include_candidate_promotion_on_sunday(self) -> None:
         tasks = cloud_agent_runner.auto_tasks(cloud_agent_runner.parse_date("2026-07-05"))
@@ -3090,7 +3103,9 @@ class AuditLoopTest(unittest.TestCase):
             cloud_agent_runner.validate_must_cover_mainstream(result, screen)
 
     def test_model_call_timeout_tiered_by_model(self) -> None:
-        with mock.patch.dict(os.environ, {}, clear=True):
+        # Without an explicit role, a model other than the screening model is
+        # treated as synthesis (legacy inference, kept for unlabeled callers).
+        with mock.patch.dict(os.environ, {"CHEAP_SCREEN_MODEL": "openai/gpt-5-nano"}, clear=True):
             self.assertEqual(
                 cloud_agent_runner.model_call_timeout("openai/gpt-5-nano"), 300
             )
