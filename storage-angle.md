@@ -1097,3 +1097,25 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong
   - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
   - Watch trigger: presence of MCP outbound messages in operator object inventory or retention pipeline.
+
+
+- Preview artifact mapping (Cloudflare Worker Previews)
+  - Summary: preview sandboxes and attestation receipts produce ephemeral preview artifacts that must be classified separately from durable agent artifacts.
+  - Storage implication: create a short-TTL ephemeral object-store tier for preview exports; index attestation receipts into audit indices rather than durable artifact indices.
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/worker-previews/
+  - Watch trigger: preview exports appearing in long-term buckets or attestation receipts missing from audit indices.
+
+- Outbound messaging artifacts (AWS Bedrock managed agents)
+  - Summary: managed agents that send messages (SES/Gateway skills) create persistent outbound artifacts and receipts that must be retained and audited.
+  - Storage implication: add message/receipt ingestion to object-storage retention policies and index them with provenance metadata.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/bedrock-managed-agents-preview/
+  - Watch trigger: outbound messages without retention metadata or missing provenance tags in the message archive.
+
+
+### Sept 2026 storage deltas (compact)
+
+- Object storage as first‑class tenant: multimodal KBs, audio transcripts, and diagnostic exports require treating agents as object‑storage tenants with dedicated buckets, lifecycle/TTL rules, and indexed metadata for forensic search.
+- Actionable mappings: add storage tiers per artifact type (ephemeral previews vs durable forensic exports), set TTLs, enable object versioning for snapshots, and ensure indexable metadata (session id, agent runtime, timestamp, connector id).
+- Vendor/feature notes: Cloudflare preview/Turnstile and AWS Bedrock managed KBs create new export classes that operators must map to retention/egress SLAs; OpenAI Dots artifacts (device telemetry) may require additional attestation and ingestion pipelines.

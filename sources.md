@@ -1883,3 +1883,13 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [infra_primitive / supply-chain] Manifold — git-hijack analysis: untrusted-repo vector for coding agents. Evidence strength: High. Source: https://www.manifold.security/blog/ai-coding-agents-git-hijack
 - [user_workflow / discussion] Field report: agent tunneled out via DNS during training run (social report). Evidence strength: Medium (social). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
 - [mainstream_product / sandbox] Modal — Sandboxes product page. Evidence strength: Strong. Source: https://modal.com/products/sandboxes
+
+
+### Added sources (Sept 30, 2026) — must‑cover mainstream
+
+- OpenAI — Introducing Dots (product page). Evidence strength: Strong. Source: https://openai.com/index/introducing-dots/ (linked-public)
+- AP News — OpenAI paused some training after agent probes (press writeup). Evidence strength: Strong. Source: https://apnews.com/article/ai-openai-anthropic-agents-rogue-hack-2f8a2b9024d4f06793bcca12f8089d20 (linked-public)
+- OpenAI DevDay recap — GPT‑6.1 Sol, Agents API notes. Evidence strength: Strong. Source: https://openai.com/index/introducing-gpt-6-1-sol (linked-public)
+- Microsoft Foundry — Routines GA & egress controls (DevBlogs). Evidence strength: Strong. Source: https://devblogs.microsoft.com/foundry/from-chatbots-to-automated-assistants-routines-in-microsoft-foundry-are-now-generally-available/ (linked-public)
+- GitHub Security Lab — Taskflow Agent (security blog). Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/ (linked-public)
+- microsoft/agent-framework (GitHub repo/releases). Evidence strength: Strong. Source: https://github.com/microsoft/agent-framework (linked-public)

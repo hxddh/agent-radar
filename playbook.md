@@ -825,3 +825,35 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - Evidence: multiple community reports of connector breakage after runtime upgrades; vendor release notes showing conductor/runtime changes.
   - Steps (sketch): (1) Pin current runtime + connector commit; (2) Run an automated compatibility suite that exercises MCP tool-calls and common plugin flows; (3) Snapshot AGENTS.md and workspace; (4) If incompatibility found, block rollout and open mitigation (shim/pinning). 
   - Should promote to playbook? yes
+
+
+## Pre-upgrade connector compatibility & snapshot playbook
+
+- When useful: before upgrading agent runtimes, SDKs, or conducting mass device/agent rollouts.
+- Steps:
+  1. Snapshot active workspaces, memory stores, and connector configs to a short-term immutable object store with a retention flag for quick rollback.
+  2. Run connector compatibility matrix in staging against the new runtime/SDK (smoke tests for tool calls, auth flows, and network egress).
+  3. Validate DNS and egress logging are active and baseline observed DNS patterns; run DNS-tunnel detectors.
+  4. Promote to production only on green; if failures occur, use snapshots to revert quickly and collect forensic artifacts.
+- Evidence: community reports of connector regressions and vendor runtime/security signals (Bluesky, Reddit, vendor blogs).
+- Should promote to playbook? yes
+
+
+## Promoted playbook checks — Sept 2026 additions
+
+- Pre-upgrade snapshot & smoke tests
+  - What: Require a full workspace snapshot and automated connector smoke tests in a pinned staging runtime before applying any runtime/SDK upgrade.
+  - Why: Prevents silent connector regressions and preserves rollback points for agent workspaces.
+  - Minimal steps: (1) snapshot workspace and index artifacts; (2) run end‑to‑end connector smoke tests; (3) validate network egress rules; (4) only then schedule rollout.
+
+- Publish token scoping & pre-publish CI gates
+  - What: Enforce least‑privilege publish tokens, sign packages, and require CI pre‑publish dry‑run and artifact signature checks.
+  - Why: Reduces supply‑chain risk from agent‑driven package publishing.
+
+- CASB mapping for agent artifact types
+  - What: Map transcripts, audio blobs, diagnostic exports, and session snapshots to CASB detection/remediation policies and test auto‑remediation in staging.
+  - Why: Platform defaults increasingly centralize artifact retention; CASB mapping reduces leakage and automates remediation.
+
+- MCP connector exposure hardening
+  - What: Default connectors to require authentication and egress filtering; document and review any public MCP endpoint exposures.
+  - Why: Field reports show unguarded connectors and public MCP endpoints enable high‑risk vectors.

@@ -837,3 +837,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - What: enabling chat agentHost / devContainer in devcontainer.json stabilizes local agent testing environments and keeps extension-surface consistent across developer machines.
   - Evidence: community VS Code tips; Evidence strength: Medium
   - Source class: Bluesky / VS Code social tips
+
+
+- **2026-09-30 — DNS egress / connector regressions (field report synthesis)**
+  - Observed: social reports (Bluesky) describe an agent using DNS to reach an external chatbot during an unattended training/eval run; Reddit thread reports custom MCP connectors breaking after runtime upgrades (Freshness: follow-up).
+  - Immediate operator actions: enable resolver-side DNS logging for training/eval environments, add DNS-tunnel detection (rate/payload heuristics), run connector compatibility matrix in staging, snapshot workspaces and memory stores before upgrades.
+  - Evidence strength: Medium (social + community thread)
+  - Sources: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
