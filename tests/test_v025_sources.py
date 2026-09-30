@@ -355,3 +355,97 @@ class CollectStatusStaleTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GatewayFallbackChainTest(unittest.TestCase):
+    """v0.26.0: routing by role, and a rejected fallback name does not end the chain."""
+
+    def _ok(self) -> mock.MagicMock:
+        good = mock.MagicMock()
+        good.__enter__.return_value.read.return_value = json.dumps(
+            {"choices": [{"message": {"content": "{\"chinese_block\": \"- 中文\"}"}}]}
+        ).encode("utf-8")
+        return good
+
+    def _http_error(self, code: int):
+        import io
+        import urllib.error
+
+        return urllib.error.HTTPError("https://ai-gateway.vercel.sh", code, "err", {}, io.BytesIO(b"nope"))
+
+    def _env(self, **extra: str) -> dict[str, str]:
+        env = {"AI_GATEWAY_API_KEY": "x", "AI_GATEWAY_CALL_INTERVAL": "0", "AI_GATEWAY_429_ROUNDS": "2"}
+        env.update(extra)
+        return env
+
+    def test_unknown_fallback_is_skipped_not_fatal(self) -> None:
+        # primary 503 (transient) -> fallback-a 404 (unknown name) -> fallback-b ok.
+        calls: list[str] = []
+
+        def fake(request, timeout=0):
+            model = json.loads(request.data)["model"]
+            calls.append(model)
+            if model == "primary":
+                raise self._http_error(503)
+            if model == "fallback-a":
+                raise self._http_error(404)
+            return self._ok()
+
+        with mock.patch.dict(os.environ, self._env(AI_GATEWAY_FALLBACK_MODELS="fallback-a,fallback-b")), \
+                mock.patch.object(urllib.request, "urlopen", side_effect=fake), \
+                mock.patch.object(cloud_agent_runner.time, "sleep"):
+            cloud_agent_runner.call_ai_gateway_model("p", "primary", role="synthesis")
+        self.assertEqual(calls, ["primary", "fallback-a", "fallback-b"])
+
+    def test_dead_model_is_not_retried_in_later_rounds(self) -> None:
+        calls: list[str] = []
+
+        def fake(request, timeout=0):
+            model = json.loads(request.data)["model"]
+            calls.append(model)
+            if model == "fallback-a":
+                raise self._http_error(404)
+            if len(calls) < 4:
+                raise self._http_error(503)
+            return self._ok()
+
+        with mock.patch.dict(os.environ, self._env(AI_GATEWAY_FALLBACK_MODELS="fallback-a")), \
+                mock.patch.object(urllib.request, "urlopen", side_effect=fake), \
+                mock.patch.object(cloud_agent_runner.time, "sleep"):
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.call_ai_gateway_model("p", "primary", role="synthesis")
+        self.assertEqual(calls.count("fallback-a"), 1)
+
+    def test_primary_client_error_still_stops_the_chain(self) -> None:
+        # A 400 on the primary is about the payload; replaying it elsewhere won't help.
+        calls: list[str] = []
+
+        def fake(request, timeout=0):
+            calls.append(json.loads(request.data)["model"])
+            raise self._http_error(400)
+
+        with mock.patch.dict(os.environ, self._env(AI_GATEWAY_FALLBACK_MODELS="fallback-a")), \
+                mock.patch.object(urllib.request, "urlopen", side_effect=fake), \
+                mock.patch.object(cloud_agent_runner.time, "sleep"):
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.call_ai_gateway_model("p", "primary", role="synthesis")
+        self.assertEqual(calls, ["primary"])
+
+    def test_chinese_mirror_uses_its_own_model_then_the_synthesis_model(self) -> None:
+        calls: list[str] = []
+
+        def fake(request, timeout=0):
+            model = json.loads(request.data)["model"]
+            calls.append(model)
+            if model == "anthropic/claude-haiku-4.5":
+                raise self._http_error(404)
+            return self._ok()
+
+        env = self._env(FINAL_SYNTHESIS_MODEL="openai/gpt-5-mini", CHINESE_MIRROR_MODEL="")
+        with mock.patch.dict(os.environ, env), \
+                mock.patch.object(cloud_agent_runner, "model_provider", return_value="vercel-ai-gateway"), \
+                mock.patch.object(urllib.request, "urlopen", side_effect=fake), \
+                mock.patch.object(cloud_agent_runner.time, "sleep"):
+            block = cloud_agent_runner.request_chinese_mirror("daily/2026-10.md ## 2026-10-01", "- x", 3)
+        self.assertEqual(calls, ["anthropic/claude-haiku-4.5", "openai/gpt-5-mini"])
+        self.assertEqual(block, "- 中文")

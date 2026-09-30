@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+## v0.26.0 - 2026-09-30
+
+Model routing review. The primary route stays `openai/gpt-5-mini`: about $2.6/month against the $4 budget, and the problems this cycle traced to the pipeline, not the model. What changes is everything around the primary.
+
+### Fixed
+- **Every call took the screening fallback chain.** `ai_gateway_fallback_models()` and `model_call_timeout()` decided a call's role by comparing the model name with `CHEAP_SCREEN_MODEL`. Since v0.23.0 pinned screening, research and synthesis all to `gpt-5-mini`, every call matched: synthesis fell back to Gemini 2.5 Flash Lite (the model that had failed the bilingual quality gate) instead of its own chain, and ran under the 300s screening timeout instead of 900s. Callers now pass `role="screen" | "synthesis" | "mirror"`; the name-based inference remains only for unlabeled calls.
+- **An unknown fallback name ended the chain.** Any non-retryable HTTP status stopped `call_ai_gateway_model()`, so a retired or misspelled fallback model would have failed the call at that point. A 404, or any client error on a non-primary model, now marks that model dead for the rest of the call and moves on; a client error on the primary still stops the chain (the payload is the problem there).
+
+### Changed
+- Code defaults match the pinned workflow route (`openai/gpt-5-mini` for all three stages). They still named July's Nano / GPT-OSS 120B route, so dropping a workflow pin would have reverted silently.
+- Fallback chains are pinned in `cloud-agent.yml` instead of read from repository variables, which had drifted from the file (the run log showed screening → Gemini Flash Lite and synthesis → GPT-5 Nano, neither matching the workflow default). New chains: synthesis `anthropic/claude-haiku-4.5 → openai/gpt-5-nano`; screening `anthropic/claude-haiku-4.5 → google/gemini-2.5-flash-lite`. The older models stay as last resort.
+
+### Added
+- `CHINESE_MIRROR_MODEL` (default `anthropic/claude-haiku-4.5`) for the 中文 mirror repair, falling back to `FINAL_SYNTHESIS_MODEL`. It runs only when a report's Chinese is thin; GPT-5 Mini's clearest weakness this cycle was omitting the Chinese entirely (10 of September's 27 dailies). Estimated under $0.5/month.
+
+### Not verified
+- The Gateway's model catalog was not reachable from the build sandbox, so the `anthropic/claude-haiku-4.5` slug is not confirmed. If the Gateway rejects it, the 404 skip above falls through to the next model; the run log's `Fallbacks:` line and the per-model token line will show which model served each call.
+
 ## v0.25.1 - 2026-09-30
 
 Hotfix: the first two scheduled runs on v0.25.0 (2026-09-29 and 09-30) were discarded at the Validate step (#105).

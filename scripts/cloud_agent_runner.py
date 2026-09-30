@@ -52,10 +52,22 @@ AI_GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
 _AI_GATEWAY_LAST_CALL = 0.0
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
-DEFAULT_CHEAP_SCREEN_MODEL = "openai/gpt-5-nano"
-DEFAULT_MAIN_RESEARCH_MODEL = "openai/gpt-oss-120b"
-DEFAULT_FINAL_SYNTHESIS_MODEL = DEFAULT_MAIN_RESEARCH_MODEL
-DEFAULT_AI_GATEWAY_FALLBACK_MODEL = "google/gemini-2.5-flash-lite"
+# Code defaults mirror the route pinned in .github/workflows/cloud-agent.yml.
+# They used to name the free-tier route of July (Nano screening, GPT-OSS
+# synthesis), so removing a workflow pin would have silently reverted to it.
+DEFAULT_CHEAP_SCREEN_MODEL = "openai/gpt-5-mini"
+DEFAULT_MAIN_RESEARCH_MODEL = "openai/gpt-5-mini"
+DEFAULT_FINAL_SYNTHESIS_MODEL = "openai/gpt-5-mini"
+# Fallbacks are walked in order; a model the Gateway does not know (404) is
+# skipped rather than ending the chain. Claude Haiku 4.5 leads both chains:
+# a different provider from the primary, and the Chinese quality the old
+# synthesis fallback (GPT-5 Nano) lacked. The older models stay as last resort.
+DEFAULT_SCREEN_FALLBACK_MODELS = ["anthropic/claude-haiku-4.5", "google/gemini-2.5-flash-lite"]
+DEFAULT_SYNTHESIS_FALLBACK_MODELS = ["anthropic/claude-haiku-4.5", "openai/gpt-5-nano"]
+# The 中文 mirror is a translation of a finished English body: small volume
+# (only thin reports), and the one step where GPT-5 Mini's weakness showed
+# (10 of September's 27 dailies shipped with no Chinese at all).
+DEFAULT_CHINESE_MIRROR_MODEL = "anthropic/claude-haiku-4.5"
 DEFAULT_AI_GATEWAY_MAX_OUTPUT_TOKENS = 32_768
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
@@ -2323,7 +2335,7 @@ def preflight_shared_screening(
     shards = screening_shard_items(items) if shard_count > 1 else []
     if len(shards) < 2:
         compact = format_scored_items_for_screening(items, cap)
-        data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model)
+        data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model, role="screen")
         screen_text = response_output_text(data)
         write_screening_artifact(root, day, screen_text)
         RUN_AUDIT["screening_shards"] = 1
@@ -2333,7 +2345,7 @@ def preflight_shared_screening(
     for shard_name, shard_items in shards:
         compact = format_scored_items_for_screening(shard_items, screening_shard_cap(shard_name, cap))
         compact = f"Screening shard: {shard_name} sources only.\n{compact}"
-        data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model)
+        data = call_ai_gateway_model(build_screen_prompt("auto", compact, root), screen_model, role="screen")
         calls += 1
         payload = parse_screening_json(response_output_text(data))
         if payload:
@@ -3540,7 +3552,7 @@ def run_claim_audit(root: Path | None, task: str, result: dict[str, Any]) -> int
         return 0
     try:
         screen_model = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
-        data = call_ai_gateway_model(build_claim_audit_prompt(entries), screen_model)
+        data = call_ai_gateway_model(build_claim_audit_prompt(entries), screen_model, role="screen")
         RUN_AUDIT["ai_gateway_calls"] = int(RUN_AUDIT.get("ai_gateway_calls", 0)) + 1
         payload = parse_screening_json(response_output_text(data))
     except Exception as exc:  # Fail-open: an audit outage must not block the daily.
@@ -6480,17 +6492,34 @@ def ai_gateway_headers() -> dict[str, str]:
     }
 
 
-def ai_gateway_fallback_models(model: str) -> list[str]:
+MODEL_ROLES = ("screen", "synthesis", "mirror")
+
+
+def model_role(model: str, role: str | None = None) -> str:
+    """The workload a call belongs to: screen, synthesis, or mirror.
+
+    Callers pass it. Inferring it from the model name (model == the screening
+    model -> screen) broke once the whole route was pinned to one model: every
+    call, synthesis included, took the screening fallback chain and the
+    screening timeout.
+    """
+    if role in MODEL_ROLES:
+        return role
     cheap = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
-    if model == cheap:
-        fallback = split_env_list(
-            "AI_GATEWAY_SCREEN_FALLBACK_MODELS", [DEFAULT_AI_GATEWAY_FALLBACK_MODEL]
-        )
+    return "screen" if model == cheap else "synthesis"
+
+
+def ai_gateway_fallback_models(model: str, role: str | None = None) -> list[str]:
+    role = model_role(model, role)
+    if role == "screen":
+        fallback = split_env_list("AI_GATEWAY_SCREEN_FALLBACK_MODELS", DEFAULT_SCREEN_FALLBACK_MODELS)
     else:
-        # Reuse Nano for synthesis recovery: it is cheaper than Mini, retains a
-        # long output window, and avoids asking Flash Lite to write the long
-        # bilingual reports that it failed the production quality gate on.
-        fallback = split_env_list("AI_GATEWAY_FALLBACK_MODELS", [DEFAULT_CHEAP_SCREEN_MODEL])
+        fallback = split_env_list("AI_GATEWAY_FALLBACK_MODELS", DEFAULT_SYNTHESIS_FALLBACK_MODELS)
+        if role == "mirror":
+            # A failed mirror model falls back to the synthesis model first:
+            # it wrote the English body and is known to be reachable.
+            final = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
+            fallback = [final, *fallback]
     models = [model]
     for item in fallback:
         if item not in models:
@@ -6498,13 +6527,12 @@ def ai_gateway_fallback_models(model: str) -> list[str]:
     return models
 
 
-def model_call_timeout(model: str) -> int:
-    """Cheap screen-tier calls get a short timeout; synthesis keeps the long one.
+def model_call_timeout(model: str, role: str | None = None) -> int:
+    """Screening calls get a short timeout; synthesis keeps the long one.
 
     A hanging endpoint otherwise burns the full 900s per fallback attempt, which
     stretched one auto run past 50 minutes."""
-    cheap = os.environ.get("CHEAP_SCREEN_MODEL", DEFAULT_CHEAP_SCREEN_MODEL)
-    if model == cheap:
+    if model_role(model, role) == "screen":
         return env_int("SCREEN_MODEL_TIMEOUT", 300)
     return env_int("MODEL_TIMEOUT", 900)
 
@@ -6562,7 +6590,7 @@ def total_gateway_tokens() -> tuple[int, int]:
     )
 
 
-def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
+def call_ai_gateway_model(prompt: str, model: str, role: str | None = None) -> dict[str, Any]:
     payload = {
         "model": model,
         "messages": [
@@ -6586,7 +6614,12 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
     # 400/404/409 are client errors: replaying the same payload against a
     # fallback model will not help, so only retry genuinely transient statuses.
     retryable_status = {408, 429, 500, 502, 503, 504}
-    models = ai_gateway_fallback_models(model)
+    role = model_role(model, role)
+    models = ai_gateway_fallback_models(model, role)
+    # A model the Gateway rejects outright (404, or any client error on a
+    # fallback) is dropped for the rest of the call instead of ending it: an
+    # unknown or retired fallback name used to stop the chain at that model.
+    dead_models: set[str] = set()
     # Free-tier 429s are per-minute quotas that refill: walk the (cross-pool)
     # chain several rounds with real backoff instead of giving up after one
     # pass (Issue #76: primary and fallback shared one exhausted free pool).
@@ -6596,6 +6629,8 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
     retry_after_hint = 0
     attempts = [(r, m) for r in range(rounds) for m in models]
     for attempt, (round_index, candidate_model) in enumerate(attempts):
+        if candidate_model in dead_models:
+            continue
         payload["model"] = candidate_model
         audit_model(candidate_model)
         if candidate_model != model:
@@ -6622,7 +6657,7 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             method="POST",
         )
         try:
-            with urllib.request.urlopen(request, timeout=model_call_timeout(candidate_model)) as response:
+            with urllib.request.urlopen(request, timeout=model_call_timeout(candidate_model, role)) as response:
                 raw = response.read().decode("utf-8")
         except urllib.error.HTTPError as exc:
             body = redact_http_error_body(exc.read().decode("utf-8", errors="replace"))
@@ -6632,6 +6667,10 @@ def call_ai_gateway_model(prompt: str, model: str) -> dict[str, Any]:
             except (TypeError, ValueError):
                 retry_after_hint = 0
             if exc.code not in retryable_status:
+                if exc.code == 404 or candidate_model != model:
+                    dead_models.add(candidate_model)
+                    if len(dead_models) < len(models):
+                        continue
                 break
             continue
         except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exc:
@@ -6743,13 +6782,13 @@ def call_ai_gateway(task: str, prompt: str, public_sources: str) -> dict[str, An
     if len(models) > max_calls:
         models = models[-max_calls:]
     if len(models) == 1:
-        return call_ai_gateway_model(prompt, models[0])
+        return call_ai_gateway_model(prompt, models[0], role="synthesis")
 
     screen_text = response_output_text(
-        call_ai_gateway_model(build_screen_prompt(task, public_sources), models[0])
+        call_ai_gateway_model(build_screen_prompt(task, public_sources), models[0], role="screen")
     )
     prompt = apply_screened_summary_to_prompt(prompt, screen_text)
-    return call_ai_gateway_model(prompt, models[-1])
+    return call_ai_gateway_model(prompt, models[-1], role="synthesis")
 
 
 def invoke_model(
@@ -6774,7 +6813,9 @@ def invoke_model(
                 screen_text = shared_screened
             else:
                 screen_text = response_output_text(
-                    call_ai_gateway_model(build_screen_prompt(task, public_sources), active_models[0])
+                    call_ai_gateway_model(
+                        build_screen_prompt(task, public_sources), active_models[0], role="screen"
+                    )
                 )
                 # Persist the screening artifact in single-task mode too, so the
                 # prompt's reference to automation/screening/<date>.json is real
@@ -6787,7 +6828,7 @@ def invoke_model(
         else:
             prompt = build_prompt(task, day, allowed, context, root=root, public_sources=public_sources)
         record_prompt_budget(len(prompt))
-        return call_ai_gateway_model(prompt, active_models[-1])
+        return call_ai_gateway_model(prompt, active_models[-1], role="synthesis")
     if provider == "openai":
         prompt = build_prompt(task, day, allowed, context, root=root, public_sources=public_sources)
         record_prompt_budget(len(prompt))
@@ -7217,10 +7258,10 @@ def request_chinese_mirror(rel_path: str, english_body: str, required_lines: int
     """One targeted model call for a report's 中文 mirror. '' when unavailable."""
     if model_provider() != "vercel-ai-gateway":
         return ""
-    model = os.environ.get("FINAL_SYNTHESIS_MODEL", DEFAULT_FINAL_SYNTHESIS_MODEL)
+    model = os.environ.get("CHINESE_MIRROR_MODEL", "").strip() or DEFAULT_CHINESE_MIRROR_MODEL
     try:
         data = call_ai_gateway_model(
-            build_chinese_mirror_prompt(rel_path, english_body, required_lines), model
+            build_chinese_mirror_prompt(rel_path, english_body, required_lines), model, role="mirror"
         )
     except SystemExit as exc:
         RUN_AUDIT["apply_warnings"].append(f"中文 mirror call failed for {rel_path}: {exc}"[:220])
@@ -7959,6 +8000,7 @@ def run_task(
                 call_ai_gateway_model(
                     build_screen_prompt(task, public_sources, root),
                     ai_gateway_models_for_task(task)[0],
+                    role="screen",
                 )
             )
             write_screening_artifact(root, day, screen_text)
