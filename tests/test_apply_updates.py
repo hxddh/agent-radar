@@ -4,6 +4,7 @@ import importlib.util
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -454,9 +455,13 @@ class ApplyUpdatesTest(unittest.TestCase):
 
     def test_daily_without_cjk_chinese_publishes_with_marker(self) -> None:
         # v0.25.0: a thin daily day is repaired or published with the marker,
-        # never refused (2026-09-01 was lost to the refusal, #103). Without a
-        # model provider the mirror is unavailable, so the marker path runs.
-        with tempfile.TemporaryDirectory() as tmp:
+        # never refused (2026-09-01 was lost to the refusal, #103). The mirror
+        # call is stubbed: the Cloud Agent workflow runs these tests with a
+        # live model provider configured, and an unstubbed call both spent a
+        # paid request and returned real Chinese, failing the 2026-09-29 run.
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
+            cloud_agent_runner, "request_chinese_mirror", return_value=""
+        ):
             root = Path(tmp)
             content = (
                 "# Daily Agent Radar - 2026-07\n\n## 2026-07-02\n\n"

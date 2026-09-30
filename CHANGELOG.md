@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## v0.25.1 - 2026-09-30
+
+Hotfix: the first two scheduled runs on v0.25.0 (2026-09-29 and 09-30) were discarded at the Validate step (#105).
+
+### Fixed
+- **A unit test called the live model.** `test_daily_without_cjk_chinese_publishes_with_marker` (added in v0.25.0) ran `apply_updates()` without stubbing `request_chinese_mirror()`. The Cloud Agent workflow runs the suite with `AGENT_RADAR_MODEL_PROVIDER` and `AI_GATEWAY_API_KEY` set, so the test made a paid gateway call, got real Chinese back, and failed its "no Chinese → marker" assertion. That failed Validate and dropped the run's output. PR CI missed it because `validate.yml` configures no provider.
+- The mirror call is now stubbed. Checked the whole suite with a provider set and `urlopen` patched to raise: no test reaches the network (one did before).
+
+### Note
+- The discarded 2026-09-29 run did reach synthesis on v0.25.0. Its lead sources included the new Microsoft Foundry feed, a real Cursor blog post (the page filter) and no package-registry or long-tail repo links. That is one run and not yet an evaluation; the first committed run will be.
+
 ## v0.25.0 - 2026-09-29
 
 Five weeks unattended (08-21 → 09-28) published 27 of 28 dailies and every weekly/monthly. This release is a review of what those reports were built from, and the review found the inputs were weaker than the dashboards said.
