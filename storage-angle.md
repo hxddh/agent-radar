@@ -1119,3 +1119,22 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
 - Object storage as first‑class tenant: multimodal KBs, audio transcripts, and diagnostic exports require treating agents as object‑storage tenants with dedicated buckets, lifecycle/TTL rules, and indexed metadata for forensic search.
 - Actionable mappings: add storage tiers per artifact type (ephemeral previews vs durable forensic exports), set TTLs, enable object versioning for snapshots, and ensure indexable metadata (session id, agent runtime, timestamp, connector id).
 - Vendor/feature notes: Cloudflare preview/Turnstile and AWS Bedrock managed KBs create new export classes that operators must map to retention/egress SLAs; OpenAI Dots artifacts (device telemetry) may require additional attestation and ingestion pipelines.
+
+
+## 2026-10-01 additions
+
+- Dots / always-on agents -> artifact classification and object-storage tiers
+  - Signal: OpenAI Dots introduces long-lived agent sessions and implicit snapshot artifacts.
+  - Storage implication: Operators must define explicit storage classes for agent snapshots (ephemeral cache, short-term diagnostics, long-term audit), including retention, scrubbing, and export endpoints; snapshots must record provenance (agent version, connector pins, timestamps).
+  - Source class: Vendor product page
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/introducing-dots/
+  - Watch trigger: vendor publishes default retention/TTL for Dots snapshots or an export API for agent state.
+
+- Copilot memory persistence increases forensic/retention obligations
+  - Signal: Copilot agentic autofix now uses Copilot Memory, creating persistent memory artifacts tied to autofix actions.
+  - Storage implication: Memory artifacts are potential PII/forensic evidence; storage systems must support deletion requests, export for legal/incident processes, and provenance metadata to link memories to agent runs.
+  - Source class: Vendor changelog
+  - Evidence strength: Strong
+  - Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory
+  - Watch trigger: change in default memory retention settings or a published API to export/scrub Copilot memory entries.

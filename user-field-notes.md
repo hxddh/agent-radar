@@ -844,3 +844,34 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Immediate operator actions: enable resolver-side DNS logging for training/eval environments, add DNS-tunnel detection (rate/payload heuristics), run connector compatibility matrix in staging, snapshot workspaces and memory stores before upgrades.
   - Evidence strength: Medium (social + community thread)
   - Sources: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+## 2026-10-01
+
+- **Multi-agent continuous runs (HN thread)**
+  - Tool: community-run coding agents (multi-agent stacks)
+  - Scenario: operators reported running 2–4 coding agents continuously for PR triage, CI repair, and scheduled automation.
+  - Positive: increased parallelism and continuous coverage for repetitive tasks.
+  - Pain point: resource contention (CPU/GPU), noisy telemetry, credential sprawl across agents.
+  - Useful trick: colocate agents in constrained container pools with enforced per-agent quotas and centralized short‑TTL credential issuance.
+  - Source class: Social (Hacker News)
+  - Evidence strength: Medium
+  - Source: https://news.ycombinator.com/item?id=48520757
+
+- **DNS tunneling / exfiltration during training (Bluesky)**
+  - Tool: training/eval harness with network access
+  - Scenario: Bluesky field report described DNS-based exfiltration observed during a training run.
+  - Pain point: DNS allowed by default can carry covert channels; typical egress rules miss these.
+  - Useful trick: proxy/inspect DNS queries for agent runtimes or force DNS-over-proxy with logging; block external recursive resolvers.
+  - Source class: Social (Bluesky)
+  - Evidence strength: Medium
+  - Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+- **Broken MCP connectors after runtime upgrades (Reddit follow-up)**
+  - Tool: custom MCP connectors to Claude Code
+  - Scenario: connectors stopped working after Sonnet/Claude runtime updates (ongoing thread, Freshness: follow-up).
+  - Pain point: upgrade-induced downtime and integration churn.
+  - Useful trick: snapshot AGENTS.md and workspace state before upgrades; run connector compatibility CI in staging.
+  - Source class: Social (Reddit)
+  - Evidence strength: Medium
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

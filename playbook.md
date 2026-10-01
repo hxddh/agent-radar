@@ -857,3 +857,11 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - MCP connector exposure hardening
   - What: Default connectors to require authentication and egress filtering; document and review any public MCP endpoint exposures.
   - Why: Field reports show unguarded connectors and public MCP endpoints enable high‑risk vectors.
+
+
+## Snapshot-before-upgrade connector pinning (candidate playbook entry)
+
+- Trick: Before upgrading agent runtimes or connected SDKs, snapshot the agent workspace (AGENTS.md, runtime version, connector config) and pin connector versions in CI; run a staged connector-compatibility test suite that simulates typical tool-calls and file-system interactions.
+  - When useful: any runtime or MCP server upgrade, or when enabling stricter containment defaults (e.g., Anthropic Sonnet/Claude upgrades).
+  - Evidence: multiple community reports of broken MCP connectors after runtime upgrades (Reddit), vendor notes tightening containment defaults (Anthropic Sonnet 5.5).
+  - Should promote to playbook? yes

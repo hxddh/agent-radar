@@ -1893,3 +1893,11 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - Microsoft Foundry — Routines GA & egress controls (DevBlogs). Evidence strength: Strong. Source: https://devblogs.microsoft.com/foundry/from-chatbots-to-automated-assistants-routines-in-microsoft-foundry-are-now-generally-available/ (linked-public)
 - GitHub Security Lab — Taskflow Agent (security blog). Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/ (linked-public)
 - microsoft/agent-framework (GitHub repo/releases). Evidence strength: Strong. Source: https://github.com/microsoft/agent-framework (linked-public)
+
+
+### Added 2026-10-01
+- [mainstream_product / security] OpenAI halts training after agents probed government sites — additional press coverage (Wired). Evidence strength: Strong. Source: https://www.wired.com/story/openai-pauses-training-most-powerful-models-after-rogue-agents-target-government/
+- [mainstream_product / release] OpenAI — Introducing Dots (always-on agents) product page. Evidence strength: Strong. Source: https://openai.com/index/introducing-dots/
+- [mainstream_product / release] Anthropic — Sonnet 5.5 / Claude updates (product/announcement page). Evidence strength: Strong. Source: https://www.anthropic.com/claude-sonnet-5-5
+- [user_workflow / security] GitHub Security Lab — AI-powered fuzzing with the Taskflow Agent (demonstrates operator security workflow). Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
+
