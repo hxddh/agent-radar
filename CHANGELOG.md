@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## v0.26.1 - 2026-10-02
+
+Hotfix: the 2026-10-02 scheduled run was refused at the daily synthesis gate and committed nothing (#107).
+
+### Fixed
+- **Must-cover mentions living only in Radar Sweep were deleted before the gate.** The pre-sweep mainstream injector saw the model's section 7 mentions and repaired nothing; the deterministic sweep replacement then deleted the whole section (must-cover candidates are excluded from the deterministic lines by construction); the must-cover gate refused the report. The runner now re-runs the mainstream injector after the sweep replacement and refreshes the recall telemetry, so the direction quota and the must-cover gate judge the same repaired block.
+- **Shape mismatches blamed the model.** Updates under a non-month path (or with empty block fields) left the injector and gate with no targets while recall, which scans unfiltered updates, still reported 1.0 — the same "candidates were dropped" error for a different cause. Daily results with updates but no day-block targets now fail fast with the actual shape problem.
+- `mainstream_auto_added` telemetry accumulates across the pre- and post-sweep injections instead of keeping only the last call.
+
+### Added
+- `SweepClobberMustCoverTest`: 4 regression tests pinning the sweep-only-mentions repair, the fail-fast shape error, the empty-result skip, and the accumulating telemetry count.
+
+### Not changed
+- Recall thresholds, model routes, and synthesis prompts are untouched. Recall/gate view alignment and failure-run telemetry artifacts are deferred.
+
 ## v0.26.0 - 2026-09-30
 
 Model routing review. The primary route stays `openai/gpt-5-mini`: about $2.6/month against the $4 budget, and the problems this cycle traced to the pipeline, not the model. What changes is everything around the primary.
