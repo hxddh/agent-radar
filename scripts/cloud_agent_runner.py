@@ -4472,6 +4472,29 @@ def daily_update_block_targets(result: dict[str, Any]) -> list[tuple[dict[str, A
     return targets
 
 
+def ensure_daily_update_targets(result: dict[str, Any]) -> None:
+    """Fail fast when a daily result carries no writable day block.
+
+    Every daily injector and gate reads `daily_update_block_targets()`; when
+    the model returns updates under a non-month path (or with empty block
+    fields) the injector silently repairs nothing while the recall audit —
+    which scans unfiltered updates — still reports 1.0, and the must-cover
+    gate then blames the model for "dropping" candidates that were never in
+    the gate's view. Refuse with the actual shape problem instead of the
+    misleading coverage error.
+    """
+    if daily_update_block_targets(result):
+        return
+    if not (result.get("updates") or result.get("files")):
+        return
+    raise SystemExit(
+        "Refusing daily update: no daily day-block targets in updates/files "
+        "(expected a daily/YYYY-MM.md update with content or "
+        "english_block+chinese_block); refusing instead of silently skipping "
+        "the day block."
+    )
+
+
 def transform_daily_english_blocks(
     result: dict[str, Any], transform: Callable[[str], str]
 ) -> int:
@@ -4546,7 +4569,7 @@ def inject_missing_mainstream_signals(
         result, lambda block: _append_mainstream_bullets(block, section_body)
     )
     if injected:
-        RUN_AUDIT["mainstream_auto_added"] = len(bullets)
+        RUN_AUDIT["mainstream_auto_added"] = int(RUN_AUDIT.get("mainstream_auto_added", 0) or 0) + len(bullets)
         RUN_AUDIT["apply_warnings"].append(
             f"Auto-added {len(bullets)} screened mainstream delta(s) the model dropped "
             f"({'; '.join(' '.join(str(c.get('title', '?')).split()) for c in missing[:2])})"
@@ -4668,6 +4691,8 @@ def validate_synthesis_result(
 ) -> None:
     if task not in {"daily", "weekly", "monthly"}:
         return
+    if task == "daily":
+        ensure_daily_update_targets(result)
     details = compute_synthesis_recall_details(screen_text, result)
     # Record what the MODEL itself covered before any deterministic repair, so
     # free-tier quality stays observable even though the gates act on the
@@ -4716,6 +4741,17 @@ def validate_synthesis_result(
         RUN_AUDIT["model_discussion_signal_count"] = count_discussion_signal_bullets(result)
         inject_missing_discussion_signals(result, screen_text, root=root, day=day)
         inject_deterministic_radar_sweep(result)
+        # Re-check mainstream coverage AFTER the sweep replacement: it deletes
+        # the model's whole section 7, so a must-cover candidate mentioned
+        # ONLY there looked covered at the pre-sweep injection above (a silent
+        # no-op) but is gone by the gate below — the 2026-10-02 daily was
+        # refused exactly this way. Repairing here keeps the direction quota
+        # and the must-cover gate on the same repaired block.
+        if inject_missing_mainstream_signals(result, screen_text, root=root, day=day):
+            details = compute_synthesis_recall_details(screen_text, result)
+            RUN_AUDIT["synthesis_recall"] = details["recall"]
+            RUN_AUDIT["weighted_synthesis_recall"] = details["weighted_recall"]
+            RUN_AUDIT["mainstream_recall"] = details["mainstream_recall"]
         ensure_daily_accountability_lines(result, screen_text, root=root)
         validate_daily_direction_quota(result)
         validate_must_cover_mainstream(result, screen_text, root=root, day=day)

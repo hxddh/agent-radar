@@ -1231,3 +1231,189 @@ class DegradationMarkerFloorTest(unittest.TestCase):
             text = target.read_text(encoding="utf-8")
             self.assertTrue(radar_bilingual.has_recorded_chinese_degradation(text))
             self.assertEqual(cloud_agent_runner.RUN_AUDIT["chinese_mirror_marker_cleared"], 0)
+
+
+class SweepClobberMustCoverTest(unittest.TestCase):
+    """Pin the 2026-10-02 refusal: must-cover mentions that lived ONLY in the
+    model's section 7 looked covered at the pre-sweep injection check, then
+    the deterministic Radar Sweep replacement deleted them, and the
+    must-cover gate refused a report the injector had already "seen"."""
+
+    T1 = "OpenAI launches 'Dots' always-on agents"
+    U1 = "https://openai.com/index/introducing-dots/"
+    T2 = "Anthropic Sonnet 5.5 release discussion"
+    U2 = "https://www.anthropic.com/news/sonnet-5-5"
+
+    SCREEN = json.dumps(
+        {
+            "summary": "sweep-clobber screening",
+            "candidates": [
+                {
+                    "id": "scr-aaa111",
+                    "title": T1,
+                    "why_it_matters": "Always-on agents change deployment posture.",
+                    "evidence": [U1],
+                    "confidence": "high",
+                    "relevance_score": 10,
+                    "signal_class": "mainstream_product",
+                    "promotion_status": "candidate",
+                },
+                {
+                    "id": "scr-bbb222",
+                    "title": T2,
+                    "why_it_matters": "New flagship model chatter.",
+                    "evidence": [U2],
+                    "confidence": "high",
+                    "relevance_score": 9,
+                    "signal_class": "mainstream_product",
+                    "promotion_status": "candidate",
+                },
+            ],
+            "gaps": [],
+        }
+    )
+
+    # Canonical sections 1-6+8 satisfy the direction quota WITHOUT any
+    # must-cover title token (vendors google+microsoft, themes
+    # security+eval, user field report, HN-cited discussion bullet).
+    CORE = """#### 1. Lead Analysis
+
+Google shipped a Gemini security advisory workflow; field report notes operator pain point on key rotation.
+
+#### 2. New Signals
+
+- Signal: Google Gemini security benchmark update
+  - Why it matters: eval scores moved on containment tests.
+  - Category: Mainstream product
+  - Source: https://blog.google/technology/ai/security-benchmark/
+
+- Signal: Operator thread on Gemini key rotation
+  - Why it matters: field report with a useful trick for operators.
+  - Category: User workflow
+  - Source: https://news.ycombinator.com/item?id=12345678
+
+#### 3. Mainstream Agent Progress
+
+- Signal: Microsoft Copilot agent mode reaches GA for enterprise
+  - Why it matters: operator rollout in practice.
+  - Category: Mainstream product
+  - Source: https://github.blog/changelog/copilot-ga/
+
+#### 4. User Workflow & Field Notes
+
+- Operator note: rotate keys weekly; the field report trick above saves an hour.
+
+#### 5. Emerging Agents / Infra Primitives
+
+- Signal: A small eval harness for agent traces
+  - Why it matters: benchmark workflow engine comparisons.
+  - Category: infra_primitive
+  - Source: https://example.com/eval-harness
+
+#### 6. Storage / Infra Angle
+
+- Snapshot retention policy notes for agent traces.
+
+#### 8. Assessment & Gaps
+
+- Coverage ledger: checked=google-blog, microsoft-blog; missed=none recorded
+"""
+
+    ZH = "#### 1. Lead Analysis\n\n\u4e2d\u6587\u5360\u4f4d\u5185\u5bb9\u63cf\u8ff0\u5b89\u5168\u6d4b\u8bc4\u8fdb\u5c55\u548c\u5de5\u5177\u4f7f\u7528\u7ecf\u9a8c\u5206\u4eab\u3002\n"
+
+    def setUp(self) -> None:
+        self._sweep = list(cloud_agent_runner.SHARED_SWEEP_LINES)
+        self._audit = {
+            key: (list(value) if isinstance(value, list) else value)
+            for key, value in cloud_agent_runner.RUN_AUDIT.items()
+        }
+        # The auto-added count accumulates across injector calls now, so reset
+        # it: earlier tests in the file may have left a nonzero value behind.
+        cloud_agent_runner.RUN_AUDIT["mainstream_auto_added"] = 0
+
+    def tearDown(self) -> None:
+        cloud_agent_runner.SHARED_SWEEP_LINES[:] = self._sweep
+        cloud_agent_runner.RUN_AUDIT.clear()
+        cloud_agent_runner.RUN_AUDIT.update(self._audit)
+
+    def _result(self, sweep: str, path: str = "daily/2026-10.md") -> dict:
+        english = self.CORE.replace(
+            "#### 8. Assessment & Gaps", sweep + "\n#### 8. Assessment & Gaps"
+        )
+        return {
+            "summary": "sweep-clobber daily summary",
+            "updates": [
+                {
+                    "path": path,
+                    "mode": "append",
+                    "day_heading": "## 2026-10-02",
+                    "english_block": english,
+                    "chinese_block": self.ZH,
+                }
+            ],
+        }
+
+    def _sweep_only_result(self, path: str = "daily/2026-10.md") -> dict:
+        return self._result(
+            f"#### 7. Radar Sweep\n\n"
+            f"- [mainstream_product] {self.T1} | {self.U1}\n"
+            f"- [mainstream_product] {self.T2} | {self.U2}\n",
+            path,
+        )
+
+    def test_sweep_only_mentions_are_repaired_after_replacement(self) -> None:
+        # The model mentioned both must-cover candidates ONLY in section 7.
+        # The deterministic sweep replacement deletes that section, so the
+        # runner must re-inject into section 3 before the gate runs.
+        cloud_agent_runner.SHARED_SWEEP_LINES[:] = [
+            "- [infra_primitive] Unrelated remaining pool line | https://example.com/pool"
+        ]
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = self._sweep_only_result()
+        # Full pipeline must pass: this exact shape was refused on 2026-10-02.
+        cloud_agent_runner.validate_synthesis_result("daily", result, self.SCREEN)
+        bodies = "\n".join(cloud_agent_runner.daily_update_bodies(result))
+        section3 = bodies.split("#### 3. Mainstream Agent Progress", 1)[1].split(
+            "#### 4.", 1
+        )[0]
+        self.assertIn(self.T1, section3)
+        self.assertIn(self.T2, section3)
+        self.assertIn("auto-added by the runner", section3)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["mainstream_auto_added"], 2)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["must_cover_missing"], 0)
+        # Honest metric stays: the MODEL covered both before any repair.
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["model_mainstream_recall"], 1.0)
+
+    def test_wrong_path_fails_with_shape_error_not_coverage_error(self) -> None:
+        # Updates under a non-month path leave the injector/gate with no
+        # targets while recall (unfiltered) still reports 1.0; refuse with
+        # the actual shape problem instead of "candidates were dropped".
+        cloud_agent_runner.SHARED_SWEEP_LINES[:] = [
+            "- [infra_primitive] Unrelated remaining pool line | https://example.com/pool"
+        ]
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        result = self._sweep_only_result(path="daily/2026-10-02.md")
+        with self.assertRaises(SystemExit) as ctx:
+            cloud_agent_runner.validate_synthesis_result("daily", result, self.SCREEN)
+        self.assertIn("no daily day-block targets", str(ctx.exception))
+        self.assertNotIn("were dropped", str(ctx.exception))
+
+    def test_empty_result_skips_target_check(self) -> None:
+        # No updates/files at all: nothing to judge the shape of.
+        cloud_agent_runner.ensure_daily_update_targets({"summary": "nothing yet"})
+        cloud_agent_runner.ensure_daily_update_targets({})
+
+    def test_mainstream_auto_added_accumulates_across_injections(self) -> None:
+        # Pre-sweep and post-sweep injections both run now; the telemetry
+        # count must total them instead of keeping only the last call.
+        cloud_agent_runner.RUN_AUDIT["apply_warnings"] = []
+        only2 = self._result(
+            f"#### 7. Radar Sweep\n\n- [mainstream_product] {self.T2} | {self.U2}\n"
+        )
+        only1 = self._result(
+            f"#### 7. Radar Sweep\n\n- [mainstream_product] {self.T1} | {self.U1}\n"
+        )
+        cloud_agent_runner.inject_missing_mainstream_signals(only2, self.SCREEN)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["mainstream_auto_added"], 1)
+        cloud_agent_runner.inject_missing_mainstream_signals(only1, self.SCREEN)
+        self.assertEqual(cloud_agent_runner.RUN_AUDIT["mainstream_auto_added"], 2)
