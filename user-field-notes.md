@@ -875,3 +875,18 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Source class: Social (Reddit)
   - Evidence strength: Medium
   - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- 2026-10-02: Connector compatibility & pre-upgrade snapshotting
+  - Signal: community reports (Reddit) that custom MCP connectors were broken by a runtime upgrade.
+  - Impact: operators experienced workflow outages when connector contracts changed.
+  - Actionable note: always snapshot connector manifests and configs before a runtime upgrade, run connector smoke tests in a staging runtime, and pin connector versions in CI to detect regressions early.
+  - Evidence strength: Medium (public discussion)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-10-02: Agent-driven fuzzing as CI pattern
+  - Signal: GitHub Security Lab demonstrated Taskflow Agent for AI-driven fuzzing.
+  - Impact: CI fuzzing pipelines must be sandboxed with clear egress and artifact retention rules.
+  - Actionable note: run Taskflow fuzzing in ephemeral sandboxes, export sanitized artifacts for triage, and add CI-level SSRF/egress monitors.
+  - Evidence strength: Strong (GitHub blog)
+  - Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/

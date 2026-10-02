@@ -1138,3 +1138,18 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong
   - Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory
   - Watch trigger: change in default memory retention settings or a published API to export/scrub Copilot memory entries.
+
+
+- Persistent assistant artifact classes (OpenAI Dots)
+  - Observation: Always-on/persistent assistants generate continuous state, scheduled task logs, and device telemetry distinct from single-run agent artifacts.
+  - Storage implication: Operators must separate ephemeral preview/product‑preview sinks (short TTL) from durable audit logs; design exportable forensic snapshots for vendor requests.
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/introducing-dots/ ; https://apnews.com/article/ai-openai-anthropic-agents-rogue-hack-2f8a2b9024d4f06793bcca12f8089d20
+  - Watch trigger: vendor publishes Dots export/forensics API or changes default retention.
+
+- High-fidelity tracing and fuzz artifacts (langfuse + Taskflow)
+  - Observation: Improved trace fidelity and agentic fuzzing increase stored volume and query complexity.
+  - Storage implication: Implement sampling, TTL tiers, and indexed metadata for rapid forensic filtering; measure trace ingestion costs as part of agent TCO.
+  - Evidence strength: Strong
+  - Source: https://github.com/langfuse/langfuse ; https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
+  - Watch trigger: monthly trace volume growth >20% or trace-related billing anomalies.

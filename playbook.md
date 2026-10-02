@@ -865,3 +865,16 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - When useful: any runtime or MCP server upgrade, or when enabling stricter containment defaults (e.g., Anthropic Sonnet/Claude upgrades).
   - Evidence: multiple community reports of broken MCP connectors after runtime upgrades (Reddit), vendor notes tightening containment defaults (Anthropic Sonnet 5.5).
   - Should promote to playbook? yes
+
+
+## Pre-upgrade connector smoke test & snapshot playbook (candidate)
+
+- When useful: Before upgrading agent runtimes (Claude Code, Codex, Dots/Agents API), or when changing MCP connector versions.
+- Steps:
+  1. Snapshot current connector manifests, credentials pointers (redacted), and working workspace state to an immutable export.
+  2. Run a connector smoke test suite in a staging runtime that mirrors production auth/egress rules.
+  3. Validate end-to-end tool calls (identity, network, file ops) with recorded traces (langfuse or equivalent) and verify absence of new permission escalations.
+  4. If tests fail, roll back runtime/connector in staging and open a vendor issue with trace IDs.
+- Evidence: Reddit community reports of connector breakage; vendor notes recommending staged rollouts.
+- Should promote to playbook? yes
+- Source references: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; langfuse observability guidance
