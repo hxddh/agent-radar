@@ -890,3 +890,14 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Actionable note: run Taskflow fuzzing in ephemeral sandboxes, export sanitized artifacts for triage, and add CI-level SSRF/egress monitors.
   - Evidence strength: Strong (GitHub blog)
   - Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
+
+
+- Snapshot-before-upgrade (operator play): snapshot MCP connector state and pinned runtime version before upgrading conductor/runtime.
+  - When seen: community reports of broken MCP connectors after recent runtime upgrades (Reddit ongoing thread).
+  - Why: connector handshake/compatibility regressions cause immediate workflow outages.
+  - Public-safe summary: add a pre-upgrade stage that runs connector compatibility smoke tests and makes a workspace snapshot available for rollback. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Vercel Rogo deploy flow (operator note): require signed artifacts and pre-deploy agent checks in any one-command agent-to-prod flow.
+  - When seen: Vercel blog describing a 5-minute agent-written-code shipping flow.
+  - Why: low-friction deploys increase risk of shipping unsafe or vulnerable code.
+  - Public-safe summary: enforce automated pre-deploy checks (lint/tests/dependency pin verification) and require artifact signing or a human approval step. Source: https://vercel.com/blog/how-rogo-ships-agent-written-code-to-production-in-5-minutes-on-vercel

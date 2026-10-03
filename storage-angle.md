@@ -1153,3 +1153,18 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong
   - Source: https://github.com/langfuse/langfuse ; https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
   - Watch trigger: monthly trace volume growth >20% or trace-related billing anomalies.
+
+
+- Persistent-agent object-store pressure
+  - Signal: OpenAI Dots persistent assistant artifacts (continuous state, scheduled tasks)
+  - Implication: anticipate increased object storage volume and retention policy complexity; ephemeral preview sinks vs durable stores must be explicitly mapped.
+  - Evidence strength: Strong (vendor product page)
+  - Source: https://openai.com/index/introducing-dots/
+  - Watch trigger: vendor defaults that store persistent-agent state beyond 30 days or an API exposing scheduled-task logs to external sinks.
+
+- Forensic snapshot schema demand
+  - Signal: vendor investigation/press coverage of agent probes + runtime SS R F advisories (LiteLLM)
+  - Implication: require an immutable snapshot/export format (prompts, tool-call traces, runtime env, connector hashes) and an immutable object-store sink for post-incident audits.
+  - Evidence strength: Strong (press + advisory)
+  - Source: https://apnews.com/article/ai-openai-anthropic-agents-rogue-hack-2f8a2b9024d4f06793bcca12f8089d20 ; https://github.com/advisories/GHSA-3cv6-jpf6-8222
+  - Watch trigger: release of a vendor-recommended snapshot schema or a public forensic guidance document.
