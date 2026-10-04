@@ -1168,3 +1168,37 @@ Notes: These promotions reinforce existing storage-angle guidance (snapshot sche
   - Evidence strength: Strong (press + advisory)
   - Source: https://apnews.com/article/ai-openai-anthropic-agents-rogue-hack-2f8a2b9024d4f06793bcca12f8089d20 ; https://github.com/advisories/GHSA-3cv6-jpf6-8222
   - Watch trigger: release of a vendor-recommended snapshot schema or a public forensic guidance document.
+
+
+## 2026-10-04 storage implications — persistent agents & previews
+
+- Persistent assistants (OpenAI Dots) create at least three new artifact classes:
+  1. Agent-state snapshots (periodic persistent state that operators may need for forensic replay).
+  2. Scheduled-output archives (long-window outputs from background tasks).
+  3. Long-window telemetry (continuous logs/traces spanning background lifetimes).
+
+- Immediate operator actions:
+  - Create explicit lifecycle classes and map them to object-store buckets with TTLs (ephemeral: previews/worker-previews; durable: audited traces with indexes).
+  - Add scrubbing/export hooks for sensitive fields before exporting or persisting scheduled outputs.
+
+- Watch triggers: vendor-published default TTLs or export formats for Dots and Cloudflare/Vercel preview exports (would confirm recommended artifact classification).
+
+Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.com/one-observability-platform/
+
+
+### 2026-10-04 — Promotions: OpenAI Dots, OpenAI GPT-6 guide, Cloudflare agents@0.26.0
+
+- OpenAI Dots (promoted)
+  - Storage implication: introduces three persistent artifact classes — (1) periodic agent-state snapshots, (2) scheduled-output archives, and (3) long-window telemetry. Operators must map each class to explicit storage tiers (ephemeral preview vs durable audit), require export-to-operator-bucket hooks, and add scrubbing/export hooks for sensitive fields before persisting scheduled outputs.
+  - Recommended: add Dots-specific manifest fields (agent id, AGENTS.md SHA, runtime version, connector pins), enforce server-side encryption with customer-managed keys for durable snapshots, and add automated secret-scans on any persisted Dots snapshot.
+  - Evidence strength: Strong. Source: https://openai.com/index/introducing-dots/
+
+- OpenAI GPT-6 model guide (promoted)
+  - Storage implication: recommended integration patterns (SDK/tooling guidance) can change runtime defaults (telemetry, artifact retention, run identifiers). Operators should re-run snapshot/telemetry smoke tests after applying GPT-6 integration guidance and confirm SDKs do not enable unexpected persistent telemetry or artifact uploads by default.
+  - Recommended: review GPT-6 guide integration defaults, pin SDK versions in connector CI, and ensure run-level manifests include model-version and integration flags to aid forensic triage.
+  - Evidence strength: Strong. Source: https://openai.com/index/practical-guide-building-gpt-6
+
+- Cloudflare agents@0.26.0 (promoted)
+  - Storage implication: edge runtime/bundler changes can alter preview/export sinks and introduce or change audio/transcript artifacts. Operators should treat new edge artifacts as first-class (indexable transcripts, audio blobs) and map preview exports to tenant-controlled short-TTL buckets while routing promoted artifacts into durable forensic prefixes.
+  - Recommended: validate bundler compatibility, verify preview->export mapping to operator buckets, add transcript PII scanning and audio retention classes to lifecycle templates.
+  - Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0

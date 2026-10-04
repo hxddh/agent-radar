@@ -14,8 +14,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic released Claude Opus 5.5 (2026-09-22) which tightens cybersecurity defaults and auditing for agent tool-calls. Operators should expect stricter containment defaults that may break permissive custom MCP connectors; pin runtime versions, snapshot AGENTS.md before upgrades, and add connector compatibility tests to CI. Evidence strength: Strong
-- Source: https://www.anthropic.com/claude-opus-5-5
+- Recent changes: Anthropic published containment engineering guidance and continues to ship runtime updates (Sonnet/Opus series). New 2026-10 evidence clarifies stricter default containment and improved auditing for tool-calls; operators report connector regressions after upgrades (community reports). Immediate action: pin runtimes for connectors, add connector contract tests to CI, snapshot workspaces before upgrades, and map Anthropic's recommended audit sink fields to operator log pipelines.
+- Freshness: checked 2026-10-04 (new evidence: Anthropic containment engineering post)
+- Evidence strength: Strong (vendor engineering post) + Medium (community reports)
+- Source: https://www.anthropic.com/engineering/how-we-contain-claude
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted AI IDE; security vulnerabilities remain a key operator concern.
@@ -65,9 +67,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 # Emerging Agents
 
 ## Omnigent
-- What it is: Open meta-harness for orchestrating many agents with policy and sandboxing primitives.
-- Why it matters: Increased uptake and visible OSS alternatives indicate meta-harnesses moving from power-user territory toward broader operator adoption; they influence how operators reason about cross-runtime orchestration, verification receipts, and policy enforcement.
-- Recent changes: Continued community adoption and connector examples surfaced this month; evidence strength: Strong (GitHub + community). Follow-up: track integrations with popular runtimes (Codex, Claude, Copilot). Source: https://github.com/omnigent-ai/omnigent
+- What it is: Meta-harness for multi-runtime orchestration, policy enforcement, and verifiable action receipts.
+- Why it matters: Community uptake and OSS alternatives (swarms) suggest meta-harnesses are moving from power-user to broader operator use; they help unify cross-runtime orchestration and audit trails.
+- Freshness: checked 2026-10-04 (community traction observed; no single standard yet)
+- Evidence strength: Medium (community + repo activity)
+- Source: https://github.com/omnigent-ai/omnigent
 ## Omnigent
 
 - What it is: A meta-harness / policy-enforcement project for orchestrating and constraining multi-agent runs (previously promoted in research-log).
@@ -75,9 +79,12 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Why it matters: Shows meta-harnesses are moving from power-user tools toward broader operator workflows; useful for consistent policy enforcement across agent fleets. Evidence strength: Medium
 - Action: Evaluate Omnigent for policy enforcement in a constrained staging environment and compare with swarm-based alternatives.
 ## Vestige
-- What it is: An agent-memory primitive (one of several competing approaches).
-- Why it matters: Vestige-like projects illustrate the diversity of memory architectures (copy-on-write, vector branching, versioned objects) and the operational choices vendors and operators must make for retention and provenance.
-- Recent changes: Multiple memory projects surfaced this week (agenticow, remem-ai, mem0 updates) showing the ecosystem is active; no single approach has consolidated mainstream status. Evidence strength: Medium-Strong. Follow-up: test migrations and snapshot exports to ensure forensic continuity.
+- What it is: Agent memory primitive / project (local-first and branching memory approaches have similar projects: agenticow, remem-ai).
+- Why it matters: Multiple memory projects surfaced this week; Vestige-like approaches compete with vector/document/graph memory primitives and need operator evaluation for snapshot/provenance semantics.
+- Freshness: checked 2026-10-04 (still undated in watchlist; mark as active investigation)
+- Evidence strength: Medium
+- Follow-up: map Vestige APIs to existing snapshot schema and verify export/TTL behaviors.
+- Source class: repo/community (need canonical vendor page for stronger evidence)
 ## Vestige
 
 - What it is: (memory primitive) — local-first agent memory design explored by several projects.
@@ -410,19 +417,19 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — Vulnerability Discovery / Daybreak (scr-2b8d6e-followup)
-
-- What it is: Cloudflare's vulnerability-discovery and Daybreak remediation tooling for platform-level triage and export/playbook hygiene.
-- Why it matters: Platform-level vulnerability discovery that can automatically triage and export remediation artifacts reshapes operator workflows: export sinks, forensics, and egress policies become operational levers rather than optional integrations. This directly affects operator attack surface and containment controls for agent-driven vulnerability triage runs.
-- Evidence strength: Strong (official Cloudflare blog)
-- Promotion reason: strong first-party product signal with immediate operator governance impact; promotes containment/security thesis and snapshot/export controls.
-- Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
-
-
+- Category: Platform observability / security
+- Maturity: Promoted; platform-level observability and privacy gateway primitives
+- Recent changes: Cloudflare One Observability and Worker preview/export changes increase ephemeral vs durable artifact choices; operators must map preview artifacts to short TTLs and observability traces to durable indexed stores. Recommended: test worker-preview export behavior in staging and capture default TTLs for preview artifacts.
+- Freshness: checked 2026-10-04
+- Evidence strength: Strong
+- Source: https://blog.cloudflare.com/one-observability-platform/
 ## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)
 - Category: Platform sandbox / managed agents
-- Maturity: GA/active for managed sandbox use-cases.
-- Recent changes: Vercel ai@7.0.117 (2026-09-27) — SDK/deploy surface changes; sandbox memory observability and WebMCP support updates increase persisted artifact visibility and change default runtime environment variables. Operators should parse changelog diffs for retention/observability defaults, map preview export sinks to short‑TTL object storage, and re-run deployment tests in staging. Evidence strength: Strong
-- Source: https://github.com/vercel/ai/releases/tag/ai%407.0.117
+- Maturity: GA/active for managed sandbox use-cases
+- Recent changes: Vercel sandbox memory/observability and WebMCP support updates were observed; vercel-labs/agent-browser v0.38.2 release improves browser sandbox UX. Operators should parse changelog diffs for retention/observability defaults, map preview export sinks to short‑TTL object storage, and re-run deployment tests in staging.
+- Freshness: checked 2026-10-04 (agent-browser release)
+- Evidence strength: Strong
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.38.2
 ## MemOS — hybrid retrieval memory (MemTensor / MemOS)
 
 - What it is: MemOS (MemTensor/MemOS) — hybrid retrieval memory claiming token‑savings via a self‑evolving persistent memory + retrieval stack.
@@ -540,3 +547,23 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Recent changes: Repository activity and releases in September signaled integration and runtime updates that operators must validate against existing connector matrices. Evidence strength: Strong (GitHub repo/releases). Source: https://github.com/microsoft/agent-framework
 - Operator guidance: review release notes for API/egress/defaults changes; add compatibility tests for connectors and CI smoke tests before rollouts.
 - replace_section anchor: `## Microsoft / agent‑framework (scr-9f1a2b)`
+
+
+## OpenAI — Dots
+
+- What it is: OpenAI Dots — a persistent/always-on assistant platform that exposes long-lived agent state, scheduled/background tasks, and device/assistant telemetry.
+- Why it matters: Persistent assistants change the artifact taxonomy operators must govern: periodic agent-state snapshots, scheduled-output archives, and long-window telemetry require explicit retention, scrub/export hooks, and provenance metadata to enable forensic replay and legal review. This is a mainstream product-level change with direct operator impact on storage, retention, and incident playbooks.
+- Evidence strength: Strong (official product page)
+- Relevance score: 10
+- Recommended immediate actions: require export-to-operator-bucket hooks for Dots persistent state; add AGENTS.md + runtime/version fields to any snapshot manifest; classify artifact types (preview-ephemeral, preview-promotable, production-durable) before enabling Dots in production.
+- Source: https://openai.com/index/introducing-dots/
+
+
+## Cloudflare — agents@0.26.0
+
+- What it is: Cloudflare agents edge/runtime release (agents@0.26.0) with bundler/worker changes that affect preview/export/edge artifact behavior.
+- Why it matters: Edge runtime and bundler deltas can change where artifacts (audio, transcripts, snapshots, preview exports) land and what defaults apply for retention/egress. Operators that run edge-hosted agents must re-validate worker-bundler compatibility and confirm preview/export sinks map to tenant-controlled buckets.
+- Evidence strength: Strong (GitHub release)
+- Relevance score: 8
+- Recommended immediate actions: run bundler/worker compatibility tests in staging; verify preview export sinks and default TTLs; add audio/transcript retention and PII-scan steps to snapshot playbooks.
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0

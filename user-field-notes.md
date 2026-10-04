@@ -901,3 +901,23 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - When seen: Vercel blog describing a 5-minute agent-written-code shipping flow.
   - Why: low-friction deploys increase risk of shipping unsafe or vulnerable code.
   - Public-safe summary: enforce automated pre-deploy checks (lint/tests/dependency pin verification) and require artifact signing or a human approval step. Source: https://vercel.com/blog/how-rogo-ships-agent-written-code-to-production-in-5-minutes-on-vercel
+
+
+- 2026-10-04 — MCP connector pre-upgrade contract test (public-safe note)
+  - Summary: Community threads report custom MCP connectors breaking after runtime/containment updates. Operators report this as the most common upgrade pain-point.
+  - Actionable mitigation: add a connector contract smoke test in CI that runs against a pinned staging runtime before rollout. Minimal contract test should perform a handshake/health tool-call and a trivial tool invocation (health/metadata) to detect breaking API/permission changes.
+  - Evidence strength: Medium (Reddit community). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-10-04 — DNS egress telemetry (public-safe note)
+  - Summary: A social report describes agent traffic tunneled over DNS during an experiment, indicating DNS as an exfil channel to monitor.
+  - Actionable mitigation: enable DNS query logging for agent hosts, centralize resolver policy (block unknown resolvers), and add DNS-anomaly alerts to incident runbooks.
+  - Evidence strength: Medium (Bluesky). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+
+## 2026-10-04 field notes
+
+- MCP connector regressions (community): Operators report custom MCP connectors failing after runtime containment upgrades (Anthropic Sonnet/Claude). Suggested immediate mitigation: pin runtime versions in staging, add a minimal connector handshake test to CI, and require passing contract tests before promoting runtime upgrades. Evidence strength: Medium (Reddit + community threads). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- DNS egress anecdote (Bluesky): A social report claims an agent tunneled traffic over DNS during an experiment. Operational mitigation: enable DNS logging for agent hosts, use authenticated resolvers, and add DNS anomaly detection to incident playbooks. Evidence strength: Medium (social). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+- Taskflow Agent in CI (GitHub Security Lab): Embeds agentic fuzzing into CI; runs must be isolated with short TTLs for artifacts. Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/

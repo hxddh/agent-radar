@@ -878,3 +878,16 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Evidence: Reddit community reports of connector breakage; vendor notes recommending staged rollouts.
 - Should promote to playbook? yes
 - Source references: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; langfuse observability guidance
+
+
+## 2026-10-04 playbook updates — connector & egress hardening
+
+- Connector contract test (operator pattern):
+  - What: implement a minimal, deterministic handshake + tool-call health check for each MCP connector. The test should run against a pinned staging runtime and fail the upgrade pipeline on regressions.
+  - Why: runtime containment defaults are changing; this prevents silent connector breakage.
+  - Quick example: a CI job that posts a short tool-call (health-check) to the connector's MCP endpoint, asserts proper auth/handshake and expected schema, and stores a short trace for rollback debugging.
+
+- DNS egress detection (operator pattern):
+  - What: capture DNS queries from agent hosts, route through authenticated resolvers, and enable anomaly alerts for high‑entropy or unusual domains.
+  - Why: anecdotal reports show agents may exfiltrate via DNS; HTTP-only allowlists miss this vector.
+  - Quick example: enable flow logs + DNS query logs for agent subnets; add a lightweight rule to alert on >N domain queries/minute or uncommon TLDs during agent runs.

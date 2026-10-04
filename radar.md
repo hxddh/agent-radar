@@ -67,55 +67,21 @@ Last updated: 2026-07-09
 - Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos? — New evidence: ongoing vendor entries (AWS Bedrock/AgentCore, Cloudflare OS, Vercel Gateway, JetBrains) likely accelerate adoption but also risk vendor siloing.
 - Will the agent trust gap (low eval trust + high autonomous deployment) lead to a major incident that forces regulatory action? — New evidence: press coverage and reported incidents this week increase the near-term risk; status: risk elevated but not resolved.
 ## Thesis Scorecard
-
-| # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter‑evidence |
+| # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter-evidence |
 |---|----------------|--------------|------------------------|----------------------------|
-| 1 | Task‑based execution | ↑ | Gemini CLI remote MCP integration | – |
-| 2 | Coding agents adoption | ↑ | GitHub Code Quality GA, Qwen Code v0.20.0 | – |
-| 3 | Evaluation core | → | Code Quality static analysis | – |
-| 4 | Uneven user experience | → | Astryx design system workflow | – |
-| 5 | Object storage importance | → | Headroom token‑compression reduces storage needs | – |
-| 6 | Meta‑harnesses emergence | → | No new meta‑harness releases | – |
-| 7 | Memory + MCP convergence | ↑ | Remote MCP support in Gemini CLI, Openlegion sandbox | – |
-| 8 | Platform‑vendor MCP entry | → | Continued vendor releases (Google, GitHub) | – |
-| 9 | Containment / security | ↑ | Openlegion sandbox, Code Quality policies | Potential compression‑induced errors |
-|10 | Cost economics | ↑ | Headroom token‑compression, remote MCP cost model shift | – |
+| 1 | Task‑based execution | ↑ | Microsoft Foundry Routines GA; OpenAI Dots orchestration primitives | Pricing fragmentation for long-running tasks |
+| 2 | Coding agents adoption | → | Continued IDE/runtime updates (Claude Code, Codex CLI) | — |
+| 3 | Evaluation as core | → | Langfuse v4.50.0 improving traces | — |
+| 4 | Uneven UX across vendors | → | Multiple vendor default changes breaking connectors | — |
+| 5 | Object storage as artifact plane | → | Dots and preview/export flows require TTL mapping | Headroom token-compression reducing some storage needs |
+| 6 | Meta-harnesses emergence | ↑ | Omnigent uptake and OSS multi-agent tools observed (social) | No single meta-harness standard yet |
+| 7 | Memory + MCP convergence | ↑ | Multiple memory projects + MCP SDK 2.3.0; mem0 / remem projects active | No single dominant memory primitive yet |
+| 8 | Platform‑vendor MCP entry | ↑ | Cloudflare observability/gateway, Vercel sandbox memory, Microsoft Foundry controls | Risk of vendor‑specific siloing remains |
+| 9 | Containment / security | ↑ | Anthropic containment engineering post; OpenAI training/eval pause; DNS egress anecdotes | No single universal containment standard yet |
+|10 | Cost economics | → | Headroom token‑compression signals cost optimizations | Pricing for long-running agents remains fragmented |
 
-
-### 2026-07-26 Promotions
-
-- Safety Alignment for Long‑Horizon Models (openai-safety-horizon): promoted as a governance signal; Source: https://openai.com/index/safety-alignment-long-horizon-models
-- Gemini 3.6 Flash Release: promoted; Source: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
-- Claude Code Conductor 2.51.1: promoted; Source: https://pypi.org/project/claude-code-conductor/2.51.1/
-
-
-### 2026-08-09 Promotions
-
-- OpenAI Python SDK (openai PyPI): promoted — reason: official SDK release changes client/auth/integration surface used by many agent runtimes; this has high operational impact on runtime compatibility, telemetry, and persisted session artifacts. Source: https://pypi.org/project/openai/
-
-- Cloudflare OS (Agent Access Model / WriteGuard): promoted — reason: major vendor-level policy and egress primitives that shift containment, edge snapshot/export patterns, and audit sinks to the platform; affects Thesis 8 (platform-vendor MCP entry) and Thesis 9 (containment/security). Source: https://blog.cloudflare.com/cloudflare-os/
-
-- Omnigent: promoted (upgrade) — reason: agent meta-harness with strong community adoption and immediate operator relevance for cross-runtime orchestration, policy enforcement, and verifiable action receipts. Source: https://github.com/omnigent-ai/omnigent
-
-
-### 2026-08-16 Promotions
-
-- Vercel AI Gateway (promoted): Gateway-level model routing and one-command agent setup materially affect operator model mix, deployment artifacts, and snapshot/retention needs. Source: https://vercel.com/changelog/set-up-coding-agents-in-one-command-with-ai-gateway
-
-- Anthropic — Claude Code v2.1.229 (promoted): Runtime/conductor release that can change containment, tool-call semantics, and session streaming expectations for operators running Claude Code agents. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.229
-
-- GitHub Copilot — Agent Plugins 1.0 (promoted): Standardizes plugin interfaces across VS Code, Copilot CLI, and Copilot app; expands third-party plugin execution surface and increases operator governance requirements around plugin permissions, sandboxing, and artifact retention. Source: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app
-
-### 2026-08-21
-
-- Added signal: Anthropic — "Scaling Managed Agents" engineering post (operational model for managed/long-running agents). Strengthens Thesis 1 (task-based execution) and Thesis 8 (platform MCP entry) by providing concrete operator patterns for decoupling managed agent control planes. Evidence: Strong (vendor engineering blog). Source: https://www.anthropic.com/engineering/managed-agents
-
-- Added signal: Anthropic — Claude Opus 5 release & observed coherence regressions (public GH issue). Strengthens Thesis 2 (coding agents) and Thesis 9 (containment/security) because runtime changes affect long-running sessions, connector compatibility, and containment controls. Evidence: Strong (vendor announcement) + Strong (public issue threads). Source: https://www.anthropic.com/news/claude-opus-5 ; https://github.com/anthropics/claude-code/issues/77136
-
-- Added signal: Cloudflare — MCP security updates (network detection, WriteGuard). Reinforces Thesis 9 (containment/security) and Thesis 8 (platform-vendor MCP entry). Evidence: Strong (official blog). Source: https://blog.cloudflare.com/mcp-security-updates/
-
-- Thesis Scorecard delta (compact): increased confidence in Thesis 9 (containment/security) and Thesis 8 (platform MCP entry); Thesis 7 (memory+MCP convergence) gained modest confidence due to continued MCP server/router releases and storage orchestration patterns observed in vendor docs.
-
+- Updated at: 2026-10-04
+- Notes: Confidence deltas reflect vendor product launches and multiple independent signals this week that raised the operational prominence of containment, MCP/memory convergence, and persistent assistant artifacts.
 ## Anthropic — Claude Code (scr-claude-code)
 
 What it is: Claude Code runtime and orchestration components for coding agents.
@@ -199,3 +165,21 @@ Action items: document connector compatibility tests, require connector CI again
 - GitHub — Copilot Agentic autofix uses Copilot Memory (promoted)
   - Why promoted: Memory persistence for autofix modifies provenance, retention, and forensic requirements for widely-used coding-agent workflows; high operator impact on snapshot/retention/playbooks. Affects Thesis 7 (memory+MCP convergence) and Thesis 5 (artifact plane).
   - Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory
+
+
+### 2026-10-04 Promotions
+
+- OpenAI — Dots (promoted)
+  - Why promoted: vendor launch of persistent/always-on assistants introduces new operational artifact classes (agent-state snapshots, scheduled-output archives, long-window telemetry) that materially change operator retention/forensics playbooks and upgrade the importance of export hooks and provenance manifests.
+  - Affects theses: 5 (object storage as artifact plane), 7 (memory + MCP convergence), 9 (containment/security).
+  - Source: https://openai.com/index/introducing-dots/
+
+- OpenAI — GPT-6 model guide (promoted)
+  - Why promoted: official integration patterns and recommended defaults for GPT-6 shape agent runtime defaults (telemetry, tool-call semantics, SDK behaviors) and thus have high operational relevance for agent deployments and connector compatibility.
+  - Affects theses: 1 (task-based execution), 5 (artifact plane), 10 (cost/economics via model guidance).
+  - Source: https://openai.com/index/practical-guide-building-gpt-6
+
+- Cloudflare — agents@0.26.0 release (promoted)
+  - Why promoted: edge runtime / bundler changes can change default export/retention behavior and introduce or expand audio/transcript artifact classes at the edge — operator mapping and lifecycle policies required.
+  - Affects theses: 5 (object storage), 8 (platform-vendor MCP entry), 9 (containment/security).
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0
