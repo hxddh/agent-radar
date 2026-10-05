@@ -1202,3 +1202,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Storage implication: edge runtime/bundler changes can alter preview/export sinks and introduce or change audio/transcript artifacts. Operators should treat new edge artifacts as first-class (indexable transcripts, audio blobs) and map preview exports to tenant-controlled short-TTL buckets while routing promoted artifacts into durable forensic prefixes.
   - Recommended: validate bundler compatibility, verify preview->export mapping to operator buckets, add transcript PII scanning and audio retention classes to lifecycle templates.
   - Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0
+
+
+- Persistent assistants (OpenAI Dots) — artifact model and storage implications
+  - Observation: Dots introduces continuous state and scheduled-output artifacts that differ from per-session chat logs.
+  - Storage implication: require versioned agent-state snapshots, scheduled-output archives, and retention policies (TTL + immutable manifests). Object storage budgets and lifecycle policies must be updated to account for longer retention and potential legal-preservation needs.
+  - Evidence strength: Strong (OpenAI product page)
+  - Source: https://openai.com/index/introducing-dots/
+  - Watch trigger: vendor publishes Dots export API schema or default TTLs.
+
+- Edge retrieval & preview artifacts (Cloudflare Web Search API)
+  - Observation: edge-hosted retrieval will produce cached answers and preview transcript artifacts that may be exported.
+  - Storage implication: map preview/export artifacts to ephemeral object stores and add server-side PII scanning on export; adjust default TTLs for cache eviction.
+  - Evidence strength: Strong (Cloudflare blog)
+  - Source: https://blog.cloudflare.com/introducing-web-search-api/
+  - Watch trigger: change in default cache TTLs or an agents@ release that alters preview export behavior.

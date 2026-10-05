@@ -1901,3 +1901,12 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product / release] Anthropic — Sonnet 5.5 / Claude updates (product/announcement page). Evidence strength: Strong. Source: https://www.anthropic.com/claude-sonnet-5-5
 - [user_workflow / security] GitHub Security Lab — AI-powered fuzzing with the Taskflow Agent (demonstrates operator security workflow). Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
 
+
+
+### Added 2026-10-05 (source-sweep)
+- [mainstream_product / teams] JetBrains — Air Teams (agentic workflows for teams). Evidence strength: Strong. Source: https://blog.jetbrains.com/air/2026/09/introducing-air-teams/
+- [infra_primitive / containment] Anthropic — How we contain Claude across products (engineering blog; containment/segmentation patterns). Evidence strength: Strong. Source: https://www.anthropic.com/engineering/how-we-contain-claude
+- [user_workflow / memory] AWS — Build agent memory with NVIDIA NeMo Agent Toolkit + Amazon S3 vectors (operator guide). Evidence strength: Strong. Source: https://aws.amazon.com/blogs/machine-learning/build-agent-memory-with-nvidia-nemo-agent-toolkit-and-amazon-s3-vectors/
+- [user_workflow / sandbox/workbench] E2B — Build an Agent Workbench on OpenAI's Agents API (operator guide). Evidence strength: Medium-Strong. Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api
+- [user_workflow / discussion] Bluesky — Cloudflare TLS fingerprinting breaks agent scraping of Stack Overflow (field report). Evidence strength: Medium (social). Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
+- [user_workflow / retrieval] AWS — Add secure Web Search to Claude Desktop with Amazon Bedrock AgentCore (integration guide). Evidence strength: Medium-Strong. Source: https://aws.amazon.com/blogs/machine-learning/add-secure-web-search-to-claude-desktop-with-amazon-bedrock-agentcore/

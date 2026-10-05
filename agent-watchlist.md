@@ -20,8 +20,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Source: https://www.anthropic.com/engineering/how-we-contain-claude
 ## Cursor
 - Category: AI IDE / coding agent
-- Maturity: Widely adopted AI IDE; security vulnerabilities remain a key operator concern.
-- Recent changes: Security disclosures and community reports continue to surface extension-level vulnerabilities and local-extension RCE classes. Last‑checked: 2026-09-13. Immediate action: enforce extension signing, enable workspace isolation, and add extension audit to CI. Evidence strength: Strong (vendor changelog + community/security reports). Source: https://cursor.com/changelog#main
+- Maturity: Widely adopted; vendor adds operational controls
+- Recent changes: Cursor published Rollouts and a Security Reviewer to gate bot rollouts and perform pre-deploy security checks (2026-10-05). These controls are first‑party rollout gates that operators should integrate into CI and policy-as-code flows.
+- Immediate action: wire Cursor rollout hooks into staging pipelines, require Security Reviewer pass for agents with egress/tool privileges, and add rollout-experiment telemetry to detect behavior drift post-deploy.
+- Evidence strength: Strong
+- Source: https://cursor.com/blog/rollouts-and-security-reviewer
 ## Devin / Cognition
 - Category: Agent runtime / platform
 - Maturity: Deferred; no fresh public changelog located during this pass.

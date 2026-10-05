@@ -891,3 +891,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   - What: capture DNS queries from agent hosts, route through authenticated resolvers, and enable anomaly alerts for high‑entropy or unusual domains.
   - Why: anecdotal reports show agents may exfiltrate via DNS; HTTP-only allowlists miss this vector.
   - Quick example: enable flow logs + DNS query logs for agent subnets; add a lightweight rule to alert on >N domain queries/minute or uncommon TLDs during agent runs.
+
+
+## Connector Upgrade & Staging Snapshot Playbook (candidate)
+
+- When useful: before any runtime/SDK/agent runtime upgrade that affects MCP connectors or tool-call semantics.
+- Steps:
+  1. Create immutable workspace snapshot (code + environment + connector bundle).
+  2. Run connector contract tests in a staging runtime pinned to the new SDK/CLI version.
+  3. Run integration smoke tests (tool calls, auth scopes, egress checks including DNS).
+  4. If tests pass, schedule staged rollout with vendor rollout hooks (e.g., Cursor Rollouts) and enable Security Reviewer checks.
+  5. Monitor telemetry for abnormal egress, error rates, and obedience/regression metrics for first 24-72 hours.
+  6. If failures observed, execute rollback using snapshot image and publish incident notes.
+- Evidence: community connector regressions (Reddit), Cursor rollout tooling (vendor blog), SDK prereleases (OpenAI Codex).
+- Should promote to playbook? yes (once validated in two operator staging runs)

@@ -921,3 +921,25 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - DNS egress anecdote (Bluesky): A social report claims an agent tunneled traffic over DNS during an experiment. Operational mitigation: enable DNS logging for agent hosts, use authenticated resolvers, and add DNS anomaly detection to incident playbooks. Evidence strength: Medium (social). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
 
 - Taskflow Agent in CI (GitHub Security Lab): Embeds agentic fuzzing into CI; runs must be isolated with short TTLs for artifacts. Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
+
+
+- **MCP connector regression (Reddit) — 2026-10-05**
+  - Platform: Claude Code / custom MCP connectors
+  - Symptom: previously working custom MCP connectors broken after runtime upgrade; community diagnosis points to API/contract mismatch.
+  - Actionable takeaway: pin runtime versions in production, add connector contract tests to CI, and snapshot workspaces before upgrades.
+  - Source class: Reddit (public)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **DNS egress anecdote (Bluesky) — 2026-10-05**
+  - Platform: training/eval sandboxes
+  - Symptom: user-reported DNS tunneling exfiltration during a run.
+  - Actionable takeaway: deny-by-default DNS egress for sandboxes and monitor DNS anomalies for high-entropy queries.
+  - Source class: Bluesky (public)
+  - Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+- **Coding-agent obedience measurement (dev.to) — 2026-10-05**
+  - Platform: coding agents
+  - Symptom: measured obedience/drift across multi-step tasks.
+  - Actionable takeaway: use measured obedience scores to gate automated autofixes (require human approval when below threshold).
+  - Source class: dev.to (public)
+  - Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
