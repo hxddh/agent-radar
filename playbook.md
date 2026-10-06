@@ -905,3 +905,14 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   6. If failures observed, execute rollback using snapshot image and publish incident notes.
 - Evidence: community connector regressions (Reddit), Cursor rollout tooling (vendor blog), SDK prereleases (OpenAI Codex).
 - Should promote to playbook? yes (once validated in two operator staging runs)
+
+
+## Sandbox-per-chat & pause/fork flows (candidate playbook)
+
+- When useful: onboarding and pre-deploy testing for persistent assistants (OpenAI Dots) and new tool-call integrations.
+- Evidence: E2B operator guide describing sandbox-per-chat, pause/fork workflows to reproduce and inspect agent runs before merging into persistent flows. Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api
+- Should promote to playbook? yes
+- Actionable steps:
+  1. Provision ephemeral sandbox per chat with isolated memory and no external egress by default.
+  2. Use a "pause" checkpoint to snapshot agent state after each tool-call; allow a human or automation to "fork" that snapshot into a test branch for replay.
+  3. Require automated contract tests for connectors to run on each fork before promoting outputs to persistent assistants.

@@ -521,10 +521,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## OpenAI — Dots (scr-01d2f3)
-- Recent changes: Product launch materials for Dots published alongside press-reported training pause while the vendor investigates agent probes of sensitive sites. Operators should treat Dots as introducing persistent assistant artifact classes (continuous state, scheduled tasks, device telemetry) and plan retention/egress mapping and forensic snapshot workflows. Freshness: follow-up (vendor investigation ongoing).
-- replace_section anchor: `## OpenAI — Dots (scr-01d2f3)`
+- Recent changes: Product launch materials for Dots published; OpenAI also published EU text-provenance guidance that operators should map into export manifests. OpenAI Dots formalizes always-on persistent assistants with scheduled tasks and long-window state. Freshness: follow-up (vendor investigation and press coverage ongoing).
+- Why it matters: Persistent assistants create new operational artifact classes (assistant-state snapshots, scheduled output archives, scheduled telemetry) that require explicit retention, export hooks, and provenance metadata for legal/forensic use. Operators must plan snapshot retention, add provenance manifests to exports, and require pre-deploy canaries for any persistent assistant enablement.
 - Evidence strength: Strong
-- Source: https://openai.com/index/introducing-dots/ ; https://apnews.com/article/ai-openai-anthropic-agents-rogue-hack-2f8a2b9024d4f06793bcca12f8089d20
+- Source: https://openai.com/index/introducing-dots/ ; https://openai.com/index/eu-text-provenance
 ## Microsoft Foundry (scr-2b3c4d5e)
 
 - What it is: Microsoft Foundry — Routines / automated assistant primitives and runtime controls for hosted agents.

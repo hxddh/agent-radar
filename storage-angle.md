@@ -1217,3 +1217,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong (Cloudflare blog)
   - Source: https://blog.cloudflare.com/introducing-web-search-api/
   - Watch trigger: change in default cache TTLs or an agents@ release that alters preview export behavior.
+
+
+- Dots persistent-state snapshot requirements
+  - Related to: OpenAI Dots (persistent assistants)
+  - Storage implication: define three-tier storage mapping for assistant artifacts: ephemeral previews (short TTL), durable forensic snapshots (immutable, versioned buckets), and provenance index (searchable manifest mapping). Include export manifest schema fields recommended by vendor (EU provenance guidance).
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/introducing-dots/ ; https://openai.com/index/eu-text-provenance
+  - Watch trigger: OpenAI publishes a Dots export API or example manifest schema.
+
+- Browser artifact sinks for browser-based MCP hosts
+  - Related to: @browserstack/mcp-server
+  - Storage implication: browser artifacts (HAR, screenshots, WebM) will default to vendor-managed sinks; operators should require export connectors to copy artifacts to enterprise buckets for retention and PII scanning.
+  - Evidence strength: Strong
+  - Source: https://www.npmjs.com/package/%40browserstack/mcp-server
+  - Watch trigger: BrowserStack docs show default sink configuration for persisted artifacts.

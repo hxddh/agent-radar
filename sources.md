@@ -1910,3 +1910,14 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / sandbox/workbench] E2B — Build an Agent Workbench on OpenAI's Agents API (operator guide). Evidence strength: Medium-Strong. Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api
 - [user_workflow / discussion] Bluesky — Cloudflare TLS fingerprinting breaks agent scraping of Stack Overflow (field report). Evidence strength: Medium (social). Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
 - [user_workflow / retrieval] AWS — Add secure Web Search to Claude Desktop with Amazon Bedrock AgentCore (integration guide). Evidence strength: Medium-Strong. Source: https://aws.amazon.com/blogs/machine-learning/add-secure-web-search-to-claude-desktop-with-amazon-bedrock-agentcore/
+
+
+### Added 2026-10-06 — high-priority signals
+
+- OpenAI — Introducing Dots (persistent assistants). Evidence strength: Strong. Source: https://openai.com/index/introducing-dots/
+- OpenAI — EU text-provenance guidance. Evidence strength: Strong. Source: https://openai.com/index/eu-text-provenance
+- openai/codex — rust-v0.160.1 (GitHub release). Evidence strength: Strong. Source: https://github.com/openai/codex/releases/tag/rust-v0.160.1
+- @browserstack/mcp-server (npm). Evidence strength: Strong. Source: https://www.npmjs.com/package/%40browserstack/mcp-server
+- Community / operator guide: Build an Agent Workbench on OpenAI's Agents API (E2B). Evidence strength: Medium-Strong. Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api
+- Community / discussion: Reddit thread on broken MCP connectors. Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+- Community / discussion: Bluesky field reports (TLS fingerprinting; DNS tunneling). Evidence strength: Medium. Sources: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r ; https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p

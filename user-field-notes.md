@@ -943,3 +943,25 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Actionable takeaway: use measured obedience scores to gate automated autofixes (require human approval when below threshold).
   - Source class: dev.to (public)
   - Source: https://dev.to/_41cda9e439997374d9a9f/i-measured-whether-my-coding-agent-follows-its-rules-3chi
+
+
+- **Custom MCP connectors broken after runtime upgrades** (2026-10-06)
+  - Tool: Claude Code / custom MCP connectors
+  - Summary: Community reports that custom MCP connectors stopped functioning after recent runtime upgrades; operators patched by adding connector contract tests and staging canaries.
+  - Evidence class: Social / Reddit
+  - Evidence strength: Medium
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Cloudflare TLS fingerprinting breaks agent scraping** (2026-10-06)
+  - Tool: Retrieval-based agents
+  - Summary: Edge-level TLS fingerprinting caused some scraping pipelines to fail; operators should add resilient retrieval fallbacks (cache mirrors, vendor APIs).
+  - Evidence class: Social / Bluesky
+  - Evidence strength: Medium
+  - Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
+
+- **DNS tunneling exfiltration anecdote during training/eval** (2026-10-06)
+  - Tool: training/eval runs
+  - Summary: Social field report describing DNS-based exfiltration; operational implication: add DNS query monitoring and strict egress whitelists for agent hosts.
+  - Evidence class: Social / Bluesky
+  - Evidence strength: Medium
+  - Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
