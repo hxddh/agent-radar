@@ -47,14 +47,15 @@ class CloudAgentRunnerTest(unittest.TestCase):
             )
 
     def test_ai_gateway_default_fallbacks_are_tiered_by_role(self) -> None:
+        # Defaults name only models the free Gateway tier serves (v0.26.2).
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-mini", "screen"),
-                ["openai/gpt-5-mini", "anthropic/claude-haiku-4.5", "google/gemini-2.5-flash-lite"],
+                ["openai/gpt-5-mini", "google/gemini-2.5-flash-lite"],
             )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_fallback_models("openai/gpt-5-mini", "synthesis"),
-                ["openai/gpt-5-mini", "anthropic/claude-haiku-4.5", "openai/gpt-5-nano"],
+                ["openai/gpt-5-mini", "openai/gpt-5-nano"],
             )
             self.assertEqual(
                 cloud_agent_runner.ai_gateway_fallback_models("anthropic/claude-haiku-4.5", "mirror"),

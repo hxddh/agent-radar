@@ -58,16 +58,18 @@ DEFAULT_GITHUB_MODEL = "openai/gpt-4o"
 DEFAULT_CHEAP_SCREEN_MODEL = "openai/gpt-5-mini"
 DEFAULT_MAIN_RESEARCH_MODEL = "openai/gpt-5-mini"
 DEFAULT_FINAL_SYNTHESIS_MODEL = "openai/gpt-5-mini"
-# Fallbacks are walked in order; a model the Gateway does not know (404) is
-# skipped rather than ending the chain. Claude Haiku 4.5 leads both chains:
-# a different provider from the primary, and the Chinese quality the old
-# synthesis fallback (GPT-5 Nano) lacked. The older models stay as last resort.
-DEFAULT_SCREEN_FALLBACK_MODELS = ["anthropic/claude-haiku-4.5", "google/gemini-2.5-flash-lite"]
-DEFAULT_SYNTHESIS_FALLBACK_MODELS = ["anthropic/claude-haiku-4.5", "openai/gpt-5-nano"]
+# Fallbacks are walked in order; a model the Gateway will not serve this
+# account (401/403/404) is skipped rather than ending the chain. Every entry
+# must be reachable on the account's Gateway tier: v0.26.0 led both chains with
+# Claude Haiku 4.5, which the free tier refuses (HTTP 403). Put a paid model
+# here only after enabling paid Gateway credits.
+DEFAULT_SCREEN_FALLBACK_MODELS = ["google/gemini-2.5-flash-lite"]
+DEFAULT_SYNTHESIS_FALLBACK_MODELS = ["openai/gpt-5-nano"]
 # The 中文 mirror is a translation of a finished English body: small volume
-# (only thin reports), and the one step where GPT-5 Mini's weakness showed
-# (10 of September's 27 dailies shipped with no Chinese at all).
-DEFAULT_CHINESE_MIRROR_MODEL = "anthropic/claude-haiku-4.5"
+# (only thin reports). A stronger translator (e.g. anthropic/claude-haiku-4.5)
+# can be set via CHINESE_MIRROR_MODEL once the Gateway account has paid credits;
+# on the free tier it is refused and the call falls through to this model.
+DEFAULT_CHINESE_MIRROR_MODEL = "openai/gpt-5-mini"
 DEFAULT_AI_GATEWAY_MAX_OUTPUT_TOKENS = 32_768
 MAX_FILE_CHARS = 80_000
 GITHUB_MAX_FILE_CHARS = 6_000
@@ -6529,6 +6531,9 @@ def ai_gateway_headers() -> dict[str, str]:
 
 
 MODEL_ROLES = ("screen", "synthesis", "mirror")
+# Statuses that say "this model is not available to this account", as opposed
+# to "this request is malformed" (400/409/422), which no other model would fix.
+MODEL_ACCESS_STATUS = frozenset({401, 403, 404})
 
 
 def model_role(model: str, role: str | None = None) -> str:
@@ -6652,9 +6657,12 @@ def call_ai_gateway_model(prompt: str, model: str, role: str | None = None) -> d
     retryable_status = {408, 429, 500, 502, 503, 504}
     role = model_role(model, role)
     models = ai_gateway_fallback_models(model, role)
-    # A model the Gateway rejects outright (404, or any client error on a
-    # fallback) is dropped for the rest of the call instead of ending it: an
-    # unknown or retired fallback name used to stop the chain at that model.
+    # A model the Gateway will not serve to this account (401/403/404), or any
+    # client error on a fallback, is dropped for the rest of the call instead
+    # of ending it. A 403 on the primary is about the model, not the payload:
+    # v0.26.0 stopped there, so when the free-tier account was refused Claude
+    # Haiku 4.5 the 中文 mirror never reached its GPT-5 Mini fallback and three
+    # reports shipped degraded (2026-10-03, 10-04, W40).
     dead_models: set[str] = set()
     # Free-tier 429s are per-minute quotas that refill: walk the (cross-pool)
     # chain several rounds with real backoff instead of giving up after one
@@ -6703,7 +6711,7 @@ def call_ai_gateway_model(prompt: str, model: str, role: str | None = None) -> d
             except (TypeError, ValueError):
                 retry_after_hint = 0
             if exc.code not in retryable_status:
-                if exc.code == 404 or candidate_model != model:
+                if exc.code in MODEL_ACCESS_STATUS or candidate_model != model:
                     dead_models.add(candidate_model)
                     if len(dead_models) < len(models):
                         continue

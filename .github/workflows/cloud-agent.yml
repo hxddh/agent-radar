@@ -75,14 +75,15 @@ jobs:
       DRY_RUN_ON_BUDGET_EXCEEDED: ${{ vars.DRY_RUN_ON_BUDGET_EXCEEDED || 'true' }}
       # Cross-vendor chain: one exhausted free pool must not kill primary AND fallback.
       # Fallbacks and the 中文 mirror model are pinned here too (v0.26.0): the
-      # repo variables had drifted from this file, so the chain that actually
-      # ran (screen -> Gemini 2.5 Flash Lite, synthesis -> GPT-5 Nano) was not
-      # the one the repo stated. A name the Gateway rejects (404) is skipped,
-      # so a retired model degrades to the next entry instead of ending the chain.
-      AI_GATEWAY_FALLBACK_MODELS: 'anthropic/claude-haiku-4.5,openai/gpt-5-nano'
-      AI_GATEWAY_SCREEN_FALLBACK_MODELS: 'anthropic/claude-haiku-4.5,google/gemini-2.5-flash-lite'
+      # repo variables had drifted from this file. Every model must be one the
+      # Gateway serves on this account's tier: v0.26.0 pinned Claude Haiku 4.5,
+      # which the free tier refuses with HTTP 403 (2026-10-03). To use it, add
+      # paid Gateway credits, then put `anthropic/claude-haiku-4.5` first in
+      # these three lines. A refused model (401/403/404) is skipped.
+      AI_GATEWAY_FALLBACK_MODELS: 'openai/gpt-5-nano'
+      AI_GATEWAY_SCREEN_FALLBACK_MODELS: 'google/gemini-2.5-flash-lite'
       # Only called for a thin 中文 half; falls back to FINAL_SYNTHESIS_MODEL.
-      CHINESE_MIRROR_MODEL: 'anthropic/claude-haiku-4.5'
+      CHINESE_MIRROR_MODEL: 'openai/gpt-5-mini'
       AI_GATEWAY_MAX_OUTPUT_TOKENS: ${{ vars.AI_GATEWAY_MAX_OUTPUT_TOKENS || '32768' }}
       # Tuned in-repo (repo Actions variables held stale lower values and
       # silently clamped collection breadth; see docs/release-v0.19.0.md).

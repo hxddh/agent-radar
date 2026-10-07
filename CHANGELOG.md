@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## v0.26.2 - 2026-10-07
+
+Hotfix for a v0.26.0 regression. Three reports shipped with the 中文 degradation marker that the pre-v0.26 mirror path would have repaired: the dailies for 2026-10-03 and 10-04, and `weekly/2026-W40.md`.
+
+### Fixed
+- **A 403 on the primary model ended the chain.** v0.26.0 skipped a rejected model only on 404 or when it was a fallback; any other client error on the primary was treated as a bad payload. The Gateway account is on the free tier, which answers Claude Haiku 4.5 with `403 Free tier users do not have access to this model`. Haiku was the 中文 mirror's primary, so the call stopped there instead of reaching its GPT-5 Mini fallback. 401, 403 and 404 now mean "this model is unavailable to this account" and are skipped wherever they occur; other client errors on the primary still stop the chain.
+
+### Changed
+- Pins and code defaults name only models the free tier serves: the 中文 mirror is back on `openai/gpt-5-mini`, the synthesis fallback is `openai/gpt-5-nano`, the screening fallback is `google/gemini-2.5-flash-lite`. To use Claude Haiku 4.5, enable paid Gateway credits and put `anthropic/claude-haiku-4.5` first in the three workflow lines.
+
+### Confirmed by the first week on v0.26 (2026-10-01 → 10-06)
+- Every run committed. Daily-only days (10-02, 10-03, 10-06) now run the shared collection and four screening shards: candidate pools of 41, 53 and 49, against 8–14 on September's daily-only days.
+- Cost: 40 GPT-5 Mini calls, 480k input / 207k output tokens in six days, about $2.7/month.
+
 ## v0.26.1 - 2026-10-02
 
 Hotfix: the 2026-10-02 scheduled run was refused at the daily synthesis gate and committed nothing (#107).
