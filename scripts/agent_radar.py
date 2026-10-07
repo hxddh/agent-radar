@@ -58,7 +58,7 @@ INIT_PROTECTED_FILES = {
 INIT_PROTECTED_DIRS = ("prompts", "automation", "docs")
 
 
-__version__ = "0.26.2"
+__version__ = "0.26.3"
 
 CORE_FILES = [
     "README.md",
@@ -859,6 +859,18 @@ def chinese_substance_findings(path: Path, strict: bool = False) -> tuple[list[s
         if thin_days:
             day_warnings.append(
                 f"{path}: day block(s) with a thin 中文 half: {', '.join(thin_days)}"
+            )
+        # A day the runner published with the degradation marker is thin too.
+        # Listed separately (and still only a warning): once the month-wide
+        # check passes, nothing else would mention it (2026-10-03, 10-04).
+        marked_days = [
+            label
+            for label in radar_bilingual.thin_chinese_day_labels(content, include_marked=True)
+            if label not in thin_days
+        ]
+        if marked_days:
+            day_warnings.append(
+                f"{path}: day block(s) published with a recorded 中文 degradation: {', '.join(marked_days)}"
             )
     if not radar_bilingual.missing_chinese_substance(content):
         return [], day_warnings

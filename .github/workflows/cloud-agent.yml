@@ -79,7 +79,7 @@ jobs:
       # Gateway serves on this account's tier: v0.26.0 pinned Claude Haiku 4.5,
       # which the free tier refuses with HTTP 403 (2026-10-03). To use it, add
       # paid Gateway credits, then put `anthropic/claude-haiku-4.5` first in
-      # these three lines. A refused model (401/403/404) is skipped.
+      # these three lines. A refused model (403/404) is skipped.
       AI_GATEWAY_FALLBACK_MODELS: 'openai/gpt-5-nano'
       AI_GATEWAY_SCREEN_FALLBACK_MODELS: 'google/gemini-2.5-flash-lite'
       # Only called for a thin 中文 half; falls back to FINAL_SYNTHESIS_MODEL.
