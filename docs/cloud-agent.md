@@ -54,9 +54,10 @@ MAX_AI_GATEWAY_CALLS_PER_TASK=
 MAX_PROMPT_CHARS=120000
 DRY_RUN_ON_BUDGET_EXCEEDED=true
 # Pinned in cloud-agent.yml since v0.26.0; repository variables no longer override these.
-AI_GATEWAY_FALLBACK_MODELS=anthropic/claude-haiku-4.5,openai/gpt-5-nano
-AI_GATEWAY_SCREEN_FALLBACK_MODELS=anthropic/claude-haiku-4.5,google/gemini-2.5-flash-lite
-CHINESE_MIRROR_MODEL=anthropic/claude-haiku-4.5
+AI_GATEWAY_FALLBACK_MODELS=openai/gpt-5-nano
+AI_GATEWAY_SCREEN_FALLBACK_MODELS=google/gemini-2.5-flash-lite
+CHINESE_MIRROR_MODEL=openai/gpt-5-mini
+# Paid Gateway credits only: put anthropic/claude-haiku-4.5 first in all three.
 AI_GATEWAY_MAX_OUTPUT_TOKENS=32768
 MAX_RELEASE_REPOS=20
 MAX_RELEASES_PER_REPO=3
@@ -126,7 +127,7 @@ Notes on source reliability:
 - Hacker News requires `HN_MIN_POINTS` points (default `10`, pinned in the workflow); `0` restores the unfiltered newest-first feed, which was mostly 0-point posts.
 - Repos found in `agent-watchlist.md` / `sources.md` get a release collector only with at least `MIN_CONTEXT_REPO_STARS` stars (default `200`). `DEFAULT_RELEASE_REPOS` and the `RELEASE_REPOS` variable are never filtered. `research-log.md` is no longer read for repos. Tags are fetched only for repos with no GitHub releases.
 - General feeds (`aws-whats-new`, `producthunt`, `jetbrains-blog`, `meta-ai-blog`, Hugging Face blog) keep only items matching agent topics. Page collectors drop navigation links and list entries under the page's own path first.
-- Model routing (v0.26.0): each gateway call states its role (`screen`, `synthesis`, `mirror`), which picks the fallback chain and timeout. Before, the role was inferred from the model name, so with every stage pinned to `gpt-5-mini` all calls took the screening chain (Gemini Flash Lite) and the 300s screening timeout. A fallback the Gateway rejects (404, or any client error on a non-primary model) is skipped for the rest of the call; a client error on the primary still stops the chain. The 中文 mirror calls `CHINESE_MIRROR_MODEL` (Claude Haiku 4.5), then `FINAL_SYNTHESIS_MODEL`.
+- Model routing (v0.26.0): each gateway call states its role (`screen`, `synthesis`, `mirror`), which picks the fallback chain and timeout. Before, the role was inferred from the model name, so with every stage pinned to `gpt-5-mini` all calls took the screening chain (Gemini Flash Lite) and the 300s screening timeout. A model the Gateway will not serve this account (401/403/404), or any client error on a non-primary model, is skipped for the rest of the call; any other client error on the primary (a malformed payload) still stops the chain. The 中文 mirror calls `CHINESE_MIRROR_MODEL`, then `FINAL_SYNTHESIS_MODEL`. The Gateway account is on the free tier, which refuses Claude models with HTTP 403 (seen 2026-10-03), so every pinned model is one the free tier serves.
 - `collect-status` lists collectors no run has touched in 7 days separately, as retired, renamed, or rotated out, instead of showing them as live outages.
 
 Recommended source budgets (code defaults when `MAX_PUBLIC_SOURCE_ITEMS` is unset):

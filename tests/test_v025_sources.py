@@ -431,21 +431,32 @@ class GatewayFallbackChainTest(unittest.TestCase):
                 cloud_agent_runner.call_ai_gateway_model("p", "primary", role="synthesis")
         self.assertEqual(calls, ["primary"])
 
-    def test_chinese_mirror_uses_its_own_model_then_the_synthesis_model(self) -> None:
+    def test_chinese_mirror_falls_through_a_refused_model(self) -> None:
+        # 2026-10-03: the free-tier Gateway answered Claude Haiku 4.5 with 403.
+        # v0.26.0 treated that like a bad payload and stopped, so the mirror
+        # never reached GPT-5 Mini and the day shipped degraded.
         calls: list[str] = []
 
         def fake(request, timeout=0):
             model = json.loads(request.data)["model"]
             calls.append(model)
             if model == "anthropic/claude-haiku-4.5":
-                raise self._http_error(404)
+                raise self._http_error(403)
             return self._ok()
 
-        env = self._env(FINAL_SYNTHESIS_MODEL="openai/gpt-5-mini", CHINESE_MIRROR_MODEL="")
+        env = self._env(FINAL_SYNTHESIS_MODEL="openai/gpt-5-mini", CHINESE_MIRROR_MODEL="anthropic/claude-haiku-4.5")
         with mock.patch.dict(os.environ, env), \
                 mock.patch.object(cloud_agent_runner, "model_provider", return_value="vercel-ai-gateway"), \
                 mock.patch.object(urllib.request, "urlopen", side_effect=fake), \
                 mock.patch.object(cloud_agent_runner.time, "sleep"):
-            block = cloud_agent_runner.request_chinese_mirror("daily/2026-10.md ## 2026-10-01", "- x", 3)
+            block = cloud_agent_runner.request_chinese_mirror("daily/2026-10.md ## 2026-10-03", "- x", 3)
         self.assertEqual(calls, ["anthropic/claude-haiku-4.5", "openai/gpt-5-mini"])
         self.assertEqual(block, "- 中文")
+
+    def test_empty_mirror_model_uses_the_default(self) -> None:
+        response = {"choices": [{"message": {"content": "{\"chinese_block\": \"- 中文\"}"}}]}
+        with mock.patch.dict(os.environ, {"CHINESE_MIRROR_MODEL": ""}), \
+                mock.patch.object(cloud_agent_runner, "model_provider", return_value="vercel-ai-gateway"), \
+                mock.patch.object(cloud_agent_runner, "call_ai_gateway_model", return_value=response) as call:
+            cloud_agent_runner.request_chinese_mirror("weekly/2026-W40.md", "- x", 3)
+        self.assertEqual(call.call_args.args[1], cloud_agent_runner.DEFAULT_CHINESE_MIRROR_MODEL)
