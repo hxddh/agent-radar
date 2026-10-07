@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v0.26.3 - 2026-10-07
+
+Two findings from the Codex review of #104 and #109, both verified against the code before acting.
+
+### Fixed
+- **A 401 fell through the fallback chain (#109).** A 401 means the AI Gateway key itself is invalid, and every model in the chain is called with the same key, so falling back could never recover: it only added pacing delays and blamed the last fallback model for a credential error. 401 now stops the chain wherever it occurs; 403 and 404 (model unavailable to this account) still fall through.
+- **`validate` was silent about days published with the 中文 degradation marker (#104).** `thin_chinese_day_labels()` skips marked days by default, and once the pooled month-wide check passes nothing else mentions them: `daily/2026-10.md` validated with no warning although 2026-10-03 and 10-04 shipped English-only. Marked days are now listed in their own warning (still a warning, never an error).
+
 ## v0.26.2 - 2026-10-07
 
 Hotfix for a v0.26.0 regression. Three reports shipped with the 中文 degradation marker that the pre-v0.26 mirror path would have repaired: the dailies for 2026-10-03 and 10-04, and `weekly/2026-W40.md`.

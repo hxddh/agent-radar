@@ -460,3 +460,62 @@ class GatewayFallbackChainTest(unittest.TestCase):
                 mock.patch.object(cloud_agent_runner, "call_ai_gateway_model", return_value=response) as call:
             cloud_agent_runner.request_chinese_mirror("weekly/2026-W40.md", "- x", 3)
         self.assertEqual(call.call_args.args[1], cloud_agent_runner.DEFAULT_CHINESE_MIRROR_MODEL)
+
+
+class CodexReviewFollowupTest(unittest.TestCase):
+    """v0.26.3: two findings from the Codex review of #104 and #109."""
+
+    def _http_error(self, code: int):
+        import io
+        import urllib.error
+
+        return urllib.error.HTTPError("https://ai-gateway.vercel.sh", code, "err", {}, io.BytesIO(b"nope"))
+
+    def _run(self, failing: dict[str, int]) -> list[str]:
+        calls: list[str] = []
+
+        def fake(request, timeout=0):
+            model = json.loads(request.data)["model"]
+            calls.append(model)
+            raise self._http_error(failing.get(model, 503))
+
+        env = {"AI_GATEWAY_API_KEY": "x", "AI_GATEWAY_CALL_INTERVAL": "0", "AI_GATEWAY_429_ROUNDS": "1",
+               "AI_GATEWAY_FALLBACK_MODELS": "fallback-a,fallback-b"}
+        with mock.patch.dict(os.environ, env), \
+                mock.patch.object(urllib.request, "urlopen", side_effect=fake), \
+                mock.patch.object(cloud_agent_runner.time, "sleep"):
+            with self.assertRaises(SystemExit):
+                cloud_agent_runner.call_ai_gateway_model("p", "primary", role="synthesis")
+        return calls
+
+    def test_401_on_the_primary_stops_the_chain(self) -> None:
+        # Every model is called with the same Gateway key: a fallback cannot fix it.
+        self.assertEqual(self._run({"primary": 401}), ["primary"])
+
+    def test_401_on_a_fallback_stops_the_chain(self) -> None:
+        self.assertEqual(self._run({"fallback-a": 401}), ["primary", "fallback-a"])
+
+    def test_403_still_falls_through(self) -> None:
+        self.assertEqual(self._run({"primary": 403, "fallback-a": 403}), ["primary", "fallback-a", "fallback-b"])
+
+    def test_validate_reports_marked_days(self) -> None:
+        # A marked English-only day must still surface once the pooled
+        # month-wide check passes (2026-10-03 and 10-04 were silent).
+        good = "".join(
+            f"#### {i}. S\n\n- Signal {i}: vendor shipped feature {i} for coding agents. https://e.com/{i}\n\n"
+            for i in range(1, 7)
+        )
+        cn = "".join(f"#### {i}. 小节\n\n- 第{i}条：厂商为编码代理发布了新功能，值得跟踪。\n\n" for i in range(1, 7))
+        content = (
+            "# Daily Agent Radar - 2026-10\n\n"
+            f"## 2026-10-02\n\n### English\n\n{good}### 中文\n\n{cn}---\n\n"
+            f"## 2026-10-03\n\n### English\n\n{good}### 中文\n\n"
+            f"> {radar_bilingual.CHINESE_MIRROR_DEGRADED_MARKER}，请以上方 `### English` 正文为准。\n\n---\n\n"
+            f"## 2026-10-04\n\n### English\n\n{good}### 中文\n\n{cn}---\n"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "2026-10.md"
+            path.write_text(content, encoding="utf-8")
+            errors, warnings = agent_radar.chinese_substance_findings(path, strict=True)
+        self.assertEqual(errors, [])
+        self.assertTrue(any("recorded 中文 degradation: 2026-10-03" in w for w in warnings), warnings)

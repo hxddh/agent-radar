@@ -59,7 +59,7 @@ DEFAULT_CHEAP_SCREEN_MODEL = "openai/gpt-5-mini"
 DEFAULT_MAIN_RESEARCH_MODEL = "openai/gpt-5-mini"
 DEFAULT_FINAL_SYNTHESIS_MODEL = "openai/gpt-5-mini"
 # Fallbacks are walked in order; a model the Gateway will not serve this
-# account (401/403/404) is skipped rather than ending the chain. Every entry
+# account (403/404) is skipped rather than ending the chain. Every entry
 # must be reachable on the account's Gateway tier: v0.26.0 led both chains with
 # Claude Haiku 4.5, which the free tier refuses (HTTP 403). Put a paid model
 # here only after enabling paid Gateway credits.
@@ -6533,7 +6533,10 @@ def ai_gateway_headers() -> dict[str, str]:
 MODEL_ROLES = ("screen", "synthesis", "mirror")
 # Statuses that say "this model is not available to this account", as opposed
 # to "this request is malformed" (400/409/422), which no other model would fix.
-MODEL_ACCESS_STATUS = frozenset({401, 403, 404})
+# 401 is not one: it means the Gateway key itself is invalid, and every model
+# in the chain is called with the same key, so falling back only adds pacing
+# delays and blames the last model for a credential error.
+MODEL_ACCESS_STATUS = frozenset({403, 404})
 
 
 def model_role(model: str, role: str | None = None) -> str:
@@ -6657,7 +6660,7 @@ def call_ai_gateway_model(prompt: str, model: str, role: str | None = None) -> d
     retryable_status = {408, 429, 500, 502, 503, 504}
     role = model_role(model, role)
     models = ai_gateway_fallback_models(model, role)
-    # A model the Gateway will not serve to this account (401/403/404), or any
+    # A model the Gateway will not serve to this account (403/404), or any
     # client error on a fallback, is dropped for the rest of the call instead
     # of ending it. A 403 on the primary is about the model, not the payload:
     # v0.26.0 stopped there, so when the free-tier account was refused Claude
@@ -6711,7 +6714,7 @@ def call_ai_gateway_model(prompt: str, model: str, role: str | None = None) -> d
             except (TypeError, ValueError):
                 retry_after_hint = 0
             if exc.code not in retryable_status:
-                if exc.code in MODEL_ACCESS_STATUS or candidate_model != model:
+                if exc.code != 401 and (exc.code in MODEL_ACCESS_STATUS or candidate_model != model):
                     dead_models.add(candidate_model)
                     if len(dead_models) < len(models):
                         continue
