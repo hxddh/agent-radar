@@ -965,3 +965,19 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Evidence class: Social / Bluesky
   - Evidence strength: Medium
   - Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+
+- **MCP connector regressions — Reddit field report (2026-10-08)**
+  - Summary: Operators report custom MCP connectors broke after runtime upgrades to Claude Code and similar runtimes.
+  - Practical note: snapshot workspaces before runtime upgrades; add connector contract smoke tests (handshake + minimal tool-call) to CI; pin connector-compatible runtime versions in production.
+  - Evidence strength: Medium (community reports). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Retrieval interruptions — Bluesky TLS fingerprinting note (2026-10-05/08)**
+  - Summary: Edge TLS fingerprinting caused scraping/retrieval failures (StackOverflow example), producing silent degradation in retrieval-based context for agents.
+  - Practical note: instrument retrieval success rate telemetry, maintain mirrored caches for critical corpora, and add fingerprint-aware fetch tests to CI.
+  - Evidence strength: Medium (social). Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
+
+- **Sandbox lifecycles — Agent Workbench recipe (E2B, 2026-10-07)**
+  - Summary: pause/fork and sandbox-per-chat lifecycle patterns reduce blast radius and enable reproducible experiments.
+  - Practical note: implement automated pause/fork that snapshots state and rehydrates a fork for postmortem; wire into CI as a smoke-test step for connector upgrades.
+  - Evidence strength: Medium-Strong (operator guide). Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api

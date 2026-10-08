@@ -510,16 +510,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## GitHub Copilot — Agentic autofix now uses Copilot Memory (promoted 2026-09-27)
-
-- What it is: GitHub Copilot's agentic autofix feature has been updated to persist autofix decisions and provenance into Copilot Memory (integration announced in changelog).
-- Why it matters: Memory integration changes the lifecycle and residency of autofix histories and provenance. Persisted autofix memory affects auditability (who/what produced a fix), rollback paths (replay or undo), privacy (persisted code/contexts), and storage budgeting for operator environments that run large fleets of automated autofix runs.
-- Operational impact: operators must treat Copilot Memory entries created by autofix as agent artifacts: include them in snapshot/retention policies, export-to-customer-bucket options, and secrets scans. Add tests that validate that autofix memory exports can be scrubbed or redacted before long-term archival.
-- Evidence strength: Strong
-- Relevance score: 9
-- Promotion: promoted 2026-09-27 — added to watchlist due to direct operator governance and forensic impact.
-- Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory
-
-
+- Recent changes: GitHub announced two operational deltas (2026-10-07): local sandboxing for Copilot is now generally available, and the Copilot CLI can discover local models for on-device routing. Both moves shift some execution from cloud-hosted sandboxes to operator-managed local environments and caches.
+- User impact: Reduced remote egress for many coding tasks but increased local artifact/forensics burden (container/VM images, local model caches). Operators will see fewer outbound telemetry signals for some flows and more host-local artifacts to govern.
+- Infra implication: Add local-image pinning, local-model version governance, and pre-upgrade connector contract tests. Ensure CI smoke tests exercise local sandbox images and model-discovery routing.
+- Evidence strength: Strong (GitHub changelogs). Sources: https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available ; https://github.blog/changelog/2026-10-07-discover-local-models-in-github-copilot-cli
 ## OpenAI — Dots (scr-01d2f3)
 - Recent changes: Product launch materials for Dots published; OpenAI also published EU text-provenance guidance that operators should map into export manifests. OpenAI Dots formalizes always-on persistent assistants with scheduled tasks and long-window state. Freshness: follow-up (vendor investigation and press coverage ongoing).
 - Why it matters: Persistent assistants create new operational artifact classes (assistant-state snapshots, scheduled output archives, scheduled telemetry) that require explicit retention, export hooks, and provenance metadata for legal/forensic use. Operators must plan snapshot retention, add provenance manifests to exports, and require pre-deploy canaries for any persistent assistant enablement.

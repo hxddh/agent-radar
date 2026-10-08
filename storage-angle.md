@@ -1232,3 +1232,14 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong
   - Source: https://www.npmjs.com/package/%40browserstack/mcp-server
   - Watch trigger: BrowserStack docs show default sink configuration for persisted artifacts.
+
+
+- Persistent assistant artifacts (OpenAI Dots): add structured snapshot manifests and TTLed scheduled-output stores.
+  - Implication: object-storage schemas must include provenance fields and quick indexability for forensic queries (agent-id, timestamp, trigger, args).
+  - Watch trigger: vendor publishes snapshot/export API or retention defaults; or scheduled-output archives appear in telemetry counts.
+  - Source: https://openai.com/index/introducing-dots/ ; https://news.ycombinator.com/item?id=49919026
+
+- Local sandbox artifacts (GitHub Copilot): local container images and model caches require host retention and scanning policies.
+  - Implication: local retention/forensics becomes first-class; backups and secure deletion policies for local model caches are needed.
+  - Watch trigger: telemetry shows growth in local-model cache sizes OR vendor publishes local cache directory guidance.
+  - Source: https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available ; https://github.blog/changelog/2026-10-07-discover-local-models-in-github-copilot-cli

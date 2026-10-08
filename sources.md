@@ -1921,3 +1921,18 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - Community / operator guide: Build an Agent Workbench on OpenAI's Agents API (E2B). Evidence strength: Medium-Strong. Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api
 - Community / discussion: Reddit thread on broken MCP connectors. Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 - Community / discussion: Bluesky field reports (TLS fingerprinting; DNS tunneling). Evidence strength: Medium. Sources: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r ; https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+
+### Added 2026-10-08 (source-sweep)
+
+- [mainstream_product / discussion] OpenAI Dots — Hacker News discussion spike. Evidence strength: Medium-Strong (community surge; discussion carries operator sentiment). Source: https://news.ycombinator.com/item?id=49919026
+
+- [infra_primitive / advisory] Flowise — NodeVM sandbox escape (GHSA-9gvv-qjj3-2p6g / CVE-2026-73483). Evidence strength: Strong (GitHub Advisory). Source: https://github.com/advisories/GHSA-9gvv-qjj3-2p6g
+
+- [infra_primitive / advisory] Flowise — prompt-injection → RCE & SSRF (GHSA-w7x8-q2gp-5cgg / CVE-2026-73487). Evidence strength: Strong (GitHub Advisory). Source: https://github.com/advisories/GHSA-w7x8-q2gp-5cgg
+
+- [mainstream_product / security] GitHub Security Lab — AI-powered fuzzing with the Taskflow Agent (vendor security blog demonstrating agent-assisted appsec tooling). Evidence strength: Strong. Source: https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/
+
+- [user_workflow / discussion] Playbook vs Agent Skill (Bluesky field post; operator test showing different success rates). Evidence strength: Medium (social/operator report). Source: https://bsky.app/profile/pawn002.bsky.social/post/3mxc3fycnjk2a
+
+- [user_workflow / ops-guidance] Agent sprawl: ownership, review points, retirement rules (Bluesky). Evidence strength: Medium (operator practice note). Source: https://bsky.app/profile/tituskellog.bsky.social/post/3mxdstikd4s2l
