@@ -1243,3 +1243,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Implication: local retention/forensics becomes first-class; backups and secure deletion policies for local model caches are needed.
   - Watch trigger: telemetry shows growth in local-model cache sizes OR vendor publishes local cache directory guidance.
   - Source: https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available ; https://github.blog/changelog/2026-10-07-discover-local-models-in-github-copilot-cli
+
+
+- 2026-10-09 — Persistent-assistant snapshotting (OpenAI Dots / Gemini at Work)
+  - Signal: Dots and Workspace-integrated agents increase long-lived state and scheduled-output artifacts.
+  - Storage implication: Operators must define snapshot schema (manifest fields), object-store locations, TTLs, and versioning; snapshots should be tamper-evident and linked to audit metadata (who/why/tool-call traces).
+  - Evidence strength: Strong (vendor + press)
+  - Source: https://openai.com/index/introducing-dots/ ; https://techcrunch.com/2026/10/08/google-brings-agentic
+  - Watch trigger: vendor SDKs or docs publishing an explicit snapshot/export manifest or adding SDK support for snapshot exports.
+
+- 2026-10-09 — Forensic sink standardization (Anthropic + Cloudflare guidance)
+  - Signal: Anthropic policy updates and Cloudflare guidance point to a converging need for canonical audit sinks.
+  - Storage implication: Operators should standardize audit sink formats and retention across vendors and create ingestion pipelines that tag artifacts with provenance fields before archival.
+  - Evidence strength: Strong
+  - Source: https://www.anthropic.com/news/2026-usage-policy-update ; https://blog.cloudflare.com/agentic-security-operations/
+  - Watch trigger: publication of vendor-provided audit field lists or a cross-vendor guidance doc for audit manifest fields.

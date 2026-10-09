@@ -1,6 +1,6 @@
 # Source Health
 
-Last checked: 2026-10-08
+Last checked: 2026-10-09
 
 | Source | Status | Detail |
 | --- | --- | --- |
@@ -32,7 +32,7 @@ Last checked: 2026-10-08
 | page:xai-news | ok |  |
 | page:e2b-blog | ok |  |
 | page:mistral-news | ok |  |
-| page:github-trending | ok |  |
+| page:github-trending | error | The read operation timed out |
 | page:modal-blog | ok |  |
 | page:daytona-blog | ok |  |
 | page:openrouter-announcements | ok |  |

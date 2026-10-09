@@ -981,3 +981,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Summary: pause/fork and sandbox-per-chat lifecycle patterns reduce blast radius and enable reproducible experiments.
   - Practical note: implement automated pause/fork that snapshots state and rehydrates a fork for postmortem; wire into CI as a smoke-test step for connector upgrades.
   - Evidence strength: Medium-Strong (operator guide). Source: https://e2b.dev/resources/build-an-agent-workbench-on-openais-agents-api
+
+
+- 2026-10-09 — MCP connector regressions (community field reports): multiple operators reported that custom MCP connectors ceased working after recent runtime/connector updates. Symptom: handshake/auth failures and retrieval breakage. Mitigation used by operators: snapshot connector configs prior to upgrades, run connector-contract smoke tests against staging runtimes, and pin connector versions in CI. Evidence strength: Medium (Reddit, Bluesky). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-10-09 — Dots long-window budgeting trick: when enabling scheduled jobs for persistent assistants, configure object-store TTLs and add budget alarms for long-window logs/outputs to avoid runaway storage costs. Evidence strength: Medium-Strong (HN discussion + vendor docs). Source: https://openai.com/index/introducing-dots/ ; https://news.ycombinator.com/item?id=49919026
