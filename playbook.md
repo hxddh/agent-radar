@@ -916,3 +916,16 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   1. Provision ephemeral sandbox per chat with isolated memory and no external egress by default.
   2. Use a "pause" checkpoint to snapshot agent state after each tool-call; allow a human or automation to "fork" that snapshot into a test branch for replay.
   3. Require automated contract tests for connectors to run on each fork before promoting outputs to persistent assistants.
+
+
+## Release pin (operator playbook candidate)
+
+- When useful: Before upgrading runtimes, SDKs, or changing connector endpoints for agents that rely on MCP/connector contracts.
+- What it is: ship model version + prompt manifest + connector/tool manifest together as a single release artifact (release pin). Include an explicit compatibility test that validates connector handshake, sample tool-call, and audit-sink write.
+- Evidence: community incidents of connector regressions after runtime upgrades; vendor runtime changes (Anthropic, vercel-labs, Claude Code reports).
+- Should promote to playbook? yes — immediate operational value.
+- Quick steps:
+  1. Produce a release bundle: (model version, prompt manifest, connector/tool versions, acceptance-test SHA).
+  2. Run connector-contract CI (handshake + sample tool-call + audit-sink write) in staging.
+  3. Snapshot workspace and connector state.
+  4. Roll forward only when all tests pass; keep automated rollback on failed runs.

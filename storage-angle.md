@@ -1258,3 +1258,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong
   - Source: https://www.anthropic.com/news/2026-usage-policy-update ; https://blog.cloudflare.com/agentic-security-operations/
   - Watch trigger: publication of vendor-provided audit field lists or a cross-vendor guidance doc for audit manifest fields.
+
+
+- 2026-10-10 — Persistent assistant artifacts
+  - Signal: vendor launches (OpenAI Dots; Google Gemini at Work) imply new long-lived artifact classes: assistant-state snapshots, scheduled-output archives, and long-window telemetry.
+  - Storage implication: require versioned snapshot stores, exportable manifests including model/prompt/tool versions, and searchable indices for scheduled outputs to support forensic reconstruction and audit.
+  - Evidence strength: Strong (vendor posts) + Medium (community)
+  - Sources: https://openai.com/index/introducing-dots/ ; https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026
+  - Watch trigger: vendor publishes snapshot/export API or manifest schema; absence of such API within next vendor guidance cycle increases operational risk.
+
+- 2026-10-10 — Edge/browser runtime provenance
+  - Signal: browser-edge runtime releases and browser cost experiments (Vercel agent-browser v0.39.0; Asana/OpenAI browser agent cost delta) indicate more work will execute client-side.
+  - Storage implication: split-residency requires cross-boundary provenance (client ↔ server receipts) and reconciled retention accounting; operators should ensure server-side receipts exist for client-originated actions.
+  - Evidence strength: Strong
+  - Sources: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.0 ; https://openai.com/index/asana-browser-agent
+  - Watch trigger: reports of missing server-side receipts for client-originated actions or inability to reconstruct client-driven changes from server logs.

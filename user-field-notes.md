@@ -986,3 +986,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - 2026-10-09 — MCP connector regressions (community field reports): multiple operators reported that custom MCP connectors ceased working after recent runtime/connector updates. Symptom: handshake/auth failures and retrieval breakage. Mitigation used by operators: snapshot connector configs prior to upgrades, run connector-contract smoke tests against staging runtimes, and pin connector versions in CI. Evidence strength: Medium (Reddit, Bluesky). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 
 - 2026-10-09 — Dots long-window budgeting trick: when enabling scheduled jobs for persistent assistants, configure object-store TTLs and add budget alarms for long-window logs/outputs to avoid runaway storage costs. Evidence strength: Medium-Strong (HN discussion + vendor docs). Source: https://openai.com/index/introducing-dots/ ; https://news.ycombinator.com/item?id=49919026
+
+
+- 2026-10-10 — MCP connector regressions (community reports)
+  - Summary: multiple operators reported custom MCP connectors failing after runtime upgrades. Symptoms include handshake failures, TLS/fingerprint mismatches, and unexpected protocol deltas.
+  - Practical mitigation tried by operators: pin connector+runtime combos; add a connector handshake smoke test that runs on every upgrade; pre-upgrade workspace snapshot & rollback plan.
+  - Evidence strength: Medium (Reddit + Bluesky field reports)
+  - Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r

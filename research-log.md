@@ -4364,3 +4364,11 @@ Notes: runner/web access limitation declared in repo context; research-log recor
   - Source: https://openai.com/index/introducing-dots/ ; https://news.ycombinator.com/item?id=49919026
 
 - Note: several infra / eval candidates from the screening pass (agentic-eval, detect-coding-agent, memOS variants) remain in the candidate inbox and will be reassessed for promotion in weekly passes.
+
+
+- **Daily pass 2026-10-10**: quick verification & candidate refresh for high-priority mainstreams.
+  - Items checked: Google Gemini at Work (enterprise integration); OpenAI/Asana browser agent cost test (GPT-6.1 Sol ~76x cost delta); vercel-labs/agent-browser v0.39.0; Anthropic containment press + SDK mitigations; Cloudflare on-demand profiling for Workers.
+  - Community evidence reviewed: Reddit MCP connector thread (connector regressions), Bluesky TLS/tunneling reports, HN Dots discussion spike.
+  - Follow-ups noted: Map Microsoft Copilot changelogs (missing this window); extract vendor snapshot/export APIs for Dots and Gemini; schedule containment smoke tests for Anthropic SDK updates.
+  - Candidate housekeeping: updated last_checked_at for OpenAI Dots and MCP connector candidates; no automatic promotions this run.
+  - Source summary: cloud.google.com blog; openai.com/asana-agent; github.com/vercel-labs/agent-browser/releases/tag/v0.39.0; nytimes; blog.cloudflare.com; reddit + bsky + hn
