@@ -14,10 +14,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic published containment engineering guidance and continues to ship runtime updates (Sonnet/Opus series). New 2026-10 evidence clarifies stricter default containment and improved auditing for tool-calls; operators report connector regressions after upgrades (community reports). Immediate action: pin runtimes for connectors, add connector contract tests to CI, snapshot workspaces before upgrades, and map Anthropic's recommended audit sink fields to operator log pipelines.
-- Freshness: checked 2026-10-04 (new evidence: Anthropic containment engineering post)
-- Evidence strength: Strong (vendor engineering post) + Medium (community reports)
-- Source: https://www.anthropic.com/engineering/how-we-contain-claude
+- Recent changes: Anthropic published Claude Code v2.1.296 (2026-10-11). Runtime/conductor deltas can change tool-calling semantics, session streaming, and containment behavior; previous operator reports show connector regressions after upgrades.
+- Immediate action: pin Claude Code runtimes in production, run connector compatibility smoke tests in staging, snapshot active workspaces pre-upgrade, and map Anthropic's recommended audit sink fields to operator log pipelines.
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.296
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls
@@ -27,8 +27,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Source: https://cursor.com/blog/rollouts-and-security-reviewer
 ## Devin / Cognition
 - Category: Agent runtime / platform
-- Maturity: Deferred; no fresh public changelog located during this pass.
-- Recent changes: No substantive public updates since last entry; last‑checked: 2026-09-13. Action: deprioritized pending vendor changelog or operator reports. Evidence strength: None (no public updates).
+- Maturity: Deferred; public changelog silent.
+- Recent changes: No substantive public updates since last entry; last‑checked: 2026-09-13. Action: deprioritized pending vendor changelog or operator reports; retain watchlist entry but mark as "deprioritized" until vendor posts evidence. Evidence strength: None
+- replace_section anchor: `## Devin / Cognition`
 ## GitHub Copilot / Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI/GitHub ecosystems.
@@ -37,23 +38,37 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Last-checked: 2026-09-20
 - Source: https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14 ; https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
 ## Replit Agent
-- Category: Cloud IDE / coding agent
-- Maturity: Active historically; no fresh public changelog in this pass.
-- Recent changes: No new vendor changelog found; last‑checked: 2026-09-13. Status: deprioritized until vendor publishes new release or operator reports. Evidence strength: None (no update).
+- Category: Platform-hosted agent / IDE-like runtime
+- Maturity: Active
+- Recent changes: Replit platform changelog (2026-10-09) indicates platform updates that may change hosted agent dev/CI workflows; operators hosting agents on Replit should re-run deployment tests and review default network/egress rules. Last‑checked: 2026-10-09. Evidence strength: Medium-Strong
+- Action: Validate hosted-agent network egress defaults and snapshot/backup hooks on Replit-hosted projects.
+- replace_section anchor: `## Replit Agent`
 ## Warp
-- Category: Terminal / developer productivity agent
-- Maturity: Previously active; no public updates found during this pass.
-- Recent changes: last‑checked: 2026-09-13. Status: deprioritized; recheck on vendor changelog. Evidence strength: None.
+- Category: Terminal / developer workflow agent
+- Maturity: No fresh public changelog located during this pass; last‑checked: 2026-09-13.
+- Action: mark deprioritized pending vendor changelog; recommend periodic (monthly) recheck. Evidence strength: None
+- replace_section anchor: `## Warp`
 ## Amp
-- Category: Agent / productivity assistant
-- Maturity: No fresh public changelog during this pass. Last‑checked: 2026-09-13. Status: deprioritized until new evidence appears.
+- Category: Agent / productivity tool
+- Maturity: No fresh public changelog located during this pass; last‑checked: 2026-09-13.
+- Action: deprioritized until vendor publishes product changes or operator reports. Evidence strength: None
+- replace_section anchor: `## Amp`
 ## Factory
-- Category: Agent orchestration / platform
-- Maturity: No fresh public changelog during this pass. Last‑checked: 2026-09-13. Status: deprioritized until vendor publishes updates or operator reports. Evidence strength: None.
+- Category: Agent orchestration / workflow
+- Maturity: No fresh public changelog located during this pass; last‑checked: 2026-09-13.
+- Action: deprioritized pending vendor updates. Evidence strength: None
+- replace_section anchor: `## Factory`
 ## Raycast AI
-- Category: Desktop assistant / agent integration
-- Maturity: Previously active; no new public changelog found this pass. Last‑checked: 2026-09-13. Status: deprioritized pending vendor updates. Evidence strength: None.
+- Category: Desktop/IDE assistant
+- Maturity: No public updates since 2026-09-13 in current snapshot.
+- Action: deprioritized for this cycle; re-evaluate if vendor posts runtime/sandbox changes. Evidence strength: None
+- replace_section anchor: `## Raycast AI`
 ## Vercel AI / Sandbox-Related Agent Workflow
+- Category: Sandbox / managed agents
+- Maturity: GA/active for managed sandbox use-cases
+- Recent changes: Vercel agent-browser v0.39.0 and sandbox-memory/observability updates observed (2026-10); operators should parse changelog diffs for retention/observability defaults, map preview export sinks to short‑TTL object storage, and re-run deployment tests in staging. Evidence strength: Strong
+- Action: review Vercel sandbox export TTL defaults and integrate their export hooks into retention playbooks.
+- replace_section anchor: `## Vercel AI / Sandbox-Related Agent Workflow`
 ## Vercel AI / Sandbox-Related Agent Workflow
 
 - What it is: Vercel's AI Gateway, SDK and sandbox integrations for deploying agent workloads and vision models at the edge.
@@ -515,10 +530,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Infra implication: Add local-image pinning, local-model version governance, and pre-upgrade connector contract tests. Ensure CI smoke tests exercise local sandbox images and model-discovery routing.
 - Evidence strength: Strong (GitHub changelogs). Sources: https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available ; https://github.blog/changelog/2026-10-07-discover-local-models-in-github-copilot-cli
 ## OpenAI — Dots (scr-01d2f3)
-- Recent changes: Product launch materials for Dots published; OpenAI also published EU text-provenance guidance that operators should map into export manifests. OpenAI Dots formalizes always-on persistent assistants with scheduled tasks and long-window state. Freshness: follow-up (vendor investigation and press coverage ongoing).
-- Why it matters: Persistent assistants create new operational artifact classes (assistant-state snapshots, scheduled output archives, scheduled telemetry) that require explicit retention, export hooks, and provenance metadata for legal/forensic use. Operators must plan snapshot retention, add provenance manifests to exports, and require pre-deploy canaries for any persistent assistant enablement.
-- Evidence strength: Strong
-- Source: https://openai.com/index/introducing-dots/ ; https://openai.com/index/eu-text-provenance
+- Recent changes: OpenAI published Dots launch materials describing always-on assistants, scheduled tasks, and export/backup hooks. Freshness: follow-up (previously covered 2026-10-04); today's delta: map artifact classes into retention/forensics playbooks.
+- Operational implication: new long-lived state requires retention policies, export manifest support, and telemetry schema extensions for agent-state snapshots.
+- Evidence strength: Strong (vendor docs) + Medium-Strong (HN/social discussion)
+- Source: https://openai.com/index/introducing-dots/
 ## Microsoft Foundry (scr-2b3c4d5e)
 
 - What it is: Microsoft Foundry — Routines / automated assistant primitives and runtime controls for hosted agents.
@@ -564,3 +579,13 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Relevance score: 8
 - Recommended immediate actions: run bundler/worker compatibility tests in staging; verify preview export sinks and default TTLs; add audio/transcript retention and PII-scan steps to snapshot playbooks.
 - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0
+
+
+## Mistral — Studio & Vibe
+
+- What it is: Vendor product suite (Studio & Vibe) for developing, testing, and running long‑horizon agents and agent-driven workflows. Tooling targets the full lifecycle (model-forge, workspace orchestration, run harnesses) and advertises integrations for dev/test pipelines and operator controls.
+- Why it matters: Introduces a first-party vendor flow for long-running agent development and runtime orchestration. This can meaningfully shift operator workflows (CI/staging/hardening steps), sandboxing expectations, and how memory/connector integrations are exercised in production. It is an operator-facing product that operators will need to evaluate for containment, export hooks, and snapshot compatibility.
+- Evidence strength: Strong (vendor product page)
+- Relevance score: 8
+- Follow-up / watch triggers: documentation or release notes that describe default export/retention hooks, sandbox defaults, memory export formats, or MCP/connector integration examples. Hands-on eval recommended to validate containment/export semantics.
+- Source: https://mistral.ai/products/studio/

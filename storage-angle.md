@@ -1273,3 +1273,36 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong
   - Sources: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.0 ; https://openai.com/index/asana-browser-agent
   - Watch trigger: reports of missing server-side receipts for client-originated actions or inability to reconstruct client-driven changes from server logs.
+
+
+- Persistent assistant snapshots (2026-10-11): OpenAI Dots introduces scheduled tasks and long-window state; storage teams should prepare tiered retention policies and snapshot/manifest schemas that include provenance fields (agent-version, connector-version, and tool-call trace ids).
+  - Watch trigger: vendor publishes Dots export API with manifest fields or default TTLs.
+  - Source: https://openai.com/index/introducing-dots/ (Evidence: Strong)
+
+- Per-agent snapshot scale (2026-10-11): Bedrock-hosted agent fleets (Postman on Bedrock) show that snapshotting at scale requires per-tenant cost allocation tags and lifecycle rules to avoid runaway storage costs.
+  - Watch trigger: published Bedrock guidance or third-party reports quantifying per-agent snapshot volumes.
+  - Source: https://aws.amazon.com/blogs/machine-learning/how-postman-runs-agent-mode-for-40-million-developers-on-amazon-bedrock/ (Evidence: Strong)
+
+
+## Notes (2026-10-11)
+
+- Persistent assistants (OpenAI Dots) create durable snapshot and scheduled-output artifact classes. Operational requirements: manifest schema with timestamps & provenance, per-agent retention TTLs, and per-agent cost allocation tags for object stores (S3/GCS/R2).
+- At Bedrock / fleet scale, index snapshots for incremental retrieval and legal preservation; avoid naive full-snapshot retention which scales linearly with agent count.
+- Action: add per-agent snapshot quotas, TTL policies, and storage cost-alerting to the standard operator runbook.
+
+
+---
+
+### 2026-10-11 Promotions affecting storage angle
+
+- Cloudflare — Containers cross-tenant data exposure fix (promoted: scr-6f708192)
+  - What it is: Cloudflare published a fix addressing a cross-tenant data exposure in Containers that could allow artifacts from one tenant to be exposed to another.
+  - Storage implications: Operators must re-check container-hosted agent workspace defaults, preview/export sinks, and any automatic artifact export paths. Immediate actions: verify that platform previews and container artifacts are not landing in shared buckets, ensure per-tenant object-store prefixes are enforced, enable object-level access logging for container-exported artifacts, and run retroactive scans for leaked artifacts. Consider adding an automated CI test that validates per-tenant prefixing for any vendor-managed export hooks.
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
+
+- Manifold — Git-based repo-hijack analysis (promoted: scr-4d5e6f7a)
+  - What it is: Detailed analysis describing how untrusted Git repos can be hijacked or trojaned to cause agent toolchains to execute arbitrary code via repo-sourced dependencies or automation.
+  - Storage implications: Supply‑chain repo-hijacks increase the need for immutable forensic prefixes, signed/pinned bundle artifacts, and recorded provenance metadata for snapshots (AGENTS.md SHA, connector pins, runtime version). Operators should treat repo-sourced artifacts as sensitive: enforce pinned revisions or signed bundles before import into workspaces, snapshot any repo-derived artifacts into write-once forensic prefixes, and run secrets scans on repo-supplied artifacts prior to retention. Add a policy to require second-source validation for any repo-fed agent run that writes artifacts to durable storage.
+  - Evidence strength: High (detailed write-up)
+  - Source: research-log.md (scr-4d5e6f7a)

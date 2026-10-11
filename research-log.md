@@ -4372,3 +4372,29 @@ Notes: runner/web access limitation declared in repo context; research-log recor
   - Follow-ups noted: Map Microsoft Copilot changelogs (missing this window); extract vendor snapshot/export APIs for Dots and Gemini; schedule containment smoke tests for Anthropic SDK updates.
   - Candidate housekeeping: updated last_checked_at for OpenAI Dots and MCP connector candidates; no automatic promotions this run.
   - Source summary: cloud.google.com blog; openai.com/asana-agent; github.com/vercel-labs/agent-browser/releases/tag/v0.39.0; nytimes; blog.cloudflare.com; reddit + bsky + hn
+
+
+- **Anthropic — Claude Code v2.1.296** (scr-claude-code-v2.1.296): release may change containment/runtime semantics; immediate operator action: run connector compatibility tests and pin runtimes in production. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-10-11; last_checked_at: 2026-10-11; defer_count: 0; stale_after_days: 30.
+  - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.296
+
+- **OpenAI — Dots follow-up (operational artifacts)**: cataloged Dots as introducing persistent assistant artifact classes (snapshots, scheduled-output archives). Evidence strength: Strong; follow-up: extract export/manifest schema when published. candidate_seen_at: 2026-10-11; last_checked_at: 2026-10-11; promotion_status: candidate.
+  - Source: https://openai.com/index/introducing-dots/
+
+- **Flowise GHSA advisories**: sandbox escape and prompt-injection escalation advisories require containment checklist updates. Evidence strength: Strong; candidate_seen_at: 2026-10-08; last_checked_at: 2026-10-11; promotion_status: candidate; follow-up: map fleet versions and apply patches.
+  - Sources: https://github.com/advisories/GHSA-9gvv-qjj3-2p6g ; https://github.com/advisories/GHSA-w7x8-q2gp-5cgg
+
+
+- **Corroboration: Cloudflare agentic security operations guide (scr-3a1e6b9)**: primary vendor blog located and confirmed. Evidence strength: Strong; promotion_status: candidate->accepted-for-followup. Follow-up: extract operational patterns for evidence-grounded security harnesses. Source: https://blog.cloudflare.com/agentic-security-operations/ ; candidate_seen_at: 2026-10-11; last_checked_at: 2026-10-11.
+
+- **MCP connector regressions (community follow-up)**: Reddit thread corroborates multiple operator reports of custom MCP connector breakage after runtime upgrades. Evidence strength: Medium; action: add connector-contract tests to playbook and open vendor tickets where available. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; candidate_seen_at: 2026-10-11; last_checked_at: 2026-10-11; promotion_status: candidate.
+
+- **mksglu/context-mode '98%' claim (number-check pending)**: screening noted a repo claiming '98% outp' not found in snapshot; Number check: unable to verify the numeric claim in the cited snapshot; label: Number check pending-official. Action: request clarification from the repository authors or locate primary benchmark snapshot before trusting. candidate_seen_at: 2026-10-10; last_checked_at: 2026-10-11; promotion_status: deferred; follow-up needed: 7 days.
+
+- **Modal scale-to-1M sandboxes claim (number-check)**: repo/blog claims extreme scale; our number-checker flagged mismatch vs snapshot titles. Action: flag for verification; do not rely on absolute 1M figure until primary telemetry is published. Source: https://modal.com/blog/scaling-to-1-million-concurrent-sandboxes-in-seconds ; candidate_seen_at: 2026-10-10; last_checked_at: 2026-10-11.
+
+
+- **Mistral — Studio & Vibe** (scr-8a9012b4): Promotion action: promoted -> added to agent-watchlist.md. Why it matters: vendor product pages show Studio & Vibe enable long-horizon agent dev/test/run workflows and have direct operator impact on sandboxing, memory, and connector integrations; promoted to watchlist to track operator impact and follow-up. Evidence strength: Strong; Relevance score: 8. candidate_seen_at: 2026-09-28; last_checked_at: 2026-10-11; promotion_status: promoted; defer_count: 0; stale_after_days: 30. Source: https://mistral.ai/products/studio/
+
+- **Cloudflare — Containers cross-tenant data exposure fix** (scr-6f708192): Promotion action: promoted -> added to storage-angle.md and radar.md. Why it matters: security advisory fixes cross-tenant exposure for container-hosted artifacts; immediate storage & export/retention audit required for operator buckets and preview/export sinks. Evidence strength: Strong; Relevance score: 8. candidate_seen_at: 2026-09-28; last_checked_at: 2026-10-11; promotion_status: promoted; defer_count: 0; stale_after_days: 30. Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
+
+- **Manifold — Git-based repo-hijack analysis (supply-chain vector)** (scr-4d5e6f7a): Promotion action: promoted -> added to radar.md and storage-angle.md for supply-chain / provenance implications. Why it matters: concrete repo-hijack mechanics require pinned/signed bundles and strengthened snapshot provenance for forensic readiness; promotes operator mitigations (signed-bundles, pinning, CI checks). Evidence strength: High; Relevance score: 9. candidate_seen_at: 2026-09-28; last_checked_at: 2026-10-11; promotion_status: promoted; defer_count: 0; stale_after_days: 30. Source: research-log.md (scr-4d5e6f7a)

@@ -929,3 +929,22 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
   2. Run connector-contract CI (handshake + sample tool-call + audit-sink write) in staging.
   3. Snapshot workspace and connector state.
   4. Roll forward only when all tests pass; keep automated rollback on failed runs.
+
+
+## Connector compatibility smoke test (playbook candidate)
+
+- When useful: before upgrading agent runtimes or rolling out new MCP connector versions to production.
+- Steps:
+  1. Take a workspace snapshot of active agent sessions.
+  2. Run a matrix of connector integration tests against the staging runtime (tool calls, auth flows, egress rules).
+  3. Validate expected artifact formats (session streams, tool-call records) and audit sink fields.
+  4. If any test fails, abort rollout and trigger rollback; record detailed diffs for vendor bug reports.
+- Evidence: community reports of connector regressions (Reddit) and vendor runtime churn (Anthropic release v2.1.296).
+- Should promote to playbook? yes (operationally actionable and low cost to run)
+
+
+## Week 2026-10-11 playbook deltas
+
+- Pre-upgrade checklist: snapshot active workspaces -> run connector contract smoke tests -> stage rollout behind vendor Security Reviewer / internal gate -> monitor export/manifest generation -> rollback plan.
+- Connector CI: add a small matrix that runs each custom MCP connector against the latest stable runtime + latest prerelease to detect breaking changes early.
+- Budgeting: require per-agent budget windows and token/compute circuit-breakers in orchestration runtimes.

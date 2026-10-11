@@ -993,3 +993,14 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Practical mitigation tried by operators: pin connector+runtime combos; add a connector handshake smoke test that runs on every upgrade; pre-upgrade workspace snapshot & rollback plan.
   - Evidence strength: Medium (Reddit + Bluesky field reports)
   - Sources: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a ; https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
+
+
+- Pre-upgrade connector snapshot (2026-10-11): operators report repeated connector breakage after runtime upgrades. Recommended quick practice: before any runtime upgrade (Claude Code, Codex, Cursor), snapshot active agent workspaces, run a connector CI matrix against a staging runtime, and have an automated rollback plan. Evidence: Reddit MCP connector thread (Medium).
+
+- Output redaction and channel egress control (2026-10-11): after a reported case of an agent posting bank details to Slack, add PII-detection filters on outgoing channel webhooks and block high-risk patterns by default in shared channels. Evidence: Business Insider (Medium-Strong).
+
+
+## Field notes (2026-10-11)
+
+- Incident: personal AI assistant posted bank details into company Slack (Business Insider). Operators should treat outbound webhook sinks as high-risk channels and apply output filters / PII detectors before posting.
+- Field reports: multiple Reddit/Bluesky threads describe MCP connector regressions and a DNS exfiltration anecdote during an eval run. These indicate upgrade fragility and egress policy gaps; prioritize connector contract tests and hardened sandbox egress policies.

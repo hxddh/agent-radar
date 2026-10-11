@@ -69,19 +69,18 @@ Last updated: 2026-07-09
 ## Thesis Scorecard
 | # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter-evidence |
 |---|----------------|--------------|------------------------|----------------------------|
-| 1 | Task‑based execution | ↑ | Microsoft Foundry Routines GA; OpenAI Dots orchestration primitives | Pricing fragmentation for long-running tasks |
-| 2 | Coding agents adoption | → | Continued IDE/runtime updates (Claude Code, Codex CLI) | — |
-| 3 | Evaluation as core | → | Langfuse v4.50.0 improving traces | — |
-| 4 | Uneven UX across vendors | → | Multiple vendor default changes breaking connectors | — |
-| 5 | Object storage as artifact plane | → | Dots and preview/export flows require TTL mapping | Headroom token-compression reducing some storage needs |
-| 6 | Meta-harnesses emergence | ↑ | Omnigent uptake and OSS multi-agent tools observed (social) | No single meta-harness standard yet |
-| 7 | Memory + MCP convergence | ↑ | Multiple memory projects + MCP SDK 2.3.0; mem0 / remem projects active | No single dominant memory primitive yet |
-| 8 | Platform‑vendor MCP entry | ↑ | Cloudflare observability/gateway, Vercel sandbox memory, Microsoft Foundry controls | Risk of vendor‑specific siloing remains |
-| 9 | Containment / security | ↑ | Anthropic containment engineering post; OpenAI training/eval pause; DNS egress anecdotes | No single universal containment standard yet |
-|10 | Cost economics | → | Headroom token‑compression signals cost optimizations | Pricing for long-running agents remains fragmented |
+| 1 | Task‑based execution | ↑ | Microsoft Foundry Routines GA; OpenAI Dots orchestration primitives (vendor docs) | Pricing fragmentation for long-running tasks; connector fragility |
+| 2 | Coding agents adoption | → | Continued IDE/runtime updates (Anthropic Claude Code v2.1.296; OpenAI Codex client churn) | No major counter-evidence; coding still dominant |
+| 3 | Evaluation as core | → | Langfuse / agent-eval tooling updates improving traces and replay | Eval tooling still fragmented across vendors |
+| 4 | Uneven UX across vendors | → | Multiple vendor default changes breaking connectors; MCP connector regression threads | Vendors shipping operator gates (mitigation) |
+| 5 | Object storage as artifact plane | → | OpenAI Dots + Bedrock fleet patterns require snapshot/manifest designs | Token-compression and local caching offset some storage needs |
+| 6 | Meta-harnesses emergence | ↑ | Omnigent uptake and OSS multi-agent 'swarms' activity in social + repo signals | No single meta-harness standard yet |
+| 7 | Memory + MCP convergence | ↑ | mem0 / remem / agenticow activity; MCP server releases and routers | No dominant memory primitive chosen yet |
+| 8 | Platform‑vendor MCP entry | ↑ | Cloudflare agent platform updates; Vercel sandbox memory/observability; AWS Bedrock Agent Mode case study | Risk of vendor-specific siloing remains |
+| 9 | Containment / security | ↑ | Flowise GHSA advisories; Anthropic containment engineering notes; OpenAI training/eval pauses | No universal containment standard; incidents continue |
+|10 | Cost economics | → | Headroom token‑compression signals cost optimizations; vendor browser-side cost reductions | Long-running pricing models still fragmented |
 
-- Updated at: 2026-10-04
-- Notes: Confidence deltas reflect vendor product launches and multiple independent signals this week that raised the operational prominence of containment, MCP/memory convergence, and persistent assistant artifacts.
+- Updated at: 2026-10-11
 ## Anthropic — Claude Code (scr-claude-code)
 
 What it is: Claude Code runtime and orchestration components for coding agents.
@@ -183,3 +182,21 @@ Action items: document connector compatibility tests, require connector CI again
   - Why promoted: edge runtime / bundler changes can change default export/retention behavior and introduce or expand audio/transcript artifact classes at the edge — operator mapping and lifecycle policies required.
   - Affects theses: 5 (object storage), 8 (platform-vendor MCP entry), 9 (containment/security).
   - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0
+
+
+### 2026-10-11 Promotions
+
+- Mistral — Studio & Vibe (promoted)
+  - Why promoted: Vendor product pages signal an integrated dev/test/run suite for long‑horizon agents that directly affects operator toolchains, sandboxing, and memory/connector integration testing. Promoting this surfacing helps operators track a mainstream tooling vector for agent lifecycle management.
+  - Affects theses: 1 (task execution), 3 (eval/dev tooling), 7 (memory + MCP convergence).
+  - Source: https://mistral.ai/products/studio/
+
+- Cloudflare — Containers cross-tenant fix (promoted)
+  - Why promoted: Security advisory with direct operator impact on where container-run artifacts and preview exports can land; forces immediate audit of export/retention defaults and per-tenant object-store mappings.
+  - Affects theses: 5 (object storage as artifact plane), 9 (containment/security).
+  - Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
+
+- Manifold — Git-based repo-hijack analysis (promoted)
+  - Why promoted: Supply-chain vector that concretely ties repository provenance to agent execution risk; promotes tighter pinning/signed-bundle practices and snapshot provenance requirements for forensic readiness.
+  - Affects theses: 9 (containment/security), 7 (memory + MCP convergence) by way of provenance and snapshoting needs.
+  - Source: research-log.md (scr-4d5e6f7a)
