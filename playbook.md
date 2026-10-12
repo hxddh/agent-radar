@@ -948,3 +948,15 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Pre-upgrade checklist: snapshot active workspaces -> run connector contract smoke tests -> stage rollout behind vendor Security Reviewer / internal gate -> monitor export/manifest generation -> rollback plan.
 - Connector CI: add a small matrix that runs each custom MCP connector against the latest stable runtime + latest prerelease to detect breaking changes early.
 - Budgeting: require per-agent budget windows and token/compute circuit-breakers in orchestration runtimes.
+
+
+- Connector upgrade & rollback playbook (candidate)
+  - When useful: before any runtime or MCP server upgrade that touches connector contracts.
+  - Steps:
+    1) Snapshot active workspaces and relevant object-storage manifests.
+    2) Run connector-contract smoke tests in staging (registration, heartbeat, tool-call flows), fail fast on mismatch.
+    3) Validate messaging connectors with pre-send dry-run or approval webhook.
+    4) Stage rollout with pinned connector/runtime pair; allow immediate rollback if handshake errors appear in canary tenant.
+    5) Post-upgrade: run full e2e test and retention/forensics probe (can we reconstruct the last N actions?)
+  - Evidence: community MCP connector regressions (Reddit), vendor runtime churn (Anthropic releases)
+  - Should promote to playbook? yes

@@ -1306,3 +1306,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Storage implications: Supply‑chain repo-hijacks increase the need for immutable forensic prefixes, signed/pinned bundle artifacts, and recorded provenance metadata for snapshots (AGENTS.md SHA, connector pins, runtime version). Operators should treat repo-sourced artifacts as sensitive: enforce pinned revisions or signed bundles before import into workspaces, snapshot any repo-derived artifacts into write-once forensic prefixes, and run secrets scans on repo-supplied artifacts prior to retention. Add a policy to require second-source validation for any repo-fed agent run that writes artifacts to durable storage.
   - Evidence strength: High (detailed write-up)
   - Source: research-log.md (scr-4d5e6f7a)
+
+
+- Persistent assistant artifacts (Dots / persistent agents)
+  - Signal: persistent assistants introduce agent-state snapshots, scheduled-output archives, and long-window telemetry as first-class artifacts.
+  - Storage implication: operators must categorize snapshot artifacts (ephemeral vs durable), add manifested provenance metadata, and implement lifecycle/TTL policies for scheduled outputs.
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/introducing-dots/
+  - Watch trigger: vendor publishes a snapshot/export manifest schema or default retention TTL change.
+
+- Preview/export sink isolation (Cloudflare containers cross-tenant fix)
+  - Signal: vendor fixes and notes around container cross-tenant exposure force re-evaluation of where previews and exports are stored.
+  - Storage implication: ensure preview/export sinks are tenant-scoped object-store buckets and add export-level tenant checks during artifact writes.
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
+  - Watch trigger: detection of exported artifacts with mismatched tenant IDs or missing tenant-scoped ACLs.

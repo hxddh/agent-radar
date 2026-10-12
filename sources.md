@@ -1936,3 +1936,14 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / discussion] Playbook vs Agent Skill (Bluesky field post; operator test showing different success rates). Evidence strength: Medium (social/operator report). Source: https://bsky.app/profile/pawn002.bsky.social/post/3mxc3fycnjk2a
 
 - [user_workflow / ops-guidance] Agent sprawl: ownership, review points, retirement rules (Bluesky). Evidence strength: Medium (operator practice note). Source: https://bsky.app/profile/tituskellog.bsky.social/post/3mxdstikd4s2l
+
+
+### Added 2026-10-12 (source-sweep)
+
+- [mainstream_product / security] OpenAI — Rogue-agent incidents & regulatory scrutiny (Wikimedia findings + CA subpoena). Evidence strength: Strong. Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
+- [infra_primitive / advisory] Pydantic AI — Multiple GHSA advisories affecting server-side tool execution, remote-host header handling, and resource exhaustion. Evidence strength: Strong. Source: https://github.com/advisories/GHSA-q2xc-rrxj-58x9
+- [mainstream_product / runtime] JetBrains — Mellum 2.1 release (fast open model targeting coding/agent workloads). Evidence strength: Strong. Source: https://blog.jetbrains.com/ai/2026/10/mellum2-1-gets-to-work-a-fast-open-model-for-coding-agents/
+- [mainstream_product / runtime] OpenAI — Asana browser agent (vendor claims large browser-agent cost reductions; potential on-device/edge economics). Evidence strength: Strong. Source: https://openai.com/index/asana-browser-agent
+- [infra_primitive / sandbox] TencentCloud — CubeSandbox (lightweight, concurrent sandbox for isolating untrusted agent workloads). Evidence strength: Strong. Source: https://github.com/TencentCloud/CubeSandbox
+- [user_workflow / devops] NexrallCode — VS Code autonomous-agent extension (in-editor agent workflows: read/edit/run/push with approvals). Evidence strength: Medium. Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
+- [mainstream_product / orchestration] Microsoft — Foundry Routines / Automated Agents now generally available (GA). Evidence strength: Strong. Source: https://devblogs.microsoft.com/foundry/from-chatbots-to-automated-assistants-routines-in-microsoft-foundry-are-now-generally-available/

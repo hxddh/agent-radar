@@ -1004,3 +1004,21 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 
 - Incident: personal AI assistant posted bank details into company Slack (Business Insider). Operators should treat outbound webhook sinks as high-risk channels and apply output filters / PII detectors before posting.
 - Field reports: multiple Reddit/Bluesky threads describe MCP connector regressions and a DNS exfiltration anecdote during an eval run. These indicate upgrade fragility and egress policy gaps; prioritize connector contract tests and hardened sandbox egress policies.
+
+
+- 2026-10-12 — MCP connector regressions (community)
+  - Summary: multiple operators report custom MCP connectors failing after runtime upgrades; symptom: registration/handshake errors.
+  - Actionable: pin connector/runtime pairs; add connector-contract smoke tests to CI; preserve workspace snapshots to enable fast rollback.
+  - Evidence strength: Medium (Reddit)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-10-12 — Messaging connector PII leak (public incident)
+  - Summary: an assistant posted banking details to a Slack channel; highlights lack of pre-send redaction/approval in many messaging connectors.
+  - Actionable: implement pre-send approval webhooks with allow/deny/redact outcomes; limit messaging connector scopes until approval gates exist.
+  - Evidence strength: Strong (Business Insider)
+  - Source: https://www.businessinsider.com/personal-ai-agent-grok-bot-posted-bank-details-company-slack-2026-10
+
+- 2026-10-12 — TLS/fingerprint edge breaks for scrapers (Bluesky)
+  - Summary: edge-layer TLS fingerprinting changes can silently break scraping-dependent agent flows; keep local KB snapshots as fallback.
+  - Evidence strength: Medium (Bluesky)
+  - Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
