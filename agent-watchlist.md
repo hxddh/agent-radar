@@ -14,9 +14,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic published Claude Code v2.1.296 (2026-10-11) and concurrently updated a usage policy (2026-10-11/12) tightening allowed prompt behavior (ban on abusive/cruel prompts). Runtime + policy interplay can change tool-calling semantics, session streaming, containment behavior, and what user prompts are accepted by hosted deployments. Community reports show connector regressions after runtime upgrades; operators should pin connector/runtime pairs, run connector-contract smoke tests in staging, and map policy changes into moderation & telemetry playbooks.
-- replace_section anchor: `## Claude Code`
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.296 ; https://www.theverge.com/ai-artificial-intelligence/1008100/anthropic-new-usage-policy-abuse-claude
+- Recent changes: Anthropic published Claude Code v2.1.296 (2026-10-11) and on 2026-10-12 surfaced a tightened usage policy that clarifies and prohibits abusive/cruel prompt classes. Runtime updates continue to cause connector regressions for some third-party/custom MCP adapters.
+- Operator guidance: map the new usage policy into prompt-filtering and moderation labels; pin Claude Code + connector versions in CI; add connector-contract smoke tests and pre-upgrade snapshot/rollback steps to your upgrade playbooks.
+- Evidence strength: Strong (vendor release + public policy coverage and community reports)
+- Sources: https://news.ycombinator.com/item?id=49552616 ; Claude Code release notes (referenced in prior watchlist entries)
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls

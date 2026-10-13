@@ -1321,3 +1321,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong
   - Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
   - Watch trigger: detection of exported artifacts with mismatched tenant IDs or missing tenant-scoped ACLs.
+
+
+- Bedrock AgentCore memory billing -> snapshot pressure
+  - Signal: AWS consumption-based short-term memory pricing introduces a direct cost for RAM-like memory windows.
+  - Storage implication: Operators will move non-critical state to object storage snapshots, compress memory encodings, or reduce short-term retention windows; snapshot schema must include provenance, TTL, and cost tags.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/10/agentcore-memory-consumption-based-pricing
+  - Watch trigger: vendors/teams publishing migration guides or sudden billing line-item increases labeled "AgentCore memory".
+
+- Persistent assistant artifacts require manifest + TTL semantics
+  - Signal: Always-on assistants and new harness runtimes increase durable artifact classes (agent-state, scheduled outputs, long-window telemetry).
+  - Storage implication: Define manifest schemas for agent-state snapshots, require export hooks, and set default TTLs to avoid unbounded retention costs.
+  - Evidence strength: Strong / Medium
+  - Sources: https://openai.com/index/introducing-dots/ ; https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+  - Watch trigger: default retention policies >30 days or vendor docs that create new persistent artifact endpoints without export hooks.

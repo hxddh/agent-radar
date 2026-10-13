@@ -1022,3 +1022,19 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Summary: edge-layer TLS fingerprinting changes can silently break scraping-dependent agent flows; keep local KB snapshots as fallback.
   - Evidence strength: Medium (Bluesky)
   - Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
+
+
+- **MCP connector regression — production upgrade incident (2026-10-13)**
+  - Tool: custom MCP connectors to hosted Claude/other MCP servers
+  - Scenario: runtime upgraded in staging/production; connectors started failing handshakes and tool-call roundtrips
+  - Observable: increased 5xx error rates in connector health endpoints and sudden task backlog
+  - Operator mitigation: pin runtime+connector pairs, add connector-contract smoke tests in CI, add pre-upgrade workspace snapshotting and fast rollback paths
+  - Evidence strength: Medium (Reddit community reports)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Installer persistence — Codex CLI daemon (2026-10-13)**
+  - Tool: Codex CLI installer
+  - Scenario: installer offers/creates a self-updating background daemon by default; managed endpoints unexpectedly gain a persistent process
+  - Operator mitigation: block daemon installs via policy for managed hosts, require explicit opt-in for auto-update, and audit installers during onboarding
+  - Evidence strength: Medium (HN discussion)
+  - Source: https://news.ycombinator.com/item?id=50059096

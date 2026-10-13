@@ -960,3 +960,19 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
     5) Post-upgrade: run full e2e test and retention/forensics probe (can we reconstruct the last N actions?)
   - Evidence: community MCP connector regressions (Reddit), vendor runtime churn (Anthropic releases)
   - Should promote to playbook? yes
+
+
+## Connector-contract Smoke Test (candidate)
+
+- Trick: A small CI job that verifies connector contracts by running a pinned staging runtime and exercising the connector's tool-call surface (auth, schema, stream start/stop).
+- When useful: Before any runtime upgrade, and as part of release gating for connector changes.
+- Evidence: Recommended after multiple community reports of connector regressions (Reddit 2026-10-13).
+- Should promote to playbook? yes
+- Follow-up: provide a template CI workflow and sample test vectors for common MCP connectors.
+
+## Pre-upgrade workspace snapshot & rollback
+
+- Trick: Take a compact workspace snapshot (files + connector state + memory export) before runtime upgrades so you can rollback quickly and compare failure modes.
+- When useful: Any production runtime upgrade for agents with external connectors or long-running state.
+- Evidence: Operationally recommended in multiple connector regression reports (community).
+- Should promote to playbook? yes
