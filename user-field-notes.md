@@ -1038,3 +1038,16 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Operator mitigation: block daemon installs via policy for managed hosts, require explicit opt-in for auto-update, and audit installers during onboarding
   - Evidence strength: Medium (HN discussion)
   - Source: https://news.ycombinator.com/item?id=50059096
+
+
+- **MCP connector regressions — community field reports (2026-10-14)**
+  - Symptom: Custom MCP connectors stopped working after recent runtime/SDK upgrades.
+  - Practical mitigation: Add connector-compat smoke-tests that run a minimal end-to-end (auth, schema, sample tool call) against a staging runtime snapshot before production cutover; require connector pinning and a pre-upgrade workspace snapshot step.
+  - Evidence strength: Medium (Reddit)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **IDE/Container filesystem scoping (operator tip)**
+  - Symptom: Agents with wide filesystem mounts risk exposing host data.
+  - Practical mitigation: Share a minimal project filesystem between agent runtime and web IDE via a dedicated container volume; avoid bind-mounting host '/' and prefer explicit secret mounts.
+  - Evidence strength: Medium (Bluesky operator post)
+  - Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r

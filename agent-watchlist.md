@@ -442,12 +442,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong
 - Source: https://blog.cloudflare.com/one-observability-platform/
 ## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)
-- Category: Platform sandbox / managed agents
-- Maturity: GA/active for managed sandbox use-cases
-- Recent changes: Vercel sandbox memory/observability and WebMCP support updates were observed; vercel-labs/agent-browser v0.38.2 release improves browser sandbox UX. Operators should parse changelog diffs for retention/observability defaults, map preview export sinks to short‑TTL object storage, and re-run deployment tests in staging.
-- Freshness: checked 2026-10-04 (agent-browser release)
-- Evidence strength: Strong
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.38.2
+- Recent changes: Vercel Labs published agent-browser v0.39.1 (2026-10-13) with runtime and observability fixes. Operators should treat this as a staging-first update: runtime changes can alter preview export sinks, TTLs, and bundler behavior that map previews into durable object storage.
+- User impact: Preview & browser-agent UX improvements; potential changes in where preview artifacts land by default (check release notes for export/TTL diffs).
+- Infra implication: Pin agent-browser runtime in CI, re-run preview/export tests in staging, and map any changed default sinks to short‑TTL object storage to avoid accidental long-term retention.
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.1
 ## MemOS — hybrid retrieval memory (MemTensor / MemOS)
 
 - What it is: MemOS (MemTensor/MemOS) — hybrid retrieval memory claiming token‑savings via a self‑evolving persistent memory + retrieval stack.

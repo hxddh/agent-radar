@@ -1336,3 +1336,16 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong / Medium
   - Sources: https://openai.com/index/introducing-dots/ ; https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
   - Watch trigger: default retention policies >30 days or vendor docs that create new persistent artifact endpoints without export hooks.
+
+
+- Persistent-session artifacts (sessions, tab stacks, login cookies) created by persistent-browser tools or always-on assistants should be classified as durable artifacts with explicit retention policies.
+  - Implication: Add session-snapshot manifests, include provenance fields (agent-id, runtime-version, connector-version), and map previews → durable object store with short TTL unless explicitly exported for compliance reasons.
+  - Watch trigger: Vendor changelog that changes preview/export default from ephemeral to persistent storage.
+  - Evidence strength: Strong
+  - Sources: https://developers.cloudflare.com/changelog/post/2026-10-13-persistent-browser/ ; https://openai.com/index/introducing-dots/
+
+- Transactional agent artifacts (receipts, ledgers, payment callbacks) must be durable and reconciled with run logs.
+  - Implication: Treat payment receipts as first-class archival objects that are indexed for auditing; include them in export/manifest tooling so incident responders can reconstruct event timelines.
+  - Watch trigger: Any production integration that writes payment receipts only to ephemeral logs or omits them from the export manifest.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/blogs/machine-learning/building-agents-that-transact-with-anchor-browser-and-agentcore-payments/
