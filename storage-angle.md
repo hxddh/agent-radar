@@ -1349,3 +1349,9 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Watch trigger: Any production integration that writes payment receipts only to ephemeral logs or omits them from the export manifest.
   - Evidence strength: Strong
   - Source: https://aws.amazon.com/blogs/machine-learning/building-agents-that-transact-with-anchor-browser-and-agentcore-payments/
+
+
+## Oct 2026 update: persistent agents and storage mapping
+- Observation: Dots / Amp / AgentCore patterns increase durable artifact classes: scheduled-output archives, agent-state snapshots, browser-session exports, and tool-call transcripts.
+- Operational mapping: classify artifacts by retention sensitivity (ephemeral preview vs durable forensic), route ephemeral artifacts to short‑TTL buckets and durable artifacts to tagged forensic buckets with manifest and provenance metadata.
+- Playbook action: require export hooks and provenance manifests (timestamped snapshot, runtime version, connector hash) for any agent workflow that is allowed to run outside staging.

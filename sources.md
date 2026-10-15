@@ -1947,3 +1947,26 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [infra_primitive / sandbox] TencentCloud — CubeSandbox (lightweight, concurrent sandbox for isolating untrusted agent workloads). Evidence strength: Strong. Source: https://github.com/TencentCloud/CubeSandbox
 - [user_workflow / devops] NexrallCode — VS Code autonomous-agent extension (in-editor agent workflows: read/edit/run/push with approvals). Evidence strength: Medium. Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
 - [mainstream_product / orchestration] Microsoft — Foundry Routines / Automated Agents now generally available (GA). Evidence strength: Strong. Source: https://devblogs.microsoft.com/foundry/from-chatbots-to-automated-assistants-routines-in-microsoft-foundry-are-now-generally-available/
+
+
+### Added 2026-10-15 (source-sweep)
+
+- [mainstream_product / vendor] OpenAI — Amp: Amp puts AI agents to work beyond code. Evidence strength: Strong. Source: https://openai.com/index/amp-beyond-coding
+
+- [mainstream_product / social] OpenHands v1.27.0 (DO Harness support) — social report on Bluesky noting new runtime/harness target; operator-impact: egress/export defaults may differ. Evidence strength: Medium (Bluesky). Source: https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+
+- [mainstream_product / sandbox] JetBrains — How Cloud-Based Agent Sandboxing Works in Air: vendor blog describing sandbox design and operator controls for cloud agent sandboxes. Evidence strength: Strong. Source: https://blog.jetbrains.com/air/2026/10/cloud-agent-sandboxing/
+
+- [mainstream_product / release] Vercel — ai@7.0.141 release: runtime/client update with potential preview/export/observability deltas. Evidence strength: Strong. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.141
+
+- [mainstream_product / mcp/runtime] AWS — Build self‑improving document processing using Bedrock AgentCore: patterns for iterative document workflows and AgentCore runtime guidance. Evidence strength: Strong. Source: https://aws.amazon.com/blogs/machine-learning/build-self-improving-document-processing-using-amazon-bedrock-agentcore/
+
+
+### Added (2026-10-15)
+- OpenAI — Amp product page (linked-public): https://openai.com/index/amp-beyond-coding
+- OpenHands v1.27.0 social report (Bluesky; evidence strength: Medium): https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+- JetBrains — Cloud agent sandboxing (blog): https://blog.jetbrains.com/air/2026/10/cloud-agent-sandboxing/
+- Vercel — ai@7.0.141 release (GitHub release): https://github.com/vercel/ai/releases/tag/ai%407.0.141
+- AWS — Build self‑improving document processing using Bedrock AgentCore (blog): https://aws.amazon.com/blogs/machine-learning/build-self-improving-document-processing-using-amazon-bedrock-agentcore/
+- Flowise GHSA advisory (security): https://github.com/advisories/GHSA-9gvv-qjj3-2p6g
+- Pydantic‑AI GHSA advisories (security): https://github.com/advisories/GHSA-h4xc-3qfq-jf93

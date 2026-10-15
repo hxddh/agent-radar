@@ -976,3 +976,13 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - When useful: Any production runtime upgrade for agents with external connectors or long-running state.
 - Evidence: Operationally recommended in multiple connector regression reports (community).
 - Should promote to playbook? yes
+
+
+## Connector CI & Compatibility Template (promoted Oct 2026)
+- Purpose: automated compatibility tests to validate MCP connectors and third-party adapters against runtime upgrades (Amp/Dots, Claude Code, Codex, Vercel ai).
+- Minimum checks: tool-call contract tests, session persistence smoke tests, export/preview sink verification, secrets injection/rotation test, dependency/policy gating.
+- Action: add CI job template and staging harness; require passing tests before runtime upgrade rollouts.
+
+## Managed Sandbox Checklist (promoted Oct 2026)
+- Extracted from JetBrains cloud-agent sandboxing guidance: network egress policy, secrets injection pattern, ephemeral filesystem layout, preview/export TTL defaults, runtime observability hooks, audit logging for tool calls.
+- Action: include checklist as pre-deploy gate for vendor-managed sandboxes.

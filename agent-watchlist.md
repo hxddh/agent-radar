@@ -588,3 +588,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Relevance score: 8
 - Follow-up / watch triggers: documentation or release notes that describe default export/retention hooks, sandbox defaults, memory export formats, or MCP/connector integration examples. Hands-on eval recommended to validate containment/export semantics.
 - Source: https://mistral.ai/products/studio/
+
+
+## OpenAI — Amp (scr-amp01)
+- What it is: OpenAI orchestration primitives and product framing that push agents beyond coding tasks into scheduled/always-on orchestration (Amp).
+- Why it matters: Changes connector/session semantics and introduces new persistent artifact classes (agent-state snapshots, scheduled outputs). Operators must run connector CI and validate egress/retention behaviors before production use.
+- Evidence strength: Strong (OpenAI product page).
+- Source: https://openai.com/index/amp-beyond-coding
+- replace_section anchor: `## OpenAI — Amp (scr-amp01)`

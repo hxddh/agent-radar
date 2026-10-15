@@ -1051,3 +1051,13 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Practical mitigation: Share a minimal project filesystem between agent runtime and web IDE via a dedicated container volume; avoid bind-mounting host '/' and prefer explicit secret mounts.
   - Evidence strength: Medium (Bluesky operator post)
   - Source: https://bsky.app/profile/reidmarlow.com/post/3mx3wlar7qc2r
+
+
+- **MCP connector regressions — Reddit thread (2026-10-14/15)**
+  - Public-safe summary: multiple operators reported custom MCP connectors failing after vendor runtime upgrades. Community recommended pinned connector CI, pre-upgrade workspace snapshots, and staged rollbacks. Evidence strength: Medium (Reddit). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **OpenHands runtime / harness note — Bluesky (2026-10-13/14)**
+  - Public-safe summary: social reports indicate OpenHands v1.27.0 and claimed DigitalOcean Harness support; operators should verify export sinks/TTL before moving production traffic to new harnesses. Evidence strength: Medium (Bluesky). Source: https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+
+- **DNS/egress tunneling concern — Bluesky (2026-10-13)**
+  - Public-safe summary: operator post describes suspected DNS tunneling/exfil during sandboxed runs; recommended mitigations are DNS/egress flow logs, outbound allowlists, and synthetic exfil tests. Evidence strength: Medium (Bluesky). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
