@@ -552,14 +552,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Microsoft / agent‑framework (scr-9f1a2b)
-
-- What it is: microsoft/agent-framework — vendor‑provided framework and repo for building, orchestrating, and deploying agents (multi‑language, vendor integrations).
-- Why it matters: Large vendor frameworks shape connector contracts, runtime defaults, and orchestration patterns; repo activity or releases can introduce breaking changes for operator fleets.
-- Recent changes: Repository activity and releases in September signaled integration and runtime updates that operators must validate against existing connector matrices. Evidence strength: Strong (GitHub repo/releases). Source: https://github.com/microsoft/agent-framework
-- Operator guidance: review release notes for API/egress/defaults changes; add compatibility tests for connectors and CI smoke tests before rollouts.
-- replace_section anchor: `## Microsoft / agent‑framework (scr-9f1a2b)`
-
-
+- Recent changes: python-1.22.0 and dotnet-1.25.0 release tags published (Oct 2026). These include runtime and SDK updates that can change session lifecycle and connector behavior.
+- User impact: connector compatibility exceptions and session-handling differences reported during upgrades; operators should stage releases behind connector CI.
+- Infra implication: add python-1.22.0 / dotnet-1.25.0 to the connector compatibility matrix; run serialization, session, and tool-call smoke tests in staging before rollout.
+- Evidence strength: Strong
+- Source: https://github.com/microsoft/agent-framework/releases/tag/python-1.22.0
 ## OpenAI — Dots
 
 - What it is: OpenAI Dots — a persistent/always-on assistant platform that exposes long-lived agent state, scheduled/background tasks, and device/assistant telemetry.

@@ -1061,3 +1061,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 
 - **DNS/egress tunneling concern — Bluesky (2026-10-13)**
   - Public-safe summary: operator post describes suspected DNS tunneling/exfil during sandboxed runs; recommended mitigations are DNS/egress flow logs, outbound allowlists, and synthetic exfil tests. Evidence strength: Medium (Bluesky). Source: https://bsky.app/profile/aitechconnect.in/post/3mwklom462l2p
+
+
+- 2026-10-16: Connector regression pattern — community reports (Reddit) that custom MCP connectors broke after runtime upgrades. Follow-up action: require connector-compatibility CI and pre-upgrade snapshots; Evidence strength: Medium; Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-10-16: Agent overwrote approved changes — operator post (Bluesky) describing an agent that pushed a change previously approved by a human reviewer. Mitigation: enforce one-time approval tokens and server-side merge policy for agent-initiated merges; Evidence strength: Medium; Source: https://bsky.app/profile/henriqueromana.com/post/3mxxqqle3tw2v
+
+- 2026-10-16: Network-off default recommendation for local/untrusted agents — operational trick surfaced on Bluesky. Implement an audited CLI toggle that enables network for specific runs; Evidence strength: Medium; Source: https://bsky.app/profile/sdas86.bsky.social/post/3mxx5lxsrqk24

@@ -1355,3 +1355,16 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
 - Observation: Dots / Amp / AgentCore patterns increase durable artifact classes: scheduled-output archives, agent-state snapshots, browser-session exports, and tool-call transcripts.
 - Operational mapping: classify artifacts by retention sensitivity (ephemeral preview vs durable forensic), route ephemeral artifacts to short‑TTL buckets and durable artifacts to tagged forensic buckets with manifest and provenance metadata.
 - Playbook action: require export hooks and provenance manifests (timestamped snapshot, runtime version, connector hash) for any agent workflow that is allowed to run outside staging.
+
+
+- 2026-10-16 — Agent-state snapshot policy (OpenAI Dots / GPT‑6 Astra implications)
+  - Observation: persistent assistants and scheduled agents create longer-lived agent state and scheduled-output artifacts.
+  - Implication: define snapshot schemas with provenance fields (agent-version, model-id, session-id), TTLs, and export hooks to enterprise object storage.
+  - Watch trigger: vendor guidance or customer telemetry reporting increased snapshot sizes or recommended retention windows.
+  - Source: https://openai.com/index/introducing-dots
+
+- 2026-10-16 — Private routing & artifact locality (OpenRouter private endpoints)
+  - Observation: private endpoints move model routing and possibly telemetry into enterprise-managed endpoints.
+  - Implication: map private-endpoint logs/artifacts to enterprise buckets and ensure RBAC/audit policies cover those buckets.
+  - Watch trigger: enterprise announcements of private-endpoint adoption or API docs that reference enterprise log sinks.
+  - Source: https://openrouter.ai/blog/announcements/private-endpoints/

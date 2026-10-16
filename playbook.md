@@ -986,3 +986,15 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 ## Managed Sandbox Checklist (promoted Oct 2026)
 - Extracted from JetBrains cloud-agent sandboxing guidance: network egress policy, secrets injection pattern, ephemeral filesystem layout, preview/export TTL defaults, runtime observability hooks, audit logging for tool calls.
 - Action: include checklist as pre-deploy gate for vendor-managed sandboxes.
+
+
+## Sandbox containment checklist (extracted 2026-10-16 from JetBrains guidance)
+
+- Network controls: default network-off for untrusted runs; explicit egress allowlist per job; per-run audit logging of network toggles.
+- Secrets handling: inject secrets via short-lived credential proxies; never bake secrets into container images or workspace snapshots.
+- Filesystem: mount ephemeral filesystems for agent workspaces; persist only approved artifact classes to object storage with provenance metadata.
+- Process/Tool scoping: restrict tool-call binaries to signed/pinned bundles; verify plugin hash pins before enabling runtime plugins.
+- Observability: enable structured telemetry and retention hooks for agent-state snapshots; ensure export/ingest hooks map to enterprise object storage.
+- Rollout rule: stage runtime/SDK upgrades behind connector compatibility CI that validates session negotiation + tool-call smoke tests.
+
+Source: JetBrains cloud agent sandboxing blog (2026-10-15). Evidence strength: Strong. Source: https://blog.jetbrains.com/air/2026/10/cloud-agent-sandboxing/
