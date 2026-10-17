@@ -1068,3 +1068,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - 2026-10-16: Agent overwrote approved changes — operator post (Bluesky) describing an agent that pushed a change previously approved by a human reviewer. Mitigation: enforce one-time approval tokens and server-side merge policy for agent-initiated merges; Evidence strength: Medium; Source: https://bsky.app/profile/henriqueromana.com/post/3mxxqqle3tw2v
 
 - 2026-10-16: Network-off default recommendation for local/untrusted agents — operational trick surfaced on Bluesky. Implement an audited CLI toggle that enables network for specific runs; Evidence strength: Medium; Source: https://bsky.app/profile/sdas86.bsky.social/post/3mxx5lxsrqk24
+
+
+- **Claude MCP connector silent failures** (2026-10-17): Community reports show connector breakage after runtime upgrades; recommend adding connector heartbeat/health-checks and snapshot-before-upgrade policy. Source class: Social (Reddit). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **OpenHands DO Harness social note** (2026-10-17): Operators reported a new DigitalOcean Harness target in a social post; watch for differing egress/export defaults and run smoke egress tests before migrating. Source class: Social (Bluesky). Source: https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+
+- **Sandbox resource patterns (E2B lab)** (2026-10-17): Lab write-up lists runaway process mitigations (idle timeouts, per-workspace cgroups); apply reclaim+snapshot pattern in per-user sandboxes. Source class: Blog / lab. Source: https://e2b.dev/resources/how-i-learned-to-stop-worrying-and-love-the-sandbox

@@ -1970,3 +1970,17 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - AWS — Build self‑improving document processing using Bedrock AgentCore (blog): https://aws.amazon.com/blogs/machine-learning/build-self-improving-document-processing-using-amazon-bedrock-agentcore/
 - Flowise GHSA advisory (security): https://github.com/advisories/GHSA-9gvv-qjj3-2p6g
 - Pydantic‑AI GHSA advisories (security): https://github.com/advisories/GHSA-h4xc-3qfq-jf93
+
+
+### Added 2026-10-17 (daily pass)
+
+- Cloudflare — Verified bots accountability (mainstream_product / security). Evidence strength: Strong. Source: https://blog.cloudflare.com/verified-bots-accountability/
+- Cursor — Cloud agent canvases and environments (mainstream_product / storage). Evidence strength: Strong. Source: https://cursor.com/changelog/cloud-agent-canvases-and-environments
+- AWS — Bedrock AgentCore: production-ready evaluation framework (mainstream_product / eval). Evidence strength: Strong. Source: https://aws.amazon.com/blogs/machine-learning/building-trust-in-ai-agents-a-production-ready-evaluation-framework-with-amazon-bedrock-agentcore/
+- Vercel — ai@7.0.143 release (mainstream_product / runtime). Evidence strength: Strong. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
+- Anthropic — Claude Code v2.1.302 (mainstream_product / runtime). Evidence strength: Strong. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.302
+- Community: Claude MCP connector follow-up (social). Evidence strength: Medium. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+- OpenHands social report (Bluesky): https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+- E2B sandbox lab (ops guidance): https://e2b.dev/resources/how-i-learned-to-stop-worrying-and-love-the-sandbox
+- NexrallCode (open-vsx listing): https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
+- HN billing/overcharge thread (operator pain): https://news.ycombinator.com/item?id=50121562

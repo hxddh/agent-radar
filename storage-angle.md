@@ -1368,3 +1368,18 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Implication: map private-endpoint logs/artifacts to enterprise buckets and ensure RBAC/audit policies cover those buckets.
   - Watch trigger: enterprise announcements of private-endpoint adoption or API docs that reference enterprise log sinks.
   - Source: https://openrouter.ai/blog/announcements/private-endpoints/
+
+
+- Persisted Canvases & Canvas Manifests
+  - Signal: Cursor cloud canvases and similar vendor features create persisted canvas manifests and environment captures.
+  - Storage implication: Treat canvas manifests as first-class artifacts; index them in object-store metadata and include them in retention/forensics manifests.
+  - Evidence strength: Strong (Cursor changelog).
+  - Source: https://cursor.com/changelog/cloud-agent-canvases-and-environments
+  - Watch trigger: New object-store prefix or MIME type for canvas exports or vendor docs describing canvas export fields.
+
+- Preview→Export Sink Incompatibilities
+  - Signal: SDK/runtime updates (Vercel ai@7.0.143) can change where previews are exported or how TTLs are applied.
+  - Storage implication: Operators must validate durable-copy hooks for previews and add alerts on missing durable artifacts after upgrades.
+  - Evidence strength: Strong (Vercel release).
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
+  - Watch trigger: Post-upgrade runs that generate preview artifacts without corresponding durable-export records in retention storage.

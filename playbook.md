@@ -998,3 +998,17 @@ Notes: this playbook was promoted from monthly synthesis (Aug 2026) after multip
 - Rollout rule: stage runtime/SDK upgrades behind connector compatibility CI that validates session negotiation + tool-call smoke tests.
 
 Source: JetBrains cloud agent sandboxing blog (2026-10-15). Evidence strength: Strong. Source: https://blog.jetbrains.com/air/2026/10/cloud-agent-sandboxing/
+
+
+## Connector Upgrade & Staging Checklist (candidate playbook)
+
+- When to use: Before upgrading any agent runtime (Claude Code, Vercel ai client, Microsoft agent-framework, etc.) in production.
+- Steps:
+  1. Pin the target runtime in connector CI and spawn a staging cluster matching production config.
+  2. Run connector health probe: minimal tool-call + expected-response; fail the rollout on mismatch.
+  3. Snapshot active workspaces and export key artifacts (session manifest, open files, canvas manifest) to durable object storage.
+  4. Run smoke end-to-end preview→export tests to validate preview/export sink mapping and TTLs.
+  5. Rollout in a canary cohort; monitor connector heartbeats, egress counts, and billing anomalies for 24h.
+  6. If a regression occurs, rollback using workspace snapshots and record reproduction steps for vendor support.
+- Evidence: Community connector fail reports (Medium) and multiple vendor runtime releases altering export sinks (Strong).
+- Should promote to playbook? yes (candidate; requires templated CI snippets and example scripts).
