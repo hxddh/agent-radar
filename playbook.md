@@ -1012,3 +1012,31 @@ Source: JetBrains cloud agent sandboxing blog (2026-10-15). Evidence strength: S
   6. If a regression occurs, rollback using workspace snapshots and record reproduction steps for vendor support.
 - Evidence: Community connector fail reports (Medium) and multiple vendor runtime releases altering export sinks (Strong).
 - Should promote to playbook? yes (candidate; requires templated CI snippets and example scripts).
+
+
+## Connector Upgrade Safety Checklist
+
+- When useful: Before upgrading agent runtimes, conductor versions, or connector SDKs that affect MCP/tool-call semantics.
+- Steps:
+  1. Pin current runtime and connector versions in staging and record a workspace snapshot (include package-lock, manifest, and sample artifact manifest).
+  2. Run an end-to-end connector smoke test: authenticate, call a benign tool, assert expected artifact creation, and validate output retention/manifest signing.
+  3. Run negative tests for egress: assert blocked hosts and permitted endpoints according to policy-as-code rules.
+  4. Validate billing telemetry for scheduled tasks: run a short scheduled job and verify quota accounting and alerting.
+  5. Rollback plan: keep automated snapshot restore and a pinned revert commit to rebind connector versions if failures observed.
+- Evidence: Community connector regressions (Reddit) and vendor runtime churn (Anthropic, Google, Cloudflare).
+- Should promote to playbook? yes
+
+
+## Connector Upgrade Safety Checklist (candidate playbook — 2026-10-18)
+- Purpose: reduce breakage when runtimes/SDKs (Codex, Claude Code, MCP servers) upgrade.
+- Steps:
+  1. Snapshot current workspace + connector manifests (artifact with signed manifest).
+  2. Pin connector dependency versions in staging; run connector CI matrix against new runtime prerelease.
+  3. Run end-to-end MCP connector handshake tests and tool-call smoke tests with a staging agent and recorded traces.
+  4. Validate export sinks & TTLs (preview → durable object store) and signed provenance manifest creation.
+  5. Gate rollout behind a manual approval window and automated health probes; include rollback plan with snapshot restore.
+  6. Post-upgrade: keep increased telemetry verbosity for 24–72 hours and monitor connector handshake/registration metrics.
+
+- When useful: before runtime/SDK upgrades, when onboarding new MCP servers, and before enabling persistent assistants in production.
+
+Evidence: community reports of connector regressions (Reddit) + multiple vendor runtime releases this week.

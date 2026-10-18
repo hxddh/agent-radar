@@ -4522,3 +4522,61 @@ Notes: runner/web access limitation declared in repo context; research-log recor
 - **Cursor — Cloud agent canvases** (scr-cursor-canvases): Why it matters: persisted canvases produce new artifact classes requiring retention/versioning. Evidence strength: Strong (vendor changelog). Relevance score: 8. candidate_seen_at: 2026-10-17; last_checked_at: 2026-10-17; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://cursor.com/changelog/cloud-agent-canvases-and-environments
 
 - **Community follow-up: Claude MCP connectors** (scr-claude-connectors-followup): Why it matters: repeated community reports of connector regressions indicate an operational gap in connector CI and health telemetry. Evidence strength: Medium (Reddit). Relevance score: 8. candidate_seen_at: 2026-10-17; last_checked_at: 2026-10-17; promotion_status: candidate; defer_count: 0; stale_after_days: 21. Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- **OpenAI rogue agent / Wikimedia edits** (scr-0f3a9b1): Why it matters: public incident requiring immutable audit exports and stronger provenance manifests; evidence strength: Strong; promotion_status: candidate
+  - Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 30
+
+- **Microsoft Foundry — egress controls for hosted agents** (scr-f1b2c3d4): Why it matters: vendor-level egress primitive operators can adopt; evidence strength: Strong; promotion_status: candidate
+  - Source: https://devblogs.microsoft.com/foundry/egress-controls-hosted-agent/
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 30
+
+- **OCI — oci-generativeaiagentruntime (npm)** (scr-03c6e1): Why it matters: first-party OCI Node client for agent runtimes; evidence strength: Strong; promotion_status: candidate
+  - Source: https://www.npmjs.com/package/oci-generativeaiagentruntime
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 30
+
+- **Google Gemini CLI v0.66.0-nightly** (scr-google-gemini-cli-06618): Why it matters: active tooling churn; evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.66.0-nightly.20261018.ged96faedf
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 14
+
+- **Cloudflare agents@0.28.1** (scr-cloudflare-agents-0281): Why it matters: edge runtime changes can alter export/TTL defaults; evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.28.1
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 30
+
+- **GHSA — Anthropic Claude Code hash-pin bypass** (scr-ghsa-anthropic): Why it matters: supply-chain/plugin hash-pin bypass increases integrity risk; evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/advisories/GHSA-pq7j-f95f-qfcv
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 14
+
+- **GHSA — Pydantic AI host-header / server-side tool exec advisories** (scr-ghsa-pydantic): Why it matters: web UI vectors can trigger server-side tool execution; evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/advisories/GHSA-q2xc-rrxj-58x9
+  - candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 14
+
+- **Community follow-ups**: Reddit/Bluesky/HN reports (connector regressions, OpenHands runtime target, billing surprises) moved to candidate inbox for corroboration and playbook extraction; evidence strength: Medium. candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18; defer_count: 0; stale_after_days: 21
+
+
+## Corroboration queue resolution (2026-10-18)
+- **openai/codex — rust-v0.164.0-alpha.3**: Verified primary source (GitHub release). Evidence strength: Strong; promotion_status: candidate → keep in candidate inbox for operator compatibility actions. Source: https://github.com/openai/codex/releases/tag/rust-v0.164.0-alpha.3; candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18.
+
+- **@vernikr/browser-agent-mcp**: NPM entry surfaced in screening; primary package page present (npm). Evidence strength: Medium; promotion_status: candidate (defer until integration tests). Follow-up: run minimal integration smoke tests to verify headful browser behavior. candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18.
+
+- **Cloudflare agents@0.28.1**: Verified (GitHub release). Evidence strength: Strong; promotion_status: candidate → promoted for operator watch (edge export/TTL implications). Source: https://github.com/cloudflare/agents/releases/tag/agents%400.28.1; candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18.
+
+- **trycua/cua (Computer-Use SDK)**: Repo found (GitHub). Evidence strength: Medium; candidate_status: candidate; follow-up: evaluate sandbox integration. Source: https://github.com/trycua/cua; candidate_seen_at: 2026-10-16; last_checked_at: 2026-10-18.
+
+- **boxlite-ai/boxlite (micro-VM for agents)**: Screening reported the project name only; primary link not confirmed in the snapshot. Evidence strength: Weak; action: pending-official — need a primary vendor/repo URL to upgrade. candidate_seen_at: 2026-10-16; last_checked_at: 2026-10-18; promotion_status: pending-official.
+
+- **QwenLM/qwen-code v0.25.2**: Screening entry (candidate) — primary release URL pending; action: locate official Qwen release and upgrade evidence strength on success. candidate_seen_at: 2026-10-16; last_checked_at: 2026-10-18; promotion_status: pending-official.
+
+- **@tangle-network/agent-eval**: NPM package surfaced; evidence strength: Medium; follow-up: install & run local eval runner to verify feature set. candidate_seen_at: 2026-10-16; last_checked_at: 2026-10-18.
+
+- **detect-coding-agent (crate)**: Crate present (crates.io entry surfaced in screening). Evidence strength: Medium; follow-up: test detection heuristics with Copilot/Codex traces. candidate_seen_at: 2026-10-18; last_checked_at: 2026-10-18.
+
+Notes: items without a clear primary vendor page were marked pending-official and put on a 14-day re-check cadence. If no primary source appears after two checks, move to deprioritized archive.
+
+
+- **Anthropic — Claude Code v2.1.302** (scr-claude-2.1.302): promotion_status: promoted; promoted_at: 2026-10-18; reason: official release (v2.1.302) changes runtime/conductor semantics that affect tool-call containment, session streaming, and artifact formats — requires immediate staging validation and connector compatibility tests. Evidence strength: Strong. candidate_seen_at: 2026-10-17; last_checked_at: 2026-10-17; Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.302
+
+- **Vercel — ai@7.0.143** (scr-vercel-7.0.143): promotion_status: promoted; promoted_at: 2026-10-18; reason: SDK/runtime update alters preview/export sink and TTL/observability semantics; storage and export playbooks must be validated and staging-first checks required. Evidence strength: Strong. candidate_seen_at: 2026-10-17; last_checked_at: 2026-10-17; Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
+
+- **Cloudflare — Verified Bots accountability** (scr-cloudflare-verified-bots): promotion_status: promoted; promoted_at: 2026-10-18; reason: edge-level accountability primitives change operator attribution and triage flows; map attestation/receipt fields into telemetry and forensic manifests. Evidence strength: Strong (vendor blog). candidate_seen_at: 2026-10-17; last_checked_at: 2026-10-17; Source: Cloudflare vendor blog

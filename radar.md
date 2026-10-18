@@ -55,17 +55,17 @@ Last updated: 2026-07-09
 
 - Added signal: AWS GuardDuty AI Protection is now available as first-party threat detection for AI workloads, signaling that major cloud providers are building AI-specific security services. Directly reinforces thesis 9 (agent containment/security as first-class infrastructure). Evidence strength: Strong (official AWS announcement). Source: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-guardduty-ai-protection-aws/
 ## Open Questions
-- Will agent usage remain IDE-centric, or shift toward cloud task runners? — New evidence (Copilot CLI, JetBrains IDE updates, Vercel AI Gateway, Daytona sandboxes) points to a hybrid trajectory: IDEs remain primary for coding workflows while cloud task runners grow for long‑running/background tasks.
-- Will MCP become the default tool integration layer? — New evidence: multiple MCP server releases and router projects (modelcontextprotocol servers, mcp-ai-router) increase adoption signals but do not establish a single default implementation yet.
-- Will long-running agents be priced by seat, token, task, or compute time? — Unchanged: no clear market consensus observed this week; pricing signals remain fragmented.
-- Which agent categories will expand beyond coding first? — Unchanged: signs of voice and browser automation growth exist, but coding still dominates adoption metrics.
-- Will meta-harnesses like Omnigent become standard or remain power-user tools? — New evidence: Omnigent uptake and OSS alternatives (swarms) suggest meta-harnesses are moving toward broader operator use, though standardization is not guaranteed.
-- Will agent memory primitives like Vestige be absorbed into mainstream platforms? — New evidence: multiple memory projects (agenticow, remem-ai, Neo4j agent-memory client) surfaced; no clear absorption into a single mainstream platform yet.
-- Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge? — Unchanged: KB‑backed MCP server patterns exist but not universally dominant.
-- Will MCP server proliferation lead to standardization (convergence) or fragmentation (divergence)? — New evidence: proliferation of server implementations increases fragmentation risk absent a strong governance push.
-- Which agent memory architecture (document-based, vector-based, graph-based, versioned objects) will dominate? — Unchanged: multiple viable approaches coexist; dominance unresolved.
-- Will platform-vendor MCP adoption (Apple, AWS, HashiCorp, MongoDB) accelerate standardization or create vendor-specific silos? — New evidence: ongoing vendor entries (AWS Bedrock/AgentCore, Cloudflare OS, Vercel Gateway, JetBrains) likely accelerate adoption but also risk vendor siloing.
-- Will the agent trust gap (low eval trust + high autonomous deployment) lead to a major incident that forces regulatory action? — New evidence: press coverage and reported incidents this week increase the near-term risk; status: risk elevated but not resolved.
+- Will agent usage remain IDE-centric, or shift toward cloud task runners? — New evidence: Copilot CLI / JetBrains IDE updates / Vercel AI Gateway / Daytona sandboxes point to a hybrid trajectory (IDEs for short-cycle coding, cloud task runners for long-running/background automation). Evidence: JetBrains Mellum release, Vercel AI Gateway logs, Copilot local-sandbox reports. Status: New evidence.
+- Will MCP become the default tool integration layer? — New evidence: multiple MCP server implementations and routers surfaced (mcp-ai-router, browser-agent-mcp, many MCP server packages). Status: New evidence.
+- Will long-running agents be priced by seat, token, task, or compute time? — Unchanged: no clear market consensus; price signals remain fragmented. Status: Unchanged.
+- Which agent categories will expand beyond coding first? — Unchanged: voice and browser automation show growth signals but coding remains dominant. Status: Unchanged.
+- Will meta-harnesses like Omnigent become standard or remain power-user tools? — New evidence: Omnigent and OSS multi-agent swarms show uptake; still unclear if this becomes a standard. Status: New evidence.
+- Will agent memory primitives like Vestige be absorbed into mainstream platforms? — New evidence: multiple memory projects surfaced (agenticow, remem-ai, Neo4j agent-memory client), but no mainstream absorption yet. Status: New evidence.
+- Will knowledge-base MCP servers become a standard agent interface for personal/team knowledge? — Unchanged: patterns exist but not universal adoption. Status: Unchanged.
+- Will MCP server proliferation lead to standardization or fragmentation? — New evidence: large proliferation increases fragmentation risk absent governance. Status: New evidence.
+- Which agent memory architecture (document/vector/graph/versioned) will dominate? — Unchanged: multiple approaches coexist. Status: Unchanged.
+- Will platform-vendor MCP adoption accelerate standardization or create vendor silos? — New evidence: entries from AWS, Cloudflare, Vercel, JetBrains increase adoption but risk siloing. Status: New evidence.
+- Will the agent trust gap lead to a major incident forcing regulatory action? — New evidence: press coverage and reported incidents increase risk; status: risk elevated. Status: New evidence.
 ## Thesis Scorecard
 | # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter-evidence |
 |---|----------------|--------------|------------------------|----------------------------|
@@ -82,121 +82,19 @@ Last updated: 2026-07-09
 
 - Updated at: 2026-10-11
 ## Anthropic — Claude Code (scr-claude-code)
-
 What it is: Claude Code runtime and orchestration components for coding agents.
 
-Recent change: Release v2.1.229 published (2026-08-13). Runtime and conductor updates can affect tool-calling semantics, session streaming, and containment behaviors operators rely on.
+Recent change: Release v2.1.302 published (2026-10-17). Runtime and conductor updates in v2.1.302 further adjust tool-calling semantics, session streaming, and containment behaviors that operator playbooks depend on.
 
-Why it matters: Runtime-level changes in a major coding-agent provider can shift containment assumptions (sandboxing, session streaming, workspace trust), alter artifact formats, and require ops teams to re-validate CI/compatibility and audit pipelines.
+Why it matters: Runtime-level changes in a major coding-agent provider can shift containment assumptions (sandboxing, session streaming, workspace trust), alter artifact formats, and require ops teams to re-validate CI/compatibility and audit pipelines. This release in particular modifies connector behavior observed in prior patch cycles and should be treated as a high-impact upgrade for production fleets.
 
 Evidence strength: Strong (official GitHub release)
 
 Relevance score: 9
 
-Follow-up needed: extract and publish release-note deltas that affect containment, tool-call sandboxes, or storage schemas; run staging compatibility checks for tool calls and session persistence.
+Follow-up needed: Extract and publish release-note deltas that affect containment, tool-call sandboxes, or storage schemas; run staging compatibility checks for tool calls and session persistence; pin connector CI to a staging runtime and add upgrade-time compatibility gates (test harnesses that validate connector behavior before production rollout).
 
-Operational signal (2026-08-22): community reports surfaced a regression where custom MCP connectors stopped functioning after a runtime/upgrade event. Multiple community posts describe connector breakage and connector-runtime incompatibilities that prevented previously working integrations from connecting.
+Operational signal (2026-10-17): community posts and operator smoke runs should be monitored for connector regressions and altered session export behavior after upgrading to v2.1.302.
 
-- Why it matters: This is an operator-impacting integration regression. Broken MCP connectors cause immediate availability and workflow failures for customers who rely on third-party connectors or custom MCP adapters. The incident underscores the need for explicit connector compatibility matrices, pinned connector versions, and pre-upgrade snapshot/restore playbooks. Operators should treat runtime upgrades as high-risk for connector contracts and add upgrade-time compatibility gates (test harnesses that validate connector behavior in staging before production rollout).
-- Evidence strength: Medium (community reports / Reddit thread).
-- Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a/
-
-Action items: document connector compatibility tests, require connector CI against a staging runtime, and add pre-upgrade workspace snapshots to enable quick rollback when connector regressions are observed.
-
-
-### 2026-08-30 Promotions
-
-- Cloudflare — BotBase for Operators (promoted): Platform-level operator directory and onboarding flow that affects egress/retention and snapshot/export defaults. Reason for promotion: strong first-party evidence and direct operator governance impact on snapshot/egress workflows. Source: https://blog.cloudflare.com/botbase-for-operators/
-
-- GitHub Copilot — Policy & Billing Changes (promoted): Changelog shows upcoming policy/billing changes that will affect operator cost models and feature access for Copilot agent surfaces. Reason for promotion: mainstream product change with strong operational impact for coding-agent fleets and background runs. Source: https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing
-
-- remem-ai (promoted): Local-first/persistent memory crate for coding agents. Reason for promotion: direct infra primitive for agent memory with concrete storage/snapshot implications; promotes memory-as-artifact operational work. Source: https://crates.io/crates/remem-ai
-
-
-### 2026-09-06 Promotions
-
-- Cloudflare — Vulnerability Discovery / Daybreak (promoted)
-  - Why promoted: Strong first-party product signal that changes export/egress and triage playbooks; raises containment and forensic-sink requirements (affects Thesis 9: containment/security and Thesis 8: platform‑vendor MCP entry).
-  - Source: https://blog.cloudflare.com/vulnerability-discovery-remediation/
-
-- Vercel — Cursor Cloud Agents in Vercel Sandbox (promoted)
-  - Why promoted: Platform-managed sandbox defaults materially affect where agent artifacts are stored and the default retention/egress semantics operators must reconcile (affects Thesis 5: object storage as artifact plane; Thesis 8: platform-vendor MCP entry).
-  - Source: https://vercel.com/changelog/run-cursor-cloud-agents-vercel-sandbox
-
-- MemOS — hybrid retrieval memory (promoted)
-  - Why promoted: Memory-as-artifact primitive that may reduce token storage while increasing snapshot/provenance requirements; strengthens Thesis 7 (memory + MCP convergence) and has direct storage/schema implications for snapshots and replay.
-  - Source: https://github.com/MemTensor/MemOS
-
-
-### 2026-09-13 Promotions
-
-- OpenAI — Agents API (promoted)
-  - Why promoted: Official product launch that formalizes agent runtime/tool-call lifecycle and SDK surfaces; immediate operator and infra impact on snapshot formats, telemetry, and auth integration. Affects Thesis 1 (task-based execution), Thesis 5 (object storage as artifact plane), and Thesis 8 (platform-vendor MCP entry).
-  - Source: https://openai.com/index/introducing-the-agents-api
-
-- Anthropic — Threat Intelligence Report (Sept 2026) (promoted)
-  - Why promoted: Vendor-disclosed incident report that changes containment and forensic requirements for operators running Claude/Claude-Code agents; strengthens Thesis 9 (containment/security) and drives storage/audit playbook changes.
-  - Source: https://www.anthropic.com/threat-intelligence-report-september-2026
-
-
-### 2026-09-20 Promotions
-
-- GitHub — Workflow Execution Protections (promoted: scr-1a2b3c4d)
-  - Why promoted: GA changelog introduces enforcement points in Actions/runners that give operators a native mechanism to limit or quarantine agent-driven CI. This materially affects operator governance, incident triage, and artifact retention for automated runs. Source: https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available
-
-- GitHub — Agentic CLI telemetry (promoted: scr-2b3c4d5e)
-  - Why promoted: Adding CLI customization telemetry into the usage metrics API surfaces operator-relevant signals for anomaly detection and governance of agentic CLI workflows. This expands the telemetry/observability surface that operators can use to detect and respond to misuse or automation drift. Source: https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
-
-- AVIDS2 — memorix (promoted: scr-avids-memorix)
-  - Why promoted: Cross-agent memory primitives directly impact Thesis 7 (memory + MCP convergence) by pushing memory to an infra primitive that must be snapshotted, versioned, and governed. If adopted broadly, memorix would require snapshot schema extensions and provenance fields. Source: https://github.com/AVIDS2/m
-
-
-### 2026-09-27 Promotions
-
-- Cloudflare — Turnstile Spin & Worker Previews (promoted)
-  - Why promoted: Edge attestation + preview sandboxes are a vendor-level change that reduces blast radius and introduces preview/export artifact classes requiring explicit operator mapping to ephemeral vs durable storage. Affects Thesis 5 (object storage as artifact plane), Thesis 8 (platform‑vendor MCP entry), and Thesis 9 (containment/security).
-  - Source: https://blog.cloudflare.com/turnstile-spin/ ; https://blog.cloudflare.com/worker-previews/
-
-- AWS — Messaging/SES AI skills for MCP Server (promoted)
-  - Why promoted: Formalizes privileged outbound messaging connectors at the MCP layer and creates a new artifact category (sent message artifacts & receipts) that operators must index, retain, and govern. Affects Thesis 5 (object storage), Thesis 7 (memory/MCP convergence), and operator incident playbooks.
-  - Source: https://aws.amazon.com/about-aws/whats-new/2026/09/aws-messaging-ses-ai-skills-mcp-server/
-
-- GitHub — Copilot Agentic autofix uses Copilot Memory (promoted)
-  - Why promoted: Memory persistence for autofix modifies provenance, retention, and forensic requirements for widely-used coding-agent workflows; high operator impact on snapshot/retention/playbooks. Affects Thesis 7 (memory+MCP convergence) and Thesis 5 (artifact plane).
-  - Source: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory
-
-
-### 2026-10-04 Promotions
-
-- OpenAI — Dots (promoted)
-  - Why promoted: vendor launch of persistent/always-on assistants introduces new operational artifact classes (agent-state snapshots, scheduled-output archives, long-window telemetry) that materially change operator retention/forensics playbooks and upgrade the importance of export hooks and provenance manifests.
-  - Affects theses: 5 (object storage as artifact plane), 7 (memory + MCP convergence), 9 (containment/security).
-  - Source: https://openai.com/index/introducing-dots/
-
-- OpenAI — GPT-6 model guide (promoted)
-  - Why promoted: official integration patterns and recommended defaults for GPT-6 shape agent runtime defaults (telemetry, tool-call semantics, SDK behaviors) and thus have high operational relevance for agent deployments and connector compatibility.
-  - Affects theses: 1 (task-based execution), 5 (artifact plane), 10 (cost/economics via model guidance).
-  - Source: https://openai.com/index/practical-guide-building-gpt-6
-
-- Cloudflare — agents@0.26.0 release (promoted)
-  - Why promoted: edge runtime / bundler changes can change default export/retention behavior and introduce or expand audio/transcript artifact classes at the edge — operator mapping and lifecycle policies required.
-  - Affects theses: 5 (object storage), 8 (platform-vendor MCP entry), 9 (containment/security).
-  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0
-
-
-### 2026-10-11 Promotions
-
-- Mistral — Studio & Vibe (promoted)
-  - Why promoted: Vendor product pages signal an integrated dev/test/run suite for long‑horizon agents that directly affects operator toolchains, sandboxing, and memory/connector integration testing. Promoting this surfacing helps operators track a mainstream tooling vector for agent lifecycle management.
-  - Affects theses: 1 (task execution), 3 (eval/dev tooling), 7 (memory + MCP convergence).
-  - Source: https://mistral.ai/products/studio/
-
-- Cloudflare — Containers cross-tenant fix (promoted)
-  - Why promoted: Security advisory with direct operator impact on where container-run artifacts and preview exports can land; forces immediate audit of export/retention defaults and per-tenant object-store mappings.
-  - Affects theses: 5 (object storage as artifact plane), 9 (containment/security).
-  - Source: https://blog.cloudflare.com/containers-cross-tenant-vulnerability/
-
-- Manifold — Git-based repo-hijack analysis (promoted)
-  - Why promoted: Supply-chain vector that concretely ties repository provenance to agent execution risk; promotes tighter pinning/signed-bundle practices and snapshot provenance requirements for forensic readiness.
-  - Affects theses: 9 (containment/security), 7 (memory + MCP convergence) by way of provenance and snapshoting needs.
-  - Source: research-log.md (scr-4d5e6f7a)
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.302
+- Action: treat v2.1.302 as a must-stage release; require pre-upgrade snapshot and connector CI checks.

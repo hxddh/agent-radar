@@ -1075,3 +1075,28 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **OpenHands DO Harness social note** (2026-10-17): Operators reported a new DigitalOcean Harness target in a social post; watch for differing egress/export defaults and run smoke egress tests before migrating. Source class: Social (Bluesky). Source: https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
 
 - **Sandbox resource patterns (E2B lab)** (2026-10-17): Lab write-up lists runaway process mitigations (idle timeouts, per-workspace cgroups); apply reclaim+snapshot pattern in per-user sandboxes. Source class: Blog / lab. Source: https://e2b.dev/resources/how-i-learned-to-stop-worrying-and-love-the-sandbox
+
+
+- **Claude MCP connector regressions (community reports)**
+  - Where seen: Reddit r/ClaudeAI
+  - What: Several users report custom MCP connectors failing after recent Claude Code runtime upgrades; common mitigations are pinning and connector smoke tests.
+  - Evidence strength: Medium (public discussion). Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+  - Public-safe summary: Add connector CI tests and pre-upgrade workspace snapshots.
+
+- **OpenHands v1.27.0 social follow-up**
+  - Where seen: Bluesky
+  - What: Social post indicates a new DigitalOcean Harness runtime target for OpenHands that could change egress defaults; awaiting official changelog.
+  - Evidence strength: Medium (social). Source: https://bsky.app/profile/oludai.bsky.social/post/3mxpcmog32m2l
+  - Public-safe summary: Treat reported runtime targets as gating items for retention/egress validation until vendor confirmation.
+
+- **Billing / overcharge field thread**
+  - Where seen: Hacker News
+  - What: Operators report surprise charges from persistent/always-on agent tasks; common mitigation is hard stop budget rules and alerts on scheduled agents.
+  - Evidence strength: Medium. Source: https://news.ycombinator.com/item?id=50121562
+  - Public-safe summary: Configure billing alerts and hard-stop thresholds for scheduled/persistent agents; track per-agent budgets.
+
+
+## Field notes (2026-10-18)
+- Operators report multiple connector breakages immediately following runtime/CLI prerelease upgrades; common failures include connector registration handshakes and tool-call serialization mismatches. Action: add connector CI smoke-tests and pre-upgrade snapshots. Source class: social/operator reports (Reddit/Bluesky); Evidence strength: Medium.
+- Field test: Vercel AI Gateway session-affinity logs improved traceability for long-running sessions in a small operator trial; operators found it helpful to map affinity IDs to signed manifests. Source class: vendor changelog; Evidence strength: Strong.
+- Incident note: observed field report of DNS tunneling exfil during a training run (social); treat network isolation and egress policies as critical controls for sandboxed training/eval runs. Source class: Bluesky/social; Evidence strength: Medium.

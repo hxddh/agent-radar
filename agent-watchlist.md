@@ -7,10 +7,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: OpenAI published a prerelease tag rust-v0.156.0-alpha.9 (2026-09-20) updating runtime/CLI behavior; Open VSX listing shows ChatGPT extension distribution beyond the primary marketplace. Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension install vectors across marketplaces.
+- Recent changes: Codex client/prerelease churn continues (rust v0.164.0-alpha.3 published 2026-10-18). Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension install vectors across marketplaces. Source: https://github.com/openai/codex/releases/tag/rust-v0.164.0-alpha.3
+- Operational recommendation: add Codex prerelease smoke tests to connector CI and include backwards-compatibility checks for MCP connectors before upgrades.
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
-- Evidence strength: Strong
-- Sources: https://github.com/openai/codex/releases/tag/rust-v0.156.0-alpha.9 ; https://open-vsx.org/extension/openai/chatgpt
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
@@ -28,7 +27,7 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Devin / Cognition
 - Category: Agent runtime / platform
 - Maturity: Deferred; public changelog silent.
-- Recent changes: No substantive public updates since last entry; last‑checked: 2026-09-13. Action: deprioritized pending vendor changelog or operator reports; retain watchlist entry but mark as "deprioritized" until vendor posts evidence. Evidence strength: None
+- Recent changes: No substantive public updates since last entry; last‑checked: 2026-09-13. Status: deprioritized for active promotion due to prolonged silence. Keep as watch-if-active; re-check in 30 days or on a vendor changelog.
 - replace_section anchor: `## Devin / Cognition`
 ## GitHub Copilot / Coding Agent
 - Category: Coding agent / task agent
@@ -44,24 +43,24 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Action: Validate hosted-agent network egress defaults and snapshot/backup hooks on Replit-hosted projects.
 - replace_section anchor: `## Replit Agent`
 ## Warp
-- Category: Terminal / developer workflow agent
-- Maturity: No fresh public changelog located during this pass; last‑checked: 2026-09-13.
-- Action: mark deprioritized pending vendor changelog; recommend periodic (monthly) recheck. Evidence strength: None
+- Category: IDE/integration vendor
+- Maturity: Previously tracked for IDE‑integrations and terminal-first agent flows.
+- Recent changes: No public changelog since 2026-09-13. Status: deprioritized until a substantive vendor update appears. Re-check in 30 days or on announcement.
 - replace_section anchor: `## Warp`
 ## Amp
-- Category: Agent / productivity tool
-- Maturity: No fresh public changelog located during this pass; last‑checked: 2026-09-13.
-- Action: deprioritized until vendor publishes product changes or operator reports. Evidence strength: None
+- Category: Agent surface / runtime
+- Maturity: Previously tracked.
+- Recent changes: No substantive public updates since 2026-09-13; status: deprioritized. Keep monitored for security advisories or runtime releases.
 - replace_section anchor: `## Amp`
 ## Factory
-- Category: Agent orchestration / workflow
-- Maturity: No fresh public changelog located during this pass; last‑checked: 2026-09-13.
-- Action: deprioritized pending vendor updates. Evidence strength: None
+- Category: Agent infra / orchestration
+- Maturity: Previously tracked.
+- Recent changes: No substantive public updates since 2026-09-13; status: deprioritized pending vendor activity.
 - replace_section anchor: `## Factory`
 ## Raycast AI
-- Category: Desktop/IDE assistant
-- Maturity: No public updates since 2026-09-13 in current snapshot.
-- Action: deprioritized for this cycle; re-evaluate if vendor posts runtime/sandbox changes. Evidence strength: None
+- Category: Desktop/command-surface agent
+- Maturity: Previously tracked for rapid local workflows.
+- Recent changes: No substantive public updates since 2026-09-13; status: deprioritized pending fresh evidence. Operators relying on Raycast agent flows should verify local permission grants before onboarding.
 - replace_section anchor: `## Raycast AI`
 ## Vercel AI / Sandbox-Related Agent Workflow
 - Category: Sandbox / managed agents
@@ -442,11 +441,9 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong
 - Source: https://blog.cloudflare.com/one-observability-platform/
 ## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)
-- Recent changes: Vercel Labs published agent-browser v0.39.1 (2026-10-13) with runtime and observability fixes. Operators should treat this as a staging-first update: runtime changes can alter preview export sinks, TTLs, and bundler behavior that map previews into durable object storage.
-- User impact: Preview & browser-agent UX improvements; potential changes in where preview artifacts land by default (check release notes for export/TTL diffs).
-- Infra implication: Pin agent-browser runtime in CI, re-run preview/export tests in staging, and map any changed default sinks to short‑TTL object storage to avoid accidental long-term retention.
-- Evidence strength: Strong (GitHub release)
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.1
+- Recent changes: Vercel AI Gateway added session-affinity logs and model-catalog updates; agent-browser releases and sandbox ergonomics continue to change preview/export semantics. Operators should validate session-affinity behavior and preview-to-store export targets in staging. Source: https://vercel.com/changelog/ai-gateway-logs-now-show-session-affinity
+- Operational recommendation: add Vercel preview/export mapping to the preproduction checklist and monitor release notes for default TTL changes.
+- replace_section anchor: `## Vercel — Cursor Cloud Agents in Vercel Sandbox (scr-3c9f7a-followup)`
 ## MemOS — hybrid retrieval memory (MemTensor / MemOS)
 
 - What it is: MemOS (MemTensor/MemOS) — hybrid retrieval memory claiming token‑savings via a self‑evolving persistent memory + retrieval stack.
@@ -524,10 +521,9 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## GitHub Copilot — Agentic autofix now uses Copilot Memory (promoted 2026-09-27)
-- Recent changes: GitHub announced two operational deltas (2026-10-07): local sandboxing for Copilot is now generally available, and the Copilot CLI can discover local models for on-device routing. Both moves shift some execution from cloud-hosted sandboxes to operator-managed local environments and caches.
-- User impact: Reduced remote egress for many coding tasks but increased local artifact/forensics burden (container/VM images, local model caches). Operators will see fewer outbound telemetry signals for some flows and more host-local artifacts to govern.
-- Infra implication: Add local-image pinning, local-model version governance, and pre-upgrade connector contract tests. Ensure CI smoke tests exercise local sandbox images and model-discovery routing.
-- Evidence strength: Strong (GitHub changelogs). Sources: https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available ; https://github.blog/changelog/2026-10-07-discover-local-models-in-github-copilot-cli
+- Recent changes: GitHub announced local sandboxing for Copilot is generally available and the Copilot CLI can discover local models for on-device routing (2026-10-07 → 2026-10-18 follow-up signals). Operators should map default permission grants and local model discovery to existing governance controls, validate local sandbox policies, and treat Copilot CLI discovery as a new local-sourcing surface.
+- Operational recommendation: require local-sandbox configuration audits in preproduction; add Copilot CLI discovery to asset-inventory tooling.
+- replace_section anchor: `## GitHub Copilot — Agentic autofix now uses Copilot Memory (promoted 2026-09-27)`
 ## OpenAI — Dots (scr-01d2f3)
 - Recent changes: OpenAI published Dots launch materials describing always-on assistants, scheduled tasks, and export/backup hooks. Freshness: follow-up (previously covered 2026-10-04); today's delta: map artifact classes into retention/forensics playbooks.
 - Operational implication: new long-lived state requires retention policies, export manifest support, and telemetry schema extensions for agent-state snapshots.
@@ -568,15 +564,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.26.0
-
-- What it is: Cloudflare agents edge/runtime release (agents@0.26.0) with bundler/worker changes that affect preview/export/edge artifact behavior.
-- Why it matters: Edge runtime and bundler deltas can change where artifacts (audio, transcripts, snapshots, preview exports) land and what defaults apply for retention/egress. Operators that run edge-hosted agents must re-validate worker-bundler compatibility and confirm preview/export sinks map to tenant-controlled buckets.
-- Evidence strength: Strong (GitHub release)
-- Relevance score: 8
-- Recommended immediate actions: run bundler/worker compatibility tests in staging; verify preview export sinks and default TTLs; add audio/transcript retention and PII-scan steps to snapshot playbooks.
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.26.0
-
-
+- Recent changes: Cloudflare published agents@0.28.1 (2026-10-18) with runtime and observability fixes that may alter preview-export sinks and default TTLs for edge artifacts. Operators should treat this as a staging-first update and verify preview-to-object-store mappings and per-tenant export defaults.
+- User impact: Edge-deployed agents may now produce different artifact classes (transcripts, audio, previews) and TTL semantics; mapping these to durable storage and forensic indexes is necessary.
+- Infra implication: Reconcile CDN/edge preview TTLs with central object-store retention, and validate per-tenant export isolation after the upgrade.
+- Evidence strength: Strong
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.28.1
 ## Mistral — Studio & Vibe
 
 - What it is: Vendor product suite (Studio & Vibe) for developing, testing, and running long‑horizon agents and agent-driven workflows. Tooling targets the full lifecycle (model-forge, workspace orchestration, run harnesses) and advertises integrations for dev/test pipelines and operator controls.
@@ -593,3 +585,19 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong (OpenAI product page).
 - Source: https://openai.com/index/amp-beyond-coding
 - replace_section anchor: `## OpenAI — Amp (scr-amp01)`
+
+
+## Cloudflare — Verified Bots accountability (scr-cloudflare-verified-bots)
+
+- What it is: Edge-level accountability and verified-bot controls that surface identity/attestation metadata for agent-originated traffic at Cloudflare's edge.
+
+- Why it matters: Identity/attestation fields (verified-bot receipts, attestation tokens, bot provenance headers) change how operators attribute agent actions and perform incident triage. Mapping these fields into operator telemetry and linking them to run-level snapshots improves triage speed and reduces ambiguity when reconstructing agent-originated external actions.
+
+- Evidence strength: Strong (vendor blog / product announcement)
+
+- Operational actions:
+  - Map Cloudflare verified-bot / attestation fields into run-level telemetry and the forensic manifest (run_id → snapshot prefix).
+  - Persist attestation receipts into a short-lived append-only audit prefix and provide a promoted pathway to copy evidence into durable forensic buckets when an incident hold is required.
+  - Update playbooks to parse and surface verified-bot tokens during incident triage and to require attestation receipt capture for any agent action that performs external mutations.
+
+- Follow-up needed: confirm exact header/receipt schema from Cloudflare docs and add a mapping test to ingestion pipelines that link attestation receipts to snapshot manifests.

@@ -1383,3 +1383,47 @@ Sources: https://openai.com/index/introducing-dots/ ; https://blog.cloudflare.co
   - Evidence strength: Strong (Vercel release).
   - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
   - Watch trigger: Post-upgrade runs that generate preview artifacts without corresponding durable-export records in retention storage.
+
+
+- Signal: Immutable snapshots + signed manifests for agent edits
+  - Related to: OpenAI rogue-agent incident
+  - Storage implication: Implement WORM-style object-store snapshots for agent-initiated content changes and attach signed manifests (agent id, runtime version, tool-call traces) to each snapshot for forensic reconstruction.
+  - Source class: independent analysis
+  - Evidence strength: Strong. Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
+  - Watch trigger: discovery of an edit that cannot be reconstructed from existing logs or manifests.
+
+- Signal: Edge runtime default export changes require mapping to durable sinks
+  - Related to: Cloudflare agents@0.28.1; OCI agent runtime client
+  - Storage implication: Re-audit preview export TTLs and default targets (CDN vs object-store); add a translation layer that guarantees copies of any artifact with forensic value are replicated to durable object storage.
+  - Source class: GitHub release / npm
+  - Evidence strength: Strong. Sources: https://github.com/cloudflare/agents/releases/tag/agents%400.28.1 ; https://www.npmjs.com/package/oci-generativeaiagentruntime
+  - Watch trigger: vendor changelog note changing default export target or TTL semantics.
+
+
+## 2026-10-18: Immutable snapshots & provenance defaults
+- Recommendation: default to creating a signed, write-once snapshot and a short-lived but durable export for any agent run that can perform external actions (edits, sends messages, files). Snapshots must include: agent identity, model+version, MCP connector id, tool-call logs, and a cryptographic signature of the manifest.
+- Implementation checklist:
+  - Enable WORM/object-store bucket for agent-forensics artifacts.
+  - Attach signed manifest generation to agent runtime shutdown or scheduled snapshot intervals for long-running agents.
+  - Map preview artifacts → short TTL, but copy forensic artifacts → durable buckets with retention policy aligned to compliance needs.
+  - Ensure traceability: snapshot id → telemetry traces → audit logs.
+- Watch trigger: any reported unauthorized external mutation attributable to an agent.
+
+Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams need immutable, signed evidence to reconstruct events and attribute actions.
+
+
+### 2026-10-18 Promotion — Vercel ai@7.0.143 (promoted)
+
+- What it is: Vercel ai@7.0.143 is a runtime/client SDK release that changes preview/export sinks, TTL behavior, and some observability hooks for serverless sandboxed agent runs.
+
+- Why it matters: Changes to where previews and diagnostic artifacts are exported (preview → durable sinks, TTL defaults, or provenance headers) materially affect operator storage mappings and forensic/export workflows. Serverless/runtime SDKs that change default sinks can cause preview artifacts to land in durable buckets unintentionally or strip provenance metadata needed for replay and incident triage.
+
+- Storage implications / recommended actions:
+  - Validate preview→export mapping after upgrading to ai@7.0.143: ensure preview artifacts remain in tenant-controlled ephemeral buckets unless explicitly promoted.
+  - Add staging smoke tests that exercise exports and verify provenance headers (agent id, run_id, AGENTS.md SHA, connector version) are present on any durable copy.
+  - Alert on any upgrade that changes default export targets or TTLs so retention policies can be applied before production promotion.
+
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
+
+- Follow-up needed: run an artifact-export matrix (preview vs promoted), confirm that any automatic durable-copy hooks are gated by operator opt-in, and update playbooks to require explicit export approvals for serverless/preview SDK upgrades.
