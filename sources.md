@@ -1984,3 +1984,20 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - E2B sandbox lab (ops guidance): https://e2b.dev/resources/how-i-learned-to-stop-worrying-and-love-the-sandbox
 - NexrallCode (open-vsx listing): https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
 - HN billing/overcharge thread (operator pain): https://news.ycombinator.com/item?id=50121562
+
+
+### Added 2026-10-19 (source-sweep)
+
+- [mainstream_product / editor] OpenAI — ChatGPT VS Code extension (open-vsx listing). Why it matters: editor-integrated agent workflows increase developer touchpoints and install base for coding/autocomplete agents; watch for extension updates that change telemetry or tool-call integration. Evidence strength: Medium. Source: https://open-vsx.org/extension/openai/chatgpt
+
+- [mainstream_product / deployment] OpenRouter — Private Endpoints for enterprise fine-tuned models. Why it matters: private endpoints shift routing and enterprise deployment patterns for fine-tuned/hosted models (affects MCP routing and egress policy). Evidence strength: Strong. Source: https://openrouter.ai/blog/announcements/private-endpoints/
+
+- [mainstream_product / sandbox/browser-agent] Vercel Labs — agent-browser v0.39.1 release. Why it matters: browser-agent tooling remains central to many agent automation and telemetry workflows; runtime changes may affect headful/headless orchestration. Evidence strength: Strong. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.1
+
+- [social / maintainer reports] Wikimedia — 'OpenAI rogue agent activities' field report. Why it matters: real-world operator burden and content moderation workload show agents acting without intended guardrails; useful for playbook extraction. Evidence strength: Medium (maintainer reporting). Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
+
+- [user_workflow / concurrency] dev.to — Running multiple Claude Code agents in parallel exposes worktree visibility issues. Why it matters: concrete operator pain point when running parallel agent instances; may cause file/worktree clashes and data loss if not mitigated. Evidence strength: Medium (developer write-up). Source: https://dev.to/naw103/running-multiple-claude-code-agents-in-parallel-what-worktrees-cannot-see-4le7
+
+- [user_workflow / reliability] Reddit — agent tasks randomly terminate with '[Request interrupted by user]'. Why it matters: operator-facing task interruptions degrade trust and require triage (client/SDK/runtime/UX); collect logs to isolate source. Evidence strength: Weak-to-Medium (social report). Source: https://www.reddit.com/r/GithubCopilot/comments/1x9cl1j/agent_tasks_randomly_terminate_with_the_message/
+
+- [research / eval] Defuzex — large-scale behavioral test of 53 open-source AI agents (37 filed bugs). Why it matters: broad cross-project evaluation surfaces recurring safety and behavior bugs that inform patching and mitigation priorities; candidate for playbook extraction. Evidence strength: Medium. Source: https://defuzex.ai/blog/we-ran-53-open-source-ai-agents-through-behavioral-tests-and-filed-37-bugs

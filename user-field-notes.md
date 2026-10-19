@@ -1100,3 +1100,23 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Operators report multiple connector breakages immediately following runtime/CLI prerelease upgrades; common failures include connector registration handshakes and tool-call serialization mismatches. Action: add connector CI smoke-tests and pre-upgrade snapshots. Source class: social/operator reports (Reddit/Bluesky); Evidence strength: Medium.
 - Field test: Vercel AI Gateway session-affinity logs improved traceability for long-running sessions in a small operator trial; operators found it helpful to map affinity IDs to signed manifests. Source class: vendor changelog; Evidence strength: Strong.
 - Incident note: observed field report of DNS tunneling exfil during a training run (social); treat network isolation and egress policies as critical controls for sandboxed training/eval runs. Source class: Bluesky/social; Evidence strength: Medium.
+
+
+- Claude MCP connector regressions (community reports)
+  - When seen: 2026-10-17 → 2026-10-19
+  - Symptom: custom MCP connectors stop binding or return tool-call errors after runtime/SDK upgrades
+  - Operator mitigation: nightly connector smoke-tests that run a short tool-call suite and validate session export/trace IDs; stage upgrades and snapshot workspaces before rollout
+  - Evidence strength: Medium (Reddit thread)
+  - Source: https://www.reddit.com/r/ClaudeAI/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Billing surprises for long-running/background agents
+  - When seen: ongoing; community thread 2026-10-18
+  - Symptom: agents exceed expected quotas, producing large bills due to unattended long-running tasks
+  - Operator mitigation: enforce daily spend caps per-agent and implement soft-stop hooks at 80% spend threshold
+  - Evidence strength: Medium (Hacker News discussion)
+  - Source: https://news.ycombinator.com/item?id=50121562
+
+- Quick staging trick: 'connector canary' job
+  - When useful: before any runtime/SDK upgrade
+  - What it does: runs a concise sequence of tool-calls, streaming checks, and export/restore cycles to validate connector behavior within 15 minutes
+  - Evidence strength: Aggregated from community troubleshooting and vendor upgrade recommendations

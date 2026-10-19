@@ -13,10 +13,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic published Claude Code v2.1.302 (2026-10-17) with runtime and conductor updates. Runtime updates continue to be a recurring source of connector regressions for some third-party/custom MCP adapters; operators should pin runtime versions in connector CI, snapshot workspaces prior to rollout, and add connector health probes to staging and production.
-- Evidence strength: Strong (GitHub release)
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.302
-- replace_section anchor: `## Claude Code`
+- Recent changes: Anthropic published Claude Code v2.1.303 (2026-10-19). Runtime and conductor updates in v2.1.303 continue to adjust tool-calling semantics, session streaming, and containment behaviors that operator playbooks depend on. Operators should treat this as a staging-first upgrade: snapshot workspaces before upgrade, run connector compatibility tests, and add connector health probes to CI. Note: a related GHSA advisory on plugin hash‑pin bypass increases the need for plugin integrity checks when loading third-party adapters.
+- Evidence strength: Strong (official GitHub release; GHSA advisory)
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.303
+- Related security advisory: https://github.com/advisories/GHSA-pq7j-f95f-qfcv
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls

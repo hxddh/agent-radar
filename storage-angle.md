@@ -1427,3 +1427,25 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
 - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
 
 - Follow-up needed: run an artifact-export matrix (preview vs promoted), confirm that any automatic durable-copy hooks are gated by operator opt-in, and update playbooks to require explicit export approvals for serverless/preview SDK upgrades.
+
+
+- Cursor cloud canvases → new persisted artifact class
+  - Implication: canvases behave like long-lived workspace artifacts and must be included in retention policies, searchable manifests, and immutable forensic exports.
+  - Evidence: Cursor changelog (2026-10)
+  - Evidence strength: Strong
+  - Source: https://cursor.com/changelog/cloud-agent-canvases-and-environments
+  - Watch trigger: increase in canvas export failures or restore mismatches after a runtime change.
+
+- OpenAI Dots export/backup hooks → persistent assistant artifacts
+  - Implication: scheduled/always-on assistants will generate periodic backups and exports; these artifacts need provenance metadata and TTL policies to avoid storage bloat and to support audits.
+  - Evidence: OpenAI Dots product docs
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/introducing-dots
+  - Watch trigger: rising counts of backup blobs without provenance fields or unexpected retention durations in object storage.
+
+- Vercel ai preview/export TTL changes
+  - Implication: SDK/runtime updates can silently change where previews are exported and default TTLs, impacting forensic retention and egress cost accounting.
+  - Evidence: Vercel ai release notes
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
+  - Watch trigger: mismatch between preview artifacts found in CDN logs vs exported object manifests after a deploy.

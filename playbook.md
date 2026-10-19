@@ -1040,3 +1040,15 @@ Source: JetBrains cloud agent sandboxing blog (2026-10-15). Evidence strength: S
 - When useful: before runtime/SDK upgrades, when onboarding new MCP servers, and before enabling persistent assistants in production.
 
 Evidence: community reports of connector regressions (Reddit) + multiple vendor runtime releases this week.
+
+
+## SDK & Runtime Upgrade playbook (short checklist)
+
+- Scope: apply when an upstream SDK or runtime (OpenAI SDK, Claude Code, agent-framework, Vercel ai) publishes a release.
+- Steps:
+  1. Snapshot current staging workspaces and export manifests (immutable blob with provenance metadata).
+  2. Run 'connector canary' job: streaming + tool-call + export-restore (target < 15 minutes).
+  3. Run nightly integration smoke tests for connectors for 24–48h with low-traffic canary tenants.
+  4. Verify plugin integrity: ensure hash pin + signature checks for plugin installs; if GHSA present, enforce signature-only installs until patched.
+  5. Monitor billing counters and daily spend cap triggers during canary window.
+- Promote to playbook? yes — evidence: repeated connector regressions and vendor SDK churn (Oct 2026). Source: community threads + vendor releases.
