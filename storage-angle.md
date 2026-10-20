@@ -1449,3 +1449,10 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.143
   - Watch trigger: mismatch between preview artifacts found in CDN logs vs exported object manifests after a deploy.
+
+
+## 2026-10-20 storage/angle highlights
+
+- Structured agent outputs (AWS Bedrock + Claude): Bedrock structured outputs enable typed manifests and simplify ingestion into object stores and downstream pipelines. Operational action: add schema validators to object-store ingestion, version manifest parsers, and include manifest presence/absence in upgrade gating. Evidence strength: Strong. Source: https://aws.amazon.com/blogs/machine-learning/structured-outputs-for-anthropic-claude-models-on-amazon-bedrock/
+
+- Endpoint client changes affect artifact sinks (Cloudflare One GA): when endpoint clients change routing defaults, preview/export sinks can be rerouted or TTL defaults altered, causing accidental retention of intermediate artifacts. Operational action: validate tenant export mappings and TTLs after client upgrades; add automated checks that detect unexpected new object-store prefixes. Evidence strength: Strong. Source: https://developers.cloudflare.com/changelog/post/2026-10-20-warp-windows-ga/

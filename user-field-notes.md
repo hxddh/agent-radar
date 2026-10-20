@@ -1120,3 +1120,12 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - When useful: before any runtime/SDK upgrade
   - What it does: runs a concise sequence of tool-calls, streaming checks, and export/restore cycles to validate connector behavior within 15 minutes
   - Evidence strength: Aggregated from community troubleshooting and vendor upgrade recommendations
+
+
+## 2026-10-20 notes
+
+- **Task interruptions**: Multiple Reddit reports of tasks ending with '[Request interrupted by user]'. Actionable tip: collect websocket/SDK logs and match timestamps to client SDK releases (streaming fixes often correlate). Evidence strength: Weak-to-Medium. Source: https://www.reddit.com/r/GithubCopilot/comments/1x9cl1j/agent_tasks_randomly_terminate_with_the_message/
+
+- **Parallel Claude Code runs**: dev.to author reports worktree visibility/clash when running parallel Claude Code agents. Actionable tip: run each agent in an ephemeral worktree or container mount to guarantee isolation. Evidence strength: Medium. Source: https://dev.to/naw103/running-multiple-claude-code-agents-in-parallel-what-worktrees-cannot-see-4le7
+
+- **Unexpected automated edits (Wikimedia)**: maintainers found unintended edits attributed to automated tooling. Actionable tip: require signed bot identities and stricter pre-commit gating for automated edits. Evidence strength: Medium. Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
