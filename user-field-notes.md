@@ -1129,3 +1129,13 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Parallel Claude Code runs**: dev.to author reports worktree visibility/clash when running parallel Claude Code agents. Actionable tip: run each agent in an ephemeral worktree or container mount to guarantee isolation. Evidence strength: Medium. Source: https://dev.to/naw103/running-multiple-claude-code-agents-in-parallel-what-worktrees-cannot-see-4le7
 
 - **Unexpected automated edits (Wikimedia)**: maintainers found unintended edits attributed to automated tooling. Actionable tip: require signed bot identities and stricter pre-commit gating for automated edits. Evidence strength: Medium. Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
+
+
+- 2026-10-21: Wikimedia maintainer report (community evidence).
+  - Summary: Maintainers reported a cluster of agent-driven edits that required rollbacks and forensic diffs. Evidence strength: Medium (maintainer blog). Operator implication: collect revert diffs and request vendor timelines when a managed agent is suspected. Source: https://diff.wikimedia.org/2026/10/05/openai-rogue-agent-activities-found-on-wikimedia-projects/
+
+- 2026-10-21: Claude Code parallel-run worktree issue (dev.to).
+  - Summary: Running multiple Claude Code agents in parallel can cause worktree visibility and file-clash issues. Evidence strength: Medium (dev.to). Operator implication: use per-agent ephemeral branches or ephemeral volumes and snapshot before merges. Source: https://dev.to/naw103/running-multiple-claude-code-agents-in-parallel-what-worktrees-cannot-see-4le7
+
+- 2026-10-21: Reddit task interruption reports.
+  - Summary: Operators report unexpected task terminations showing '[Request interrupted by user]'; logs and correlation IDs are needed for triage. Evidence strength: Weak-to-Medium (Reddit). Operator implication: enable short-window, high-fidelity streaming logs and gather correlation IDs for vendor support. Source: https://www.reddit.com/r/GithubCopilot/comments/1x9cl1j/agent_tasks_randomly_terminate_with_the_message/

@@ -1456,3 +1456,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
 - Structured agent outputs (AWS Bedrock + Claude): Bedrock structured outputs enable typed manifests and simplify ingestion into object stores and downstream pipelines. Operational action: add schema validators to object-store ingestion, version manifest parsers, and include manifest presence/absence in upgrade gating. Evidence strength: Strong. Source: https://aws.amazon.com/blogs/machine-learning/structured-outputs-for-anthropic-claude-models-on-amazon-bedrock/
 
 - Endpoint client changes affect artifact sinks (Cloudflare One GA): when endpoint clients change routing defaults, preview/export sinks can be rerouted or TTL defaults altered, causing accidental retention of intermediate artifacts. Operational action: validate tenant export mappings and TTLs after client upgrades; add automated checks that detect unexpected new object-store prefixes. Evidence strength: Strong. Source: https://developers.cloudflare.com/changelog/post/2026-10-20-warp-windows-ga/
+
+
+- 2026-10-21: Schema validation for structured outputs (Bedrock + Claude).
+  - Signal: AWS Bedrock announced structured outputs for Anthropic Claude.
+  - Storage implication: Ingest systems must version and validate structured outputs; store raw LLM output alongside parsed schema fields for forensics and migration.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/10/claude-structured-outputs-bedrock/
+  - Watch trigger: Bedrock publishes schema versioning or deprecation timelines.
+
+- 2026-10-21: Signed-artifact trust after CA compromise.
+  - Signal: eMudhra intermediate CA compromise announced by Cloudflare.
+  - Storage implication: Operators should audit any artifact-signing chains, plan re-signing for affected artifacts, and verify object-store endpoints' TLS trust anchors.
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/emudhra-certificate-compromise/
+  - Watch trigger: Public rotation/revocation notices and vendor re-sign guidance.

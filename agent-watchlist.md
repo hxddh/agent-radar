@@ -564,11 +564,13 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.26.0
-- Recent changes: Cloudflare published agents@0.28.1 (2026-10-18) with runtime and observability fixes that may alter preview-export sinks and default TTLs for edge artifacts. Operators should treat this as a staging-first update and verify preview-to-object-store mappings and per-tenant export defaults.
-- User impact: Edge-deployed agents may now produce different artifact classes (transcripts, audio, previews) and TTL semantics; mapping these to durable storage and forensic indexes is necessary.
-- Infra implication: Reconcile CDN/edge preview TTLs with central object-store retention, and validate per-tenant export isolation after the upgrade.
+- Recent changes: Cloudflare published agents@0.29.0 (2026-10-21) alongside coordinated runtime package updates (think@0.21.0, shell@0.5.0). These releases include observability and export fixes that may change preview-export sinks and TTL defaults.
+- Security advisory: Cloudflare also published an advisory describing an eMudhra intermediate CA compromise that impacts TLS trust chains and signed-artifact validation; operators must audit certificate usages for preview/export endpoints and prepare rotation/re-sign procedures.
+- Why it matters: Edge runtime updates + a CA compromise raise immediate staging and forensic requirements — validate preview-to-object-store mappings, per-tenant export TTLs, and certificate trust anchors before production rollouts.
+- Actionable: Treat agents@0.29.0 as a staging-first upgrade: run preview-export smoke tests, verify per-tenant TTLs, and exercise re-sign/rotation playbooks for impacted certificates.
+- Source class: GitHub releases + vendor advisory
 - Evidence strength: Strong
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.28.1
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.29.0; https://blog.cloudflare.com/emudhra-certificate-compromise/
 ## Mistral — Studio & Vibe
 
 - What it is: Vendor product suite (Studio & Vibe) for developing, testing, and running long‑horizon agents and agent-driven workflows. Tooling targets the full lifecycle (model-forge, workspace orchestration, run harnesses) and advertises integrations for dev/test pipelines and operator controls.

@@ -1052,3 +1052,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   4. Verify plugin integrity: ensure hash pin + signature checks for plugin installs; if GHSA present, enforce signature-only installs until patched.
   5. Monitor billing counters and daily spend cap triggers during canary window.
 - Promote to playbook? yes — evidence: repeated connector regressions and vendor SDK churn (Oct 2026). Source: community threads + vendor releases.
+
+
+## Snapshot-first upgrade playbook (promote candidate)
+
+- When useful: Applying runtime or SDK upgrades for agent platforms (Claude Code, Cloudflare Agents, Vercel SDK, Bedrock integrations).
+- Steps:
+  1. Snapshot active workspaces and persisted agent artifacts before any runtime/SDK change.
+  2. Pin new runtime/SDK in a staging environment; exercise connector CI with automated tool-call and session-persistence smoke tests.
+  3. Run preview→object-store export tests; validate TTLs and per-tenant export mappings.
+  4. Verify plugin integrity (hash-pin checks) and refuse auto-install of unpinned plugins; require explicit operator approval.
+  5. After passing staging, roll out canary with telemetry correlation IDs enabled; keep rollback snapshot available for at least 48–72 hours.
+- Evidence: Multiple vendor releases and community reports (Cloudflare, Anthropic, Vercel, GHSA advisories, dev.to/Wikimedia). Source examples: https://github.com/anthropics/claude-code/releases/tag/v2.1.306; https://github.com/cloudflare/agents/releases/tag/agents%400.29.0; https://github.com/advisories/GHSA-pq7j-f95f-qfcv
+- Should promote to playbook? yes
