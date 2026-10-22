@@ -1471,3 +1471,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://blog.cloudflare.com/emudhra-certificate-compromise/
   - Watch trigger: Public rotation/revocation notices and vendor re-sign guidance.
+
+
+- Structured outputs & schema validation (2026-10-22)
+  - Signal: AWS Bedrock announces structured outputs support for Anthropic Claude; OpenAI Dots and other vendor export hooks are converging on manifested artifacts.
+  - Storage implication: Ingest pipelines must validate schema versions, preserve raw payloads for forensics, and include manifest metadata (producer runtime, schema version, signing) to enable reliable replay/forensic analysis.
+  - Evidence strength: Strong (AWS)
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/10/claude-structured-outputs-bedrock/
+  - Watch trigger: production exports adopting manifest headers or S3 naming conventions tied to schema versions.
+
+- Artifact trust & certificate chain risk (2026-10-22)
+  - Signal: Cloudflare eMudhra intermediate CA compromise affects TLS trust for preview/export flows.
+  - Storage implication: Operators should require artifact signatures anchored to operator-managed keys and avoid implicit trust of intermediate CA chains for agent previews stored in edge caches.
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/emudhra-certificate-compromise/
+  - Watch trigger: vendor advisories requiring re-signing or rotation of preview/export artifacts; spike in signature verification failures.

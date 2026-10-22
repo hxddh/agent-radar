@@ -2001,3 +2001,18 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / reliability] Reddit — agent tasks randomly terminate with '[Request interrupted by user]'. Why it matters: operator-facing task interruptions degrade trust and require triage (client/SDK/runtime/UX); collect logs to isolate source. Evidence strength: Weak-to-Medium (social report). Source: https://www.reddit.com/r/GithubCopilot/comments/1x9cl1j/agent_tasks_randomly_terminate_with_the_message/
 
 - [research / eval] Defuzex — large-scale behavioral test of 53 open-source AI agents (37 filed bugs). Why it matters: broad cross-project evaluation surfaces recurring safety and behavior bugs that inform patching and mitigation priorities; candidate for playbook extraction. Evidence strength: Medium. Source: https://defuzex.ai/blog/we-ran-53-open-source-ai-agents-through-behavioral-tests-and-filed-37-bugs
+
+
+### Added 2026-10-22 (source-sweep)
+
+- [mainstream_product / oauth/security] GitHub — GitHub CLI: opt in to expiring, auto-refreshing OAuth tokens. Why it matters: changes to CLI token lifecycles affect CI, long-lived automation, and agent integrations that rely on persisted OAuth tokens; operators should audit token refresh workflows. Evidence strength: Strong. Source: https://github.blog/changelog/2026-10-21-github-cli-opt-in-to-expiring-auto-refreshing-oauth-tokens/
+
+- [infra_primitive / mcp] xerj-org/xerj — local-first search engine & MCP-compatible server. Why it matters: local-first index + MCP API provides an emerging memory/RAG backend option for agent fleets that prefer on-prem or first-party hosting. Evidence strength: Medium-Strong. Source: https://github.com/xerj-org/xerj
+
+- [user_workflow / editor] NexrallCode.nexrall-code-vscode (OpenVSX). Why it matters: in-IDE autonomous coding agent that reads the codebase and can run commands; relevant to operator UX, review flows, and CI gating patterns. Evidence strength: Medium. Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
+
+- [user_workflow / session-review] icaro0310.agent-sessions-vscode (OpenVSX). Why it matters: local-first multi-agent session browser enabling offline review of agent runs and approval flows; useful for containment and operator audit workflows. Evidence strength: Medium. Source: https://open-vsx.org/extension/icaro0310/agent-sessions-vscode
+
+- [mainstream_product / runtime] openai/codex — prerelease rust-v0.164.0-alpha.11. Why it matters: frequent pre-releases indicate active SDK/runtime changes that may affect local coding-agent integrations and CI pinning. Evidence strength: Strong. Source: https://github.com/openai/codex/releases/tag/rust-v0.164.0-alpha.11
+
+- [mainstream_product / runtime] anthropics/claude-code v2.1.308 release. Why it matters: incremental runtime/conductor changes can alter connector and containment semantics; operators should snapshot workspaces and run compatibility tests before upgrading. Evidence strength: Strong. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.308

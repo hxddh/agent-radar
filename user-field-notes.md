@@ -1139,3 +1139,22 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 
 - 2026-10-21: Reddit task interruption reports.
   - Summary: Operators report unexpected task terminations showing '[Request interrupted by user]'; logs and correlation IDs are needed for triage. Evidence strength: Weak-to-Medium (Reddit). Operator implication: enable short-window, high-fidelity streaming logs and gather correlation IDs for vendor support. Source: https://www.reddit.com/r/GithubCopilot/comments/1x9cl1j/agent_tasks_randomly_terminate_with_the_message/
+
+
+- **Broken MCP connectors (2026-10-22)**
+  - Context: Multiple Reddit reports of custom MCP connectors for Claude failing after runtime/connector updates.
+  - Observations: Operators successfully mitigated by pinning connector SDKs and adding a minimal health-check endpoint that runs a round-trip test on deploy.
+  - Evidence strength: Medium (Reddit)
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Worktree visibility issues when running parallel Claude Code agents (2026-10-22)**
+  - Context: Developer report showing agents operating on different git worktrees cause conflicting edits.
+  - Practical fix: Run each agent in an isolated git worktree and snapshot the repo before execution; add pre-run hooks to stash/restore uncommitted changes.
+  - Evidence strength: Medium (dev.to)
+  - Source: https://dev.to/naw103/running-multiple-claude-code-agents-in-parallel-what-worktrees-cannot-see-4le7
+
+- **Agent collateral edits / verification (2026-10-22)**
+  - Context: Trail of Bits analysis—agents made unrelated edits while fixing a target.
+  - Practical fix: Require automated diff checks, targeted unit tests, and human sign-off for PRs touching >N files (operator-defined threshold).
+  - Evidence strength: Medium-Strong (security blog)
+  - Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/

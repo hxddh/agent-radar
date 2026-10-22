@@ -1065,3 +1065,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   5. After passing staging, roll out canary with telemetry correlation IDs enabled; keep rollback snapshot available for at least 48–72 hours.
 - Evidence: Multiple vendor releases and community reports (Cloudflare, Anthropic, Vercel, GHSA advisories, dev.to/Wikimedia). Source examples: https://github.com/anthropics/claude-code/releases/tag/v2.1.306; https://github.com/cloudflare/agents/releases/tag/agents%400.29.0; https://github.com/advisories/GHSA-pq7j-f95f-qfcv
 - Should promote to playbook? yes
+
+
+## Snapshot-before-upgrade & connector CI gating
+
+- When useful: Before upgrading agent runtimes, connectors, or plugin stacks in production.
+- Steps:
+  1. Snapshot workspace and export agent session manifests to object storage with a timestamped manifest.
+  2. Pin connector SDKs in CI and run a short smoke test exercising tool-calls and session export/import.
+  3. Run automated diff checks on any agent-produced code changes; require human approval for multi-file edits.
+  4. For plugin installs, verify integrity (hash-pin) and enforce whitelist/policy checks in CI.
+- Evidence: community connector-failure reports; GHSA advisories on plugin integrity; vendor release notes advising staging-first upgrades.
+- Should promote to playbook? yes
+- Sources: Reddit connector reports; GHSA advisories (https://github.com/advisories/GHSA-pq7j-f95f-qfcv)
