@@ -4686,3 +4686,35 @@ Notes: items without a clear primary vendor page were marked pending-official an
 - **xerj-org/xerj — local-first search + MCP (scr-xerj-2026-10-23)**: Why it matters: offers self-hosted MCP-compatible memory/index option. Evidence strength: Medium-Strong (GitHub). Relevance score: 7. Follow-up needed: run compatibility smoke tests with representative MCP clients and benchmark. candidate_seen_at: 2026-10-23; last_checked_at: 2026-10-23; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://github.com/xerj-org/xerj
 
 - **detect-coding-agent (scr-detect-coding-agent-followup-2026-10-23)**: Why it matters: detection primitive for coding-agent invocation (telemetry/security). Evidence strength: Medium (crates.io). Freshness: follow-up (previously covered). Follow-up needed: benchmark false-positive rate with representative repos. candidate_seen_at: 2026-10-23; last_checked_at: 2026-10-23; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://crates.io/crates/detect-coding-agent
+
+
+- **Cloudflare — agents@0.30.1** (scr-cloudflare-agents-2026-10-24): Why it matters: runtime observability/export TTL changes affect forensic artifact availability and retention mapping; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 30
+
+- **Microsoft / agent-framework dotnet-1.26.0** (scr-microsoft-agent-framework-2026-10-24): Why it matters: SDK/runtime update can change session lifecycle and connector semantics; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/microsoft/agent-framework/releases/tag/dotnet-1.26.0
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 30
+
+- **OpenAI — Scaling online storage (Part II)** (scr-openai-storage-2026-10-24): Why it matters: vendor operational patterns for artifact manifests/deltas relevant to agent workspace retention and forensics; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://openai.com/index/scaling-storage-one-billion-users-part-two
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 30
+
+- **AWS — Bayer AgentCore case study** (scr-aws-bayer-2026-10-24): Why it matters: concrete enterprise deployment pattern for decision export and unified ops; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://aws.amazon.com/blogs/machine-learning/how-bayer-crop-science-built-an-agentic-decision-engine-on-amazon-bedrock-agentcore-with-aws-unified-operations/
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 30
+
+- **Vercel — ai@7.0.152** (scr-vercel-ai-2026-10-24): Why it matters: SDK/eval churn affects reproducible evaluation harnesses; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/vercel/ai/releases/tag/ai%407.0.152
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 30
+
+- **mem0ai Databricks vector store — GHSA-7587-9684-52r6 (CVE-2026-115324)** (scr-mem0ai-cve-2026-10-24): Why it matters: SQL injection can expose vectors/metadata used by agent memory; Evidence strength: Strong (GitHub Advisory); promotion_status: candidate
+  - Source: https://github.com/advisories/GHSA-7587-9684-52r6
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 21
+
+- **NVIDIA OpenShell (scr-nvidia-openshell-2026-10-24)**: Why it matters: new kernel-level sandbox runtime for agent fleets; Evidence strength: Strong (GitHub repo); promotion_status: candidate
+  - Source: https://github.com/NVIDIA/OpenShell
+  - candidate_seen_at: 2026-10-24; last_checked_at: 2026-10-24; defer_count: 0; stale_after_days: 30
+
+- **Follow-ups moved to candidate inbox**: MCP TypeScript SDK memory exhaustion advisory (GHSA-46jr-4wx8-v453), xerj local-first MCP, detect-coding-agent benchmarks. These require operational verification and benchmarks before promotion.
+  - Sources: https://github.com/advisories/GHSA-46jr-4wx8-v453, https://github.com/xerj-org/xerj, https://crates.io/crates/detect-coding-agent

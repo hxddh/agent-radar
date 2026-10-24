@@ -1078,3 +1078,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Evidence: community connector-failure reports; GHSA advisories on plugin integrity; vendor release notes advising staging-first upgrades.
 - Should promote to playbook? yes
 - Sources: Reddit connector reports; GHSA advisories (https://github.com/advisories/GHSA-pq7j-f95f-qfcv)
+
+
+## Snapshot-first upgrade playbook (candidate)
+
+- When useful: Upgrading agent runtimes, SDKs, or platform components (e.g., Cloudflare agents, Microsoft agent-framework, Vercel ai).
+- Steps:
+  1. Create a full workspace snapshot (repo commit, workspace files, environment manifest, installed connector versions).
+  2. Deploy new runtime to a canary/staging workspace isolated by network and storage policies.
+  3. Run canonical smoke scenarios (tool-calls, file edits, decision export) and automated diff/assertion checks on outputs (Trail of Bits pattern).
+  4. Validate exported artifacts arrive in long-term store and match manifest expectations; run restore to a fresh workspace.
+  5. If checks pass, rollout to progressive production buckets with feature flags and monitoring for replayable decision traces.
+- Evidence: Vendor release notes (Cloudflare, Microsoft), Trail of Bits guidance, field reports on connector regressions.
+- Should promote to playbook? yes (after templating into CI snippets and test harnesses)

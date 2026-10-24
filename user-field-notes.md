@@ -1158,3 +1158,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Practical fix: Require automated diff checks, targeted unit tests, and human sign-off for PRs touching >N files (operator-defined threshold).
   - Evidence strength: Medium-Strong (security blog)
   - Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/
+
+
+- **Parallel Claude Code agents — worktree collisions** (2026-10-24): dev.to report documents file/worktree visibility issues when running multiple Claude Code agents in parallel. Mitigation: allocate separate git worktrees or containerized workspaces per agent; enforce pre-flight repo locks. Evidence strength: Medium. Source: https://dev.to/naw103/running-multiple-claude-code-agents-in-parallel-what-worktrees-cannot-see-4le7
+
+- **Custom MCP connectors broken (community reports)** (2026-10-24): Reddit thread reporting broken custom MCP connectors for Claude users; operators should pin connectors and add connector smoke-tests to CI. Evidence strength: Medium (social). Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **OpenHands upgrade field note** (2026-10-24): Bluesky thread reports fixes to automation connection states but new Cloud LLM profile issues; recommendation: run upgrades in canary and use automated diff-assertion checks. Evidence strength: Medium (social). Source: https://bsky.app/profile/deployedbyai.bsky.social/post/3mmtv345no24u

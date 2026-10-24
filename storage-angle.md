@@ -1486,3 +1486,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://blog.cloudflare.com/emudhra-certificate-compromise/
   - Watch trigger: vendor advisories requiring re-signing or rotation of preview/export artifacts; spike in signature verification failures.
+
+
+- Artifact manifests + incremental deltas (recommended pattern)
+  - What: Adopt an artifact plane for agent workspaces: manifests describing snapshot contents + incremental delta uploads for runtime changes.
+  - Why it matters: Enables deterministic decision replay, smaller incremental uploads, and reliable forensics for long‑running agents (aligns with OpenAI storage Part II).
+  - Evidence strength: Strong (OpenAI operational post)
+  - Source: https://openai.com/index/scaling-storage-one-billion-users-part-two
+  - Watch trigger: Publication of a sample manifest schema or vendor SDK that serializes manifests for export/restore.
+
+- Export sink mapping and TTL validation
+  - What: Treat edge/preview exports as ephemeral by default; add automated pipelines to copy previews to long‑term versioned stores with retention metadata.
+  - Why it matters: Prevents loss of preview artifacts required for incident replay after TTL changes (prompted by Cloudflare agents@0.30.1 changes).
+  - Evidence strength: Strong (Cloudflare release)
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+  - Watch trigger: An incident replay where preview artifacts are missing due to TTL mismatch.
