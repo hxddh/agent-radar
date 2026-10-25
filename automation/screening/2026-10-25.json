@@ -1,0 +1,757 @@
+{
+  "summary": "Deduplicated discussion signals about agent runtimes, eval, memory security, bank access restrictions, and recent product releases (OpenShell, Gemini, OpenHands). | Vendor-only screening: mix of high-priority security advisories, platform releases (OpenAI, Cloudflare, JetBrains, OpenRouter), and operator case studies (AWS, Supabase). Top signals: OpenAI Decisions API and multiple GHSA advisories affecting MCP/vector-store tooling. | GitHub snapshot shows heavy activity in agent platforms (LangFlow, Dify, Rocketride, BrowserOS), multiple vendor releases (Cloudflare, Microsoft, Vercel), and rising infra primitives (agent sandboxes, MCP memory). No social/discussion field reports in this shard — need external user threads for operator workflows and adoption signals. | Package-release scan (PyPI/npm/crates/open-vsx/docker) surfaced several agent infra primitives and a few high-download vendor extensions; missing operator/social reports for field workflows.",
+  "candidates": [
+    {
+      "id": "scr-1f8b2a9c",
+      "title": "NVIDIA OpenShell runtime open-sourced",
+      "why_it_matters": "Kernel-level sandboxes keep credentials out of agent environments.",
+      "evidence": [
+        "https://github.com/NVIDIA/OpenShell",
+        "https://dev.to/slabb/agents-should-never-hold-your-api-keys-nvidia-just-open-sourced-the-runtime-that-enforces-it-3jm4",
+        "https://news.ycombinator.com/item?id=50059096"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 3,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for security audits, adoption examples, and vendor/operator integrations.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-4c7d9e02",
+      "title": "US banks blocking third-party AI agents from accounts",
+      "why_it_matters": "Banks are detecting and restricting unvetted agents from customer account access.",
+      "evidence": [
+        "https://www.reuters.com/legal/government/us-banks-detect-unauthorized-ai-agents-customer-accounts-axios-reports-2026-10-22/",
+        "https://www.axios.com/2026/10/22/ai-agents-banks-unauthorized-accounts-access"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Track bank/fintech guidance and vendor mitigations (MCP proxies, credential gateways)."
+    },
+    {
+      "id": "scr-d3a5b7f1",
+      "title": "Google Gemini Agent / Gemini at Work mention",
+      "why_it_matters": "Google pushing 'Gemini Agent' into workplace deployments (vendor-level shift).",
+      "evidence": [
+        "https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Monitor detailed feature docs and admin controls for enterprise use."
+    },
+    {
+      "id": "scr-6b2e4c8a",
+      "title": "Agent Eval Harness update (v0.1.0 checkpoint)",
+      "why_it_matters": "New harness aims to stan\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/undercodenews.bsky.social/post/3mynlddrcak2s",
+        "https://bsky.app/profile/undercodenews.bsky.social/post/3myo3f4vkxp2f",
+        "https://bsky.app/profile/pixelscott.bsky.social/post/3mynrtsotmk23"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Check the official repo/release notes for CVE-style issues and benchmark suites.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-9a4f0d7b",
+      "title": "OpenHands v1.33.0 release (UI/cloud options)",
+      "why_it_matters": "Adds --mars-web and --lo\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/whatsnew.fyi/post/3mymdihnfwc2z",
+        "https://bsky.app/profile/deployedbyai.bsky.social/post/3mqrromqmm3ev"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Confirm changelog/PRs and user reports of regression or migration work.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium",
+      "corroboration": "pending-official"
+    },
+    {
+      "id": "scr-7c3e1b6d",
+      "title": "Memory poisoning / persistent-memory prompt-injection discussion",
+      "why_it_matters": "Persistent memories can \n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/pranjulrathour.bsky.social/post/3myo65je6yt2q",
+        "https://bsky.app/profile/derpupe.bsky.social/post/3mymzqe4ks22l"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 2,
+      "signal_class": "user_workflow",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Look for proof-of-concept exploits, mitigation patterns, and vendor guidance.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Medium"
+    },
+    {
+      "id": "scr-2e6a8c4f",
+      "title": "Mintclaw reliability push (browser automation, agent recovery)",
+      "why_it_matters": "Release emphasizes safer\n\n[... middle truncated for prompt budget ...]\n\n social/discussion source (keep; label evidence)",
+      "evidence": [
+        "https://bsky.app/profile/undercodenews.bsky.social/post/3myofrrun722s"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Require changelog/repo link or additional reports before promotion.",
+      "source_visibility": "Public",
+      "evidence_basis": "social_discussion",
+      "evidence_strength": "Weak"
+    },
+    {
+      "id": "scr-5b1f9d3a",
+      "title": "LayerFS: filesystem for AI coding agents",
+      "why_it_matters": "Specialized filesystem aims to improve isolation and file-versioning for agents.",
+      "evidence": [
+        "https://layerfs.ai/",
+        "https://news.ycombinator.com/item?id=49911500"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "candidate",
+      "next_check": "Verify technical docs, benchmarks, and early adopter reports.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-8d0c6e21",
+      "title": "Runtime (runtm.com) — sandboxed coding agents startup (Launch HN)",
+      "why_it_matters": "Offers accessible sandboxes for coding agents across teams and workflows.",
+      "evidence": [
+        "https://www.runtm.com/",
+        "https://news.ycombinator.com/item?id=50059096"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 2,
+      "signal_class": "mainstream_product",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Track integrations, pricing, and enterprise security posture.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-0b9a4f6e",
+      "title": "CopilotKit/OpenBot: per-agent containers + browsers (open-source)",
+      "why_it_matters": "Run each AI coworker in isolated container + browser for safer experiments.",
+      "evidence": [
+        "https://github.com/CopilotKit/OpenBot",
+        "https://bsky.app/profile/yug1224.com/post/3myocglbw5o2x",
+        "https://bsky.app/profile/technews4869.bsky.social/post/3myogdg4myb2s"
+      ],
+      "confidence": "low",
+      "relevance_score": 5,
+      "source_diversity": 3,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Needs second independent adoption report or security review before promotion.",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-1a2b3c4d",
+      "title": "OpenAI: Build more responsive apps with the Decisions API",
+      "why_it_matters": "New Decisions API changes runtime control flows for apps and agents.",
+      "evidence": [
+        "https://openai.com/index/decisions-api"
+      ],
+      "confidence": "high",
+      "relevance_score": 10,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Watch for SDK docs, pricing, and rollout region notes"
+    },
+    {
+      "id": "scr-2b3c4d5e",
+      "title": "Cloudflare emergency WAF release (2026-10-25)",
+      "why_it_matters": "Emergency managed ruleset release for active WAF threat mitigation.",
+      "evidence": [
+        "https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Monitor Cloudflare advisory for affected customers and mitigation guidance"
+    },
+    {
+      "id": "scr-3c4d5e6f",
+      "title": "GHSA: mem0ai Databricks vector store vulnerable to SQL injection (CVE-2026-115324)",
+      "why_it_matters": "Critical SQLi in Databricks vector store can lead to data exposure or integrity loss.",
+      "evidence": [
+        "https://github.com/advisories/GHSA-7587-9684-52r6"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "candidate",
+      "next_check": "Confirm vendor/packager patch and deployment guidance",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-4d5e6f70",
+      "title": "MCP TypeScript SDK: request could exhaust server memory (CVE-2026-111768)",
+      "why_it_matters": "High-severity memory exhaustion in MCP TypeScript SDK affects hosted MCP servers.",
+      "evidence": [
+        "https://github.com/advisories/GHSA-46jr-4wx8-v453"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "candidate",
+      "next_check": "Check SDK maintainers for patched releases and CVE timeline",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-5e6f7081",
+      "title": "JetBrains: Air Governance — manage agents, access, and spend",
+      "why_it_matters": "New governance product for org-wide agent access, policies, and cost control.",
+      "evidence": [
+        "https://blog.jetbrains.com/blog/2026/10/22/air-governance-manage-ai-agents-access-and-spend-throughout-your-organization/"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Track product docs and enterprise rollout/pricing details"
+    },
+    {
+      "id": "scr-6f708192",
+      "title": "Supabase: Check production with your coding agent (operate-with-confidence guide)",
+      "why_it_matters": "Operator workflow showing concrete checks and commands to validate production via coding agents.",
+      "evidence": [
+        "https://supabase.com/blog/operate-with-confidence-check-production-with-your-coding-agent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Verify example reproducibility and recommended guardrails for production use",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-708192a3",
+      "title": "AWS ML: How Bayer built an agentic decision engine on Bedrock AgentCore",
+      "why_it_matters": "Case study with concrete AgentCore orchestration and operations on AWS Bedrock.",
+      "evidence": [
+        "https://aws.amazon.com/blogs/machine-learning/how-bayer-crop-science-built-an-agentic-decision-engine-on-amazon-bedrock-agentcore-with-aws-unified-operations/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Look for AWS reference architecture and reproducible templates"
+    },
+    {
+      "id": "scr-8192a3b4",
+      "title": "GHSA: FastMCP client wrappers allow issuer redirect (OAuth misbinding)",
+      "why_it_matters": "OAuth issuer binding flaw could allow client secret to be redirected to attacker server.",
+      "evidence": [
+        "https://github.com/advisories/GHSA-vqqp-x5qm-5qp4"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "Confirm mitigations and patched client-wrapper releases",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-92a3b4c5",
+      "title": "OpenRouter: Private Endpoints for fine-tuned models and dedicated capacity",
+      "why_it_matters": "Enterprises can route their own fine-tuned models through private endpoints.",
+      "evidence": [
+        "https://openrouter.ai/blog/announcements/private-endpoints/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Watch for enterprise onboarding docs and SLA details"
+    },
+    {
+      "id": "scr-a3b4c5d6",
+      "title": "Cursor changelog: Cloud agent canvases and environments",
+      "why_it_matters": "New Cursor features for organizing and running cloud agents and environments.",
+      "evidence": [
+        "https://cursor.com/changelog/cloud-agent-canvases-and-environments"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Check SDK/CLI updates for self-host and security options"
+    },
+    {
+      "id": "scr-b4c5d6e7",
+      "title": "Cloudflare: How Commerce.com and Cloudflare prepare storefronts for AI agents",
+      "why_it_matters": "Describes storefront operator steps to enable agent-driven commerce workflows.",
+      "evidence": [
+        "https://blog.cloudflare.com/webmcp-commerce/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "user_workflow",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "Seek third-party merchant reports or integrations",
+      "source_visibility": "Public",
+      "evidence_basis": "mixed_discussion"
+    },
+    {
+      "id": "scr-c5d6e7f8",
+      "title": "E2B: Introducing E2B Secrets — inject creds outside sandbox",
+      "why_it_matters": "Secret-injection pattern to keep credentials out of sandboxes for safer external calls.",
+      "evidence": [
+        "https://e2b.dev/resources/introducing-e2b-secrets"
+      ],
+      "confidence": "medium",
+      "relevance_score": 5,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "candidate",
+      "next_check": "Confirm threat model and integration steps for popular sandbox runtimes"
+    },
+    {
+      "id": "scr-1f4a2b",
+      "title": "langflow-ai/langflow",
+      "why_it_matters": "Widely used visual builder for agent workflows and deployments.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/langflow-ai/langflow"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "none",
+      "promotion_status": "candidate",
+      "next_check": "monitor release notes and major PRs for breaking API or deployment changes",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-2b7c8d",
+      "title": "langgenius/dify",
+      "why_it_matters": "Large RAG/workspace platform for building & deploying agent pipelines.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/langgenius/dify"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "track adoption notes, cloud/VPC deployment guides and changelog",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-3c9e1a",
+      "title": "rocketride-org/rocketride-server",
+      "why_it_matters": "High-performance AI pipeline engine with broad provider & DB integrations.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/rocketride-org/rocketride-server"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "watch release notes for provider changes and performance benchmarks",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-4d2f5b",
+      "title": "browseros-ai/BrowserOS",
+      "why_it_matters": "Open-source agentic browser alternative to commercial agent browsers.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/browseros-ai/BrowserOS"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "monitor integrations with model providers and extension marketplaces",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-5e6b7c",
+      "title": "cloudflare/agents@0.30.1 release",
+      "why_it_matters": "Cloudflare Agents update for edge-hosted agents and platform features.",
+      "evidence": [
+        "https://github.com/cloudflare/agents/releases/tag/agents%400.30.1"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "check changelog for new edge runtime or security controls",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-6a1d9f",
+      "title": "microsoft/agent-framework dotnet-1.26.0",
+      "why_it_matters": "Microsoft Agent Framework .NET SDK update for enterprise agent development.",
+      "evidence": [
+        "https://github.com/microsoft/agent-framework/releases/tag/dotnet-1.26.0"
+      ],
+      "confidence": "high",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "scan release notes for breaking API or new integrations",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-7b3c2e",
+      "title": "vercel/ai ai@7.0.153",
+      "why_it_matters": "Vercel AI SDK release — updates to agent/browser SDK tooling.",
+      "evidence": [
+        "https://github.com/vercel/ai/releases/tag/ai%407.0.153",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/zai%403.0.40",
+        "https://github.com/vercel/ai/releases/tag/%40ai-sdk/xai%405.0.30"
+      ],
+      "confidence": "high",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "review SDK changelog for developer-facing breaking changes"
+    },
+    {
+      "id": "scr-8c4d6a",
+      "title": "inoio/agents-sandbox",
+      "why_it_matters": "MicroVM sandbox with host-side secret injection for isolated agent runs.",
+      "evidence": [
+        "https://github.com/inoio/agents-sandbox"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "seek independent security/audit reports or user adoption threads",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-9d5e8b",
+      "title": "HKUDS/nanobot",
+      "why_it_matters": "Popular self-hosted personal agent framework with MCP, memory, tools and WebUI.; repo-star ≠ product delta",
+      "evidence": [
+        "https://github.com/HKUDS/nanobot"
+      ],
+      "confidence": "medium",
+      "relevance_score": 3,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "mcp",
+      "promotion_status": "candidate",
+      "next_check": "monitor issue threads for common operator pitfalls or security reports",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-a0f2b4",
+      "title": "DevinoSolutions/stealth-chrome-devtools-mcp",
+      "why_it_matters": "Undetectable browser automation for agents via MCP — anti-detection risk.",
+      "evidence": [
+        "https://github.com/DevinoSolutions/stealth-chrome-devtools-mcp"
+      ],
+      "confidence": "low",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "defer",
+      "next_check": "investigate abuse reports, vendor warnings, and independent analyses",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-b1e7c9",
+      "title": "dreamor/MemVault",
+      "why_it_matters": "Self-hosted MCP memory server with auto-injection and hybrid search.",
+      "evidence": [
+        "https://github.com/dreamor/MemVault"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "look for integration examples or adopters beyond the repo",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-c2f3d1",
+      "title": "agentfiles-io/agentfiles",
+      "why_it_matters": "Open-core artifact layer for multi-agent workflows and git-backed storage.",
+      "evidence": [
+        "https://github.com/agentfiles-io/agentfiles"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "storage",
+      "promotion_status": "defer",
+      "next_check": "verify adoption and cross-platform integrations",
+      "risk_flags": [
+        "single-repo-source"
+      ]
+    },
+    {
+      "id": "scr-1a9f2b",
+      "title": "library/amazon/amazon-ecs-agent (Docker Hub)",
+      "why_it_matters": "Widely pulled Amazon ECS agent image used for containerized orchestration and runtime agents.",
+      "evidence": [
+        "https://hub.docker.com/r/library/amazon/amazon-ecs-agent"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "deployment",
+      "promotion_status": "candidate",
+      "next_check": "Confirm latest upstream changelog and compatibility notes (ECS runtime changes)."
+    },
+    {
+      "id": "scr-2b8c3d",
+      "title": "openai.chatgpt (Open-VSX extension)",
+      "why_it_matters": "Official ChatGPT/Codex extension with huge installs, impacts coding-agent workflows in editors.",
+      "evidence": [
+        "https://open-vsx.org/extension/openai/chatgpt"
+      ],
+      "confidence": "high",
+      "relevance_score": 9,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Check vendor release notes/marketplace page for recent feature or policy changes."
+    },
+    {
+      "id": "scr-3c7d4e",
+      "title": "@vercel/agent-eval (npm)",
+      "why_it_matters": "Vercel-backed framework for testing agents and browsing eval experiment results.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40vercel/agent-eval"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "eval",
+      "promotion_status": "candidate",
+      "next_check": "Fetch Vercel blog/changelog and GitHub repo to validate scope and integrations."
+    },
+    {
+      "id": "scr-4d6e5f",
+      "title": "NexrallCode / Nexrall coding agent (Open-VSX)",
+      "why_it_matters": "High-download VS Code autonomous coding extension that edits, runs, and ships with approvals.",
+      "evidence": [
+        "https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode"
+      ],
+      "confidence": "medium",
+      "relevance_score": 8,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Confirm vendor/docs for MCP/tooling and model support; look for social adoption reports."
+    },
+    {
+      "id": "scr-5e4f6a",
+      "title": "localharness (PyPI) — local agent harness",
+      "why_it_matters": "Local open-source harness for running YAML agents on vLLM/llama.cpp with permission gating.",
+      "evidence": [
+        "https://pypi.org/project/localharness/0.22.0/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "sandbox",
+      "promotion_status": "defer",
+      "next_check": "Find upstream repo, docs, and user reports to corroborate claimed backends and security model."
+    },
+    {
+      "id": "scr-6f3a7b",
+      "title": "@vernikr/browser-agent-mcp (npm) — browser headful MCP",
+      "why_it_matters": "MCP server packaged to give agents a headful Chrome (X11 mouse + Turnstile auto-solve) for web-driven agents.",
+      "evidence": [
+        "https://www.npmjs.com/package/%40vernikr/browser-agent-mcp"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Validate companion GitHub and security posture; confirm Turnstile auto-solve claims and legal/safety notes."
+    },
+    {
+      "id": "scr-7b2c8d",
+      "title": "opencode-cognition-agent-memory (npm)",
+      "why_it_matters": "Git-backed agent memory implementation following an Agent Memory Repo spec.",
+      "evidence": [
+        "https://www.npmjs.com/package/opencode-cognition-agent-memory"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "memory",
+      "promotion_status": "defer",
+      "next_check": "Check repo, spec conformance, and cross-client adoption evidence (OpenCode integrations)."
+    },
+    {
+      "id": "scr-8c1d9e",
+      "title": "abacusai.abacusai-agent (Open-VSX)",
+      "why_it_matters": "Large-download VS Code autonomous coding agent supporting multiple model backends and keys.",
+      "evidence": [
+        "https://open-vsx.org/extension/abacusai/abacusai-agent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 7,
+      "source_diversity": 1,
+      "signal_class": "mainstream_product",
+      "infra_angle": "runtime",
+      "promotion_status": "candidate",
+      "next_check": "Confirm vendor docs and model/back-end options; look for changelog and enterprise notes."
+    },
+    {
+      "id": "scr-9d0e1f",
+      "title": "noc-ops (PyPI) — multi-cloud ops CLI",
+      "why_it_matters": "Multi-cloud ops CLI (AWS/Alibaba/Tencent/GCP/Azure/Oracle/Cloudflare/Supabase) with inventory and scheduled tasks.",
+      "evidence": [
+        "https://pypi.org/project/noc-ops/0.1.8/"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "mcp",
+      "promotion_status": "defer",
+      "next_check": "Locate project repo, docs, and user reports; verify security model for credential handling."
+    },
+    {
+      "id": "scr-a1b2c3",
+      "title": "detect-coding-agent (crates) — agent detection library",
+      "why_it_matters": "Library to detect when apps are being invoked by AI coding agents (Copilot, Claude Code, Cursor, etc.).",
+      "evidence": [
+        "https://crates.io/crates/detect-coding-agent"
+      ],
+      "confidence": "medium",
+      "relevance_score": 6,
+      "source_diversity": 1,
+      "signal_class": "infra_primitive",
+      "infra_angle": "security",
+      "promotion_status": "defer",
+      "next_check": "Review implementation and false-positive rates; seek usage reports or adopters."
+    }
+  ],
+  "gaps": [
+    "Missing mainstream_product: OpenAI official changelog",
+    "Missing mainstream_product: Anthropic official changelog",
+    "Missing social/discussion: Bluesky/Reddit/HN field reports for these vendor rollouts (official-only shard)",
+    "Missing mainstream_product: Microsoft agent governance changelog or Azure-specific agent rollout notes",
+    "Missing user_workflow: social/discussion (Reddit/Bluesky/X/HackerNews) field reports with concrete operator playbooks or friction",
+    "Missing social/discussion: corroborating threads for repo-only releases (need user threads showing adoption, errors, or security incidents)",
+    "Missing vendor changelogs: Anthropic/OpenAI/Google product deltas in this shard (no explicit releases present)",
+    "Missing user_workflow: operator/field reports (Reddit/Bluesky/X) about real-world usage, commands, failures",
+    "Missing social/discussion: corroborating Bluesky/Reddit/HN threads for PyPI/npm packages (localharness, noc-ops, opencode)",
+    "Missing vendor changelogs: confirm recent releases/feature notes for Vercel/OpenAI/AbacusAI packages"
+  ]
+}

@@ -1091,3 +1091,24 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   5. If checks pass, rollout to progressive production buckets with feature flags and monitoring for replayable decision traces.
 - Evidence: Vendor release notes (Cloudflare, Microsoft), Trail of Bits guidance, field reports on connector regressions.
 - Should promote to playbook? yes (after templating into CI snippets and test harnesses)
+
+
+## CI diff-assertion for agent-generated PRs (candidate playbook)
+
+- When useful: gating agent-generated code changes, preventing collateral edits from merging without review.
+- Steps:
+  1. Add a CI job (e.g. .github/workflows/agent-pr-check.yml) that runs on PRs with a tag/label indicating an agent author.
+  2. Compute the PR diff and assert allowed-change patterns (paths, filetypes) using a simple script (example: check that only files under /docs or /fixes are modified, or that changes to infra/* require human approval).
+  3. If unexpected filetypes or sensitive paths are touched, fail the job and move the PR to a quarantine branch for manual review.
+  4. Archive the agent run artifacts (input prompt, run-id, output) in an immutable storage location for post-merge forensics.
+- Evidence: Trail of Bits analysis (2026-10-21) recommending diff checks and quarantine flows.
+- Should promote to playbook? yes
+- Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/
+
+
+## CI diff-assertion + quarantine branch (recommended pattern)
+
+- What: Add a CI step that computes the set of changed files/patch hunks produced by an agent-run PR and asserts allowed-change patterns (e.g. only tests, a single file, or a pre-approved set). If unexpected changes are detected, fail the pipeline and push the changes to a quarantine branch for human review.
+- Why: Prevents silent collateral edits introduced by autonomous agents and shortens mean-time-to-detection for unintended changes.
+- Evidence / source: Trail of Bits analysis and multiple field reports (Medium-Strong). Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/
+- Action item: add a template diff-assertion job to CI playbooks and include a quarantine-branch workflow for human reconciliation.

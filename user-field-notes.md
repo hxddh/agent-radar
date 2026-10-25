@@ -1165,3 +1165,27 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Custom MCP connectors broken (community reports)** (2026-10-24): Reddit thread reporting broken custom MCP connectors for Claude users; operators should pin connectors and add connector smoke-tests to CI. Evidence strength: Medium (social). Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 
 - **OpenHands upgrade field note** (2026-10-24): Bluesky thread reports fixes to automation connection states but new Cloud LLM profile issues; recommendation: run upgrades in canary and use automated diff-assertion checks. Evidence strength: Medium (social). Source: https://bsky.app/profile/deployedbyai.bsky.social/post/3mmtv345no24u
+
+
+- 2026-10-25 — Banking connectors & blocked agent flows
+  - Symptom: Banks are flagging and blocking third-party agent requests, causing legitimate automation to fail and raising support load.
+  - Practical mitigations: implement short-lived OAuth with explicit customer consent, add a monitoring dashboard to surface blocked requests by connector and user, and implement retry/backoff with human approval paths for high-value operations.
+  - Source class: News / operator reporting
+  - Evidence strength: Strong
+  - Source: https://www.reuters.com/legal/government/us-banks-detect-unauthorized-ai-agents-customer-accounts-axios-reports-2026-10-22/
+
+- 2026-10-25 — CI diff gating for agent PRs (playbook candidate)
+  - Symptom: agent-generated PRs may include unintended collateral edits
+  - Defensive step: add a CI job that rejects PRs where the diff touches disallowed paths or includes non-intent changes; preserve agent-run artifacts for audit.
+  - Source class: Security blog / analysis
+  - Evidence strength: Medium-Strong
+  - Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/
+
+
+## 2026-10-25 Field Notes (weekly pass)
+
+- Banks blocking third-party AI agents (Reuters): practical mitigation includes short-lived OAuth tokens, explicit in-session user consent, and dedicated monitoring for agent-originated transactions. Evidence strength: Strong. Source: https://www.reuters.com/legal/government/us-banks-detect-unauthorized-ai-agents-customer-accounts-axios-reports-2026-10-22/
+
+- Parallel agent runs clobber worktrees: operator trick — run each agent in a per-run ephemeral clone (git worktree or container) and prefix temp paths with run IDs. Evidence strength: Medium (dev.to field reports).
+
+- CI pattern: add a diff-assertion step to CI that rejects unexpected collateral edits from agent PRs and routes allowed diffs into a quarantine branch for human review (Trail of Bits). Evidence strength: Medium-Strong. Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/

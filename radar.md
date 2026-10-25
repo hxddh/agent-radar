@@ -98,3 +98,12 @@ Operational signal (2026-10-17): community posts and operator smoke runs should 
 
 - Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.302
 - Action: treat v2.1.302 as a must-stage release; require pre-upgrade snapshot and connector CI checks.
+
+
+### 2026-10-25 Promotions — quick notes
+
+- xerj-org/xerj promoted to watchlist (relevance 7). Impact: supports thesis 7 (memory + MCP convergence) by offering a tenant‑hosted, MCP‑compatible memory/index alternative. Source: https://github.com/xerj-org/xerj
+
+- detect-coding-agent promoted to watchlist (relevance 7). Impact: strengthens thesis 9 (containment/security) by surfacing a detection primitive operator teams can use to trigger forensic snapshots and containment. Source: https://crates.io/crates/detect-coding-agent
+
+- Cloudflare agents@0.30.1 promoted to watchlist (relevance 8). Impact: reinforces thesis 8 (platform‑vendor MCP entry) and thesis 5 (object storage as artifact plane) because edge runtime/export defaults materially affect where artifacts land and how operators must map retention/forensics. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1

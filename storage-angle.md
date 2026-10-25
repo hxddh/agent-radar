@@ -1501,3 +1501,43 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong (Cloudflare release)
   - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
   - Watch trigger: An incident replay where preview artifacts are missing due to TTL mismatch.
+
+
+- 2026-10-25 — Edge WAF → forensic retention mapping
+  - Observation: Cloudflare emergency WAF rules may change request capture (bodies/headers) and TTLs for edge logs.
+  - Implication: For agent forensics, map WAF ruleset versions to exported log schemas and ensure retention windows cover investigation windows (7–30 days depending on threat model).
+  - Actionable check: compare staging vs production WAF log schemas after rule updates; ensure exporters (S3/remote logging) still receive the same fields.
+  - Watch trigger: a measurable drop in captured request bodies or header fields for agent-origin traffic.
+  - Source: Cloudflare changelog (2026-10-25)
+  - Source link: https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/
+
+- 2026-10-25 — Sandbox artifact collection for kernel‑level runtimes
+  - Observation: OpenShell-style sandboxes produce ephemeral overlayfs/sandbox-layer artifacts and syscall logs rather than long-lived in-process logs.
+  - Implication: storage/backups must capture ephemeral mount snapshots and syscall traces; adjust collectors to sample these artifacts at run exit and upload to durable storage for post-mortem.
+  - Watch trigger: presence of overlayfs snapshots or sandbox-layer journals in staging test runs and a change in median artifact size per run.
+  - Source: NVIDIA OpenShell repo
+  - Source link: https://github.com/NVIDIA/OpenShell
+
+
+## 2026-10-25 Storage Angle — Edge & Sandbox Artifact Capture
+
+- OpenAI storage guidance (Scaling online storage Part II) emphasizes manifest/delta-friendly snapshot formats and operational patterns for large fleets. Operators should prefer manifests + delta layering over full binary retention when exporting agent artifacts at scale. Source: https://openai.com/index/scaling-storage-one-billion-users-part-two
+
+- Edge WAF and kernel sandbox changes (Cloudflare emergency WAF, NVIDIA OpenShell) shift artifact locations: expect more ephemeral overlay snapshots and syscall journals. Storage pipelines must add fast collectors for small, structured manifests and ability to ingest short-lived syscall trace blobs.
+
+- Practical step: instrument a per-run manifest that references small artifact blobs (logs, syscall traces, overlay diffs) and store manifests in object storage with short TTLs for verbose binary blobs and longer retention for manifests and indexes.
+
+
+## 2026-10-25: Promotions with storage implications
+
+- xerj-org/xerj (promoted)
+  - Storage angle: local‑first index/memory options like xerj shift some artifact pressure away from vendor-managed persistent memory into tenant‑hosted indices. Action: add compatibility tests that measure index size, snapshot/export formats, and manifest metadata (AGENTS.md SHA, connector pins) so operator retention policies can be applied consistently across vendor and self‑hosted memory providers.
+  - Evidence: https://github.com/xerj-org/xerj
+
+- detect-coding-agent (promoted)
+  - Storage angle: detection primitives let operators tag runs as agent‑origin earlier in the pipeline; use that signal to trigger higher‑fidelity snapshotting (short‑TTL for previews vs durable forensic snapshot for flagged agent runs). Action: implement a conditional snapshot hook that elevates artifact retention and provenance metadata when the detector fires.
+  - Evidence: https://crates.io/crates/detect-coding-agent
+
+- Cloudflare agents@0.30.1 (promoted)
+  - Storage angle: edge runtime changes can change default export sinks and artifact classes (audio/transcript, HAR/DOM snapshots). Action: verify that preview exports stay tenant‑scoped, enforce tenant prefixes, and add automated checks that detect unexpected durable copies after SDK/edge upgrades; add transcript PII scanning into the ingestion pipeline.
+  - Evidence: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1

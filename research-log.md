@@ -4718,3 +4718,41 @@ Notes: items without a clear primary vendor page were marked pending-official an
 
 - **Follow-ups moved to candidate inbox**: MCP TypeScript SDK memory exhaustion advisory (GHSA-46jr-4wx8-v453), xerj local-first MCP, detect-coding-agent benchmarks. These require operational verification and benchmarks before promotion.
   - Sources: https://github.com/advisories/GHSA-46jr-4wx8-v453, https://github.com/xerj-org/xerj, https://crates.io/crates/detect-coding-agent
+
+
+- **Cloudflare — Emergency WAF rules (scr-cloudflare-emergency-2026-10-25)**: Why it matters: rapid mitigation for active agent-like abuse at the edge; affects blocking behavior and forensic retention mapping. Evidence strength: Strong (official changelog). Relevance score: 10. Defer reason: operator adoption and false-positive telemetry unknown; follow-up needed: collect staging vs prod log diffs and list of rule IDs. candidate_seen_at: 2026-10-25; last_checked_at: 2026-10-25; promotion_status: candidate; defer_count: 0; stale_after_days: 21. Source: https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/
+
+- **Vercel — ai@7.0.153 (scr-vercel-ai-2026-10-25)**: Why it matters: SDK/eval churn affects reproducible evals and trace compatibility in operator harnesses. Evidence strength: Strong (GitHub release). Relevance score: 8. Defer reason: operational revalidation required (pin+rerun). Follow-up needed: run golden evals in CI and note trace-schema deltas. candidate_seen_at: 2026-10-25; last_checked_at: 2026-10-25; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.153
+
+
+## 2026-10-25 Corroboration Queue Pass
+
+- **NVIDIA OpenShell (scr-nvidia-openshell-2026-10-24)**: Verified primary source (GitHub). Promotion_status: verified-candidate. Follow-up: schedule staging trials, collect syscall/overlayfs traces, solicit community run reports. Source: https://github.com/NVIDIA/OpenShell; candidate_seen_at: 2026-10-23; last_checked_at: 2026-10-25.
+
+- **OpenAI — Scaling online storage (Part II) (scr-openai-storage-2026-10-24)**: Verified primary source (OpenAI blog). Promotion_status: verified-candidate. Follow-up: map manifest/delta guidance to export/retention playbooks. Source: https://openai.com/index/scaling-storage-one-billion-users-part-two; last_checked_at: 2026-10-25.
+
+- **OpenRouter: Private Endpoints (scr-openrouter-2026-10-25)**: Verified primary source (official blog). Promotion_status: verified-candidate. Follow-up: test private-endpoint routing with MCP clients. Source: https://openrouter.ai/blog/announcements/private-endpoints/; last_checked_at: 2026-10-25.
+
+- **Vercel ai@7.0.153 (scr-vercel-ai-2026-10-25)**: Verified primary source (GitHub release). Promotion_status: verified-candidate. Follow-up: pin and rerun golden evals in CI. Source: https://github.com/vercel/ai/releases/tag/ai%407.0.153; last_checked_at: 2026-10-25.
+
+- **Cursor cloud agent canvases (scr-cursor-2026-10-17)**: Verified primary source (vendor changelog). Promotion_status: verified-candidate. Follow-up: verify workspace export formats. Source: https://cursor.com/changelog/cloud-agent-canvases-and-environments; last_checked_at: 2026-10-25.
+
+- **simstudioai/sim (candidate from 2026-10-24)**: No authoritative vendor adoption metric or official usage snapshot found in public sources. Promotion_status: dropped-from-corrob (pending vendor evidence). Follow-up: request primary blog/metrics or mark deprioritized in 21 days.
+
+- **aimod-cc/Agent2API & sinameraji/hotcell**: Remain in candidate inbox (pending hands-on verification); recommend smoke-tests before promotion.
+
+- Addendum: E2B "Introducing E2B Secrets" and Cloudflare emergency WAF were cross-checked and remain active candidates for operator playbook updates. Sources: https://e2b.dev/resources/introducing-e2b-secrets, https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/.
+
+
+## 2026-10-25 Promote-candidates pass
+
+- **xerj-org/xerj** (scr-xerj-2026-10-23): promotion_status: promoted → Added to agent-watchlist.md and storage-angle.md. Why promoted: relevance_score 7; direct agent‑infra implication as a self‑hosted MCP‑compatible memory/index option that reduces reliance on vendor-managed persistent memory and affects storage/forensic choices. Evidence strength: Medium‑Strong (GitHub). last_checked_at: 2026-10-25. Follow-up: run MCP client compatibility smoke tests, benchmark index sizes, and verify snapshot/export manifests. Source: https://github.com/xerj-org/xerj
+
+- **detect-coding-agent** (scr-detect-coding-agent-followup-2026-10-23): promotion_status: promoted → Added to agent-watchlist.md. Why promoted: relevance_score 7; detection primitive has clear security/operational value (can gate snapshots and containment). Evidence strength: Medium (crates.io). last_checked_at: 2026-10-25. Follow-up: benchmark FP/FN rates on CI and instrumented agent runs; if reliable, wire detector into conditional snapshot pipeline. Source: https://crates.io/crates/detect-coding-agent
+
+- **Cloudflare — agents@0.30.1** (scr-cloudflare-agents-2026-10-24): promotion_status: promoted → Added to agent-watchlist.md and storage-angle.md. Why promoted: relevance_score 8; vendor edge runtime changes have immediate operator impact (preview/export sinks, audio/transcript artifacts, tenant isolation). Evidence strength: Strong (release notes). last_checked_at: 2026-10-25. Follow-up: verify preview→export mapping, confirm tenant prefix enforcement, and add smoke tests to check provenance headers on durable copies. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+
+Notes:
+- Promotions limited to three candidates this run per Promote-candidates gate.
+- Deferred/unchecked candidates in the inbox remain unchanged; their defer_count will be incremented on subsequent checks when examined.
+- If any promoted candidate surfaces additional primary sources (official docs, changelogs, or integration guides), update the watchlist entries with that primary evidence and escalate follow-up actions (e.g., storage playbook changes, compatibility tests).
