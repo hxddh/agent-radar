@@ -2016,3 +2016,20 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product / runtime] openai/codex — prerelease rust-v0.164.0-alpha.11. Why it matters: frequent pre-releases indicate active SDK/runtime changes that may affect local coding-agent integrations and CI pinning. Evidence strength: Strong. Source: https://github.com/openai/codex/releases/tag/rust-v0.164.0-alpha.11
 
 - [mainstream_product / runtime] anthropics/claude-code v2.1.308 release. Why it matters: incremental runtime/conductor changes can alter connector and containment semantics; operators should snapshot workspaces and run compatibility tests before upgrading. Evidence strength: Strong. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.308
+
+
+### Added 2026-10-26 (source-sweep)
+
+- [mainstream_product / runtime] Microsoft — agent-framework (dotnet & python) release tag dotnet-1.26.0. Why it matters: official SDK/runtime updates from Microsoft change operator integration contracts (connectors, telemetry, containment). Evidence strength: Strong. Source: https://github.com/microsoft/agent-framework/releases/tag/dotnet-1.26.0
+
+- [mainstream_product / runtime] Vercel Labs — agent-browser v0.39.3 release. Why it matters: browser automation tooling impacts headful/headless orchestration traces and operator golden tests. Evidence strength: Strong. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.3
+
+- [mainstream_product / runtime] OpenAI — Decisions API launch/announcement. Why it matters: Decisions API aims to codify decisioning & reduce latency for interactive/agentic apps; affects operator integration and runtime choices. Evidence strength: Strong. Source: https://openai.com/index/decisions-api
+
+- [user_workflow / customer_case] AWS — Bayer Crop Science built an agentic decision engine on Bedrock AgentCore (customer case study). Why it matters: real-world customer implementation shows Bedrock AgentCore usage patterns and unified-ops integration; useful for operator playbooks. Evidence strength: Strong. Source: https://aws.amazon.com/blogs/machine-learning/how-bayer-crop-science-built-an-agentic-decision-engine-on-amazon-bedrock-agentcore-with-aws-unified-operations/
+
+- [mainstream_product / governance] JetBrains — Air Governance: manage AI agents, access, and spend. Why it matters: org-level governance features (approval workflows, spend tracking) influence operator control-plane decisions. Evidence strength: Strong. Source: https://blog.jetbrains.com/blog/2026/10/22/air-governance-manage-ai-agents-access-and-spend-throughout-your-organization/
+
+- [user_workflow / social] Cursor desktop-control discussion (agents clicking/typing in desktop apps). Why it matters: desktop control widens containment risk and operator UX pain (sandboxing & focus-stealing). Evidence strength: Medium (social report). Source: https://bsky.app/profile/pigeonrelay.bsky.social/post/3myqqpcskgk2b
+
+- [user_workflow / operator-tooling] Corgi — terminal multiplexer for managing many coding agents. Why it matters: operator tooling that groups agents, shows token usage and file diffs improves session review and containment. Evidence strength: Medium. Source: https://corgi.computer/

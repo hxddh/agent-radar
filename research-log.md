@@ -4756,3 +4756,39 @@ Notes:
 - Promotions limited to three candidates this run per Promote-candidates gate.
 - Deferred/unchecked candidates in the inbox remain unchanged; their defer_count will be incremented on subsequent checks when examined.
 - If any promoted candidate surfaces additional primary sources (official docs, changelogs, or integration guides), update the watchlist entries with that primary evidence and escalate follow-up actions (e.g., storage playbook changes, compatibility tests).
+
+
+- **OpenAI — NASK partnership** (scr-9i0j1k2): Why it matters: national-level safety partnership may change incident coordination and cross-border forensics expectations; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://openai.com/index/openai-nask-ai-safety-security-partnership
+  - candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; defer_count: 0; stale_after_days: 30
+
+- **Vercel — agent-browser v0.39.3** (scr-0a1b2c3d-followup-2026-10-26): Why it matters: browser automation CLI changes can break headful/headless traces used in operator golden tests; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.3
+  - candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; defer_count: 0; stale_after_days: 21
+
+- **mem0ai Databricks vector store — GHSA-7587-9684-52r6 (CVE-2026-115324)** (scr-mem0ai-cve-2026-10-26): Why it matters: SQL injection risks memory/vector exfiltration for agent RAG flows; Evidence strength: Strong; promotion_status: candidate (security triage)
+  - Source: https://github.com/advisories/GHSA-7587-9684-52r6
+  - candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; defer_count: 0; stale_after_days: 21
+
+- **FastMCP SDK advisories (GHSA-vqqp-x5qm-5qp4)** (scr-fastmcp-ghsa-2026-10-26): Why it matters: issuer redirection & skipped auth enable MCP trust bypasses; Evidence strength: Strong; promotion_status: candidate (urgent audit)
+  - Source: https://github.com/advisories/GHSA-vqqp-x5qm-5qp4
+  - candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; defer_count: 0; stale_after_days: 21
+
+- **Cloudflare — emergency WAF & agents@0.30.1** (scr-cloudflare-emergency-2026-10-26): Why it matters: edge rule changes affect webhook delivery and artifact retention mapping; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/ and https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+  - candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; defer_count: 0; stale_after_days: 21
+
+
+- **microsoft/agent-framework — dotnet-1.26.0** (scr-3d4e5f6a): Why it matters: Microsoft shipping cross-language agent-framework updates (dotnet & python) can change connector contracts, telemetry points, and containment semantics for enterprise operators. Evidence strength: Strong (GitHub release). Relevance score: 7. Defer reason: discovery / operator compatibility testing required before promotion. Follow-up needed: capture changelog deltas vs prior release, run connector smoke tests, verify telemetry fields and default sandbox settings. candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://github.com/microsoft/agent-framework/releases/tag/dotnet-1.26.0
+
+- **OpenAI Decisions API (scr-3c4d5e6)**: Why it matters: Decisions API intends to reduce latency and codify decisioning for interactive apps and agent controllers — could shift how operators instrument decision steps and audit logs. Evidence strength: Strong (official blog/product page). Relevance score: 10. Defer reason: product-level change; needs operator integration notes. Follow-up needed: collect API contract, identify telemetry hooks for audit, test decision trace export for forensic mapping. candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://openai.com/index/decisions-api
+
+- **Corgi — terminal multiplexer for many coding agents** (scr-0d9e6c4b): Why it matters: operator tooling that groups agents, surfaces token usage, and shows diffs can materially improve audit and review workflows; useful containment/UX pattern. Evidence strength: Medium (project site / maintainer notes). Relevance score: 7. Defer reason: early-stage/tooling; needs operator feedback. Follow-up needed: run hands-on trial with 3+ concurrent agent instances, observe file/worktree conflicts, and capture recommended safety controls (workspace isolation). candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 21. Source: https://corgi.computer/
+
+- **AWS — Bayer Crop Science on Bedrock AgentCore (scr-8h9i0j1)**: Why it matters: vendor case study showing Bedrock AgentCore used for an agentic decision engine — operational patterns (unified-ops, observability) are actionable for operators adopting Bedrock. Evidence strength: Strong (AWS blog). Relevance score: 7. Defer reason: case-study evidence; not a watchlist promotion but important for playbooks. Follow-up needed: extract architecture diagram, telemetry/ops checklist, and MCP/AgentCore integration points. candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://aws.amazon.com/blogs/machine-learning/how-bayer-crop-science-built-an-agentic-decision-engine-on-amazon-bedrock-agentcore-with-aws-unified-operations/
+
+- **JetBrains — Air Governance (scr-6f7g8h9)**: Why it matters: org governance features (agent access controls, approval workflows, spend tracking) change operator control-plane choices and incident response patterns. Evidence strength: Strong (vendor blog). Relevance score: 7. Defer reason: governance feature; requires mapping to existing org policies. Follow-up needed: document policy integration points (SSO, approval flows), test RBAC defaults, collect admin UX notes. candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://blog.jetbrains.com/blog/2026/10/22/air-governance-manage-ai-agents-access-and-spend-throughout-your-organization/
+
+- **Cursor — 'Computer Use' desktop-control social signal** (scr-6f1a2b9c): Why it matters: social field reports show agents can click/type into desktop apps, broadening automation use cases but increasing sandbox and focus-stealing risk for operators. Evidence strength: Medium (Bluesky social post; single-platform field report). Relevance score: 6. Defer reason: social-only evidence; needs corroboration or vendor doc. Follow-up needed: request vendor docs or multiple social corroborations; run a controlled test to measure OS-level input APIs used. candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 21. Source: https://bsky.app/profile/pigeonrelay.bsky.social/post/3myqqpcskgk2b
+
+- **Google Agent Compute Engine — per-agent microVM preview (scr-9d3c4e1b)**: Why it matters: per-agent microVMs promise stronger hardware isolation for agents; operator implications include onboarding, cost, and forensic collection changes. Evidence strength: Medium (social/preview report). Relevance score: 9. Defer reason: preview/social report; seek primary vendor docs or announcement. Follow-up needed: locate official preview docs/FAQ, estimate per-agent cost delta, and plan forensic snapshot changes for microVM exports. candidate_seen_at: 2026-10-26; last_checked_at: 2026-10-26; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://bsky.app/profile/thenewstack.io/post/3myqwuqhwu32z
