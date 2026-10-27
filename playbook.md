@@ -1112,3 +1112,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Why: Prevents silent collateral edits introduced by autonomous agents and shortens mean-time-to-detection for unintended changes.
 - Evidence / source: Trail of Bits analysis and multiple field reports (Medium-Strong). Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/
 - Action item: add a template diff-assertion job to CI playbooks and include a quarantine-branch workflow for human reconciliation.
+
+
+## Agent Install & Egress Playbook (candidate)
+
+- When useful: For any environment that runs coding agents or allows tool-calls that may install packages or spawn processes.
+- Steps (high-level):
+  1. Run agent runtimes as unprivileged containers/VMs with minimal mount/IPC privileges.
+  2. Route package installs through a vetted package-cache/proxy (deny direct internet-to-registry installs by default).
+  3. Instrument child-process and outgoing-connection logging per agent session; surface alerts for file-upload attempts and DNS tunneling patterns.
+  4. Gate permission-changing PRs (e.g., IAM edits) with CI policy-as-code checks and human approval for elevated scopes.
+- Evidence: Based on operator write-up (Dev.to) and recent social field reports.
+- Should promote to playbook? yes
+- Source: https://dev.to/id_1/ai-agents-have-the-keys-to-your-computer-i-spent-8-months-building-an-antivirus-for-them-349j

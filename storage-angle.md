@@ -1541,3 +1541,16 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
 - Cloudflare agents@0.30.1 (promoted)
   - Storage angle: edge runtime changes can change default export sinks and artifact classes (audio/transcript, HAR/DOM snapshots). Action: verify that preview exports stay tenant‑scoped, enforce tenant prefixes, and add automated checks that detect unexpected durable copies after SDK/edge upgrades; add transcript PII scanning into the ingestion pipeline.
   - Evidence: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+
+
+- 2026-10-27: Bedrock / GPT-6.1 storage implications
+  - Observation: Availability of GPT-6.1 Terra on AWS Bedrock increases reliance on cloud-managed export, snapshot, and object-storage contracts for agent artifact retention.
+  - Impact: Operators must map Bedrock export hooks and S3-like retention TTLs into forensic playbooks and ensure backups include those remote artifacts.
+  - Watch trigger: Publication of Bedrock export/retention SLA or any incident reporting missing Bedrock-exported artifacts.
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/10/openai-gpt-6-1-terra-on-amazon-bedrock/
+
+- 2026-10-27: Edge WAF vs agent artifact reliability
+  - Observation: Cloudflare agents release and emergency WAF updates can change webhook behavior and cause artifact loss unless exporters are validated.
+  - Impact: Map WAF rule IDs to alerting and backup exporter configuration to durable object storage.
+  - Watch trigger: Spike in 4xx/5xx webhook errors coincident with WAF rule rollout.
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1

@@ -1189,3 +1189,9 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Parallel agent runs clobber worktrees: operator trick — run each agent in a per-run ephemeral clone (git worktree or container) and prefix temp paths with run IDs. Evidence strength: Medium (dev.to field reports).
 
 - CI pattern: add a diff-assertion step to CI that rejects unexpected collateral edits from agent PRs and routes allowed diffs into a quarantine branch for human review (Trail of Bits). Evidence strength: Medium-Strong. Source: https://blog.trailofbits.com/2026/10/21/your-ai-agent-fixed-the-bug-but-what-else-did-it-change/
+
+
+- 2026-10-27: Field-note: operator containment patterns from recent write-ups and social reports.
+  - Summary: Common practical controls recommended by operators: (1) run agents in non-privileged containers; (2) proxy package registries (npm/pypi) to deny direct installs; (3) log child-process spawns and network egress per-agent session; (4) require human approvals for permission/privilege changes surfaced by Copilot-like features.
+  - Evidence strength: Medium (Dev.to operator write-up + multiple Bluesky field reports).
+  - Actionable next-step: bake package-proxy and child-process logging into staging images and add an egress-deny-by-default policy for agent sandboxes.

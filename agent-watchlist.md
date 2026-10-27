@@ -658,3 +658,13 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Relevance score: 8
 - Follow-up needed: validate preview→export mapping post‑upgrade, confirm tenant‑scoped prefixes are enforced, add smoke tests that verify provenance headers (agent id, run_id, AGENTS.md SHA) are preserved on durable copies; check for audio/transcript export defaults and ensure PII scrubbing where required.
 - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+
+
+## OpenHands Software Agent SDK
+
+- What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.
+- Why it matters: A reported unauthenticated RCE (CVE-2026-112346) affects containment & supply-chain; if widely embedded, this can require fleet-wide patching and emergency containment actions.
+- Evidence strength: Medium-Strong (NVD entry + social report). Vendor advisory/GitHub Advisory: MISSING (follow-up required).
+- Immediate operator advice: identify any pinned OpenHands SDK versions in your fleet, block untrusted package installs from agent runtimes, capture exec/egress telemetry, and prepare hotpatch/test gates.
+- Source: https://bsky.app/profile/stemshop.bsky.social/post/3myscuucfe72w; https://nvd.nist.gov/vuln/detail/CVE-2026-112346
+- replace_section anchor: `## OpenHands Software Agent SDK`
