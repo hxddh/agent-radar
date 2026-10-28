@@ -1125,3 +1125,17 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Evidence: Based on operator write-up (Dev.to) and recent social field reports.
 - Should promote to playbook? yes
 - Source: https://dev.to/id_1/ai-agents-have-the-keys-to-your-computer-i-spent-8-months-building-an-antivirus-for-them-349j
+
+
+## Connector Upgrade & Runtime Pinning Checklist (playbook candidate)
+
+- When useful: before upgrading agent runtimes, browser automation runtimes, or MCP client/server libraries in production fleets.
+- Steps:
+  1. Snapshot active workspaces and export last‑known good session traces.
+  2. Pin the previous runtime version in CI manifests and create an upgrade branch.
+  3. Run golden smoke tests that include representative tool-calls, browser traces, and connector handshakes.
+  4. Validate issuer and $ref behaviors for MCP routers (ensure issuer assertions and disable auto $ref fetches where possible).
+  5. Deploy to a staging fleet with traffic shadowing for 24–72 hours; monitor for errors and degraded latencies.
+  6. Roll forward on small batches and keep rollback playbooks ready.
+- Evidence: derived from multiple runtime and advisory signals (Anthropic runtime churn, Vercel agent-browser, GHSA advisories).
+- Should promote to playbook? yes

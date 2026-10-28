@@ -1554,3 +1554,14 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Impact: Map WAF rule IDs to alerting and backup exporter configuration to durable object storage.
   - Watch trigger: Spike in 4xx/5xx webhook errors coincident with WAF rule rollout.
   - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+
+
+- Signal: Increased enterprise & government distribution (Anthropic S‑1, GSA partnership; OpenAI + Oracle) increases demand for snapshotable session artifacts and exportable forensics.
+  - Implication: Teams must standardize session artifact manifests (signed, time-stamped), retention policies, and eDiscovery export paths.
+  - Evidence strength: Strong (vendor announcements).
+  - Watch trigger: vendor SDK or admin console exposes a 'session_export' API or documentation for forensic export.
+
+- Signal: Router-level content screening (OpenRouter) and MCP advisories create new temporary storage needs for flagged payloads and may impose legal retention obligations.
+  - Implication: Screening points should write flagged payloads to compliance-controlled buckets with clear retention/ redaction rules; logging must avoid exposing PII in plain text.
+  - Evidence strength: Strong (OpenRouter blog + GHSA advisories).
+  - Watch trigger: routing/screening service publishes retention/escrow policy or a 'flagged_payloads' export endpoint.

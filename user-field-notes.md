@@ -1195,3 +1195,8 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Summary: Common practical controls recommended by operators: (1) run agents in non-privileged containers; (2) proxy package registries (npm/pypi) to deny direct installs; (3) log child-process spawns and network egress per-agent session; (4) require human approvals for permission/privilege changes surfaced by Copilot-like features.
   - Evidence strength: Medium (Dev.to operator write-up + multiple Bluesky field reports).
   - Actionable next-step: bake package-proxy and child-process logging into staging images and add an egress-deny-by-default policy for agent sandboxes.
+
+
+- **Cursor desktop-control (2026-10-28)**: multiple social reports indicate desktop-level input automation (click/type) is being exercised by desktop agents. Evidence strength: Medium (Bluesky social post). Impact: increases containment surface (focus stealing, local-credential exposure). Suggested operator action: only allow desktop-control agents in disposable VMs; enable OS-level auditing for input APIs; prefer API-driven automations when available. Source: https://bsky.app/profile/pigeonrelay.bsky.social/post/3myqqpcskgk2b
+
+- **Custom MCP connector regressions (2026-10-28)**: Reddit/ClaudeAI thread reports recent connector breakage after runtime/SDK changes. Evidence strength: Medium (Reddit). Operator action: add connector compatibility smoke tests to PR pipelines and hold connector upgrades behind feature flags. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

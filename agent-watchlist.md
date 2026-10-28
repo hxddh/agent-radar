@@ -623,13 +623,12 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Vercel AI / Sandbox-Related Agent Workflow (refreshed)
-
 - Category: Runtime / eval / agent canvases
-- Recent changes: Vercel published ai@7.0.153 (2026-10-25) — SDK/runtime deltas that affect eval and playground trace compatibility. Operators should pin versions and re-run golden evals.
-- Evidence strength: Strong (GitHub release). Source: https://github.com/vercel/ai/releases/tag/ai%407.0.153
-- Action: run CI golden tests and update eval harnesses; test export/trace schema compatibility with existing replay tooling.
-
-
+- Recent changes: Vercel published ai@7.0.153 (2026-10-25) and agent-browser v0.40.0 (2026-10-28). The agent-browser v0.40.0 release contains runtime and selector/automation deltas that can affect playgrounds, golden traces, and headful automation tests. Operators should pin agent-browser versions in CI, re-run golden evals, and validate any changes to navigation timeouts or default sandboxing behaviors.
+- Actionable: pin agent-browser and ai SDK versions in deployment manifests; add CI smoke tests that run representative browser automation traces; validate export/trace formats after upgrade.
+- Source class: GitHub releases, vendor changelog.
+- Evidence strength: Strong
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.40.0
 ## xerj-org/xerj
 
 - What it is: Local‑first memory + index project that advertises MCP compatibility and self‑hosted indexing for agent memories and retrieval (local-first, on‑prem-friendly vector/index option).
