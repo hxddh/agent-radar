@@ -1565,3 +1565,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Implication: Screening points should write flagged payloads to compliance-controlled buckets with clear retention/ redaction rules; logging must avoid exposing PII in plain text.
   - Evidence strength: Strong (OpenRouter blog + GHSA advisories).
   - Watch trigger: routing/screening service publishes retention/escrow policy or a 'flagged_payloads' export endpoint.
+
+
+- Artifact-mapping with vendor platform expansions
+  - Signal: OpenAI × ServiceNow expands where transcripts and attachments live.
+  - Implication: Operators must map artifact lanes (ITSM attachments, vendor logs) and require exportable forensic snapshots as procurement/integration preconditions.
+  - Evidence strength: Strong (vendor announcement)
+  - Source: https://openai.com/index/openai-servicenow-partnership-expansion
+  - Watch trigger: A ServiceNow or OpenAI SDK update that changes default attachment retention TTLs or disables exports.
+
+- MCP routing and storage hygiene after GHSA advisories
+  - Signal: GHSA advisories highlight issuer/$ref/trust bypass risks in MCP SDKs.
+  - Implication: Router misconfigurations could move artifacts to unexpected backends; retention and access controls must be validated end-to-end.
+  - Evidence strength: Strong (GitHub Advisory)
+  - Source: https://github.com/advisories/GHSA-5h93-6whr-6q8j
+  - Watch trigger: Detection of unpinned issuer metadata or unexpected $ref fetch requests in router logs.
