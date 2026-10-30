@@ -649,15 +649,12 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.30.1
-
-- What it is: Cloudflare's edge agent runtime release (agents@0.30.1) with changes to edge preview/export behavior, session artifacts (audio/transcripts), and preview attestation hooks that affect where and how agent artifacts are produced and exported.
-- Why it matters: Vendor runtime changes at the edge can silently change preview→durable export targets, TTL defaults, and attestation metadata. This release materially affects operator artifact mapping, tenant isolation (preview sinks), and transcript/audio artifact flow — all important for forensic retention, PII handling, and per‑tenant isolation.
-- Evidence strength: Strong (official GitHub release)
-- Relevance score: 8
-- Follow-up needed: validate preview→export mapping post‑upgrade, confirm tenant‑scoped prefixes are enforced, add smoke tests that verify provenance headers (agent id, run_id, AGENTS.md SHA) are preserved on durable copies; check for audio/transcript export defaults and ensure PII scrubbing where required.
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
-
-
+- Recent changes: Cloudflare published agents@0.32.0 (2026-10-30). The release adjusts runtime selector behavior, exporter defaults and TTLs, and addresses observability/export reliability at the edge. Operators must remap exporter endpoints, validate retention/TTL in staging, and ensure WAF/managed-rule mappings preserve forensic artifacts.
+- Impact: platform defaults now directly affect artifact lifetimes and evidence availability for incident response; upgrade planning should include exporter smoke-tests and retention verification.
+- Action: run staging upgrade, validate exporter/TTL, add exporter connectivity checks to CI, and map Cloudflare TTLs to internal retention policies.
+- Source class: GitHub release
+- Evidence strength: Strong
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
 ## OpenHands Software Agent SDK
 
 - What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.

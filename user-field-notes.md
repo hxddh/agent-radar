@@ -1207,3 +1207,10 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **Bluesky — Cursor desktop control** (2026-10-28): field reports show agents clicking/typing into local desktop apps; containment risk elevated. Evidence strength: Medium (bluesky). Actionable note: run desktop-control tests inside nested microVMs and require explicit admin opt-in for desktop input features. Source: https://bsky.app/profile/pigeonrelay.bsky.social/post/3myqqpcskgk2b
 
 - **Gist — Claude Code background summaries token usage** (2026-10-28): background summaries/status lines may consume ~15–20% of session tokens in some runs. Evidence strength: Medium (gist). Actionable note: add token-usage meters per-session and disable background summaries for high-throughput CI tasks. Source: https://gist.github.com/flamerix-ai/c3905705cc4205e5de3011fa2e74efce
+
+
+- **Permission-prompt fatigue (2026-10-30)**: multiple Bluesky posts report users habitually accepting per-tool confirmations, reducing the effectiveness of UI-level safety checks. Evidence strength: Medium; Source class: Social (Bluesky). Source: https://bsky.app/profile/wyrework.bsky.social/post/3mz34w5dycm2i
+
+- **MCP connector fragility (2026-10-30)**: field reports (Bluesky + Reddit) show custom MCP connectors broken after client updates, and some clients ignoring readOnly/destructiveHint hints. Evidence strength: Medium; Source class: Social (Bluesky / Reddit). Sources: https://bsky.app/profile/hivegate.dev/post/3mz34qryxjd2m ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Public-safe summary: operators should instrument confirmation acceptance rates, add server-side enforcement shims for required confirmation metadata, and treat connector handshake failures as high-priority CI issues.

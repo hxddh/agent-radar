@@ -1139,3 +1139,10 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   6. Roll forward on small batches and keep rollback playbooks ready.
 - Evidence: derived from multiple runtime and advisory signals (Anthropic runtime churn, Vercel agent-browser, GHSA advisories).
 - Should promote to playbook? yes
+
+
+- Playbook candidate: Stage-first upgrade + exporter/TTL mapping
+  - When useful: before upgrading edge or agent runtimes (Cloudflare, Vercel, Codex runtimes).
+  - Evidence: Cloudflare agents@0.32.0 release and OpenAI/Codex runtime churn (2026-10-30).
+  - Steps: (1) Snapshot workspace and connector config; (2) deploy to canary tenants; (3) validate exporter connectivity and artifact retrieval; (4) run golden-trace smoke tests for tool-calls and session transcripts; (5) promote only after no evidence-dropouts.
+  - Should promote to playbook? yes

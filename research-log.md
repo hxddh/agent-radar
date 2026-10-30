@@ -4850,3 +4850,28 @@ Notes:
 - **Langfuse — docs/trace guidance (trace & eval best-practices)** (scr-8f4b2a1): Why it matters: vendor-backed guidance and examples for tracing and evaluating agent/LLM apps support observable golden-trace CI and reproducible eval pipelines for operators. Evidence strength: Strong (official docs). Relevance score: 9. Defer reason: monitoring/eval integration needed; not a promotion during source-sweep. Follow-up needed: map Langfuse trace fields to our eval CI, schedule hands-on eval with representative tasks. candidate_seen_at: 2026-10-29; last_checked_at: 2026-10-29; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://github.com/langfuse/langfuse-docs
 
 - **Microsoft — Scope open-source evaluation for coding agents** (scr-2b3c4d): Why it matters: reproducible, vendor-backed eval harness for coding agents enables standardized benchmarks and affects procurement/eval processes for operator teams. Evidence strength: Strong (official Microsoft open-source announcement). Relevance score: 9. Defer reason: evaluation-only; requires integration testing with internal pipelines. Follow-up needed: pull Scope into an evaluation runner, compare with existing eval harnesses, record measurement gaps. candidate_seen_at: 2026-10-29; last_checked_at: 2026-10-29; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://opensource.microsoft.com/blog/2026/10/19/introducing-scope-open-source-evaluation-for-ai-coding-agents/?utm_source=bluesky&utm_medium=
+
+
+- **Google: prompt-injection warning (scr-1d2e3f4)**: Why it matters: signals prompt-injection targeting coding/automation agent toolchains; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://cloud.google.com/blog/topics/threat-intelligence/from-prompting-to-autonomy-the-evolution-of-adversarial-ai
+  - candidate_seen_at: 2026-10-30; last_checked_at: 2026-10-30; defer_count: 0; stale_after_days: 30
+
+- **Cloudflare agents@0.32.0** (scr-1a2b3c4d): Why it matters: edge runtime/exporter/TTL changes affect forensic artifact lifetimes; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
+  - candidate_seen_at: 2026-10-30; last_checked_at: 2026-10-30; defer_count: 0; stale_after_days: 21
+
+- **OpenAI: Updated Model Spec** (scr-openai-model-spec): Why it matters: new model behavioral/eval guidance affects acceptance tests and governance; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://openai.com/index/updated-model-spec
+  - candidate_seen_at: 2026-10-30; last_checked_at: 2026-10-30; defer_count: 0; stale_after_days: 30
+
+- **AWS: Step Functions as AI agent tools** (scr-3c4d5e6f): Why it matters: existing workflows exposed as callable agent tools increases blast radius; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/10/step-functions-workflows-ai-agent-tools/
+  - candidate_seen_at: 2026-10-30; last_checked_at: 2026-10-30; defer_count: 0; stale_after_days: 30
+
+- **OpenAI Codex rust-v0.166.0** (scr-2b3c4d5e): Why it matters: runtime/SDK churn affects local coding-agent integrations; Evidence strength: Strong; promotion_status: candidate
+  - Source: https://github.com/openai/codex/releases/tag/rust-v0.166.0
+  - candidate_seen_at: 2026-10-30; last_checked_at: 2026-10-30; defer_count: 0; stale_after_days: 30
+
+- **Social/operator notes: permission-prompt fatigue & MCP connector fragility** (scr-social-ops-2026-10-30): Why it matters: operator controls weakened by UX and connector regressions; Evidence strength: Medium; promotion_status: candidate
+  - Sources: https://bsky.app/profile/wyrework.bsky.social/post/3mz34w5dycm2i ; https://bsky.app/profile/hivegate.dev/post/3mz34qryxjd2m ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+  - candidate_seen_at: 2026-10-30; last_checked_at: 2026-10-30; defer_count: 0; stale_after_days: 21

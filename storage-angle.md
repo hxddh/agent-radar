@@ -1580,3 +1580,20 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong (GitHub Advisory)
   - Source: https://github.com/advisories/GHSA-5h93-6whr-6q8j
   - Watch trigger: Detection of unpinned issuer metadata or unexpected $ref fetch requests in router logs.
+
+
+- Signal: Edge/runtime exporter defaults can shorten forensic windows.
+  - Related to: Cloudflare agents@0.32.0
+  - Storage implication: TTL changes may delete session transcripts and artifacts earlier than internal runbooks assume; ensure exporter-to-object-store retention alignment.
+  - Source class: GitHub release
+  - Evidence strength: Strong
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
+  - Watch trigger: missing or truncated session transcripts when retrieving from exporters after a recent upgrade.
+
+- Signal: Spec/runtime churn increases object-storage demand for traces and versioned artifacts.
+  - Related to: OpenAI Model Spec + Codex runtime release
+  - Storage implication: richer audit logs and longer retention for evaluations will increase object-store usage and retrieval costs; plan for retention-tiering and sampling.
+  - Source class: Official spec + GitHub release
+  - Evidence strength: Strong
+  - Sources: https://openai.com/index/updated-model-spec ; https://github.com/openai/codex/releases/tag/rust-v0.166.0
+  - Watch trigger: unexpected growth in stored transcript counts or a billing increase correlated with session-trace objects.
