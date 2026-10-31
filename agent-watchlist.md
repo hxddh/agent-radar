@@ -649,12 +649,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.30.1
-- Recent changes: Cloudflare published agents@0.32.0 (2026-10-30). The release adjusts runtime selector behavior, exporter defaults and TTLs, and addresses observability/export reliability at the edge. Operators must remap exporter endpoints, validate retention/TTL in staging, and ensure WAF/managed-rule mappings preserve forensic artifacts.
-- Impact: platform defaults now directly affect artifact lifetimes and evidence availability for incident response; upgrade planning should include exporter smoke-tests and retention verification.
-- Action: run staging upgrade, validate exporter/TTL, add exporter connectivity checks to CI, and map Cloudflare TTLs to internal retention policies.
-- Source class: GitHub release
-- Evidence strength: Strong
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
+- Recent changes: Cloudflare published agents@0.32.0 (2026-10-30) and announced Services for Private Origins GA (2026-10-30). The agents@0.32.0 release adjusts runtime selector behavior, exporter defaults and TTLs, and improves exporter reliability at the edge. Private Origins GA enables private-origin deployment topologies that change where agent-hosted apps resolve (public→private) and therefore shift exporter endpoints and data residency for artifacts.
+- Why it matters: exporter endpoint/TTL defaults and the private→public topology change the operator mapping of forensic artifact sinks (where previews, web-app exports, logs, and snapshots land). Edge-hosted agents may now deposit artifacts into private-origin backends that require different access controls and retention policies.
+- Actionable operator guidance: validate agents@0.32.0 in staging; remap exporter endpoints and retention/TTL settings; ensure WAF managed-rule mappings preserve forensic artifacts; test replayability of exported previews and browser-session artifacts into object storage; document data-residency implications for compliance.
+- Evidence strength: Strong (Cloudflare blog + GitHub release). Sources: https://blog.cloudflare.com/private-origins-public-to-private/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
 ## OpenHands Software Agent SDK
 
 - What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.

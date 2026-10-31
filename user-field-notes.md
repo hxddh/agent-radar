@@ -1214,3 +1214,28 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - **MCP connector fragility (2026-10-30)**: field reports (Bluesky + Reddit) show custom MCP connectors broken after client updates, and some clients ignoring readOnly/destructiveHint hints. Evidence strength: Medium; Source class: Social (Bluesky / Reddit). Sources: https://bsky.app/profile/hivegate.dev/post/3mz34qryxjd2m ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 
 - Public-safe summary: operators should instrument confirmation acceptance rates, add server-side enforcement shims for required confirmation metadata, and treat connector handshake failures as high-priority CI issues.
+
+
+- Date: 2026-10-31 — Broken MCP connectors (community repro)
+  - Tool: Custom MCP connectors (Claude Code integrations)
+  - Scenario: Multiple users reported connector regressions after recent runtime/connector updates; community repro steps shared.
+  - Pain: Connector breakages block CI and developer workflows; slow triage due to lack of golden traces.
+  - Tactical note: Capture a Langfuse-style trace in a pinned staging runtime before filing vendor bug reports.
+  - Source class: Social / discussion
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Date: 2026-10-31 — Unexpected MCP provisioning by Copilot
+  - Tool: GitHub Copilot automation
+  - Scenario: User report that Copilot-created automation spun up multiple MCP servers during an iteration loop.
+  - Pain: Uncontrolled infra creation, potential billing/attack surface exposure.
+  - Tactical note: Add an approval gate (manual sign-off) for infra creation flows and tag resources with agent-created=true for auditing.
+  - Source class: Social / discussion
+  - Source: https://www.reddit.com/r/GithubCopilot/comments/1xic60y/my_copilot_built_4_mcp_servers_for_me_in_minutes/
+
+- Date: 2026-10-31 — Marketplace extension integrity concern
+  - Tool: Cursor marketplace extension for Claude Code
+  - Scenario: Vendor security notice about malicious extension; operators should not auto-install marketplace extensions in production.
+  - Pain: Marketplaces increase attack surface; hard to determine which installs are safe.
+  - Tactical note: Treat marketplace installs as staging-only until hash/signature verified; add extension hash checks to CI.
+  - Source class: Vendor blog
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice

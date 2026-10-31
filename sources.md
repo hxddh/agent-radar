@@ -2033,3 +2033,11 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / social] Cursor desktop-control discussion (agents clicking/typing in desktop apps). Why it matters: desktop control widens containment risk and operator UX pain (sandboxing & focus-stealing). Evidence strength: Medium (social report). Source: https://bsky.app/profile/pigeonrelay.bsky.social/post/3myqqpcskgk2b
 
 - [user_workflow / operator-tooling] Corgi — terminal multiplexer for managing many coding agents. Why it matters: operator tooling that groups agents, shows token usage and file diffs improves session review and containment. Evidence strength: Medium. Source: https://corgi.computer/
+
+
+### Added 2026-10-31 (must-cover sources)
+- Cursor — Malicious Claude Code extension security notice (linked-public). Source: https://cursor.com/blog/claude-code-extension-security-notice
+- Reuters — DeepSeek banned from U.S. federal civilian agencies (linked-public). Source: https://www.reuters.com/technology/us-banning-chinese-ai-deepseek-government-agency-it-systems-2026-10-19/
+- AWS — Bedrock AgentCore runtime preview: live web-app previews while coding agents build them (linked-public). Source: https://aws.amazon.com/blogs/machine-learning/preview-web-apps-live-as-your-coding-agent-builds-them-with-amazon-bedrock-agentcore-runtime/
+- Microsoft — agent-framework python-1.24.0 release (linked-public). Source: https://github.com/microsoft/agent-framework/releases/tag/python-1.24.0
+- Cloudflare — Services for Private Origins GA (linked-public). Source: https://blog.cloudflare.com/private-origins-public-to-private/

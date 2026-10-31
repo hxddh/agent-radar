@@ -67,20 +67,20 @@ Last updated: 2026-07-09
 - Will platform-vendor MCP adoption accelerate standardization or create vendor silos? — New evidence: entries from AWS, Cloudflare, Vercel, JetBrains increase adoption but risk siloing. Status: New evidence.
 - Will the agent trust gap lead to a major incident forcing regulatory action? — New evidence: press coverage and reported incidents increase risk; status: risk elevated. Status: New evidence.
 ## Thesis Scorecard
-| # | Thesis (short) | Confidence Δ | Strongest new evidence | Strongest counter-evidence |
-|---|----------------|--------------|------------------------|----------------------------|
-| 1 | Task‑based execution | ↑ | Microsoft Foundry Routines GA; OpenAI Dots orchestration primitives (vendor docs) | Pricing fragmentation for long-running tasks; connector fragility |
-| 2 | Coding agents adoption | → | Continued IDE/runtime updates (Anthropic Claude Code v2.1.296; OpenAI Codex client churn) | No major counter-evidence; coding still dominant |
-| 3 | Evaluation as core | → | Langfuse / agent-eval tooling updates improving traces and replay | Eval tooling still fragmented across vendors |
-| 4 | Uneven UX across vendors | → | Multiple vendor default changes breaking connectors; MCP connector regression threads | Vendors shipping operator gates (mitigation) |
-| 5 | Object storage as artifact plane | → | OpenAI Dots + Bedrock fleet patterns require snapshot/manifest designs | Token-compression and local caching offset some storage needs |
-| 6 | Meta-harnesses emergence | ↑ | Omnigent uptake and OSS multi-agent 'swarms' activity in social + repo signals | No single meta-harness standard yet |
-| 7 | Memory + MCP convergence | ↑ | mem0 / remem / agenticow activity; MCP server releases and routers | No dominant memory primitive chosen yet |
-| 8 | Platform‑vendor MCP entry | ↑ | Cloudflare agent platform updates; Vercel sandbox memory/observability; AWS Bedrock Agent Mode case study | Risk of vendor-specific siloing remains |
-| 9 | Containment / security | ↑ | Flowise GHSA advisories; Anthropic containment engineering notes; OpenAI training/eval pauses | No universal containment standard; incidents continue |
-|10 | Cost economics | → | Headroom token‑compression signals cost optimizations; vendor browser-side cost reductions | Long-running pricing models still fragmented |
+| # | Thesis (short) | Confidence Δ (month) | Strongest new evidence | Strongest counter-evidence |
+|---|----------------|----------------------|------------------------|----------------------------|
+| 1 | Task‑based execution | ↑ | Microsoft Foundry Routines GA; OpenAI Amp/Dots positioning across weeks | Pricing fragmentation for long-running tasks; connector fragility reported in social threads |
+| 2 | Coding agents adoption | → | Continued IDE/runtime updates (Anthropic Claude Code releases; OpenAI Codex churn) | No major counter-evidence; coding still dominant |
+| 3 | Evaluation as core | → | Bedrock AgentCore evaluation guidance; new eval tooling signals (Langfuse/SCOPE) | Eval tooling still fragmented across vendors |
+| 4 | Uneven UX across vendors | → | Repeated connector regressions and marketplace extension risks (Cursor notice) | Vendors shipping operator gates (mitigations emerging) |
+| 5 | Object storage as artifact plane | ↑ | Bedrock AgentCore preview + Dots preview patterns; Vercel runtime exports | Token-compression & local caching offset some storage needs |
+| 6 | Meta-harnesses emergence | ↑ | Continued Omnigent / OSS multi-agent activity and new MCP routers | No single meta-harness standard yet |
+| 7 | Memory + MCP convergence | ↑ | mem0 / xerj / MCP server releases and router tooling surfaced this month | No dominant memory primitive chosen yet |
+| 8 | Platform‑vendor MCP entry | ↑↑ | OpenAI Amp/Dots, AWS Bedrock AgentCore previews, Cloudflare Services for Private Origins GA, Vercel runtime updates | Risk of vendor-specific siloing and exporter default divergence |
+| 9 | Containment / security | ↑↑ | Cursor security notice (malicious extension); Flowise & Pydantic GHSA advisories; DeepSeek procurement ban; JetBrains sandbox guidance | No universal containment standard; incidents continue |
+|10 | Cost economics | → | Browser-side cost-reduction signals and token-efficiency eval work | Long-running pricing models still fragmented |
 
-- Updated at: 2026-10-11
+- Updated at: 2026-10-31
 ## Anthropic — Claude Code (scr-claude-code)
 What it is: Claude Code runtime and orchestration components for coding agents.
 

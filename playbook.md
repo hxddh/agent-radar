@@ -1146,3 +1146,43 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Evidence: Cloudflare agents@0.32.0 release and OpenAI/Codex runtime churn (2026-10-30).
   - Steps: (1) Snapshot workspace and connector config; (2) deploy to canary tenants; (3) validate exporter connectivity and artifact retrieval; (4) run golden-trace smoke tests for tool-calls and session transcripts; (5) promote only after no evidence-dropouts.
   - Should promote to playbook? yes
+
+
+## Playbook candidate: Extension & Connector Integrity Gate
+
+- When useful: Before enabling marketplace extensions or new MCP connectors in production; during major SDK/runtime upgrades.
+- Steps:
+  1. Pin runtime/SDK versions in a staging devcontainer and reproduce the integration.
+  2. Verify extension/connector package hash/signature against vendor-provided metadata; refuse install if mismatched.
+  3. Run a connectivity-limited smoke test: network egress blocked except to allowed telemetry endpoints; capture Langfuse-style trace and store in object storage with manifest.
+  4. Require explicit approval in the CI/CD pipeline (peer reviewer + security owner) to promote to production.
+- Evidence: Cursor security notice; community reports of connector regressions and Copilot auto-provisioning.
+- Should promote to playbook? yes
+- Sources: https://cursor.com/blog/claude-code-extension-security-notice ; https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+### Promoted playbook items (added 2026-10)
+
+#### Connector CI & Compatibility Template
+- What: standardized staging-first CI template to pin agent SDKs/CLIs (openai/codex, anthopics/claude-code, microsoft agent-framework), run connector compatibility smoke tests, and validate tool-call semantics before production upgrades.
+- Why it matters: frequent SDK/runtime churn has caused connector regressions; a template ensures upgrades are caught in staging.
+- Actionables: pin versions, run suite: (1) session streaming smoke; (2) tool-call end-to-end in sandbox; (3) workspace export & replay to object storage.
+
+#### Managed-sandbox checklist (extract from JetBrains Air guidance)
+- Items: network egress rules, secrets injection policy, ephemeral filesystem mounts, process & syscall scoping, approved exporter sinks, staged rollout for marketplace extensions, artifact snapshot hooks to object storage.
+- Why: concrete controls reduce blast radius and make operator adoption safe-by-default where possible.
+
+#### Storage mapping for persistent agents
+- Items: classify artifact types (state snapshots, scheduled-output archives, browser session exports, preview artifacts) and map to retention classes (hot/short-term, cold/forensic long-term), export endpoints (S3/R2/private-origin), and recovery/replay paths.
+
+---
+
+### 晋升的运行手册条目（中文）
+
+#### 连接器 CI 与 兼容性 模板
+- 内容：在 staging 环境中固定 SDK/CLI 版本，运行连接器兼容性冒烟测试，验证工具调用语义。
+- 行动项：固定版本、运行会话/工具调用/导出到对象存储的测试。
+
+#### 托管沙箱检查清单（摘自 JetBrains Air 指南）
+- 条目：网络出站规则、密钥注入策略、临时文件系统、进程/系统调用限制、批准的导出接收端、扩展分阶段上线、产物快照到对象存储的挂钩。
+
+#### 持久代理的存储映射
+- 条目：将产物类型映射到保留级别（短期/取证长期）、导出端点（S3/R2/私有源）和回放/恢复路径。
