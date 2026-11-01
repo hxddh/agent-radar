@@ -1626,3 +1626,34 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - 短期预览：hot bucket，短 TTL（7–30 天）。
   - 取证快照：cold bucket，受限访问，长保留策略（>=90 天或合规要求）。
   - 可重放导出：保存压缩产物与回放清单（含 agent/SDK/连接器 hash），以便在 staging 环境中重放。
+
+
+## 2026-11-01 — Storage angle: snapshotting live previews & edge exporter TTLs
+
+- Signal: live web-app previews (AWS Bedrock AgentCore preview) and edge exporter TTL changes (Cloudflare Services for Private Origins) increase the need to capture ephemeral artifacts into durable object storage.
+- Recommendation:
+  - Ensure all preview runtimes auto-export a replayable artifact bundle (HTML dump, server logs, stdout/stderr, network traces) to object storage on creation and on every significant update.
+  - Validate exporter default TTLs at the edge: change staging exporter endpoints to mirror production retention policies; set alerts for exporter failures or zero-length artifacts.
+  - Keep retention mapping documented per vendor topology (edge vs private origin vs central blob storage) and include forensic retrieval playbooks in the runbook.
+
+- Watch triggers: failed replay of a preview artifact during incident response; vendor guidance changing export formats or TTL semantics.
+
+
+---
+
+## 2026-11-01 — Promote-candidates: storage implications
+
+- Manifold (repo-hijack)
+  - Storage implication: artifacts imported from third-party repositories (binaries, scripts, generated artifacts) must be written to a quarantined, write-once forensic prefix with rich provenance metadata (repo URL, commit SHA, AGENTS.md SHA, connector version) prior to use by agents. Avoid allowing unpinned repo contents to be written directly to durable tenant buckets.
+  - Immediate actions: add staging checks that detect unpinned imports; implement an automatic copy-to-forensic-bucket on first-use by agent runs; require operator approval to copy quarantined artifacts into production durable stores.
+  - Evidence: research-log.md (scr-4d5e6f7a)
+
+- agenticow (copy-on-write memory deltas)
+  - Storage implication: COW branching encourages storing small vector-delta blobs and manifests rather than repeated full snapshots. Object-store schemas should include branch-id, parent snapshot id, compression/encoding metadata, and vector-delta sizes to enable cost accounting, sampling, and replay.
+  - Immediate actions: instrument delta-size telemetry in staging; adapt lifecycle rules so transient branches default to short TTL while promoted branches are archived with full provenance.
+  - Source: https://www.npmjs.com/package/agenticow
+
+- agent-browser (browser artifacts)
+  - Storage implication: browser runs create large multimodal artifacts (HAR, DOM, screenshots, WebM) that should default to ephemeral preview buckets. Durable retention must be opt-in and accompanied by PII/audio-transcript scanning and replay manifests.
+  - Immediate actions: require export-to-operator-bucket hooks for promoted snapshots; attach replay manifests and perform automated PII scans before durable retention; set default preview TTLs (7–30 days) and monitor preview export failures.
+  - Source: https://crates.io/crates/agent-browser

@@ -4900,3 +4900,55 @@ Notes:
   - Action items recorded: collect vendor remediation IOCs for Cursor extension; add DeepSeek to compliance denylist checks; run Bedrock AgentCore preview export capture into object-storage for replay tests; pin & smoke-test microsoft agent-framework python-1.24.0 in connector CI; validate Cloudflare exporter/TTL settings in staging.
 
 - Candidate inbox dedup: all MUST mainstream items above are already present in Candidate inbox entries; this pass appended operational follow-ups rather than duplicate candidate entries.
+
+
+- **Anthropic — Claude Code behavioral tighten (game-clone / reverse-engineering)** (scr-1a9f2b3): Why it matters: runtime behavioral changes affect coding-agent workflows and test harnesses; evidence strength: Medium-Strong; candidate_seen_at: 2026-11-01; last_checked_at: 2026-11-01; promotion_status: candidate
+  - Source: https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-ai-model-is-now-blocking-attempts-at-video-game-recreation-and-cloning-users-also-claim-non-malicious-generic-reverse-engineering-tasks-are-blocked
+
+- **DeepSeek governance chatter / federal denylist** (scr-7b3d5e1): Why it matters: procurement-level blocklists change enterprise exposure and require telemetry scans; evidence strength: Medium (social) with prior Reuters corroboration; candidate_seen_at: 2026-11-01; last_checked_at: 2026-11-01; promotion_status: candidate
+  - Source: https://bsky.app/profile/dailyinference.news/post/3mza5azvxsk7o
+
+- **Google Gemini CLI nightly (v0.67.0-nightly.20261101)** (scr-9a1b2c3d): Why it matters: CLI churn affects automation & parsing; evidence strength: Strong; candidate_seen_at: 2026-11-01; last_checked_at: 2026-11-01; promotion_status: candidate
+  - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.67.0-nightly.20261101.g6814e00d6
+
+- **Qwen Code Desktop v0.26.5** (scr-e4f5g6h7): Why it matters: desktop coding-agent updates affect local integrations; evidence strength: Strong; candidate_seen_at: 2026-11-01; last_checked_at: 2026-11-01; promotion_status: candidate
+  - Source: https://github.com/QwenLM/qwen-code/releases/tag/desktop-v0.26.5
+
+- **Amazon ECS agent (Docker Hub)** (scr-3b7e1a): Why it matters: widely used runtime component for containerized agent hosts; evidence strength: Strong; candidate_seen_at: 2026-11-01; last_checked_at: 2026-11-01; promotion_status: candidate
+  - Source: https://hub.docker.com/r/library/amazon/amazon-ecs-agent
+
+
+### 2026-11-01 — Corroboration queue pass
+
+- **Cursor — malicious Claude Code extension (scr-a1b2c3d4)**: primary source located (Cursor security blog). Promotion_status: corroborated → candidate (operational mitigation required). Evidence strength: Strong. Action: collect vendor IOCs and CVE mapping. Source: https://cursor.com/blog/claude-code-extension-security-notice
+  - candidate_seen_at: 2026-10-31; last_checked_at: 2026-11-01; promotion_status: corroborated; defer_count: 0; stale_after_days: 30
+
+- **AWS Bedrock AgentCore preview (scr-2b7d4f)**: primary source located (AWS blog on live web-app previews). Promotion_status: corroborated → candidate (ops follow-up). Evidence strength: Strong. Action: schedule export+replay capture into object storage. Source: https://aws.amazon.com/blogs/machine-learning/preview-web-apps-live-as-your-coding-agent-builds-them-with-amazon-bedrock-agentcore-runtime/
+  - candidate_seen_at: 2026-10-31; last_checked_at: 2026-11-01; promotion_status: corroborated; defer_count: 0; stale_after_days: 21
+
+- **Google Gemini CLI nightly (scr-9a1b2c3d)**: primary source located (GitHub nightly release). Promotion_status: corroborated. Evidence strength: Strong. Action: pin CLI in CI. Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.67.0-nightly.20261101.g6814e00d6
+  - candidate_seen_at: 2026-11-01; last_checked_at: 2026-11-01; promotion_status: corroborated; defer_count: 0; stale_after_days: 14
+
+- **Modal: scaling to 1M sandboxes claim**: primary source located (Modal engineering blog). Evidence strength: Strong (engineering post). Promotion_status: corroborated → candidate (engineering pattern signal). Source: https://modal.com/blog/scaling-to-1-million-concurrent-sandboxes-in-seconds
+  - candidate_seen_at: 2026-10-31; last_checked_at: 2026-11-01; promotion_status: corroborated; defer_count: 0; stale_after_days: 30
+
+- **NexrallCode VS Code extension downloads claim**: primary source: Open-VSX listing (nexrall-code-vscode). Evidence strength: Medium (marketplace listing). Promotion_status: corroborated (pending any vendor download-metrics). Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
+  - candidate_seen_at: 2026-10-31; last_checked_at: 2026-11-01; promotion_status: corroborated; defer_count: 0; stale_after_days: 30
+
+- **Anthropic behavior tightening (scr-1a9f2b3)**: press coverage located (Tom's Hardware). Evidence strength: Medium-Strong. Promotion_status: corroborated (behavioral regression tests required). Source: https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-ai-model-is-now-blocking-attempts-at-video-game-recreation-and-cloning-users-also-claim-non-malicious-generic-reverse-engineering-tasks-are-blocked
+  - candidate_seen_at: 2026-10-31; last_checked_at: 2026-11-01; promotion_status: corroborated; defer_count: 0; stale_after_days: 30
+
+Notes: remaining corroboration items without a clear primary source (e.g., simstudioai/sim traction metrics, OpenClaw smoke-test integration specifics, CortexDB local-first graph claims) kept in Candidate inbox for follow-up; if upstream vendor/official docs appear, mark as corroborated in the next pass.
+
+
+## 2026-11-01 Promote-candidates pass
+
+- **Manifold — Git-based repo-hijack analysis** (scr-4d5e6f7a): promotion_status: promoted; reason: High-confidence technical analysis describing a direct supply-chain attack vector for agent toolchains that materially affects containment, artifact provenance, and snapshotting policies. Action: promoted to agent-watchlist.md to track mitigation patterns and produce operator checklists. candidate_seen_at: 2026-09-28; last_checked_at: 2026-11-01; defer_count: 0; stale_after_days: 30. Sources: research-log.md (original entry)
+
+- **agenticow (npm)** (scr-agenticow): promotion_status: promoted; reason: memory COW branching changes snapshot/delta storage economics and replayability; merits watchlist monitoring for storage schema changes and retention policy impact. Action: promoted to agent-watchlist.md; add delta-size telemetry and manifest integration tests in staging. candidate_seen_at: 2026-07-19; last_checked_at: 2026-11-01; defer_count: 0; stale_after_days: 30. Source: https://www.npmjs.com/package/agenticow
+
+- **agent-browser (crate)** (scr-agent-browser): promotion_status: promoted; reason: introduces new multimodal preview artifacts (HAR/DOM/WebM) that require explicit preview→durable mapping, PII scanning, and replay manifests; operationally significant for both storage and forensic playbooks. Action: promoted to agent-watchlist.md and flagged in storage-angle.md for immediate staging tests. candidate_seen_at: 2026-07-19; last_checked_at: 2026-11-01; defer_count: 0; stale_after_days: 30. Source: https://crates.io/crates/agent-browser
+
+Notes:
+- Promotions performed automatically per Promote-candidates gate (max 3 candidates). Each promoted candidate was added to agent-watchlist.md with recommended operator actions and to storage-angle.md where relevant storage implications were recorded.
+- No other candidates were force-deferred in this pass; those left in the Candidate inbox retain their existing defer_count. Future passes should increment defer_count for candidates that are checked but not promoted.

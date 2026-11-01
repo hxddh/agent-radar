@@ -1186,3 +1186,17 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 
 #### 持久代理的存储映射
 - 条目：将产物类型映射到保留级别（短期/取证长期）、导出端点（S3/R2/私有源）和回放/恢复路径。
+
+
+## 2026-11-01 — Playbook: Staging & Connector Pinning (short)
+
+- Goal: safely roll agent/runtime updates (Claude Code, Gemini CLI, Qwen Code) with minimal production disruption.
+- Steps:
+  1. Snapshot current workspace & export artifacts to object storage (snapshots + logs + network traces).
+  2. Deploy updated runtime to isolated staging with identical exporter/TTL settings.
+  3. Run behavioral regression suite: core tool-calls, file-system edits, reverse-engineering prompt set, and security-sensitive prompts.
+  4. Run MCP handshake and $ref resolution smoke-tests for every custom connector.
+  5. Validate exported artifacts are replayable and stored for 90+ days per policy; fail the pipeline if exporters drop artifacts.
+  6. Only after passing staging checks, promote to canary with limited agents and monitoring; require manual approval for full rollout.
+
+- Notes: pin CLI/runtime versions in CI; require expiring tokens for agent principals; record any vendor IOCs and integrate into SIEM/EDR.

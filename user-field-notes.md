@@ -1239,3 +1239,30 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
   - Tactical note: Treat marketplace installs as staging-only until hash/signature verified; add extension hash checks to CI.
   - Source class: Vendor blog
   - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+
+- **Custom MCP connector failures (2026-11-01)**
+  - Summary: Multiple community reports (Reddit) indicate recent Claude Code runtime/connector deltas caused previously working custom MCP connectors to fail; failures manifest as handshake/ $ref resolution errors.
+  - Practical note: Add nightly connector smoke tests for MCP handshake and $ref resolution; keep a pinned staging runtime for connector CI.
+  - Source class: Social (Reddit)
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- **Copilot auto-provisioned MCP servers (2026-11-01)**
+  - Summary: Community reports that agent flows or Copilot scripts can create MCP servers automatically, producing unexpected cloud resources and potential billing surprises.
+  - Practical note: Enforce least-privilege agent roles and require explicit approval (policy-as-code) for resource provisioning actions.
+  - Source class: Social (Reddit / community reports)
+
+- **DeepSeek governance / compliance follow-up (2026-11-01)**
+  - Summary: After vendor surge, compliance teams are proactively scanning for DeepSeek artifacts and considering denylist action; operational teams should map telemetry signatures to denylist rules.
+  - Practical note: Add DeepSeek signature searches to SIEM queries and prepare denylist block rules pending vendor attestation.
+  - Source class: Social (Bluesky)
+  - Source: https://bsky.app/profile/dailyinference.news/post/3mza5azvxsk7o
+
+
+## 2026-11-01 — Operator field notes (compact)
+
+- Issue: Custom MCP connectors broke after Claude Code runtime behavior tightened (Reddit reports). Repro: upgrade Claude Code in staging; MCP $ref handling failed in custom connector; connector handshake errors surfaced. Action: add MCP handshake and $ref resolution smoke tests to connector CI; pin parsing libraries; capture staging logs for vendor bug reports.
+- Issue: Cursor marketplace extension supply-chain risk. Repro: users installed a compromised extension variant; vendor notice published. Action: block marketplace installs by default; require signed/hashed extension artifacts for corporate workstations; add vendor IOCs to EDR/extension telemetry.
+- Issue: Copilot auto-provisioned MCP servers (social report). Risk: infra sprawl and unexpected egress. Action: restrict agent principals from provisioning cloud infra without approval; require resource-tagging and approval workflows.
+
+Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-engineering prompt corpus); add object-storage export verification to nightly staging runs.

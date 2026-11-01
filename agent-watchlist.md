@@ -13,17 +13,16 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic published Claude Code v2.1.303 (2026-10-19). Runtime and conductor updates in v2.1.303 continue to adjust tool-calling semantics, session streaming, and containment behaviors that operator playbooks depend on. Operators should treat this as a staging-first upgrade: snapshot workspaces before upgrade, run connector compatibility tests, and add connector health probes to CI. Note: a related GHSA advisory on plugin hash‑pin bypass increases the need for plugin integrity checks when loading third-party adapters.
-- Evidence strength: Strong (official GitHub release; GHSA advisory)
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.303
-- Related security advisory: https://github.com/advisories/GHSA-pq7j-f95f-qfcv
+- Recent changes: Anthropic has tightened Claude Code behavior to refuse prompts that attempt game cloning and (in some cases) reverse‑engineering-style requests; community reports indicate some non‑malicious reverse‑engineering prompts are being blocked. Operators should treat this as a behavior/regression risk: snapshot workspaces before upgrade, run connector compatibility and behavioral regression tests that include tool-calling and reverse-engineering prompts, and gate upgrades via staging. Note: Cursor's marketplace extension security notice and other supply-chain signals increase the operational need for extension hash‑pinning and marketplace vetting.
+- Evidence strength: Medium-Strong
+- Source: https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-ai-model-is-now-blocking-attempts-at-video-game-recreation-and-cloning-users-also-claim-non-malicious-generic-reverse-engineering-tasks-are-blocked ; https://cursor.com/blog/claude-code-extension-security-notice
+- replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls
-- Recent changes: Cursor published Rollouts and a Security Reviewer to gate bot rollouts and perform pre-deploy security checks (2026-10-05). These controls are first‑party rollout gates that operators should integrate into CI and policy-as-code flows.
-- Immediate action: wire Cursor rollout hooks into staging pipelines, require Security Reviewer pass for agents with egress/tool privileges, and add rollout-experiment telemetry to detect behavior drift post-deploy.
-- Evidence strength: Strong
-- Source: https://cursor.com/blog/rollouts-and-security-reviewer
+- Recent changes: Cursor published a security notice regarding malicious/compromised Claude Code VS Code extension variants discovered in the marketplace (2026-10-31). Operators must treat marketplace installs as untrusted until verified: pin extension hashes, require signed extensions, and ingest vendor IOCs into block/allow rules. Evidence strength: Strong (vendor security blog). Source: https://cursor.com/blog/claude-code-extension-security-notice
+- Operational action: Collect vendor IOCs, add marketplace-install verification to onboarding playbooks, and add extension hash-pinning to enterprise extension deployment pipelines.
+- replace_section anchor: `## Cursor`
 ## Devin / Cognition
 - Category: Agent runtime / research prototype
 - Recent changes: No vendor-stated release this week. Last dated update: 2026-09-13. Operator note: continue to monitor for runtime containment docs and SDK compatibility with MCP connectors.
@@ -43,9 +42,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Action: Validate hosted-agent network egress defaults and snapshot/backup hooks on Replit-hosted projects.
 - replace_section anchor: `## Replit Agent`
 ## Warp
-- Category: IDE/integration vendor
-- Maturity: Previously tracked for IDE‑integrations and terminal-first agent flows.
-- Recent changes: No public changelog since 2026-09-13. Status: deprioritized until a substantive vendor update appears. Re-check in 30 days or on announcement.
+- Category: Terminal/IDE agent / developer tooling
+- Maturity: Previously active in developer lane
+- Recent changes: No dated vendor changelog in 21+ days (last noted 2026-09-13). Status: deprioritized until fresh vendor evidence or field reports surface. Operators: keep on passive watch; re-open if a dated release or operator incident appears.
 - replace_section anchor: `## Warp`
 ## Amp
 - Category: Agent surface / runtime
@@ -53,9 +52,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Recent changes: No substantive public updates since 2026-09-13; status: deprioritized. Keep monitored for security advisories or runtime releases.
 - replace_section anchor: `## Amp`
 ## Factory
-- Category: Agent infra / orchestration
-- Maturity: Previously tracked.
-- Recent changes: No substantive public updates since 2026-09-13; status: deprioritized pending vendor activity.
+- Category: Orchestration / agent workbench
+- Maturity: Power‑user / workbench
+- Recent changes: No new public changelog in 21+ days (last 2026-09-13). Status: deprioritized for active watch until fresh vendor evidence appears. Keep on passive radar for meta-harness adoption signals.
 - replace_section anchor: `## Factory`
 ## Raycast AI
 - Category: Desktop/command-surface agent
@@ -582,9 +581,9 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 ## OpenAI — Amp (scr-amp01)
 - Category: Task agent / multi-domain agent
-- Recent changes: Amp remains a vendor focus for non-coding agent scenarios; no new dated changelog this week. Operators should map Amp artifact classes into retention/forensics playbooks (follow OpenAI storage guidance where applicable).
-- Evidence strength: Strong (vendor product page). Source: https://openai.com/index/amp-beyond-coding
-- Action: ensure Amp tasks have explicit egress & export policies; add to audit plan.
+- Maturity: Vendor-first product for non-coding agent scenarios
+- Recent changes: No new dated public changelog this run (last noted 2026-09-13). Status: deprioritized from active promotion until new vendor evidence; continue to map Amp artifact classes into retention/forensics playbooks when encountered.
+- replace_section anchor: `## OpenAI — Amp (scr-amp01)`
 ## Cloudflare — Verified Bots accountability (scr-cloudflare-verified-bots)
 
 - What it is: Edge-level accountability and verified-bot controls that surface identity/attestation metadata for agent-originated traffic at Cloudflare's edge.
@@ -661,3 +660,43 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Immediate operator advice: identify any pinned OpenHands SDK versions in your fleet, block untrusted package installs from agent runtimes, capture exec/egress telemetry, and prepare hotpatch/test gates.
 - Source: https://bsky.app/profile/stemshop.bsky.social/post/3myscuucfe72w; https://nvd.nist.gov/vuln/detail/CVE-2026-112346
 - replace_section anchor: `## OpenHands Software Agent SDK`
+
+
+## Manifold — Git-based repo-hijack analysis (scr-4d5e6f7a)
+
+- What it is: Detailed analysis describing how untrusted Git repositories can be hijacked or trojaned to cause agent toolchains to execute arbitrary code via repo-sourced dependencies or automation. Focuses on supply-chain vectors that target agent workflows which automatically fetch and run repository artifacts.
+- Why it matters: Direct supply-chain threat to coding agents and orchestrators. Agent runs that pull unpinned or unsigned repo contents can escalate into arbitrary execution, data exfiltration, or insertion of malicious build steps that persist into durable artifacts. This changes operational assumptions about what artifacts may be trusted and how snapshots/forensics must be collected.
+- Evidence strength: High (detailed write-up / technical analysis)
+- Relevance score: 9
+- Recommended actions:
+  - Enforce pinned revisions or signed bundles for any repository material ingested by agent runs.
+  - Treat repo-derived artifacts as quarantined: on first-use, copy to a write-once forensic prefix with provenance metadata (repo URL, commit SHA, AGENTS.md SHA, connector version) before allowing execution or durable retention.
+  - Add automated secrets scans and behavioral sandboxing for any agent job that imports third-party repo code.
+- Follow-up needed: publish a short operator checklist (pinned-bundle verification), build a test harness for pinned-bundle verification, and collect cross-vendor mitigation patterns for inclusion in playbooks.
+- Source: research-log.md (scr-4d5e6f7a)
+
+## agenticow (scr-agenticow)
+
+- What it is: NPM package implementing copy‑on‑write vector branching for agent memory (branching snapshots / COW memory primitives), advertised to substantially speed branch-based agent workflows and enable cheap forks/replays.
+- Why it matters: Memory architecture directly affects snapshoting and storage patterns. Copy‑on‑write branching encourages many small delta snapshots and ephemeral branches rather than full snapshot retention, which has both cost and replay implications for object-store designs and manifest schemas.
+- Evidence strength: Medium (npm release and performance claims require independent benchmarks)
+- Relevance score: 7
+- Recommended actions:
+  - Evaluate agenticow in staging to measure delta sizes and snapshot/dedup behavior before any production uptake.
+  - Ensure artifact manifests include branch-id, parent snapshot id, compression/encoding metadata and proof-of-origin so deltas are replayable and auditable.
+  - Add telemetry for delta-size and branch-cardinality to inform retention policy decisions.
+- Follow-up needed: benchmark delta vs full-snapshot storage costs, verify licensing/maintenance, and test integration with existing manifest/replay tooling.
+- Source: https://www.npmjs.com/package/agenticow
+
+## agent-browser (scr-agent-browser)
+
+- What it is: Fast browser automation CLI for agents (crates.io) that enables headless browsing, HAR/DOM dumps, screenshots, WebM captures, and lightweight web interaction primitives for agent toolchains.
+- Why it matters: Browser-driven agents create new multimodal artifact classes (HAR, DOM snapshots, screenshots, audio/video) that are often large and may contain PII. These artifacts must be handled as preview‑class exports by default and require clear preview→durable mapping, PII scanning, and provenance manifests for forensic replay.
+- Evidence strength: Medium (crates.io release)
+- Relevance score: 7
+- Recommended actions:
+  - Default browser artifacts to ephemeral preview buckets with short TTL (7–30 days) unless operator explicitly promotes them to durable forensic storage.
+  - Attach replay manifests (run_id, agent_version, connector pins, collected URLs) to every browser artifact and run PII/audio-transcript scanning prior to durable retention.
+  - Add staging tests that validate preview→operator-bucket export hooks and verify provenance headers are present on durable copies.
+- Follow-up needed: test ingestion size, PII detection efficacy on WebM/DOM snapshots, and export‑hook gating behavior.
+- Source: https://crates.io/crates/agent-browser
