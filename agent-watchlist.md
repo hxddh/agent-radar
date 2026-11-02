@@ -7,15 +7,12 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Codex / ChatGPT Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: Codex client/prerelease churn continues (rust v0.164.0-alpha.3 published 2026-10-18). Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension install vectors across marketplaces. Source: https://github.com/openai/codex/releases/tag/rust-v0.164.0-alpha.3
-- Operational recommendation: add Codex prerelease smoke tests to connector CI and include backwards-compatibility checks for MCP connectors before upgrades.
+- Recent changes: Codex client/prerelease churn continues; notable prereleases include rust-v0.167.0-alpha.3 (2026-11-02) and recent 0.166.x tags. Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension/install-time vectors for any third-party integrations that parse Codex output. Source: https://github.com/openai/codex/releases/tag/rust-v0.167.0-alpha.3
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
 - Category: Coding agent / runtime
 - Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic has tightened Claude Code behavior to refuse prompts that attempt game cloning and (in some cases) reverse‑engineering-style requests; community reports indicate some non‑malicious reverse‑engineering prompts are being blocked. Operators should treat this as a behavior/regression risk: snapshot workspaces before upgrade, run connector compatibility and behavioral regression tests that include tool-calling and reverse-engineering prompts, and gate upgrades via staging. Note: Cursor's marketplace extension security notice and other supply-chain signals increase the operational need for extension hash‑pinning and marketplace vetting.
-- Evidence strength: Medium-Strong
-- Source: https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-ai-model-is-now-blocking-attempts-at-video-game-recreation-and-cloning-users-also-claim-non-malicious-generic-reverse-engineering-tasks-are-blocked ; https://cursor.com/blog/claude-code-extension-security-notice
+- Recent changes: Anthropic published v2.1.316 (2026-11-02) with runtime/conductor deltas affecting tool-calling and session export semantics. Separately, Cursor published a security notice about malicious/compromised Claude Code VS Code extension variants discovered in marketplaces; independent investigative posts circulated alleging remote-access tooling delivered via extension variants. Operators should treat upgrades as high-risk: snapshot workspaces before upgrade, run connector compatibility and behavioral regression tests, enforce extension-hash allow-lists in org images, and collect vendor IOCs for incident response. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.316; https://cursor.com/blog/claude-code-extension-security-notice
 - replace_section anchor: `## Claude Code`
 ## Cursor
 - Category: AI IDE / coding agent
@@ -622,11 +619,8 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Vercel AI / Sandbox-Related Agent Workflow (refreshed)
-- Recent changes: Vercel published agent-browser v0.41.0 (2026-10-29). The release contains runtime/selector and automation timing deltas vs v0.40.x that can affect golden headful traces and CI stability.
-- Operator guidance: pin agent-browser versions in CI pipelines; re-run golden-trace suites after upgrading; add selector/timeouts tolerance tests and snapshot DOM timing metrics to catch subtle regressions.
-- Source class: GitHub release (Strong)
-- Evidence strength: Strong
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.0
+- Recent changes: Vercel published agent-browser v0.41.1 (2026-11-02). The release contains selector and timing deltas vs v0.41.0 that can affect golden headful traces and CI stability; agent-browser artifact shapes (HAR/DOM/WebM) should be mapped into durable object-storage with metadata. Operators should rebaseline headful traces, pin agent-browser versions in CI, and capture artifact manifests for replay. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.1
+- replace_section anchor: `## Vercel AI / Sandbox-Related Agent Workflow (refreshed)`
 ## xerj-org/xerj
 
 - What it is: Local‑first memory + index project that advertises MCP compatibility and self‑hosted indexing for agent memories and retrieval (local-first, on‑prem-friendly vector/index option).

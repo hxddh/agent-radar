@@ -1200,3 +1200,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   6. Only after passing staging checks, promote to canary with limited agents and monitoring; require manual approval for full rollout.
 
 - Notes: pin CLI/runtime versions in CI; require expiring tokens for agent principals; record any vendor IOCs and integrate into SIEM/EDR.
+
+
+- Playbook candidate: Extension-hash allow-list & automated CI check
+  - Trick: Bake an allow-list of approved extension package hashes into base devcontainer images and add a CI job that fails when unpinned/unknown extension versions are present.
+  - When useful: Prevents accidental upgrades to compromised marketplace variants and speeds incident triage.
+  - Evidence: Vendor security notice (Cursor) and community incident reports; practical benefit observed in org rollbacks.
+  - Should promote to playbook? yes
+
+- Playbook candidate: Connector health probes + canary windows
+  - Trick: Add HTTP/heartbeat liveness probes for MCP connectors, an automated restart policy, and configure a small canary cohort to receive upgrades first with automatic rollback on error thresholds.
+  - When useful: Reduces blast radius of connector regressions and provides fast rollback signals.
+  - Evidence: Multiple community reports of connector failure and operator workarounds (Reddit).
+  - Should promote to playbook? yes

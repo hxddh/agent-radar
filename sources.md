@@ -2041,3 +2041,30 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - AWS — Bedrock AgentCore runtime preview: live web-app previews while coding agents build them (linked-public). Source: https://aws.amazon.com/blogs/machine-learning/preview-web-apps-live-as-your-coding-agent-builds-them-with-amazon-bedrock-agentcore-runtime/
 - Microsoft — agent-framework python-1.24.0 release (linked-public). Source: https://github.com/microsoft/agent-framework/releases/tag/python-1.24.0
 - Cloudflare — Services for Private Origins GA (linked-public). Source: https://blog.cloudflare.com/private-origins-public-to-private/
+
+
+### Added 2026-11-02 (source-sweep)
+
+- [mainstream_product / security] Claude Code VS Code extension security reports (Cursor vendor notice + investigative posts). Why it matters: marketplace extension variants can deliver remote-access trojans to developer machines; high supply-chain risk for dev toolchains. Evidence strength: Strong (Cursor security blog) + Medium (investigative coverage). Source: https://cursor.com/blog/claude-code-extension-security-notice; https://doublepulsar.com/anthropic-hacked-to-deliver-remote-access-trojan-to-claude-developer-laptops-worldwide-1148a92baae2
+
+- [mainstream_product / runtime] vercel-labs/agent-browser v0.41.1 release. Why it matters: changes to selector/timing behavior and artifact shapes (HAR/DOM/WebM) can break golden-trace tests and increase artifact volume; operators should rebaseline CI. Evidence strength: Strong. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.1
+
+- [mainstream_product / runtime] openai/codex — rust-v0.167.0-alpha.3 release. Why it matters: frequent CLI/SDK pre-releases indicate active runtime churn; pin and test in CI. Evidence strength: Strong. Source: https://github.com/openai/codex/releases/tag/rust-v0.167.0-alpha.3
+
+- [mainstream_product / runtime] anthropics/claude-code v2.1.316 release. Why it matters: runtime/conductor updates affect tool-calling, session export formats, and connector compatibility. Evidence strength: Strong. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.316
+
+- [mainstream_product / deployment] cloudflare/agents @0.32.0. Why it matters: exporter/TTL and hosting updates can change artifact residency and operator deployment practices. Evidence strength: Strong. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
+
+- [user_workflow / operator patterns] Cursor — Rollouts and Security Reviewer (operator patterns for bot rollouts & security review). Why it matters: describes a concrete security-review workflow and rollout gating for bots; useful for ops/approval playbooks. Evidence strength: Medium. Source: https://cursor.com/blog/rollouts-and-security-reviewer
+
+- [research / eval] Terminal-Bench-Science announcement (community two-party/multi-agent eval debates and a new public harness). Why it matters: signals community interest in larger workflow and multi-agent eval designs; may influence evaluation standards. Evidence strength: Medium. Source: https://www.terminal-bench-science.ai/announcement
+
+- [user_workflow / tutorial] OpenRouter — Build an AI Code Reviewer tutorial. Why it matters: concrete operator workflow for automated diff review and fix suggestions; useful for integrating auto-review into CI. Evidence strength: Medium. Source: https://openrouter.ai/blog/tutorials/ai-code-review/
+
+- [user_workflow / incident report] Replit partial outage affecting agent/workspace interactions. Why it matters: operator-facing outage that impacted agent sessions and advised simple recovery steps (refresh); field report for on-call runbooks. Evidence strength: Medium (public outage tracker / user reports). Source: https://outages.live/outages/replit-221k6q7oc
+
+- [infra_primitive / security] GHSA-5324-3w58 (mem0 cross-tenant conversation leak — CVE-2026-116575). Why it matters: session-scope key delimiter bug caused cross-tenant conversation leaks; immediate patching and tenant-scoped key checks required. Evidence strength: High (GitHub Advisory). Source: https://github.com/advisories/GHSA-5324-3w58-qpp2
+
+- [mainstream_product / extension] open-vsx.org — openai/chatgpt VS Code extension listing. Why it matters: high-distribution marketplace extensions affect many developer workflows and are a vector for supply-chain risk. Evidence strength: Strong. Source: https://open-vsx.org/extension/openai/chatgpt
+
+- [mainstream_product / extension] NexrallCode.nexrall-code-vscode (Open-VSX listing; large-download extension). Why it matters: widely distributed coding extension with MCP/permissions features requires operator compatibility tests and permission audits. Evidence strength: Medium. Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode

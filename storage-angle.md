@@ -1657,3 +1657,20 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Storage implication: browser runs create large multimodal artifacts (HAR, DOM, screenshots, WebM) that should default to ephemeral preview buckets. Durable retention must be opt-in and accompanied by PII/audio-transcript scanning and replay manifests.
   - Immediate actions: require export-to-operator-bucket hooks for promoted snapshots; attach replay manifests and perform automated PII scans before durable retention; set default preview TTLs (7–30 days) and monitor preview export failures.
   - Source: https://crates.io/crates/agent-browser
+
+
+- Signal: Bedrock AgentCore live-preview artifacts require explicit replay capture.
+  - What happened: AWS previewed Bedrock AgentCore live web-app previews that create ephemeral preview artifacts during agent iterations.
+  - Storage implication: Add an automated export step to capture previews (HTML/HAR/video) into object storage with structured metadata (agent-version, session-id, commit-sha) and consider short-term immutability for forensic windows.
+  - Source class: vendor blog
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/blogs/machine-learning/preview-web-apps-live-as-your-coding-agent-builds-them-with-amazon-bedrock-agentcore-runtime/
+  - Watch trigger: measurable rise in preview artifact ingest (GB/day) or customer tickets about missing preview artifacts.
+
+- Signal: Exporter/TTL default changes at the edge (Cloudflare agents@0.32.0) affect artifact residency and retention cost.
+  - What happened: Cloudflare adjusted exporter defaults and TTLs in agents@0.32.0.
+  - Storage implication: Reconcile exporter endpoints to object-storage retention policies and update alerting/orchestration that assumes older TTLs.
+  - Source class: GitHub release
+  - Evidence strength: Strong
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
+  - Watch trigger: incidents reporting expired artifacts older than previously expected retention windows.

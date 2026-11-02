@@ -1266,3 +1266,23 @@ Do not publish: Reddit usernames beyond what is visible at source; no private da
 - Issue: Copilot auto-provisioned MCP servers (social report). Risk: infra sprawl and unexpected egress. Action: restrict agent principals from provisioning cloud infra without approval; require resource-tagging and approval workflows.
 
 Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-engineering prompt corpus); add object-storage export verification to nightly staging runs.
+
+
+- 2026-11-02 — Extension vetting & emergency response
+  - Tool: VS Code extensions (Claude Code variants)
+  - Scenario: vendor security notice reported malicious/compromised extension variants; teams needed to roll back and revoke keys.
+  - Positive: vendor provided indicators and recommended mitigation steps.
+  - Pain point: propagating pinned extension versions across developer images and workstations is slow without automation.
+  - Useful trick: maintain an enterprise extension-hash allow-list and bake it into base devcontainer images and startup checks.
+  - Source class: vendor blog + social
+  - Evidence strength: Strong
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- 2026-11-02 — MCP connector outages (community workaround)
+  - Tool: custom MCP connectors
+  - Scenario: connectors failing in the field; operators used manual refresh/rollback as a stopgap.
+  - Pain point: manual intervention scales poorly across many teams.
+  - Useful trick: implement liveness probes, automated restart, and a canary cohort for connector upgrades.
+  - Source class: Reddit discussion
+  - Evidence strength: Medium
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
