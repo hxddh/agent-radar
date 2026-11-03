@@ -694,3 +694,12 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
   - Add staging tests that validate preview→operator-bucket export hooks and verify provenance headers are present on durable copies.
 - Follow-up needed: test ingestion size, PII detection efficacy on WebM/DOM snapshots, and export‑hook gating behavior.
 - Source: https://crates.io/crates/agent-browser
+
+
+## Microsoft — agent-framework
+- What it is: Multi-language agent runtime and language SDKs surfaced by Microsoft as a public GitHub repository.
+- Why it matters: Vendor-backed orchestration/runtime can standardize connector models, default sandboxing, and enterprise adoption patterns; this materially affects orchestration and runtime choices across enterprise fleets.
+- Recent changes: Public repository visibility and SDK documentation surfaced (2026-11-03). Operators should evaluate default permission models and sandboxing assumptions before adoption.
+- Evidence strength: Strong
+- Source: https://github.com/microsoft/agent-framework
+- replace_section anchor: `## Microsoft — agent-framework`

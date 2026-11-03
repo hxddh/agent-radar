@@ -4980,3 +4980,19 @@ Notes:
 - **NexrallCode.nexrall-code-vscode (Open-VSX listing; high downloads)** (scr-3c4d5e6f): Why it matters: large-install base coding extension with MCP/permissions features requires compatibility and permission audits; potential supply-chain/privilege surface for agent-based code actions. Evidence strength: Medium (marketplace listing). Relevance score: 7. Defer reason: marketplace-level signal; not a promotion candidate. Follow-up needed: test extension in staging, capture any MCP/permission scopes, and map to EDR/EDR rule set. candidate_seen_at: 2026-11-02; last_checked_at: 2026-11-02; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
 
 - **Field-signal delta note**: MUST mainstream candidates flagged by screening (Claude Code extension backdoor reports; vercel-labs/agent-browser v0.41.1; openai/codex rust-v0.167.0-alpha.3; cloudflare/agents@0.32.0; anthropics/claude-code v2.1.316) are already present earlier in this research-log (candidate_seen_at: 2026-11-02). This sweep focused on social/user-workflow follow-ups and an infra advisory (GHSA). Do not duplicate existing entries; instead, follow up on them per their listed actions. last_checked_at: 2026-11-02.
+
+
+- **OpenAI — Preparing next security sprint** (scr-openai-sec-sprint): Why it matters: vendor-level coordinated hardening may change endpoints/auth/telemetry used by agent runtimes and require emergency patch/pin plans; evidence strength: Strong; relevance score: 9; promotion_status: candidate; defer_count: 0; candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-03; stale_after_days: 30
+  - Source: https://openai.com/index/preparing-our-next-security-sprint-to-harden-openai
+
+- **GitHub — Repo protection status in org security assessments** (scr-gh-repoprotection): Why it matters: org-level signal for supply-chain hygiene that can be automated into preflight agent checks; evidence strength: Strong; relevance score: 8; promotion_status: candidate; defer_count: 0; candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-03; stale_after_days: 30
+  - Source: https://github.blog/changelog/2026-11-02-security-risk-assessments-include-repository-protection-status
+
+- **Microsoft — agent-framework (public repo surfaced)** (scr-ms-agent-framework): Why it matters: vendor-provided multi-language agent runtime can become an orchestration default; operators must evaluate sandboxing and connector defaults; evidence strength: Strong; relevance score: 9; promotion_status: candidate; defer_count: 0; candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-03; stale_after_days: 30
+  - Source: https://github.com/microsoft/agent-framework
+
+- **DeepSeek — dsh-superagent OSS + Creator Mode (social)** (scr-deepseek-dsh): Why it matters: new OSS runtime accelerates community experimentation and plugin ecosystems; evidence strength: Medium (Bluesky post); relevance score: 7; promotion_status: candidate; defer_count: 0; candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-03; stale_after_days: 21
+  - Source: https://bsky.app/profile/hacker.at.thenote.app/post/3mzf5im5is22r
+
+- **Mistral — Le Chonk weights (Mistral Large 4 OSS)** (scr-mistral-lechonk): Why it matters: open weights enable local/self-hosted agent experimentation for coding and red-team tasks; evidence strength: Strong; relevance score: 8; promotion_status: candidate; defer_count: 0; candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-03; stale_after_days: 30
+  - Source: https://mistral.ai/news/mistral-large-4-oss/

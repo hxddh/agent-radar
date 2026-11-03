@@ -1213,3 +1213,15 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - When useful: Reduces blast radius of connector regressions and provides fast rollback signals.
   - Evidence: Multiple community reports of connector failure and operator workarounds (Reddit).
   - Should promote to playbook? yes
+
+
+## Extension allow-list & hash-pin playbook (candidate)
+- When useful: protecting developer images and agent-enabled IDEs from malicious marketplace variants.
+- Steps:
+  1. Build and publish a canonical devcontainer image with required extensions preinstalled.
+  2. Compute and store SHA256 hashes for each extension artifact; publish a signed manifest in your internal artifact registry.
+  3. Configure CI/IDEs to refuse installs that are not in the manifest; optionally use marketplace-blocking policies for org devices.
+  4. Add quick isolation steps to on-call runbooks: uninstall extension, snapshot workspace, collect EDR trace, rotate creds if suspicious.
+- Evidence: Cursor vendor security notice and community investigative posts.
+- Should promote to playbook? yes (promote after one org pilot)
+- Source: https://cursor.com/blog/claude-code-extension-security-notice

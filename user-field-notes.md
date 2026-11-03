@@ -1286,3 +1286,8 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Source class: Reddit discussion
   - Evidence strength: Medium
   - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- **Cursor / Claude Code VS Code extension incident (2026-11-02/03)**: Vendor notice + investigative posts report compromised marketplace variants of a Claude Code extension. Practical operator mitigation: use prebuilt devcontainer images with hash-pinned extensions, enforce EDR on developer workstations, and require plugin rollout through an internal artifact repository rather than direct marketplace installs. Evidence strength: Strong (vendor) + Medium (investigative). Sources: https://cursor.com/blog/claude-code-extension-security-notice; https://doublepulsar.com/anthropic-hacked-to-deliver-remote-access-trojan-to-claude-developer-laptops-worldwide-1148a92baae2
+
+- **MCP connector breakage (ongoing follow-up)**: Community reports (Reddit) show custom MCP connectors breaking after platform changes; actionable fix is to add connector smoke-tests in CI that validate auth and schema for common tool-calls and to gate connector releases behind staged rollouts. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

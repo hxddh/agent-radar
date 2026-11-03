@@ -1674,3 +1674,17 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
   - Watch trigger: incidents reporting expired artifacts older than previously expected retention windows.
+
+
+- Vercel agent-browser artifact growth
+  - Observation: v0.41.1 changes HAR/DOM/WebM shapes (more verbose traces).
+  - Storage implication: object-store volumes and ingress parsing costs will rise; teams should normalize artifact manifests, compress archives, and store diffs for long-term retention.
+  - Evidence strength: Strong (release)
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.1
+  - Watch trigger: sustained >30% increase in daily object-store bytes for headful traces or spike in CI replay parser errors.
+
+- Exporter TTL/residency changes (Cloudflare)
+  - Observation: vendor exporter defaults and TTL adjustments change where forensic artifacts reside and how long they are available.
+  - Storage implication: ensure central archival of critical forensic exports with immutable retention if needed for incident response; map exporter endpoints to retention policies.
+  - Evidence strength: Strong (vendor releases summarized in research-log)
+  - Watch trigger: incident response finds expected artifacts missing due to TTL expiry or exporter endpoint change.
