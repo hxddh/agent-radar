@@ -10,10 +10,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Recent changes: Codex client/prerelease churn continues; notable prereleases include rust-v0.167.0-alpha.3 (2026-11-02) and recent 0.166.x tags. Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension/install-time vectors for any third-party integrations that parse Codex output. Source: https://github.com/openai/codex/releases/tag/rust-v0.167.0-alpha.3
 - replace_section anchor: `## Codex / ChatGPT Coding Agent`
 ## Claude Code
-- Category: Coding agent / runtime
-- Maturity: Active; widely used in developer and enterprise contexts
-- Recent changes: Anthropic published v2.1.316 (2026-11-02) with runtime/conductor deltas affecting tool-calling and session export semantics. Separately, Cursor published a security notice about malicious/compromised Claude Code VS Code extension variants discovered in marketplaces; independent investigative posts circulated alleging remote-access tooling delivered via extension variants. Operators should treat upgrades as high-risk: snapshot workspaces before upgrade, run connector compatibility and behavioral regression tests, enforce extension-hash allow-lists in org images, and collect vendor IOCs for incident response. Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.316; https://cursor.com/blog/claude-code-extension-security-notice
-- replace_section anchor: `## Claude Code`
+- Recent changes: Anthropic published Claude Code v2.1.316 (2026-11-02) with runtime/conductor deltas that affect tool-calling and session export semantics. Separately, Cursor published a security notice about malicious/compromised Claude Code VS Code extension variants discovered in marketplaces; independent investigative posts report remote-access tooling delivered via variant installs.
+- Implication: treat upgrades as high-risk: snapshot workspaces before upgrade, run connector compatibility tests, enforce extension-hash allowlists, and collect vendor IOCs for incident response.
+- Evidence strength: Strong (release + Cursor notice)
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.316; https://cursor.com/blog/claude-code-extension-security-notice
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls
@@ -619,8 +619,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Vercel AI / Sandbox-Related Agent Workflow (refreshed)
-- Recent changes: Vercel published agent-browser v0.41.1 (2026-11-02). The release contains selector and timing deltas vs v0.41.0 that can affect golden headful traces and CI stability; agent-browser artifact shapes (HAR/DOM/WebM) should be mapped into durable object-storage with metadata. Operators should rebaseline headful traces, pin agent-browser versions in CI, and capture artifact manifests for replay. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.1
-- replace_section anchor: `## Vercel AI / Sandbox-Related Agent Workflow (refreshed)`
+- Recent changes: Vercel published agent-browser v0.41.2 with selector/timing deltas and artifact-shape changes (HAR/DOM/WebM). These changes can break golden headful traces and CI for agent-driven browser automation. Operators should pin agent-browser in CI, rebaseline headful traces, and capture artifact manifests for replay and cost forecasting.
+- Implication: update artifact ingestion parsers and storage schemas to accommodate new HAR/DOM/WebM variants; watch for storage cost increases.
+- Evidence strength: Strong
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
 ## xerj-org/xerj
 
 - What it is: Local‑first memory + index project that advertises MCP compatibility and self‑hosted indexing for agent memories and retrieval (local-first, on‑prem-friendly vector/index option).
@@ -642,10 +644,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.30.1
-- Recent changes: Cloudflare published agents@0.32.0 (2026-10-30) and announced Services for Private Origins GA (2026-10-30). The agents@0.32.0 release adjusts runtime selector behavior, exporter defaults and TTLs, and improves exporter reliability at the edge. Private Origins GA enables private-origin deployment topologies that change where agent-hosted apps resolve (public→private) and therefore shift exporter endpoints and data residency for artifacts.
-- Why it matters: exporter endpoint/TTL defaults and the private→public topology change the operator mapping of forensic artifact sinks (where previews, web-app exports, logs, and snapshots land). Edge-hosted agents may now deposit artifacts into private-origin backends that require different access controls and retention policies.
-- Actionable operator guidance: validate agents@0.32.0 in staging; remap exporter endpoints and retention/TTL settings; ensure WAF managed-rule mappings preserve forensic artifacts; test replayability of exported previews and browser-session artifacts into object storage; document data-residency implications for compliance.
-- Evidence strength: Strong (Cloudflare blog + GitHub release). Sources: https://blog.cloudflare.com/private-origins-public-to-private/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.32.0
+- Recent changes: Cloudflare published Zero Wire (vendor vulnerability-hunting hub) and agents@0.33.0 (2026-11-03/04) with exporter default and TTL changes that affect where agent artifacts land and how long they are retained. Operators should validate exporter→object-storage mappings, check TTLs against forensic retention requirements, and map Zero Wire IOCs into edge detection rules.
+- Implication: edge-hosted agent exports may need reconfiguration to ensure forensic artifacts are retained and discoverable during incident response.
+- Evidence strength: Strong
+- Source: https://blog.cloudflare.com/zero-wire/; https://github.com/cloudflare/agents/releases/tag/agents%400.33.0
 ## OpenHands Software Agent SDK
 
 - What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.

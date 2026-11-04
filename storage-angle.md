@@ -1688,3 +1688,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Storage implication: ensure central archival of critical forensic exports with immutable retention if needed for incident response; map exporter endpoints to retention policies.
   - Evidence strength: Strong (vendor releases summarized in research-log)
   - Watch trigger: incident response finds expected artifacts missing due to TTL expiry or exporter endpoint change.
+
+
+- 2026-11-04: Artifact schema & metadata for browser headful captures
+  - Signal: Vercel agent-browser v0.41.2 changed selector/timing and artifact shapes (HAR/DOM/WebM).
+  - Storage implication: object-storage schemas must include artifact-type, runtime-hash, selector-version, and human-readable provenance metadata to support reliable replay and cost attribution.
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+  - Watch trigger: failed replay runs or missing MIME-type mapping during ingest.
+
+- 2026-11-04: Exporter TTL & retention mapping at the edge
+  - Signal: Cloudflare agents@0.33.0 altered exporter defaults and TTL behavior.
+  - Storage implication: ensure exporter endpoints map to durable buckets with retention policies that satisfy IR/compliance windows; mismatches can orphan forensic artifacts.
+  - Evidence strength: Strong
+  - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.33.0
+  - Watch trigger: customer incident reconstruction fails due to missing artifacts within the documented retention window.

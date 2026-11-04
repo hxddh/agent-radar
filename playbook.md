@@ -1225,3 +1225,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Evidence: Cursor vendor security notice and community investigative posts.
 - Should promote to playbook? yes (promote after one org pilot)
 - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+
+## Pre-upgrade snapshot & connector CI checklist (candidate playbook)
+
+- When useful: before bumping agent runtimes (Claude Code, Codex, agent-browser, Cloudflare agents) in production.
+- Steps:
+  1. Take a storage snapshot of active workspaces and persistent artifacts.
+  2. Pin the new runtime version in a staging environment and run a connector compatibility suite (tool-call contract tests, session export round-trip).
+  3. Rebaseline golden headful traces (if using browser automation) and compare artifact shapes.
+  4. Verify exporter→object-storage mapping and TTL settings match forensic retention requirements.
+  5. If extensions are used in developer images, validate extension hashes and enforce allowlists.
+- Evidence: vendor release notes (Cloudflare, Vercel, Anthropic) and community reports.
+- Should promote to playbook? yes

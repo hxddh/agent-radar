@@ -4996,3 +4996,12 @@ Notes:
 
 - **Mistral — Le Chonk weights (Mistral Large 4 OSS)** (scr-mistral-lechonk): Why it matters: open weights enable local/self-hosted agent experimentation for coding and red-team tasks; evidence strength: Strong; relevance score: 8; promotion_status: candidate; defer_count: 0; candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-03; stale_after_days: 30
   - Source: https://mistral.ai/news/mistral-large-4-oss/
+
+
+- **Cloudflare — Zero Wire** (scr-0a1b2c3d): Why it matters: vendor hub centralizes IOCs and hunting workflows for edge/agent surfaces; relevance=9. Evidence strength: Strong (official blog). Follow-up needed: ingest Zero Wire IOCs into CDN/WAF rules and map to exporter endpoints for agent artifacts. candidate_seen_at: 2026-11-04; last_checked_at: 2026-11-04; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://blog.cloudflare.com/zero-wire/
+
+- **Vercel — agent-browser v0.41.2** (scr-9f1a2b): Why it matters: artifact shape and timing deltas require rebaseline and storage schema updates; relevance=8. Evidence strength: Strong (GitHub release). Follow-up: schedule CI pin + nightly rebaseline job. candidate_seen_at: 2026-11-04; last_checked_at: 2026-11-04; promotion_status: candidate; defer_count: 0; stale_after_days: 21. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+
+- **Google — Gemini Agent / Antigravity rollout** (scr-1a2b3c4d): Why it matters: remote-agent platform push affects auth/telemetry/exporter patterns; relevance=9. Evidence strength: Strong (official blog). Follow-up: check remote-agent default auth and exporter docs for enterprise customers. candidate_seen_at: 2026-11-04; last_checked_at: 2026-11-04; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026
+
+- **Cursor — Claude Code extension security notice (follow-up)** (scr-1d2c3b4a): Why it matters: marketplace extension variants used to deliver remote-access tooling to developer hosts; relevance=9. Evidence strength: Strong (Cursor) + Medium (investigative posts). Follow-up: collect vendor IOCs and EDR indicators, add to playbook. candidate_seen_at: 2026-11-03; last_checked_at: 2026-11-04; promotion_status: candidate; defer_count: 0; stale_after_days: 14. Source: https://cursor.com/blog/claude-code-extension-security-notice
