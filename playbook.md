@@ -1238,3 +1238,18 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   5. If extensions are used in developer images, validate extension hashes and enforce allowlists.
 - Evidence: vendor release notes (Cloudflare, Vercel, Anthropic) and community reports.
 - Should promote to playbook? yes
+
+
+- Playbook candidate: Extension install vetting & allowlist
+  - When useful: org-managed developer images and CI images that include VS Code extensions or editor plugins used by coding agents.
+  - Evidence: Cursor vendor security notice and community follow-ups showing marketplace variant risk.
+  - Actionable steps: enforce signed-extension installs via policy, maintain a hash-based allowlist for org images, block auto-updates for critical extensions until verified in staging.
+  - Should promote to playbook? yes
+  - Sources: https://cursor.com/blog/claude-code-extension-security-notice
+
+- Playbook candidate: Pin-and-stage agent runtime upgrades
+  - When useful: any deployment that runs coding agents or remote-agent CLIs in CI or production.
+  - Evidence: rapid prerelease cadence observed in Codex and gemini-cli releases.
+  - Actionable steps: pin runtime versions in staging images, run connector CI that verifies session-export shapes, hold production rollouts until connector CI green.
+  - Should promote to playbook? yes
+  - Sources: https://github.com/openai/codex/releases/tag/rust-v0.168.0-alpha.3, https://github.com/google-gemini/gemini-cli/releases/tag/v0.67.0

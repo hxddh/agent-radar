@@ -1703,3 +1703,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://github.com/cloudflare/agents/releases/tag/agents%400.33.0
   - Watch trigger: customer incident reconstruction fails due to missing artifacts within the documented retention window.
+
+
+- Storage signal: Exporter→object-storage mapping must be explicit and versioned
+  - Observation: Cloudflare and other edge vendors now expose richer exporter defaults (including HAR, DOM, WebM traces) for agents.
+  - Practical implication: object-storage schemas and keys should include runtime/version tags (e.g., claude-code:v2.1.318/session-export) to avoid accidental overwrites and to support reproducible forensic retrieval.
+  - Recommended action: require exporters to write manifest files alongside artifacts and enforce manifest schema checks during ingestion.
+  - Watch trigger: sudden increase in "missing manifest" or schema validation errors in archival ingestion pipelines after a vendor release.
+  - Source: https://blog.cloudflare.com/personal-agents-visibility-control/
+
+- Storage signal: Evaluation traces must be durable for audit and repro
+  - Observation: AWS Bedrock AgentCore evaluation guidance implies evaluation traces (inputs, outputs, scores) are part of the audit trail.
+  - Practical implication: evaluation pipelines must write traces to durable buckets with retention policies and queryable indices; ephemeral-only storage will prevent post-hoc reviews.
+  - Recommended action: add evaluation-run IDs to storage indexing and retention policies; store both raw inputs and scored outputs for 90+ days by default (policy adjustable per data sensitivity).
+  - Watch trigger: failed reproduction of an evaluation run due to pruned artifacts or unreachable inputs.
+  - Source: https://aws.amazon.com/blogs/machine-learning/use-decision-models-with-amazon-bedrock-agentcore-evaluations/

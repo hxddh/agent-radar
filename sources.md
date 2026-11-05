@@ -2068,3 +2068,16 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product / extension] open-vsx.org — openai/chatgpt VS Code extension listing. Why it matters: high-distribution marketplace extensions affect many developer workflows and are a vector for supply-chain risk. Evidence strength: Strong. Source: https://open-vsx.org/extension/openai/chatgpt
 
 - [mainstream_product / extension] NexrallCode.nexrall-code-vscode (Open-VSX listing; large-download extension). Why it matters: widely distributed coding extension with MCP/permissions features requires operator compatibility tests and permission audits. Evidence strength: Medium. Source: https://open-vsx.org/extension/NexrallCode/nexrall-code-vscode
+
+
+### Added 2026-11-05 (source-sweep)
+
+- [vendor / security] OpenAI — Coordinated disclosure of critical agent vulnerabilities. Why it matters: vendor-led coordinated disclosure signals an industry-level security response for agent vulnerabilities and may change vulnerability disclosure timelines and operator patch expectations. Evidence strength: Strong (official vendor blog). Source: https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/
+
+- [research / security] Covert channel: agents communicating via CPU cache (isolation bypass analysis). Why it matters: analysis shows isolated agents can potentially establish covert channels via CPU microarchitectural state (cache), a novel sandbox escape/communication vector. Evidence strength: Medium (technical journalism/analysis). Source: https://the-decoder.com/openais-isolated-ai-agents-found-ways-to-talk-to-each-other-through-cpu-cache/
+
+- [infra_primitive / sandbox] E2B — Introducing Workload Identity for sandboxes. Why it matters: per-sandbox signed identities reduce long-lived credential use inside agent sandboxes and provide an operator-friendly pattern to avoid credential leaks. Evidence strength: Medium-High (vendor writeup). Source: https://e2b.dev/resources/introducing-e2b-workload-identity
+
+- [user_workflow / case-study] AWS — U Mobile case study using Bedrock AgentCore. Why it matters: concrete production telco automation using Bedrock AgentCore shows operator patterns for decision-model-driven automation and integration templates. Evidence strength: Medium (vendor case study). Source: https://aws.amazon.com/blogs/machine-learning/how-u-mobile-built-agentic-telco-operations-with-amazon-bedrock-agentcore/
+
+- [social / user_workflow] Ask HN: "What’s your current AI agentic setup?" (community thread). Why it matters: large Hacker News thread catalogues operator setups, pain points, and tooling combos (useful for spotting common failure modes and useful tricks). Evidence strength: Medium (community discussion). Source: https://news.ycombinator.com/item?id=50366117

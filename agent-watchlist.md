@@ -5,15 +5,16 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Category: Coding agent / task agent
-- Maturity: Strong adoption in OpenAI ecosystem and third‑party tooling.
-- Recent changes: Codex client/prerelease churn continues; notable prereleases include rust-v0.167.0-alpha.3 (2026-11-02) and recent 0.166.x tags. Operators should pin CLI/runtime versions, retest devcontainer images, validate sandbox hardening for local execution, and audit extension/install-time vectors for any third-party integrations that parse Codex output. Source: https://github.com/openai/codex/releases/tag/rust-v0.167.0-alpha.3
-- replace_section anchor: `## Codex / ChatGPT Coding Agent`
+- Recent changes: OpenAI continues rapid prerelease cadence for Codex CLI/runtime; rust-v0.168.0-alpha.3 observed (2026-11-03/04). Frequent pre-releases increase the operational need to pin CLI versions in CI and validate tool-calling behavior before rollouts.
+- Operational action: pin Codex CLI in dev & CI images, add regression tests that validate exported session artifacts and tool-call sequences.
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.168.0-alpha.3
 ## Claude Code
-- Recent changes: Anthropic published Claude Code v2.1.316 (2026-11-02) with runtime/conductor deltas that affect tool-calling and session export semantics. Separately, Cursor published a security notice about malicious/compromised Claude Code VS Code extension variants discovered in marketplaces; independent investigative posts report remote-access tooling delivered via variant installs.
-- Implication: treat upgrades as high-risk: snapshot workspaces before upgrade, run connector compatibility tests, enforce extension-hash allowlists, and collect vendor IOCs for incident response.
-- Evidence strength: Strong (release + Cursor notice)
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.316; https://cursor.com/blog/claude-code-extension-security-notice
+- Recent changes: Anthropic published Claude Code v2.1.318 (2026-11-04) with runtime and conductor deltas that affect tool-calling semantics and session export formats. Operators should treat this as a compatibility-release: pin staging runners, rebaseline any session-export parsers, and hold production upgrades until connector CI passes.
+- Security note: Cursor published a vendor security notice about malicious/compromised Claude Code VS Code extension variants in marketplaces; ingest vendor IOCs and treat marketplace installs as untrusted until verified.
+- User impact: VS Code extension integrations and connector parsers are the highest-risk surface for silent breakage or supply-chain compromise.
+- Evidence strength: Strong (release + vendor security notice)
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.318; https://cursor.com/blog/claude-code-extension-security-notice
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls

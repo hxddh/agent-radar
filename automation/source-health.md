@@ -1,6 +1,6 @@
 # Source Health
 
-Last checked: 2026-11-04
+Last checked: 2026-11-05
 
 | Source | Status | Detail |
 | --- | --- | --- |

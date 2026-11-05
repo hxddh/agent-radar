@@ -1296,3 +1296,16 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - 2026-11-04: Connector resilience — multiple operators report custom MCP connectors breaking after recent Claude Code/connector runtime updates (Reddit thread). Mitigation: keep a pinned staging runtime for connector CI and add a quick contract-smoke test for connector merges. Source: Reddit (public), evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
 
 - 2026-11-04: Browser-agent CI pattern — after Vercel agent-browser v0.41.2, teams saw flaky headful traces. Practical step: pin agent-browser in CI, add nightly rebaseline job, and fail builds on unexpected trace-shape diffs. Source: GitHub release + community validation, evidence strength: Medium. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+
+
+- **Cursor / Claude Code extension incident — operator remediation patterns**
+  - Scenario: vendor published IOCs and remediation guidance after discovering malicious extension variants.
+  - Practical note: operators should enforce signed-extension policies, pin extension hashes in org-managed images, and ingest vendor IOCs into EDR rules.
+  - Evidence strength: Strong (vendor notice) + Medium (community investigative posts)
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- **Community Ask HN: agent setups**
+  - Scenario: public thread listing common agent deployment patterns and friction points (pinning, connector breakage).
+  - Practical note: several operators recommend hermetic CI containers and artifact archives for reproducibility; consider adopting this pattern for agent CI.
+  - Evidence strength: Medium (HN thread)
+  - Source: https://news.ycombinator.com/item?id=50366117
