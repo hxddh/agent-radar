@@ -1309,3 +1309,30 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Practical note: several operators recommend hermetic CI containers and artifact archives for reproducibility; consider adopting this pattern for agent CI.
   - Evidence strength: Medium (HN thread)
   - Source: https://news.ycombinator.com/item?id=50366117
+
+
+- 2026-11-08 — HN/Reddit field reports on Claude Code extension secret exposure
+  - Summary: Community reports collected on HN indicate extension UX/"Don't Ask Again" patterns have surfaced secrets for multiple operators. Several threads provide concrete mitigation steps.
+  - Actionable operator checklist:
+    1. Pin extension hashes in managed images; require signed extensions.
+    2. Run git history secret scans (git-secrets / TruffleHog / repo grep for known prefixes) across org repos and rotate any exposed keys immediately.
+    3. Add an 'artifact schema' contract test in CI that validates session-export manifest versions (HAR/DOM/WebM) before accepting new runs into production buckets.
+  - Evidence strength: Medium-Strong (HN + Reddit threads)
+  - Sources:
+    - https://news.ycombinator.com/item?id=50352757
+    - https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- 2026-11-08 — Practical trick: Quick secret-scan command
+  - Summary: For quick triage, run repo scans in CI or locally using standard tools; do not publish rotated keys in PRs.
+  - Example (operator-level): use existing tools (git-secrets, TruffleHog) and a CI fail-on-match job; treat findings as incident triggers.
+  - Evidence strength: Medium (community practice)
+
+
+## 2026-11-08 Field Notes (operator tips from this run)
+
+- Quick containment checklist after suspected extension compromise:
+  1. Revoke any developer tokens / rotate keys used on affected hosts.
+  2. Quarantine suspect devcontainers and snapshot their filesystem images.
+  3. Export agent session artifacts and push manifests + blobs to immutable object storage for later triage.
+
+- Small, high-leverage habit: include schema_version in every saved trace; add a lightweight CI check that rejects unknown schema versions until a parser is added.

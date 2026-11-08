@@ -107,3 +107,12 @@ Operational signal (2026-10-17): community posts and operator smoke runs should 
 - detect-coding-agent promoted to watchlist (relevance 7). Impact: strengthens thesis 9 (containment/security) by surfacing a detection primitive operator teams can use to trigger forensic snapshots and containment. Source: https://crates.io/crates/detect-coding-agent
 
 - Cloudflare agents@0.30.1 promoted to watchlist (relevance 8). Impact: reinforces thesis 8 (platform‑vendor MCP entry) and thesis 5 (object storage as artifact plane) because edge runtime/export defaults materially affect where artifacts land and how operators must map retention/forensics. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.30.1
+
+
+### 2026-11-08 Promotion — OpenAI GPT‑6 Cyber (promoted)
+
+- What it is: OpenAI announced a GPT‑6 Cyber variant aimed at cybersecurity automation and evaluation workflows.
+- Why it matters for the radar: a mainstream vendor shipping a cybersecurity-focused model variant changes both attacker/defender automation surfaces and operator threat models. This reinforces Thesis 9 (containment / security as first-class infra) and raises urgency for updated eval harnesses, forensic snapshot policies, and threat-modeling for automated red-team/blue-team agent workflows.
+- Assessment: Evidence strength: Strong (official vendor announcement). Relevance score: 10. Immediate operator actions: update incident response playbooks to include model-driven automation paths, re-evaluate egress/privilege controls for agent tool-calls that may be used in automated cyber workflows, and ensure evaluation environments are isolated from production data.
+- Follow-up needed: instrument targeted evals for 'agent-as-attacker' scenarios, and add GPT‑6 Cyber-specific containment tests to pre-deploy gating (sandboxing, network egress policies, tool-call whitelists).
+- Source: https://openai.com/index/introducing-gpt-6-cyber/

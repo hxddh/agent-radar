@@ -10,11 +10,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Evidence strength: Strong (GitHub release)
 - Source: https://github.com/openai/codex/releases/tag/rust-v0.168.0-alpha.3
 ## Claude Code
-- Recent changes: Anthropic published Claude Code v2.1.318 (2026-11-04) with runtime and conductor deltas that affect tool-calling semantics and session export formats. Operators should treat this as a compatibility-release: pin staging runners, rebaseline any session-export parsers, and hold production upgrades until connector CI passes.
-- Security note: Cursor published a vendor security notice about malicious/compromised Claude Code VS Code extension variants in marketplaces; ingest vendor IOCs and treat marketplace installs as untrusted until verified.
-- User impact: VS Code extension integrations and connector parsers are the highest-risk surface for silent breakage or supply-chain compromise.
-- Evidence strength: Strong (release + vendor security notice)
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.318; https://cursor.com/blog/claude-code-extension-security-notice
+- Recent changes: Anthropic published Claude Code v2.1.319 (2026-11-08) with runtime and conductor deltas that affect tool-calling semantics and session export formats. Operators should treat v2.1.319 as a compatibility release: pin staging runners, rebaseline session-export parsers, and hold production upgrades until connector CI passes. Evidence strength: Strong.
+- replace_section anchor: `## Claude Code`
+- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.319
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls
@@ -23,9 +21,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - replace_section anchor: `## Cursor`
 ## Devin / Cognition
 - Category: Agent runtime / research prototype
-- Recent changes: No vendor-stated release this week. Last dated update: 2026-09-13. Operator note: continue to monitor for runtime containment docs and SDK compatibility with MCP connectors.
-- Evidence strength: Medium (historical releases & discussion). Source: (see prior entries on disk)
-- Action: deprioritized for promotion until a new dated vendor changelog appears.
+- Recent changes: No dated vendor changelog or public release since 2026-09-13. Deprioritized for active promotion until a new dated release or operator field report appears.
+- Operational note: continue to monitor for containment docs and MCP connector compatibility; re-evaluate on vendor-stated updates.
+- replace_section anchor: `## Devin / Cognition`
 ## GitHub Copilot / Coding Agent
 - Category: Coding agent / task agent
 - Maturity: Strong adoption in OpenAI/GitHub ecosystems.
@@ -34,15 +32,12 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Last-checked: 2026-09-20
 - Source: https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14 ; https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
 ## Replit Agent
-- Category: Platform-hosted agent / IDE-like runtime
-- Maturity: Active
-- Recent changes: Replit platform changelog (2026-10-09) indicates platform updates that may change hosted agent dev/CI workflows; operators hosting agents on Replit should re-run deployment tests and review default network/egress rules. Last‑checked: 2026-10-09. Evidence strength: Medium-Strong
-- Action: Validate hosted-agent network egress defaults and snapshot/backup hooks on Replit-hosted projects.
+- Category: Web-hosted coding agent
+- Recent changes: No new dated public changelog since 2026-10-09. Deprioritized for active promotion; keep as watchlist entry for operator UX reports and hosted-runtime containment notes.
 - replace_section anchor: `## Replit Agent`
 ## Warp
 - Category: Terminal/IDE agent / developer tooling
-- Maturity: Previously active in developer lane
-- Recent changes: No dated vendor changelog in 21+ days (last noted 2026-09-13). Status: deprioritized until fresh vendor evidence or field reports surface. Operators: keep on passive watch; re-open if a dated release or operator incident appears.
+- Recent changes: No dated public update since 2026-09-13. Deprioritized for active promotion until a new release or operator field report; continue to monitor for integration or governance additions.
 - replace_section anchor: `## Warp`
 ## Amp
 - Category: Agent surface / runtime
@@ -51,13 +46,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - replace_section anchor: `## Amp`
 ## Factory
 - Category: Orchestration / agent workbench
-- Maturity: Power‑user / workbench
-- Recent changes: No new public changelog in 21+ days (last 2026-09-13). Status: deprioritized for active watch until fresh vendor evidence appears. Keep on passive radar for meta-harness adoption signals.
+- Recent changes: No dated public update since 2026-09-13. Deprioritized for active promotion until fresh vendor evidence appears.
 - replace_section anchor: `## Factory`
 ## Raycast AI
-- Category: Desktop/command-surface agent
-- Maturity: Previously tracked for rapid local workflows.
-- Recent changes: No substantive public updates since 2026-09-13; status: deprioritized pending fresh evidence. Operators relying on Raycast agent flows should verify local permission grants before onboarding.
+- Category: Desktop/IDE agent
+- Recent changes: No dated public update since 2026-09-13. Deprioritized for active promotion; monitor for governance controls and desktop containment features.
 - replace_section anchor: `## Raycast AI`
 ## Vercel AI / Sandbox-Related Agent Workflow
 - Category: Sandbox / managed agents
@@ -144,12 +137,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Last review: 2026-07-12 (weekly W28). No new public changelog or release since previous review. Retain as active due to potential enterprise surface; refresh in 21 days if no new signal.
 - Reference: https://github.com/microsoft/agent-framework
 ## GitHub Copilot
-- Category: Coding agent / task agent
-- Maturity: Strong adoption across developer ecosystems.
-- Recent changes (2026-09-06 refresh): Copilot now surfaces Anthropic Claude Fable 5.1 as a model option (Copilot changelog 2026-09-01). Operators should validate model-driven differences in tool-calls and connector behavior in staging. Evidence strength: Strong (GitHub blog/changelog).
-- Action: Add Fable/Astra to Copilot regression tests; pin integrations where necessary.
-- Last refreshed: 2026-09-06
-- Source: https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot
+- Category: Coding agent / developer tooling
+- Recent changes: No new dated vendor changelog in the past 21+ days (last noted 2026-09-20 in index). Community threads report device-side cookie/token handling experiments; no vendor advisory found in this run. Status: deprioritized for active promotion pending a dated vendor changelog or official advisory.
+- Operational note: enforce extension/credential pinning in org devcontainers and CI; instrument local token storage scanning if Copilot or local-CLI runtimes are enabled in developer images.
+- replace_section anchor: `## GitHub Copilot`
 ## GitHub Copilot
 
 - What it is: GitHub's coding assistant agent surface including IDE plugins, the Copilot CLI, and Copilot app integrations (now shipping Agent Plugins 1.0 across VS Code, CLI, and the Copilot app).
@@ -706,3 +697,20 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong
 - Source: https://github.com/microsoft/agent-framework
 - replace_section anchor: `## Microsoft — agent-framework`
+
+## Amp (OpenAI)
+
+- Category: Task agent / multi-domain agent
+- Recent changes: No new dated public changelog this run (last noted 2026-09-13). Deprioritized from active promotion; retain as mainstream index for audit mapping when encountered in fleets.
+- replace_section anchor: `## OpenAI — Amp (scr-amp01)`
+
+
+## Vercel — agent-browser (vercel-labs/agent-browser)
+
+- What it is: A Rust/CLI browser-automation primitive for AI agents (HAR/DOM/WebM capture, headful traces, selector/timing controls) enabling programmatic web interactions and multimodal artifact export.
+- Why it matters: agent-browser makes browser automation a first-class agent primitive. Agents that can drive headful browsers create large, multimodal artifacts (HAR, DOM snapshots, video) and therefore change upstream storage, replay, and PII-scanning requirements. It also enables more realistic long-running agent workflows that interact with web apps, increasing the need for exporter/manifest versioning and retention controls.
+- Evaluation notes (operator lens): check default export/TTL behavior, manifest/versioning support, selectors/timing changes (v0.41.2), and whether durable exports are opt-in. Confirm PII/audio-transcript scanning hooks and enterprise export-to-bucket connectors before promoting durable retention.
+- Evidence strength: Strong (project release notes / repo). 
+- Relevance score: 7
+- Follow-up: add parser & sidecar-manifest tests for ingest pipelines; require export-to-operator-bucket gating before durable retention; include artifact-schema version checks in ingest validators.
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2

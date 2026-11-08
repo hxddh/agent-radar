@@ -1253,3 +1253,34 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Actionable steps: pin runtime versions in staging images, run connector CI that verifies session-export shapes, hold production rollouts until connector CI green.
   - Should promote to playbook? yes
   - Sources: https://github.com/openai/codex/releases/tag/rust-v0.168.0-alpha.3, https://github.com/google-gemini/gemini-cli/releases/tag/v0.67.0
+
+
+## Candidate playbook: Rapid response to extension/plugin-driven secret exposure (2026-11-08)
+
+- When useful: A social report or monitoring alert suggests an extension or plugin may have leaked credentials (e.g., HN thread or telemetry spikes).
+- Steps:
+  1. Put a short freeze on related CI/CD runs (if correlation is strong) to avoid further automated pushes.
+  2. Run org-wide secret scans (git-secrets / TruffleHog / built-in repository scanners) across main branches and recent commits (last 30 days).
+  3. Rotate any keys found; issue scoped short-lived replacements and revoke old keys in IAM dashboards.
+  4. Pin extension/agent binary hashes in managed workstation images and CI runners; require signed extensions where supported.
+  5. Add an artifact-schema contract test to CI to detect upstream artifact shape changes (manifest version check).
+- Evidence: Community reports aggregated on HN/Reddit; vendor security notices (cursor.com) recommend similar containment steps.
+- Should promote to playbook? yes
+- Sources:
+  - https://news.ycombinator.com/item?id=50352757
+  - https://cursor.com/blog/claude-code-extension-security-notice
+
+
+## 2026-11-08 Playbook additions (operator-ready)
+
+- Pin & hash-lock strategy
+  - Action: enforce extension hash pinning for VS Code / JetBrains marketplace installs in org devcontainers; require signed-extension checks in onboarding images.
+  - Why: prevents trojanized marketplace variants from executing on developer machines.
+
+- Artifact manifest & replay contract
+  - Action: with every exported trace (HAR/DOM/WebM/session-export) store a small manifest JSON: {producer, producer_version, schema_version, sha256, timestamp} alongside blob.
+  - Why: enables multi-version parsers and deterministic replays for forensic triage.
+
+- Pre-upgrade smoke test
+  - Action: add a short CI smoke test that runs a representative tool-call, verifies expected file-write semantics, and parses the session-export before approving production rollout.
+  - Why: catches connector/semantics regressions early.

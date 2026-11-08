@@ -5052,3 +5052,45 @@ Notes:
 - **GHSA-5324-3w58 / CVE-2026-116575 (mem0 cross-tenant conversation leak)**: Why it matters: cross-tenant leak in session key handling; evidence strength: High; relevance score: 10; candidate_seen_at: 2026-11-06; last_checked_at: 2026-11-06; promotion_status: candidate; defer_count: 0; stale_after_days: 21. Source: https://github.com/advisories/GHSA-5324-3w58-qpp2
 
 - **detect-coding-agent (crates.io)**: Why it matters: detection primitive for coding-agent invocation useful for triggering forensic snapshots; evidence strength: Medium; relevance score: 7; candidate_seen_at: 2026-11-06; last_checked_at: 2026-11-06; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://crates.io/crates/detect-coding-agent
+
+
+- **AWS Agent Registry GA (GovCloud US‑West)** (scr-aws-agent-registry-2026-11-08): Why it matters: first‑party registry and governance primitives for agent artifacts in regulated clouds; Evidence strength: Strong; relevance score: 9; candidate_seen_at: 2026-11-08; last_checked_at: 2026-11-08; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/11/aws-agent-registry-govcloud-us-west/
+
+- **OpenRouter — Auto & Auto Code Routers** (scr-openrouter-2026-11-08): Why it matters: router specialization for auto/code workloads changes routing policy and enforcement locations; Evidence strength: Strong; relevance score: 8; candidate_seen_at: 2026-11-08; last_checked_at: 2026-11-08; promotion_status: candidate; defer_count: 0; stale_after_days: 21.
+  - Source: https://openrouter.ai/blog/announcements/auto-and-auto-code-routers/
+
+- **@openai/codex (npm) — Codex CLI packaged** (scr-codex-npm-2026-11-08): Why it matters: official CLI increases local agent runs and requires device-containment guidance; Evidence strength: Strong; relevance score: 9; candidate_seen_at: 2026-11-08; last_checked_at: 2026-11-08; promotion_status: candidate; defer_count: 0; stale_after_days: 30.
+  - Source: https://www.npmjs.com/package/@openai/codex
+
+
+## 2026-11-08 Corroboration Pass (append)
+
+- **Cursor — Claude Code VS Code extension security notice** (2026-10-31) — VERIFIED. Cursor vendor blog published a security advisory describing malicious/compromised Claude Code extension variants found in marketplaces. Upgraded to Strong; follow-up: ingest vendor IOCs into org EDR and extension-blocklists. Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- **E2B — secrets-injection / secrets injection guidance** (2026-11-04) — VERIFIED (vendor docs). E2B guidance on injecting secrets via secure headers to reduce sandbox-leakage risk confirmed; follow-up: test header-based credential injection in sandbox CI patterns. Source: https://e2b.dev/resources/introducing-e2b-workload-identity
+
+- **Cloudflare — Trusted Agent Delegation** (2026-11-06) — VERIFIED (Cloudflare blog). Confirmed edge delegation primitives; follow-up: validate short-lived delegation token auditing and TTL. Source: https://blog.cloudflare.com/trusted-agent-delegation/
+
+- **OpenRouter — Auto / Auto Code Routers** (2026-11-08) — VERIFIED (OpenRouter blog). Router specialization confirmed; follow-up: test routing policies against audit/exporter hooks. Source: https://openrouter.ai/blog/announcements/auto-and-auto-code-routers/
+
+- **AWS — Agent Registry GA (GovCloud US-West)** (2026-11-08) — VERIFIED (AWS whats-new). Registry GA confirmed; follow-up: map registry metadata to object-storage retention & legal hold flows. Source: https://aws.amazon.com/about-aws/whats-new/2026/11/aws-agent-registry-govcloud-us-west/
+
+- **Firecracker-based Agent Compute Engine prototype (25ms snapshot restores)** (2026-11-08) — UNVERIFIED. No authoritative vendor blog or primary research POC located in screening snapshot. Action: follow-up to locate primary prototype write-up or vendor demo; currently flagged pending-official.
+
+- **CPU-cache covert-channel claims** (2026-11-05) — UNVERIFIED PRIMARY; flagged. Multiple secondary news summaries exist but no primary POC/paper confirmed in the snapshot. Action: seek primary research paper or vendor advisory before elevating.
+
+- Candidate bookkeeping: updated promotion_status / defer notes where primary sources were found. Items still awaiting primary proof remain in Candidate inbox with defer_count incremented and stale_after_days set per existing policy.
+
+
+## 2026-11-08 — Promote-candidates pass
+
+- Promoted: **AWS Serverless MCP server (ECS Fargate)** (scr-aws-mcp-server): Why it matters: concrete operator pattern for MCP→object-store ingestion that materially affects storage mapping, retention, and per-run cost telemetry. Evidence strength: Strong (AWS blog). Relevance score: 8. promotion_status: promoted; promoted_at: 2026-11-08; reason: first‑party MCP pattern with direct storage/forensics implications; added storage-angle guidance and operator actions. Source: https://aws.amazon.com/blogs/machine-learning/serverless-mcp-server-for-ai-agent-data-lake-access-on-amazon-ecs-fargate/
+
+- Promoted: **OpenAI — GPT‑6 Cyber** (scr-openai-gpt6-cyber): Why it matters: vendor-grade cybersecurity model variant changes attacker/defender automation, increases containment & eval risk. Evidence strength: Strong (vendor announcement). Relevance score: 10. promotion_status: promoted; promoted_at: 2026-11-08; reason: mainstream vendor release with thesis-level security impact; added radar note and runbook follow-ups. Source: https://openai.com/index/introducing-gpt-6-cyber/
+
+- Promoted: **Vercel — agent-browser (agent-browser)** (scr-agent-browser): Why it matters: browser automation primitive produces large multimodal artifacts and introduces schema/versioning needs for manifests; this impacts ingest pipelines and PII scanning. Evidence strength: Strong (release notes). Relevance score: 7. promotion_status: promoted; promoted_at: 2026-11-08; reason: operational storage & ingestion implications; added watchlist entry and storage-angle guidance. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+
+- Deferred (checked, defer_count incremented): **Ask HN: What’s your current AI agentic setup?** (scr-askhn-agent-2026-11-05): Evidence strength: Medium (social thread). Relevance score: 7. defer_count: 0 -> 1; last_checked_at: 2026-11-08; reason: social-only; needs cross-platform corroboration / representative operator quotes before promotion. Follow-up: sample operator patterns from the thread and surface notable quotes to the operator playbook.
+
+- Notes: promotions limited to three candidates this pass per Promote-candidates gate. Other inbox items left untouched; will run additional passes to advance corroboration queue. If any promoted candidate receives new contradictory evidence, follow-up entries will be appended here (do not delete historic lines).

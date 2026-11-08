@@ -1718,3 +1718,45 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Recommended action: add evaluation-run IDs to storage indexing and retention policies; store both raw inputs and scored outputs for 90+ days by default (policy adjustable per data sensitivity).
   - Watch trigger: failed reproduction of an evaluation run due to pruned artifacts or unreachable inputs.
   - Source: https://aws.amazon.com/blogs/machine-learning/use-decision-models-with-amazon-bedrock-agentcore-evaluations/
+
+
+- 2026-11-08 — Versioned artifact manifests for browser-driven traces
+  - Related to: Vercel agent-browser v0.41.2 artifact changes
+  - Storage implication: Store a small sidecar manifest (artifact schema version, selector/timing version, producer-version) alongside trace blobs; this enables parsers to choose the correct parser and fall back safely.
+  - Evidence strength: Strong (agent-browser release notes)
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+  - Watch trigger: Spike in parser errors in ingest logs or replay mismatches for saved traces.
+
+- 2026-11-08 — Registry→Object-store retention mapping
+  - Related to: AWS Agent Registry GA
+  - Storage implication: When using a cloud Agent Registry, ensure registry metadata (artifact signatures, version IDs) are exported to long-term object storage with retention/TTL metadata for audits and forensics. Map registry deletion to object-store retention policies to avoid losing forensic artifacts.
+  - Evidence strength: Strong (AWS announcement)
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/11/aws-agent-registry-govcloud-us-west/
+  - Watch trigger: Discrepancy between registry metadata and object-store manifests during audit or failed-forensics exercises.
+
+
+## 2026-11-08 Storage Angle — recent deltas
+
+- Artifact schema versioning is now operationally necessary: when agent-browser or Claude Code change HAR/DOM/WebM or session-export shapes, parsing breaks and golden-trace tests fail. Store a manifest (producer/version/schema/sha) with each artifact blob.
+
+- Registry→storage mapping: with AWS Agent Registry GA, teams must reconcile registry metadata (signed artifact identifiers) with long-term storage and legal-hold processes; implement a mapping table exporter_id → bucket + retention_policy.
+
+- Exporter TTLs matter for forensics: Cloudflare agents exporter/TTL changes mean some edge-stored artifacts may expire earlier than expected; add exporter-TTL audits to retention checks.
+
+
+## 2026-11-08 — AWS: Serverless MCP server for AI agent data lake access (ECS Fargate)
+
+- What it is: AWS published a Serverless MCP server pattern that connects agent MCP clients to an agent data-lake on ECS Fargate, offering an example operator architecture for managed MCP→object-store pipelines.
+- Storage implications: first‑party MCP server patterns that push agent artifacts directly into cloud object stores solidify the object-store-as-artifact-plane thesis. Operators must map MCP exports to explicit retention lanes (ephemeral previews vs durable forensic prefixes), ensure manifest + provenance metadata (agent-id, run-id, model+version, connector SHA) are attached, and validate export TTLs and tenant scoping. Serverless MCP patterns also change ingestion timing (spikes from concurrent agent runs) and require autoscaling and lifecycle policies to avoid runaway storage costs.
+- Immediate actions: add MCP-export smoke tests that verify bucket/ prefix isolation per tenant, require manifest sidecars and producer-version tags on every export, and instrument per-run cost telemetry for MCP→object-store flows. Ensure encryption + KMS key policies and access-logging are enabled for MCP-export buckets.
+- Evidence strength: Strong (AWS machine-learning blog).
+- Source: https://aws.amazon.com/blogs/machine-learning/serverless-mcp-server-for-ai-agent-data-lake-access-on-amazon-ecs-fargate/
+
+
+## 2026-11-08 — agent-browser artifact & manifest guidance
+
+- Observation: agent-browser releases changed HAR/DOM/WebM shapes (v0.41.2). Browser-driven agent traces are now a prominent artifact class with schema churn risk.
+- Storage implication: store a small sidecar manifest with each trace (producer-version, artifact-schema-version, selector/timing-version, runtime-hash) so parsers select the correct ingest path and replay tools can fall back safely. Compress large binary blobs (video/WebM), store deltas where possible, and tier retention (short TTL for previews; durable, indexed manifests for forensics).
+- Immediate actions: require that any durable copy of a browser trace include a manifest and provenance fields before it becomes searchable; add parser-version checks and alert on schema-validation failures during ingest.
+- Evidence strength: Strong (agent-browser release notes).
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
