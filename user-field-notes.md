@@ -1336,3 +1336,12 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   3. Export agent session artifacts and push manifests + blobs to immutable object storage for later triage.
 
 - Small, high-leverage habit: include schema_version in every saved trace; add a lightweight CI check that rejects unknown schema versions until a parser is added.
+
+
+- 2026-11-09: Marketplace extension safety (Cursor advisory)
+  - Tool: VS Code extensions (Claude Code variants)
+  - Field note: Several operators reported compromised extension variants discovered in public marketplaces; recommended mitigation was immediate pinning of extension hashes in org images and enforcing signed-extension policies. Evidence strength: Strong (vendor advisory). Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- 2026-11-09: MCP connector fragility (community reports)
+  - Tool: Custom MCP connectors (multiple vendors)
+  - Field note: Reddit/Ask-HN posters supplied reproduction steps for connector breakage across upgrades; practical mitigation used by some teams: maintain pinned fallback connectors and include connector-level smoke-tests in CI. Evidence strength: Medium (social). Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

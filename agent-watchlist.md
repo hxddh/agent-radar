@@ -714,3 +714,16 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Relevance score: 7
 - Follow-up: add parser & sidecar-manifest tests for ingest pipelines; require export-to-operator-bucket gating before durable retention; include artifact-schema version checks in ingest validators.
 - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+
+
+## Google — Gemini Agent (scr-7a3f1b)
+- What it is: Google-branded enterprise agent runtime positioned as "Gemini at Work" for integrated workplace workflows and first-party orchestration.
+- Why it matters: Platform vendor shipping a first-party agent runtime shifts where connectors, telemetry, and artifact defaults are set (export/retention implications). Reinforces radar thesis 8 (platform-vendor MCP entry) and thesis 5 (object storage as artifact plane).
+- Evidence strength: Strong (official blog)
+- Source: https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026
+
+## Perplexity — "Teammates" agents (scr-2c8d4e)
+- What it is: Perplexity's agentic teammates for ongoing/complex work in team hubs.
+- Why it matters: Adds a mainstream non-coding agent vendor into the mix; operators need to map Perplexity connectors and permission scopes into existing governance controls.
+- Evidence strength: Strong (official blog)
+- Source: https://www.perplexity.ai/en-GB/hub/blog/teammates-are-agents-for-complex-ongoing-work

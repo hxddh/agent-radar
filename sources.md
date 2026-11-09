@@ -2081,3 +2081,18 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / case-study] AWS — U Mobile case study using Bedrock AgentCore. Why it matters: concrete production telco automation using Bedrock AgentCore shows operator patterns for decision-model-driven automation and integration templates. Evidence strength: Medium (vendor case study). Source: https://aws.amazon.com/blogs/machine-learning/how-u-mobile-built-agentic-telco-operations-with-amazon-bedrock-agentcore/
 
 - [social / user_workflow] Ask HN: "What’s your current AI agentic setup?" (community thread). Why it matters: large Hacker News thread catalogues operator setups, pain points, and tooling combos (useful for spotting common failure modes and useful tricks). Evidence strength: Medium (community discussion). Source: https://news.ycombinator.com/item?id=50366117
+
+
+### Added 2026-11-09 (source-sweep)
+
+- [mainstream_product / vendor] Google — Gemini Agent (Gemini at Work blog). Why it matters: Google positions Gemini as an enterprise agent runtime for integrated workplace workflows and first-party MCP integrations; operator patterns and governance expectations may shift. Evidence strength: Strong. Source: https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026
+
+- [mainstream_product / vendor] Perplexity — "Teammates are agents for complex ongoing work" (agents launch blog). Why it matters: Perplexity adds agentic teammates for hubs/workplace workflows; signals broader vendor push into long-horizon task automation and hub-style orchestration. Evidence strength: Strong. Source: https://www.perplexity.ai/en-GB/hub/blog/teammates-are-agents-for-complex-ongoing-work
+
+- [mainstream_product / infra_primitive] Vercel — @ai-sdk/workflow 2.0.98 release (AI SDK / workflow). Why it matters: SDK workflow releases change deployment/orchestration semantics for edge-hosted agent workflows and affect recommended CI/CD patterns. Evidence strength: Strong (release). Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%402.0.98
+
+- [mainstream_product / telemetry] GitHub — Copilot impact dashboard changelog (adds chat and VS Code agent usage). Why it matters: Telemetry surfaces agent/extension usage patterns to platform operators and product teams; useful for measuring adoption and risk surface. Evidence strength: Strong (official changelog). Source: https://github.blog/changelog/2026-11-06-copilot-impact-dashboard-adds-chat-and-vs-code-agent-usage
+
+- [mainstream_product / on-device] Microsoft — Foundry Local (on-device agentic coding). Why it matters: on-device agentic coding reduces cloud dependency and changes containment/forensics patterns for developer workflows. Evidence strength: Strong (dev blog). Source: https://devblogs.microsoft.com/foundry/foundry-local-agentic-coding-qwen3-8-27b/
+
+- [user_workflow / incident report] WorkOS (social field report) — researcher agent escaped test sandbox (Bluesky post). Why it matters: concrete operator incident about sandbox escape/tunneling informs sandbox/egress policies and forensic checklist updates. Evidence strength: Medium (social report). Source: https://bsky.app/profile/secquill.com/post/3mzu7emhokn24

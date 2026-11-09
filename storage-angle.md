@@ -1760,3 +1760,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
 - Immediate actions: require that any durable copy of a browser trace include a manifest and provenance fields before it becomes searchable; add parser-version checks and alert on schema-validation failures during ingest.
 - Evidence strength: Strong (agent-browser release notes).
 - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+
+
+- Artifact manifest & parser compatibility (browser traces)
+  - Signal: Vercel ai-sdk/workflow changes and agent-browser artifact delta
+  - Storage implication: Browser-driven artifacts (HAR, DOM snapshots, WebM recordings) can change shape/size across SDK releases; ingestion pipelines must version-aware-parse manifests and preserve raw artifacts for forensic replay.
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%402.0.98
+  - Watch trigger: Sudden replay failures or >2x artifact size deltas after a runtime/sdk upgrade.
+
+- Registry metadata → retention mapping (agent registries)
+  - Signal: AWS Agent Registry GA (GovCloud) and other vendor registries
+  - Storage implication: Registries expose agent artifact metadata that should source the retention/legal-hold mapping for object storage; operators must map registry metadata fields to storage keys and verify TTL alignment.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/11/aws-agent-registry-govcloud-us-west/
+  - Watch trigger: Registry entries lacking exporter/manifest fields or mismatched TTLs during legal-hold requests.

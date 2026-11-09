@@ -1284,3 +1284,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Pre-upgrade smoke test
   - Action: add a short CI smoke test that runs a representative tool-call, verifies expected file-write semantics, and parses the session-export before approving production rollout.
   - Why: catches connector/semantics regressions early.
+
+
+- Pin VS Code extension hashes + require signed extensions
+  - When useful: Org developer images and CI that install marketplace extensions for agent workflows.
+  - Evidence: Cursor security advisory and multiple operator posts recommending hash pinning.
+  - Should promote to playbook? yes
+  - Notes: Include an automated check in build pipelines that verifies extension package hash and signature before image publish.
+
+- Connector smoke-test and pinned fallback runner
+  - When useful: Any automated deployment using third-party MCP connectors or non-first-party tool-call connectors.
+  - Evidence: Reddit reports of connector regressions and vendor runtime churn.
+  - Should promote to playbook? yes
+  - Notes: Keep a pinned fallback connector runner image and a minimal smoke-test that exercises critical tool-calls; fail releases if smoke-tests regress.
