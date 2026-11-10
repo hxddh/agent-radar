@@ -1297,3 +1297,10 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Evidence: Reddit reports of connector regressions and vendor runtime churn.
   - Should promote to playbook? yes
   - Notes: Keep a pinned fallback connector runner image and a minimal smoke-test that exercises critical tool-calls; fail releases if smoke-tests regress.
+
+
+- Playbook candidate: Upgrade gating for agent runtimes & browser automation tools
+  - When useful: before upgrading agent-browser, Claude Code runtimes, or Codex CLI in production.
+  - Steps: 1) run golden-run diff against pinned baseline; 2) capture artifact manifest and HAR/DOM samples; 3) run preflight tool-call containment tests (egress, identity, allowed-tool list); 4) only promote if smoke tests pass and artifact parsers ingest without errors.
+  - Evidence: Vercel agent-browser v0.42.0 release (artifact shape changes) and Anthropic model upgrade guidance; Source links: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0, https://www.anthropic.com/claude-fable-and-mythos-5-2
+  - Should promote to playbook? yes

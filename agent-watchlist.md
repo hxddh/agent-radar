@@ -10,9 +10,10 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Evidence strength: Strong (GitHub release)
 - Source: https://github.com/openai/codex/releases/tag/rust-v0.168.0-alpha.3
 ## Claude Code
-- Recent changes: Anthropic published Claude Code v2.1.319 (2026-11-08) with runtime and conductor deltas that affect tool-calling semantics and session export formats. Operators should treat v2.1.319 as a compatibility release: pin staging runners, rebaseline session-export parsers, and hold production upgrades until connector CI passes. Evidence strength: Strong.
-- replace_section anchor: `## Claude Code`
-- Source: https://github.com/anthropics/claude-code/releases/tag/v2.1.319
+- Recent changes: Anthropic published Claude Fable 5.2 (2026-11-10), a model-family update improving coding/tool-call behavior. While not a Claude Code runtime release, the model delta affects connector behavior and tool-call confidence thresholds that Claude Code operators enforce. Treat this model rollout as a staging event for connector compatibility and containment tests.
+- Action: pin staging runners to current stable runtimes, rebaseline session-export parsers, and run tool-call gating tests against Fable 5.2 before production upgrades.
+- Evidence strength: Strong.
+- Source: https://www.anthropic.com/claude-fable-and-mythos-5-2
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls
@@ -611,10 +612,9 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Vercel AI / Sandbox-Related Agent Workflow (refreshed)
-- Recent changes: Vercel published agent-browser v0.41.2 with selector/timing deltas and artifact-shape changes (HAR/DOM/WebM). These changes can break golden headful traces and CI for agent-driven browser automation. Operators should pin agent-browser in CI, rebaseline headful traces, and capture artifact manifests for replay and cost forecasting.
-- Implication: update artifact ingestion parsers and storage schemas to accommodate new HAR/DOM/WebM variants; watch for storage cost increases.
-- Evidence strength: Strong
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
+- Recent changes: Vercel agent-browser published v0.42.0 (2026-11-09) with selector/timing and artifact-shape deltas that affect HAR/DOM/trace manifests. These changes can break golden headful traces and CI for agent-driven browser automation. Operators should pin agent-browser in CI, rebaseline headful traces, and capture artifact manifests for replay and cost forecasting.
+- Infra implication: add manifest-version metadata to every run; parser-version gating in ingestion pipelines recommended.
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
 ## xerj-org/xerj
 
 - What it is: Local‑first memory + index project that advertises MCP compatibility and self‑hosted indexing for agent memories and retrieval (local-first, on‑prem-friendly vector/index option).
@@ -727,3 +727,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Why it matters: Adds a mainstream non-coding agent vendor into the mix; operators need to map Perplexity connectors and permission scopes into existing governance controls.
 - Evidence strength: Strong (official blog)
 - Source: https://www.perplexity.ai/en-GB/hub/blog/teammates-are-agents-for-complex-ongoing-work
+
+
+## Tailscale — Grok Bot tailnet
+
+- What it is: Tailnet connectivity option enabling Grok Bot to reach private MCP endpoints via Tailscale.
+- Why it matters: Simplifies private MCP access for third-party agents but increases the need for RBAC, short-lived credentials, and tailnet-origin audit logs.
+- Evidence strength: Medium (vendor social post). Corroboration: vendor blog or docs should be checked for formal rollout notes.
+- Source: https://bsky.app/profile/tailscale.com/post/3mzvrsa3lek24

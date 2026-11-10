@@ -1775,3 +1775,16 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://aws.amazon.com/about-aws/whats-new/2026/11/aws-agent-registry-govcloud-us-west/
   - Watch trigger: Registry entries lacking exporter/manifest fields or mismatched TTLs during legal-hold requests.
+
+
+- Bedrock AgentCore web-search artifact policy
+  - Observation: AgentCore Web Search API will produce searchable result artifacts as part of agent runs.
+  - Storage implication: Treat these search-response artifacts as first-class KB objects; ensure PII/DMCA scanning, retention tagging, and query->result provenance are recorded.
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-bedrock-agentcore-web-search-api/
+  - Watch trigger: spike in 'search_result' objects or newly introduced artifact types in object storage logs.
+
+- Agent-browser artifact schema versioning
+  - Observation: agent-browser v0.42.0 changes HAR/DOM/trace shapes; parser mismatches can create orphaned artifacts.
+  - Storage implication: Add manifest-version fields and parser-versioned ingestion to avoid data-loss during runtime upgrades.
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
+  - Watch trigger: increased ingestion/parsing errors or rapidly rising counts of unparsed artifact files in object-storage logs.

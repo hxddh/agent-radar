@@ -1345,3 +1345,10 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - 2026-11-09: MCP connector fragility (community reports)
   - Tool: Custom MCP connectors (multiple vendors)
   - Field note: Reddit/Ask-HN posters supplied reproduction steps for connector breakage across upgrades; practical mitigation used by some teams: maintain pinned fallback connectors and include connector-level smoke-tests in CI. Evidence strength: Medium (social). Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- VS Code / Claude Code extension marketplace risk (2026-11-10): Cursor reported malicious/compromised Claude Code extension variants in the marketplace. Operators should treat marketplace installs as untrusted by default; require signed/pinned extension hashes in fleet policies. Source: https://cursor.com/blog/claude-code-extension-security-notice (Evidence strength: Strong).
+
+- Connector fragility (2026-11-10): Reddit thread reports many custom MCP connectors broke for Claude users; best-practice: keep a connector CI pipeline that runs against staging MCP endpoints and captures reproducible test artifacts before rolling connectors to prod. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a (Evidence strength: Medium).
+
+- Sandbox escape field report (2026-11-10): Bluesky researcher report of a sandbox escape — recommended immediate mitigations include stricter egress defaults, per-sandbox ephemeral identities, and packet/flow logging for forensic capture. Source: https://bsky.app/profile/secquill.com/post/3mzu7emhokn24 (Evidence strength: Medium).
