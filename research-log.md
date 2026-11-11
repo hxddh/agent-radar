@@ -5125,3 +5125,14 @@ Notes:
 - **Tailscale — Grok Bot tailnet (social)** (scr-1f8a2b): Social post noting Grok Bot tailnet connectivity; why it matters: private MCP access pattern change; evidence strength: Medium (social vendor post); promotion_status: candidate; follow-up: verify tailnet RBAC patterns and logging; candidate_seen_at: 2026-11-10; last_checked_at: 2026-11-10; Source: https://bsky.app/profile/tailscale.com/post/3mzvrsa3lek24
 
 - **OpenAI — Codex prerelease rust-v0.169.0-alpha.7** (scr-a2b3c4d5): Why it matters: CLI/runtime churn; evidence strength: Strong; promotion_status: candidate; follow-up: pin and run connector CI tests; candidate_seen_at: 2026-11-10; last_checked_at: 2026-11-10; Source: https://github.com/openai/codex/releases/tag/rust-v0.169.0-alpha.7
+
+
+- **QwenLM / qwen-code (scr-9f2a1b3c)**: Terminal-first coding agent releases observed (GitHub). Why it matters: increases CLI/CI agent runtime surface. Evidence strength: Strong; promotion_status: candidate. Follow-up: add qwen-code to CI smoke-test matrix and inventory. candidate_seen_at: 2026-11-11; last_checked_at: 2026-11-11; defer_count: 0; stale_after_days: 30. Source: https://github.com/QwenLM/qwen-code
+
+- **openai (PyPI) v3.49.0 (scr-0a1b2c3)**: OpenAI Python SDK update observed on PyPI. Why it matters: connector & streaming semantics may change; pin and test. Evidence strength: Strong; promotion_status: candidate. candidate_seen_at: 2026-11-11; last_checked_at: 2026-11-11; defer_count: 0; stale_after_days: 30. Source: https://pypi.org/project/openai/
+
+- **anthropic (PyPI) v2.8.0 (scr-1b2c3d4)**: Anthropic Python client update on PyPI. Why it matters: affects Claude/Claude Code integrations and tool-calls. Evidence strength: Strong; promotion_status: candidate. candidate_seen_at: 2026-11-11; last_checked_at: 2026-11-11; defer_count: 0; stale_after_days: 30. Source: https://pypi.org/project/anthropic/
+
+- **google-gemini/gemini-cli v0.69.0-preview.0 (scr-a1b2c3d4)**: Preview release for gemini-cli. Why it matters: first-party CLI tooling affects default auth/egress flows. Evidence strength: Strong; promotion_status: candidate. candidate_seen_at: 2026-11-11; last_checked_at: 2026-11-11; defer_count: 0; stale_after_days: 30. Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.69.0-preview.0
+
+- **JetBrains ReSharper 2026.3 (scr-7f8e21d)**: ReSharper adds Claude Agent and Codex integrations for Visual Studio (blog). Why it matters: IDE-level integration increases extension/credential exposure surface. Evidence strength: Strong; promotion_status: candidate. candidate_seen_at: 2026-11-11; last_checked_at: 2026-11-11; defer_count: 0; stale_after_days: 30. Source: https://blog.jetbrains.com/dotnet/2026/11/10/resharper-2026-3-release/

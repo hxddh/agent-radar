@@ -1304,3 +1304,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Steps: 1) run golden-run diff against pinned baseline; 2) capture artifact manifest and HAR/DOM samples; 3) run preflight tool-call containment tests (egress, identity, allowed-tool list); 4) only promote if smoke tests pass and artifact parsers ingest without errors.
   - Evidence: Vercel agent-browser v0.42.0 release (artifact shape changes) and Anthropic model upgrade guidance; Source links: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0, https://www.anthropic.com/claude-fable-and-mythos-5-2
   - Should promote to playbook? yes
+
+
+- Playbook candidate: Enforce extension hash/signature verification for IDEs
+  - When useful: enterprise developer fleets using VS Code / Visual Studio with agent extensions (Cursor, Claude Code, ReSharper integrations).
+  - Evidence: Cursor vendor security notice and ReSharper 2026.3 integration. Source: https://cursor.com/blog/claude-code-extension-security-notice; https://blog.jetbrains.com/dotnet/2026/11/10/resharper-2026-3-release/
+  - Should promote to playbook? yes
+  - Notes: include automatic denylisting of known-malicious versions and monitor extension-install telemetry.
+
+- Playbook candidate: Artifact parser-versioning & replay baseline checks
+  - When useful: environments ingesting browser/HAR/DOM traces from agent-driven automations (Vercel agent-browser, agent-browser changes).
+  - Evidence: Vercel agent-browser v0.42.0 release changed artifact shapes. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
+  - Should promote to playbook? yes
+  - Notes: store parser version with artifacts and run nightly replay regression tests against golden traces.

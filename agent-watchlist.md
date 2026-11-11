@@ -735,3 +735,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Why it matters: Simplifies private MCP access for third-party agents but increases the need for RBAC, short-lived credentials, and tailnet-origin audit logs.
 - Evidence strength: Medium (vendor social post). Corroboration: vendor blog or docs should be checked for formal rollout notes.
 - Source: https://bsky.app/profile/tailscale.com/post/3mzvrsa3lek24
+
+
+## ReSharper 2026.3 (JetBrains)
+- What it is: ReSharper 2026.3 adds integrated Claude Agent and Codex support inside Visual Studio, bringing mainstream IDE vendor integration for coding agents.
+- Why it matters: Broad adoption of agent features inside Visual Studio increases the attack surface for credential leakage and supply-chain risks via extensions; operator guidance for developer machines must be updated.
+- Evidence strength: Strong (vendor blog/release note)
+- Source: https://blog.jetbrains.com/dotnet/2026/11/10/resharper-2026-3-release/
+- Action: Add ReSharper/Visual Studio agent settings to enterprise IDE hardening checklist; require signed/verified extensions and track extension-install telemetry.

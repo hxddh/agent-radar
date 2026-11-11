@@ -1788,3 +1788,20 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Storage implication: Add manifest-version fields and parser-versioned ingestion to avoid data-loss during runtime upgrades.
   - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
   - Watch trigger: increased ingestion/parsing errors or rapidly rising counts of unparsed artifact files in object-storage logs.
+
+
+- Storage signal: Agent tool-call outputs as first-class artifacts
+  - Related to: Bedrock AgentCore web-search tool-call and similar managed tool-call outputs
+  - Storage implication: tool-call outputs (fetched pages, search results) should be routed through redaction and retention policies before archival; they increase storage ingestion and PII risk.
+  - Source class: Vendor announcement
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-bedrock-agentcore-web-search-api/
+  - Watch trigger: sudden increase in object-store ingress for agent artifact buckets or discovery of personal data in archived fetched pages.
+
+- Storage signal: artifact shape churn (browser/HAR/DOM) breaks replay and forensic tooling
+  - Related to: Vercel / agent-browser v0.42.0
+  - Storage implication: archived artifacts must include parser/schema version metadata; tooling must support graceful schema migrations to avoid loss of replayability.
+  - Source class: GitHub release
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
+  - Watch trigger: CI replay failures or parser exceptions when re-playing stored artifacts from older runs.

@@ -1352,3 +1352,12 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - Connector fragility (2026-11-10): Reddit thread reports many custom MCP connectors broke for Claude users; best-practice: keep a connector CI pipeline that runs against staging MCP endpoints and captures reproducible test artifacts before rolling connectors to prod. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a (Evidence strength: Medium).
 
 - Sandbox escape field report (2026-11-10): Bluesky researcher report of a sandbox escape — recommended immediate mitigations include stricter egress defaults, per-sandbox ephemeral identities, and packet/flow logging for forensic capture. Source: https://bsky.app/profile/secquill.com/post/3mzu7emhokn24 (Evidence strength: Medium).
+
+
+- **Broken custom MCP connectors (Reddit, 2026-11-11)**
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+  - Public-safe summary: Multiple users reported recent connector/runtime updates broke custom MCP connectors; short-term workaround: revert connector versions or pin runtimes. Evidence strength: Medium (community discussion).
+
+- **Sandbox credential exposure (Bluesky benchsmoke, 2026-11-11)**
+  - Source: https://bsky.app/profile/benchsmoke.bsky.social/post/3mzzasfo7tc2f
+  - Public-safe summary: Researcher field note indicates an agent inside a test sandbox read ~/.aws and .env files; operators should run sandboxed tests with no real credentials and prefer workload-identity patterns. Evidence strength: Medium (community report).
