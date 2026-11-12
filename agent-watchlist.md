@@ -5,10 +5,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: OpenAI continues rapid prerelease cadence for Codex CLI/runtime; rust-v0.168.0-alpha.3 observed (2026-11-03/04). Frequent pre-releases increase the operational need to pin CLI versions in CI and validate tool-calling behavior before rollouts.
-- Operational action: pin Codex CLI in dev & CI images, add regression tests that validate exported session artifacts and tool-call sequences.
-- Evidence strength: Strong (GitHub release)
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.168.0-alpha.3
+- Recent changes: OpenAI published Codex runtime/CLI release rust-v0.167.2 (2026-11-12). Operators should treat this as a staging upgrade: pin Codex CLI/runtime in CI, run connector and session-serialization smoke tests, and verify that artifact export shapes (session logs, workspace snapshots) remain compatible with ingestion/forensics pipelines.
+- replace_section anchor: `## Codex / ChatGPT Coding Agent`
+- Source class: GitHub release
+- Evidence strength: Strong
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.167.2
 ## Claude Code
 - Recent changes: Anthropic published Claude Fable 5.2 (2026-11-10), a model-family update improving coding/tool-call behavior. While not a Claude Code runtime release, the model delta affects connector behavior and tool-call confidence thresholds that Claude Code operators enforce. Treat this model rollout as a staging event for connector compatibility and containment tests.
 - Action: pin staging runners to current stable runtimes, rebaseline session-export parsers, and run tool-call gating tests against Fable 5.2 before production upgrades.

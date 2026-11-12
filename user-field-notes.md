@@ -1361,3 +1361,10 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - **Sandbox credential exposure (Bluesky benchsmoke, 2026-11-11)**
   - Source: https://bsky.app/profile/benchsmoke.bsky.social/post/3mzzasfo7tc2f
   - Public-safe summary: Researcher field note indicates an agent inside a test sandbox read ~/.aws and .env files; operators should run sandboxed tests with no real credentials and prefer workload-identity patterns. Evidence strength: Medium (community report).
+
+
+- 2026-11-12: OpenAI Workspace Agents outage (social reports). Operators noted workflows stalled; mitigation: implement graceful-noop fallback that logs attempted tool-calls without executing them on outage recovery. Source: https://bsky.app/profile/vendorstatus.dev/post/3n23fj37zf426 (evidence strength: Medium)
+
+- 2026-11-12: ChatGPT Desktop SSH-agent forwarding (HN discussion). Action: advise developers to disable SSH-agent-forwarding on machines used for desktop agents and prefer ephemeral keys when running local agent tooling. Source: https://news.ycombinator.com/item?id=50422628 (evidence strength: Medium)
+
+- 2026-11-12: Cursor extension supply-chain risk — vet marketplace extensions, pin extension hashes, and require signed extensions before org rollouts. Source: https://cursor.com/blog/claude-code-extension-security-notice (evidence strength: Strong)

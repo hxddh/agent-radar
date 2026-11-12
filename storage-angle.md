@@ -1805,3 +1805,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
   - Watch trigger: CI replay failures or parser exceptions when re-playing stored artifacts from older runs.
+
+
+- 2026-11-12: Bedrock AgentCore Web Search artifacts
+  - Observation: Bedrock's Web Search tool-call will create search-result and page-snapshot artifacts that must be indexed and retained.
+  - Implication: Object-storage growth and retention/PII redaction policies need updates; search artifacts may carry third-party content with copyright/PII implications.
+  - Evidence strength: Strong (vendor blog)
+  - Source: https://aws.amazon.com/blogs/machine-learning/build-autonomous-ai-agents-with-amazon-bedrock-and-spring-ai/
+  - Watch trigger: sustained increase in MB/run for agent exports or new 'search' artifact type appearing in export manifests.
+
+- 2026-11-12: Local repo/.env uploads (Grok Build)
+  - Observation: Press reports indicate Grok Build accepted local repo histories and .env files for upload.
+  - Implication: Storage backends should enable pre-ingest filters and immediate redaction; snapshot retention policies must allow rapid purge and forensic export with redaction markers.
+  - Evidence strength: Strong (press)
+  - Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+  - Watch trigger: vendor disclosure of affected-upload counts or internal audit showing .env/.git accepted by upload endpoints.
