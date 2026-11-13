@@ -1,6 +1,6 @@
 # Source Lanes
 
-Last checked: 2026-11-12
+Last checked: 2026-11-13
 
 | Lane | OK collectors | Error collectors | Items collected |
 | --- | ---: | ---: | ---: |
@@ -10,7 +10,7 @@ Last checked: 2026-11-12
 | crates | 9 | 0 | 45 |
 | devto | 3 | 3 | 12 |
 | docker | 3 | 0 | 15 |
-| feed | 19 | 0 | 98 |
+| feed | 19 | 0 | 102 |
 | github | 17 | 0 | 85 |
 | hn | 28 | 0 | 128 |
 | lobsters | 1 | 0 | 6 |
@@ -19,7 +19,7 @@ Last checked: 2026-11-12
 | page | 22 | 0 | 121 |
 | pypi-package | 8 | 0 | 8 |
 | pypi-updates | 9 | 0 | 45 |
-| reddit-rss | 1 | 9 | 4 |
+| reddit-rss | 1 | 7 | 4 |
 | release | 32 | 0 | 96 |
 
 Failure handling:

@@ -1317,3 +1317,12 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Evidence: Vercel agent-browser v0.42.0 release changed artifact shapes. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
   - Should promote to playbook? yes
   - Notes: store parser version with artifacts and run nightly replay regression tests against golden traces.
+
+
+## Verify editor/extension provenance and pinning (playbook candidate)
+
+- When useful: Whenever installing or allowing VS Code / JetBrains extensions that enable agent behavior (language model tool-calls, MCP connectors, or automation hooks).
+- Steps: 1) Require signed extensions and check publisher certificate; 2) Pin extension version and hash in enterprise policies; 3) Validate extension install in an isolated VM/sample workspace before wide rollout; 4) Log extension install hash and automatic update events for audit.
+- Evidence: Cursor security notice and recent marketplace-compromise style incidents; Grok Build operator reports suggest upload flows should be treated with extra scrutiny.
+- Should promote to playbook? yes
+- Sources: https://cursor.com/blog/claude-code-extension-security-notice, https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/

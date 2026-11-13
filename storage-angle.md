@@ -1820,3 +1820,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong (press)
   - Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
   - Watch trigger: vendor disclosure of affected-upload counts or internal audit showing .env/.git accepted by upload endpoints.
+
+
+- Topic: Vendor-side artifact retention after agent uploads
+  - What changed: Reports that some agent CLIs/upload flows send full repo blobs and history to vendor storage (Grok Build report).
+  - Storage implication: Operators must map upload endpoints to object-storage buckets, ensure retention and deletion APIs exist, and verify redaction can be performed on stored blobs. Also update legal/IR timelines for vendor-held artifacts.
+  - Evidence strength: Strong
+  - Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+  - Watch trigger: vendor publishes an API or dashboard for deleting uploaded artifacts; detection of unexpected outbound POSTs carrying repo blobs from developer hosts.
+
+- Topic: Artifact schema drift for browser-agent traces
+  - What changed: Vercel agent-browser v0.43.0 alters trace/HAR/DOM manifest shapes.
+  - Storage implication: Archive ingestion pipelines must tolerate schema changes or explicitly version manifests; otherwise archived traces become unreadable for replay and audits.
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.43.0
+  - Watch trigger: HAR/manifest ingestion errors after agent-browser v0.43.0 adoption or mismatch in stored manifest version fields.

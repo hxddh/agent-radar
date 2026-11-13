@@ -1368,3 +1368,16 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - 2026-11-12: ChatGPT Desktop SSH-agent forwarding (HN discussion). Action: advise developers to disable SSH-agent-forwarding on machines used for desktop agents and prefer ephemeral keys when running local agent tooling. Source: https://news.ycombinator.com/item?id=50422628 (evidence strength: Medium)
 
 - 2026-11-12: Cursor extension supply-chain risk — vet marketplace extensions, pin extension hashes, and require signed extensions before org rollouts. Source: https://cursor.com/blog/claude-code-extension-security-notice (evidence strength: Strong)
+
+
+- **ChatGPT Desktop — SSH-agent forwarding (2026-11-13)**
+  - Source class: Hacker News (community reports)
+  - Evidence strength: Medium
+  - Public-safe summary: Multiple community reports describe ChatGPT Desktop or related desktop integrations forwarding the local SSH agent to remote sessions. Operators should treat desktop integrations as credential boundaries: reproduce in isolated VM, disable agent-forwarding by default, and audit agent sockets before trusting any desktop extension.
+  - Source: https://news.ycombinator.com/item?id=50422628
+
+- **Grok Build operator impact notes (2026-11-13)**
+  - Source class: Journalism + social
+  - Evidence strength: Strong
+  - Public-safe summary: The Grok Build report highlights that CLI/IDE upload defaults may transmit sensitive repo artifacts. Field action: add pre-upload filters (deny known secret file globs), record upload consent events in logs, and ensure vendor deletion/retention APIs are exercised during incident response.
+  - Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/

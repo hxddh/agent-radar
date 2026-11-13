@@ -613,9 +613,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Vercel AI / Sandbox-Related Agent Workflow (refreshed)
-- Recent changes: Vercel agent-browser published v0.42.0 (2026-11-09) with selector/timing and artifact-shape deltas that affect HAR/DOM/trace manifests. These changes can break golden headful traces and CI for agent-driven browser automation. Operators should pin agent-browser in CI, rebaseline headful traces, and capture artifact manifests for replay and cost forecasting.
-- Infra implication: add manifest-version metadata to every run; parser-version gating in ingestion pipelines recommended.
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.42.0
+- Recent changes: vercel-labs/agent-browser published v0.43.0 (2026-11-13) with selector/timing and artifact-shape deltas that affect HAR/DOM/trace manifests and headful replay semantics. These deltas can break golden traces, CI replay, and archival ingestion if operator pipelines expect older manifest schema. Operators should: pin agent-browser in CI, rebaseline headful traces, capture sample artifacts for replay, and add a compatibility smoke test to deployment gates.
+- Infra implication: artifact-schema changes increase risk to forensic replay and archival indices; object-storage lifecycle mappings may need schema-aware ingestion adapters.
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.43.0
 ## xerj-org/xerj
 
 - What it is: Local‑first memory + index project that advertises MCP compatibility and self‑hosted indexing for agent memories and retrieval (local-first, on‑prem-friendly vector/index option).
