@@ -1835,3 +1835,12 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.43.0
   - Watch trigger: HAR/manifest ingestion errors after agent-browser v0.43.0 adoption or mismatch in stored manifest version fields.
+
+
+- Repo-upload artifact risk (Grok Build): When coding agents accept or upload full repositories, object storage and vendor endpoints become second-order repositories of sensitive artifacts. Operators should: audit uploader defaults, enforce secret-scan and file-type restrictions before any upload, and ensure exporter endpoints are logged and included in forensic runbooks.
+  - Immediate action: add pre-upload scanning + deny rules for .env, ssh keys, and private certs.
+  - Watch trigger: discovery of unexpected exposed artifact in vendor-side storage or evidence of repo-originating leak linked to agent uploads.
+
+- Manifest and TTL churn (agent-browser / edge exporters): schema changes in headful trace manifests and edge exporter TTL/defaults (e.g., vercel agent-browser v0.43.0, Cloudflare exporter updates) can break replay pipelines and shorten forensic retention inadvertently.
+  - Immediate action: pin manifest parsers, capture sample artifacts post-upgrade, and add replay smoke tests to CI.
+  - Watch trigger: failed trace replays in CI or missing artifacts during incident playback.

@@ -5,22 +5,25 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: OpenAI published Codex runtime/CLI release rust-v0.167.2 (2026-11-12). Operators should treat this as a staging upgrade: pin Codex CLI/runtime in CI, run connector and session-serialization smoke tests, and verify that artifact export shapes (session logs, workspace snapshots) remain compatible with ingestion/forensics pipelines.
-- replace_section anchor: `## Codex / ChatGPT Coding Agent`
-- Source class: GitHub release
+- Recent changes: GitHub announced upcoming deprecation of selected Copilot models (2026-12) and highlighted pipeline shifts including Gemini 4 Hydrogen references; operators should inventory model usage and prepare staged migrations.
+- Action: run model-compatibility tests, update model-routing configs, and pin model versions in production images until migration windows are scheduled.
+- Source class: vendor changelog
 - Evidence strength: Strong
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.167.2
+- Source: https://github.blog/changelog/2026-11-13-upcoming-deprecation-of-selected-github-copilot-models-in-december
 ## Claude Code
-- Recent changes: Anthropic published Claude Fable 5.2 (2026-11-10), a model-family update improving coding/tool-call behavior. While not a Claude Code runtime release, the model delta affects connector behavior and tool-call confidence thresholds that Claude Code operators enforce. Treat this model rollout as a staging event for connector compatibility and containment tests.
-- Action: pin staging runners to current stable runtimes, rebaseline session-export parsers, and run tool-call gating tests against Fable 5.2 before production upgrades.
-- Evidence strength: Strong.
-- Source: https://www.anthropic.com/claude-fable-and-mythos-5-2
+- Recent change: Anthropic discussion and operator reports highlight a move toward parallel worker execution for Claude Code Projects (impacting session semantics and worker-local state). Additionally, a GHSA TOCTOU advisory exists allowing writes outside the workspace; treat as high-priority containment advisory.
+- User impact: multi-worker projects may change memory/approval semantics; TOCTOU may enable unintended file writes.
+- Infra implication: require pinned upgrades, add worker-isolation tests, and map affected connector versions for emergency patching.
+- Source class: social + GitHub Advisory
+- Evidence strength: Medium-Strong
+- Source: https://news.ycombinator.com/item?id=50480909, https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor adds operational controls
-- Recent changes: Cursor published a security notice regarding malicious/compromised Claude Code VS Code extension variants discovered in the marketplace (2026-10-31). Operators must treat marketplace installs as untrusted until verified: pin extension hashes, require signed extensions, and ingest vendor IOCs into block/allow rules. Evidence strength: Strong (vendor security blog). Source: https://cursor.com/blog/claude-code-extension-security-notice
-- Operational action: Collect vendor IOCs, add marketplace-install verification to onboarding playbooks, and add extension hash-pinning to enterprise extension deployment pipelines.
-- replace_section anchor: `## Cursor`
+- Recent changes: Cursor published a security notice (2026-11) about compromised/malicious Claude Code VS Code extension variants found in extension channels. Operators must treat marketplace installs as untrusted until verified: pin extension hashes, require signed extensions, and ingest vendor IOCs into block/allow rules. Add extension-hash pinning to onboarding playbooks and notify developer teams.
+- Source class: vendor blog
+- Evidence strength: Strong
+- Source: https://cursor.com/blog/security-incident-update
 ## Devin / Cognition
 - Category: Agent runtime / research prototype
 - Recent changes: No dated vendor changelog or public release since 2026-09-13. Deprioritized for active promotion until a new dated release or operator field report appears.
@@ -693,13 +696,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Microsoft — agent-framework
-- What it is: Multi-language agent runtime and language SDKs surfaced by Microsoft as a public GitHub repository.
-- Why it matters: Vendor-backed orchestration/runtime can standardize connector models, default sandboxing, and enterprise adoption patterns; this materially affects orchestration and runtime choices across enterprise fleets.
-- Recent changes: Public repository visibility and SDK documentation surfaced (2026-11-03). Operators should evaluate default permission models and sandboxing assumptions before adoption.
+- Recent changes: python-1.26.0 release published (2026-11-13). Operators embedding the Microsoft SDK should pin, run connector/regression tests, and review changes to API defaults and permission models.
+- Action: update staging images, run end-to-end tests on workflows that rely on the Python SDK, and check for permission model changes that could widen tool-call scopes.
+- Source class: GitHub release
 - Evidence strength: Strong
-- Source: https://github.com/microsoft/agent-framework
-- replace_section anchor: `## Microsoft — agent-framework`
-
+- Source: https://github.com/microsoft/agent-framework/releases/tag/python-1.26.0
 ## Amp (OpenAI)
 
 - Category: Task agent / multi-domain agent

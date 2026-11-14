@@ -1381,3 +1381,10 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Evidence strength: Strong
   - Public-safe summary: The Grok Build report highlights that CLI/IDE upload defaults may transmit sensitive repo artifacts. Field action: add pre-upload filters (deny known secret file globs), record upload consent events in logs, and ensure vendor deletion/retention APIs are exercised during incident response.
   - Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+
+
+- **ChatGPT Desktop — SSH-agent forwarding (2026-11-12 HN reports)**: users reported desktop integration forwarding the local SSH agent into remote/embedded sessions. Operator note: disable or isolate desktop integrations on workstations until vendor confirms explicit forwarding controls. Source: Hacker News; Evidence strength: Medium. Source: https://news.ycombinator.com/item?id=50422628
+
+- **MCP switching costs (Bluesky field report)**: operators emphasize memory migration, approvals, identity, and spend as barriers to changing MCP providers. Operator note: keep tested export/import workflows and quarterly restore drills. Source: Bluesky; Evidence strength: Medium. Source: https://bsky.app/profile/1minutesignal.bsky.social/post/3n2apseyqoo2u
+
+- **Claude custom MCP connectors broken (Reddit thread)**: community reports connectors broke after recent runtime/model deltas; operator note: add connector roundtrip smoke tests to PR pipelines and pin connector versions. Source: Reddit; Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
