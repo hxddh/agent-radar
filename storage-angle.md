@@ -1844,3 +1844,60 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
 - Manifest and TTL churn (agent-browser / edge exporters): schema changes in headful trace manifests and edge exporter TTL/defaults (e.g., vercel agent-browser v0.43.0, Cloudflare exporter updates) can break replay pipelines and shorten forensic retention inadvertently.
   - Immediate action: pin manifest parsers, capture sample artifacts post-upgrade, and add replay smoke tests to CI.
   - Watch trigger: failed trace replays in CI or missing artifacts during incident playback.
+
+
+- Date: 2026-11-15 — Artifact retention & exporter mapping
+  - Signal: Cloudflare guidance and recent exporter/default TTL changes mean agent artifacts (HARs, traces, exported workspaces) may now land in different object-storage targets or be retained for different durations.  
+  - Implication: Forensic readiness requires an explicit mapping from exporter default → object-storage bucket → retention policy; operator playbooks must include verification steps when vendor upgrades change exporter defaults.  
+  - Watch trigger: vendor change to exporter default target or TTL that reduces retention below organizational forensic minimums.
+  - Source: https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/
+
+- Date: 2026-11-15 — Payment receipts and cross-vendor artifacts
+  - Signal: ChatGPT Wallet introduces agent-initiated payment artifacts that may be stored across vendor boundaries (OpenAI receipts, third-party merchant logs).  
+  - Implication: Include payment receipts and payment-intent logs as part of incident evidence collection; ensure these are stored immutable and mapped into the incident storage tier.  
+  - Watch trigger: any agent-initiated payment event without a signed receipt or with insufficient retention guarantees.
+  - Source: https://openai.com/index/introducing-chatgpt-wallet
+
+
+## 2026-11-15 Storage & Forensics Notes
+
+- Agent-initiated payments (ChatGPT Wallet) create new forensic artifacts (payment intents, third-party receipts, signed webhooks). Operators must ensure these artifacts are captured, immutable (or versioned), and mapped to legal-hold retention policies; vendor retention guarantees should be recorded.
+
+- Headful/browser agent artifacts (HAR, DOM snapshots, WebM) increased in volume with vercel agent-browser v0.43.0 changes: rebaseline ingest pipelines to avoid schema drift and ensure replayability.
+
+- Exporter defaults (Cloudflare agents/exporter TTLs) can move the canonical artifact plane; alerting trigger: any change that reduces exporter TTL below your forensic retention baseline or moves exporter target to an unmanaged bucket.
+
+- Actionables: (1) add signed-receipt ingestion rules to forensic collectors; (2) add manifest/shape regression tests to artifact pipelines; (3) map exporter→object-storage and TTLs to retention/compliance requirements.
+
+
+### 2026-11-15 — Promotions with storage implications
+
+- Grok Build (xAI) — repo uploads & secret leakage (promoted)
+  - What changed: Reports that Grok Build accepted full repo history and local files (including .env) to vendor endpoints.
+  - Storage implication: Vendor upload endpoints become second-order repositories of sensitive artifacts. Operators must add pre-ingest filtering and immediate quarantine semantics for any vendor-held blobs originating from local repositories. Forensic prefixes (write-once, quarantined buckets) should be used for first-copy vendor uploads until redaction and approval complete.
+  - Immediate actions: enforce client-side deny-lists for sensitive file types, add an automatic copy-to-quarantine-forensics-bucket on first-use, require operator approval for promotion to durable tenant buckets, and log export endpoints with run_id and provenance metadata.
+  - Evidence: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+
+- Cursor — extension marketplace risk & canvas exports (promoted)
+  - What changed: Vendor security notice and ongoing canvas persistence features.
+  - Storage implication: Canvas exports and any cloud-saved IDE artifacts must include clear provenance (extension version, producer id) and be written to tenant-scoped buckets with manifest sidecars. Malicious marketplace artifacts increase the need to treat IDE-origin exports as high-sensitivity artifacts until validated.
+  - Immediate actions: require manifest sidecars for any canvas export, enforce tenant prefixes and signed-producer metadata, and run automated PII/secret scans before durable retention.
+  - Evidence: https://cursor.com/blog/security-incident-update
+
+- GHSA-5324-3w58-qpp2 — tenant isolation advisory (promoted)
+  - What changed: Security advisory impacting tenant isolation semantics in hosted runtimes.
+  - Storage implication: Cross-tenant exposure advisories force re-evaluation of preview/export sink isolation. Operators should verify that exporter endpoints map to tenant-tagged buckets and that object-store ACLs/keys prevent cross-tenant reads. Forensics prefixes must be audited for unexpected tenant-mixings.
+  - Immediate actions: audit exporter→bucket mappings, add automated tests that assert per-tenant prefixing post-deploy, and enforce exporter ACL checks in staging smoke tests.
+  - Evidence: https://github.com/advisories/GHSA-5324-3w58-qpp2
+
+
+## Storage implications — November 2026 notes
+
+- Observed patterns: persistent canvases (Cursor), agent artifact exports (Vercel agent-browser HAR/DOM/WebM), and vendor-side repo uploads (Grok Build) emphasize object storage as the canonical artifact plane for agents.
+- Immediate operator actions:
+  - Inventory all agent exporters and map artifacts to buckets with owner/tenant tags.
+  - Verify bucket ACLs, lifecycle rules, and TTLs (match retention to legal/forensic requirements).
+  - Add detection for unusual artifact sizes or unexpected repo/blob uploads; alert on uploads containing sensitive file patterns (e.g., .env).
+  - Treat storage residency as part of the incident response runbook: snapshot IDs, immutability, and export provenance must be captured together.
+
+- Follow-up: request vendors to publish exporter metadata (artifact type, schema version, retention hints) to simplify mapping.

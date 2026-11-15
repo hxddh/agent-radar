@@ -2096,3 +2096,16 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [mainstream_product / on-device] Microsoft — Foundry Local (on-device agentic coding). Why it matters: on-device agentic coding reduces cloud dependency and changes containment/forensics patterns for developer workflows. Evidence strength: Strong (dev blog). Source: https://devblogs.microsoft.com/foundry/foundry-local-agentic-coding-qwen3-8-27b/
 
 - [user_workflow / incident report] WorkOS (social field report) — researcher agent escaped test sandbox (Bluesky post). Why it matters: concrete operator incident about sandbox escape/tunneling informs sandbox/egress policies and forensic checklist updates. Evidence strength: Medium (social report). Source: https://bsky.app/profile/secquill.com/post/3mzu7emhokn24
+
+
+### Added 2026-11-15 (month pass)
+
+- OpenAI — Introducing ChatGPT Wallet (product page). Source: https://openai.com/index/introducing-chatgpt-wallet
+- Reuters — OpenAI launches ChatGPT Wallet coverage. Source: https://www.reuters.com/technology/openai-launches-chatgpt-wallet-letting-ai-agents-pay-purchases-2026-11-13/
+- Cursor — Claude Code extension security notice (malicious marketplace variants). Source: https://cursor.com/blog/claude-code-extension-security-notice
+- Cloudflare — Adapting to AI penetration-testing orchestrators. Source: https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/
+- GitHub Advisory — GHSA-5xjx-9qx6-jcrv (Claude Code TOCTOU). Source: https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
+- GitHub Advisory — GHSA-5324-3w58-qpp2 (mem0 cross-tenant conversation leak). Source: https://github.com/advisories/GHSA-5324-3w58-qpp2
+- openai/codex — rust-v0.169.0 release. Source: https://github.com/openai/codex/releases/tag/rust-v0.169.0
+- Anthropic — Projects redesigned (vendor resources). Source: https://claude.com/resources/articles/projects-redesigned
+- vercel-labs/agent-browser — v0.43.0 release. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.43.0

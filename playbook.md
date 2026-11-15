@@ -1326,3 +1326,53 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Evidence: Cursor security notice and recent marketplace-compromise style incidents; Grok Build operator reports suggest upload flows should be treated with extra scrutiny.
 - Should promote to playbook? yes
 - Sources: https://cursor.com/blog/claude-code-extension-security-notice, https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+
+
+## Playbook candidate: Extension & payment hardening (added 2026-11-15)
+
+- When useful: Onboard enterprise developer workstations and CI that run agent extensions or allow in-IDE tool-calls; and for fleets that permit any agent-initiated payments.
+- Steps:
+  1. Default to managed-only extensions in corporate IDE images; maintain an allowlist of signed extension hashes.  
+  2. On agent-capable endpoints, disable auto-pay by default; require an admin enablement workflow for any agent that can spend funds.  
+  3. Enforce per-agent spending caps and require signed receipts; mirror receipts to an immutable audit store for forensic use.  
+  4. Add connector health probes and preflight checks (status endpoint, version check) to CI pipelines; fail deployments on connector mismatch.  
+- Evidence: Cursor security notice; OpenAI ChatGPT Wallet announcement; community reports on broken connectors.  
+- Should promote to playbook? yes
+- Source: https://cursor.com/blog/claude-code-extension-security-notice, https://openai.com/index/introducing-chatgpt-wallet, community reports
+
+
+## 2026-11-15 Playbook additions (short)
+
+- Extension & IDE control
+  - Default: block auto-install of marketplace extensions for developer images.
+  - Pin: require signed extensions and hash-pinning for IDE images (OpenVSX/VS Code marketplace artifacts).
+  - Incident: on suspected extension compromise, rotate local dev workspaces and revoke extension tokens; ingest vendor IOCs into endpoint controls.
+
+- Payment-capable agents (ChatGPT Wallet)
+  - Default: agent-initiated payments disabled unless explicitly approved per-agent by admin.
+  - Add: payment-intent logging to incident collection (signed receipts, webhook payloads, vendor invoice IDs) and retain per legal-hold policy.
+
+- SDK/Runtime upgrades
+  - Pin SDK versions (e.g., openai/codex rust releases, vercel agent-browser) in CI; run connector regression and replay smoke-tests before rollout.
+
+- Parallel-worker / long-running agent staging
+  - Create a parallel-worker compatibility checklist: session isolation, export-merge behavior, artifact deduping, cost-limits; run in staging with representative workloads.
+
+
+## November 2026 playbook promotions (short)
+
+- Extension & IDE playbook:
+  - Pin extension hashes and require vendor-signed packages for enterprise images.
+  - Add extension-supply-chain CI checks (scan marketplace metadata, compare vendor release signatures).
+  - Ingest vendor IOCs (Cursor) into blocklists and SIEM rules.
+
+- Payment & side-effect gating:
+  - Any agent capable of payments (ChatGPT Wallet) must be disabled by default; require admin enablement per-team and per-agent spending caps.
+  - Log all payment webhooks/receipts to a billed-events ledger; retain for forensic windows.
+
+- Runtime & SDK release gating:
+  - Add pre-rollout compatibility smoke tests for SDK/runtime releases (codex, agent-browser, Anthropic updates).
+  - Pin SDKs in CI until smoke tests pass and a staging window is observed.
+
+- Isolation & exporter mapping:
+  - Audit exporter→object-storage mappings and TTLs; require per-tenant ACL review and immutable forensic snapshot capability for critical workflows.

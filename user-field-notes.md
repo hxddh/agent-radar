@@ -1388,3 +1388,31 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - **MCP switching costs (Bluesky field report)**: operators emphasize memory migration, approvals, identity, and spend as barriers to changing MCP providers. Operator note: keep tested export/import workflows and quarterly restore drills. Source: Bluesky; Evidence strength: Medium. Source: https://bsky.app/profile/1minutesignal.bsky.social/post/3n2apseyqoo2u
 
 - **Claude custom MCP connectors broken (Reddit thread)**: community reports connectors broke after recent runtime/model deltas; operator note: add connector roundtrip smoke tests to PR pipelines and pin connector versions. Source: Reddit; Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- Date: 2026-11-15 — Custom MCP connector outages (community)
+  - Observation: Multiple community posts report custom MCP connectors for Claude Code have been broken for >1 week; failures surface as silent tool-call errors in automated tasks.  
+  - Practical mitigation tried by users: add connector health-check endpoints and fail-fast with alerts; pin connector versions in deployment manifests.  
+  - Evidence strength: Medium (Reddit community thread).  
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+- Date: 2026-11-15 — Extension supply-chain caution (Cursor incident)
+  - Observation: Cursor published IOCs and a security notice after malicious Claude Code extension variants were distributed; enterprise installs risk credential leakage.  
+  - Practical mitigation tried by users: require managed-only extension installs in corporate VS Code images; add extension-hash verification in CI images.  
+  - Evidence strength: Strong (vendor + security reporting).  
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- Date: 2026-11-15 — Sandbox identity pattern (community)
+  - Observation: Operators reiterate using ephemeral workload identities and ephemeral object buckets for agent runs to reduce blast-radius and simplify cleanup.  
+  - Practical mitigation tried by users: create per-job short-lived credentials and per-run ephemeral buckets; leak-proof artifacts to read-only cold storage after verification.  
+  - Evidence strength: Medium (Bluesky / operator posts).  
+  - Source: community operator posts (see research-log for aggregated links)
+
+
+## 2026-11-15 Field Notes (ops)
+
+- Disposable workspaces and short-lived credentials remain the most effective mitigation for marketplace/extension threats — create a dev onboarding checklist requiring ephemeral workspaces for any agent-enabled flows.
+
+- When enabling agent payments for a team, require: admin opt-in per agent, per-agent spending caps, audited webhooks for receipts, and a daily summary email to finance.
+
+- If a runtime/extension shows a GHSA advisory (Claude Code / mem0): immediately pin affected versions, run connector smoke-tests, and schedule a targeted forensics snapshot of recent agent exports.

@@ -14,46 +14,17 @@ Last updated: 2026-07-09
 9. Agent containment and security (blast-radius isolation, sandbox/worktree boundaries, tool scoping, supply-chain hardening) are becoming first-class agent infrastructure, driven by first-party engineering practice, network/edge detection primitives, and real agent CVEs/bugs. Confidence Δ: ↑ (August incidents & vendor primitives strengthened this thesis).
 10. Agent cost economics (model pricing pressure, token budgets, quota windows) increasingly shape agent adoption and tool choice; operators route work across tools by remaining quota rather than committing to one.
 ## Changed Thesis
-### 2026-07-12
-- Added signal: Vercel Agent Eval Playground (npm package) enters agent evaluation space, signaling platform-vendor interest in eval infrastructure. Evidence: official Vercel npm package. Confidence: Medium.
-- Added signal: MITRE ATLAS detection tool (atlas-detect crate) emerges as an early security primitive for AI agent attack detection, reinforcing thesis 9 (agent containment/security as first-class infrastructure). Evidence: crates.io package, 90+ attack techniques covered. Confidence: Low-Medium.
-- Added signal: Grok 4.5 pricing undercuts Anthropic and OpenAI on coding agent pricing, impacting thesis 10 (agent cost economics). Evidence: DevOps.com article. Confidence: Medium (pricing not yet independently verified). Source: https://devops.com/spacexais-grok-4-5-undercuts-anthropic-and-openai-on-coding-agent-pricing/
-- Added signal: JetBrains Kotlin Benchmark for AI Coding Agents fills Kotlin-specific evaluation gap, reinforcing thesis 3 (evaluation as core infrastructure). Evidence: official JetBrains blog. Confidence: Medium (benchmark adoption unknown). Source: https://blog.jetbrains.com/kotlin/2026/07/jetbrains-kotlin-benchmark-for-ai-coding-agents/
-- Added signal: xAI Grok Build CLI uploads entire local repositories, git history, and sensitive .env files to xAI servers without consent, highlighting agent tool data leakage risks and reinforcing thesis 9 (agent containment/security). Evidence: discussion source (Bluesky/HN), needs official confirmation. Confidence: Medium. Source: https://bsky.app/profile/hncompanion.com/post/3mqgw74pxlm2g
-### 2026-07-09
+### 2026-11-15
 
-- Merged: former theses 7 (agent memory time-travel), 8 (knowledge bases via MCP), and 9 (MCP ecosystem expansion) into a single thesis 7 (memory + KB + MCP as one converging integration layer). The three tracked the same signal cluster and were scored separately without independent evidence.
-- Renumbered: former thesis 10 (platform vendors entering MCP) is now thesis 8.
-- Added thesis 9 (agent containment/security as first-class infrastructure). Evidence: Anthropic containment engineering post (https://www.anthropic.com/engineering/how-we-contain-claude), Cline CVE-2026-59723 (https://nvd.nist.gov/vuln/detail/CVE-2026-59723), GitHub npm install-time security and GAT bypass-2FA deprecation, recurring sandbox/worktree isolation fixes across Claude Code and Devin. Confidence: Medium-High.
-- Added thesis 10 (agent cost economics shape adoption). Evidence: cost-positioned model launches (labeled Medium; parameter/pricing claims need first-party corroboration), user field notes on mixing free/paid quota across Cursor/Codex/Copilot/Claude, recurring pricing open question. Confidence: Medium.
-- Note: daily/weekly reports before 2026-07-09 reference the old thesis numbering (7/8/9/10 = pre-merge).
+- Added signal: OpenAI — ChatGPT Wallet (agents can initiate payments). Why it matters: introduces billing/audit/privilege surfaces that map into operator incident & accounting playbooks. Evidence: OpenAI product page + Reuters. Confidence: Strong.
 
-### 2026-07-06
+- Added signal: Anthropic — Projects redesign (parallel workers). Why it matters: parallel worker semantics change concurrency, session export/merge behavior, and containment tests. Evidence: Anthropic product resources + community threads. Confidence: Medium-Strong; operator-impact requires staged validation.
 
-- Added: Major platform vendors (Apple, AWS, HashiCorp, MongoDB) are entering the MCP ecosystem, signaling a transition from developer-led to platform-vendor adoption.
-- Evidence: Apple Safari MCP server (Technology Preview 247; WebKit blog), AWS Agent Toolkit (AWS What's New), MongoDB official MCP Docker image (500K+ pulls), HashiCorp Vault official MCP server.
-- Confidence: Medium.
+- Added signal: Cloudflare — adaption guidance for AI penetration-testing orchestrators. Why it matters: formalizes edge-level detection & response patterns; maps to exporter→object-storage and IOC ingestion tasks. Evidence: Cloudflare blog. Confidence: Strong.
 
-### 2026-07-02
+- Added security signals: GHSA advisories (Claude Code TOCTOU; mem0 cross-tenant leak) and Cursor marketplace compromise. Why it matters: immediate tenant-isolation and supply-chain remediation required. Evidence: GitHub Advisories + vendor security blog. Confidence: Strong.
 
-- Initial setup.
-- Added thesis points 6-8 based on Omnigent, Vestige, and Obsidian Turbocharged signals.
-- Added thesis point 9 based on proliferation of memory, web access, observability, and security MCP servers in the 2026-07-02 snapshot.
-
-### 2026-07-15
-### 2026-07-19
-- Added signal: Anthropic Fable 5 jailbreak scoring framework proposed with Amazon, Microsoft, Google — potential industry-wide safety standard. Reinforces thesis 9. Evidence: Strong (official blog). Source: https://www.anthropic.com/news/redeploying-fable-5
-- Added signal: Cloudflare Precursor introduces network-layer agent detection. Reinforces thesis 9. Evidence: Strong (official blog). Source: https://blog.cloudflare.com/introducing-precursor/
-- Added signal: OpenAI encrypts Codex agent instructions, blocking audit trail. Tension with thesis 9 — security measure vs transparency regression. Evidence: Strong (The Register). Source: https://www.theregister.com/ai-and-ml/2026/07/15/openai-hides-codex-agent-instructions-behind-encryption-leaving-developers-in-the-dark/5271484
-- Added signal: DeepSeek V4 Pro reported 25x cheaper than Kimi K3. Reinforces thesis 10. Evidence: Medium (social). Source: https://bsky.app/profile/issei.org/post/3mqxlhqi3mc2h
-- Added signal: 5% trust agent evals; 66% remove human checkpoint. Reinforces thesis 3 (eval gap) and thesis 9 (governance). Evidence: Medium (social). Source: https://bsky.app/profile/alphaxagent.bsky.social/post/3mqwdebohgj2y
-- Added signal: Google ADK Go 2.0 with graph-based multi-agent workflows. Reinforces thesis 1. Evidence: Strong (official blog). Source: https://developers.googleblog.com/announcing-adk-go-20/
-- Added signal: Drylake (VS Code extension) provides proactive workspace risk scanning for AI agents, detecting security issues before agent execution. Reinforces thesis 9 (agent containment/security). Evidence: Medium (VS Code extension). Source: https://open-vsx.org/extension/xupracorp/drylake
-- Added signal: agentic-eval (crates.io) is a comprehensive eval suite for token efficiency, safety, and other axes, targeting agent evaluation. Reinforces thesis 3 (evaluation as core infrastructure). Evidence: Medium (crates.io package). Source: https://crates.io/crates/agentic-eval
-- Added signal: mcp-ai-router (PyPI) routes MCP clients to multiple LLMs via browser sessions, enabling multi-model agent workflows. Reinforces thesis 7 (MCP ecosystem convergence). Evidence: Medium (PyPI release). Source: https://pypi.org/project/mcp-ai-router/0.1.6/
-### 2026-07-15
-
-- Added signal: AWS GuardDuty AI Protection is now available as first-party threat detection for AI workloads, signaling that major cloud providers are building AI-specific security services. Directly reinforces thesis 9 (agent containment/security as first-class infrastructure). Evidence strength: Strong (official AWS announcement). Source: https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-guardduty-ai-protection-aws/
+Notes: these changes collectively push thesis 8 (platform-vendor MCP entry) and thesis 9 (containment/security) upward this month; storage-as-artifact-plane (thesis 5) is materially stronger as vendors and incidents surface persisted canvases and repo-blob uploads.
 ## Open Questions
 - Will agent usage remain IDE-centric, or shift toward cloud task runners? — New evidence: Copilot CLI / JetBrains IDE updates / Vercel AI Gateway / Daytona sandboxes point to a hybrid trajectory (IDEs for short-cycle coding, cloud task runners for long-running/background automation). Evidence: JetBrains Mellum release, Vercel AI Gateway logs, Copilot local-sandbox reports. Status: New evidence.
 - Will MCP become the default tool integration layer? — New evidence: multiple MCP server implementations and routers surfaced (mcp-ai-router, browser-agent-mcp, many MCP server packages). Status: New evidence.
@@ -116,3 +87,15 @@ Operational signal (2026-10-17): community posts and operator smoke runs should 
 - Assessment: Evidence strength: Strong (official vendor announcement). Relevance score: 10. Immediate operator actions: update incident response playbooks to include model-driven automation paths, re-evaluate egress/privilege controls for agent tool-calls that may be used in automated cyber workflows, and ensure evaluation environments are isolated from production data.
 - Follow-up needed: instrument targeted evals for 'agent-as-attacker' scenarios, and add GPT‑6 Cyber-specific containment tests to pre-deploy gating (sandboxing, network egress policies, tool-call whitelists).
 - Source: https://openai.com/index/introducing-gpt-6-cyber/
+
+
+### 2026-11-15 Promotions — quick notes
+
+- xAI Grok Build (promoted)
+  - Why it matters for the radar: a mainstream coding-agent vendor accepting local repo blobs and .env files for upload elevates thesis 9 (containment/security) and thesis 5 (object storage as artifact plane). Vendor-side upload endpoints now function as secondary artifact stores and therefore belong in operator threat models and retention mapping. Relevance: 10. Source: Ars Technica.
+
+- Cursor (promoted)
+  - Why it matters for the radar: marketplace extension variants and persisted cloud canvases highlight IDE-level attack vectors and persistent artifact classes (canvases), reinforcing thesis 9 (containment/security) and thesis 5 (storage/artifact manifests). Relevance: 9. Source: Cursor security notice.
+
+- GHSA-5324-3w58-qpp2 advisory (promoted)
+  - Why it matters for the radar: platform-level advisories that affect tenant isolation are immediate operational risks for MCP servers and hosted agent fleets; they increase the urgency of exporter→bucket mapping and per-tenant retention/ACL audits. Relevance: 9. Source: GitHub Advisory.

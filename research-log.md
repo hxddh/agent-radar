@@ -5188,3 +5188,40 @@ Notes:
 - **GHSA: Claude Code TOCTOU (scr-ghsa-claude)**: Why it matters: allows writes outside workspace; immediate patch/mitigation required. Evidence strength: Strong (GitHub Advisory). Relevance score: 9. candidate_seen_at: 2026-11-12; last_checked_at: 2026-11-14; promotion_status: candidate; defer_count: 0; stale_after_days: 14. Source: https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
 
 - **GHSA: mem0 cross-tenant leak (scr-ghsa-mem0)**: Why it matters: multi-tenant memory leak; actionable security advisory. Evidence strength: Strong (GitHub Advisory). Relevance score: 9. candidate_seen_at: 2026-11-12; last_checked_at: 2026-11-14; promotion_status: candidate; defer_count: 0; stale_after_days: 14. Source: https://github.com/advisories/GHSA-5324-3w58-qpp2
+
+
+- **OpenAI — ChatGPT Wallet (scr-openai-wallet-2026-11-13)**: Why it matters: agents can initiate payments, creating new privilege and audit surfaces; requires billing telemetry, spending caps, and incident-playbook changes. Evidence strength: Strong (vendor announcement + Reuters). Relevance score: 10. Defer reason: operational policy updates required; do not promote as watchlist item yet. Follow-up needed: collect webhook/receipt formats, retention guarantees, and admin controls. candidate_seen_at: 2026-11-15; last_checked_at: 2026-11-15; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://openai.com/index/introducing-chatgpt-wallet, https://www.reuters.com/technology/openai-launches-chatgpt-wallet-letting-ai-agents-pay-purchases-2026-11-13/
+
+- **Cloudflare — Adapting to AI penetration-testing orchestrators (scr-cloudflare-pentest-2026-11-15)**: Why it matters: vendor guidance formalizes detection/response patterns for agentic pentesters at the edge; impacts exporter→object-storage mapping and IOC ingestion. Evidence strength: Strong (vendor blog). Relevance score: 8. Follow-up needed: map Cloudflare IOCs to org rules and verify exporter default mappings. candidate_seen_at: 2026-11-15; last_checked_at: 2026-11-15; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/
+
+- **openai/codex — rust-v0.169.0 (scr-codex-rust-2026-11-15)**: Why it matters: SDK runtime changes can break connectors and CI; pin and run regression tests. Evidence strength: Strong (GitHub release). Relevance score: 8. candidate_seen_at: 2026-11-15; last_checked_at: 2026-11-15; promotion_status: candidate; defer_count: 0; stale_after_days: 30. Source: https://github.com/openai/codex/releases/tag/rust-v0.169.0
+
+
+## 2026-11-15 Corroboration & Verification Pass
+
+- **OpenAI — ChatGPT Wallet (scr-openai-wallet-2026-11-13)**: Verified primary sources: OpenAI product page + Reuters coverage. Why it matters: agents can initiate payments → new audit & billing surfaces. Evidence strength: Strong; promotion_status: candidate (follow-up needed: collect webhook/receipt schemas, admin controls). candidate_seen_at: 2026-11-15; last_checked_at: 2026-11-15.
+  - Sources: https://openai.com/index/introducing-chatgpt-wallet, https://www.reuters.com/technology/openai-launches-chatgpt-wallet-letting-ai-agents-pay-purchases-2026-11-13/
+
+- **Cloudflare — Adapting to AI penetration-testing orchestrators (scr-cloudflare-pentest-2026-11-15)**: Verified vendor blog. Why it matters: formalizes edge-level detection/response patterns for agentic pentesters; follow-up: map Zero Wire IOCs to org rules. Evidence strength: Strong. candidate_seen_at: 2026-11-15; last_checked_at: 2026-11-15.
+  - Source: https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/
+
+- **Cursor security notice (scr-cursor-2026-11)**: Verified vendor security blog + secondary reporting. Why it matters: marketplace extension supply-chain compromise; follow-up: add extension-hash pinning to playbook and ingest IOCs. Evidence strength: Strong. candidate_seen_at: 2026-11-14; last_checked_at: 2026-11-15.
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- **Anthropic — Claude Code parallel workers (scr-claude-code-pworkers)**: Evidence: Anthropic resources + community threads (HN). Status: corroboration pending for detailed connector/merging semantics — label: pending-official. Action: run staging concurrency tests to surface tooling/export behavior. candidate_seen_at: 2026-11-14; last_checked_at: 2026-11-15.
+  - Public pointer: https://claude.com/resources/articles/projects-redesigned
+
+- **Grok Build leak (scr-grok-2026-11-14)**: Primary reporting exists (Ars Technica + community reports); remains a high-risk incident candidate. Follow-up: collect official vendor statement for technical specifics; label: corroboration: pending-official for extent of exfiltration. candidate_seen_at: 2026-11-14; last_checked_at: 2026-11-15.
+  - Public pointer: (reporting aggregated in screening shard; follow-up required)
+
+- Notes on runner limitations: this pass used the screening snapshot present in repo context; no live web crawling beyond supplied screening URLs was attempted. Any unresolved 'pending-official' items remain in the corroboration queue for next run.
+
+
+- **xAI — Grok Build data-leak** (scr-2b3c4d5e): promotion_status: promoted; promotion_date: 2026-11-15; reason: Strong press reporting plus multiple community corroborations that Grok Build uploaded full repo histories and local files (including sensitive .env) to vendor endpoints, creating a high-severity vendor-side artifact risk that directly affects operator storage and forensic practices. Evidence strength: Strong. candidate_seen_at: 2026-11-14; last_checked_at: 2026-11-15; defer_count: 0; stale_after_days: 14. Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+
+- **Cursor security notice** (scr-1a2b3c4d): promotion_status: promoted; promotion_date: 2026-11-15; reason: Vendor security notice documenting malicious/variant VS Code extension discovery plus growing operational concern about persisted cloud canvases; promoted because it changes IDE-hosted agent threat models and persisted artifact classes. Evidence strength: Strong. candidate_seen_at: 2026-11-14; last_checked_at: 2026-11-15; defer_count: 0; stale_after_days: 14. Source: https://cursor.com/blog/security-incident-update
+
+- **GHSA-5324-3w58-qpp2 (tenant isolation advisory)**: promotion_status: promoted; promotion_date: 2026-11-15; reason: Official GitHub Advisory describing tenant-impacting behavior that maps to MCP/hosted-agent isolation; promoted for immediate operator attention and mapping to exporter→bucket audits. Evidence strength: Strong. candidate_seen_at: 2026-11-12; last_checked_at: 2026-11-15; defer_count: 0; stale_after_days: 14. Source: https://github.com/advisories/GHSA-5324-3w58-qpp2
+
+
+- **Monthly aggregation note (2026-11 mid-month pass)**: Consolidated W44–W46 signals: OpenAI ChatGPT Wallet (payment surface), Cursor marketplace compromise, Cloudflare pentest guidance, Anthropic Projects redesign, and multiple runtime releases (openai/codex rust, vercel agent-browser). Evidence strength: mixed→strong for vendor/GHSA items; social used for UX corroboration. Follow-up: obtain ChatGPT Wallet webhook/receipt schemas, Grok Build vendor post-mortem, and Anthropic detailed export semantics. promotion_status: monitoring; candidate_seen_at: 2026-11-15; last_checked_at: 2026-11-15.

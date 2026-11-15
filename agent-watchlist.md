@@ -5,44 +5,34 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: GitHub announced upcoming deprecation of selected Copilot models (2026-12) and highlighted pipeline shifts including Gemini 4 Hydrogen references; operators should inventory model usage and prepare staged migrations.
-- Action: run model-compatibility tests, update model-routing configs, and pin model versions in production images until migration windows are scheduled.
-- Source class: vendor changelog
-- Evidence strength: Strong
-- Source: https://github.blog/changelog/2026-11-13-upcoming-deprecation-of-selected-github-copilot-models-in-december
+- Recent changes: OpenAI announced the ChatGPT Wallet (2026-11-13) allowing agents to make purchases; the ChatGPT VS Code extension is listed in Open‑VSX. openai/codex published rust-v0.169.0 (2026-11-15) indicating continued SDK/runtime churn. Operators should treat IDE-integrated agents with side-effects (network calls, payments) as high-risk: require explicit admin enablement, per-agent spending caps, signed extension artifacts, extension-hash pinning in enterprise images, and CI-compatible SDK pinning.
+- Evidence strength: Strong (OpenAI product page; Reuters; GitHub release)
 ## Claude Code
-- Recent change: Anthropic discussion and operator reports highlight a move toward parallel worker execution for Claude Code Projects (impacting session semantics and worker-local state). Additionally, a GHSA TOCTOU advisory exists allowing writes outside the workspace; treat as high-priority containment advisory.
-- User impact: multi-worker projects may change memory/approval semantics; TOCTOU may enable unintended file writes.
-- Infra implication: require pinned upgrades, add worker-isolation tests, and map affected connector versions for emergency patching.
-- Source class: social + GitHub Advisory
-- Evidence strength: Medium-Strong
-- Source: https://news.ycombinator.com/item?id=50480909, https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
+- Recent changes: GHSA issued for a TOCTOU allowing writes outside the workspace (GHSA-5xjx-9qx6-jcrv); Anthropic Projects redesign adds parallel worker semantics that change concurrency and export-merging behavior. Operators must: apply GHSA mitigations immediately, run parallel-worker isolation/merge tests in staging, and validate session export integrity before fleet upgrades.
+- Evidence strength: Strong (GHSA) + Medium-Strong (Anthropic resources)
 ## Cursor
 - Category: AI IDE / coding agent
-- Maturity: Widely adopted; vendor adds operational controls
-- Recent changes: Cursor published a security notice (2026-11) about compromised/malicious Claude Code VS Code extension variants found in extension channels. Operators must treat marketplace installs as untrusted until verified: pin extension hashes, require signed extensions, and ingest vendor IOCs into block/allow rules. Add extension-hash pinning to onboarding playbooks and notify developer teams.
-- Source class: vendor blog
-- Evidence strength: Strong
-- Source: https://cursor.com/blog/security-incident-update
+- Maturity: Widely adopted; vendor active on operational controls
+- Recent changes: Cursor published a security notice (2026-11) about compromised/malicious Claude Code VS Code extension variants found in extension channels; vendor confirmed marketplace compromises and persistent cloud canvases that change artifact residency assumptions. Operators must: pin extension hashes, require vendor-signed extensions, ingest Cursor IOCs into blocklists, and add extension-supply-chain checks to onboarding playbooks. Also audit persisted canvases for retention and access controls.
+- Evidence strength: Strong (Cursor security blog + secondary reporting)
 ## Devin / Cognition
 - Category: Agent runtime / research prototype
-- Recent changes: No dated vendor changelog or public release since 2026-09-13. Deprioritized for active promotion until a new dated release or operator field report appears.
-- Operational note: continue to monitor for containment docs and MCP connector compatibility; re-evaluate on vendor-stated updates.
+- Recent changes: No dated vendor changelog or public release since 2026-09-13. Deprioritized for active promotion until a new dated release or operator field report appears. Keep on passive watch; promote only with new dated artifacts or operator adoption signals.
 - replace_section anchor: `## Devin / Cognition`
 ## GitHub Copilot / Coding Agent
 - Category: Coding agent / task agent
-- Maturity: Strong adoption in OpenAI/GitHub ecosystems.
-- Recent changes: Copilot weekly releases (Sept) included code-review UX changes and a model deprecation notice; GitHub added enterprise-managed permissions for Copilot agent operations (enterprise telemetry & permissions). Operators should pin extension/CLI versions, validate agent telemetry in usage dashboards, and update cost forecasts for IDE and background agent usage.
-- Actionables: audit extension installs across primary and alternative marketplaces, add Copilot-specific CI checks for model deprecation migrations, and map telemetry to billing forecasts.
-- Last-checked: 2026-09-20
-- Source: https://github.blog/changelog/2026-09-18-github-copilot-weekly-releases-september-14 ; https://github.blog/changelog/2026-09-17-agentic-cli-customizations-now-in-the-usage-metrics-api
+- Maturity: Strong adoption across developer ecosystems.
+- Recent changes: GitHub changelog notes model deprecation in December and Copilot impact dashboard updates (adds chat & VS Code agent usage metrics). Operators should plan migrations for deprecated models, pin Copilot model versions where possible, and map Copilot telemetry retention to forensic/retention policies.
+- Evidence strength: Strong (GitHub changelog).
+- replace_section anchor: `## GitHub Copilot / Coding Agent`
 ## Replit Agent
-- Category: Web-hosted coding agent
-- Recent changes: No new dated public changelog since 2026-10-09. Deprioritized for active promotion; keep as watchlist entry for operator UX reports and hosted-runtime containment notes.
+- Category: Hosted coding/workspace agent
+- Recent changes: Replit experienced a partial outage earlier in November that affected agent/workspace interactions; no dated product changelog since 2026-10-09. Operators using Replit-hosted agents should add session recovery steps and offline fallbacks to runbooks.
+- Status: Monitor for dated vendor updates; keep operational mitigations in playbooks.
 - replace_section anchor: `## Replit Agent`
 ## Warp
 - Category: Terminal/IDE agent / developer tooling
-- Recent changes: No dated public update since 2026-09-13. Deprioritized for active promotion until a new release or operator field report; continue to monitor for integration or governance additions.
+- Recent changes: No high-confidence vendor changelog this run (last public note: 2026-09-13). Deprioritized until a dated release or operator field report surfaces. Keep on passive watch for governance or integration controls.
 - replace_section anchor: `## Warp`
 ## Amp
 - Category: Agent surface / runtime
@@ -51,7 +41,7 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - replace_section anchor: `## Amp`
 ## Factory
 - Category: Orchestration / agent workbench
-- Recent changes: No dated public update since 2026-09-13. Deprioritized for active promotion until fresh vendor evidence appears.
+- Recent changes: No new public changelog this week (last noted 2026-09-13). Deprioritized for active watch until fresh vendor evidence appears.
 - replace_section anchor: `## Factory`
 ## Raycast AI
 - Category: Desktop/IDE agent
@@ -616,10 +606,8 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Vercel AI / Sandbox-Related Agent Workflow (refreshed)
-- Recent changes: vercel-labs/agent-browser published v0.43.0 (2026-11-13) with selector/timing and artifact-shape deltas that affect HAR/DOM/trace manifests and headful replay semantics. These deltas can break golden traces, CI replay, and archival ingestion if operator pipelines expect older manifest schema. Operators should: pin agent-browser in CI, rebaseline headful traces, capture sample artifacts for replay, and add a compatibility smoke test to deployment gates.
-- Infra implication: artifact-schema changes increase risk to forensic replay and archival indices; object-storage lifecycle mappings may need schema-aware ingestion adapters.
+- Recent changes: vercel-labs/agent-browser published v0.43.0 (2026-11-13) with selector/timing and artifact-shape deltas (HAR/DOM/WebM) that affect golden-trace replays and archival. Operators should pin agent-browser in CI, rebaseline headful traces, capture sample artifacts, and add compatibility smoke tests to deployment gates.
 - Evidence strength: Strong (GitHub release)
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.43.0
 ## xerj-org/xerj
 
 - What it is: Local‑first memory + index project that advertises MCP compatibility and self‑hosted indexing for agent memories and retrieval (local-first, on‑prem-friendly vector/index option).
@@ -641,10 +629,8 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.30.1
-- Recent changes: Cloudflare published Zero Wire (vendor vulnerability-hunting hub) and agents@0.33.0 (2026-11-03/04) with exporter default and TTL changes that affect where agent artifacts land and how long they are retained. Operators should validate exporter→object-storage mappings, check TTLs against forensic retention requirements, and map Zero Wire IOCs into edge detection rules.
-- Implication: edge-hosted agent exports may need reconfiguration to ensure forensic artifacts are retained and discoverable during incident response.
-- Evidence strength: Strong
-- Source: https://blog.cloudflare.com/zero-wire/; https://github.com/cloudflare/agents/releases/tag/agents%400.33.0
+- Recent changes: Cloudflare published guidance on adapting to AI penetration-testing orchestrators and continues to alter exporter defaults and TTLs in the agents releases stream. Operators should validate exporter→object-storage mappings, verify TTLs against forensic retention requirements, and map Zero Wire IOCs into edge detection rules and incident playbooks.
+- Evidence strength: Strong (Cloudflare blog + releases)
 ## OpenHands Software Agent SDK
 
 - What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.
@@ -697,17 +683,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 ## Microsoft — agent-framework
 - Recent changes: python-1.26.0 release published (2026-11-13). Operators embedding the Microsoft SDK should pin, run connector/regression tests, and review changes to API defaults and permission models.
-- Action: update staging images, run end-to-end tests on workflows that rely on the Python SDK, and check for permission model changes that could widen tool-call scopes.
-- Source class: GitHub release
-- Evidence strength: Strong
-- Source: https://github.com/microsoft/agent-framework/releases/tag/python-1.26.0
+- Evidence strength: Strong (GitHub release)
 ## Amp (OpenAI)
-
 - Category: Task agent / multi-domain agent
 - Recent changes: No new dated public changelog this run (last noted 2026-09-13). Deprioritized from active promotion; retain as mainstream index for audit mapping when encountered in fleets.
-- replace_section anchor: `## OpenAI — Amp (scr-amp01)`
-
-
+- replace_section anchor: `## Amp (OpenAI)`
 ## Vercel — agent-browser (vercel-labs/agent-browser)
 
 - What it is: A Rust/CLI browser-automation primitive for AI agents (HAR/DOM/WebM capture, headful traces, selector/timing controls) enabling programmatic web interactions and multimodal artifact export.
@@ -746,3 +726,41 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong (vendor blog/release note)
 - Source: https://blog.jetbrains.com/dotnet/2026/11/10/resharper-2026-3-release/
 - Action: Add ReSharper/Visual Studio agent settings to enterprise IDE hardening checklist; require signed/verified extensions and track extension-install telemetry.
+
+
+## xAI — Grok Build (promoted: scr-2b3c4d5e)
+
+- What it is: xAI's Grok Build tooling/CLI for coding assistance that accepts local repo inputs and (per press reports) uploads repo history and local files during builds/analysis.
+- Why it matters: Press and community reports show Grok Build accepted full repo history and .env/local secrets in uploads, creating a high-severity data-leak vector for coding-agent workflows and vendor-hosted artifact stores. This materially changes containment and pre-ingest-redaction requirements for any agent that accepts local artifacts. Operators must treat vendor upload endpoints as potential secondary repositories of sensitive data.
+- Evidence strength: Strong (press + community corroboration)
+- Relevance score: 10
+- Follow-up needed: verify vendor advisory/patch, confirm counts of affected uploads, add pre-ingest deny-lists (.env, ssh keys), and require explicit operator approval for any durable vendor-side retention of repo blobs.
+- Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+
+
+## Cursor — VS Code extension & cloud canvases (promoted: scr-1a2b3c4d)
+
+- What it is: Cursor's cloud canvases / cloud agent features and a vendor security notice reporting malicious/maliciously-modified VS Code extension variants found in the ecosystem.
+- Why it matters: Malicious extension variants in the marketplace are a direct IDE-level supply vector that can subvert user-side controls, enable unauthorized tool-calls, or exfiltrate workspace artifacts. For operators and security teams, this heightens risk for developer-hosted agent runs and local-to-cloud artifact flows.
+- Evidence strength: Strong (vendor security notice)
+- Relevance score: 9
+- Follow-up needed: ensure extension signing & marketplace provenance checks, require in-org extension allowlists, add detection rules for anomalous extension behavior, and verify that canvas exports include provenance metadata before being archived to durable stores.
+- Source: https://cursor.com/blog/security-incident-update
+
+
+## GHSA-5324-3w58-qpp2 — LTI/tenant advisory (promoted)
+
+- What it is: A GitHub Security Advisory (GHSA-5324-3w58-qpp2) describing vulnerabilities in certain tenant/LTI-style deployments that can allow tenant-impacting behavior requiring patching and tenant-impact analysis.
+- Why it matters: Platform-level advisories that affect multi-tenant runtime behaviors are directly relevant to hosted agent fleets and MCP servers — they can enable cross-tenant artifact exposure or privilege escalation in agent-hosting runtimes. Operators should treat such advisories as must-patch items when they map to agent hosting or MCP components.
+- Evidence strength: Strong (GitHub Advisory)
+- Relevance score: 9
+- Follow-up needed: map advisory to vendor runtimes in use, schedule emergency staging tests, and verify per-tenant isolation/ACLs for any export or preview sinks used by agent runtimes.
+- Source: https://github.com/advisories/GHSA-5324-3w58-qpp2
+
+
+## OpenAI — ChatGPT Wallet
+
+- What it is: Product feature that allows ChatGPT / agent sessions to initiate payments and store payment instruments for agent-initiated commerce.
+- Why it matters: expands agent privilege model to include financial side-effects; requires billing telemetry, spending limits, approval gating, and new incident playbook items for fraudulent payments or unintended charges.
+- Evidence strength: Strong (OpenAI product page; Reuters)
+- Source: https://openai.com/index/introducing-chatgpt-wallet, https://www.reuters.com/technology/openai-launches-chatgpt-wallet-letting-ai-agents-pay-purchases-2026-11-13/
