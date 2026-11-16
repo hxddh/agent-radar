@@ -1901,3 +1901,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Treat storage residency as part of the incident response runbook: snapshot IDs, immutability, and export provenance must be captured together.
 
 - Follow-up: request vendors to publish exporter metadata (artifact type, schema version, retention hints) to simplify mapping.
+
+
+## 2026-11-16 Storage Angle Notes
+
+- Persistent canvases & uploaded repo blobs enlarge the artifact surface
+  - Implication: map new artifact classes (canvas blobs, uploaded repo snapshots, payment receipts) into object storage buckets with explicit retention, ACLs, and immutable snapshots for forensics.
+  - Evidence strength: Strong (vendor notices + press)
+  - Watch trigger: sudden increase in POST/PUTs to canvas/upload endpoints or new object prefixes appearing in object storage.
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice; https://openai.com/index/introducing-chatgpt-wallet
+
+- Telemetry artifact versioning (HAR/DOM/WebM) is required for reliable replay
+  - Implication: store artifact-shape metadata and runtime versions alongside trace objects; version golden-trace formats.
+  - Evidence strength: Medium
+  - Watch trigger: failed trace replays or missing artifact fields during forensic replay.
+  - Source: https://www.npmjs.com/package/%40newrelic/browser-agent

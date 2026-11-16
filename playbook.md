@@ -1376,3 +1376,20 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 
 - Isolation & exporter mapping:
   - Audit exporter→object-storage mappings and TTLs; require per-tenant ACL review and immutable forensic snapshot capability for critical workflows.
+
+
+## 2026-11-16 Playbook Candidates
+
+- Extension supply-chain hardening
+  - When useful: responding to vendor marketplace compromises or preventing IDE-level persistence risks
+  - Evidence: Cursor security notice (malicious extension variants discovered)
+  - Actionable steps: enforce enterprise extension-hash pinning, require vendor-signed artifacts, block unsigned marketplace installs, ingest vendor IOCs into MDM/EDR blocklists.
+  - Should promote to playbook? yes
+  - Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- Agent payment controls (ChatGPT Wallet)
+  - When useful: when agents are enabled to make external purchases
+  - Evidence: OpenAI ChatGPT Wallet announcement
+  - Actionable steps: require admin opt-in for payments, set per-agent and per-organization spending caps, log and store payment webhooks/receipts in immutable object-store with retention policy, simulate purchases in canary sandboxes to validate billing paths.
+  - Should promote to playbook? yes
+  - Source: https://openai.com/index/introducing-chatgpt-wallet

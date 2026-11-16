@@ -1416,3 +1416,8 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - When enabling agent payments for a team, require: admin opt-in per agent, per-agent spending caps, audited webhooks for receipts, and a daily summary email to finance.
 
 - If a runtime/extension shows a GHSA advisory (Claude Code / mem0): immediately pin affected versions, run connector smoke-tests, and schedule a targeted forensics snapshot of recent agent exports.
+
+
+- 2026-11-16: Cursor malicious extension incident — operator steps: ingest Cursor IOCs into blocklists, pin VS Code extension hashes in corporate images, block unsigned marketplace installs via endpoint manager, and scan persisted canvases for unexpected or large blobs. Evidence strength: Strong. Source: https://cursor.com/blog/claude-code-extension-security-notice
+
+- 2026-11-16: MCP connector regressions — community-sourced rollback pins and connector smoke tests helped triage breakages after runtime upgrades. Operational recommendation: maintain a canary connector pipeline and a documented rollback playbook. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

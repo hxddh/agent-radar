@@ -5,8 +5,8 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: OpenAI announced the ChatGPT Wallet (2026-11-13) allowing agents to make purchases; the ChatGPT VS Code extension is listed in Open‑VSX. openai/codex published rust-v0.169.0 (2026-11-15) indicating continued SDK/runtime churn. Operators should treat IDE-integrated agents with side-effects (network calls, payments) as high-risk: require explicit admin enablement, per-agent spending caps, signed extension artifacts, extension-hash pinning in enterprise images, and CI-compatible SDK pinning.
-- Evidence strength: Strong (OpenAI product page; Reuters; GitHub release)
+- Recent changes: OpenAI announced the ChatGPT Wallet (2026-11-13) allowing agents to make purchases; openai/codex published Rust SDK churn including rust-v0.169.0 and rust-v0.171.0-alpha.7 (2026-11-15 / 2026-11-16) indicating continued SDK/runtime churn. Operators should treat IDE-integrated agents and SDK updates as high-risk: require explicit admin enablement, per-agent spending caps for payment primitives, signed extension artifacts, extension-hash pinning in enterprise images, and CI-compatible SDK pinning with pre-upgrade smoke/regression tests.
+- Source: https://openai.com/index/introducing-chatgpt-wallet; https://github.com/openai/codex/releases/tag/rust-v0.171.0-alpha.7; https://www.npmjs.com/package/%40newrelic/browser-agent
 ## Claude Code
 - Recent changes: GHSA issued for a TOCTOU allowing writes outside the workspace (GHSA-5xjx-9qx6-jcrv); Anthropic Projects redesign adds parallel worker semantics that change concurrency and export-merging behavior. Operators must: apply GHSA mitigations immediately, run parallel-worker isolation/merge tests in staging, and validate session export integrity before fleet upgrades.
 - Evidence strength: Strong (GHSA) + Medium-Strong (Anthropic resources)

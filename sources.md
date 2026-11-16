@@ -2109,3 +2109,20 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - openai/codex — rust-v0.169.0 release. Source: https://github.com/openai/codex/releases/tag/rust-v0.169.0
 - Anthropic — Projects redesigned (vendor resources). Source: https://claude.com/resources/articles/projects-redesigned
 - vercel-labs/agent-browser — v0.43.0 release. Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.43.0
+
+
+### Added 2026-11-16 (source-sweep)
+
+- [mainstream_product / mcp] BrowserStack — @browserstack/mcp-server release. Why it matters: first-party MCP server from a major cross-browser testing vendor can change MCP testing topologies and provide an off-the-shelf MCP server option for browser-headful agent testing. Evidence strength: Strong (npm). Source: https://www.npmjs.com/package/%40browserstack/mcp-server
+
+- [mainstream_product / deployment] Amazon — amazon-ecs-agent (official Docker image). Why it matters: widely-deployed ECS agent image affects runtime/container patterns for hosted agent workloads and isolation practices. Evidence strength: Medium-Strong (Docker Hub). Source: https://hub.docker.com/r/library/amazon/amazon-ecs-agent
+
+- [infra_primitive / sandbox] trycua/cua — computer-use & sandbox drivers. Why it matters: cross-OS drivers and sandbox primitives for scalable agent computer-use workloads; useful for benchmarking and containment experiments. Evidence strength: Medium (repo). Source: https://github.com/trycua/cua
+
+- [infra_primitive / memory] ClickHouse/loom — shared long-term memory for agents. Why it matters: memory primitives that link memories to files/symbols support persistent agent context and fleet coordination. Evidence strength: Medium (repo). Source: https://github.com/ClickHouse/loom
+
+- [infra_primitive / eval] NVIDIA/SkillEvaluator — agent skill evaluation framework. Why it matters: multi-tier eval tooling and gates for agent skill measurement and coverage. Evidence strength: Medium (repo). Source: https://github.com/NVIDIA/SkillEvaluator
+
+- [user_workflow / sandbox] Modal — Snorkel customer story: running realistic agent simulations with Modal. Why it matters: concrete operator flow for large-scale agent sandboxes and staged simulation (useful for reproducible testing). Evidence strength: Medium (vendor blog / customer case). Source: https://modal.com/blog/how-snorkel-runs-realistic-agent-simulations-with-modal
+
+- [user_workflow / scaling] JetBrains — Scaling AI agents: lessons from 9 real-world cases. Why it matters: operator lessons and practical debugging/scale practices for agent-driven developer workflows. Evidence strength: Medium (vendor blog). Source: https://blog.jetbrains.com/blog/2026/11/13/scaling-ai-agents-what-we-learned-from-9-real-world-cases/
