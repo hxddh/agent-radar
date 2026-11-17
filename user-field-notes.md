@@ -1421,3 +1421,10 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - 2026-11-16: Cursor malicious extension incident — operator steps: ingest Cursor IOCs into blocklists, pin VS Code extension hashes in corporate images, block unsigned marketplace installs via endpoint manager, and scan persisted canvases for unexpected or large blobs. Evidence strength: Strong. Source: https://cursor.com/blog/claude-code-extension-security-notice
 
 - 2026-11-16: MCP connector regressions — community-sourced rollback pins and connector smoke tests helped triage breakages after runtime upgrades. Operational recommendation: maintain a canary connector pipeline and a documented rollback playbook. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- 2026-11-17: Operator field notes — connector fragility (Reddit follow-up)
+  - Symptom: Multiple operators report custom MCP connectors failing after runtime changes; failures include auth token errors and tool-call mismatches.
+  - Actionable mitigation: Add nightly connector conformance jobs that run a minimal skill invocation and report schema/auth regressions to the on-call team.
+  - Evidence strength: Medium (Reddit thread)
+  - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

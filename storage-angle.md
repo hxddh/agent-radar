@@ -1916,3 +1916,11 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Medium
   - Watch trigger: failed trace replays or missing artifact fields during forensic replay.
   - Source: https://www.npmjs.com/package/%40newrelic/browser-agent
+
+
+- 2026-11-17: Managed-KB & trace export implications
+  - Summary: Vendor-managed memory (Bedrock Agentic Retrieve) and router-level trace export (OpenRouter→Hugging Face storage) create two classes of persistent artifacts: KB records and trace blobs. Both can contain PII, code, and payment receipts. Operators must treat these artifacts as part of the canonical retention/inventory and apply redaction/TTL controls.
+  - Immediate actions: inventory all vendor-managed KBs and router trace export targets; add redaction hooks and TTL enforcement; require explicit admin opt-in for any trace export features.
+  - Watch trigger: a vendor SDK or router upgrade that flips on trace export by default or exposes storage targets without ACL checks.
+  - Evidence strength: Strong (AWS blog; OpenRouter blog)
+  - Sources: https://aws.amazon.com/blogs/machine-learning/build-memory-aware-ai-agents-with-agentic-retrieve-on-amazon-bedrock-managed-knowledge-base/; https://openrouter.ai/blog/announcements/hugging-face-inference-providers/
