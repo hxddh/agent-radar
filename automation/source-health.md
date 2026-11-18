@@ -1,6 +1,6 @@
 # Source Health
 
-Last checked: 2026-11-17
+Last checked: 2026-11-18
 
 | Source | Status | Detail |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ Last checked: 2026-11-17
 | release:huggingface/smolagents | ok |  |
 | release:omnigent-ai/omnigent | ok |  |
 | release:Mng-dev-ai/agentrove | ok |  |
-| release:microsoft/agent-framework | ok |  |
 | release:vercel-labs/agent-browser | ok |  |
 | release:OpenHands/OpenHands | ok |  |
 | release:MemTensor/MemOS | ok |  |
+| release:xerj-org/xerj | ok |  |

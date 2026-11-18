@@ -5,13 +5,16 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: GitHub announced deprecation of certain Copilot models effective 2026-11-16; openai/codex published rust-v0.171.0-alpha.7 (2026-11-16) indicating continued SDK/runtime churn. Operators should treat model deprecation and SDK churn as high-risk: require explicit admin enablement for Copilot features, create migration windows for deprecated models, and pin SDKs in connector CI with pre-upgrade smoke/regression tests. Add per-agent spend caps where agents can access payment primitives (see ChatGPT Wallet). Also track open issues for connector compatibility with Anthropic Projects parallel-worker semantics.
-- Source class: Official changelog + GitHub releases
+- Recent changes: OpenAI announced GPT‑6.2 (Astra/Sol) model family (2026-11-18) which expands agent tool-call capabilities and should be staged before fleet-wide adoption. GitHub also published Copilot app changelogs (2026-11-17) and JetBrains Copilot updates affecting extension storage and UX. Operators must treat model upgrades and IDE/extension churn as high-risk: require admin enablement for new Copilot features, pin SDKs/connectors in CI, and add pre-upgrade smoke/regression tests that validate tool-call semantics and artifact residency.
+- Source class: Product page + vendor changelog
 - Evidence strength: Strong
-- Sources: https://github.blog/changelog/2026-11-16-github-copilot-models-deprecated-on-november-16-2026; https://github.com/openai/codex/releases/tag/rust-v0.171.0-alpha.7
+- Source: https://openai.com/index/introducing-gpt-6-2-astra-sol; https://github.blog/changelog/2026-11-17-github-copilot-app-microsoft-ignite-releases
 ## Claude Code
-- Recent changes: GHSA issued for a TOCTOU allowing writes outside the workspace (GHSA-5xjx-9qx6-jcrv); Anthropic Projects redesign adds parallel worker semantics that change concurrency and export-merging behavior. Operators must: apply GHSA mitigations immediately, run parallel-worker isolation/merge tests in staging, and validate session export integrity before fleet upgrades.
-- Evidence strength: Strong (GHSA) + Medium-Strong (Anthropic resources)
+- Recent changes: Anthropic published Projects redesign notes (parallel-worker semantics) that change concurrency and export/merge behavior for Claude Code. A GHSA advisory for related components remains on the watchlist; operators must apply GHSA mitigations, stage parallel-worker isolation/merge tests in staging, and validate session export integrity before fleet upgrades.
+- Actions: Pin runtimes in connector CI; add merge/consistency tests and export-hash validation to deployment gates.
+- Source class: Vendor resource + discussion
+- Evidence strength: Strong + Medium
+- Source: https://claude.com/resources/articles/projects-redesigned; https://news.ycombinator.com/item?id=50398241
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor active on operational controls
@@ -731,15 +734,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## xAI — Grok Build (promoted: scr-2b3c4d5e)
-
-- What it is: xAI's Grok Build tooling/CLI for coding assistance that accepts local repo inputs and (per press reports) uploads repo history and local files during builds/analysis.
-- Why it matters: Press and community reports show Grok Build accepted full repo history and .env/local secrets in uploads, creating a high-severity data-leak vector for coding-agent workflows and vendor-hosted artifact stores. This materially changes containment and pre-ingest-redaction requirements for any agent that accepts local artifacts. Operators must treat vendor upload endpoints as potential secondary repositories of sensitive data.
-- Evidence strength: Strong (press + community corroboration)
-- Relevance score: 10
-- Follow-up needed: verify vendor advisory/patch, confirm counts of affected uploads, add pre-ingest deny-lists (.env, ssh keys), and require explicit operator approval for any durable vendor-side retention of repo blobs.
-- Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
-
-
+- Recent changes: Community reports (Hacker News) describe a Grok Build instance leaking confidential information in coding-agent sessions. This elevates supply-chain and data-residency concerns for Grok Build customers and enterprise operators.
+- Actions: Treat as an incident-risk: block suspect connectors, require vendor remediation or advisory, and add detect-and-snapshot triggers in CI for agent outputs until vendor post-mortem is available.
+- Source class: Discussion (Hacker News)
+- Evidence strength: Medium–Strong
+- Source: https://news.ycombinator.com/item?id=50397355
 ## Cursor — VS Code extension & cloud canvases (promoted: scr-1a2b3c4d)
 
 - What it is: Cursor's cloud canvases / cloud agent features and a vendor security notice reporting malicious/maliciously-modified VS Code extension variants found in the ecosystem.

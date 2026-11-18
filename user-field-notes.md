@@ -1428,3 +1428,13 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Actionable mitigation: Add nightly connector conformance jobs that run a minimal skill invocation and report schema/auth regressions to the on-call team.
   - Evidence strength: Medium (Reddit thread)
   - Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- 2026-11-18 — Grok Build leakage discussion (HN)
+  - Observation: Several users posted repro notes showing confidential repo fragments appearing in agent outputs; vendor post-mortem not yet published. Evidence strength: Medium–Strong (HN thread). Action: operators should run containment exercises, block outbound connectors, and snapshot artifacts for triage. Source: https://news.ycombinator.com/item?id=50397355
+
+- 2026-11-18 — Bluesky report: California sues OpenAI (early social signal)
+  - Observation: Bluesky thread claims a legal filing tied to AI agent control failures. Evidence strength: Medium (social); follow-up required to verify official docket. Action: legal/IR teams should prepare incident-pack templates and monitor press/dockets. Source: https://bsky.app/profile/nbctech.bsky.social/post/3n2l2s3fpyo2r
+
+- 2026-11-18 — SSH-agent socket proxying trick (operator pattern)
+  - Observation: Practical workflow to run remote coding agents without giving away long-lived credentials by using ephemeral SSH agent sockets and biometric/local approval. Evidence strength: Medium (Bluesky discussion). Action: document ephemeral-socket pattern in team playbooks and require audit logs when used. Source: https://bsky.app/profile/andrewoshei.bsky.social/post/3n2l33rmmg42j

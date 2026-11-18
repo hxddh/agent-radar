@@ -1924,3 +1924,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Watch trigger: a vendor SDK or router upgrade that flips on trace export by default or exposes storage targets without ACL checks.
   - Evidence strength: Strong (AWS blog; OpenRouter blog)
   - Sources: https://aws.amazon.com/blogs/machine-learning/build-memory-aware-ai-agents-with-agentic-retrieve-on-amazon-bedrock-managed-knowledge-base/; https://openrouter.ai/blog/announcements/hugging-face-inference-providers/
+
+
+- 2026-11-18 — ChatGPT Wallet: new payment artifacts to inventory
+  - Signal: OpenAI's ChatGPT Wallet introduces persisted payment/transaction artifacts linked to agent actions.
+  - Storage implication: Operators must map wallet receipts, webhook callbacks, and payment logs into retention and audit policies; these are new forensic artifacts beyond typical trace logs.
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/introducing-chatgpt-wallet
+  - Watch trigger: Published webhook/receipt schema or vendor guidance about retention/exports.
+
+- 2026-11-18 — Vendor-managed canvases & Grok uploads create external artifact residency
+  - Signal: Community reports and changelogs show agents persisting canvases/uploads in vendor stores (Grok, Cursor, Copilot IDE flows).
+  - Storage implication: Add vendor-managed artifact stores to the enterprise inventory; ensure ACLs, export controls, and incident-retention policies include these external buckets.
+  - Evidence strength: Medium–Strong
+  - Source: https://news.ycombinator.com/item?id=50397355; https://github.blog/changelog/2026-11-17-github-copilot-app-microsoft-ignite-releases
+  - Watch trigger: Vendor console listing of default export buckets or an incident showing data recovered from vendor-managed canvases.
