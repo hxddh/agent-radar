@@ -765,3 +765,12 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Why it matters: expands agent privilege model to include financial side-effects; requires billing telemetry, spending limits, approval gating, and new incident playbook items for fraudulent payments or unintended charges.
 - Evidence strength: Strong (OpenAI product page; Reuters)
 - Source: https://openai.com/index/introducing-chatgpt-wallet, https://www.reuters.com/technology/openai-launches-chatgpt-wallet-letting-ai-agents-pay-purchases-2026-11-13/
+
+
+## Microsoft — Foundry (Hosted Agents & Dev Pack)
+
+- What it is: Microsoft Foundry now advertises a hosted-agent service, developer pack, and reusable toolboxes announced at Ignite 2026.
+- Why it matters: provides an enterprise-hosted path for running agent fleets and reusable toolboxes; centralizes traces and exported artifacts under vendor-managed endpoints which operators must audit for retention/ACL and forensic readiness.
+- Evidence strength: Strong (official Microsoft Dev Blog)
+- Source: https://devblogs.microsoft.com/foundry/hosted-agents-foundry-agent-service-ignite-2026/
+

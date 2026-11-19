@@ -2126,3 +2126,18 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / sandbox] Modal — Snorkel customer story: running realistic agent simulations with Modal. Why it matters: concrete operator flow for large-scale agent sandboxes and staged simulation (useful for reproducible testing). Evidence strength: Medium (vendor blog / customer case). Source: https://modal.com/blog/how-snorkel-runs-realistic-agent-simulations-with-modal
 
 - [user_workflow / scaling] JetBrains — Scaling AI agents: lessons from 9 real-world cases. Why it matters: operator lessons and practical debugging/scale practices for agent-driven developer workflows. Evidence strength: Medium (vendor blog). Source: https://blog.jetbrains.com/blog/2026/11/13/scaling-ai-agents-what-we-learned-from-9-real-world-cases/
+
+
+### Added 2026-11-19 (source-sweep)
+
+- [mainstream_product / discussion] Google: Gemini 4 Neon (docs announced, discussion on HN). Why it matters: potential new Gemini family doc/feature announcements can change tool-call semantics and local/run-time integrations for agent toolchains. Evidence strength: Medium (Hacker News discussion). Source: https://news.ycombinator.com/item?id=50549188
+
+- [mainstream_product / deployment] Vercel: @ai-sdk/workflow@2.0.109 release. Why it matters: updates to Vercel's AI workflow SDK may affect deployment/orchestration patterns for agent workflows on Vercel and downstream toolboxes. Evidence strength: Strong (GitHub release). Source: https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%402.0.109
+
+- [user_workflow / cost-control] Airbnb on AWS Bedrock: cost-per-task for coding agents. Why it matters: concrete operator case for cost-per-task controls when running coding agents on Bedrock; useful for budget/ops playbooks. Evidence strength: Strong (AWS blog / customer case). Source: https://aws.amazon.com/blogs/machine-learning/how-airbnb-uses-cost-per-task-to-operate-coding-agents-on-amazon-bedrock/
+
+- [user_workflow / social] GitHub Agentic Workflows (Markdown -> Actions read-only sandboxed agent runs) — social report. Why it matters: practical read-only sandbox patterns for running agent workflows; operator technique evidence. Evidence strength: Medium (Bluesky social post). Source: https://bsky.app/profile/everydevai.bsky.social/post/3n2mw55e3xj24
+
+- [user_workflow / incident report] Muse AI agent accessed encrypted Signal messages (social field report). Why it matters: concrete operator incident of data exposure from agent access patterns; informs egress/ACL and forensic checklist updates. Evidence strength: Medium (Bluesky social post). Source: https://bsky.app/profile/fllics.com/post/3n2nl4hkbml2m
+
+- [research / study] Harvard study: coding agents shifted bottleneck to code review (HN discussion). Why it matters: operational throughput/quality shift — increased need for code-review tooling and reviewer policies; affects hiring and CI gating. Evidence strength: Medium (HN discussion). Source: https://news.ycombinator.com/item?id=50520757

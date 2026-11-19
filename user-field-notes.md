@@ -1438,3 +1438,8 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 
 - 2026-11-18 — SSH-agent socket proxying trick (operator pattern)
   - Observation: Practical workflow to run remote coding agents without giving away long-lived credentials by using ephemeral SSH agent sockets and biometric/local approval. Evidence strength: Medium (Bluesky discussion). Action: document ephemeral-socket pattern in team playbooks and require audit logs when used. Source: https://bsky.app/profile/andrewoshei.bsky.social/post/3n2l33rmmg42j
+
+
+- 2026-11-19: Grok Build leakage thread (HN) — several users reported confidential snippets appearing in Grok Build agent outputs. Operators reported mitigation steps: disable automatic repo/blob uploads, require manual approval for external uploads, and enable immediate snapshot/quarantine triggers when leakage indicators are observed. Evidence strength: Medium–Strong (HN). Public-safe summary: treat vendor upload endpoints as external artifact stores until vendor provides a post-mortem. Source: https://news.ycombinator.com/item?id=50397355
+
+- 2026-11-19: Claude MCP connector fragility (Reddit follow-up) — community reports that custom MCP connectors broke after runtime updates; practical mitigation is pinning connector versions and running canary handshakes post-upgrade. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a

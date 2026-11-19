@@ -1939,3 +1939,16 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Medium–Strong
   - Source: https://news.ycombinator.com/item?id=50397355; https://github.blog/changelog/2026-11-17-github-copilot-app-microsoft-ignite-releases
   - Watch trigger: Vendor console listing of default export buckets or an incident showing data recovered from vendor-managed canvases.
+
+
+- 2026-11-19: Vendor-managed hosted agents increase the artifact plane surface.
+  - Observation: Hosted agents (Foundry, vendor sandboxes) push traces, canvases, and uploads into vendor-managed storage endpoints rather than local disks.
+  - Implication: Incident response and retention plans must include vendor export endpoints, API keys, and ACLs; forensic snapshots may require vendor cooperation and export tooling.
+  - Watch trigger: vendor publishes example export manifests showing storage endpoint hostnames (S3/Blob/HF) or an official export-to-third-party option.
+  - Source: Microsoft Foundry blog; OpenAI risk guidance.
+
+- 2026-11-19: Snapshot/manifest shape churn risk from CLI/runtime previews.
+  - Observation: CLI preview releases (e.g., gemini-cli v0.70.0-preview.0) can change snapshot manifest fields and artifact encoding (HAR/DOM/WebM) used for golden-trace replays and archival.
+  - Implication: Storage pipelines must tolerate manifest versioning and maintain conversion or migration scripts for replay/archival tooling.
+  - Watch trigger: detection of a new manifest version in exported traces or an updated release note listing manifest schema changes.
+  - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.70.0-preview.0

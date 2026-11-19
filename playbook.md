@@ -1393,3 +1393,12 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Actionable steps: require admin opt-in for payments, set per-agent and per-organization spending caps, log and store payment webhooks/receipts in immutable object-store with retention policy, simulate purchases in canary sandboxes to validate billing paths.
   - Should promote to playbook? yes
   - Source: https://openai.com/index/introducing-chatgpt-wallet
+
+
+## Pin & Verify Marketplace Extensions (playbook candidate)
+
+- Trick: Require vendor-signed extensions and pin extension hashes for IDE/extension installs used by agent pipelines; perform a hash-verify step in onboarding scripts and CI.
+- When useful: When agents interact with IDEs or when user-provided extensions can alter artifact residency (e.g., Cursor or VS Code extension uploads).
+- Evidence: Cursor security notice and Bluesky/HN marketplace compromise reports indicate malicious extension variants and supply-chain risks.
+- Should promote to playbook? yes (actionable, low-cost, high-leverage)
+- Sources: Cursor security notice (see agent-watchlist) and social reports (Bluesky/HN). Evidence strength: Medium–Strong
