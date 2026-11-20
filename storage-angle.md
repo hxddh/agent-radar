@@ -1952,3 +1952,16 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Implication: Storage pipelines must tolerate manifest versioning and maintain conversion or migration scripts for replay/archival tooling.
   - Watch trigger: detection of a new manifest version in exported traces or an updated release note listing manifest schema changes.
   - Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.70.0-preview.0
+
+
+- Hosted-agent export mapping (vendor default→operator bucket)
+  - Summary: Vendor-hosted agents (Foundry, Cursor, Grok Build) are increasingly offering managed exports and persisted canvases; operators must map these exports to internal bucket/ACL and retention policies before enabling uploads or automatic exports.
+  - Action: inventory vendor export endpoints, test an export round-trip, and create a mapping table of vendor-export → internal-bucket with retention/ACL rules.
+  - Watch trigger: vendor docs or SDKs adding a new export toggle or a default 'persist to cloud' setting.
+  - Source examples: Microsoft Foundry blog; Grok Build reporting.
+
+- MCP server origin & artifact residency
+  - Summary: New MCP server implementations (including browser-side MCP packages) change where attachments and tool logs are produced and stored.
+  - Action: instrument MCP server endpoints in staging to capture where artifacts land, and add TTL/ACL verification to deployment checklists.
+  - Watch trigger: telemetry showing unexpected MCP server installs or packages that add upload endpoints in their changelog.
+  - Source examples: BrowserStack MCP package (npm)

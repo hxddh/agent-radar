@@ -5,10 +5,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: OpenAI announced GPT‑6.2 (Astra/Sol) model family (2026-11-18) which expands agent tool-call capabilities and should be staged before fleet-wide adoption. GitHub also published Copilot app changelogs (2026-11-17) and JetBrains Copilot updates affecting extension storage and UX. Operators must treat model upgrades and IDE/extension churn as high-risk: require admin enablement for new Copilot features, pin SDKs/connectors in CI, and add pre-upgrade smoke/regression tests that validate tool-call semantics and artifact residency.
-- Source class: Product page + vendor changelog
-- Evidence strength: Strong
-- Source: https://openai.com/index/introducing-gpt-6-2-astra-sol; https://github.blog/changelog/2026-11-17-github-copilot-app-microsoft-ignite-releases
+- Recent changes: OpenAI published new codex rust client/runtime releases (rust-v0.171.0 stable and rust-v0.173.0-alpha.1). These releases may change client-side tool-call and streaming semantics used by coding-agent connectors. Operators must pin client versions in connector CI and run golden-trace/compatibility smoke tests before fleet upgrades.
+- User impact: potential subtle changes in workspace streaming and tool-call formats that can alter agent behavior or containment assumptions.
+- Infra implication: require connector pinning, CI smoke tests, and an upgrade-window policy for codex client rollouts.
+- Evidence strength: Strong (GitHub releases)
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.171.0
 ## Claude Code
 - Recent changes: Anthropic published Projects redesign notes (parallel-worker semantics) that change concurrency and export/merge behavior for Claude Code. A GHSA advisory for related components remains on the watchlist; operators must apply GHSA mitigations, stage parallel-worker isolation/merge tests in staging, and validate session export integrity before fleet upgrades.
 - Actions: Pin runtimes in connector CI; add merge/consistency tests and export-hash validation to deployment gates.
@@ -768,9 +769,6 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Microsoft — Foundry (Hosted Agents & Dev Pack)
-
-- What it is: Microsoft Foundry now advertises a hosted-agent service, developer pack, and reusable toolboxes announced at Ignite 2026.
-- Why it matters: provides an enterprise-hosted path for running agent fleets and reusable toolboxes; centralizes traces and exported artifacts under vendor-managed endpoints which operators must audit for retention/ACL and forensic readiness.
-- Evidence strength: Strong (official Microsoft Dev Blog)
-- Source: https://devblogs.microsoft.com/foundry/hosted-agents-foundry-agent-service-ignite-2026/
-
+- Recent changes: Microsoft published "Build trusted autonomous agents for your team" and introduced a hosted Foundry Agent Service plus a dev pack to help teams onboard fleets. Operators should treat Foundry pilots as a hosted-fleet exercise: extract default export and retention settings, pin any Foundry SDKs in CI, and treat vendor export endpoints as first-class artifacts for retention/ACL mapping.
+- Why it matters: centralizes hosted fleets and exporter defaults under vendor control, increasing the need for explicit export→object-storage mapping and pre-deploy eval gating.
+- Evidence strength: Strong (Microsoft Dev Blog)

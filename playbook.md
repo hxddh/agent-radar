@@ -1402,3 +1402,11 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Evidence: Cursor security notice and Bluesky/HN marketplace compromise reports indicate malicious extension variants and supply-chain risks.
 - Should promote to playbook? yes (actionable, low-cost, high-leverage)
 - Sources: Cursor security notice (see agent-watchlist) and social reports (Bluesky/HN). Evidence strength: Medium–Strong
+
+
+- Convert agent evals into CI gates
+  - When useful: when teams run automated evals as part of pre-merge or pre-deploy checks for agent-driven changes
+  - Evidence: community operator posts and pilot implementations (Bluesky examples)
+  - How-to (starter): produce a JSON artifact {"passed": true/false, "score": N}; add a CI step that fails when passed != true; collect eval artifacts into a retention bucket for audits.
+  - Should promote to playbook? yes
+  - Sources: https://bsky.app/profile/jeremymorgan.com/post/3n2pikbthai2k

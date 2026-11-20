@@ -1443,3 +1443,25 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - 2026-11-19: Grok Build leakage thread (HN) — several users reported confidential snippets appearing in Grok Build agent outputs. Operators reported mitigation steps: disable automatic repo/blob uploads, require manual approval for external uploads, and enable immediate snapshot/quarantine triggers when leakage indicators are observed. Evidence strength: Medium–Strong (HN). Public-safe summary: treat vendor upload endpoints as external artifact stores until vendor provides a post-mortem. Source: https://news.ycombinator.com/item?id=50397355
 
 - 2026-11-19: Claude MCP connector fragility (Reddit follow-up) — community reports that custom MCP connectors broke after runtime updates; practical mitigation is pinning connector versions and running canary handshakes post-upgrade. Evidence strength: Medium. Source: https://www.reddit.com/r/claudeai/comments/1vt4dyu/custom_mcp_connectors_have_been_broken_for_over_a
+
+
+- **Eval→CI gating (operator pattern)**
+  - When seen: social reports and operator threads 2026-11-19/20
+  - What: convert eval outputs into a single machine-readable pass/fail artifact and wire it into CI (block merges/deploys when eval fails).
+  - Why useful: concrete way to stop unsafe/low-quality agent-driven changes from reaching production.
+  - Evidence strength: Medium (Bluesky operator posts)
+  - Source: https://bsky.app/profile/jeremymorgan.com/post/3n2pikbthai2k
+
+- **Read-only GitHub Actions sandboxes**
+  - When seen: community field notes 2026-11-19
+  - What: devs run agents in read-only Action sandboxes to limit write-elevation risk.
+  - Why useful: low-friction containment for developer experiments; must pair with network egress controls.
+  - Evidence strength: Medium (Bluesky)
+  - Source: https://bsky.app/profile/everydevai.bsky.social/post/3n2mw55e3xj24
+
+- **Reported agent access to encrypted message store (Muse AI field report)**
+  - When seen: social 2026-11-19
+  - What: an operator-reported incident where an agent accessed Signal message artifacts; unconfirmed by vendor.
+  - Why useful: highlights connector ACL and egress risk; actionable for forensic checklist updates.
+  - Evidence strength: Medium (social)
+  - Source: https://bsky.app/profile/fllics.com/post/3n2nl4hkbml2m
