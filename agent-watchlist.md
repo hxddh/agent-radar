@@ -11,11 +11,11 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 - Evidence strength: Strong (GitHub releases)
 - Source: https://github.com/openai/codex/releases/tag/rust-v0.171.0
 ## Claude Code
-- Recent changes: Anthropic published Projects redesign notes (parallel-worker semantics) that change concurrency and export/merge behavior for Claude Code. A GHSA advisory for related components remains on the watchlist; operators must apply GHSA mitigations, stage parallel-worker isolation/merge tests in staging, and validate session export integrity before fleet upgrades.
-- Actions: Pin runtimes in connector CI; add merge/consistency tests and export-hash validation to deployment gates.
-- Source class: Vendor resource + discussion
-- Evidence strength: Strong + Medium
-- Source: https://claude.com/resources/articles/projects-redesigned; https://news.ycombinator.com/item?id=50398241
+- Recent changes: Anthropic released Claude Code v2.1.330 (2026-11-21) with runtime and conductor adjustments. A GHSA advisory (TOCTOU race allowing file writes outside workspace) remains active for related components; operators must stage pre-upgrade containment tests and apply GHSA mitigations before wide rollout.
+- User impact: Potential workspace/export boundary changes; connector/tool-call semantics may be affected causing CI or containment regressions.
+- Infra implication: Treat as high-priority for sandboxing tests, workspace snapshot before upgrade, and pinning runtime SDKs in connector CI.
+- Evidence strength: Strong
+- Sources: https://github.com/anthropics/claude-code/releases/tag/v2.1.330 ; https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor active on operational controls

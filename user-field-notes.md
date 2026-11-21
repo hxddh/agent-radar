@@ -1465,3 +1465,11 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Why useful: highlights connector ACL and egress risk; actionable for forensic checklist updates.
   - Evidence strength: Medium (social)
   - Source: https://bsky.app/profile/fllics.com/post/3n2nl4hkbml2m
+
+
+- **GitHub Agentic Workflows — read-only Actions sandbox pattern** (2026-11-21):
+  - Scenario: developers want to run experiment agents without risking direct repo writes or PR churn.
+  - Observed trick: configure Actions job with no write-scoped GITHUB_TOKEN, mount ephemeral artifact upload to an isolated bucket, and include a post-run verification step asserting no refs/PRs were created.
+  - Why useful: low-friction containment for exploratory agent runs, usable as a step before granting connector write privileges.
+  - Evidence strength: Medium (Bluesky operator report)
+  - Source: https://bsky.app/profile/everydevai.bsky.social/post/3n2mw55e3xj24

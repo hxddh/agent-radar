@@ -1410,3 +1410,15 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - How-to (starter): produce a JSON artifact {"passed": true/false, "score": N}; add a CI step that fails when passed != true; collect eval artifacts into a retention bucket for audits.
   - Should promote to playbook? yes
   - Sources: https://bsky.app/profile/jeremymorgan.com/post/3n2pikbthai2k
+
+
+- **Pre-upgrade containment & connector smoke test (Claude Code / Codex)**
+  - When useful: before rolling new coding-agent runtimes (e.g., Claude Code v2.1.330) to staging/production
+  - Steps:
+    1. Pin the runtime image and client SDK in CI images.
+    2. Run a containment smoke suite that executes typical edit-tool flows (create/edit/delete) and asserts workspace sandbox boundaries (no writes outside workspace directory).
+    3. Verify export/retention behavior by triggering an export and confirming exporter destination and ACLs.
+    4. Run golden-trace replay for a representative session and compare artifact digests.
+  - Evidence: GHSA advisory + vendor release notes (Anthropic release + advisory)
+  - Should promote to playbook? yes
+  - Sources: https://github.com/anthropics/claude-code/releases/tag/v2.1.330 ; https://github.com/advisories/GHSA-5xjx-9qx6-jcrv

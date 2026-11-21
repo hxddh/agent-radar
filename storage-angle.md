@@ -1965,3 +1965,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Action: instrument MCP server endpoints in staging to capture where artifacts land, and add TTL/ACL verification to deployment checklists.
   - Watch trigger: telemetry showing unexpected MCP server installs or packages that add upload endpoints in their changelog.
   - Source examples: BrowserStack MCP package (npm)
+
+
+- **Vendor exporter defaults -> object-storage as primary artifact plane**
+  - What: GitHub advisory controls and Cloudflare exporter/WAF changes make vendor-side export and edge defaults the de facto artifact store for many agent runtimes.
+  - Implication: operations must treat vendor exporter endpoints as first-class retention & ACL policy points and include them in forensic mapping.
+  - Evidence strength: Strong
+  - Sources: https://github.blog/changelog/2026-11-20-security-advisory-permissions-are-now-generally-available ; https://blog.cloudflare.com/ruby2shell-waf-protection/
+  - Watch trigger: vendor publishes explicit exporter TTL/ACL changes or an automated exporter→bucket mapping template appears in deployment manifests.
+
+- **Large-context models impact snapshot strategy**
+  - What: 1M-context model discussion (Gemini 4 Neon) implies different decisions for short-live context vs. long-term memory.
+  - Implication: prefer short-horizon in-memory context for immediate work but increase long-term snapshot cadence for provenance if models support larger native contexts; ensure object-store snapshots remain indexable for replay.
+  - Evidence strength: Medium
+  - Sources: Gemini social discussion (see daily) ; gemini-cli preview (research-log)
+  - Watch trigger: official model docs publishing context-window numeric values or pricing per-context bucket.
