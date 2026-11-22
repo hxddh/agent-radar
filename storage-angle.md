@@ -1980,3 +1980,45 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Medium
   - Sources: Gemini social discussion (see daily) ; gemini-cli preview (research-log)
   - Watch trigger: official model docs publishing context-window numeric values or pricing per-context bucket.
+
+
+- Vendor exporters as first-class artifact sinks (2026-11-22)
+  - Context: Microsoft Foundry and Cloudflare agents updates show vendors exposing exporter endpoints and persisting canvases/artifacts by default.
+  - Storage implication: Add vendor exporter endpoints to asset inventories; map exporter→S3/Blob buckets, set TTLs, and audit ACLs. Treat exporter changes as release-note items that can change retention and compliance posture.
+  - Evidence strength: Strong
+  - Source: https://devblogs.microsoft.com/foundry/hosted-agents-private-network-setup/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.34.0
+  - Watch trigger: any vendor release that changes default exporter URL, TTL, or adds a new persisted-canvas feature.
+
+- Shared KV caches & ephemeral residency (2026-11-22)
+  - Context: AWS Quick's shared KV cache changes where short-term context is stored.
+  - Storage implication: cache TTLs and purge semantics must be part of cost and retention planning; unexpected persistence increases exposure surface for sensitive context.
+  - Evidence strength: Strong
+  - Source: https://aws.amazon.com/blogs/machine-learning/new-in-aws-quick-more-capable-flows-an-updated-web-experience-and-agents-that-work-together/
+  - Watch trigger: sudden increase in cache object counts or cross-flow read rates in telemetry.
+
+
+## 2026-11-22 — Storage & exporter implications
+
+- Vendor-hosted exporters are now first-class artifact sinks: Foundry hosted agents and Cloudflare agents changes demonstrate vendor defaults can determine where canvases, uploaded repo blobs, and session exports land. Action: maintain an exporter inventory mapping vendor default endpoints → approved buckets + TTL + ACL.
+
+- Shared KV caching changes residency of ephemeral context: AWS Quick and similar shared-cache patterns mean ephemeral context may persist beyond a single run; treat cache TTLs and purge semantics as operational knobs for privacy/cost.
+
+- Forensics & retention: require per-run export toggles and automated snapshot retention policies for any agent with broad connector scopes; validate cross-tenant ACLs after vendor upgrades (Cloudflare agents@0.34.0 example).
+
+
+## 2026-11-22 — Promotions with storage implications
+
+- BrowserStack / @browserstack/mcp-server (promoted)
+  - Storage implication: MCP server packages can change where browser-driven tool-call artifacts and previews are exported. Operators must map any new exporter default targets to tenant-scoped buckets, verify TTLs, and require manifest sidecars with provenance (agent-id, run-id, producer-version) before durable promotion.
+  - Immediate actions: add a staging smoke test that exercises BrowserStack MCP exports and asserts bucket prefix, ACLs, and manifest presence; alert on exporter target changes after upgrades.
+  - Evidence: research-log.md (scr-browserstack-mcp-2026-11-20)
+
+- Modal Sandboxes (promoted)
+  - Storage implication: Ephemeral sandbox sessions emit overlayfs/sandbox-layer artifacts (syscall traces, overlay diffs, HAR/DOM/WebM for headful runs). Default behavior should be preview-first; durable retention requires explicit opt-in, manifest sidecars, and PII/secret scanning prior to archival.
+  - Immediate actions: require sandbox runtimes to produce a replay manifest on session end, add automated PII/secret scans before durable retention, and tier binary artifacts (short TTL hot bucket; durable manifest archived separately).
+  - Evidence: https://modal.com/products/sandboxes
+
+- Arizona/California investigations (promoted)
+  - Storage implication: Regulatory pressure increases need for immutable retention lanes and exportable forensic bundles. Operators should ensure that vendor-managed exporters support legal-hold/forensic export APIs and that object-storage retention/ACL metadata is auditable.
+  - Immediate actions: inventory vendor exporter endpoints, verify vendor forensic-export capabilities, and document legal-hold and export runbooks for each major vendor.
+  - Evidence: https://www.reuters.com/legal/transactional/arizona-says-it-is-investigating-openai-other-firms-over-possible-rogue-agents-2026-11-19/

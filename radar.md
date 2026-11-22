@@ -99,3 +99,18 @@ Operational signal (2026-10-17): community posts and operator smoke runs should 
 
 - GHSA-5324-3w58-qpp2 advisory (promoted)
   - Why it matters for the radar: platform-level advisories that affect tenant isolation are immediate operational risks for MCP servers and hosted agent fleets; they increase the urgency of exporter→bucket mapping and per-tenant retention/ACL audits. Relevance: 9. Source: GitHub Advisory.
+
+
+### 2026-11-22 Promotions — quick notes
+
+- BrowserStack — @browserstack/mcp-server (promoted)
+  - Why it matters for the radar: a vendor MCP server package for browser integrations raises thesis 5 (object storage as artifact plane) and thesis 8 (platform-vendor MCP entry) because exporter defaults and MCP origins determine where session artifacts land. Evidence strength: Strong. Relevance: 8–9.
+  - Source: research-log.md (scr-browserstack-mcp-2026-11-20)
+
+- Modal Sandboxes (promoted)
+  - Why it matters for the radar: ephemeral sandboxes that run untrusted agent code increase the importance of sandbox→artifact mapping, replay manifests, and short-vs-long retention policies (thesis 9: containment/security; thesis 5: storage). Evidence strength: Medium. Relevance: 7.
+  - Source: https://modal.com/products/sandboxes
+
+- Arizona & California investigations (promoted)
+  - Why it matters for the radar: regulatory investigations materially raise the bar on forensic exportability, retention defaults, and vendor post-mortems, increasing the urgency of thesis 9 (containment/security) and operationalizing thesis 5 (storage as artifact plane). Evidence strength: Strong. Relevance: 10.
+  - Source: https://www.reuters.com/legal/transactional/arizona-says-it-is-investigating-openai-other-firms-over-possible-rogue-agents-2026-11-19/

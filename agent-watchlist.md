@@ -5,11 +5,9 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Mainstream Agents
 
 ## Codex / ChatGPT Coding Agent
-- Recent changes: OpenAI published new codex rust client/runtime releases (rust-v0.171.0 stable and rust-v0.173.0-alpha.1). These releases may change client-side tool-call and streaming semantics used by coding-agent connectors. Operators must pin client versions in connector CI and run golden-trace/compatibility smoke tests before fleet upgrades.
-- User impact: potential subtle changes in workspace streaming and tool-call formats that can alter agent behavior or containment assumptions.
-- Infra implication: require connector pinning, CI smoke tests, and an upgrade-window policy for codex client rollouts.
-- Evidence strength: Strong (GitHub releases)
-- Source: https://github.com/openai/codex/releases/tag/rust-v0.171.0
+- Recent changes: Multiple codex rust client releases in November (rust-v0.171.0-alpha.7 and continued alpha releases through 2026-11) — runtime/SDK churn remains fast and may change streaming/tool-call semantics used by coding-agent connectors. Operators must pin client versions in connector CI and run golden-trace/compatibility smoke tests before fleet upgrades.
+- Stale check: refreshed 2026-11-22 (added rust-v0.171.0-alpha.7 evidence)
+- Source: https://github.com/openai/codex/releases/tag/rust-v0.171.0-alpha.7
 ## Claude Code
 - Recent changes: Anthropic released Claude Code v2.1.330 (2026-11-21) with runtime and conductor adjustments. A GHSA advisory (TOCTOU race allowing file writes outside workspace) remains active for related components; operators must stage pre-upgrade containment tests and apply GHSA mitigations before wide rollout.
 - User impact: Potential workspace/export boundary changes; connector/tool-call semantics may be affected causing CI or containment regressions.
@@ -19,36 +17,37 @@ Track mainstream AI Agents and emerging candidates. Keep entries concise, source
 ## Cursor
 - Category: AI IDE / coding agent
 - Maturity: Widely adopted; vendor active on operational controls
-- Recent changes: Cursor published a security notice (2026-11) about compromised/malicious Claude Code VS Code extension variants found in extension channels; vendor confirmed marketplace compromises and persistent cloud canvases that change artifact residency assumptions. Operators must: pin extension hashes, require vendor-signed extensions, ingest Cursor IOCs into blocklists, and add extension-supply-chain checks to onboarding playbooks. Also audit persisted canvases for retention and access controls.
-- Evidence strength: Strong (Cursor security blog + secondary reporting)
+- Recent changes: Cursor published a security notice (Nov 2026) about malicious Claude Code VS Code extension variants found in extension channels and persistent cloud canvases; vendor IOCs and guidance evolved over the week.
+- Action: pin extension hashes in enterprise images, require vendor-signed extensions, ingest Cursor IOCs into blocklists, and audit persisted canvases for retention and access controls.
+- Stale check: refreshed 2026-11-22 (added vendor security notice linkage)
+- Source: https://cursor.com/blog/security-incident-update
 ## Devin / Cognition
 - Category: Agent runtime / research prototype
-- Recent changes: No dated vendor changelog or public release since 2026-09-13. Deprioritized for active promotion until a new dated release or operator field report appears. Keep on passive watch; promote only with new dated artifacts or operator adoption signals.
-- replace_section anchor: `## Devin / Cognition`
+- Recent changes: No dated vendor changelog or public release since 2026-09-13. Deprioritized for active promotion until a new dated release or operator field report appears.
+- Stale check: deprioritized 2026-11-22 (no new evidence in 21+ days)
+- Follow-up: watch for a dated release or operator report before re-promoting.
 ## GitHub Copilot / Coding Agent
-- Category: Coding agent / task agent
-- Maturity: Strong adoption across developer ecosystems.
-- Recent changes: GitHub changelog notes model deprecation in December and Copilot impact dashboard updates (adds chat & VS Code agent usage metrics). Operators should plan migrations for deprecated models, pin Copilot model versions where possible, and map Copilot telemetry retention to forensic/retention policies.
-- Evidence strength: Strong (GitHub changelog).
-- replace_section anchor: `## GitHub Copilot / Coding Agent`
+- Recent changes: GitHub published Copilot impact dashboard updates (Nov 2026) that add chat and VS Code agent usage telemetry; useful for enterprise adoption and measuring IDE vs non-IDE usage.
+- Action: map Copilot telemetry outputs into org-level adoption and incident dashboards; use telemetry to validate IDE-centric vs cloud-run hypotheses.
+- Stale check: refreshed 2026-11-22 (added Copilot impact dashboard reference)
+- Source: https://github.blog/changelog/2026-11-06-copilot-impact-dashboard-adds-chat-and-vs-code-agent-usage
 ## Replit Agent
-- Category: Hosted coding/workspace agent
-- Recent changes: Replit experienced a partial outage earlier in November that affected agent/workspace interactions; no dated product changelog since 2026-10-09. Operators using Replit-hosted agents should add session recovery steps and offline fallbacks to runbooks.
-- Status: Monitor for dated vendor updates; keep operational mitigations in playbooks.
-- replace_section anchor: `## Replit Agent`
+- Recent changes: Replit had a partial outage in October 2026 affecting agent/workspace interactions (2026-10-09 field reports); no new dated vendor changelog since. Status: deprioritized for active promotion until new dated vendor release/notice appears.
+- Stale check: deprioritized 2026-11-22
+- Source: https://outages.live/outages/replit-221k6q7oc
 ## Warp
-- Category: Terminal/IDE agent / developer tooling
-- Recent changes: No high-confidence vendor changelog this run (last public note: 2026-09-13). Deprioritized until a dated release or operator field report surfaces. Keep on passive watch for governance or integration controls.
-- replace_section anchor: `## Warp`
+- Category: IDE/terminal agent integration
+- Recent changes: No dated vendor changelog since 2026-09-13. Deprioritized for active promotion; keep as index entry for supply-chain mapping when encountered in fleets.
+- Stale check: deprioritized 2026-11-22
 ## Amp
 - Category: Agent surface / runtime
 - Maturity: Previously tracked.
 - Recent changes: No substantive public updates since 2026-09-13; status: deprioritized. Keep monitored for security advisories or runtime releases.
 - replace_section anchor: `## Amp`
 ## Factory
-- Category: Orchestration / agent workbench
-- Recent changes: No new public changelog this week (last noted 2026-09-13). Deprioritized for active watch until fresh vendor evidence appears.
-- replace_section anchor: `## Factory`
+- Category: Orchestration / meta-harness candidate
+- Recent changes: No dated vendor changelog since 2026-09-13. Deprioritized for active promotion; continue to watch for framework-stabilizing releases or operator writeups.
+- Stale check: deprioritized 2026-11-22
 ## Raycast AI
 - Category: Desktop/IDE agent
 - Recent changes: No dated public update since 2026-09-13. Deprioritized for active promotion; monitor for governance controls and desktop containment features.
@@ -635,8 +634,9 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.30.1
-- Recent changes: Cloudflare published guidance on adapting to AI penetration-testing orchestrators and continues to alter exporter defaults and TTLs in the agents releases stream. Operators should validate exporter→object-storage mappings, verify TTLs against forensic retention requirements, and map Zero Wire IOCs into edge detection rules and incident playbooks.
-- Evidence strength: Strong (Cloudflare blog + releases)
+- Recent changes: Cloudflare published agents@0.34.0 (2026-11-21) with exporter & edge runtime adjustments that affect where ephemeral workspaces and canvases are persisted. Operators should validate exporter→object-storage mappings, TTLs, and per-tenant ACLs after upgrading; map Zero Wire IOCs and edge detection rules into incident playbooks.
+- Evidence strength: Strong (GitHub release)
+- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.34.0
 ## OpenHands Software Agent SDK
 
 - What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.
@@ -693,7 +693,7 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 ## Amp (OpenAI)
 - Category: Task agent / multi-domain agent
 - Recent changes: No new dated public changelog this run (last noted 2026-09-13). Deprioritized from active promotion; retain as mainstream index for audit mapping when encountered in fleets.
-- replace_section anchor: `## Amp (OpenAI)`
+- Stale check: deprioritized 2026-11-22
 ## Vercel — agent-browser (vercel-labs/agent-browser)
 
 - What it is: A Rust/CLI browser-automation primitive for AI agents (HAR/DOM/WebM capture, headful traces, selector/timing controls) enabling programmatic web interactions and multimodal artifact export.
@@ -769,6 +769,34 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Microsoft — Foundry (Hosted Agents & Dev Pack)
-- Recent changes: Microsoft published "Build trusted autonomous agents for your team" and introduced a hosted Foundry Agent Service plus a dev pack to help teams onboard fleets. Operators should treat Foundry pilots as a hosted-fleet exercise: extract default export and retention settings, pin any Foundry SDKs in CI, and treat vendor export endpoints as first-class artifacts for retention/ACL mapping.
-- Why it matters: centralizes hosted fleets and exporter defaults under vendor control, increasing the need for explicit export→object-storage mapping and pre-deploy eval gating.
-- Evidence strength: Strong (Microsoft Dev Blog)
+- Recent changes: Microsoft published guidance and launched a hosted Foundry Agent Service and developer pack (2026-11). Foundry's hosted model introduces default export targets and managed compute options; operators should extract export endpoints, default retention settings, and treat vendor-managed exporters as primary artifact sinks in compliance diagrams.
+- Action: Pin Foundry SDKs in CI, add pre-upgrade compatibility gates, and validate browser-automation tool-call scopes in staging before production rollout.
+- Evidence strength: Strong (Microsoft DevBlogs)
+- Source: https://devblogs.microsoft.com/foundry/hosted-agents-private-network-setup/
+
+
+## BrowserStack — @browserstack/mcp-server
+
+- What it is: BrowserStack's MCP-server package that changes how browser-based MCP clients integrate with MCP servers and where artifacts/executions originate.
+- Why it matters: MCP server implementations shape exporter origins for browser-driven tool-calls and can change which storage endpoints receive session exports and previews. A first-party MCP package from a major infra vendor increases the chance operator artifact mapping must be updated (exporter→bucket, TTLs, tenant scoping).
+- Evidence strength: Strong (vendor / release entry in research-log). Relevance score: 8–9.
+- Follow-up needed: smoke-test BrowserStack MCP server in staging, map exporter endpoints to tenant buckets, verify manifest sidecars and provenance fields are produced.
+- Source: research-log.md (scr-browserstack-mcp-2026-11-20)
+
+
+## Modal Sandboxes (Modal)
+
+- What it is: Ephemeral sandboxes for running untrusted agent code (Modal sandboxes / products page).
+- Why it matters: Sandboxed runtimes change storage lifecycles: ephemeral session artifacts vs optional durable snapshots, and require clear exporter hooks to capture replayable manifests and transient overlayfs artifacts. Operators must treat sandbox session outputs as preview-first with opt-in durable export.
+- Evidence strength: Medium (vendor product page). Relevance score: 7.
+- Follow-up needed: verify persistent volume support, exporter hooks, replay manifest formats, and default TTLs; add sandbox artifact exporters to inventory.
+- Source: https://modal.com/products/sandboxes
+
+
+## Arizona & California investigations into OpenAI & others (regulatory)
+
+- What it is: State-level investigations (Arizona/California) into possible rogue agent behavior and vendor disclosures.
+- Why it matters: Regulatory scrutiny increases operator obligations for audit logs, retention, and forensic export defaults, and may require vendors to publish post-mortems or enable forensic exports by default. Treat this as a platform-wide operational signal rather than a single-agent product entry.
+- Evidence strength: Strong (Reuters). Relevance score: 10 for operational impact.
+- Follow-up needed: ensure runbooks and vendor contracts map to forensic export capabilities, update retention and legal-hold playbooks, and add vendor post-mortem monitoring to corroboration queue.
+- Source: https://www.reuters.com/legal/transactional/arizona-says-it-is-investigating-openai-other-firms-over-possible-rogue-agents-2026-11-19/

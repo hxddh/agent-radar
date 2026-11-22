@@ -1473,3 +1473,17 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Why useful: low-friction containment for exploratory agent runs, usable as a step before granting connector write privileges.
   - Evidence strength: Medium (Bluesky operator report)
   - Source: https://bsky.app/profile/everydevai.bsky.social/post/3n2mw55e3xj24
+
+
+- 2026-11-22: Agents losing context after git push (social report).
+  - Observation: Operators reported running agents 'going blind' after a repo push; common mitigations are snapshotting workspaces before pushes or running long-lived agents against read-only clones.
+  - Practical mitigation: snapshot workspace as an artifact and rehydrate explicitly; avoid tying long-running agents to mutable local worktrees.
+  - Evidence strength: Medium (Bluesky social post)
+  - Source: https://bsky.app/profile/zippysh.bsky.social/post/3n2v33yf4c524
+
+
+## 2026-11-22
+
+- Snapshot before push: multiple operator reports show agents "going blind" after git push; practical mitigation: snapshot or export workspace before pushing repository changes and prefer read-only clones for long-running/background agent runs. Source: social field reports (Bluesky); Evidence strength: Medium. See: https://bsky.app/profile/zippysh.bsky.social/post/3n2v33yf4c524
+
+- Read-only Actions pattern: GitHub Actions read-only sandbox pattern (mount read-only workspace, restrict tool-calls) is a low-friction containment pattern worth piloting for developer-run agents. Evidence strength: Medium (social / operator writeups). See research-log candidate entries for follow-up.

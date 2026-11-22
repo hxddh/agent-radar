@@ -5309,3 +5309,45 @@ Notes:
 - **Google Gemini 4 Neon (discussion-level)** (scr-gemini-neon-2026-11-21): Why it matters: discussion suggests 1M-context model variant; impacts workspace vs long-term memory tradeoffs. Evidence strength: Medium (social); promotion_status: candidate; follow-up: capture official Gemini docs. candidate_seen_at: 2026-11-21; last_checked_at: 2026-11-21; defer_count: 0; stale_after_days: 14. Source: https://bsky.app/profile/feed.igeek.gamer-geek-news.com.ap.brid.gy/post/3n2sk3hhfopl2
 
 - **AWS Quick: multi-agent cooperation blog** (scr-aws-quick-2026-11-21): Why it matters: vendor orchestration primitives affect enterprise adoption and default export semantics. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-11-21; last_checked_at: 2026-11-21; defer_count: 0; stale_after_days: 30. Source: https://aws.amazon.com/blogs/machine-learning/new-in-aws-quick-more-capable-flows-an-updated-web-experience-and-agents-that-work-together/
+
+
+- **Microsoft — Foundry hosted agents & dev pack** (scr-foundry-2026-11-22): Why it matters: vendor-hosted agent path with managed compute and browser automation consolidates where artifacts and logs may be exported; operators must map exporter endpoints and retention. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-11-22; last_checked_at: 2026-11-22; defer_count: 0; stale_after_days: 30. Source: https://devblogs.microsoft.com/foundry/hosted-agents-private-network-setup/
+
+- **Cloudflare — agents@0.34.0** (scr-cloudflare-agents-0.34.0-2026-11-21): Why it matters: edge runtime release changes exporter defaults and TTLs that affect forensic retention and multitenant isolation. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-11-21; last_checked_at: 2026-11-22; defer_count: 0; stale_after_days: 30. Source: https://github.com/cloudflare/agents/releases/tag/agents%400.34.0
+
+- **BrowserStack @browserstack/mcp-server (npm)** (scr-browserstack-mcp-2026-11-20): Why it matters: formalizes a browser→MCP server integration surface that affects routing and where browser-driven artifacts are proxied. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-11-20; last_checked_at: 2026-11-22; defer_count: 0; stale_after_days: 30. Source: https://www.npmjs.com/package/%40browserstack/mcp-server
+
+- **QwenLM — qwen-code v0.28.3** (scr-qwen-2026-11-21): Why it matters: code-model release that can change generation behavior and backend compatibility; operators should pin and regression-test. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-11-21; last_checked_at: 2026-11-22; defer_count: 0; stale_after_days: 30. Source: https://github.com/QwenLM/qwen-code/releases/tag/v0.28.3
+
+- **Cursor security notice (malicious VS Code extension variants)** (scr-cursor-2026-11): Why it matters: supply-chain compromise vector for IDE extensions; ingestion into blocklists and pinning are immediate mitigations. Evidence strength: Strong; promotion_status: candidate; candidate_seen_at: 2026-11-22; last_checked_at: 2026-11-22; defer_count: 0; stale_after_days: 30. Source: https://cursor.com/blog/security-incident-update
+
+
+## 2026-11-22 — Corroboration & Candidate housekeeping
+
+- **Resolved / upgraded**: @browserstack/mcp-server (scr-browserstack-mcp-2026-11-20): Found primary package on npm; evidence strength: Strong; promotion_status: candidate -> verified. Source: https://www.npmjs.com/package/%40browserstack/mcp-server
+
+- **Resolved / upgraded**: pullrun/pullrun (scr-pullrun-2026-11-22): GitHub repo found (fast agent sandbox runtime); evidence strength: Medium->Strong for infra_primitive relevance; promotion_status: candidate. Source: https://github.com/pullrun/pullrun
+
+- **Resolved / noted**: ThreatDefence/agentic-attack-detections (scr-threatdefence-2026-11-22): GitHub IOCs & hunts located; evidence strength: Medium; keep in infra_primitive candidate inbox for SOC integration. Source: https://github.com/ThreatDefence/agentic-attack-detections
+
+- **Resolved / upgraded**: @tangle-network/agent-eval (scr-tangle-agent-eval-2026-11-22): npm package found (agent-eval tooling); evidence strength: Medium; promotion_status: candidate. Source: https://www.npmjs.com/package/%40tangle-network/agent-eval
+
+- **Still pending / number-check**: 2026-11-20 numeric claims (1M-context / 1M-users) flagged in prior items — no primary snapshot matching the exact numeric claim found; Number check: verify before trusting.
+
+- **Freshness notes**: detect-coding-agent remains follow-up (previous coverage present); do not promote until additional independent field reports appear.
+
+- candidate_seen_at / last_checked_at: 2026-11-22 for the above; defer_count kept or reset per resolved state.
+
+
+## 2026-11-22 Promote-candidates pass
+
+- **BrowserStack — @browserstack/mcp-server** (scr-browserstack-mcp-2026-11-20): promotion_status: promoted; why: vendor MCP-server package changes browser→MCP integration surface and artifact origins, creating direct storage/exporter mapping work for operators (exporter→bucket, TTLs, manifest sidecars). Evidence strength: Strong (release / research-log entry). last_checked_at: 2026-11-22. Follow-up: run staging export smoke-tests, confirm manifest fields and tenant-prefixing; add to corroboration queue for vendor release notes. Source: research-log.md (candidate entry)
+
+- **Modal Sandboxes** (scr-modal-sandboxes): promotion_status: promoted; why: ephemeral sandbox runtimes alter artifact lifecycles (overlayfs/syscall traces, ephemeral previews) and require explicit replay/export hooks and manifest sidecars for durable retention. Evidence strength: Medium (vendor product page). last_checked_at: 2026-11-22. Follow-up: validate exporter hooks and persistent-volume behavior in staging; add schema/version tests for sandbox artifacts. Source: https://modal.com/products/sandboxes
+
+- **Arizona & California investigations into OpenAI & others** (scr-arizona-ca-2026-11-19): promotion_status: promoted; why: state investigations raise operator obligations for audit logs, retention, legal-hold, and vendor forensic exports; this is an operational/regulatory watch item with immediate implications for retention mapping and export capabilities. Evidence strength: Strong (Reuters). last_checked_at: 2026-11-22. Follow-up: inventory vendor exporter/export-to-tenant capabilities and legal-hold APIs; monitor for vendor post-mortems. Source: https://www.reuters.com/legal/transactional/arizona-says-it-is-investigating-openai-other-firms-over-possible-rogue-agents-2026-11-19/
+
+Notes:
+- Promotions applied: 3 (limit per run). Each promoted candidate has been added to agent-watchlist.md and storage-angle.md and referenced in radar.md quick notes.
+- Deduplication: Grok Build and Cursor were previously promoted (see earlier entries); this pass promoted candidates that were present in the current candidate inbox and met relevance/infra-implication gates.
+- Next steps: operational smoke-tests and manifest verification for MCP and sandbox exporters; vendor-postmortem monitoring for regulatory items.

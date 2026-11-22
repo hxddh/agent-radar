@@ -1422,3 +1422,22 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Evidence: GHSA advisory + vendor release notes (Anthropic release + advisory)
   - Should promote to playbook? yes
   - Sources: https://github.com/anthropics/claude-code/releases/tag/v2.1.330 ; https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
+
+
+- Pin vendor extensions & SDKs in onboarding playbooks
+  - When useful: onboarding IDEs or fleets that accept third-party extensions or new SDK/runtime releases.
+  - Evidence: Cursor extension compromise; OpenAI/Codex and Codex-sandbox guidance; OpenAI/Codex and other SDK churn show runtime deltas can break connectors.
+  - Actionable checklist: require vendor-signed extension packages, record extension hash in onboarding scripts, run extension smoke tests in staging, and include an automated step to scan persisted canvases for unexpected artifacts.
+  - Should promote to playbook? yes
+  - Sources: https://cursor.com/blog/security-incident-update ; https://openai.com/index/inside-the-codex-sandbox/
+
+
+## 2026-11-22 — Ops playbook additions (compact)
+
+- Pre-upgrade snapshot gate: before upgrading coding-agent runtimes (Codex, Claude Code, Qwen), run a staged compatibility job that snapshots workspace exports and validates tool-call sandboxing and export/merge behavior.
+
+- Extension supply-chain rule: enterprise images should pin extension hashes and require vendor-signed extensions; add extension IOCs (e.g., Cursor notice) to blocklists and extension-onboarding checklists.
+
+- Payment & billing controls: enable per-agent spending caps and payment-webhook logging if agent wallet/payment primitives are enabled (e.g., ChatGPT Wallet); include payment audit trails in incident playbooks.
+
+- Quick test recipes: (1) simulate an agent-initiated purchase in a sandbox with payment-webhook replay; (2) test exporter→approved-bucket mappings and per-tenant ACLs on vendor-hosted agents; (3) run read-only GitHub Actions sandbox smoke tests for short workflows.
