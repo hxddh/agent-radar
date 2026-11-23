@@ -1441,3 +1441,17 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
 - Payment & billing controls: enable per-agent spending caps and payment-webhook logging if agent wallet/payment primitives are enabled (e.g., ChatGPT Wallet); include payment audit trails in incident playbooks.
 
 - Quick test recipes: (1) simulate an agent-initiated purchase in a sandbox with payment-webhook replay; (2) test exporter→approved-bucket mappings and per-tenant ACLs on vendor-hosted agents; (3) run read-only GitHub Actions sandbox smoke tests for short workflows.
+
+
+## Staged migration: Agent Builder → Agents SDK / Workspaces (playbook candidate)
+
+- When useful: Vendor signals or deprecation notices announce a Builder-style UI shutdown, or when an org's inventory shows agents still bound to legacy control-plane IDs.
+- Steps:
+  1. Inventory: enumerate all agents using the Builder path, record exporter endpoints, credentials, and attached workspace IDs.
+  2. Shadow-mode: run equivalent agents against the Agents SDK in a staging workspace without switching live traffic; have them write to a staging exporter proxy.
+  3. Manifest verification: ensure the SDK-produced exporter manifest matches expectations (tenant-prefixing, object metadata, retention TTLs).
+  4. Credentials rotation: create new scoped credentials for the SDK/workspace path and rotate secrets only after manifest verifications pass.
+  5. Cutover window: pick a narrow maintenance window, enable monitoring for exporter errors, and keep a rollback path to Builder control plane for 48h.
+  6. Post-cutover audit: verify no unapproved extensions or agent-side uploaded artifacts remain unaccounted for.
+- Evidence: Bluesky social deprecation signal + vendor SDK docs (follow-up to get vendor confirmation).
+- Should promote to playbook? yes

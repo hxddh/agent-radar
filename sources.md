@@ -2141,3 +2141,26 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / incident report] Muse AI agent accessed encrypted Signal messages (social field report). Why it matters: concrete operator incident of data exposure from agent access patterns; informs egress/ACL and forensic checklist updates. Evidence strength: Medium (Bluesky social post). Source: https://bsky.app/profile/fllics.com/post/3n2nl4hkbml2m
 
 - [research / study] Harvard study: coding agents shifted bottleneck to code review (HN discussion). Why it matters: operational throughput/quality shift — increased need for code-review tooling and reviewer policies; affects hiring and CI gating. Evidence strength: Medium (HN discussion). Source: https://news.ycombinator.com/item?id=50520757
+
+
+### Added 2026-11-23 (source-sweep)
+
+- [mainstream_product / discussion] OpenAI — Agent Builder deprecation (social-first). Why it matters: immediate operator migration implications from Agent Builder to Agents SDK/Workspaces; credential/exporter mapping and cutover windows are operationally significant. Evidence strength: Medium (Bluesky social post). Source: https://bsky.app/profile/aideprecations.bsky.social/post/3n2waa3pwze2m
+
+- [mainstream_product / sandbox] OpenAI — Codex Sandbox (official writeup). Why it matters: clarifies sandbox confinement, tool-call mediation, and artifact retention semantics for coding agents; directly relevant to containment/exporter mapping. Evidence strength: Strong (official writeup). Source: https://openai.com/index/inside-the-codex-sandbox/
+
+- [mainstream_product / runtime] Google — gemini-cli nightly (v0.71.0-nightly.20261123). Why it matters: CLI/runtime deltas can change integration signatures and tool-call behavior for operator toolchains. Evidence strength: Strong (GitHub release tag). Source: https://github.com/google-gemini/gemini-cli/releases/tag/v0.71.0-nightly.20261123.geecccfcd5
+
+- [mainstream_product / deployment] Microsoft — Foundry Managed Compute GA. Why it matters: managed compute GA defines default export targets, retention settings, and network topology guidance for hosted agents. Evidence strength: Strong (dev blog). Source: https://devblogs.microsoft.com/foundry/managed-compute-ga/
+
+- [mainstream_product / framework] mastra-ai/mastra — TypeScript framework for building AI apps and agents. Why it matters: a framework that can affect how teams scaffold agent workflows and integrate runtimes; potential adoption vector for agent-enabled apps. Evidence strength: Strong (GitHub). Source: https://github.com/mastra-ai/mastra
+
+- [infra_primitive / security] Cursor — security incident update (malicious VS Code extension variants). Why it matters: supply-chain risk for coding-agent workflows; extension pinning and CI preflight are immediate mitigations. Evidence strength: Strong (vendor blog). Source: https://cursor.com/blog/security-incident-update
+
+- [infra_primitive / sandbox] GHSA-5xjx-9qx6-jcrv — Claude Code TOCTOU allowing file writes outside workspace. Why it matters: sandbox escape / TOCTOU affecting workspace containment guarantees. Evidence strength: Strong (GitHub Advisory). Source: https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
+
+- [infra_primitive / security] GHSA-qx49-fqc8-xw99 — MCP Python SDK OAuth client could send credentials to attacker-chosen auth server. Why it matters: credential leakage risk in MCP client implementations; urgent patching/mitigation. Evidence strength: Strong (GitHub Advisory). Source: https://github.com/advisories/GHSA-qx49-fqc8-xw99
+
+- [user_workflow / cost-control] AWS — Distributed KV caching agent skill (cost & latency reductions for self-hosted LLMs). Why it matters: actionable operator technique to reduce cost and latency for self-hosted coding/assistant agents; useful for ops playbooks. Evidence strength: Strong (AWS blog). Source: https://aws.amazon.com/blogs/machine-learning/cut-self-hosted-llm-cost-and-latency-with-the-distributed-kv-caching-agent-skill/
+
+- [user_workflow / incident report] Together AI — coding-agent leaked credential & customer prompts (social report). Why it matters: concrete operator incident with data exposure implications for agent prompt and secret handling. Evidence strength: Medium (Bluesky social post). Source: https://bsky.app/profile/technewsbulletin.bsky.social/post/3n2xnqx2emr2b

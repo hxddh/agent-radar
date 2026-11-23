@@ -1487,3 +1487,37 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - Snapshot before push: multiple operator reports show agents "going blind" after git push; practical mitigation: snapshot or export workspace before pushing repository changes and prefer read-only clones for long-running/background agent runs. Source: social field reports (Bluesky); Evidence strength: Medium. See: https://bsky.app/profile/zippysh.bsky.social/post/3n2v33yf4c524
 
 - Read-only Actions pattern: GitHub Actions read-only sandbox pattern (mount read-only workspace, restrict tool-calls) is a low-friction containment pattern worth piloting for developer-run agents. Evidence strength: Medium (social / operator writeups). See research-log candidate entries for follow-up.
+
+
+- **Agent Builder migration — operator field note**
+  - Tool: OpenAI Agent Builder / Agents SDK
+  - Scenario: Teams reported surprise on deprecation signal; missing vendor-dated migration window increased urgency.
+  - Positive: Agents SDK/Workspaces provide more programmatic controls for exporters.
+  - Pain point: Inventorying builders and their linked exporter endpoints is non-trivial; some orgs only realized export-to-bucket mappings during smoke-tests.
+  - Useful trick: Run a 'dry-run exporter' in staging that validates manifest fields and tenant prefixes before swapping agent control planes.
+  - Source class: social_discussion
+  - Source visibility: Public (Bluesky)
+  - Evidence strength: Medium
+  - Public-safe summary: Start inventory + dry-run export tests now; do not rely on a single-step migration. Source: https://bsky.app/profile/aideprecations.bsky.social/post/3n2waa3pwze2m
+
+- **Foundry hosted-agent private-network setup — operator checklist**
+  - Tool: Microsoft Foundry Managed Compute
+  - Scenario: Deploying hosted agents into a private VNet where external exporter endpoints are restricted.
+  - Positive: Foundry documentation includes private-network guidance and examples.
+  - Pain point: Missing exporter endpoint in VNet can leave agents unable to publish artifacts; observability gaps appear if logs are routed to vendor-managed sinks.
+  - Useful trick: Pre-provision NAT/egress rules and a staging export proxy that mirrors production exporter manifests; validate full exporter write path in staging before production rollout.
+  - Source class: vendor_doc
+  - Source visibility: Public
+  - Evidence strength: Strong
+  - Public-safe summary: Validate egress & exporter proxies in staging; test with a representative workload. Source: https://devblogs.microsoft.com/foundry/managed-compute-ga/
+
+- **Cursor malicious extension incident — immediate ops note**
+  - Tool: VS Code / Cursor extension
+  - Scenario: Malicious extension variants were discovered in extension channels; vendor published IOCs.
+  - Positive: Vendor IOCs and takedown guidance exist.
+  - Pain point: Large orgs with BYO extension policies may have unpinned/unaudited extensions installed across many dev machines.
+  - Useful trick: Add a CI gate to reject builds when a dev environment includes unapproved extension IDs; run periodic extension inventory reports.
+  - Source class: vendor_security_blog
+  - Source visibility: Public
+  - Evidence strength: Strong
+  - Public-safe summary: Pin and audit VS Code extensions; add inventory checks to CI. Source: https://cursor.com/blog/security-incident-update

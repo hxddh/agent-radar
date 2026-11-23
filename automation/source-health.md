@@ -1,6 +1,6 @@
 # Source Health
 
-Last checked: 2026-11-22
+Last checked: 2026-11-23
 
 | Source | Status | Detail |
 | --- | --- | --- |
@@ -28,7 +28,7 @@ Last checked: 2026-11-22
 | page:anthropic-engineering | ok |  |
 | page:google-developers-blog | ok |  |
 | page:qwen-blog | ok |  |
-| page:deepseek-news | ok |  |
+| page:deepseek-news | error | HTTP Error 404: Not Found |
 | page:xai-news | ok |  |
 | page:e2b-blog | ok |  |
 | page:mistral-news | ok |  |

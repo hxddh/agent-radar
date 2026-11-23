@@ -2022,3 +2022,20 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Storage implication: Regulatory pressure increases need for immutable retention lanes and exportable forensic bundles. Operators should ensure that vendor-managed exporters support legal-hold/forensic export APIs and that object-storage retention/ACL metadata is auditable.
   - Immediate actions: inventory vendor exporter endpoints, verify vendor forensic-export capabilities, and document legal-hold and export runbooks for each major vendor.
   - Evidence: https://www.reuters.com/legal/transactional/arizona-says-it-is-investigating-openai-other-firms-over-possible-rogue-agents-2026-11-19/
+
+
+- Codex Sandbox → artifact classification & manifest hygiene
+  - Related to: OpenAI Codex Sandbox operational semantics
+  - Storage implication: Sandboxed runs clarify which files are ephemeral vs durable; exporters must mark durable artifacts with explicit manifest fields (tenant prefix, artifact class, retention TTL) so forensic exports and legal-hold can target durable items only.
+  - Source class: official_product_doc
+  - Evidence strength: Strong
+  - Source: https://openai.com/index/inside-the-codex-sandbox/
+  - Watch trigger: vendor adds or changes the official manifest schema (e.g., new required fields such as "durable=true" or tenant-prefix rules) — that would require immediate schema migrations in exporter pipelines.
+
+- Managed Compute defaults → exporter mapping risk (Foundry)
+  - Related to: Microsoft Foundry Managed Compute GA
+  - Storage implication: Managed compute vendors often set default exporter targets (vendor-managed buckets or telemetry sinks); operators must map these defaults into compliance diagrams and confirm retention/ACL settings to avoid unexpected data residency.
+  - Source class: vendor_blog / guidance
+  - Evidence strength: Strong
+  - Source: https://devblogs.microsoft.com/foundry/managed-compute-ga/
+  - Watch trigger: discovery of a vendor-default exporter endpoint in tenant logs (e.g., unexpected writes to vendor-owned buckets during staging) — confirms risk and requires immediate ACL/retention remediation.
