@@ -2039,3 +2039,16 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://devblogs.microsoft.com/foundry/managed-compute-ga/
   - Watch trigger: discovery of a vendor-default exporter endpoint in tenant logs (e.g., unexpected writes to vendor-owned buckets during staging) — confirms risk and requires immediate ACL/retention remediation.
+
+
+- Storage signal: per-agent artifact manifests (Bedrock Trusted Access encourages per-agent identity)
+  - Implication: require a standardized manifest schema for per-agent artifacts that includes agent-id, uploader, timestamp, source (client/browser/IDE), and retention TTL.
+  - Evidence strength: Strong (AWS Bedrock Trusted Access API announcement)
+  - Source: https://aws.amazon.com/blogs/machine-learning/introducing-the-amazon-bedrock-trusted-access-api-with-anthropics-enterprise-frontier-safeguards-and-enterprise-data-controls/
+  - Watch trigger: a vendor API or console UI that returns per-agent artifact lists or per-agent export tokens.
+
+- Storage signal: browser & canvas duality (Vercel in-browser runtimes + Cursor canvases)
+  - Implication: add mapping tests that enumerate where artifacts are cached locally vs uploaded to canvases, and require a forensic-export path for cloud canvases.
+  - Evidence strength: Strong (Vercel release; Cursor notice)
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.44.0 — https://cursor.com/blog/security-incident-update
+  - Watch trigger: a reproducible session replay referencing a vendor-managed canvas or a trace uploaded from a browser runtime to a vendor endpoint.

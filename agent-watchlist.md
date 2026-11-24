@@ -735,11 +735,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## xAI — Grok Build (promoted: scr-2b3c4d5e)
-- Recent changes: Community reports (Hacker News) describe a Grok Build instance leaking confidential information in coding-agent sessions. This elevates supply-chain and data-residency concerns for Grok Build customers and enterprise operators.
-- Actions: Treat as an incident-risk: block suspect connectors, require vendor remediation or advisory, and add detect-and-snapshot triggers in CI for agent outputs until vendor post-mortem is available.
-- Source class: Discussion (Hacker News)
-- Evidence strength: Medium–Strong
-- Source: https://news.ycombinator.com/item?id=50397355
+- Recent changes: Ars Technica (2026-11-24) reported instances where Grok Build returned confidential third-party data during coding-agent ingestion/build tasks. Community discussion and press coverage elevate supply-chain and ingest validation concerns for Grok Build users; operators should treat Grok instances as high-priority for exporter audits.
+- Impact: Data-residency and containment risk — uploaded repo blobs and .env files can become agent-accessible artifacts; export and retention defaults must be validated during onboarding.
+- Action: Immediate steps: (1) disable/unpublish automatic repo/.env ingestion in sensitive tenants, (2) require pre-ingest redaction or deny-listing of common secret filenames, (3) require vendor/instance proof-of-fix before re-enabling blob uploads in production.
+- Evidence strength: Strong (press) + Medium (community discussion)
+- Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
 ## Cursor — VS Code extension & cloud canvases (promoted: scr-1a2b3c4d)
 
 - What it is: Cursor's cloud canvases / cloud agent features and a vendor security notice reporting malicious/maliciously-modified VS Code extension variants found in the ecosystem.

@@ -1521,3 +1521,25 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Source visibility: Public
   - Evidence strength: Strong
   - Public-safe summary: Pin and audit VS Code extensions; add inventory checks to CI. Source: https://cursor.com/blog/security-incident-update
+
+
+- **Together AI — accidental credential/prompt exposure (community report)**
+  - When seen: 2026-11-23 / 2026-11-24 community posts
+  - Symptom: prompts and credential-like strings appeared in shared prompt stores.
+  - Public-safe summary: community field reports indicate accidental uploads of secrets/prompts during agent runs. Operators: add pre-upload secret-detection (regex/entropy checks) and runbook steps to revoke any exposed credentials.
+  - Source class: social (Bluesky)
+  - Source: https://bsky.app/profile/technewsbulletin.bsky.social/post/3n2xnqx2emr2b
+
+- **Raycast MCP clipboard/quicklinks operator pattern (social report)**
+  - When seen: 2026-11-23
+  - Symptom: teams enabling clipboard access for agent calls to speed workflows.
+  - Public-safe summary: useful productivity pattern but increases blast radius for secrets in clipboard; recommend telemetry + consent gating for clipboard-originated tool-calls.
+  - Source class: social (Bluesky)
+  - Source: https://bsky.app/profile/dev-signal.bsky.social/post/3n32c5gntnt2j
+
+- **Copilot persistent agents — retention concerns (community report)**
+  - When seen: 2026-11-23
+  - Symptom: reports that persistent agents retain memory/email while endpoints are offline.
+  - Public-safe summary: persistent agent convenience vs. retention risk trade-off; enforce short TTLs for memory and tenant revocation.
+  - Source class: social (Bluesky)
+  - Source: https://bsky.app/profile/tokenburn.co.uk/post/3n2xnxl2qo22f

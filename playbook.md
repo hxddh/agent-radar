@@ -1455,3 +1455,12 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   6. Post-cutover audit: verify no unapproved extensions or agent-side uploaded artifacts remain unaccounted for.
 - Evidence: Bluesky social deprecation signal + vendor SDK docs (follow-up to get vendor confirmation).
 - Should promote to playbook? yes
+
+
+- Playbook candidate: Extension pinning & CI preflight for IDE/VS Code extensions
+  - When useful: any org that allows developer IDEs or automated coding-agent workflows which can install marketplace extensions.
+  - Evidence: Cursor security incident + community reports of malicious extension variants.
+  - Steps: (1) pin approved extension versions in developer environment images, (2) add CI checks that verify extension hashes/signatures before allowing extension-enabled builds, (3) distribute vendor IOCs to EDR and block via policy.
+  - Should promote to playbook? yes
+  - Source class: vendor blog + community
+  - Source: https://cursor.com/blog/security-incident-update
