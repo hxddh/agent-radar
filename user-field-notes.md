@@ -1543,3 +1543,15 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Public-safe summary: persistent agent convenience vs. retention risk trade-off; enforce short TTLs for memory and tenant revocation.
   - Source class: social (Bluesky)
   - Source: https://bsky.app/profile/tokenburn.co.uk/post/3n2xnxl2qo22f
+
+
+- 2026-11-25 — Operator triage checklist (public-safe)
+  - Trigger: press/social report of coding-agent data exposure (example: Grok Build)
+  - Immediate steps:
+    1. Run automated exporter inventory for the tenant and list all registered exporter endpoints.
+    2. Scan recent object uploads for repo/blob/.env patterns and known secret regexes; escalate positives to IR.
+    3. Revoke any long-lived keys associated with agents that uploaded suspicious artifacts; rotate service credentials.
+    4. Pin or block suspected marketplace extensions (VS Code) until signed provenance is verified.
+    5. Add Siren-style containment scenarios to staging CI and block promotions that fail critical exfiltration checks.
+  - Evidence strength: derived from press & vendor notices (Ars Technica, Cursor security notice) and community reports.
+  - Sources: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/, https://cursor.com/blog/security-incident-update
