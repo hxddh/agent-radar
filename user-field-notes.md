@@ -1555,3 +1555,16 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
     5. Add Siren-style containment scenarios to staging CI and block promotions that fail critical exfiltration checks.
   - Evidence strength: derived from press & vendor notices (Ars Technica, Cursor security notice) and community reports.
   - Sources: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/, https://cursor.com/blog/security-incident-update
+
+
+- **2026-11-26 — Bluesky report: Together AI credential/prompt leak (public-safe summary)**
+  - Evidence strength: Medium (Bluesky field report)
+  - Public-safe summary: A community user reported seeing prompt samples and credential hints in a vendor canvas; immediate suggestion: revoke related tokens and request IOCs from vendor. Source: https://bsky.app/profile/technewsbulletin.bsky.social/post/3n2xnqx2emr2b
+
+- **2026-11-26 — Cursor security notice: malicious VS Code extension variants**
+  - Evidence strength: Strong (vendor notice)
+  - Public-safe summary: Cursor published guidance to remove/pin malicious Claude Code extension variants discovered in extension channels; operators should pin extension versions in corporate builds. Source: https://cursor.com/blog/security-incident-update
+
+- **2026-11-26 — Grok Build follow-up (press + community)**
+  - Evidence strength: Strong (press) + Medium (community)
+  - Public-safe summary: Press corroboration that Grok Build returned confidential blobs in some cases; recommended operator actions: run sensitive-pattern scans across vendor canvases and demand exporter manifests. Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/

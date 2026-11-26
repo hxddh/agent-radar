@@ -2052,3 +2052,20 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong (Vercel release; Cursor notice)
   - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.44.0 — https://cursor.com/blog/security-incident-update
   - Watch trigger: a reproducible session replay referencing a vendor-managed canvas or a trace uploaded from a browser runtime to a vendor endpoint.
+
+
+- 2026-11-26 — Edge-indexing increases artifact-plane complexity
+  - Signal: Cloudflare Search for Agents + agents@0.34.1 (edge search + exporters)
+  - Implication: Artifact-plane now spans cloud buckets, edge indices, and vendor canvases; forensic completeness requires collecting edge exporter manifests and mapping per-tenant buckets to corporate retention policies.
+  - Source class: product blog + release
+  - Evidence strength: Strong
+  - Source: https://blog.cloudflare.com/search-for-agents/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.34.1
+  - Watch trigger: Vendor publishes a machine-readable exporter manifest or an API that enumerates per-tenant storage endpoints.
+
+- 2026-11-26 — Client runtime changes shift ephemeral/persistent boundaries
+  - Signal: Vercel agent-browser v0.45.0
+  - Implication: Operators must monitor client telemetry for increased upload events and reclassify artifacts accordingly; retention and replay tools must be updated to include client-origin metadata.
+  - Source class: GitHub release
+  - Evidence strength: Strong
+  - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.45.0
+  - Watch trigger: Spike in client-origin upload events or a documented change in the client export API.

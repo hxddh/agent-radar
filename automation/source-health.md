@@ -1,9 +1,10 @@
 # Source Health
 
-Last checked: 2026-11-25
+Last checked: 2026-11-26
 
 | Source | Status | Detail |
 | --- | --- | --- |
+| feed:openai-blog | ok |  |
 | feed:github-changelog | ok |  |
 | feed:minio-blog | ok |  |
 | feed:aws-storage-blog | ok |  |
@@ -28,7 +29,6 @@ Last checked: 2026-11-25
 | page:anthropic-engineering | ok |  |
 | page:google-developers-blog | ok |  |
 | page:qwen-blog | ok |  |
-| page:deepseek-news | error | HTTP Error 404: Not Found |
 | page:xai-news | ok |  |
 | page:e2b-blog | ok |  |
 | page:mistral-news | ok |  |

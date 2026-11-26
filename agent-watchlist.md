@@ -634,9 +634,12 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 
 ## Cloudflare — agents@0.30.1
-- Recent changes: Cloudflare published agents@0.34.0 (2026-11-21) with exporter & edge runtime adjustments that affect where ephemeral workspaces and canvases are persisted. Operators should validate exporter→object-storage mappings, TTLs, and per-tenant ACLs after upgrading; map Zero Wire IOCs and edge detection rules into incident playbooks.
-- Evidence strength: Strong (GitHub release)
-- Source: https://github.com/cloudflare/agents/releases/tag/agents%400.34.0
+- Recent changes: Cloudflare published "Search for Agents" (2026-11-25) and released agents@0.34.1. The product introduces a first-party search/indexing primitive for agent workloads and the runtime release updates exporter defaults and edge runtime behaviors.
+- Why it matters: Edge-level indexing and exporter defaults determine where agent artifacts are persisted and therefore how operators must map retention, ACLs, and forensic exports (radar thesis 5 & 8).
+- Operator action: extract exporter manifests, map per-tenant bucket & retention defaults, and add edge-export verification to pre-upgrade test plans.
+- Source class: vendor blog + GitHub release
+- Evidence strength: Strong
+- Source: https://blog.cloudflare.com/search-for-agents/ ; https://github.com/cloudflare/agents/releases/tag/agents%400.34.1
 ## OpenHands Software Agent SDK
 
 - What it is: An SDK/platform used by some coding-agent integrations to provide runtime helpers, tool-calls, and connector glue.
@@ -695,22 +698,19 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Recent changes: No new dated public changelog this run (last noted 2026-09-13). Deprioritized from active promotion; retain as mainstream index for audit mapping when encountered in fleets.
 - Stale check: deprioritized 2026-11-22
 ## Vercel — agent-browser (vercel-labs/agent-browser)
-
-- What it is: A Rust/CLI browser-automation primitive for AI agents (HAR/DOM/WebM capture, headful traces, selector/timing controls) enabling programmatic web interactions and multimodal artifact export.
-- Why it matters: agent-browser makes browser automation a first-class agent primitive. Agents that can drive headful browsers create large, multimodal artifacts (HAR, DOM snapshots, video) and therefore change upstream storage, replay, and PII-scanning requirements. It also enables more realistic long-running agent workflows that interact with web apps, increasing the need for exporter/manifest versioning and retention controls.
-- Evaluation notes (operator lens): check default export/TTL behavior, manifest/versioning support, selectors/timing changes (v0.41.2), and whether durable exports are opt-in. Confirm PII/audio-transcript scanning hooks and enterprise export-to-bucket connectors before promoting durable retention.
-- Evidence strength: Strong (project release notes / repo). 
-- Relevance score: 7
-- Follow-up: add parser & sidecar-manifest tests for ingest pipelines; require export-to-operator-bucket gating before durable retention; include artifact-schema version checks in ingest validators.
-- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.41.2
-
-
+- Recent changes: Vercel published agent-browser v0.45.0 (2026-11-25) with client/runtime artifact-lifecycle changes.
+- Why it matters: Client-side runtime updates can change which artifacts are uploaded or retained by default; impacts developer UX and operator retention mappings.
+- Operator action: pin v0.45.0 in staging, run artifact-export and canvas-upload regression tests, and delay fleet-wide upgrades until exporter behavior is validated.
+- Source class: GitHub release
+- Evidence strength: Strong
+- Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.45.0
 ## Google — Gemini Agent (scr-7a3f1b)
-- What it is: Google-branded enterprise agent runtime positioned as "Gemini at Work" for integrated workplace workflows and first-party orchestration.
-- Why it matters: Platform vendor shipping a first-party agent runtime shifts where connectors, telemetry, and artifact defaults are set (export/retention implications). Reinforces radar thesis 8 (platform-vendor MCP entry) and thesis 5 (object storage as artifact plane).
-- Evidence strength: Strong (official blog)
-- Source: https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026
-
+- Recent changes: Google published updated enterprise docs and a Gemini 4 Neon guide for the Gemini Agent platform; documentation clarifies model-target guidance and recommended integration patterns for enterprise agent deployments.
+- Why it matters: Official guidance alters onboarding, exporter and auth defaults, and what operators must test prior to deploying agents at enterprise scale.
+- Operator action: extract documented exporter/auth defaults, map to existing MCP/router flows, and add these checks to deployment playbooks.
+- Source class: vendor docs
+- Evidence strength: Strong
+- Source: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-4-neon
 ## Perplexity — "Teammates" agents (scr-2c8d4e)
 - What it is: Perplexity's agentic teammates for ongoing/complex work in team hubs.
 - Why it matters: Adds a mainstream non-coding agent vendor into the mix; operators need to map Perplexity connectors and permission scopes into existing governance controls.
@@ -800,3 +800,12 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong (Reuters). Relevance score: 10 for operational impact.
 - Follow-up needed: ensure runbooks and vendor contracts map to forensic export capabilities, update retention and legal-hold playbooks, and add vendor post-mortem monitoring to corroboration queue.
 - Source: https://www.reuters.com/legal/transactional/arizona-says-it-is-investigating-openai-other-firms-over-possible-rogue-agents-2026-11-19/
+
+
+## langfuse/langfuse
+
+- What it is: open-source AI engineering platform for gateway, observability, evals, and prompt/skill management.
+- Why it matters: Can become a standard telemetry and eval sink for multi-vendor agent fleets; useful for aggregating tool-call traces, prompt histories, and automated evals.
+- Evidence strength: Medium-Strong (active GitHub repo and community adoption signals)
+- Source class: GitHub repository
+- Source: https://github.com/langfuse/langfuse

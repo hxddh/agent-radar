@@ -1464,3 +1464,16 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Should promote to playbook? yes
   - Source class: vendor blog + community
   - Source: https://cursor.com/blog/security-incident-update
+
+
+## Playbook candidate: Pre-upgrade Containment & Exporter Audit (2026-11-26)
+
+- When useful: Before upgrading agent runtimes, client SDKs, or switching deployed agent models (any vendor runtime or client update).
+- Steps (actionable):
+  1. Snapshot current exporter manifests and per-tenant bucket mappings (edge + cloud).  
+  2. Pin the new runtime/client in a staging environment and run a short smoke suite: tool-call traces, canvas/capture events, and artifact-export attempts.  
+  3. Run automated sensitive-pattern scans across any new or existing canvases/uploads created in staging (secrets, .env patterns, PII regex).  
+  4. Verify per-tenant ACLs and retention settings post-upgrade by requesting vendor-export manifest or checking edge bucket ACLs.  
+  5. Only roll to production after exporting a forensic snapshot and confirming no new persistent canvases are created by default.
+- Evidence: Synthesized from Cloudflare search/exporter changes, Vercel client release, and Grok/press incident follow-ups.
+- Should promote to playbook? yes

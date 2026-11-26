@@ -2164,3 +2164,18 @@ Note: This pass prioritized the MUST mainstream candidates flagged in the 2026-0
 - [user_workflow / cost-control] AWS — Distributed KV caching agent skill (cost & latency reductions for self-hosted LLMs). Why it matters: actionable operator technique to reduce cost and latency for self-hosted coding/assistant agents; useful for ops playbooks. Evidence strength: Strong (AWS blog). Source: https://aws.amazon.com/blogs/machine-learning/cut-self-hosted-llm-cost-and-latency-with-the-distributed-kv-caching-agent-skill/
 
 - [user_workflow / incident report] Together AI — coding-agent leaked credential & customer prompts (social report). Why it matters: concrete operator incident with data exposure implications for agent prompt and secret handling. Evidence strength: Medium (Bluesky social post). Source: https://bsky.app/profile/technewsbulletin.bsky.social/post/3n2xnqx2emr2b
+
+
+### Added 2026-11-26 (source-sweep)
+
+- Anthropic — "Claude Code Projects" (parallel-worker projects): https://claude.com/resources/articles/projects-redesigned
+- AWS — Bedrock Trusted Access API (enterprise frontier safeguards): https://aws.amazon.com/blogs/machine-learning/introducing-the-amazon-bedrock-trusted-access-api-with-anthropics-enterprise-frontier-safeguards-and-enterprise-data-controls/
+- Cursor — VS Code extension security notice (malicious variants): https://cursor.com/blog/claude-code-extension-security-notice
+- JetBrains — Mellum 2.1 Instruct release (coding-agent performance): https://blog.jetbrains.com/ai/2026/11/mellum2-1-instruct-is-out-bringing-faster-answers-for-coding-agents/
+- Mistral — Le Chonk / open weights & Studio updates: https://mistral.ai/news/mistral-large-4-oss/
+- NVIDIA — SkillEvaluator (agent-skill eval framework): https://github.com/NVIDIA/SkillEvaluator
+- E2B — safe AI-generated code sandbox pattern: https://e2b.dev/resources/run-ai-generated-code-safely
+- Modal — scaling ephemeral sandboxes engineering note: https://modal.com/blog/scaling-to-1-million-concurrent-sandboxes-in-seconds
+- Social/operator pattern (Bluesky) — T3 Code run headless behind Tailscale/WireGuard: https://bsky.app/profile/feed.devopspack.com.ap.brid.gy/post/3n37blhwfsib2
+
+> Note: These additions are discovery-only references for the radar's source registry (public links).
