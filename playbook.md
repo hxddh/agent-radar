@@ -1477,3 +1477,17 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   5. Only roll to production after exporting a forensic snapshot and confirming no new persistent canvases are created by default.
 - Evidence: Synthesized from Cloudflare search/exporter changes, Vercel client release, and Grok/press incident follow-ups.
 - Should promote to playbook? yes
+
+
+- Sandbox preflight checklist (playbook candidate)
+  - When useful: running untrusted AI-generated code, automated code-suggestion merges, or onboarding new agent connectors.
+  - Steps:
+    1. Instantiate per-task microVM (or container with hardware isolation) with immutable image.
+    2. Block all outbound traffic except allowlisted egress endpoints required for the task.
+    3. Ensure no secrets are mounted; use ephemeral credentials with automated rotation if external access is needed.
+    4. Run test-suite and containment smoke tests (including TOCTOU write attempt tests for known advisories).
+    5. Export signed snapshot manifest of artifacts to a locked bucket; require human sign-off before promotion/merge.
+    6. Route runtime traces through your telemetry gateway (langfuse or equivalent) and alert on unexpected exporter writes.
+  - Evidence: E2B sandbox pattern; Cursor/CVE advisories; GHSA advisory follow-ups.
+  - Source examples: https://e2b.dev/resources/run-ai-generated-code-safely, https://cursor.com/blog/claude-code-extension-security-notice, https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
+  - Should promote to playbook? yes

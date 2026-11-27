@@ -804,8 +804,10 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 
 ## langfuse/langfuse
 
-- What it is: open-source AI engineering platform for gateway, observability, evals, and prompt/skill management.
-- Why it matters: Can become a standard telemetry and eval sink for multi-vendor agent fleets; useful for aggregating tool-call traces, prompt histories, and automated evals.
-- Evidence strength: Medium-Strong (active GitHub repo and community adoption signals)
-- Source class: GitHub repository
+
+- What it is: Langfuse is an open telemetry/eval gateway for prompt runs and agent traces; it captures prompts, tool-calls, and runtime metadata to aid evaluation and alerting.
+- Recent changes: Langfuse surfaced in the screening pass (2026-11-26/27) as a Medium-Strong candidate for standardizing agent observability; teams are evaluating staging integrations.
+- Why it matters: standardized traces let operators detect unexpected exporter writes, unusual tool-calls, and prompt regressions faster — directly reducing time-to-detect for agent-origin incidents.
+- Evidence strength: Medium-Strong (GitHub repository + community interest)
+- Action: schedule a staging integration for one critical agent fleet; define alert rules for artifact/bucket writes and tool-call anomalies.
 - Source: https://github.com/langfuse/langfuse

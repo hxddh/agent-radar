@@ -2069,3 +2069,18 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence strength: Strong
   - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.45.0
   - Watch trigger: Spike in client-origin upload events or a documented change in the client export API.
+
+
+- Mapping UI -> exporter -> bucket is now an operational requirement
+  - Observation: vendor features (Grok Build uploads, Cloudflare agent search, Foundry managed compute) mean many agent UIs have implicit exporter defaults that become primary artifact sinks.
+  - Implication: organizations must document the full mapping from Agent UI/Task tab to exporter and the destination bucket + retention/ACLs; failure to do so causes orphaned or leaked sensitive blobs.
+  - Evidence: Ars Technica Grok leak; Cloudflare Search for Agents; Microsoft Foundry managed compute blog.
+  - Evidence strength: Strong
+  - Watch trigger: vendor publishes explicit exporter default docs or a customer incident shows artifacts persisted unexpectedly to a vendor bucket.
+
+- On‑prem models + local eval increase internal object-store demand
+  - Observation: open weights (Mistral) + eval gateways (langfuse) mean teams can keep runs local but will need versioned object storage for snapshots and eval traces.
+  - Implication: plan for increased internal storage retention/versions and include trace retention in compliance diagrams.
+  - Evidence: https://mistral.ai/news/mistral-large-4-oss/, https://github.com/langfuse/langfuse
+  - Evidence strength: Strong / Medium-Strong
+  - Watch trigger: inability to reproduce an incident because eval traces were not retained for the configured retention window.

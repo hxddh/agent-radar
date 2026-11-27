@@ -1568,3 +1568,18 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
 - **2026-11-26 — Grok Build follow-up (press + community)**
   - Evidence strength: Strong (press) + Medium (community)
   - Public-safe summary: Press corroboration that Grok Build returned confidential blobs in some cases; recommended operator actions: run sensitive-pattern scans across vendor canvases and demand exporter manifests. Source: https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/
+
+
+- VS Code extension pin & verify (Cursor incident)
+  - When seen: 2026-11 incident cluster (Cursor vendor notice)
+  - What worked: pin extension publisher ID and version in bootstrap scripts; add CI step to verify installed extension IDs against an approved list before running agent-driven CI tasks.
+  - Why it matters: marketplace/mirror variants can deliver malicious builds that affect local developer toolchains and agent canvases.
+  - Evidence: https://cursor.com/blog/claude-code-extension-security-notice
+  - Evidence strength: Strong
+
+- E2B microVM sandbox pattern (practical ops input)
+  - When seen: 2026-11-26 operator write-up
+  - What worked: instantiate per-task microVMs with allowlisted egress, no mounted secrets, snapshot export to locked bucket, human sign-off for artifact promotion.
+  - Why it matters: reduces blast radius for running AI-generated code and gives a reproducible audit trail for merges.
+  - Evidence: https://e2b.dev/resources/run-ai-generated-code-safely
+  - Evidence strength: High
