@@ -1491,3 +1491,9 @@ Evidence: community reports of connector regressions (Reddit) + multiple vendor 
   - Evidence: E2B sandbox pattern; Cursor/CVE advisories; GHSA advisory follow-ups.
   - Source examples: https://e2b.dev/resources/run-ai-generated-code-safely, https://cursor.com/blog/claude-code-extension-security-notice, https://github.com/advisories/GHSA-5xjx-9qx6-jcrv
   - Should promote to playbook? yes
+
+
+- **Playbook candidate: Headless local agent hardening (T3 pattern)**
+  - When useful: small-team background agents where full sandbox infra is impractical.
+  - Steps: run headless agent inside private overlay (Tailscale/WireGuard), use short-lived service accounts, route telemetry to internal aggregator, and pin/scan local extensions. Evidence: Bluesky operator posts + Cursor incident. Evidence strength: Medium.
+  - Should promote to playbook? yes (after a short replication & checklist formalization)

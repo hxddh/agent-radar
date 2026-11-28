@@ -705,12 +705,9 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Strong
 - Source: https://github.com/vercel-labs/agent-browser/releases/tag/v0.45.0
 ## Google — Gemini Agent (scr-7a3f1b)
-- Recent changes: Google published updated enterprise docs and a Gemini 4 Neon guide for the Gemini Agent platform; documentation clarifies model-target guidance and recommended integration patterns for enterprise agent deployments.
-- Why it matters: Official guidance alters onboarding, exporter and auth defaults, and what operators must test prior to deploying agents at enterprise scale.
-- Operator action: extract documented exporter/auth defaults, map to existing MCP/router flows, and add these checks to deployment playbooks.
-- Source class: vendor docs
-- Evidence strength: Strong
-- Source: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-4-neon
+- Recent changes: Social reports on 2026-11-28 indicate a possible Google Workspace AI Tools Addendum that would route some Workspace agent calls (Gmail/Drive/Calendar) through Google-managed MCP servers. No official Google changelog or addendum located yet; evidence strength: Medium (Bluesky). Operators should request official confirmation of exporter/MCP defaults and map any vendor-managed exporters to their compliance inventory.
+- replace_section anchor: `## Google — Gemini Agent (scr-7a3f1b)`
+- Source: https://bsky.app/profile/bavlin-ai.bsky.social/post/3n3dizdrenm2o
 ## Perplexity — "Teammates" agents (scr-2c8d4e)
 - What it is: Perplexity's agentic teammates for ongoing/complex work in team hubs.
 - Why it matters: Adds a mainstream non-coding agent vendor into the mix; operators need to map Perplexity connectors and permission scopes into existing governance controls.
@@ -811,3 +808,11 @@ replace_section anchor: `## Cloudflare Agents (agents@0.22.0)`
 - Evidence strength: Medium-Strong (GitHub repository + community interest)
 - Action: schedule a staging integration for one critical agent fleet; define alert rules for artifact/bucket writes and tool-call anomalies.
 - Source: https://github.com/langfuse/langfuse
+
+
+## Mistral — Le Chonk weights & Studio (scr-mistral-2026-11-28)
+
+- What it is: Mistral published new open weights (Le Chonk) and Studio tooling aimed at agentic coding and deployment workflows.
+- Why it matters: open weights + a Studio lowers friction to run coding/eval agents on-prem and in managed stacks; expect more on-prem hosting and related sandbox/exporter mapping work for operators.
+- Evidence strength: Strong (vendor announcement)
+- Source: https://mistral.ai/news/mistral-large-4-oss/

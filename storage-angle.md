@@ -2084,3 +2084,11 @@ Rationale: Wikimedia/OpenAI agent edits incident shows triage and legal teams ne
   - Evidence: https://mistral.ai/news/mistral-large-4-oss/, https://github.com/langfuse/langfuse
   - Evidence strength: Strong / Medium-Strong
   - Watch trigger: inability to reproduce an incident because eval traces were not retained for the configured retention window.
+
+
+- **Vendor exporter defaults become primary artifact sinks (2026-11-28)**
+  - Observation: Cloudflare Search for Agents, Vercel SDK changes, and social reports about Google MCP routing indicate vendor defaults are increasingly the place where agent artifacts and indexes land.
+  - Implication: Operators must enumerate vendor-managed sinks (buckets, indices, export endpoints) in their compliance diagrams, and add automated checks that detect new outbound connections from agent runtimes to unknown endpoints.
+  - Evidence strength: Mixed (vendor docs strong; social claim medium)
+  - Source: https://blog.cloudflare.com/search-for-agents/; https://github.com/vercel/ai/releases/tag/%40ai-sdk/workflow%402.0.116; https://bsky.app/profile/bavlin-ai.bsky.social/post/3n3dizdrenm2o
+  - Watch trigger: SDK option exposing exporter endpoint or a runtime outbound connection to a vendor-managed bucket/index.

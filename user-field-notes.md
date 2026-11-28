@@ -1583,3 +1583,12 @@ Quick wins: add pre-upgrade behavioral regression tests (tool-calls and reverse-
   - Why it matters: reduces blast radius for running AI-generated code and gives a reproducible audit trail for merges.
   - Evidence: https://e2b.dev/resources/run-ai-generated-code-safely
   - Evidence strength: High
+
+
+- **T3 Code — headless behind Tailscale (2026-11-28)**
+  - Scenario: teams run T3 Code as a background service reachable only inside a tailnet/WireGuard overlay to reduce marketplace exposure and egress risk.
+  - Practical notes: rotate short-lived service tokens, funnel telemetry via internal aggregator, and restrict outbound egress to internal collectors. Evidence strength: Medium (Bluesky operator post). Source: https://bsky.app/profile/feed.devopspack.com.ap.brid.gy/post/3n37blhwfsib2
+
+- **Cursor extension compromise — operator mitigations (2026-11-28)**
+  - Scenario: malicious VS Code extension variants discovered in extension channels can affect developer agent workflows.
+  - Practical notes: pin extension IDs, scan extension manifests in CI preflight, and maintain rollback pins for developer workstations. Evidence strength: Strong (Cursor vendor notice). Source: https://cursor.com/blog/security-incident-update
